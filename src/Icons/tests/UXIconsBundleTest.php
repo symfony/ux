@@ -18,6 +18,7 @@ use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\UX\Icons\DependencyInjection\UXIconsExtension;
+use Symfony\UX\Icons\IconFinderInterface;
 
 class UXIconsBundleTest extends TestCase
 {
@@ -142,6 +143,15 @@ class UXIconsBundleTest extends TestCase
 
         $this->assertFalse($container->hasDefinition('.ux_icons.auto_lock_icon_registry'));
         $this->assertFalse($container->hasDefinition('.ux_icons.iconify_on_demand_registry'));
+    }
+
+    public function testCustomIconFindersAreAutoconfigured(): void
+    {
+        $container = $this->buildContainer();
+        $autoconfigured = $container->getAutoconfiguredInstanceof();
+
+        $this->assertArrayHasKey(IconFinderInterface::class, $autoconfigured);
+        $this->assertArrayHasKey('ux_icons.finder', $autoconfigured[IconFinderInterface::class]->getTags());
     }
 
     public static function provideTestValidIconAttributesConfiguration(): iterable

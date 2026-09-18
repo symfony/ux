@@ -30,6 +30,8 @@ final class WarmCacheCommandTest extends KernelTestCase
             ->assertOutputContains('Warmed icon sub:check.')
             ->assertOutputContains('Warmed icon iconamoon:3d-duotone.')
             ->assertOutputContains('Warmed icon flag:eu-4x3.')
+            // provided by InMemoryIconFinder, not found in any template
+            ->assertOutputContains('Warmed icon lucide:mail.')
             ->assertOutputContains('Icon cache warmed.')
         ;
     }

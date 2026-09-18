@@ -18,9 +18,9 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\UX\Icons\Exception\IconNotFoundException;
+use Symfony\UX\Icons\IconFinderInterface;
 use Symfony\UX\Icons\Iconify;
 use Symfony\UX\Icons\Registry\LocalSvgIconRegistry;
-use Symfony\UX\Icons\Twig\IconFinder;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
@@ -36,7 +36,7 @@ final class LockIconsCommand extends Command
     public function __construct(
         private Iconify $iconify,
         private LocalSvgIconRegistry $registry,
-        private IconFinder $iconFinder,
+        private IconFinderInterface $iconFinder,
         private readonly array $iconAliases = [],
         private readonly array $iconSetAliases = [],
     ) {
@@ -67,7 +67,7 @@ final class LockIconsCommand extends Command
             $io->comment('Adding icons aliases...');
         }
 
-        foreach ([...array_values($this->iconAliases), ...array_values($finderIcons)] as $icon) {
+        foreach ([...array_values($this->iconAliases), ...$finderIcons] as $icon) {
             if (2 !== \count($parts = explode(':', $icon))) {
                 continue;
             }

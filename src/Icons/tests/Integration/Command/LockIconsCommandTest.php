@@ -15,6 +15,7 @@ use PHPUnit\Framework\Attributes\After;
 use PHPUnit\Framework\Attributes\Before;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Filesystem\Filesystem;
+use Zenstruck\Console\Test\CommandResult;
 use Zenstruck\Console\Test\InteractsWithConsole;
 
 /**
@@ -29,6 +30,7 @@ final class LockIconsCommandTest extends KernelTestCase
         __DIR__.'/../../Fixtures/icons/flag/eu-4x3.svg',
         __DIR__.'/../../Fixtures/icons/lucide/circle.svg',
         __DIR__.'/../../Fixtures/icons/lucide/circle-off.svg',
+        __DIR__.'/../../Fixtures/icons/lucide/mail.svg',
     ];
 
     #[Before]
@@ -48,15 +50,7 @@ final class LockIconsCommandTest extends KernelTestCase
             $this->assertFileDoesNotExist($icon);
         }
 
-        $this->executeConsoleCommand('ux:icons:lock')
-            ->assertSuccessful()
-            ->assertOutputContains('Scanning project for icons...')
-            ->assertOutputContains('Imported lucide:circle')
-            ->assertOutputContains('Imported lucide:circle-off')
-            ->assertOutputContains('Imported flag:eu-4x3')
-            ->assertOutputContains('Imported iconamoon:3d-duotone')
-            ->assertOutputContains('Imported 4 icons')
-        ;
+        $this->assertAllIconsImported($this->executeConsoleCommand('ux:icons:lock'));
 
         foreach (self::ICONS as $icon) {
             $this->assertFileExists($icon);
@@ -70,24 +64,23 @@ final class LockIconsCommandTest extends KernelTestCase
 
     public function testForceImportFoundIcons(): void
     {
-        $this->executeConsoleCommand('ux:icons:lock')
-            ->assertSuccessful()
-            ->assertOutputContains('Scanning project for icons...')
-            ->assertOutputContains('Imported lucide:circle')
-            ->assertOutputContains('Imported lucide:circle-off')
-            ->assertOutputContains('Imported flag:eu-4x3')
-            ->assertOutputContains('Imported iconamoon:3d-duotone')
-            ->assertOutputContains('Imported 4 icons')
-        ;
+        $this->assertAllIconsImported($this->executeConsoleCommand('ux:icons:lock'));
 
-        $this->executeConsoleCommand('ux:icons:lock --force')
+        $this->assertAllIconsImported($this->executeConsoleCommand('ux:icons:lock --force'));
+    }
+
+    private function assertAllIconsImported(CommandResult $result): void
+    {
+        $result
             ->assertSuccessful()
             ->assertOutputContains('Scanning project for icons...')
             ->assertOutputContains('Imported lucide:circle')
             ->assertOutputContains('Imported lucide:circle-off')
             ->assertOutputContains('Imported flag:eu-4x3')
             ->assertOutputContains('Imported iconamoon:3d-duotone')
-            ->assertOutputContains('Imported 4 icons')
+            // provided by InMemoryIconFinder, not found in any template
+            ->assertOutputContains('Imported lucide:mail')
+            ->assertOutputContains('Imported 5 icons')
         ;
     }
 }

@@ -9,9 +9,10 @@
  * file that was distributed with this source code.
  */
 
-namespace Symfony\UX\Icons\Twig;
+namespace Symfony\UX\Icons\Finder;
 
 use Symfony\Component\Finder\Finder;
+use Symfony\UX\Icons\IconFinderInterface;
 use Twig\Environment;
 use Twig\Loader\ChainLoader;
 use Twig\Loader\FilesystemLoader;
@@ -22,7 +23,7 @@ use Twig\Loader\LoaderInterface;
  *
  * @internal
  */
-final class IconFinder
+final class TemplateIconFinder implements IconFinderInterface
 {
     public function __construct(
         private Environment $twig,
@@ -30,10 +31,7 @@ final class IconFinder
     ) {
     }
 
-    /**
-     * @return string[]
-     */
-    public function icons(): array
+    public function icons(): iterable
     {
         $found = [];
 

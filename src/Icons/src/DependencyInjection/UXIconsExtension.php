@@ -19,6 +19,7 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\ConfigurableExtension;
+use Symfony\UX\Icons\IconFinderInterface;
 use Symfony\UX\Icons\Iconify;
 
 /**
@@ -179,12 +180,15 @@ final class UXIconsExtension extends ConfigurableExtension implements Configurat
             }
         }
 
+        $container->registerForAutoconfiguration(IconFinderInterface::class)
+            ->addTag('ux_icons.finder');
+
         $container->getDefinition('.ux_icons.local_svg_icon_registry')
             ->setArgument(1, $mergedConfig['icon_dir'])
             ->setArgument(2, $iconSetPaths)
         ;
 
-        $container->getDefinition('.ux_icons.icon_finder')
+        $container->getDefinition('.ux_icons.template_icon_finder')
             ->setArgument(1, $mergedConfig['icon_dir'])
         ;
 

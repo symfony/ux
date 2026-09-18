@@ -13,7 +13,6 @@ namespace Symfony\UX\Icons;
 
 use Symfony\UX\Icons\Exception\IconNotFoundException;
 use Symfony\UX\Icons\Registry\CacheIconRegistry;
-use Symfony\UX\Icons\Twig\IconFinder;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
@@ -22,7 +21,7 @@ use Symfony\UX\Icons\Twig\IconFinder;
  */
 final class IconCacheWarmer
 {
-    public function __construct(private CacheIconRegistry $registry, private IconFinder $icons)
+    public function __construct(private CacheIconRegistry $registry, private IconFinderInterface $icons)
     {
     }
 

@@ -17,6 +17,7 @@ use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Bundle\TwigBundle\TwigBundle;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\HttpKernel\Kernel;
+use Symfony\UX\Icons\Tests\Util\InMemoryIconFinder;
 use Symfony\UX\Icons\UXIconsBundle;
 use Symfony\UX\TwigComponent\TwigComponentBundle;
 
@@ -79,6 +80,9 @@ final class TestKernel extends Kernel
             ],
         ]);
 
-        $container->services()->set('logger', NullLogger::class);
+        $container->services()
+            ->set('logger', NullLogger::class)
+            ->set(InMemoryIconFinder::class)->args([['lucide:mail']])->autoconfigure()
+        ;
     }
 }
