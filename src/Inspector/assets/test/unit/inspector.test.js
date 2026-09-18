@@ -388,6 +388,7 @@ describe('UXInspector', () => {
         const results = document.createElement('section');
         results.id = 'results';
         results.dataset.searchTarget = 'results';
+        results.scrollIntoView = vi.fn();
         target.append(results);
         target.dataset.controller = 'search';
         document.body.appendChild(target);
@@ -405,7 +406,15 @@ describe('UXInspector', () => {
         expect(limit.querySelector('.num').textContent).toBe('12');
         expect(limit.querySelector('[data-status="default"]')).not.toBeNull();
         const targetField = inspector.shadowRoot.querySelector('[data-field-key="element:results"]');
-        expect(targetField.querySelector('.target-pill').textContent).toContain('section#results');
+        const pill = targetField.querySelector('.target-pill');
+        expect(pill.textContent).toContain('section#results');
+        pill.click();
+        expect(pill.getAttribute('aria-pressed')).toBe('true');
+        inspector.close();
+        expect(pill.getAttribute('aria-pressed')).toBe('false');
+        inspector.open();
+        pill.click();
+        expect(pill.getAttribute('aria-pressed')).toBe('true');
     });
 
     it('leaves the open detail when the inspector is cleared', async () => {

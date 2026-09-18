@@ -2604,12 +2604,17 @@ function makeElementField(labelStr, element, options = {}) {
 			blur: (event) => emit(event.currentTarget, "clear-element-preview"),
 			click: (event) => {
 				event.stopPropagation();
-				element.scrollIntoView({
-					block: "center",
-					behavior: "smooth"
-				});
-				event.currentTarget?.setAttribute("aria-pressed", "true");
-				emit(event.currentTarget, "select-element");
+				const target = event.currentTarget;
+				const selected = target.getAttribute("aria-pressed") === "true";
+				target.setAttribute("aria-pressed", String(!selected));
+				if (selected) emit(target, "clear-element-selection");
+				else {
+					element.scrollIntoView({
+						block: "nearest",
+						behavior: "smooth"
+					});
+					emit(target, "select-element");
+				}
 			}
 		}
 	}, describeElementPill(element)));
@@ -3368,6 +3373,7 @@ var DetailNavigation = class {
 		content.addEventListener("preview-element", this.#onDetailPreview);
 		content.addEventListener("clear-element-preview", this.#onDetailClear);
 		content.addEventListener("select-element", this.#onDetailSelect);
+		content.addEventListener("clear-element-selection", this.#onDetailClearSelection);
 		let title = element.tagName.toLowerCase();
 		const framework = dataMap.keys().next().value || "default";
 		const plugin = this.#registry.get(framework);
@@ -3407,6 +3413,9 @@ var DetailNavigation = class {
 		let cleared = false;
 		while (this.drillBack()) cleared = true;
 		return cleared;
+	}
+	clearTargetSelection() {
+		this.#syncTargetSelection();
 	}
 	suspendForNavigation() {
 		const current = this.#drillStack.current;
@@ -3493,13 +3502,18 @@ var DetailNavigation = class {
 		record.content.removeEventListener("preview-element", this.#onDetailPreview);
 		record.content.removeEventListener("clear-element-preview", this.#onDetailClear);
 		record.content.removeEventListener("select-element", this.#onDetailSelect);
+		record.content.removeEventListener("clear-element-selection", this.#onDetailClearSelection);
 		if (this.#activity.id === id) this.#activity.close();
 		record.detail.destroy();
 		this.#drillDetails.delete(id);
 	}
 	#onDetailPreview = (event) => this.#callbacks.preview(event.detail);
 	#onDetailClear = () => this.#callbacks.clearPreview();
-	#onDetailSelect = (event) => this.#callbacks.select(event.detail);
+	#onDetailSelect = (event) => {
+		for (const pill of this.element.querySelectorAll(".target-pill")) pill.setAttribute("aria-pressed", String(pill === event.target));
+		this.#callbacks.select(event.detail);
+	};
+	#onDetailClearSelection = () => this.#callbacks.clearSelection();
 };
 var ResizeHandle = class {
 	element;
@@ -3842,6 +3856,10 @@ var Panel = class {
 	}
 	clearPageRuleSelection() {
 		this.#list.clearPageRuleSelection();
+	}
+	clearSelection() {
+		this.clearPageRuleSelection();
+		this.#navigation.clearTargetSelection();
 	}
 	clearFocus() {
 		this.clearPageRuleSelection();
@@ -4810,7 +4828,7 @@ var InspectorRuntime = class {
 		};
 	}
 	close() {
-		this.#panel.clearPageRuleSelection();
+		this.#panel.clearSelection();
 		this.#targetSelector.disable();
 		this.#visual.clearHover();
 		this.#visual.deselect();

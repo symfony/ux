@@ -272,6 +272,10 @@ export class Panel {
     clearPageRuleSelection(): void {
         this.#list.clearPageRuleSelection();
     }
+    clearSelection(): void {
+        this.clearPageRuleSelection();
+        this.#navigation.clearTargetSelection();
+    }
     clearFocus(): boolean {
         this.clearPageRuleSelection();
         return this.#navigation.clearFocus();

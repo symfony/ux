@@ -135,9 +135,14 @@ export function makeElementField(labelStr: string, element: Element, options: El
                     blur: (event: Event) => emit(event.currentTarget, 'clear-element-preview'),
                     click: (event: Event) => {
                         event.stopPropagation();
-                        element.scrollIntoView({ block: 'center', behavior: 'smooth' });
-                        (event.currentTarget as HTMLElement | null)?.setAttribute('aria-pressed', 'true');
-                        emit(event.currentTarget, 'select-element');
+                        const target = event.currentTarget as HTMLElement;
+                        const selected = target.getAttribute('aria-pressed') === 'true';
+                        target.setAttribute('aria-pressed', String(!selected));
+                        if (selected) emit(target, 'clear-element-selection');
+                        else {
+                            element.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+                            emit(target, 'select-element');
+                        }
                     },
                 },
             },

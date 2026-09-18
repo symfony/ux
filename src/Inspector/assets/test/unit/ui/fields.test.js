@@ -150,20 +150,25 @@ describe('plugin helpers', () => {
         const previews = [];
         const clears = [];
         const selections = [];
+        const clearedSelections = [];
         field.addEventListener('preview-element', (event) => previews.push(event.detail));
         field.addEventListener('clear-element-preview', (event) => clears.push(event.detail));
         field.addEventListener('select-element', (event) => selections.push(event.detail));
+        field.addEventListener('clear-element-selection', (event) => clearedSelections.push(event.detail));
 
         pill.dispatchEvent(new Event('pointerenter'));
         pill.dispatchEvent(new FocusEvent('focus'));
         pill.dispatchEvent(new FocusEvent('blur'));
+        pill.click();
         pill.click();
 
         expect(previews).toHaveLength(2);
         expect(previews[0]).toMatchObject({ element: target, framework: 'livecomponent', label: 'action: save' });
         expect(clears).toHaveLength(1);
         expect(selections).toHaveLength(1);
-        expect(target.scrollIntoView).toHaveBeenCalled();
+        expect(clearedSelections).toHaveLength(1);
+        expect(pill.getAttribute('aria-pressed')).toBe('false');
+        expect(target.scrollIntoView).toHaveBeenCalledExactlyOnceWith({ block: 'nearest', behavior: 'smooth' });
         expect(field.querySelector('.act')).toBeNull();
     });
 
