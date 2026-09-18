@@ -71,10 +71,14 @@ export class Timeline {
         contextual?: boolean;
     }): void {
         const contextChanged = contextual !== this.#contextual;
-        const render = contextChanged || element !== this.#elementFilter;
+        const nextFrameworks = frameworks ? new Set(frameworks) : null;
+        const frameworksChanged =
+            nextFrameworks?.size !== this.#frameworks?.size ||
+            Boolean(nextFrameworks && [...nextFrameworks].some((framework) => !this.#frameworks?.has(framework)));
+        const render = contextChanged || element !== this.#elementFilter || frameworksChanged;
         this.#query = query.trim().toLowerCase();
         this.#elementFilter = element;
-        this.#frameworks = frameworks ? new Set(frameworks) : null;
+        this.#frameworks = nextFrameworks;
         this.#contextual = contextual;
         if (contextChanged) {
             this.#selectedEntry = null;
@@ -99,8 +103,9 @@ export class Timeline {
         }
     }
 
-    #onEntry = (): void => {
+    #onEntry = (entry: ActivityEntry, removed: readonly ActivityEntry[] = []): void => {
         if (this.#paused || this.#rafId !== null) return;
+        if (!this.#matchesScope(entry) && !removed.some((expired) => this.#matchesScope(expired))) return;
         this.#rafId = requestAnimationFrame(() => this.#flushEntries());
     };
 
@@ -187,9 +192,15 @@ export class Timeline {
 
         const entries = (
             this.#paused
-                ? projectActivity(this.#entries, !this.#contextual)
-                : this.#monitor.project(null, !this.#contextual)
+                ? projectActivity(
+                      this.#elementFilter
+                          ? this.#entries.filter((entry) => this.#matchesElement(entry, this.#elementFilter!))
+                          : this.#entries,
+                      !this.#contextual
+                  )
+                : this.#monitor.project(this.#elementFilter, !this.#contextual)
         )
+            .filter((entry) => !this.#frameworks || this.#frameworks.has(entry.type))
             .slice(-MAX_ENTRIES)
             .map((entry) => {
                 const previous = this.#rows.get(this.#anchor(entry))?._inspectorEntry;
@@ -502,6 +513,13 @@ export class Timeline {
                 (raw) => raw.owner === element || raw.target === element || raw.relatedElements?.includes(element)
             ) ??
                 false)
+        );
+    }
+
+    #matchesScope(entry: ActivityEntry): boolean {
+        return (
+            (!this.#frameworks || this.#frameworks.has(entry.type)) &&
+            (!this.#elementFilter || this.#matchesElement(entry, this.#elementFilter))
         );
     }
 

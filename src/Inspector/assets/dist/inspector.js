@@ -2948,6 +2948,7 @@ var ComponentDetail = class {
 	#recentChanges = /* @__PURE__ */ new Map();
 	#changeTimer;
 	#savedGroups = /* @__PURE__ */ new Map();
+	#frameworks = /* @__PURE__ */ new Set();
 	constructor({ registry, eventMonitor, relationshipEngine, state, render = renderComponent }, onDrillInto, uiState = {}) {
 		this.#registry = registry;
 		this.#render = render;
@@ -2962,10 +2963,12 @@ var ComponentDetail = class {
 		this.#lifetime = new AbortController();
 		this.#target = target;
 		this.#previousData = dataMap;
+		this.#frameworks = new Set(dataMap.keys());
 		this.#element = el("div", { class: "detail pane" });
 		this.#replaceContent(dataMap, null);
 		if (this.#eventMonitor) {
 			this.#eventListener = (entry) => {
+				if (!this.#frameworks.has(entry.type)) return;
 				if (entry.target !== target && !(entry.target && target.contains(entry.target))) return;
 				const footer = this.#element?.querySelector(".activity-label");
 				if (footer) footer.dataset.framework = entry.type || "default";
@@ -2979,6 +2982,7 @@ var ComponentDetail = class {
 			if (!current) return;
 			const previous = detail.previous || this.#previousData;
 			this.#previousData = current;
+			this.#frameworks = new Set(current.keys());
 			this.#replaceContent(current, previous ?? null);
 		};
 		this.#state.addEventListener?.("component-updated", onUpdate, { signal: this.#lifetime.signal });
@@ -2993,6 +2997,7 @@ var ComponentDetail = class {
 		this.#recentChanges.clear();
 		this.#element = this.#target = this.#previousData = null;
 		this.#identityKey = "";
+		this.#frameworks.clear();
 	}
 	getUiState() {
 		this.#rememberGroups();
@@ -3000,7 +3005,7 @@ var ComponentDetail = class {
 	}
 	get activityCount() {
 		const target = this.#target;
-		return (target ? this.#eventMonitor?.project(target) ?? [] : []).length;
+		return (target ? this.#eventMonitor?.project(target) ?? [] : []).filter((entry) => this.#frameworks.has(entry.type)).length;
 	}
 	#identity(target, dataMap) {
 		const { name, framework, selector } = componentIdentity(target, dataMap, this.#registry);
@@ -3136,7 +3141,7 @@ var ComponentDetail = class {
 		const target = this.#target;
 		return el("div", {
 			class: "activity-label group",
-			dataset: { framework: (target ? this.#eventMonitor?.getEntriesForElement(target)?.at(-1) : void 0)?.type || "default" }
+			dataset: { framework: (target ? this.#eventMonitor?.getEntriesForElement(target)?.filter((entry) => this.#frameworks.has(entry.type)).at(-1) : void 0)?.type || "default" }
 		}, el("span", { class: "title" }, el("span", { class: "icon" }, createIcon("activity")), el("span", {
 			class: "name",
 			text: "Activity"
@@ -3338,6 +3343,7 @@ var DetailNavigation = class {
 		this.#drillStack.addEventListener("drill-push", () => callbacks.change());
 		this.#drillStack.addEventListener("drill-pop", (event) => this.#onDrillPop(event.detail));
 		state.addEventListener("component-removed", (event) => this.#onComponentRemoved(event.detail?.element), { signal: this.#lifetime.signal });
+		state.addEventListener("component-updated", (event) => this.#onComponentUpdated(event.detail), { signal: this.#lifetime.signal });
 		state.addEventListener("components-cleared", () => this.#onComponentRemoved(this.focusedComponent), { signal: this.#lifetime.signal });
 	}
 	get element() {
@@ -3363,6 +3369,7 @@ var DetailNavigation = class {
 		this.#activity.close(false);
 		const locator = this.#componentLocator(element, dataMap);
 		const stateKey = `${locator[1]}:${locator[2]}`;
+		const frameworks = [...dataMap.keys()];
 		const detail = new ComponentDetail({
 			registry: this.#registry,
 			eventMonitor: this.#eventMonitor,
@@ -3383,7 +3390,9 @@ var DetailNavigation = class {
 			detail,
 			stateKey,
 			content,
-			locator
+			locator,
+			element,
+			frameworks
 		});
 		this.#drillStack.push({
 			id,
@@ -3394,11 +3403,12 @@ var DetailNavigation = class {
 			framework
 		});
 		this.#callbacks.open();
+		this.#syncTargetSelection();
 		this.#callbacks.select({
 			element,
 			framework
 		});
-		this.#activity.open(id, content, element, title);
+		this.#activity.open(id, content, element, title, frameworks);
 	}
 	drillBack() {
 		return Boolean(this.#drillStack.pop());
@@ -3407,7 +3417,7 @@ var DetailNavigation = class {
 		const current = this.#drillStack.current;
 		const record = current && this.#drillDetails.get(current.id);
 		if (this.element.hidden || !current?.element || !record || this.#activity.id === current.id) return;
-		this.#activity.open(current.id, record.content, current.element, current.title);
+		this.#activity.open(current.id, record.content, current.element, current.title, record.frameworks);
 	}
 	clearFocus() {
 		let cleared = false;
@@ -3462,6 +3472,16 @@ var DetailNavigation = class {
 			this.#restorePendingDetail();
 		});
 	}
+	#onComponentUpdated({ element, current } = {}) {
+		if (!element) return;
+		const dataMap = current || this.#state.get(element);
+		if (!dataMap) return;
+		for (const [id, record] of this.#drillDetails) {
+			if (record.element !== element) continue;
+			record.frameworks = [...dataMap.keys()];
+			if (this.#activity.id === id) this.#activity.updateFrameworks(record.frameworks);
+		}
+	}
 	#restorePendingDetail() {
 		if (this.#destroyed) return false;
 		if (!this.#pendingDetail) return false;
@@ -3488,6 +3508,7 @@ var DetailNavigation = class {
 		this.restoreActivity();
 		if (current.element) {
 			const dataMap = this.#state.get(current.element);
+			this.#syncTargetSelection();
 			this.#callbacks.select({
 				element: current.element,
 				framework: dataMap?.keys().next().value || "default"
@@ -3510,10 +3531,16 @@ var DetailNavigation = class {
 	#onDetailPreview = (event) => this.#callbacks.preview(event.detail);
 	#onDetailClear = () => this.#callbacks.clearPreview();
 	#onDetailSelect = (event) => {
-		for (const pill of this.element.querySelectorAll(".target-pill")) pill.setAttribute("aria-pressed", String(pill === event.target));
+		this.#syncTargetSelection(event.target);
 		this.#callbacks.select(event.detail);
 	};
-	#onDetailClearSelection = () => this.#callbacks.clearSelection();
+	#onDetailClearSelection = () => {
+		this.#syncTargetSelection();
+		this.#callbacks.clearSelection();
+	};
+	#syncTargetSelection(selected = null) {
+		for (const pill of this.element.querySelectorAll(".target-pill")) pill.setAttribute("aria-pressed", String(pill === selected));
+	}
 };
 var ResizeHandle = class {
 	element;
@@ -3588,7 +3615,10 @@ var ActivityDrawer = class {
 	get id() {
 		return this.#id;
 	}
-	open(id, content, element, query) {
+	updateFrameworks(frameworks) {
+		if (this.#id) this.#timeline.configure({ frameworks });
+	}
+	open(id, content, element, query, frameworks) {
 		this.close(false);
 		const drawer = el("section", {
 			class: "pane drawer",
@@ -3623,7 +3653,7 @@ var ActivityDrawer = class {
 		this.#id = id;
 		this.#timeline.configure({
 			contextual: true,
-			frameworks: null,
+			frameworks,
 			element,
 			query: element ? "" : query
 		});
@@ -4080,10 +4110,12 @@ var Timeline = class {
 	}
 	configure({ query = this.#query, element = this.#elementFilter, frameworks = this.#frameworks, contextual = this.#contextual }) {
 		const contextChanged = contextual !== this.#contextual;
-		const render = contextChanged || element !== this.#elementFilter;
+		const nextFrameworks = frameworks ? new Set(frameworks) : null;
+		const frameworksChanged = nextFrameworks?.size !== this.#frameworks?.size || Boolean(nextFrameworks && [...nextFrameworks].some((framework) => !this.#frameworks?.has(framework)));
+		const render = contextChanged || element !== this.#elementFilter || frameworksChanged;
 		this.#query = query.trim().toLowerCase();
 		this.#elementFilter = element;
-		this.#frameworks = frameworks ? new Set(frameworks) : null;
+		this.#frameworks = nextFrameworks;
 		this.#contextual = contextual;
 		if (contextChanged) {
 			this.#selectedEntry = null;
@@ -4105,8 +4137,9 @@ var Timeline = class {
 			return false;
 		}
 	}
-	#onEntry = () => {
+	#onEntry = (entry, removed = []) => {
 		if (this.#paused || this.#rafId !== null) return;
+		if (!this.#matchesScope(entry) && !removed.some((expired) => this.#matchesScope(expired))) return;
 		this.#rafId = requestAnimationFrame(() => this.#flushEntries());
 	};
 	#flushEntries() {
@@ -4175,7 +4208,7 @@ var Timeline = class {
 		const focusedAnchor = focusedItem?._inspectorEntry && this.#anchor(focusedItem._inspectorEntry);
 		const focusedControl = focused?.dataset.control;
 		this.#onHighlight?.(null);
-		const entries = (this.#paused ? projectActivity(this.#entries, !this.#contextual) : this.#monitor.project(null, !this.#contextual)).slice(-MAX_ENTRIES).map((entry) => {
+		const entries = (this.#paused ? projectActivity(this.#elementFilter ? this.#entries.filter((entry) => this.#matchesElement(entry, this.#elementFilter)) : this.#entries, !this.#contextual) : this.#monitor.project(this.#elementFilter, !this.#contextual)).filter((entry) => !this.#frameworks || this.#frameworks.has(entry.type)).slice(-MAX_ENTRIES).map((entry) => {
 			const previous = this.#rows.get(this.#anchor(entry))?._inspectorEntry;
 			return previous && this.#sameEntries(previous, entry) ? previous : entry;
 		});
@@ -4393,6 +4426,9 @@ var Timeline = class {
 	}
 	#matchesElement(entry, element) {
 		return entry?.owner === element || entry?.target === element || (entry?.relatedElements?.includes(element) ?? false) || (entry?.rawEntries?.some((raw) => raw.owner === element || raw.target === element || raw.relatedElements?.includes(element)) ?? false);
+	}
+	#matchesScope(entry) {
+		return (!this.#frameworks || this.#frameworks.has(entry.type)) && (!this.#elementFilter || this.#matchesElement(entry, this.#elementFilter));
 	}
 	#onKeydown(event) {
 		if (![

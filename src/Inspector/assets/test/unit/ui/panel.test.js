@@ -180,7 +180,7 @@ describe('Panel', () => {
         expect(timeline.element.parentElement).toBe(panel.element.querySelector('.drawer'));
         expect(timeline.configure).toHaveBeenLastCalledWith({
             contextual: true,
-            frameworks: null,
+            frameworks: ['stimulus'],
             element: target,
             query: '',
         });
@@ -215,14 +215,14 @@ describe('Panel', () => {
         timeline.configure.mockClear();
         panel.drillInto(child);
         expect(timeline.configure.mock.calls.filter(([options]) => options.contextual)).toEqual([
-            [{ contextual: true, frameworks: null, element: child, query: '' }],
+            [{ contextual: true, frameworks: ['stimulus'], element: child, query: '' }],
         ]);
         panel.drillBack();
         expect(panel.element.querySelector('.detail')).toBe(detail);
         expect(panel.element.querySelector('.drawer').style.height).toBe('316px');
         expect(timeline.configure).toHaveBeenLastCalledWith({
             contextual: true,
-            frameworks: null,
+            frameworks: ['stimulus'],
             element: target,
             query: '',
         });
@@ -239,6 +239,32 @@ describe('Panel', () => {
         expect(panel.element.querySelector('.drawer').style.height).toBe('316px');
         expect(panel.element.querySelector('.drawer').hasAttribute('data-sized')).toBe(true);
         expect(timeline.element.parentElement).toBe(panel.element.querySelector('.drawer'));
+    });
+
+    it('updates contextual Activity when current or parent component frameworks change', () => {
+        const child = document.createElement('div');
+        document.body.appendChild(child);
+        state.set(target, 'stimulus', { data: {} });
+        state.set(child, 'stimulus', { data: {} });
+        panel.drillInto(target);
+        timeline.configure.mockClear();
+
+        state.replace(target, new Map([['livecomponent', { data: {} }]]));
+
+        expect(timeline.configure).toHaveBeenCalledWith({ frameworks: ['livecomponent'] });
+        panel.drillInto(child);
+        timeline.configure.mockClear();
+        state.replace(target, new Map([['turbo', { data: {} }]]));
+        expect(timeline.configure).not.toHaveBeenCalled();
+
+        panel.drillBack();
+
+        expect(timeline.configure).toHaveBeenLastCalledWith({
+            contextual: true,
+            frameworks: ['turbo'],
+            element: target,
+            query: '',
+        });
     });
 
     it('resets both the global Activity search input and its query when reopening Activity', () => {
@@ -268,7 +294,7 @@ describe('Panel', () => {
         expect(panel.element.querySelector('.activity-label').textContent).toBe('Activity');
         expect(timeline.configure).toHaveBeenCalledWith({
             contextual: true,
-            frameworks: null,
+            frameworks: ['stimulus'],
             element: target,
             query: '',
         });

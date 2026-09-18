@@ -19,7 +19,10 @@ export class ActivityDrawer {
     get id(): string | null {
         return this.#id;
     }
-    open(id: string, content: HTMLElement, element: Element | null, query: string): void {
+    updateFrameworks(frameworks: Iterable<string>): void {
+        if (this.#id) this.#timeline.configure({ frameworks });
+    }
+    open(id: string, content: HTMLElement, element: Element | null, query: string, frameworks: Iterable<string>): void {
         this.close(false);
         const drawerId = `component-activity-${id}`;
         const drawer: HTMLElement = el(
@@ -58,7 +61,7 @@ export class ActivityDrawer {
         drawer.prepend(this.#resizeHandle.element);
         this.#drawer = drawer;
         this.#id = id;
-        this.#timeline.configure({ contextual: true, frameworks: null, element, query: element ? '' : query });
+        this.#timeline.configure({ contextual: true, frameworks, element, query: element ? '' : query });
         this.#timeline.expandFirstVisible();
     }
 

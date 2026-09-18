@@ -7,8 +7,8 @@ async function openInspector(page) {
     await page.keyboard.type('ux');
     await inspector.evaluate((host) => host.clearLog());
     await page.evaluate(() => {
-        for (const id of ['probe', 'frame'])
-            document.getElementById(id).dispatchEvent(new CustomEvent('turbo:frame-load', { bubbles: true }));
+        document.getElementById('probe').dispatchEvent(new CustomEvent('probe:change', { bubbles: true }));
+        document.getElementById('frame').dispatchEvent(new CustomEvent('turbo:frame-load', { bubbles: true }));
     });
     return inspector;
 }
