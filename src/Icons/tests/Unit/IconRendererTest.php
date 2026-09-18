@@ -311,6 +311,11 @@ class IconRendererTest extends TestCase
             [],
             '<svg aria-label="foo"><path d="M0 0L12 12"/></svg>',
         ];
+        yield 'omitted aria-label is not a textual alternative' => [
+            '<path d="M0 0L12 12"/>',
+            ['aria-label' => false],
+            '<svg aria-hidden="true"><path d="M0 0L12 12"/></svg>',
+        ];
         yield 'aria-hidden attribute' => [
             '<path d="M0 0L12 12"/>',
             ['aria-hidden' => 'true'],

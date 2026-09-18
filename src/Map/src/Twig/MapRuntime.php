@@ -20,6 +20,7 @@ use Symfony\UX\Map\Polyline;
 use Symfony\UX\Map\Rectangle;
 use Symfony\UX\Map\Renderer\RendererInterface;
 use Twig\Extension\RuntimeExtensionInterface;
+use Twig\Extra\Html\HtmlExtension;
 
 /**
  * @author Simon André <smn.andre@gmail.com>
@@ -55,6 +56,11 @@ final class MapRuntime implements RuntimeExtensionInterface
         ?float $maxZoom = null,
         ?bool $fitBoundsToMarkers = null,
     ): string {
+        foreach ($attributes as $key => $value) {
+            // "false" marks an omitted attribute, as the renderer expects.
+            $attributes[$key] = HtmlExtension::htmlAttrValue($key, $value) ?? false;
+        }
+
         if ($map instanceof Map) {
             if (null !== $center || null !== $zoom || $markers || $polygons || $polylines || $circles || $rectangles || $minZoom || $maxZoom || null !== $fitBoundsToMarkers) {
                 throw new \InvalidArgumentException('It is not allowed to pass both a Map object and other parameters (like "center", "zoom", "markers", etc...) to the "renderMap" method. Please use either a Map object or the individual parameters.');
