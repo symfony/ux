@@ -1,0 +1,25 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2026-08-22T06:18:28Z
+
+Twig 3.29 has been released, today I will rebase this one, migrate some new kits merged in during the last few days
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-08-24T11:58:49Z
+
+Waiting for Twig 3.29, and https://github.com/VincentLanglet/Twig-CS-Fixer/pull/461 for making Fabbot happy
+
+**EDIT:** https://github.com/twigphp/Twig/releases/tag/v3.29.0 \o/
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-09-18T12:44:50Z
+
+PR rebased, conflicts fixed, and new added recipes have been modified to the good format as well
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-09-18T13:07:32Z
+
+~~Opened https://github.com/VincentLanglet/Twig-CS-Fixer/issues/467 to make Fabbot more happier~~ EDIT: was a Fabbot issue, constraint version updated for https://github.com/symfony-tools/fabbot/commit/5928bf5aeb7c7784bef12998c42b04a00fc6eec0
