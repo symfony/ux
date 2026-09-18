@@ -1,0 +1,7 @@
+{# @prop variant 'default'|'secondary'|'destructive'|'outline'|'ghost'|'link' The visual style variant. #}
+{# @prop size 'default'|'xs'|'sm'|'lg'|'icon'|'icon-xs'|'icon-sm'|'icon-lg' The button size. #}
+{# @block content The action label, usually an icon. #}
+{%- props variant = 'ghost', size = 'icon-xs' -%}
+<twig:Button variant="{{ variant }}" size="{{ size }}" data-slot="attachment-action" {{ ...attributes }}>
+    {{- block(outerBlocks.content) -}}
+</twig:Button>

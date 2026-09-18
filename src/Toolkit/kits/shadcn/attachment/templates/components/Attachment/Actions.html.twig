@@ -1,0 +1,9 @@
+{# @block content The actions of the attachment, typically one or more `Attachment:Action`. #}
+<div
+    data-slot="attachment-actions"
+    {{ attributes.defaults({
+        class: 'relative z-20 flex shrink-0 items-center group-data-[orientation=vertical]/attachment:absolute group-data-[orientation=vertical]/attachment:top-3 group-data-[orientation=vertical]/attachment:ltr:right-3 group-data-[orientation=vertical]/attachment:rtl:end-3 group-data-[orientation=vertical]/attachment:gap-1'|tailwind_classes,
+    }) }}
+>
+    {%- block content %}{% endblock -%}
+</div>

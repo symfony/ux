@@ -1,0 +1,54 @@
+<!--
+- Kit: Shadcn UI
+- Component: Attachment
+- Code:
+```twig
+<div class="mx-auto flex w-full max-w-sm flex-col gap-3">
+    <twig:Attachment size="default" class="w-full">
+        <twig:Attachment:Media>
+            <twig:ux:icon name="lucide:file-text" />
+        </twig:Attachment:Media>
+        <twig:Attachment:Content>
+            <twig:Attachment:Title>Default attachment</twig:Attachment:Title>
+            <twig:Attachment:Description>PDF · 2.4 MB</twig:Attachment:Description>
+        </twig:Attachment:Content>
+    </twig:Attachment>
+    <twig:Attachment size="sm" class="w-full">
+        <twig:Attachment:Media>
+            <twig:ux:icon name="lucide:file-text" />
+        </twig:Attachment:Media>
+        <twig:Attachment:Content>
+            <twig:Attachment:Title>Small attachment</twig:Attachment:Title>
+            <twig:Attachment:Description>PDF · 2.4 MB</twig:Attachment:Description>
+        </twig:Attachment:Content>
+    </twig:Attachment>
+    <twig:Attachment size="xs" class="w-full">
+        <twig:Attachment:Media>
+            <twig:ux:icon name="lucide:file-text" />
+        </twig:Attachment:Media>
+        <twig:Attachment:Content>
+            <twig:Attachment:Title>Extra small attachment</twig:Attachment:Title>
+        </twig:Attachment:Content>
+    </twig:Attachment>
+</div>
+```
+- Rendered code (run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="mx-auto flex w-full max-w-sm flex-col gap-3">
+    <div data-slot="attachment" data-state="done" data-size="default" data-orientation="horizontal" class="group/attachment relative flex max-w-full shrink-0 flex-wrap rounded-xl border bg-card text-card-foreground transition-colors focus-within:ring-1 focus-within:ring-ring/50 has-[>a,>button]:hover:bg-muted/50 data-[state=error]:border-destructive/30 data-[state=idle]:border-dashed gap-2 text-sm has-data-[slot=attachment-content]:px-2.5 has-data-[slot=attachment-content]:py-2 has-data-[slot=attachment-media]:p-2 min-w-40 items-center w-full"><div data-slot="attachment-media" data-variant="icon" class="relative flex aspect-square w-10 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-muted text-foreground group-data-[orientation=vertical]/attachment:w-full group-data-[size=sm]/attachment:w-8 group-data-[size=xs]/attachment:w-7 group-data-[size=xs]/attachment:rounded-md group-data-[state=error]/attachment:bg-destructive/10 group-data-[state=error]/attachment:text-destructive group-data-[orientation=vertical]/attachment:*:data-[slot=spinner]:size-6! [&amp;_svg]:pointer-events-none [&amp;_svg:not([class*='size-'])]:size-4 group-data-[orientation=vertical]/attachment:[&amp;_svg:not([class*='size-'])]:size-6 group-data-[size=xs]/attachment:[&amp;_svg:not([class*='size-'])]:size-3.5"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"></path><path d="M14 2v5a1 1 0 0 0 1 1h5M10 9H8m8 4H8m8 4H8"></path></g></svg>
+        </div>
+        <div data-slot="attachment-content" class="max-w-full min-w-0 flex-1 leading-tight group-data-[orientation=vertical]/attachment:px-1"><span data-slot="attachment-title" class="block max-w-full min-w-0 truncate font-medium group-data-[state=processing]/attachment:animate-pulse group-data-[state=uploading]/attachment:animate-pulse">Default attachment</span>
+            <span data-slot="attachment-description" class="mt-0.5 block max-w-full min-w-0 truncate text-xs text-muted-foreground group-data-[state=error]/attachment:text-destructive/80">PDF · 2.4 MB</span>
+        </div>
+    </div>
+    <div data-slot="attachment" data-state="done" data-size="sm" data-orientation="horizontal" class="group/attachment relative flex max-w-full shrink-0 flex-wrap rounded-xl border bg-card text-card-foreground transition-colors focus-within:ring-1 focus-within:ring-ring/50 has-[>a,>button]:hover:bg-muted/50 data-[state=error]:border-destructive/30 data-[state=idle]:border-dashed gap-2.5 text-xs has-data-[slot=attachment-content]:px-2 has-data-[slot=attachment-content]:py-1.5 has-data-[slot=attachment-media]:p-1.5 min-w-40 items-center w-full"><div data-slot="attachment-media" data-variant="icon" class="relative flex aspect-square w-10 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-muted text-foreground group-data-[orientation=vertical]/attachment:w-full group-data-[size=sm]/attachment:w-8 group-data-[size=xs]/attachment:w-7 group-data-[size=xs]/attachment:rounded-md group-data-[state=error]/attachment:bg-destructive/10 group-data-[state=error]/attachment:text-destructive group-data-[orientation=vertical]/attachment:*:data-[slot=spinner]:size-6! [&amp;_svg]:pointer-events-none [&amp;_svg:not([class*='size-'])]:size-4 group-data-[orientation=vertical]/attachment:[&amp;_svg:not([class*='size-'])]:size-6 group-data-[size=xs]/attachment:[&amp;_svg:not([class*='size-'])]:size-3.5"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"></path><path d="M14 2v5a1 1 0 0 0 1 1h5M10 9H8m8 4H8m8 4H8"></path></g></svg>
+        </div>
+        <div data-slot="attachment-content" class="max-w-full min-w-0 flex-1 leading-tight group-data-[orientation=vertical]/attachment:px-1"><span data-slot="attachment-title" class="block max-w-full min-w-0 truncate font-medium group-data-[state=processing]/attachment:animate-pulse group-data-[state=uploading]/attachment:animate-pulse">Small attachment</span>
+            <span data-slot="attachment-description" class="mt-0.5 block max-w-full min-w-0 truncate text-xs text-muted-foreground group-data-[state=error]/attachment:text-destructive/80">PDF · 2.4 MB</span>
+        </div>
+    </div>
+    <div data-slot="attachment" data-state="done" data-size="xs" data-orientation="horizontal" class="group/attachment relative flex max-w-full shrink-0 flex-wrap border bg-card text-card-foreground transition-colors focus-within:ring-1 focus-within:ring-ring/50 has-[>a,>button]:hover:bg-muted/50 data-[state=error]:border-destructive/30 data-[state=idle]:border-dashed gap-1.5 rounded-lg text-xs has-data-[slot=attachment-content]:px-1.5 has-data-[slot=attachment-content]:py-1 has-data-[slot=attachment-media]:p-1 min-w-40 items-center w-full"><div data-slot="attachment-media" data-variant="icon" class="relative flex aspect-square w-10 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-muted text-foreground group-data-[orientation=vertical]/attachment:w-full group-data-[size=sm]/attachment:w-8 group-data-[size=xs]/attachment:w-7 group-data-[size=xs]/attachment:rounded-md group-data-[state=error]/attachment:bg-destructive/10 group-data-[state=error]/attachment:text-destructive group-data-[orientation=vertical]/attachment:*:data-[slot=spinner]:size-6! [&amp;_svg]:pointer-events-none [&amp;_svg:not([class*='size-'])]:size-4 group-data-[orientation=vertical]/attachment:[&amp;_svg:not([class*='size-'])]:size-6 group-data-[size=xs]/attachment:[&amp;_svg:not([class*='size-'])]:size-3.5"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"></path><path d="M14 2v5a1 1 0 0 0 1 1h5M10 9H8m8 4H8m8 4H8"></path></g></svg>
+        </div>
+        <div data-slot="attachment-content" class="max-w-full min-w-0 flex-1 leading-tight group-data-[orientation=vertical]/attachment:px-1"><span data-slot="attachment-title" class="block max-w-full min-w-0 truncate font-medium group-data-[state=processing]/attachment:animate-pulse group-data-[state=uploading]/attachment:animate-pulse">Extra small attachment</span>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,9 @@
+{# @block content The attachment name. #}
+<span
+    data-slot="attachment-title"
+    {{ attributes.defaults({
+        class: 'block max-w-full min-w-0 truncate font-medium group-data-[state=processing]/attachment:animate-pulse group-data-[state=uploading]/attachment:animate-pulse'|tailwind_classes,
+    }) }}
+>
+    {%- block content %}{% endblock -%}
+</span>

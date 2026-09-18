@@ -1,0 +1,9 @@
+{# @block content The grouped attachments, typically multiple `Attachment` components. #}
+<div
+    data-slot="attachment-group"
+    {{ attributes.defaults({
+        class: 'flex min-w-0 snap-x snap-mandatory scroll-px-1 no-scrollbar gap-3 overflow-x-auto overscroll-x-contain py-1 *:data-[slot=attachment]:flex-none *:data-[slot=attachment]:snap-start'|tailwind_classes,
+    }) }}
+>
+    {%- block content %}{% endblock -%}
+</div>
