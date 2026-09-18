@@ -6,6 +6,7 @@
 - [Shadcn] Add the `login-01` and `login-02` login blocks
 - [Shadcn] Add `attachment` recipe
 - [Shadcn] Add `bubble` recipe
+- [Shadcn] Add `calendar` recipe
 - [Shadcn] Add `carousel` recipe
 - [Shadcn] Add `drawer` recipe
 - [Shadcn] Add `dropdown-menu` recipe

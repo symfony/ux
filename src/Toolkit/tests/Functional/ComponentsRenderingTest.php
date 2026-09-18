@@ -35,6 +35,23 @@ class ComponentsRenderingTest extends WebTestCase
 
     private const KITS_DIR = __DIR__.'/../../kits';
 
+    private string $initialDefaultLocale;
+
+    protected function setUp(): void
+    {
+        $this->initialDefaultLocale = \Locale::getDefault();
+        // No request is pushed here, so "format_date" falls back to the contributor's system
+        // locale, which would render the calendar examples in their language.
+        \Locale::setDefault('en');
+    }
+
+    protected function tearDown(): void
+    {
+        \Locale::setDefault($this->initialDefaultLocale);
+
+        parent::tearDown();
+    }
+
     /**
      * @return iterable<string, string, string>
      */

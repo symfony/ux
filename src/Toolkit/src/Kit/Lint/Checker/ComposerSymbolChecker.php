@@ -52,6 +52,7 @@ final class ComposerSymbolChecker implements KitCheckerInterface
         'html_attr_merge' => ['twig/extra-bundle' => null, 'twig/html-extra' => '3.24'],
         'tailwind_merge' => ['tales-from-a-dev/twig-tailwind-extra' => null],
         'tailwind_classes' => ['tales-from-a-dev/twig-tailwind-extra' => '1.3', 'twig/html-extra' => '3.24', 'symfony/ux-twig-component' => '3.5'],
+        'format_date' => ['twig/extra-bundle' => null, 'twig/intl-extra' => null],
         'ux_icon' => ['symfony/ux-icons' => null],
         '<twig:ux:icon' => ['symfony/ux-icons' => null],
         '<twig:ux:map' => ['symfony/ux-map' => null],
