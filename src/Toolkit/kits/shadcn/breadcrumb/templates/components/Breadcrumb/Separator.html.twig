@@ -1,4 +1,3 @@
-{# @block content The separator icon between breadcrumb items, defaults to a chevron. #}
 <li
     data-slot="breadcrumb-separator"
     role="presentation"
@@ -7,6 +6,7 @@
         class: '[&>svg]:size-3.5'|tailwind_classes,
     }) }}
 >
+    {##- The separator icon between breadcrumb items, defaults to a chevron. -#}
     {%- block content -%}
         <twig:ux:icon name="lucide:chevron-right" class="rtl:rotate-180" />
     {%- endblock %}

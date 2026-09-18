@@ -1,7 +1,9 @@
-{# @prop side 'top'|'bottom' The side of the bubble the reactions are anchored to. #}
-{# @prop align 'start'|'end' The inline alignment of the reactions. #}
-{# @block content The reactions, typically emoji or small action buttons. #}
-{%- props side = 'bottom', align = 'end' -%}
+{%- props
+    ## 'top'|'bottom' The side of the bubble the reactions are anchored to.
+    side = 'bottom',
+    ## 'start'|'end' The inline alignment of the reactions.
+    align = 'end'
+-%}
 {%- set style = html_cva(
     base: 'absolute z-10 flex w-fit shrink-0 items-center justify-center gap-1 rounded-full bg-muted px-1.5 py-0.5 text-sm ring-3 ring-card has-[button]:p-0',
     variants: {
@@ -23,5 +25,6 @@
         class: style.apply({side: side, align: align})|tailwind_classes,
     }) }}
 >
+    {##- The reactions, typically emoji or small action buttons. -#}
     {%- block content %}{% endblock -%}
 </div>

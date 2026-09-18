@@ -1,7 +1,11 @@
-{# @prop variant 'default'|'secondary'|'destructive'|'outline'|'ghost'|'link' The button style variant. #}
-{# @prop size 'default'|'xs'|'sm'|'lg'|'icon'|'icon-xs'|'icon-sm'|'icon-lg' The button size. #}
-{# @prop text string The accessible label of the button. #}
-{%- props variant = 'outline', size = 'icon-sm', text = 'Previous slide' -%}
+{%- props
+    ## 'default'|'secondary'|'destructive'|'outline'|'ghost'|'link' The button style variant.
+    variant = 'outline',
+    ## 'default'|'xs'|'sm'|'lg'|'icon'|'icon-xs'|'icon-sm'|'icon-lg' The button size.
+    size = 'icon-sm',
+    ## string The accessible label of the button.
+    text = 'Previous slide'
+-%}
 {%- set _carousel_orientation = inject('carousel.orientation', 'horizontal') -%}
 {%- set _carousel_loop = inject('carousel.loop', false) -%}
 <twig:Button

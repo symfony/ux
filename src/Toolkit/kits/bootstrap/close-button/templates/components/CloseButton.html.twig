@@ -1,6 +1,9 @@
-{# @prop disabled boolean Whether the close button is disabled. #}
-{# @prop label string The accessible label describing the close action. #}
-{%- props disabled = false, label = 'Close'|trans -%}
+{%- props
+    ## boolean Whether the close button is disabled.
+    disabled = false,
+    ## string The accessible label describing the close action.
+    label = 'Close'|trans
+-%}
 {%- set default_attrs = {
     type: 'button',
     class: 'btn-close',

@@ -1,7 +1,9 @@
-{# @prop for string Id of the `Sidebar:Provider` to control. Defaults to the id of the surrounding provider. #}
-{# @prop label string Accessible label announced for the trigger. #}
-{# @block content The trigger's icon (typically a `lucide:panel-left`). #}
-{%- props for = null, label = 'Toggle Sidebar' -%}
+{%- props
+    ## string Id of the `Sidebar:Provider` to control. Defaults to the id of the surrounding provider.
+    for = null,
+    ## string Accessible label announced for the trigger.
+    label = 'Toggle Sidebar'
+-%}
 {%- set _sidebar_for = for ?? inject('sidebar.id', null) -%}
 {%- set _sidebar_initial_open = inject('sidebar.defaultOpen', true) -%}
 <button
@@ -15,5 +17,6 @@
         'data-action': 'click->sidebar#toggle',
     }) }}
 >
+    {##- The trigger's icon (typically a `lucide:panel-left`). -#}
     {%- block content %}{% endblock -%}
 </button>

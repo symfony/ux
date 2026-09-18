@@ -10,7 +10,7 @@ jobs:
         name: Fabbot
         permissions:
             contents: read
-        uses: symfony-tools/fabbot/.github/workflows/fabbot.yml@93bbf91e340fd0b35d12e412c82a3a927465050e # main
+        uses: symfony-tools/fabbot/.github/workflows/fabbot.yml@5928bf5aeb7c7784bef12998c42b04a00fc6eec0 # main
         with:
             package: Symfony UX
             check_license: true

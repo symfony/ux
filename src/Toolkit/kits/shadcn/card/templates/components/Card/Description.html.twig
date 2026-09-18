@@ -1,9 +1,9 @@
-{# @block content The descriptive text of the card. #}
 <div
     data-slot="card-description"
     {{ attributes.defaults({
         class: 'text-sm text-muted-foreground'|tailwind_classes,
     }) }}
 >
+    {##- The descriptive text of the card. -#}
     {%- block content %}{% endblock -%}
 </div>

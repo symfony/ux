@@ -1,4 +1,3 @@
-{# @block content The current page text (non-clickable). #}
 <span
     data-slot="breadcrumb-page"
     role="link"
@@ -8,5 +7,6 @@
         class: 'font-normal text-foreground'|tailwind_classes,
     }) }}
 >
+    {##- The current page text (non-clickable). -#}
     {%- block content %}{% endblock -%}
 </span>

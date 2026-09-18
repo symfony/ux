@@ -29,6 +29,11 @@ final class DeclaredProp
          * Null when the prop has no default (i.e. it is required).
          */
         public readonly ?string $default = null,
+        /**
+         * The raw `## <type> <description>` documentation attached to the prop (Twig 3.29+),
+         * or null when the prop carries no documentation comment.
+         */
+        public readonly ?string $documentation = null,
     ) {
     }
 }

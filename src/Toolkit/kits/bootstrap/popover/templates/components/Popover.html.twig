@@ -1,18 +1,17 @@
-{# @prop title string|null The optional heading displayed in the popover. #}
-{# @prop content string The popover body content. #}
-{# @prop placement 'top'|'right'|'bottom'|'left'|'auto' The preferred placement relative to the trigger. #}
-{# @prop trigger string The Bootstrap interaction or space-separated interactions that open and close the popover. #}
-{# @prop html boolean Whether the popover body may contain sanitized HTML. #}
-{# @prop container string|null The optional selector of the element that receives the generated popover. #}
-{# @prop customClass string|null The optional class added to the generated popover. #}
-{# @block content The trigger element, which must render `popover_trigger_attrs` with `html_attr()`. #}
 {%- props
+    ## string|null The optional heading displayed in the popover.
     title = null,
+    ## string The popover body content.
     content = '',
+    ## 'top'|'right'|'bottom'|'left'|'auto' The preferred placement relative to the trigger.
     placement = 'right',
+    ## string The Bootstrap interaction or space-separated interactions that open and close the popover.
     trigger = 'click',
+    ## boolean Whether the popover body may contain sanitized HTML.
     html = false,
+    ## string|null The optional selector of the element that receives the generated popover.
     container = null,
+    ## string|null The optional class added to the generated popover.
     customClass = null
 -%}
 {%- set popover_trigger_attrs = {
@@ -39,4 +38,5 @@
 {%- if customClass is not null and customClass is not empty -%}
     {%- set popover_trigger_attrs = popover_trigger_attrs|merge({'data-bs-custom-class': customClass}) -%}
 {%- endif -%}
+{##- The trigger element, which must render `popover_trigger_attrs` with `html_attr()`. -#}
 {%- block content %}{% endblock -%}

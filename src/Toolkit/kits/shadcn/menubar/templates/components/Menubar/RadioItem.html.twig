@@ -1,8 +1,11 @@
-{# @prop name string|null The radio form field name. Falls back to the parent `Menubar:RadioGroup`'s `name` when omitted. #}
-{# @prop value string The value submitted when this radio is selected. #}
-{# @prop checked boolean Whether this radio is initially checked. #}
-{# @block content The label text. #}
-{%- props name = null, value = '', checked = false -%}
+{%- props
+    ## string|null The radio form field name. Falls back to the parent `Menubar:RadioGroup`'s `name` when omitted.
+    name = null,
+    ## string The value submitted when this radio is selected.
+    value = '',
+    ## boolean Whether this radio is initially checked.
+    checked = false
+-%}
 {%- set _menubar_radioGroupName = name ?? inject('menubar.radioGroupName', null) -%}
 <label
     data-slot="menubar-radio-item"
@@ -14,5 +17,6 @@
     <span class="absolute start-2 flex size-4 items-center justify-center opacity-0 peer-checked:opacity-100">
         <twig:ux:icon name="lucide:circle" class="size-2 fill-current" aria-hidden="true" />
     </span>
+    {##- The label text. -#}
     {%- block content %}{% endblock -%}
 </label>

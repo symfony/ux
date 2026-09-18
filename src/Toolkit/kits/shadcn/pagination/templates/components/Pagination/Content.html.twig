@@ -1,7 +1,7 @@
-{# @block content The pagination items, typically multiple `Pagination:Item` components. #}
 <ul
     data-slot="pagination-content"
     {{ attributes.defaults({class: 'flex items-center gap-0.5'|tailwind_classes}) }}
 >
+    {##- The pagination items, typically multiple `Pagination:Item` components. -#}
     {%- block content %}{% endblock -%}
 </ul>

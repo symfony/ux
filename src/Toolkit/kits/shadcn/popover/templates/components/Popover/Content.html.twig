@@ -1,7 +1,9 @@
-{# @prop side 'top'|'right'|'bottom'|'left' Which side of the trigger the content appears on. #}
-{# @prop align 'start'|'center'|'end' Alignment of the content along the cross axis. #}
-{# @block content The content revealed when the popover is open. #}
-{%- props side = 'bottom', align = 'center' -%}
+{%- props
+    ## 'top'|'right'|'bottom'|'left' Which side of the trigger the content appears on.
+    side = 'bottom',
+    ## 'start'|'center'|'end' Alignment of the content along the cross axis.
+    align = 'center'
+-%}
 {%- set _popover_open = inject('popover.open', false) -%}
 {%- set style = html_cva(
     base: 'invisible scale-95 opacity-0 transition-[opacity,scale,visibility] duration-150 ease-out group-data-[state=open]/popover:visible group-data-[state=open]/popover:scale-100 group-data-[state=open]/popover:opacity-100 absolute z-50 w-72 rounded-md border bg-popover p-4 text-sm text-popover-foreground shadow-md outline-none',
@@ -34,5 +36,6 @@
         class: style.apply({side: side, align: align})|tailwind_classes,
     }) }}
 >
+    {##- The content revealed when the popover is open. -#}
     {%- block content %}{% endblock -%}
 </div>

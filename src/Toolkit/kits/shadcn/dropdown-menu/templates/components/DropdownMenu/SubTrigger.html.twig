@@ -1,6 +1,7 @@
-{# @prop inset boolean Whether the trigger is inset with extra start padding. #}
-{# @block content The sub-menu trigger label. #}
-{%- props inset = false -%}
+{%- props
+    ## boolean Whether the trigger is inset with extra start padding.
+    inset = false
+-%}
 {%- set style = html_cva(
     base: 'relative flex w-full cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[state=open]:bg-accent data-[state=open]:text-accent-foreground [&_svg:not([class*=size-])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0',
     variants: {
@@ -23,6 +24,7 @@
         'data-action': 'mouseenter->dropdown-menu-sub#show focus->dropdown-menu-sub#show blur->dropdown-menu-sub#hide',
     }) }}
 >
+    {##- The sub-menu trigger label. -#}
     {%- block content %}{% endblock -%}
     <twig:ux:icon name="lucide:chevron-right" class="ms-auto size-4 rtl:rotate-180" aria-hidden="true" />
 </button>

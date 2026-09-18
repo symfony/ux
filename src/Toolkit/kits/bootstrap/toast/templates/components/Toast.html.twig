@@ -1,16 +1,15 @@
-{# @prop show boolean Whether the toast is visible on initial render. #}
-{# @prop autohide boolean Whether Bootstrap hides the toast automatically. #}
-{# @prop delay int|null The delay in milliseconds before an autohiding toast closes. #}
-{# @prop animation boolean Whether Bootstrap animates the toast. #}
-{# @prop role 'status'|'alert' The accessibility role that describes the notification urgency. #}
-{# @prop live 'polite'|'assertive' The live region politeness level. #}
-{# @block content The toast structure, typically `Toast:Header` and `Toast:Body`. #}
 {%- props
+    ## boolean Whether the toast is visible on initial render.
     show = true,
+    ## boolean Whether Bootstrap hides the toast automatically.
     autohide = true,
+    ## int|null The delay in milliseconds before an autohiding toast closes.
     delay = null,
+    ## boolean Whether Bootstrap animates the toast.
     animation = true,
+    ## 'status'|'alert' The accessibility role that describes the notification urgency.
     role = 'status',
+    ## 'polite'|'assertive' The live region politeness level.
     live = 'polite'
 -%}
 {%- set final_role = role in ['status', 'alert'] ? role : 'status' -%}
@@ -35,5 +34,6 @@
     {%- set default_attrs = default_attrs|merge({'data-bs-animation': 'false'}) -%}
 {%- endif -%}
 <div {{ attributes.defaults(default_attrs) }}>
+    {##- The toast structure, typically `Toast:Header` and `Toast:Body`. -#}
     {%- block content %}{% endblock -%}
 </div>

@@ -1,8 +1,11 @@
-{# @prop type 'button'|'submit' The button type. #}
-{# @prop variant 'default'|'secondary'|'destructive'|'outline'|'ghost'|'link' The visual style variant. #}
-{# @prop size 'default'|'sm'|'lg'|'icon'|'icon-sm'|'icon-lg' The button size. #}
-{# @block content The button label and/or icon. #}
-{%- props type = 'button', variant = 'ghost', size = 'xs' -%}
+{%- props
+    ## 'button'|'submit' The button type.
+    type = 'button',
+    ## 'default'|'secondary'|'destructive'|'outline'|'ghost'|'link' The visual style variant.
+    variant = 'ghost',
+    ## 'default'|'sm'|'lg'|'icon'|'icon-sm'|'icon-lg' The button size.
+    size = 'xs'
+-%}
 {%- set style = html_cva(
     base: 'flex items-center gap-2 text-sm shadow-none',
     variants: {
@@ -20,5 +23,6 @@
     size="{{ size }}"
     {{ ...attributes.defaults({class: style.apply({size: size})|tailwind_classes}) }}
 >
+    {##- The button label and/or icon. -#}
     {{- block(outerBlocks.content) -}}
 </twig:Button>

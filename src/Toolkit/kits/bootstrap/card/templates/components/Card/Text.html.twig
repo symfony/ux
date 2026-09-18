@@ -1,7 +1,9 @@
-{# @prop tag 'p'|'div' The HTML element to render. #}
-{# @block content The supporting text of the card. #}
-{%- props tag = 'p' -%}
+{%- props
+    ## 'p'|'div' The HTML element to render.
+    tag = 'p'
+-%}
 {%- set final_tag = tag == 'div' ? 'div' : 'p' -%}
 <{{ final_tag }} {{ attributes.defaults({class: 'card-text'}) }}>
+    {##- The supporting text of the card. -#}
     {%- block content %}{% endblock -%}
 </{{ final_tag }}>

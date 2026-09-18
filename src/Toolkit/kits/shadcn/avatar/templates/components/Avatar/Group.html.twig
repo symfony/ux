@@ -1,9 +1,9 @@
-{# @block content The grouped avatars, typically multiple `Avatar` components. #}
 <div
     data-slot="avatar-group"
     {{ attributes.defaults({
         class: '*:data-[slot=avatar]:ring-background group/avatar-group flex -space-x-2 *:data-[slot=avatar]:ring-2'|tailwind_classes,
     }) }}
 >
+    {##- The grouped avatars, typically multiple `Avatar` components. -#}
     {%- block content %}{% endblock -%}
 </div>

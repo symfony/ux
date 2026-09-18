@@ -1,9 +1,13 @@
-{# @prop id string Unique identifier for the Accordion. #}
-{# @prop multiple boolean Whether multiple items can be opened at once. #}
-{# @prop defaultValue string|array<string>|null Value(s) of the item(s) to open by default. #}
-{# @prop orientation 'vertical'|'horizontal' The visual orientation, controls whether keyboard navigation uses up/down or left/right arrow keys. #}
-{# @block content The accordion items, typically multiple `Accordion:Item` components. #}
-{%- props id, multiple = false, defaultValue = null, orientation = 'vertical' -%}
+{%- props
+    ## string Unique identifier for the Accordion.
+    id,
+    ## boolean Whether multiple items can be opened at once.
+    multiple = false,
+    ## string|array<string>|null Value(s) of the item(s) to open by default.
+    defaultValue = null,
+    ## 'vertical'|'horizontal' The visual orientation, controls whether keyboard navigation uses up/down or left/right arrow keys.
+    orientation = 'vertical'
+-%}
 {%- do provide('accordion.id', id) -%}
 {%- do provide('accordion.orientation', orientation) -%}
 {%- do provide('accordion.defaultValue', defaultValue) -%}
@@ -18,5 +22,6 @@
         'data-controller': 'accordion',
     }) }}
 >
+    {##- The accordion items, typically multiple `Accordion:Item` components. -#}
     {%- block content %}{% endblock -%}
 </div>

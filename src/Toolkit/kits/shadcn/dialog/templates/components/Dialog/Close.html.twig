@@ -1,6 +1,6 @@
-{# @block content The close trigger element (e.g., a `Button`) that closes the dialog when clicked. #}
 {%- set dialog_close_attrs = {
     'data-slot': 'dialog-close',
     'data-action': 'click->dialog#close'|html_attr_type('sst'),
 } -%}
+{##- The close trigger element (e.g., a `Button`) that closes the dialog when clicked. -#}
 {%- block content %}{% endblock -%}

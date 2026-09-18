@@ -1,10 +1,9 @@
-{# @prop color 'primary'|'secondary'|'success'|'danger'|'warning'|'info'|'light'|'dark' The Bootstrap contextual color. #}
-{# @prop pill boolean Whether to use Bootstrap's rounded pill style. #}
-{# @prop label string The fallback badge text when no content block is provided. #}
-{# @block content The badge text and optional inline content. #}
 {%- props
+    ## 'primary'|'secondary'|'success'|'danger'|'warning'|'info'|'light'|'dark' The Bootstrap contextual color.
     color = 'primary',
+    ## boolean Whether to use Bootstrap's rounded pill style.
     pill = false,
+    ## string The fallback badge text when no content block is provided.
     label = ''
 -%}
 
@@ -15,6 +14,7 @@
 }) -%}
 
 <span {{ attributes.defaults({class: classes}) }}>
+    {##- The badge text and optional inline content. -#}
     {%- block content -%}
         {{- label -}}
     {%- endblock -%}

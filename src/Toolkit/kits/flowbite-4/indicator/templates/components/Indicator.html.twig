@@ -1,7 +1,9 @@
-{# @prop variant 'brand'|'gray'|'danger'|'success'|'warning' The visual style variant. #}
-{# @prop size 'default'|'lg' The badge size. #}
-{# @block content The value. #}
-{%- props variant = 'brand', size = 'default' -%}
+{%- props
+    ## 'brand'|'gray'|'danger'|'success'|'warning' The visual style variant.
+    variant = 'brand',
+    ## 'default'|'lg' The badge size.
+    size = 'default'
+-%}
 {%- set style = html_cva(
     base: 'inline-flex items-center justify-center text-xs font-bold rounded-full',
     variants: {
@@ -24,5 +26,6 @@
         class: style.apply({variant: variant, size: size})|tailwind_classes,
     }) }}
 >
+    {##- The value. -#}
     {%- block content %}{% endblock -%}
 </span>

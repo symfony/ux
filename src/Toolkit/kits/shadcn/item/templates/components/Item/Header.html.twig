@@ -1,9 +1,9 @@
-{# @block content The header area, typically contains title and actions. #}
 <div
     data-slot="item-header"
     {{ attributes.defaults({
         class: 'flex basis-full items-center justify-between gap-2'|tailwind_classes,
     }) }}
 >
+    {##- The header area, typically contains title and actions. -#}
     {%- block content %}{% endblock -%}
 </div>

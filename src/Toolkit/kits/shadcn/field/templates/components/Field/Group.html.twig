@@ -1,9 +1,9 @@
-{# @block content The grouped fields, typically multiple `Field` components. #}
 <div
     data-slot="field-group"
     {{ attributes.defaults({
         class: 'group/field-group @container/field-group flex w-full flex-col gap-5 data-[slot=checkbox-group]:gap-3 *:data-[slot=field-group]:gap-4'|tailwind_classes,
     }) }}
 >
+    {##- The grouped fields, typically multiple `Field` components. -#}
     {%- block content %}{% endblock -%}
 </div>

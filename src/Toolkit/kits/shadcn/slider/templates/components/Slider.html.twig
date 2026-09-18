@@ -1,12 +1,21 @@
-{# @prop min int The minimum value. #}
-{# @prop max int The maximum value. #}
-{# @prop step int The step between two adjacent values. #}
-{# @prop value int|string|array A single value, a comma-separated string, or an array of values (one per thumb). #}
-{# @prop orientation 'horizontal'|'vertical' The slider orientation. #}
-{# @prop disabled bool Whether the slider is disabled. #}
-{# @prop name string The form field name. If multiple thumbs, `[]` is appended. #}
-{# @prop labels string|array A label per thumb (comma-separated string or array). When omitted, single-thumb sliders fall back to `Slider` and multi-thumb sliders fall back to `Slider thumb X of Y`. #}
-{%- props min = 0, max = 100, step = 1, value = null, orientation = 'horizontal', disabled = false, name = null, labels = null -%}
+{%- props
+    ## int The minimum value.
+    min = 0,
+    ## int The maximum value.
+    max = 100,
+    ## int The step between two adjacent values.
+    step = 1,
+    ## int|string|array A single value, a comma-separated string, or an array of values (one per thumb).
+    value = null,
+    ## 'horizontal'|'vertical' The slider orientation.
+    orientation = 'horizontal',
+    ## bool Whether the slider is disabled.
+    disabled = false,
+    ## string The form field name. If multiple thumbs, `[]` is appended.
+    name = null,
+    ## string|array A label per thumb (comma-separated string or array). When omitted, single-thumb sliders fall back to `Slider` and multi-thumb sliders fall back to `Slider thumb X of Y`.
+    labels = null
+-%}
 {%- if value is null -%}{%- set value = min -%}{%- endif -%}
 {%- set _raw_values = value is iterable ? value : value|split(',') -%}
 {%- set values = [] -%}

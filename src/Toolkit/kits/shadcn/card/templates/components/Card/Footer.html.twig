@@ -1,9 +1,9 @@
-{# @block content The footer area, typically contains actions or additional information. #}
 <div
     data-slot="card-footer"
     {{ attributes.defaults({
         class: 'flex items-center rounded-b-xl border-t bg-muted/50 p-4 group-data-[size=sm]/card:p-3'|tailwind_classes,
     }) }}
 >
+    {##- The footer area, typically contains actions or additional information. -#}
     {%- block content %}{% endblock -%}
 </div>

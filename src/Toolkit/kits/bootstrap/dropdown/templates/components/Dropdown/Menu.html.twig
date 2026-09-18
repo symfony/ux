@@ -1,9 +1,13 @@
-{# @prop tag 'ul'|'div'|'form' The menu container element to render. #}
-{# @prop dark boolean Whether to use Bootstrap's dark menu variant. #}
-{# @prop align string|array<string>|null One or more Bootstrap alignment suffixes, such as `end` or `lg-end`. #}
-{# @prop labelledBy string|null The identifier of the toggle that labels the menu. #}
-{# @block content The dropdown menu items and custom content. #}
-{%- props tag = 'ul', dark = false, align = null, labelledBy = null -%}
+{%- props
+    ## 'ul'|'div'|'form' The menu container element to render.
+    tag = 'ul',
+    ## boolean Whether to use Bootstrap's dark menu variant.
+    dark = false,
+    ## string|array<string>|null One or more Bootstrap alignment suffixes, such as `end` or `lg-end`.
+    align = null,
+    ## string|null The identifier of the toggle that labels the menu.
+    labelledBy = null
+-%}
 {%- set final_tag = tag in ['ul', 'div', 'form'] ? tag : 'ul' -%}
 {%- set menu_classes = html_classes({
     'dropdown-menu': true,
@@ -21,5 +25,6 @@
     {%- set default_attrs = default_attrs|merge({'aria-labelledby': labelledBy}) -%}
 {%- endif -%}
 <{{ final_tag }} {{ attributes.defaults(default_attrs) }}>
+    {##- The dropdown menu items and custom content. -#}
     {%- block content %}{% endblock -%}
 </{{ final_tag }}>

@@ -70,9 +70,10 @@ final class PropsDeclarationParser
 
         $props = [];
         foreach ($propsNode->getAttribute('names') as $name) {
+            $documentation = $propsNode->getPropDocumentation($name);
             $props[] = $propsNode->hasNode($name)
-                ? new DeclaredProp($name, true, $this->renderDefault($propsNode->getNode($name)))
-                : new DeclaredProp($name, false);
+                ? new DeclaredProp($name, true, $this->renderDefault($propsNode->getNode($name)), $documentation)
+                : new DeclaredProp($name, false, null, $documentation);
         }
 
         return new PropsDeclaration($props);

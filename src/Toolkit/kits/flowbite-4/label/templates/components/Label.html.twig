@@ -1,6 +1,7 @@
-{# @prop variant 'default'|'invalid' The visual style variant. #}
-{# @block content The label text for a form control. #}
-{%- props variant = 'default' -%}
+{%- props
+    ## 'default'|'invalid' The visual style variant.
+    variant = 'default'
+-%}
 {%- set style = html_cva(
     base: 'block text-sm font-medium',
     variants: {
@@ -15,5 +16,6 @@
         class: style.apply({variant: variant})|tailwind_classes,
     }) }}
 >
+    {##- The label text for a form control. -#}
     {%- block content %}{% endblock -%}
 </label>

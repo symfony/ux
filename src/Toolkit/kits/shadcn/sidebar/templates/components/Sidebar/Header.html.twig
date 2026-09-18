@@ -1,9 +1,9 @@
-{# @block content The sidebar header content. #}
 <div
     data-slot="sidebar-header"
     {{ attributes.defaults({
         class: 'flex flex-col gap-2 p-2'|tailwind_classes,
     }) }}
 >
+    {##- The sidebar header content. -#}
     {%- block content %}{% endblock -%}
 </div>

@@ -1,14 +1,13 @@
-{# @prop active boolean Whether the item represents the current page. #}
-{# @prop disabled boolean Whether the item is unavailable for interaction. #}
-{# @prop href string|null The destination of the page link. #}
-{# @prop label string The fallback item label when no content block is provided. #}
-{# @prop ariaLabel string|null The accessible label for the page link. #}
-{# @block content The page link content. #}
 {%- props
+    ## boolean Whether the item represents the current page.
     active = false,
+    ## boolean Whether the item is unavailable for interaction.
     disabled = false,
+    ## string|null The destination of the page link.
     href = null,
+    ## string The fallback item label when no content block is provided.
     label = '',
+    ## string|null The accessible label for the page link.
     ariaLabel = null
 -%}
 
@@ -19,6 +18,7 @@
 <li {{ attributes.defaults({class: item_classes}) }}>
     {%- if href is not null and not disabled -%}
         <a class="page-link" href="{{ href }}"{% if ariaLabel is not null %} aria-label="{{ ariaLabel }}"{% endif %}{% if active %} aria-current="page"{% endif %}>
+            {##- The page link content. -#}
             {%- block content -%}{{- label -}}{%- endblock -%}
         </a>
     {%- else -%}
