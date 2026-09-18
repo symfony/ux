@@ -1,0 +1,37 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2026-09-16T19:25:01Z
+
+> Should it be handled at all ?
+
+I'm very not sure. If `example.com//foo` is a valid URI, it also means it is different from `example.com/foo` so I am not sure why we should handle one for the other.
+
+Now, to be honest, this should be something dealt with 301 redirection on the server side (as I see it)
+
+So i'm not sure we want to add maintenance surface here ... wdyt ?
+
+---------------------------------------------------------------------------
+
+by mbuliard at 2026-09-16T20:13:50Z
+
+> So i'm not sure we want to add maintenance surface here ... wdyt ?
+
+I would keep the change from `parse_url` to `explode`, as Symfony did it and it adds no surface.
+But handling the double slashes seems out of scope. While the RFC allows it, Symfony do not allow a route with it, so it should not happen.
+
+> A pattern must start with a slash and must not have multiple slashes at the beginning because the generated path for this route would be confused with a network path, e.g. '//domain.com/path'.
+> src/LiveComponent/vendor/symfony/routing/Route.php:113
+
+---------------------------------------------------------------------------
+
+by mbuliard at 2026-09-17T14:40:35Z
+
+The PR is updated to reduce the change to "`parse_url` to `explode`" and not handle more
+
+---------------------------------------------------------------------------
+
+by smnandre at 2026-09-17T16:25:08Z
+
+Thank you @mbuliard !  On my side, i'm 👍
+
+@Kocal @kbond do you agree with the orientation / decisions there?
