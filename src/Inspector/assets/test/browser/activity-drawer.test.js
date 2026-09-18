@@ -1,11 +1,16 @@
 import { test, expect } from '@playwright/test';
 
 async function capture(page, target, count = 1) {
-    await page.locator(target).evaluate((element, count) => {
-        for (let i = 0; i < count; i++) {
-            element.dispatchEvent(new CustomEvent('turbo:frame-load', { bubbles: true }));
-        }
-    }, count);
+    const selectors = Array.isArray(target) ? target : [target];
+    await page.locator('body').evaluate(
+        (_, { selectors, count }) => {
+            const elements = selectors.map((selector) => document.querySelector(selector));
+            for (let i = 0; i < count; i++) {
+                elements[i % elements.length].dispatchEvent(new CustomEvent('turbo:frame-load', { bubbles: true }));
+            }
+        },
+        { selectors, count }
+    );
 }
 
 test('component activity grows with visible events, caps, and preserves manual resizing', async ({ page }) => {
@@ -64,4 +69,20 @@ test('component activity grows with visible events, caps, and preserves manual r
     for (let i = 0; i < 60; i++) await handle.press('ArrowUp');
     expect(await height()).toBeLessThanOrEqual(layout.available - 6 * layout.rootFont + 1);
     await expect(handle).toBeFocused();
+});
+
+test('global activity scrolls independently inside the panel', async ({ page }) => {
+    await page.goto('/a');
+    const inspector = page.locator('ux-inspector');
+    await expect(inspector).toHaveAttribute('ready', '');
+    await page.keyboard.type('ux');
+    await inspector.evaluate((element) => element.clearLog());
+    await capture(page, ['#frame', '#probe'], 120);
+    await inspector.getByRole('button', { name: /^Show activity/ }).click();
+    const timeline = inspector.locator('#panel-activity .timeline');
+
+    await expect(timeline.locator('.event')).toHaveCount(100);
+    expect(await timeline.evaluate((element) => element.scrollHeight > element.clientHeight)).toBe(true);
+    await timeline.evaluate((element) => (element.scrollTop = 100));
+    expect(await timeline.evaluate((element) => element.scrollTop)).toBeGreaterThan(0);
 });

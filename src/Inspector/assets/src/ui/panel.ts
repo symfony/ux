@@ -104,6 +104,7 @@ export class Panel {
         this.#activityPanel = el(
             'section',
             {
+                class: 'pane',
                 id: 'panel-activity',
                 hidden: true,
                 role: 'region',

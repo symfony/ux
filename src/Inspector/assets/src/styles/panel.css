@@ -269,6 +269,10 @@
     background: var(--surface);
 }
 
+#panel-activity {
+    height: 100%;
+}
+
 :where(.stack-body, .timeline) {
     scrollbar-color: var(--scroll-thumb) transparent;
     scrollbar-width: thin;
