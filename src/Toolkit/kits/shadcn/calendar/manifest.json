@@ -1,0 +1,21 @@
+{
+    "$schema": "../../../schema-kit-recipe-v1.json",
+    "type": "component",
+    "name": "Calendar",
+    "version-added": "3.5",
+    "copy-files": {
+        "assets/": "assets/",
+        "templates/": "templates/"
+    },
+    "dependencies": {
+        "recipe": ["button"],
+        "composer": [
+            "twig/extra-bundle",
+            "twig/html-extra:^3.24.0",
+            "twig/intl-extra",
+            "symfony/ux-icons",
+            "symfony/ux-twig-component:^3.5",
+            "tales-from-a-dev/twig-tailwind-extra:^1.3.0"
+        ]
+    }
+}
