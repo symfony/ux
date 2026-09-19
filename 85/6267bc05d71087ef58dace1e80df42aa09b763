@@ -1,0 +1,22 @@
+---------------------------------------------------------------------------
+
+by ker0x at 2026-09-15T09:11:40Z
+
+I have added two new props to the main `Questionnaire` component. One allows you to disable interactivity and remove the Stimulus controller, whilst the other allows you to display the component in a format other than a `form`. This is intended to enable the component to be used with `FormFlow`, from the Symfony Form component. A short example of how to use it has been added to the README.
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-09-18T13:26:27Z
+
+I'm on it
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-09-19T09:57:39Z
+
+Hey @ker0x, before merging I rebased this onto 3.x now that the calendar and date-picker recipes are in, and squashed everything into a single commit. Here's what else changed:
+
+- `Choice`, `Choices` and `ChoiceDescription` now compose the `field`, `radio-group`, `checkbox` and `kbd` recipes instead of restating their markup and classes, so those four are declared as recipe dependencies and `Choices` picks up the `role="radiogroup"` it was missing.
+- Validation now matches upstream: the default message moved from the Stimulus controller into `Questionnaire:Error` so it can be translated and follows the item's `required` prop, the choices of an invalid item get `data-invalid`, and the first choice takes focus with a visible ring.
+- `Questionnaire:Next`, `:Previous`, `:Skip` and `:Submit` were setting their base `class` as a literal attribute before the attribute spread, so a caller passing `class` silently dropped the grid placement, they now merge through `attributes.defaults()`.
+- Prop and block docs were migrated to the Twig 3.29 comment syntax the kit now requires, added an `## Accessibility` section, and regenerated the snapshots.
