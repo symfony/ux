@@ -60,7 +60,7 @@ fi
 
 # Recursive mode bumps every workspace package.json but always skips the commit
 # and tag (and leaves the private root package untouched), so we do both by hand.
-pnpm version "$version" --recursive --no-git-checks
+pnpm version "$version" --recursive --no-git-checks --allow-same-version
 if [ -z "$(git status --porcelain)" ]; then
     echo "Error: no package.json changes after 'pnpm version'. Version '$version' may already be set." >&2
     exit 1
