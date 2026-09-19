@@ -245,7 +245,7 @@ final class UXPaginationBundle extends AbstractBundle
 
     public function prependExtension(ContainerConfigurator $container, ContainerBuilder $builder): void
     {
-        if (!interface_exists(AssetMapperInterface::class)) {
+        if (!$this->isAssetMapperAvailable($builder)) {
             return;
         }
 
@@ -256,6 +256,23 @@ final class UXPaginationBundle extends AbstractBundle
                 ],
             ],
         ]);
+    }
+
+    private function isAssetMapperAvailable(ContainerBuilder $builder): bool
+    {
+        if (!interface_exists(AssetMapperInterface::class)) {
+            return false;
+        }
+
+        // Before Symfony 8.2, FrameworkBundle provided the AssetMapper configuration.
+        /** @var array<string, array{path: string}> $bundlesMetadata */
+        $bundlesMetadata = $builder->getParameter('kernel.bundles_metadata');
+        if (!isset($bundlesMetadata['FrameworkBundle'])) {
+            return false;
+        }
+
+        return isset($bundlesMetadata['AssetMapperBundle'])
+            || is_file($bundlesMetadata['FrameworkBundle']['path'].'/Resources/config/asset_mapper.php');
     }
 
     /**
