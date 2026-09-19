@@ -1,0 +1,14 @@
+{%- props
+    ## 'top'|'right'|'bottom'|'left' Which side of the trigger the calendar appears on.
+    side = 'bottom',
+    ## 'start'|'center'|'end' Alignment of the calendar along the cross axis.
+    align = 'start'
+-%}
+<twig:Popover:Content
+    side="{{ side }}"
+    align="{{ align }}"
+    {{ ...attributes.defaults({class: 'w-auto overflow-hidden p-0'|tailwind_classes}) }}
+>
+    {##- The popover body, typically a `Calendar`. -#}
+    {{- block(outerBlocks.content) -}}
+</twig:Popover:Content>

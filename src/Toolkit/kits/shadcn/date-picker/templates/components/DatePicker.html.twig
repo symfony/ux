@@ -1,0 +1,42 @@
+{%- props
+    ## string|array<string>|null The initially selected dates, as `Y-m-d` strings. In `range` mode, the first entry is the start and the second one the end.
+    selected = null,
+    ## string|null The locale used to format the selection.
+    locale = null,
+    ## 'full'|'long'|'medium'|'short' The length of the formatted selection.
+    dateStyle = 'long',
+    ## string The text placed between two formatted dates.
+    separator = ' - ',
+    ## boolean Whether completing the selection closes the popover.
+    closeOnSelect = true,
+    ## boolean Whether the popover is open on initial render.
+    open = false
+-%}
+{%- set _selected = null == selected ? [] : (selected is iterable ? selected|map(date => date|date('Y-m-d')) : [selected|date('Y-m-d')]) -%}
+{%- set _formatted = _selected|map(date => date|format_date(dateFormat: dateStyle, locale: locale))|join(separator) -%}
+{%- do provide('popover.open', open) -%}
+{%- do provide('datePicker.empty', _selected is empty) -%}
+{%- do provide('datePicker.formatted', _formatted) -%}
+<div
+    data-slot="date-picker"
+    data-state="{{ open ? 'open' : 'closed' }}"
+    data-empty="{{ _selected is empty ? 'true' : 'false' }}"
+    data-popover-open-value="{{ open ? 'true' : 'false' }}"
+    data-date-picker-locale-value="{{ locale }}"
+    data-date-picker-date-style-value="{{ dateStyle }}"
+    data-date-picker-separator-value="{{ separator }}"
+    data-date-picker-close-on-select-value="{{ closeOnSelect ? 'true' : 'false' }}"
+    {{ attributes.defaults({
+        class: 'group/popover group/date-picker relative inline-block'|tailwind_classes,
+        'data-controller': 'popover date-picker',
+        'data-action': [
+            'popover:open@window->popover#handleGroupOpen',
+            'click@window->popover#handleOutsideClick',
+            'keydown.esc@window->popover#handleEscape',
+            'calendar:select->date-picker#select',
+        ]|join(' ')|html_attr_type('sst'),
+    }) }}
+>
+    {##- A `DatePicker:Trigger` and a `DatePicker:Content`. -#}
+    {%- block content %}{% endblock -%}
+</div>

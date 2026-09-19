@@ -1,0 +1,9 @@
+{%- set _datePicker_formatted = inject('datePicker.formatted', '') -%}
+{%- set date_picker_input_attrs = {
+    'data-date-picker-target': 'input',
+    'data-action': 'input->date-picker#parseInput keydown.down->date-picker#open'|html_attr_type('sst'),
+    value: _datePicker_formatted,
+    autocomplete: 'off',
+} -%}
+{##- The text input (e.g., an `Input` or an `InputGroup:Input`) mirroring the selection. -#}
+{%- block content %}{% endblock -%}
