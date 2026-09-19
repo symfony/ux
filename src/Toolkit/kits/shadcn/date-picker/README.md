@@ -2,7 +2,7 @@
 
 A date picker built by composing a `Popover` and a `Calendar`.
 
-```twig {"preview":true,"height":"420px"}
+```twig {"preview":true}
 <div class="flex items-start justify-center pt-6" style="min-height: 400px">
     <twig:DatePicker>
         <twig:DatePicker:Trigger>
@@ -57,7 +57,7 @@ Picking a day formats it with `dateStyle` and `locale`, writes it into every `Da
 
 A date picker inside a `Field`, so it is labelled like any other form control.
 
-```twig {"preview":true,"height":"420px"}
+```twig {"preview":true}
 <div class="flex items-start justify-center pt-6" style="min-height: 400px">
     <twig:Field class="w-44">
         <twig:Field:Label for="date-picker-basic">Date</twig:Field:Label>
@@ -84,7 +84,7 @@ A date picker inside a `Field`, so it is labelled like any other form control.
 
 Set `mode="range"` on the `Calendar` and pass both ends to `selected`. The two dates are joined by `separator`, and the popover only closes once the end date is picked.
 
-```twig {"preview":true,"height":"460px"}
+```twig {"preview":true}
 <div class="flex items-start justify-center pt-6" style="min-height: 440px">
     <twig:Field class="w-60">
         <twig:Field:Label for="date-picker-range">Date Picker Range</twig:Field:Label>
@@ -117,7 +117,7 @@ Set `mode="range"` on the `Calendar` and pass both ends to `selected`. The two d
 
 Pair `captionLayout="dropdown"` with `startMonth` and `endMonth` so a distant year is a couple of clicks away rather than a hundred.
 
-```twig {"preview":true,"height":"420px"}
+```twig {"preview":true}
 <div class="flex items-start justify-center pt-6" style="min-height: 400px">
     <twig:Field class="w-44">
         <twig:Field:Label for="date-picker-dob">Date of birth</twig:Field:Label>
@@ -150,7 +150,7 @@ Pair `captionLayout="dropdown"` with `startMonth` and `endMonth` so a distant ye
 
 Spread `date_picker_input_attrs` onto a text input to keep it in sync with the calendar in both directions: it's rendered server-side already holding the current selection formatted, picking a day writes the formatted date back into it, and typing a date moves the calendar to match. <kbd>↓</kbd> opens the popover from the input.
 
-```twig {"preview":true,"height":"440px"}
+```twig {"preview":true}
 <div class="flex items-start justify-center pt-6" style="min-height: 420px">
     <twig:Field class="w-56">
         <twig:Field:Label for="date-picker-input">Subscription Date</twig:Field:Label>
@@ -188,7 +188,7 @@ Spread `date_picker_input_attrs` onto a text input to keep it in sync with the c
 
 The date picker only handles the date. Pair it with a native `<twig:Input type="time" />` to collect a time alongside it.
 
-```twig {"preview":true,"height":"440px"}
+```twig {"preview":true}
 <div class="flex items-start justify-center pt-6" style="min-height: 420px">
     <twig:Field orientation="horizontal" class="w-auto items-start gap-4">
         <twig:Field class="w-40">
@@ -228,7 +228,7 @@ The date picker only handles the date. Pair it with a native `<twig:Input type="
 
 To enable RTL support, set the `dir="rtl"` attribute on the root element. Pass the same `locale` to the `DatePicker` and to the `Calendar`, so the trigger label and the grid are formatted for the same language, and pin the numbering system with the `-u-nu-` extension as the `Calendar` documents.
 
-```twig {"preview":true,"height":"520px"}
+```twig {"preview":true}
 <div class="flex flex-col items-center gap-6 pt-6" style="min-height: 500px">
     {# Arabic #}
     <twig:DatePicker dir="rtl" locale="ar-u-nu-latn" selected="2026-03-15">
