@@ -1,0 +1,9 @@
+<div
+    data-slot="toast-description"
+    {{ attributes.defaults({
+        class: 'text-sm text-muted-foreground'|tailwind_classes,
+    }) }}
+>
+    {##- The secondary line describing the toast. -#}
+    {%- block content %}{% endblock -%}
+</div>

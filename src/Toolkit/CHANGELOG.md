@@ -2,6 +2,7 @@
 
 ## 3.6.0
 
+- [Shadcn] Add `toast` recipe
 - [Shadcn] Rename the `sonner` recipe's `Toast` component to `Sonner:Toast`, freeing the `Toast` component name for the new `toast` recipe
 
 ## 3.5.0
