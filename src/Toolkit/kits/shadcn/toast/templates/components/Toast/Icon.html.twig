@@ -1,0 +1,24 @@
+{%- props
+    ## 'default'|'success'|'info'|'warning'|'error'|'loading' The toast type whose status icon is rendered; `default` renders nothing.
+    type = 'default'
+-%}
+{%- set _toast_icons = {
+    success: {name: 'lucide:circle-check', class: 'size-4'},
+    info: {name: 'lucide:info', class: 'size-4'},
+    warning: {name: 'lucide:triangle-alert', class: 'size-4'},
+    error: {name: 'lucide:octagon-x', class: 'size-4 text-destructive'},
+    loading: {name: 'lucide:loader-2', class: 'size-4 animate-spin'},
+} -%}
+{%- set _toast_icon = _toast_icons[type] ?? null -%}
+{%- if null is not same as _toast_icon -%}
+    <span
+        data-slot="toast-icon"
+        data-type="{{ type }}"
+        aria-hidden="true"
+        {{ attributes.defaults({
+            class: "shrink-0 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4"|tailwind_classes,
+        }) }}
+    >
+        <twig:ux:icon name="{{ _toast_icon.name }}" class="{{ _toast_icon.class }}" />
+    </span>
+{%- endif -%}

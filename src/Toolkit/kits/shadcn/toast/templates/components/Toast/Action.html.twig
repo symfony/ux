@@ -1,0 +1,12 @@
+{%- props
+    ## 'default'|'secondary'|'destructive'|'outline'|'ghost'|'link' The button style variant.
+    variant = 'outline',
+    ## 'default'|'xs'|'sm'|'lg'|'icon'|'icon-xs'|'icon-sm'|'icon-lg' The button size.
+    size = 'sm',
+    ## 'button'|'a' The HTML tag to render; use `a` when the action navigates.
+    as = 'button'
+-%}
+<twig:Button as="{{ as }}" variant="{{ variant }}" size="{{ size }}" class="shrink-0" data-slot="toast-action" {{ ...attributes }}>
+    {##- The action button label. -#}
+    {{- block(outerBlocks.content) -}}
+</twig:Button>
