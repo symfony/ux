@@ -1,0 +1,44 @@
+{%- props
+    ## int Auto-dismiss delay in milliseconds applied to toasts that do not set their own, where `0` keeps them until dismissed.
+    duration = 5000,
+    ## int Maximum number of toasts kept on screen; the ones beyond it fade out until a slot frees up.
+    limit = 3
+-%}
+{%- do provide('toast.duration', duration) -%}
+{# Consumed here so `class` lands on the visible region, whose placement it is meant to change, rather than on the host below. #}
+{%- set _toast_viewport_class = ('pointer-events-none fixed inset-x-4 bottom-4 z-50 mx-auto w-auto max-w-sm outline-none sm:end-4 sm:start-auto sm:mx-0 sm:w-full ' ~ attributes.render('class'))|tailwind_merge -%}
+<div
+    data-slot="toaster"
+    data-toast-duration-value="{{ duration }}"
+    data-toast-limit-value="{{ limit }}"
+    {{ attributes.defaults({
+        'data-controller': 'toast',
+    }) }}
+>
+    <div
+        data-slot="toast-viewport"
+        data-toast-target="viewport"
+        class="{{ _toast_viewport_class }}"
+    ></div>
+    <template data-toast-target="template">
+        <twig:Toast>
+            <twig:Toast:Content>
+                <twig:Toast:Icon type="success" />
+                <twig:Toast:Icon type="info" />
+                <twig:Toast:Icon type="warning" />
+                <twig:Toast:Icon type="error" />
+                <twig:Toast:Icon type="loading" />
+                <div class="flex min-w-0 flex-1 flex-col gap-1">
+                    <twig:Toast:Title />
+                    <twig:Toast:Description />
+                </div>
+                {# The controller fills the action through `data-toast-part`: `Button` renders its own
+                   `data-slot="button"` first, so the `data-slot` of `Toast:Action` never reaches the DOM. #}
+                <twig:Toast:Action data-toast-part="action" data-action="click->toast#close" />
+                <twig:Toast:Close />
+            </twig:Toast:Content>
+        </twig:Toast>
+    </template>
+    {##- The trigger element(s) firing `toast#add`, and any server-rendered `Toast` items. -#}
+    {%- block content %}{% endblock -%}
+</div>
