@@ -1,0 +1,11 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2026-09-18T13:26:29Z
+
+I'm on it
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-09-18T15:02:25Z
+
+Awesome, I was working on https://github.com/symfony/ux/pull/3855 and I was like "Mmmh, we need an fully example where an user can click on an input/button, and show the calendar in a nice way", and... it's this PR :)
