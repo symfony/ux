@@ -1,0 +1,9 @@
+<div
+    data-slot="message-content"
+    {{ attributes.defaults({
+        class: 'flex w-full min-w-0 flex-col gap-2.5 wrap-break-word group-data-[align=end]/message:*:data-slot:self-end'|tailwind_classes,
+    }) }}
+>
+    {##- The message content, typically includes `Message:Header`, a `Bubble` and `Message:Footer`. -#}
+    {%- block content %}{% endblock -%}
+</div>
