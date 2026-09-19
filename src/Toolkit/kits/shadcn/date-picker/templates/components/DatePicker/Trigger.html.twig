@@ -1,0 +1,14 @@
+{%- set _popover_open = inject('popover.open', false) -%}
+{%- set _datePicker_empty = inject('datePicker.empty', true) -%}
+{%- set date_picker_trigger_attrs = {
+    'data-slot': 'date-picker-trigger',
+    'data-popover-target': 'trigger',
+    'data-date-picker-target': 'trigger',
+    'data-action': 'click->popover#toggle'|html_attr_type('sst'),
+    'aria-haspopup': 'dialog',
+    'aria-expanded': _popover_open ? 'true' : 'false',
+    'data-state': _popover_open ? 'open' : 'closed',
+    'data-empty': _datePicker_empty ? 'true' : 'false',
+} -%}
+{##- The trigger element (e.g., a `Button`) that opens the date picker when clicked. -#}
+{%- block content %}{% endblock -%}

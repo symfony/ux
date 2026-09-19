@@ -8,6 +8,7 @@
 - [Shadcn] Add `bubble` recipe
 - [Shadcn] Add `calendar` recipe
 - [Shadcn] Add `carousel` recipe
+- [Shadcn] Add `date-picker` recipe
 - [Shadcn] Add `drawer` recipe
 - [Shadcn] Add `dropdown-menu` recipe
 - [Shadcn] Add `form` recipe

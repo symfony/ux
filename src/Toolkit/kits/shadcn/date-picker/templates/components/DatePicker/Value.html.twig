@@ -1,0 +1,15 @@
+{%- props
+    ## string The text shown while nothing is selected.
+    placeholder = 'Pick a date'
+-%}
+{%- set _datePicker_formatted = inject('datePicker.formatted', '') -%}
+{%- set _datePicker_empty = inject('datePicker.empty', true) -%}
+<span
+    data-slot="date-picker-value"
+    data-date-picker-target="value"
+    data-empty="{{ _datePicker_empty ? 'true' : 'false' }}"
+    data-placeholder="{{ placeholder }}"
+    {{ attributes }}
+>
+    {{- _datePicker_empty ? placeholder : _datePicker_formatted -}}
+</span>
