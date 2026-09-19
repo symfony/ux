@@ -1,0 +1,55 @@
+{
+    "name": "symfony/ux-inspector",
+    "type": "symfony-bundle",
+    "description": "Browser inspector for Symfony UX components: Stimulus, LiveComponent and Turbo",
+    "keywords": [
+        "inspector",
+        "ux",
+        "symfony-ux",
+        "devtools",
+        "stimulus",
+        "turbo",
+        "live-components"
+    ],
+    "homepage": "https://symfony.com",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Simon André",
+            "email": "smn.andre@gmail.com"
+        },
+        {
+            "name": "Symfony Community",
+            "homepage": "https://symfony.com/contributors"
+        }
+    ],
+    "require": {
+        "php": ">=8.4",
+        "symfony/framework-bundle": "^7.4|^8.0",
+        "symfony/http-kernel": "^7.4|^8.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^11.1|^12.0",
+        "symfony/asset-mapper": "^7.4|^8.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Symfony\\UX\\Inspector\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Symfony\\UX\\Inspector\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "thanks": {
+            "name": "symfony/ux",
+            "url": "https://github.com/symfony/ux"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev"
+}
