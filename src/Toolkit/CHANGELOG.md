@@ -18,6 +18,7 @@
 - [Shadcn] Add `native-select` recipe
 - [Shadcn] Add `navigation-menu` recipe
 - [Shadcn] Add `popover` recipe
+- [Shadcn] Add `questionnaire` recipe
 - [Shadcn] Add `scroll-area` recipe
 - [Shadcn] Add `sheet` recipe
 - [Shadcn] Add `sidebar` recipe

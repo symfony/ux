@@ -1,0 +1,9 @@
+<p
+    data-slot="questionnaire-description"
+    {{ attributes.defaults({
+        class: 'text-sm text-muted-foreground text-pretty'|tailwind_classes,
+    }) }}
+>
+    {##- The supporting text shown under the question prompt. -#}
+    {%- block content %}{% endblock -%}
+</p>

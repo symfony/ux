@@ -1,0 +1,16 @@
+{%- set _questionnaire_itemInputName = inject('questionnaire.itemInputName', '') -%}
+{%- set _questionnaire_interactive = inject('questionnaire.interactive', true) -%}
+<div
+    data-slot="questionnaire-input-wrapper"
+    class="group/questionnaire-input relative w-full min-w-0"
+>
+    <input
+        data-slot="questionnaire-input"
+        {% if _questionnaire_interactive %}data-questionnaire-target="answer freeform"{% endif %}
+        {{ attributes.defaults({
+            class: 'min-h-11 w-full min-w-0 rounded-lg border border-input bg-transparent px-2.5 py-1 text-base transition-[color,box-shadow,background-color] outline-none selection:bg-primary selection:text-primary-foreground placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 disabled:bg-input/50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 sm:min-h-0 sm:h-8 md:text-sm dark:bg-input/30 dark:disabled:bg-input/80 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40'|tailwind_classes,
+            type: 'text',
+            name: _questionnaire_itemInputName,
+        }) }}
+    >
+</div>

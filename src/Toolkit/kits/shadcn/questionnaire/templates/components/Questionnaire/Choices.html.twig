@@ -1,0 +1,20 @@
+{%- set _questionnaire_itemMultiple = inject('questionnaire.itemMultiple', false) -%}
+{%- if _questionnaire_itemMultiple -%}
+    <twig:Field:Group
+        {{ ...attributes.defaults({
+            class: 'group/questionnaire-choices min-w-0 gap-2'|tailwind_classes,
+        }) }}
+    >
+        {##- The answers, typically multiple `Questionnaire:Choice` components and an optional `Questionnaire:Input`. -#}
+        {{- block(outerBlocks.content) -}}
+    </twig:Field:Group>
+{%- else -%}
+    <twig:RadioGroup
+        {{ ...attributes.defaults({
+            class: 'group/questionnaire-choices min-w-0 gap-2'|tailwind_classes,
+        }) }}
+    >
+        {##- The answers, typically multiple `Questionnaire:Choice` components and an optional `Questionnaire:Input`. -#}
+        {{- block(outerBlocks.content) -}}
+    </twig:RadioGroup>
+{%- endif -%}

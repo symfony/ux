@@ -1,0 +1,9 @@
+<legend
+    data-slot="questionnaire-title"
+    {{ attributes.defaults({
+        class: 'cn-font-heading text-base leading-snug font-medium text-pretty [&:not(:has(~[data-slot=questionnaire-description]))]:mb-4'|tailwind_classes,
+    }) }}
+>
+    {##- The question prompt. -#}
+    {%- block content %}{% endblock -%}
+</legend>

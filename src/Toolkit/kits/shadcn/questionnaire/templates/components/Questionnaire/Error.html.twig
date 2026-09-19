@@ -1,0 +1,17 @@
+{%- set _questionnaire_itemErrorId = inject('questionnaire.itemErrorId', '') -%}
+{%- set _questionnaire_itemRequired = inject('questionnaire.itemRequired', false) -%}
+{%- set _questionnaire_interactive = inject('questionnaire.interactive', true) -%}
+<p
+    id="{{ _questionnaire_itemErrorId }}"
+    data-slot="questionnaire-error"
+    {% if _questionnaire_interactive %}data-questionnaire-target="error" hidden{% endif %}
+    role="alert"
+    {{ attributes.defaults({
+        class: 'mt-2 text-sm text-destructive'|tailwind_classes,
+    }) }}
+>
+    {##- The validation message, replacing the wording the item's `required` prop selects. -#}
+    {%- block content -%}
+        {{- _questionnaire_itemRequired ? 'Choose an answer to continue.' : 'Choose an answer or skip this question.' -}}
+    {%- endblock -%}
+</p>
