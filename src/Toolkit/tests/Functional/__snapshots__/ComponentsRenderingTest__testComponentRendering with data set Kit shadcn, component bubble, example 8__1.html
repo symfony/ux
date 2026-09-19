@@ -3,7 +3,7 @@
 - Component: Bubble
 - Code:
 ```twig
-<div class="flex w-full max-w-sm flex-col gap-4 py-12">
+<div class="flex w-full max-w-sm flex-col gap-4 py-12" style="min-height: 240px">
     <twig:Bubble align="end">
         <twig:Bubble:Content>Run the build script.</twig:Bubble:Content>
     </twig:Bubble>
@@ -28,7 +28,7 @@
 </div>
 ```
 - Rendered code (run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
-<div class="flex w-full max-w-sm flex-col gap-4 py-12">
+<div class="flex w-full max-w-sm flex-col gap-4 py-12" style="min-height: 240px">
     <div data-slot="bubble" data-variant="default" data-align="end" class="group/bubble relative flex w-fit max-w-[80%] min-w-0 flex-col gap-1 *:data-[slot=bubble-content]:bg-primary *:data-[slot=bubble-content]:text-primary-foreground [&amp;>[data-slot=bubble-content]:is(button,a):hover]:bg-primary/80 self-end"><div data-slot="bubble-content" class="w-fit max-w-full min-w-0 overflow-hidden rounded-3xl border border-transparent px-3 py-2 text-sm leading-relaxed wrap-break-word group-data-[align=end]/bubble:self-end [button]:text-start [button,a]:transition-colors [button,a]:outline-none [button,a]:focus-visible:border-ring [button,a]:focus-visible:ring-3 [button,a]:focus-visible:ring-ring/50">Run the build script.</div>
     </div>
     <div data-slot="bubble" data-variant="destructive" data-align="start" class="group/bubble relative flex w-fit max-w-[80%] min-w-0 flex-col gap-1 *:data-[slot=bubble-content]:bg-destructive/10 *:data-[slot=bubble-content]:text-destructive dark:*:data-[slot=bubble-content]:bg-destructive/20 [&amp;>[data-slot=bubble-content]:is(button,a):hover]:bg-destructive/20 dark:[&amp;>[data-slot=bubble-content]:is(button,a):hover]:bg-destructive/30"><div data-slot="bubble-content" class="w-fit max-w-full min-w-0 overflow-hidden rounded-3xl border border-transparent px-3 py-2 text-sm leading-relaxed wrap-break-word group-data-[align=end]/bubble:self-end [button]:text-start [button,a]:transition-colors [button,a]:outline-none [button,a]:focus-visible:border-ring [button,a]:focus-visible:ring-3 [button,a]:focus-visible:ring-ring/50">Failed to run the command.</div>

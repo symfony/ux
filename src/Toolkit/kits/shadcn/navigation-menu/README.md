@@ -2,7 +2,7 @@
 
 A collection of navigation links with optional hover-triggered submenus.
 
-```twig {"preview":true,"height":"340px"}
+```twig {"preview":true}
 <div class="flex items-start justify-center" style="min-height: 320px">
     <twig:NavigationMenu>
         <twig:NavigationMenu:List>
@@ -108,7 +108,7 @@ A collection of navigation links with optional hover-triggered submenus.
 
 A menu of plain links, without any submenu.
 
-```twig {"preview":true,"height":"120px"}
+```twig {"preview":true}
 <div class="flex items-start justify-center" style="min-height: 100px">
     <twig:NavigationMenu>
         <twig:NavigationMenu:List>
@@ -130,7 +130,7 @@ A menu of plain links, without any submenu.
 
 To enable RTL support, set the `dir="rtl"` attribute on the root element.
 
-```twig {"preview":true,"height":"340px"}
+```twig {"preview":true}
 <div class="flex flex-col items-center gap-16 py-8" style="min-height: 320px">
     {# Arabic #}
     <div dir="rtl">

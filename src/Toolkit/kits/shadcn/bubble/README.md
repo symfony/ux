@@ -2,7 +2,7 @@
 
 Displays conversational content in a message bubble. Supports variants, alignment, grouping, reactions, and collapsible content.
 
-```twig {"preview":true,"height":"520px"}
+```twig {"preview":true}
 <div class="flex w-full max-w-sm flex-col gap-8 py-12">
     <twig:Bubble align="end">
         <twig:Bubble:Content>Hey there! what's up?</twig:Bubble:Content>
@@ -60,7 +60,7 @@ Displays conversational content in a message bubble. Supports variants, alignmen
 
 Use the `variant` prop to change the visual treatment of the bubble. A bubble sizes to its content, up to 80% of the container width. The `ghost` variant removes the max-width so assistant text and rich content can span the full row.
 
-```twig {"preview":true,"height":"860px"}
+```twig {"preview":true}
 <div class="flex w-full max-w-sm flex-col gap-12 py-12">
     <twig:Bubble>
         <twig:Bubble:Content>This is the default primary bubble.</twig:Bubble:Content>
@@ -100,7 +100,7 @@ Use the `variant` prop to change the visual treatment of the bubble. A bubble si
 
 Use the `align` prop on `Bubble` to align the bubble to the start or the end of the conversation.
 
-```twig {"preview":true,"height":"280px"}
+```twig {"preview":true}
 <div class="flex w-full max-w-sm flex-col gap-8 py-12">
     <twig:Bubble variant="muted">
         <twig:Bubble:Content>
@@ -119,7 +119,7 @@ Use the `align` prop on `Bubble` to align the bubble to the start or the end of 
 
 Use `Bubble:Group` to group consecutive bubbles from the same sender. Note the `align` prop should be set on the `Bubble` component itself, not on the `Bubble:Group` component.
 
-```twig {"preview":true,"height":"480px"}
+```twig {"preview":true}
 <div class="flex w-full max-w-sm flex-col gap-8 py-12">
     <twig:Bubble variant="muted">
         <twig:Bubble:Content>Can you tell me what's the issue?</twig:Bubble:Content>
@@ -150,7 +150,7 @@ Use `Bubble:Group` to group consecutive bubbles from the same sender. Note the `
 
 Turn a bubble into a link or a button with the `as` prop on `Bubble:Content`.
 
-```twig {"preview":true,"height":"420px"}
+```twig {"preview":true}
 <div class="flex w-full max-w-sm flex-col gap-8 py-12">
     <twig:Bubble variant="muted">
         <twig:Bubble:Content>How can I help you today?</twig:Bubble:Content>
@@ -173,7 +173,7 @@ Turn a bubble into a link or a button with the `as` prop on `Bubble:Content`.
 
 Use `Bubble:Reactions` to display reactions or quick action buttons. Use the `side` and `align` props to position the row — `side="top"` anchors it to the upper edge. Reactions overlap the bubble edge, so leave vertical space between rows — the example below uses a larger `gap` for this reason.
 
-```twig {"preview":true,"height":"560px"}
+```twig {"preview":true}
 <div class="flex w-full max-w-sm flex-col gap-12 py-12">
     <twig:Bubble variant="muted" align="end">
         <twig:Bubble:Content>I don't need tests, I know my code works.</twig:Bubble:Content>
@@ -214,7 +214,7 @@ Use `Bubble:Reactions` to display reactions or quick action buttons. Use the `si
 
 Long bubble content can be composed with `Collapsible` to allow for a show more or show less interaction.
 
-```twig {"preview":true,"height":"520px"}
+```twig {"preview":true}
 <div class="flex w-full max-w-sm flex-col gap-8 py-12">
     <twig:Bubble variant="muted">
         <twig:Bubble:Content>How can I help you today?</twig:Bubble:Content>
@@ -253,7 +253,7 @@ Long bubble content can be composed with `Collapsible` to allow for a show more 
 
 Pair a bubble with a `Tooltip` to reveal metadata on hover, such as when a message was read.
 
-```twig {"preview":true,"height":"260px"}
+```twig {"preview":true}
 <div class="flex w-full max-w-sm flex-col gap-4 py-12">
     <twig:Bubble variant="secondary">
         <twig:Bubble:Content>Did you remove the stale route?</twig:Bubble:Content>
@@ -278,8 +278,8 @@ Pair a bubble with a `Tooltip` to reveal metadata on hover, such as when a messa
 
 Pair a bubble with a `Popover` to surface more information on demand, such as the full error message for a failed action.
 
-```twig {"preview":true,"height":"420px"}
-<div class="flex w-full max-w-sm flex-col gap-4 py-12">
+```twig {"preview":true}
+<div class="flex w-full max-w-sm flex-col gap-4 py-12" style="min-height: 240px">
     <twig:Bubble align="end">
         <twig:Bubble:Content>Run the build script.</twig:Bubble:Content>
     </twig:Bubble>
@@ -308,7 +308,7 @@ Pair a bubble with a `Popover` to surface more information on demand, such as th
 
 Ghost bubbles are a good fit for rendered markdown, since they are unframed and span the full width of the conversation.
 
-```twig {"preview":true,"height":"420px"}
+```twig {"preview":true}
 <div class="flex w-full max-w-sm flex-col gap-8 py-12">
     <twig:Bubble align="end" variant="muted">
         <twig:Bubble:Content>Hello! Are you actually <strong>thinking</strong>?</twig:Bubble:Content>
@@ -327,7 +327,7 @@ Ghost bubbles are a good fit for rendered markdown, since they are unframed and 
 
 To enable RTL support, set the `dir="rtl"` attribute on the root element.
 
-```twig {"preview":true,"height":"620px"}
+```twig {"preview":true}
 <div class="flex w-full flex-col items-center gap-8">
     {# Arabic #}
     <div class="flex w-full max-w-sm flex-col gap-10 py-10" dir="rtl">

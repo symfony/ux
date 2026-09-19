@@ -2,7 +2,7 @@
 
 Displays an inline status, system note, bordered row, or labeled separator in a conversation.
 
-```twig {"preview":true,"height":"300px"}
+```twig {"preview":true}
 <div class="flex w-full max-w-sm flex-col gap-8 py-12">
     <twig:Marker>
         <twig:Marker:Icon>
@@ -49,7 +49,7 @@ Displays an inline status, system note, bordered row, or labeled separator in a 
 
 Use the `variant` prop to switch between an inline marker, a bordered row, and a labeled separator.
 
-```twig {"preview":true,"height":"240px"}
+```twig {"preview":true}
 <div class="flex w-full max-w-sm flex-col gap-8 py-12">
     <twig:Marker>
         <twig:Marker:Content>A default marker for inline notes.</twig:Marker:Content>
@@ -67,7 +67,7 @@ Use the `variant` prop to switch between an inline marker, a bordered row, and a
 
 Set `role="status"` and include a `Spinner` for streaming or in-progress markers so updates are announced.
 
-```twig {"preview":true,"height":"200px"}
+```twig {"preview":true}
 <div class="flex w-full max-w-sm flex-col gap-8 py-12">
     <twig:Marker role="status">
         <twig:Marker:Icon>
@@ -88,7 +88,7 @@ Set `role="status"` and include a `Spinner` for streaming or in-progress markers
 
 Add an animation class to `Marker:Content` for a streaming-text effect. Shadcn ships a dedicated `shimmer` utility in its own package; with plain Tailwind, `animate-pulse` gives the same in-progress cue.
 
-```twig {"preview":true,"height":"200px"}
+```twig {"preview":true}
 <div class="flex w-full max-w-sm flex-col gap-8 py-12">
     <twig:Marker role="status">
         <twig:Marker:Content class="animate-pulse">Thinking...</twig:Marker:Content>
@@ -105,7 +105,7 @@ Use the `separator` variant for labeled dividers, such as dates or section break
 
 A labeled separator needs no role: the divider lines are decorative CSS pseudo-elements and the text is announced as ordinary content. Do not add `role="separator"` — it takes its accessible name from `aria-label`, so the visible label would not be announced.
 
-```twig {"preview":true,"height":"240px"}
+```twig {"preview":true}
 <div class="flex w-full max-w-sm flex-col gap-8 py-12">
     {% for label in ['Today', 'Worked for 42s', 'Conversation compacted'] %}
         <twig:Marker variant="separator">
@@ -119,7 +119,7 @@ A labeled separator needs no role: the divider lines are decorative CSS pseudo-e
 
 Use the `border` variant for status rows that should keep the default marker alignment while separating the next row.
 
-```twig {"preview":true,"height":"230px"}
+```twig {"preview":true}
 {% set rows = [
     { icon: 'lucide:git-branch', label: 'Switched to release-candidate' },
     { icon: 'lucide:search', label: 'Reviewed 8 related files' },
@@ -141,7 +141,7 @@ Use the `border` variant for status rows that should keep the default marker ali
 
 Use `Marker:Icon` to render an icon alongside the content. It is decorative and hidden from assistive technologies, so the adjacent `Marker:Content` carries the meaning. Use `flex-col` to stack the icon above the content.
 
-```twig {"preview":true,"height":"300px"}
+```twig {"preview":true}
 <div class="flex w-full max-w-sm flex-col gap-12 py-12">
     <twig:Marker>
         <twig:Marker:Icon>
@@ -168,7 +168,7 @@ Use `Marker:Icon` to render an icon alongside the content. It is decorative and 
 
 Turn a marker into a link or a button with the `as` prop on `Marker`, so it is focusable and exposes the correct role. The accessible name comes from the marker text.
 
-```twig {"preview":true,"height":"200px"}
+```twig {"preview":true}
 <div class="flex w-full max-w-sm flex-col gap-8 py-12">
     <twig:Marker as="a" href="#links-and-buttons">
         <twig:Marker:Icon>
@@ -189,7 +189,7 @@ Turn a marker into a link or a button with the `as` prop on `Marker`, so it is f
 
 To enable RTL support, set the `dir="rtl"` attribute on the root element.
 
-```twig {"preview":true,"height":"420px"}
+```twig {"preview":true}
 <div class="flex w-full flex-col items-center gap-4">
     {# Arabic #}
     <div class="flex w-full max-w-sm flex-col gap-6 py-6" dir="rtl">

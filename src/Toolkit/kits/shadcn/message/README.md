@@ -2,7 +2,7 @@
 
 Displays a message in a conversation, with optional avatar, header, footer, and alignment.
 
-```twig {"preview":true,"height":"560px"}
+```twig {"preview":true}
 <div class="mx-auto flex w-full max-w-sm flex-col gap-6 py-12">
     <twig:Message align="end">
         <twig:Message:Avatar>
@@ -105,7 +105,7 @@ Displays a message in a conversation, with optional avatar, header, footer, and 
 
 Use `Message:Avatar` to render an avatar next to the message. Set `align="end"` on the message to align the avatar to the end of the conversation.
 
-```twig {"preview":true,"height":"420px"}
+```twig {"preview":true}
 <div class="mx-auto flex w-full max-w-sm flex-col gap-6 py-12">
     <twig:Message>
         <twig:Message:Avatar>
@@ -160,7 +160,7 @@ Use `Message:Avatar` to render an avatar next to the message. Set `align="end"` 
 
 Use `Message:Group` to stack consecutive messages from the same sender. Render an empty `Message:Avatar` on the earlier messages to keep them aligned with the avatar on the last one.
 
-```twig {"preview":true,"height":"260px"}
+```twig {"preview":true}
 <div class="mx-auto flex w-full max-w-sm flex-col gap-6 py-12">
     <twig:Message:Group>
         <twig:Message>
@@ -192,7 +192,7 @@ Use `Message:Group` to stack consecutive messages from the same sender. Render a
 
 Use `Message:Header` for a sender name and `Message:Footer` for metadata such as a delivery or read status.
 
-```twig {"preview":true,"height":"340px"}
+```twig {"preview":true}
 <div class="mx-auto flex w-full max-w-sm flex-col gap-8 py-12">
     <twig:Message>
         <twig:Message:Content>
@@ -221,7 +221,7 @@ Use `Message:Header` for a sender name and `Message:Footer` for metadata such as
 
 Place message-level actions in `Message:Footer`, such as copy, retry, or feedback buttons.
 
-```twig {"preview":true,"height":"340px"}
+```twig {"preview":true}
 <div class="mx-auto flex w-full max-w-sm flex-col gap-8 py-12">
     <twig:Message>
         <twig:Message:Content>
@@ -261,7 +261,7 @@ Place message-level actions in `Message:Footer`, such as copy, retry, or feedbac
 
 Render an `Attachment` inside `Message:Content` to send a file or an image alongside the message.
 
-```twig {"preview":true,"height":"620px"}
+```twig {"preview":true}
 <div class="mx-auto flex w-full max-w-sm flex-col gap-8 py-12">
     <twig:Message align="end">
         <twig:Message:Content>
@@ -310,7 +310,7 @@ Render an `Attachment` inside `Message:Content` to send a file or an image along
 
 Render assistant text through a `ghost` bubble, so the response is unframed and can span the full width of the conversation.
 
-```twig {"preview":true,"height":"400px"}
+```twig {"preview":true}
 <div class="mx-auto flex w-full max-w-sm flex-col gap-8 py-12">
     <twig:Message align="end">
         <twig:Message:Content>
@@ -340,7 +340,7 @@ Render assistant text through a `ghost` bubble, so the response is unframed and 
 
 To enable RTL support, set the `dir="rtl"` attribute on the root element.
 
-```twig {"preview":true,"height":"620px"}
+```twig {"preview":true}
 <div class="flex w-full flex-col items-center gap-8">
     {# Arabic #}
     <div class="flex w-full max-w-sm flex-col gap-6 py-10" dir="rtl">

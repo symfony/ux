@@ -2,7 +2,7 @@
 
 Displays a file or image attachment with media, metadata, upload state, and actions.
 
-```twig {"preview":true,"height":"380px"}
+```twig {"preview":true}
 <div class="mx-auto flex w-full max-w-sm flex-col gap-3">
     <twig:Attachment:Group>
         <twig:Attachment orientation="vertical">
@@ -93,7 +93,7 @@ Displays a file or image attachment with media, metadata, upload state, and acti
 
 Set `variant="image"` on `Attachment:Media` and render an `img` tag inside it. Use `orientation="vertical"` to stack the media above the content.
 
-```twig {"preview":true,"height":"260px"}
+```twig {"preview":true}
 {% set images = [
     { src: 'https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=900&auto=format&fit=crop&q=80', alt: 'Workspace', name: 'workspace.png', meta: 'PNG · 820 KB' },
     { src: 'https://images.unsplash.com/photo-1497215728101-856f4ea42174?w=900&auto=format&fit=crop&q=80', alt: 'Desk', name: 'desk-reference.jpg', meta: 'JPG · 1.1 MB' },
@@ -132,7 +132,7 @@ Set `variant="image"` on `Attachment:Media` and render an `img` tag inside it. U
 
 Set `state` to reflect the upload lifecycle. `uploading` and `processing` animate the title, and `error` switches to a destructive treatment.
 
-```twig {"preview":true,"height":"400px"}
+```twig {"preview":true}
 <div class="mx-auto flex w-full max-w-sm flex-col gap-2">
     <twig:Attachment state="idle" class="w-full">
         <twig:Attachment:Media>
@@ -214,7 +214,7 @@ Set `state` to reflect the upload lifecycle. `uploading` and `processing` animat
 
 Use `size` to switch between `default`, `sm`, and `xs`.
 
-```twig {"preview":true,"height":"260px"}
+```twig {"preview":true}
 <div class="mx-auto flex w-full max-w-sm flex-col gap-3">
     <twig:Attachment size="default" class="w-full">
         <twig:Attachment:Media>
@@ -249,7 +249,7 @@ Use `size` to switch between `default`, `sm`, and `xs`.
 
 Wrap attachments in `Attachment:Group` to lay them out in a horizontally scrollable, snapping row.
 
-```twig {"preview":true,"height":"180px"}
+```twig {"preview":true}
 {% set files = [
     { icon: 'lucide:file-text', name: 'briefing-notes.pdf', meta: 'PDF · 1.4 MB' },
     { src: 'https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=900&auto=format&fit=crop&q=80', name: 'workspace.png', meta: 'PNG · 820 KB' },
@@ -288,7 +288,7 @@ Wrap attachments in `Attachment:Group` to lay them out in a horizontally scrolla
 
 Add an `Attachment:Trigger` to make the whole card open a link or a dialog. It fills the card behind the actions, so the actions stay clickable.
 
-```twig {"preview":true,"height":"180px"}
+```twig {"preview":true}
 <div class="mx-auto w-full max-w-sm">
     <twig:Dialog id="attachment-preview">
         <twig:Attachment class="w-full">
@@ -327,7 +327,7 @@ Add an `Attachment:Trigger` to make the whole card open a link or a dialog. It f
 
 To enable RTL support, set the `dir="rtl"` attribute on the root element.
 
-```twig {"preview":true,"height":"320px"}
+```twig {"preview":true}
 <div class="flex w-full flex-col items-center gap-8">
     {# Arabic #}
     <div class="flex w-full max-w-sm flex-col gap-3" dir="rtl">

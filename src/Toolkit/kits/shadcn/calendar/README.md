@@ -2,7 +2,7 @@
 
 A calendar for selecting a single date, several dates, or a range of dates.
 
-```twig {"preview":true,"height":"340px"}
+```twig {"preview":true}
 <twig:Calendar
     mode="single"
     today="2026-03-15"
@@ -36,7 +36,7 @@ Dates are exchanged as `Y-m-d` strings. When `name` is set, the selection is mir
 
 A calendar with no initial selection. Use `class="rounded-lg border"` to frame it.
 
-```twig {"preview":true,"height":"320px"}
+```twig {"preview":true}
 <twig:Calendar
     mode="single"
     today="2026-03-15"
@@ -49,7 +49,7 @@ A calendar with no initial selection. Use `class="rounded-lg border"` to frame i
 
 Use `mode="range"` to select a period. The first entry of `selected` is the start of the range, the second one its end.
 
-```twig {"preview":true,"height":"360px"}
+```twig {"preview":true}
 <twig:Card class="mx-auto w-fit p-0">
     <twig:Card:Content class="p-0">
         <twig:Calendar
@@ -69,7 +69,7 @@ Use `mode="range"` to select a period. The first entry of `selected` is the star
 
 Use `mode="multiple"` to select any number of individual dates.
 
-```twig {"preview":true,"height":"320px"}
+```twig {"preview":true}
 <twig:Card class="mx-auto w-fit p-0">
     <twig:Card:Content class="p-0">
         <twig:Calendar
@@ -86,7 +86,7 @@ Use `mode="multiple"` to select any number of individual dates.
 
 Use `captionLayout="dropdown"` to replace the caption with month and year dropdowns. Their range is bounded by `startMonth` and `endMonth`.
 
-```twig {"preview":true,"height":"320px"}
+```twig {"preview":true}
 <twig:Calendar
     mode="single"
     today="2026-03-15"
@@ -102,7 +102,7 @@ Use `captionLayout="dropdown"` to replace the caption with month and year dropdo
 
 Anything placed inside the calendar is rendered below the grid, and is within reach of the `calendar` controller: a button carrying `data-action="click->calendar#selectDate"` and a `data-calendar-date-param` selects that date and jumps to its month.
 
-```twig {"preview":true,"height":"400px"}
+```twig {"preview":true}
 <twig:Card size="sm" class="mx-auto w-fit max-w-[300px]">
     <twig:Card:Content>
         <twig:Calendar
@@ -130,7 +130,7 @@ Anything placed inside the calendar is rendered below the grid, and is within re
 
 ### Date and Time Picker
 
-```twig {"preview":true,"height":"480px"}
+```twig {"preview":true}
 <twig:Card size="sm" class="mx-auto w-fit">
     <twig:Card:Content>
         <twig:Calendar
@@ -169,7 +169,7 @@ Anything placed inside the calendar is rendered below the grid, and is within re
 
 Every entry of `modifiers` is rendered as a `data-<name>` attribute on the matching days, which is enough to style them with an arbitrary utility.
 
-```twig {"preview":true,"height":"320px"}
+```twig {"preview":true}
 {% set bookedDates = (0..14)|map(offset => '2026-02-12'|date_modify('+' ~ offset ~ ' days')|date('Y-m-d')) %}
 <twig:Card class="mx-auto w-fit p-0">
     <twig:Card:Content class="p-0">
@@ -190,7 +190,7 @@ Every entry of `modifiers` is rendered as a `data-<name>` attribute on the match
 
 Cells are sized with the `--cell-size` CSS variable, which can be overridden per breakpoint.
 
-```twig {"preview":true,"height":"460px"}
+```twig {"preview":true}
 <twig:Card class="mx-auto w-fit p-0">
     <twig:Card:Content class="p-0">
         <twig:Calendar
@@ -209,7 +209,7 @@ Cells are sized with the `--cell-size` CSS variable, which can be overridden per
 
 Use `showWeekNumber` to prepend a column with the ISO week number.
 
-```twig {"preview":true,"height":"320px"}
+```twig {"preview":true}
 <twig:Card class="mx-auto w-fit p-0">
     <twig:Card:Content class="p-0">
         <twig:Calendar
@@ -227,7 +227,7 @@ Use `showWeekNumber` to prepend a column with the ISO week number.
 
 The calendar dispatches a `calendar:select` event on every selection change, with `selected` (the dates, as `Y-m-d` strings) and `mode` in its detail, and a `calendar:month-change` event on every navigation, with `month` in its detail. Both events bubble. The `calendar-display` controller shipped with this recipe listens to `calendar:select` and mirrors the selection into a visible read-only field.
 
-```twig {"preview":true,"height":"420px"}
+```twig {"preview":true}
 <div class="mx-auto flex w-fit flex-col gap-4" data-controller="calendar-display" data-action="calendar:select->calendar-display#update">
     <twig:Calendar
         mode="range"
@@ -249,7 +249,7 @@ To enable RTL support, set the `dir="rtl"` attribute on the root element. Pair i
 
 The `-u-nu-` Unicode extension pins the numbering system the digits are drawn from. Worth setting explicitly for languages that have more than one in use: a bare `ar` resolves to Arabic-Indic digits or Latin ones depending on the ICU version, and the server and the browser do not necessarily ship the same one.
 
-```twig {"preview":true,"height":"760px"}
+```twig {"preview":true}
 <div class="flex flex-col items-center gap-12">
     {# Arabic #}
     <twig:Calendar
