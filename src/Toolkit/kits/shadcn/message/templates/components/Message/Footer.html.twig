@@ -1,0 +1,9 @@
+<div
+    data-slot="message-footer"
+    {{ attributes.defaults({
+        class: 'flex max-w-full min-w-0 items-center px-3 text-xs font-medium text-muted-foreground group-data-[align=end]/message:justify-end group-has-data-[variant=ghost]/message:px-0'|tailwind_classes,
+    }) }}
+>
+    {##- The content displayed below the message, such as a delivery status or message actions. -#}
+    {%- block content %}{% endblock -%}
+</div>

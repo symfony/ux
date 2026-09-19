@@ -1,0 +1,44 @@
+<!--
+- Kit: Shadcn UI
+- Component: Message
+- Code:
+```twig
+<div class="mx-auto flex w-full max-w-sm flex-col gap-8 py-12">
+    <twig:Message>
+        <twig:Message:Content>
+            <twig:Message:Header>Olivia</twig:Message:Header>
+            <twig:Bubble variant="muted">
+                <twig:Bubble:Content>I already checked the logs.</twig:Bubble:Content>
+            </twig:Bubble>
+        </twig:Message:Content>
+    </twig:Message>
+    <twig:Message align="end">
+        <twig:Message:Content>
+            <twig:Bubble>
+                <twig:Bubble:Content>Send the report to the team. Ping @shadcn if you need help.</twig:Bubble:Content>
+            </twig:Bubble>
+            <twig:Message:Footer>
+                <div>
+                    Read <span class="font-normal">Yesterday</span>
+                </div>
+            </twig:Message:Footer>
+        </twig:Message:Content>
+    </twig:Message>
+</div>
+```
+- Rendered code (run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="mx-auto flex w-full max-w-sm flex-col gap-8 py-12">
+    <div data-slot="message" data-align="start" class="group/message relative flex w-full min-w-0 gap-2 text-sm data-[align=end]:flex-row-reverse"><div data-slot="message-content" class="flex w-full min-w-0 flex-col gap-2.5 wrap-break-word group-data-[align=end]/message:*:data-slot:self-end"><div data-slot="message-header" class="flex max-w-full min-w-0 items-center px-3 text-xs font-medium text-muted-foreground group-has-data-[variant=ghost]/message:px-0">Olivia</div>
+            <div data-slot="bubble" data-variant="muted" data-align="start" class="group/bubble relative flex w-fit max-w-[80%] min-w-0 flex-col gap-1 *:data-[slot=bubble-content]:bg-muted [&amp;>[data-slot=bubble-content]:is(button,a):hover]:bg-[color-mix(in_oklch,var(--muted),var(--foreground)_5%)]"><div data-slot="bubble-content" class="w-fit max-w-full min-w-0 overflow-hidden rounded-3xl border border-transparent px-3 py-2 text-sm leading-relaxed wrap-break-word group-data-[align=end]/bubble:self-end [button]:text-start [button,a]:transition-colors [button,a]:outline-none [button,a]:focus-visible:border-ring [button,a]:focus-visible:ring-3 [button,a]:focus-visible:ring-ring/50">I already checked the logs.</div>
+            </div>
+        </div>
+    </div>
+    <div data-slot="message" data-align="end" class="group/message relative flex w-full min-w-0 gap-2 text-sm data-[align=end]:flex-row-reverse"><div data-slot="message-content" class="flex w-full min-w-0 flex-col gap-2.5 wrap-break-word group-data-[align=end]/message:*:data-slot:self-end"><div data-slot="bubble" data-variant="default" data-align="start" class="group/bubble relative flex w-fit max-w-[80%] min-w-0 flex-col gap-1 *:data-[slot=bubble-content]:bg-primary *:data-[slot=bubble-content]:text-primary-foreground [&amp;>[data-slot=bubble-content]:is(button,a):hover]:bg-primary/80"><div data-slot="bubble-content" class="w-fit max-w-full min-w-0 overflow-hidden rounded-3xl border border-transparent px-3 py-2 text-sm leading-relaxed wrap-break-word group-data-[align=end]/bubble:self-end [button]:text-start [button,a]:transition-colors [button,a]:outline-none [button,a]:focus-visible:border-ring [button,a]:focus-visible:ring-3 [button,a]:focus-visible:ring-ring/50">Send the report to the team. Ping @shadcn if you need help.</div>
+            </div>
+            <div data-slot="message-footer" class="flex max-w-full min-w-0 items-center px-3 text-xs font-medium text-muted-foreground group-data-[align=end]/message:justify-end group-has-data-[variant=ghost]/message:px-0"><div>
+                    Read <span class="font-normal">Yesterday</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

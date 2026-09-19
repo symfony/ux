@@ -15,6 +15,7 @@
 - [Shadcn] Add `input-otp` recipe
 - [Shadcn] Add `marker` recipe
 - [Shadcn] Add `menubar` recipe
+- [Shadcn] Add `message` recipe
 - [Shadcn] Add `native-select` recipe
 - [Shadcn] Add `navigation-menu` recipe
 - [Shadcn] Add `popover` recipe

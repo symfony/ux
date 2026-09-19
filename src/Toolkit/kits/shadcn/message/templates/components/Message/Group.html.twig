@@ -1,0 +1,9 @@
+<div
+    data-slot="message-group"
+    {{ attributes.defaults({
+        class: 'flex min-w-0 flex-col gap-2'|tailwind_classes,
+    }) }}
+>
+    {##- The grouped messages, typically multiple `Message` components from the same sender. -#}
+    {%- block content %}{% endblock -%}
+</div>

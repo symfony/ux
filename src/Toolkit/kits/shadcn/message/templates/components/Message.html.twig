@@ -1,0 +1,14 @@
+{%- props
+    ## 'start'|'end' The alignment of the message in the conversation.
+    align = 'start'
+-%}
+<div
+    data-slot="message"
+    data-align="{{ align }}"
+    {{ attributes.defaults({
+        class: 'group/message relative flex w-full min-w-0 gap-2 text-sm data-[align=end]:flex-row-reverse'|tailwind_classes,
+    }) }}
+>
+    {##- The message row, typically includes `Message:Avatar` and `Message:Content`. -#}
+    {%- block content %}{% endblock -%}
+</div>

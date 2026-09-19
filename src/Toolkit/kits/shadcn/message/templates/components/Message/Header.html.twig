@@ -1,0 +1,9 @@
+<div
+    data-slot="message-header"
+    {{ attributes.defaults({
+        class: 'flex max-w-full min-w-0 items-center px-3 text-xs font-medium text-muted-foreground group-has-data-[variant=ghost]/message:px-0'|tailwind_classes,
+    }) }}
+>
+    {##- The content displayed above the message, such as the sender name. -#}
+    {%- block content %}{% endblock -%}
+</div>
