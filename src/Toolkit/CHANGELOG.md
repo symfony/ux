@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 3.6.0
+
+- [Shadcn] Rename the `sonner` recipe's `Toast` component to `Sonner:Toast`, freeing the `Toast` component name for the new `toast` recipe
+
 ## 3.5.0
 
 - Add support for blocks: ready-to-use page sections built from a kit's components, installed and previewed as a unit
