@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 3.5.1
+
+- Add missing support for Symfony 8.2's standalone `AssetMapperBundle`
+
 ## 3.5.0
 
 - Resolve map attribute values through twig/html-extra's `html_attr()` logic, so `ux_map()` and `<twig:ux:map>` render attributes like any other component: the typed values of `html_attr_type()` and `tailwind_classes` are now accepted, `null` omits an attribute, `aria-*` booleans render `"true"`/`"false"`, and a boolean `true` renders `name=""` (`data-*` renders `"true"`).
