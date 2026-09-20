@@ -52,9 +52,12 @@ class UXToolkitBundleTest extends KernelTestCase
     private function loadExtension(array $configs): string
     {
         $extension = new UXToolkitBundle()->getContainerExtension();
+
+        // The extension built by AbstractBundle reads these parameters to create its config
+        // loader, and does so unconditionally on Symfony < 8.1.
         $extension->load($configs, $container = new ContainerBuilder(new ParameterBag([
             'kernel.environment' => 'test',
-            'kernel.debug' => true,
+            'kernel.build_dir' => sys_get_temp_dir(),
         ])));
 
         return $container->getParameter('ux_toolkit.component_dir');
