@@ -13,6 +13,7 @@ namespace Symfony\UX\Toolkit\Tests;
 
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 use Symfony\UX\Toolkit\Component\ComponentDocParser;
 use Symfony\UX\Toolkit\UXToolkitBundle;
 use Twig\Environment;
@@ -51,7 +52,10 @@ class UXToolkitBundleTest extends KernelTestCase
     private function loadExtension(array $configs): string
     {
         $extension = new UXToolkitBundle()->getContainerExtension();
-        $extension->load($configs, $container = new ContainerBuilder());
+        $extension->load($configs, $container = new ContainerBuilder(new ParameterBag([
+            'kernel.environment' => 'test',
+            'kernel.debug' => true,
+        ])));
 
         return $container->getParameter('ux_toolkit.component_dir');
     }
