@@ -6,12 +6,10 @@ on:
             - 'dependabot/**'
         paths-ignore:
             - 'src/*/doc/**'
-            - 'src/**/*.md'
             - '.github/workflows/app-tests.yaml'
     pull_request:
         paths-ignore:
             - 'src/*/doc/**'
-            - 'src/**/*.md'
             - '.github/workflows/app-tests.yaml'
 
 concurrency:
@@ -65,6 +63,16 @@ jobs:
                   for file in $(find src/ -mindepth 2 -type f -name composer.json); do
                       if ! jq -e '.require.php | test(">=8.4")' "$file" > /dev/null; then
                           echo "File $file does not have the dependency 'php' >=8.4 in its composer.json";
+                          exit 1;
+                      fi
+                  done
+
+            - name: Check all composer.json have a README.md next to them
+              if: always()
+              run: |
+                  for file in $(find src/ -mindepth 2 -type f -name composer.json -not -path "*/vendor/*"); do
+                      if [ ! -f "$(dirname "$file")/README.md" ]; then
+                          echo "File $file does not have a README.md next to it";
                           exit 1;
                       fi
                   done
@@ -134,6 +142,19 @@ jobs:
                               exit 1;
                           fi
                       done
+                  done
+
+            - name: Check all package.json have a README.md next to them
+              if: always()
+              run: |
+                  for file in $(find src/ -mindepth 2 -type f -name package.json -not -path "*/tests/*" -not -path "*/vendor/*"); do
+                      if jq -e '.private == true' "$file" > /dev/null; then
+                          continue
+                      fi
+                      if [ ! -f "$(dirname "$file")/README.md" ]; then
+                          echo "File $file does not have a README.md next to it";
+                          exit 1;
+                      fi
                   done
 
             - name: Setup PHP
