@@ -12,9 +12,14 @@
 namespace Symfony\UX\Pagination\Adapter;
 
 use Doctrine\DBAL\Types\Types;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
-use Doctrine\ORM\Tools\Pagination\Paginator as DoctrinePaginator;
+use Doctrine\ORM\Tools\Pagination\CursorPage;
+use Doctrine\ORM\Tools\Pagination\CursorPaginator;
+use Doctrine\ORM\Tools\Pagination\Exception\InvalidCursor;
+use Doctrine\ORM\Tools\Pagination\OffsetPaginator;
+use Doctrine\ORM\Tools\Pagination\Window;
 use Symfony\UX\Pagination\Cursor\CursorBoundary;
 use Symfony\UX\Pagination\Cursor\CursorOrder;
 use Symfony\UX\Pagination\Cursor\CursorSlice;
@@ -29,7 +34,21 @@ use Symfony\UX\Pagination\Exception\UnsupportedDoctrineQueryException;
  */
 final class DoctrineOrmAdapter implements OffsetAdapterInterface, LookaheadAdapterInterface, CursorAdapterInterface
 {
-    use CursorValuesTrait;
+    // Types whose ordering is total, which is what a cursor boundary needs.
+    private const SUPPORTED_CURSOR_TYPES = [
+        Types::INTEGER,
+        Types::BIGINT,
+        Types::SMALLINT,
+        Types::STRING,
+        Types::GUID,
+        Types::FLOAT,
+        Types::DECIMAL,
+        Types::BOOLEAN,
+        Types::DATETIME_MUTABLE,
+        Types::DATETIME_IMMUTABLE,
+        Types::DATETIMETZ_MUTABLE,
+        Types::DATETIMETZ_IMMUTABLE,
+    ];
 
     public function supports(mixed $source): bool
     {
@@ -42,13 +61,7 @@ final class DoctrineOrmAdapter implements OffsetAdapterInterface, LookaheadAdapt
             throw new InvalidArgumentException('Source must be a Doctrine ORM QueryBuilder.');
         }
 
-        $qb = clone $source;
-
-        $qb
-            ->setFirstResult($offset)
-            ->setMaxResults($limit);
-
-        return $this->getPaginatedResults($qb);
+        return $this->getPaginatedResults(clone $source, $offset, $limit);
     }
 
     private function assertCountableQuery(QueryBuilder $queryBuilder): void
@@ -136,9 +149,11 @@ final class DoctrineOrmAdapter implements OffsetAdapterInterface, LookaheadAdapt
             throw new InvalidArgumentException('Cursor fields must be non-empty strings.');
         }
 
+        // Validated after the tie-breakers, which are cursor fields too.
+        $fields = $this->ensureDeterministicCursorFields($source, $fields);
         $this->validateFieldNames($source, $fields);
 
-        return $this->ensureDeterministicCursorFields($source, $fields);
+        return $fields;
     }
 
     public function resolveCursorOrder(mixed $source, ?array $fields, ?string $direction): CursorOrder
@@ -156,13 +171,7 @@ final class DoctrineOrmAdapter implements OffsetAdapterInterface, LookaheadAdapt
             throw new InvalidArgumentException('Source must be a Doctrine ORM QueryBuilder.');
         }
 
-        $qb = clone $source;
-
-        $qb
-            ->setFirstResult($offset)
-            ->setMaxResults($limit + 1);
-
-        $items = $this->getPaginatedResults($qb);
+        $items = $this->getPaginatedResults(clone $source, $offset, $limit + 1);
 
         $hasMore = \count($items) > $limit;
 
@@ -191,132 +200,121 @@ final class DoctrineOrmAdapter implements OffsetAdapterInterface, LookaheadAdapt
 
         $qb = clone $source;
         $alias = $this->getMainAlias($qb);
-
-        $fields = array_map(static fn ($field) => $alias.'.'.$field, $cursorFields);
         $this->assertNoExistingCursorOrder($qb);
-        $forward = $boundary->forward ?? true;
+        $this->assertNoCursorParameterCollision($qb, $alias, $cursorFields);
 
-        if (null !== $boundary) {
-            $values = $boundary->values;
+        // Doctrine owns the window and reverses ORDER BY for backward navigation.
+        $qb->setFirstResult(null)->setMaxResults(null);
+        foreach ($cursorFields as $field) {
+            $qb->addOrderBy($alias.'.'.$field, $direction);
+        }
 
-            if (\count($values) !== \count($cursorFields)) {
-                throw new InvalidArgumentException('Cursor values count does not match cursor fields count.');
+        $paginator = new CursorPaginator(
+            limit: $limit,
+            queryProducesDuplicates: $this->hasCollectionValuedOrUnknownJoin($qb),
+        );
+
+        try {
+            $page = $paginator->paginate($qb, $this->resolveCursorPosition($boundary));
+        } catch (InvalidCursor $exception) {
+            throw new InvalidArgumentException('Invalid cursor value.', 0, $exception);
+        }
+
+        $items = $page->getItems();
+        $next = $previous = null;
+
+        // Doctrine still reports an adjacent page on an empty one, which has no
+        // row to point a boundary at.
+        if ([] !== $items) {
+            $entityManager = $qb->getEntityManager();
+
+            if ($page->hasNextPage()) {
+                $last = $items[array_key_last($items)];
+                $this->warmCursorItemMetadata($entityManager, $last);
+                $next = new CursorBoundary([$this->cursorTokenFor($page, $last, true)], true);
             }
 
-            // Forward keeps items after the cursor, backward keeps items before it.
-            $after = 'ASC' === $direction ? '>' : '<';
-            $operator = $forward ? $after : ('>' === $after ? '<' : '>');
-            $parameterPrefix = $this->cursorParameterPrefix(
-                $qb,
-                \count($fields),
-            );
-
-            // Build tuple comparison: (A > x) OR (A = x AND B > y) OR (A = x AND B = y AND C > z)
-            $conditions = [];
-            for ($i = 0; $i < \count($fields); ++$i) {
-                $condition = [];
-
-                for ($j = 0; $j < $i; ++$j) {
-                    $condition[] = \sprintf('%s = :%s_%d', $fields[$j], $parameterPrefix, $j);
-                }
-
-                $condition[] = \sprintf('%s %s :%s_%d', $fields[$i], $operator, $parameterPrefix, $i);
-
-                $conditions[] = '('.implode(' AND ', $condition).')';
-            }
-
-            $qb->andWhere(implode(' OR ', $conditions));
-
-            foreach ($values as $index => $value) {
-                [$value, $type] = $this->normalizeDoctrineCursorParameter($qb, $cursorFields[$index], $value);
-                $qb->setParameter($parameterPrefix.'_'.$index, $value, $type);
+            if ($page->hasPreviousPage()) {
+                $this->warmCursorItemMetadata($entityManager, $items[0]);
+                $previous = new CursorBoundary([$this->cursorTokenFor($page, $items[0], false)], false);
             }
         }
 
-        // Backward navigation queries in reverse order, then restores display order
-        $queryDirection = $forward ? $direction : ('ASC' === $direction ? 'DESC' : 'ASC');
-        $qb->resetDQLPart('orderBy');
-        foreach ($fields as $field) {
-            $qb->addOrderBy($field, $queryDirection);
-        }
-
-        // Fetch limit + 1 to detect an adjacent page
-        $qb->setMaxResults($limit + 1);
-        $items = $this->getPaginatedResults($qb);
-
-        $hasExtra = \count($items) > $limit;
-        if ($hasExtra) {
-            array_pop($items);
-        }
-
-        if (!$forward) {
-            $items = array_reverse($items);
-        }
-
-        $firstCursor = [] !== $items ? $this->extractCursorValues($items[0], $cursorFields) : null;
-        $lastCursor = [] !== $items ? $this->extractCursorValues(end($items), $cursorFields) : null;
-
-        if ($forward) {
-            // Coming forward: a previous page exists whenever a cursor was used
-            $hasNext = $hasExtra;
-            $previousCursor = null !== $boundary && null !== $firstCursor ? new CursorBoundary($firstCursor, false) : null;
-            $nextCursor = $hasNext && null !== $lastCursor ? new CursorBoundary($lastCursor) : null;
-        } else {
-            // Coming backward: the page we came from is the next page
-            $hasNext = [] !== $items;
-            $nextCursor = null !== $lastCursor ? new CursorBoundary($lastCursor) : null;
-            $previousCursor = $hasExtra && null !== $firstCursor ? new CursorBoundary($firstCursor, false) : null;
-        }
-
-        return new CursorSlice($items, $nextCursor, $previousCursor, $hasNext);
-    }
-
-    private function cursorParameterPrefix(QueryBuilder $queryBuilder, int $count): string
-    {
-        $existing = [];
-        foreach ($queryBuilder->getParameters() as $parameter) {
-            $existing[(string) $parameter->getName()] = true;
-        }
-        $suffix = 0;
-
-        do {
-            $prefix = 'ux_pagination_cursor'.(0 === $suffix ? '' : '_'.$suffix);
-            $available = true;
-            for ($index = 0; $index < $count; ++$index) {
-                if (isset($existing[$prefix.'_'.$index])) {
-                    $available = false;
-                    ++$suffix;
-
-                    break;
-                }
-            }
-        } while (!$available);
-
-        return $prefix;
+        return new CursorSlice($items, $next, $previous, [] !== $items && $page->hasNextPage());
     }
 
     /**
-     * @return array{mixed, string}
+     * @param CursorPage<mixed> $page
      */
-    private function normalizeDoctrineCursorParameter(QueryBuilder $queryBuilder, string $field, int|string|float $value): array
+    private function cursorTokenFor(CursorPage $page, mixed $item, bool $isNext): string
     {
-        $entity = $queryBuilder->getRootEntities()[0];
-        $type = $queryBuilder->getEntityManager()->getClassMetadata($entity)->getTypeOfField($field);
-        if (!\in_array($type, [Types::INTEGER, Types::BIGINT, Types::SMALLINT, Types::STRING, Types::GUID, Types::FLOAT, Types::DECIMAL, Types::BOOLEAN, Types::DATETIME_MUTABLE, Types::DATETIME_IMMUTABLE, Types::DATETIMETZ_MUTABLE, Types::DATETIMETZ_IMMUTABLE], true)) {
-            throw new InvalidArgumentException(\sprintf('Doctrine type "%s" of cursor field "%s" is not supported.', $type, $field));
+        try {
+            return $page->getCursorForItem($item, $isNext)->encodeToString();
+        } catch (\Error $error) {
+            throw new RuntimeException(\sprintf('Cannot read the cursor fields back from an item of type "%s". Cursor pagination requires mapped entities, or objects exposing the ordered fields as public properties.', get_debug_type($item)), 0, $error);
         }
-        if (\in_array($type, [Types::DATETIME_MUTABLE, Types::DATETIME_IMMUTABLE, Types::DATETIMETZ_MUTABLE, Types::DATETIMETZ_IMMUTABLE], true)) {
-            try {
-                $value = new \DateTimeImmutable((string) $value);
-            } catch (\Exception $exception) {
-                throw new InvalidArgumentException(\sprintf('Invalid date cursor value for field "%s".', $field), 0, $exception);
-            }
-            // Cursor values are normalized to UTC, but Doctrine binds datetime
-            // columns as wall time in PHP's default timezone.
-            $value = $value->setTimezone(new \DateTimeZone(date_default_timezone_get()));
+    }
+
+    /**
+     * The boundary holds the cursor Doctrine minted for that row, unchanged, so
+     * the adapter never reproduces Doctrine's parameter keys or value encoding.
+     */
+    private function resolveCursorPosition(?CursorBoundary $boundary): ?string
+    {
+        if (null === $boundary) {
+            return null;
         }
 
-        return [$value, $type];
+        $values = $boundary->values;
+        if (1 !== \count($values) || !\is_string($values[0]) || '' === $values[0]) {
+            throw new InvalidArgumentException('A Doctrine ORM cursor boundary must hold exactly one non-empty cursor token.');
+        }
+
+        return $values[0];
+    }
+
+    /**
+     * Doctrine names its boundary parameters after the ordered fields and
+     * overwrites whatever is bound there, silently returning the wrong rows.
+     *
+     * @param list<string> $cursorFields
+     */
+    private function assertNoCursorParameterCollision(QueryBuilder $queryBuilder, string $alias, array $cursorFields): void
+    {
+        $reserved = [];
+        foreach ($cursorFields as $index => $field) {
+            $reserved[$alias.'_'.$field.'_'.$index] = $field;
+        }
+
+        foreach ($queryBuilder->getParameters() as $parameter) {
+            $name = (string) $parameter->getName();
+            if (isset($reserved[$name])) {
+                throw new InvalidArgumentException(\sprintf('The query parameter ":%s" collides with the parameter Doctrine generates for cursor field "%s". Rename it.', $name, $reserved[$name]));
+            }
+        }
+    }
+
+    /**
+     * Doctrine resolves a page item through hasMetadataFor(), which misses legacy
+     * proxy class names and then reads private properties off the proxy. Loading
+     * the metadata under the runtime class name caches it there.
+     */
+    private function warmCursorItemMetadata(EntityManagerInterface $entityManager, mixed $item): void
+    {
+        if (!\is_object($item)) {
+            return;
+        }
+
+        $metadataFactory = $entityManager->getMetadataFactory();
+        if ($metadataFactory->hasMetadataFor($item::class)) {
+            return;
+        }
+
+        try {
+            $metadataFactory->getMetadataFor($item::class);
+        } catch (\Throwable) {
+            // Not a mapped class: Doctrine falls back to public properties.
+        }
     }
 
     private function normalizeCursorContextValue(QueryBuilder $queryBuilder, mixed $value): mixed
@@ -394,24 +392,29 @@ final class DoctrineOrmAdapter implements OffsetAdapterInterface, LookaheadAdapt
     /**
      * @return list<mixed>
      */
-    private function getPaginatedResults(QueryBuilder $queryBuilder): array
+    private function getPaginatedResults(QueryBuilder $queryBuilder, int $offset, int $limit): array
     {
-        // Only joins that may duplicate root rows need Doctrine's collection
-        // paginator. Association joins to one entity preserve the LIMIT/OFFSET
-        // semantics and can execute as one plain query.
+        // Only joins that may duplicate root rows need Doctrine's paginator.
+        // Association joins to one entity preserve the LIMIT/OFFSET semantics
+        // and can execute as one plain query.
         if (!$this->hasCollectionValuedOrUnknownJoin($queryBuilder)) {
             /** @var array<mixed> $rows */
-            $rows = $queryBuilder->getQuery()->getResult();
+            $rows = $queryBuilder
+                ->setFirstResult($offset)
+                ->setMaxResults($limit)
+                ->getQuery()
+                ->getResult();
 
             return array_values($rows);
         }
 
-        $paginator = new DoctrinePaginator($queryBuilder->getQuery(), fetchJoinCollection: true);
+        if ($limit < 1) {
+            return [];
+        }
 
-        /** @var list<mixed> $results */
-        $results = array_values(iterator_to_array($paginator));
-
-        return $results;
+        return new OffsetPaginator(fetchJoinCollection: true)
+            ->paginate($queryBuilder, new Window($offset, $limit))
+            ->getItems();
     }
 
     /**
@@ -507,6 +510,11 @@ final class DoctrineOrmAdapter implements OffsetAdapterInterface, LookaheadAdapt
             $mapping = $metadata->getFieldMapping($field);
             if ($mapping->nullable) {
                 throw new InvalidArgumentException(\sprintf('Cursor field "%s" must be non-nullable.', $field));
+            }
+
+            $type = $metadata->getTypeOfField($field);
+            if (!\in_array($type, self::SUPPORTED_CURSOR_TYPES, true)) {
+                throw new InvalidArgumentException(\sprintf('Doctrine type "%s" of cursor field "%s" is not supported.', $type, $field));
             }
         }
     }
