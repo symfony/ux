@@ -305,7 +305,19 @@ final class DoctrineOrmAdapter implements OffsetAdapterInterface, LookaheadAdapt
         if (!\in_array($type, [Types::INTEGER, Types::BIGINT, Types::SMALLINT, Types::STRING, Types::GUID, Types::FLOAT, Types::DECIMAL, Types::BOOLEAN, Types::DATETIME_MUTABLE, Types::DATETIME_IMMUTABLE, Types::DATETIMETZ_MUTABLE, Types::DATETIMETZ_IMMUTABLE], true)) {
             throw new InvalidArgumentException(\sprintf('Doctrine type "%s" of cursor field "%s" is not supported.', $type, $field));
         }
-        if (\in_array($type, [Types::DATETIME_MUTABLE, Types::DATETIME_IMMUTABLE, Types::DATETIMETZ_MUTABLE, Types::DATETIMETZ_IMMUTABLE], true)) {
+        // Handle mutable date types (expect DateTime objects)
+        if (\in_array($type, [Types::DATETIME_MUTABLE, Types::DATETIMETZ_MUTABLE], true)) {
+            try {
+                $value = new \DateTime((string) $value);
+            } catch (\Exception $exception) {
+                throw new InvalidArgumentException(\sprintf('Invalid date cursor value for field "%s".', $field), 0, $exception);
+            }
+            // Cursor values are normalized to UTC, but Doctrine binds datetime
+            // columns as wall time in PHP's default timezone.
+            $value = $value->setTimezone(new \DateTimeZone(date_default_timezone_get()));
+        }
+        // Handle immutable date types (expect DateTimeImmutable objects)
+        elseif (\in_array($type, [Types::DATETIME_IMMUTABLE, Types::DATETIMETZ_IMMUTABLE], true)) {
             try {
                 $value = new \DateTimeImmutable((string) $value);
             } catch (\Exception $exception) {
