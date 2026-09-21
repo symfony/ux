@@ -138,6 +138,232 @@ describe('AutocompleteController', () => {
         expect(fetchMock.requests()[1].url).toEqual('/path/to/autocomplete?query=foo');
     });
 
+    it('reloads unfiltered AJAX options when a multiple select reopens after a selection', async () => {
+        const { container, tomSelect } = await startAutocompleteTest(`
+            <select
+                multiple
+                data-testid="main-element"
+                data-controller="autocomplete"
+                data-autocomplete-url-value="/path/to/autocomplete"
+                data-autocomplete-preload-value="false"
+            ></select>
+        `);
+
+        fetchMock.mockResponseOnce(
+            JSON.stringify({
+                results: [
+                    { value: 'cookies', text: 'Cookies' },
+                    { value: 'cooking', text: 'Cooking' },
+                ],
+                next_page: null,
+            })
+        );
+
+        const controlInput = tomSelect.control_input;
+        await userEvent.click(controlInput);
+        controlInput.value = 'coo';
+        controlInput.dispatchEvent(new Event('input'));
+
+        await waitFor(() => {
+            expect(container.querySelector('.option[data-value="cookies"]')).toBeInTheDocument();
+        });
+        expect(fetchMock.requests().map((request) => request.url)).toEqual(['/path/to/autocomplete?query=coo']);
+
+        fetchMock.mockResponseOnce(
+            JSON.stringify({
+                results: [
+                    { value: 'cookies', text: 'Cookies' },
+                    { value: 'cooking', text: 'Cooking' },
+                    { value: 'tea', text: 'Tea' },
+                ],
+                next_page: null,
+            })
+        );
+
+        await userEvent.click(container.querySelector('.option[data-value="cookies"]') as HTMLElement);
+        expect(tomSelect.items).toEqual(['cookies']);
+
+        await userEvent.click(controlInput);
+        await waitFor(() => {
+            expect(fetchMock.requests().map((request) => request.url)).toEqual([
+                '/path/to/autocomplete?query=coo',
+                '/path/to/autocomplete?query=',
+            ]);
+            expect(container.querySelector('.option[data-value="cooking"]')).toBeInTheDocument();
+            expect(container.querySelector('.option[data-value="tea"]')).toBeInTheDocument();
+        });
+    });
+
+    it('reloads the empty query after a preloaded result was filtered and selected', async () => {
+        const { container, tomSelect } = await startAutocompleteTest(`
+            <select multiple data-controller="autocomplete" data-autocomplete-url-value="/path/to/autocomplete"></select>
+        `);
+
+        const allResults = JSON.stringify({
+            results: [
+                { value: 'cookies', text: 'Cookies' },
+                { value: 'cooking', text: 'Cooking' },
+                { value: 'tea', text: 'Tea' },
+            ],
+            next_page: null,
+        });
+        fetchMock.mockResponseOnce(allResults);
+        fetchMock.mockResponseOnce(
+            JSON.stringify({
+                results: [
+                    { value: 'cookies', text: 'Cookies' },
+                    { value: 'cooking', text: 'Cooking' },
+                ],
+                next_page: null,
+            })
+        );
+        fetchMock.mockResponseOnce(allResults);
+
+        const controlInput = tomSelect.control_input;
+        await userEvent.click(controlInput);
+        await waitFor(() => {
+            expect(container.querySelector('.option[data-value="tea"]')).toBeInTheDocument();
+        });
+
+        controlInput.value = 'coo';
+        controlInput.dispatchEvent(new Event('input'));
+        await waitFor(() => {
+            expect(fetchMock.requests()).toHaveLength(2);
+            expect(container.querySelector('.option[data-value="cookies"]')).toBeInTheDocument();
+        });
+
+        await userEvent.click(container.querySelector('.option[data-value="cookies"]') as HTMLElement);
+        await userEvent.click(controlInput);
+
+        await waitFor(() => {
+            expect(fetchMock.requests().map((request) => request.url)).toEqual([
+                '/path/to/autocomplete?query=',
+                '/path/to/autocomplete?query=coo',
+                '/path/to/autocomplete?query=',
+            ]);
+            expect(container.querySelector('.option[data-value="tea"]')).toBeInTheDocument();
+        });
+    });
+
+    it('does not reload twice when resetOnFocus also refreshes after a selection', async () => {
+        const { container, tomSelect } = await startAutocompleteTest(`
+            <select
+                multiple
+                data-controller="autocomplete"
+                data-autocomplete-url-value="/path/to/autocomplete"
+                data-autocomplete-preload-value="false"
+                data-autocomplete-reset-on-focus-value="true"
+                data-autocomplete-tom-select-options-value='{"loadThrottle":0}'
+            ></select>
+        `);
+
+        fetchMock.mockResponseOnce(
+            JSON.stringify({
+                results: [{ value: 'cookies', text: 'Cookies' }],
+                next_page: null,
+            })
+        );
+
+        const controlInput = tomSelect.control_input;
+        controlInput.value = 'coo';
+        controlInput.dispatchEvent(new Event('input'));
+        await waitFor(() => {
+            expect(container.querySelector('.option[data-value="cookies"]')).toBeInTheDocument();
+        });
+
+        await userEvent.click(container.querySelector('.option[data-value="cookies"]') as HTMLElement);
+        fetchMock.mockResponse(
+            JSON.stringify({
+                results: [
+                    { value: 'cookies', text: 'Cookies' },
+                    { value: 'tea', text: 'Tea' },
+                ],
+                next_page: null,
+            })
+        );
+
+        tomSelect.trigger('focus');
+        tomSelect.open();
+
+        await waitFor(() => {
+            expect(container.querySelector('.option[data-value="tea"]')).toBeInTheDocument();
+        });
+        expect(fetchMock.requests().map((request) => request.url)).toEqual([
+            '/path/to/autocomplete?query=coo',
+            '/path/to/autocomplete?query=',
+        ]);
+    });
+
+    it('keeps local options available after selecting a filtered option', async () => {
+        const { container, tomSelect } = await startAutocompleteTest(`
+            <select multiple data-controller="autocomplete">
+                <option value="cookies">Cookies</option>
+                <option value="cooking">Cooking</option>
+                <option value="tea">Tea</option>
+            </select>
+        `);
+
+        const controlInput = tomSelect.control_input;
+        userEvent.click(controlInput);
+        controlInput.value = 'coo';
+        controlInput.dispatchEvent(new Event('input'));
+        await waitFor(() => {
+            expect(container.querySelector('.option[data-value="cookies"]')).toBeInTheDocument();
+        });
+
+        await userEvent.click(container.querySelector('.option[data-value="cookies"]') as HTMLElement);
+        expect(tomSelect.items).toEqual(['cookies']);
+        await userEvent.click(controlInput);
+
+        await waitFor(() => {
+            expect(container.querySelector('.option[data-value="cooking"]')).toBeInTheDocument();
+            expect(container.querySelector('.option[data-value="tea"]')).toBeInTheDocument();
+        });
+        expect(fetchMock.requests()).toHaveLength(0);
+    });
+
+    it('respects an explicit minimum character count after selecting a remote option', async () => {
+        const { container, tomSelect } = await startAutocompleteTest(`
+            <select
+                multiple
+                data-controller="autocomplete"
+                data-autocomplete-url-value="/path/to/autocomplete"
+                data-autocomplete-preload-value="false"
+                data-autocomplete-min-characters-value="3"
+            ></select>
+        `);
+
+        fetchMock.mockResponseOnce(
+            JSON.stringify({
+                results: [
+                    { value: 'cookies', text: 'Cookies' },
+                    { value: 'cooking', text: 'Cooking' },
+                ],
+                next_page: null,
+            })
+        );
+
+        const controlInput = tomSelect.control_input;
+        userEvent.click(controlInput);
+        controlInput.value = 'coo';
+        controlInput.dispatchEvent(new Event('input'));
+
+        await waitFor(() => {
+            expect(fetchMock.requests()).toHaveLength(1);
+            expect(container.querySelector('.option[data-value="cookies"]')).toBeInTheDocument();
+        });
+
+        await userEvent.click(container.querySelector('.option[data-value="cookies"]') as HTMLElement);
+        expect(tomSelect.items).toEqual(['cookies']);
+        await userEvent.click(controlInput);
+
+        await shortDelay(350);
+
+        expect(fetchMock.requests().map((request) => request.url)).toEqual(['/path/to/autocomplete?query=coo']);
+
+        expect(container.querySelector('.option[data-value="cooking"]')).not.toBeInTheDocument();
+    });
+
     it('connect with ajax URL on a select element, even when the user define custom TomSelect plugins', async () => {
         const { container, tomSelect } = await startAutocompleteTest(`
             <label for="the-select">Items</label>
