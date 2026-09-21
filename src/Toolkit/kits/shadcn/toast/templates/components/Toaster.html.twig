@@ -35,9 +35,8 @@
     }) }}
 >
     {# A live region has to be in the DOM before a node lands inside it, so `aria-live` belongs here
-       rather than on a `Toast`: a toast announcing itself on insertion is never read out. The region
-       is `aria-atomic="false"` so a new toast does not re-announce the whole stack — the
-       `aria-atomic="true"` each `Toast` carries scopes the announcement to that one toast. -#}
+       rather than on a `Toast`, which would never be announced. `aria-atomic="false"` keeps a new
+       toast from re-announcing the whole stack. -#}
     <div
         data-slot="toast-viewport"
         data-side="{{ _toast_position[0] }}"
