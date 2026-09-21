@@ -1,14 +1,33 @@
 {%- props
+    ## 'top-left'|'top-center'|'top-right'|'bottom-left'|'bottom-center'|'bottom-right' Corner of the screen the toast region is anchored to.
+    position = 'bottom-right',
     ## int Auto-dismiss delay in milliseconds applied to toasts that do not set their own, where `0` keeps them until dismissed.
     duration = 5000,
     ## int Maximum number of toasts kept on screen; the ones beyond it fade out until a slot frees up.
     limit = 3
 -%}
 {%- do provide('toast.duration', duration) -%}
+{%- do provide('toast.hydrated', true) -%}
+{%- set _toast_position = position|split('-') -%}
+{%- set _toast_viewport_style = html_cva(
+    base: 'group/toast-viewport pointer-events-none fixed inset-x-4 z-50 mx-auto w-auto max-w-sm outline-none sm:w-full',
+    variants: {
+        side: {
+            top: 'top-4 [--toast-direction:1] [--toast-offscreen-y:-150%]',
+            bottom: 'bottom-4 [--toast-direction:-1] [--toast-offscreen-y:150%]',
+        },
+        align: {
+            left: 'sm:mx-0 sm:start-4 sm:end-auto',
+            center: 'sm:inset-x-0 sm:mx-auto',
+            right: 'sm:mx-0 sm:end-4 sm:start-auto',
+        },
+    },
+) -%}
 {# Consumed here so `class` lands on the visible region, whose placement it is meant to change, rather than on the host below. #}
-{%- set _toast_viewport_class = ('pointer-events-none fixed inset-x-4 bottom-4 z-50 mx-auto w-auto max-w-sm outline-none sm:end-4 sm:start-auto sm:mx-0 sm:w-full ' ~ attributes.render('class'))|tailwind_merge -%}
+{%- set _toast_viewport_class = (_toast_viewport_style.apply({side: _toast_position[0], align: _toast_position[1]}) ~ ' ' ~ attributes.render('class'))|tailwind_merge -%}
 <div
     data-slot="toaster"
+    data-position="{{ position }}"
     data-toast-duration-value="{{ duration }}"
     data-toast-limit-value="{{ limit }}"
     {{ attributes.defaults({
@@ -17,9 +36,13 @@
 >
     <div
         data-slot="toast-viewport"
+        data-side="{{ _toast_position[0] }}"
         data-toast-target="viewport"
         class="{{ _toast_viewport_class }}"
-    ></div>
+    >
+        {##- The `Toast` items rendered on page load, for instance by looping over `app.flashes`. -#}
+        {%- block toasts %}{% endblock -%}
+    </div>
     <template data-toast-target="template">
         <twig:Toast>
             <twig:Toast:Content>
@@ -39,6 +62,6 @@
             </twig:Toast:Content>
         </twig:Toast>
     </template>
-    {##- The trigger element(s) firing `toast#add`, and any server-rendered `Toast` items. -#}
+    {##- The trigger element(s) firing `toast#add`. -#}
     {%- block content %}{% endblock -%}
 </div>

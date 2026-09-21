@@ -28,6 +28,7 @@ export default class extends Controller {
     };
 
     #timers = new Map(); // toast element → { id, remaining, start }
+    #hydrated = new WeakSet();
     #swipeAborts = new Map(); // toast element → AbortController
     #sequence = 0;
     #expanded = false;
@@ -49,13 +50,15 @@ export default class extends Controller {
         this.viewportTarget.addEventListener('focusin', this.onFocusIn);
         this.viewportTarget.addEventListener('focusout', this.onFocusOut);
 
-        // Server-rendered toasts are written next to the triggers; move them into the viewport.
         for (const element of this.element.querySelectorAll('[data-slot="toast"]')) {
             if (!this.viewportTarget.contains(element)) {
                 this.viewportTarget.appendChild(element);
             }
             this.#hydrate(element);
         }
+
+        this.viewportObserver = new MutationObserver((records) => this.#absorb(records));
+        this.viewportObserver.observe(this.viewportTarget, { childList: true });
 
         this.#layout();
     }
@@ -66,6 +69,7 @@ export default class extends Controller {
         this.viewportTarget.removeEventListener('pointerleave', this.onPointerLeave);
         this.viewportTarget.removeEventListener('focusin', this.onFocusIn);
         this.viewportTarget.removeEventListener('focusout', this.onFocusOut);
+        this.viewportObserver.disconnect();
 
         for (const timer of this.#timers.values()) {
             clearTimeout(timer.id);
@@ -127,10 +131,8 @@ export default class extends Controller {
         this.#fill(element, { type, title, description, actionLabel, toastId, ms });
 
         if (!existing) {
-            this.#reset(element);
             this.viewportTarget.prepend(element);
-            this.#watchSwipe(element);
-            this.#enter(element);
+            this.#hydrate(element);
         }
 
         this.#startTimer(element, ms);
@@ -176,10 +178,44 @@ export default class extends Controller {
         }
     }
 
+    #absorb(records) {
+        let changed = false;
+
+        for (const record of records) {
+            for (const node of record.addedNodes) {
+                if (Node.ELEMENT_NODE !== node.nodeType) {
+                    continue;
+                }
+
+                const added = node.matches('[data-slot="toast"]')
+                    ? [node]
+                    : node.querySelectorAll('[data-slot="toast"]');
+                for (const element of added) {
+                    this.#hydrate(element);
+                    changed = true;
+                }
+            }
+
+            for (const node of record.removedNodes) {
+                changed ||= Node.ELEMENT_NODE === node.nodeType && node.matches('[data-slot="toast"]');
+            }
+        }
+
+        if (changed) {
+            this.#layout();
+        }
+    }
+
     #hydrate(element) {
+        if (this.#hydrated.has(element)) {
+            return;
+        }
+        this.#hydrated.add(element);
+
         element.dataset.toastId ||= `toast-${++this.#sequence}`;
         this.#reset(element);
         this.#watchSwipe(element);
+        this.#enter(element);
         this.#startTimer(element, Number(element.dataset.toastDuration ?? this.durationValue));
     }
 

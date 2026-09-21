@@ -24,12 +24,13 @@ A succinct message that is displayed temporarily.
 
 ## Usage
 
-Render `Toaster` once, where the toasts should appear — usually in your base layout — then fire toasts
-from any element with a `toast#add` action, configured with `data-toast-<name>-param` attributes:
-`type`, `title`, `description`, `duration`, `id` and `actionLabel`.
+Render `Toaster` once, usually in your base layout, and set `position` to the corner the toasts should
+appear in. Then fire toasts from any element with a `toast#add` action, configured with
+`data-toast-<name>-param` attributes: `type`, `title`, `description`, `duration`, `id` and
+`actionLabel`.
 
 ```twig
-<twig:Toaster duration="5000" limit="3">
+<twig:Toaster position="top-left | top-center | top-right | bottom-left | bottom-center | bottom-right" duration="5000" limit="3">
     <twig:Button
         data-action="click->toast#add"
         data-toast-type-param="default | success | info | warning | error | loading"
@@ -139,33 +140,93 @@ success and error states.
 </div>
 ```
 
+### Position
+
+Set `position` on `Toaster` to anchor the region to one of the six corners. Below the `sm` breakpoint
+the region spans the available width, so only the vertical side applies there.
+
+```twig {"preview":true}
+<div style="min-height: 360px">
+    <div class="flex flex-wrap justify-center gap-2">
+        <twig:Toaster position="top-left">
+            <twig:Button
+                variant="outline"
+                data-action="click->toast#add"
+                data-toast-title-param="Top left notification"
+            >Top Left</twig:Button>
+        </twig:Toaster>
+        <twig:Toaster position="top-center">
+            <twig:Button
+                variant="outline"
+                data-action="click->toast#add"
+                data-toast-title-param="Top center notification"
+            >Top Center</twig:Button>
+        </twig:Toaster>
+        <twig:Toaster position="top-right">
+            <twig:Button
+                variant="outline"
+                data-action="click->toast#add"
+                data-toast-title-param="Top right notification"
+            >Top Right</twig:Button>
+        </twig:Toaster>
+        <twig:Toaster position="bottom-left">
+            <twig:Button
+                variant="outline"
+                data-action="click->toast#add"
+                data-toast-title-param="Bottom left notification"
+            >Bottom Left</twig:Button>
+        </twig:Toaster>
+        <twig:Toaster position="bottom-center">
+            <twig:Button
+                variant="outline"
+                data-action="click->toast#add"
+                data-toast-title-param="Bottom center notification"
+            >Bottom Center</twig:Button>
+        </twig:Toaster>
+        <twig:Toaster position="bottom-right">
+            <twig:Button
+                variant="outline"
+                data-action="click->toast#add"
+                data-toast-title-param="Bottom right notification"
+            >Bottom Right</twig:Button>
+        </twig:Toaster>
+    </div>
+</div>
+```
+
 ### Server Rendered
 
-Write `Toast` items inside `Toaster` to show them on page load, for instance by looping over
+Fill the `toasts` block of `Toaster` to show items on page load, for instance by looping over
 `app.flashes`. Give them `duration="0"` to keep them until they are dismissed.
+
+`Toast` items dropped into `data-slot="toast-viewport"` after the page has loaded — by a Turbo Stream,
+for instance — are picked up and animated in the same way. Use `prepend` rather than `append` so the
+newest one lands in front of the stack.
 
 ```twig {"preview":true}
 <div style="min-height: 240px">
     <twig:Toaster>
-        <twig:Toast type="success" duration="0">
-            <twig:Toast:Content>
-                <twig:Toast:Icon type="success" />
-                <div class="flex min-w-0 flex-1 flex-col gap-1">
-                    <twig:Toast:Title>Profile saved</twig:Toast:Title>
-                    <twig:Toast:Description>Your changes have been applied.</twig:Toast:Description>
-                </div>
-                <twig:Toast:Close />
-            </twig:Toast:Content>
-        </twig:Toast>
-        <twig:Toast type="info" duration="0">
-            <twig:Toast:Content>
-                <twig:Toast:Icon type="info" />
-                <div class="flex min-w-0 flex-1 flex-col gap-1">
-                    <twig:Toast:Title>Welcome back, Alice!</twig:Toast:Title>
-                </div>
-                <twig:Toast:Close />
-            </twig:Toast:Content>
-        </twig:Toast>
+        <twig:block name="toasts">
+            <twig:Toast type="success" duration="0">
+                <twig:Toast:Content>
+                    <twig:Toast:Icon type="success" />
+                    <div class="flex min-w-0 flex-1 flex-col gap-1">
+                        <twig:Toast:Title>Profile saved</twig:Toast:Title>
+                        <twig:Toast:Description>Your changes have been applied.</twig:Toast:Description>
+                    </div>
+                    <twig:Toast:Close />
+                </twig:Toast:Content>
+            </twig:Toast>
+            <twig:Toast type="info" duration="0">
+                <twig:Toast:Content>
+                    <twig:Toast:Icon type="info" />
+                    <div class="flex min-w-0 flex-1 flex-col gap-1">
+                        <twig:Toast:Title>Welcome back, Alice!</twig:Toast:Title>
+                    </div>
+                    <twig:Toast:Close />
+                </twig:Toast:Content>
+            </twig:Toast>
+        </twig:block>
     </twig:Toaster>
 </div>
 ```
@@ -177,28 +238,32 @@ To enable RTL support, set the `dir="rtl"` attribute on the root element.
 ```twig {"preview":true}
 <div style="min-height: 300px">
     <twig:Toaster dir="rtl">
-        <twig:Toast type="success" duration="0">
-            <twig:Toast:Content>
-                <twig:Toast:Icon type="success" />
-                <div class="flex min-w-0 flex-1 flex-col gap-1">
-                    <twig:Toast:Title>تم إنشاء الحدث</twig:Toast:Title>
-                    <twig:Toast:Description>الأحد ٣ ديسمبر الساعة ٩:٠٠ صباحًا</twig:Toast:Description>
-                </div>
-                <twig:Toast:Close label="إغلاق الإشعار" />
-            </twig:Toast:Content>
-        </twig:Toast>
+        <twig:block name="toasts">
+            <twig:Toast type="success" duration="0">
+                <twig:Toast:Content>
+                    <twig:Toast:Icon type="success" />
+                    <div class="flex min-w-0 flex-1 flex-col gap-1">
+                        <twig:Toast:Title>تم إنشاء الحدث</twig:Toast:Title>
+                        <twig:Toast:Description>الأحد ٣ ديسمبر الساعة ٩:٠٠ صباحًا</twig:Toast:Description>
+                    </div>
+                    <twig:Toast:Close label="إغلاق الإشعار" />
+                </twig:Toast:Content>
+            </twig:Toast>
+        </twig:block>
     </twig:Toaster>
     <twig:Toaster dir="rtl" class="bottom-36">
-        <twig:Toast type="info" duration="0">
-            <twig:Toast:Content>
-                <twig:Toast:Icon type="info" />
-                <div class="flex min-w-0 flex-1 flex-col gap-1">
-                    <twig:Toast:Title>האירוע נוצר</twig:Toast:Title>
-                    <twig:Toast:Description>יום ראשון, 3 בדצמבר בשעה 9:00</twig:Toast:Description>
-                </div>
-                <twig:Toast:Close label="סגור התראה" />
-            </twig:Toast:Content>
-        </twig:Toast>
+        <twig:block name="toasts">
+            <twig:Toast type="info" duration="0">
+                <twig:Toast:Content>
+                    <twig:Toast:Icon type="info" />
+                    <div class="flex min-w-0 flex-1 flex-col gap-1">
+                        <twig:Toast:Title>האירוע נוצר</twig:Toast:Title>
+                        <twig:Toast:Description>יום ראשון, 3 בדצמבר בשעה 9:00</twig:Toast:Description>
+                    </div>
+                    <twig:Toast:Close label="סגור התראה" />
+                </twig:Toast:Content>
+            </twig:Toast>
+        </twig:block>
     </twig:Toaster>
 </div>
 ```
