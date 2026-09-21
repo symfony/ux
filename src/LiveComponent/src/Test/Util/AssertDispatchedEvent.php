@@ -16,7 +16,7 @@ use PHPUnit\Framework\TestCase;
 final class AssertDispatchedEvent
 {
     /**
-     * @param array<string, int|float|string|bool|null> $payload
+     * @param array<string, mixed> $payload
      */
     public function __construct(
         private readonly TestCase $testCase,
@@ -26,6 +26,8 @@ final class AssertDispatchedEvent
     }
 
     /**
+     * @param array<string, mixed> $expectedEventPayload
+     *
      * @return self
      */
     public function withPayloadSubset(array $expectedEventPayload): object
@@ -35,13 +37,7 @@ final class AssertDispatchedEvent
             $this->testCase::assertSame(
                 $value,
                 $this->payload[$key],
-                \sprintf(
-                    'The event "%s" data "%s" expect to be "%s", but "%s" given.',
-                    $this->eventName,
-                    $key,
-                    $value,
-                    $this->payload[$key]
-                )
+                \sprintf('The event "%s" data "%s" is different than expected.', $this->eventName, $key)
             );
         }
 
