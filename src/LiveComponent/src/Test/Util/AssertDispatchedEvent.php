@@ -26,6 +26,8 @@ final class AssertDispatchedEvent
     }
 
     /**
+     * @param array<string, mixed> $expectedEventPayload
+     *
      * @return self
      */
     public function withPayloadSubset(array $expectedEventPayload): object
@@ -39,13 +41,26 @@ final class AssertDispatchedEvent
                     'The event "%s" data "%s" expect to be "%s", but "%s" given.',
                     $this->eventName,
                     $key,
-                    $value,
-                    $this->payload[$key]
+                    self::export($value),
+                    self::export($this->payload[$key])
                 )
             );
         }
 
         return $this;
+    }
+
+    private static function export(mixed $value): string
+    {
+        if (\is_scalar($value) || null === $value) {
+            return (string) $value;
+        }
+
+        if (\is_object($value) && !$value instanceof \Stringable) {
+            return \sprintf('object(%s)', $value::class);
+        }
+
+        return json_encode($value, \JSON_UNESCAPED_SLASHES) ?: var_export($value, true);
     }
 
     public function withPayload(array $expectedEventPayload): void

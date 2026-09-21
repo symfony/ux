@@ -26,6 +26,8 @@ final class AssertEmittedEvent
     }
 
     /**
+     * @param array<string, mixed> $expectedEventData
+     *
      * @return self
      */
     public function withDataSubset(array $expectedEventData): object
@@ -39,13 +41,26 @@ final class AssertEmittedEvent
                     'The event "%s" data "%s" expect to be "%s", but "%s" given.',
                     $this->eventName,
                     $key,
-                    $value,
-                    $this->data[$key]
+                    self::export($value),
+                    self::export($this->data[$key])
                 )
             );
         }
 
         return $this;
+    }
+
+    private static function export(mixed $value): string
+    {
+        if (\is_scalar($value) || null === $value) {
+            return (string) $value;
+        }
+
+        if (\is_object($value) && !$value instanceof \Stringable) {
+            return \sprintf('object(%s)', $value::class);
+        }
+
+        return json_encode($value, \JSON_UNESCAPED_SLASHES) ?: var_export($value, true);
     }
 
     public function withData(array $expectedEventData): void
