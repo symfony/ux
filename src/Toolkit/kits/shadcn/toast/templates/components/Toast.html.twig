@@ -14,7 +14,6 @@
     {%- if null is not same as id %} data-toast-id="{{ id }}"{% endif %}
     data-toast-duration="{{ _toast_duration }}"
     {%- if _toast_hydrated %} data-starting-style{% endif %}
-    {#- The viewport is the live region; a toast only escalates out of its politeness. -#}
     {%- if 'error' == type %} role="alert" aria-live="assertive"{% endif %}
     aria-atomic="true"
     {{ attributes.defaults({

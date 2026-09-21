@@ -151,9 +151,8 @@ export default class extends Controller {
         element.dataset.type = type;
         element.dataset.toastId = toastId;
         element.dataset.toastDuration = String(ms);
-        // The viewport is the live region, so a toast only carries the escalation. Cleared again
-        // when a replaced toast leaves `error`, or a `promise` settling into `success` under the same
-        // id would keep interrupting.
+        // Cleared again when a replaced toast leaves `error`, or a `promise` settling into `success`
+        // under the same id would stay assertive.
         if ('error' === type) {
             element.setAttribute('role', 'alert');
             element.setAttribute('aria-live', 'assertive');
@@ -205,8 +204,6 @@ export default class extends Controller {
                 }
             }
 
-            // Descendants too, as above: a toast can leave inside a subtree swapped as a whole, and
-            // a removal nobody notices leaves the surviving stack on stale offsets.
             for (const node of record.removedNodes) {
                 if (Node.ELEMENT_NODE !== node.nodeType) {
                     continue;
@@ -253,13 +250,8 @@ export default class extends Controller {
         this.#startTimer(element, Number(element.dataset.toastDuration ?? this.durationValue));
     }
 
-    /**
-     * The counterpart to `#hydrate()`. A toast can leave the viewport without going through
-     * `#dismiss()` — a Turbo Stream `remove`, a morph, a subtree swap — and both maps are keyed by the
-     * element, so without this the node stays reachable and its timer still fires, dispatching a
-     * `toast:close` for a toast that is long gone. Dropping it from `#hydrated` is what lets a node
-     * that comes back later animate in again rather than be skipped as already hydrated.
-     */
+    // The counterpart to `#hydrate()`, for a toast that leaves without `#dismiss()`. Both maps are
+    // keyed by the element, so skipping this keeps the node reachable and its timer still fires.
     #forget(element) {
         this.#hydrated.delete(element);
         this.#clearTimer(element);
@@ -384,12 +376,9 @@ export default class extends Controller {
         this.#setExpanded(this.#hovered || this.#focused);
     }
 
-    // `pointerleave` does not fire when the element under the pointer is removed, and Chrome and
-    // Safari fire no `focusout` when the focused element is (Firefox does) — closing a toast from its
-    // own close button is enough to strand `#focused`. Read both back from the DOM after a removal
-    // instead of trusting the paired events, or the region stays expanded and every timer stays paused.
-    // Hover is read off the toasts rather than the viewport, which is `pointer-events-none`: they are
-    // what the `pointerenter` and `pointerleave` listeners bubble from in the first place.
+    // Chrome and Safari fire no `focusout` when the focused element is removed (Firefox does), so
+    // closing a toast from its own close button strands `#focused` and leaves every timer paused.
+    // Hover is read off the toasts, not the `pointer-events-none` viewport, which never matches.
     #refreshInteraction() {
         this.#hovered = null !== this.viewportTarget.querySelector('[data-slot="toast"]:hover');
         this.#focused = this.viewportTarget.contains(document.activeElement);
