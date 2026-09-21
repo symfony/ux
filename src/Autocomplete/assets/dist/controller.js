@@ -139,6 +139,12 @@ var controller_default = class extends Controller {
 	#createAutocompleteWithRemoteData(autocompleteEndpointUrl, minCharacterLength) {
 		const commonConfig = this.#getCommonConfig();
 		const labelField = commonConfig.labelField ?? "text";
+		let loadedQuery = "";
+		const clearRemoteOptions = (tomSelect) => {
+			tomSelect.clearOptions();
+			if (typeof tomSelect["clearPagination"] === "function") tomSelect["clearPagination"]();
+			loadedQuery = "";
+		};
 		const config = this.#mergeConfigs(commonConfig, {
 			firstUrl: (query) => {
 				return `${autocompleteEndpointUrl}${autocompleteEndpointUrl.includes("?") ? "&" : "?"}query=${encodeURIComponent(query)}`;
@@ -147,6 +153,7 @@ var controller_default = class extends Controller {
 				const url = this.getUrl(query);
 				fetch(url).then((response) => response.json()).then((json) => {
 					this.setNextUrl(query, json.next_page);
+					loadedQuery = query;
 					callback(json.results.options || json.results, json.results.optgroups || []);
 				}).catch(() => callback([], []));
 			},
@@ -178,12 +185,15 @@ var controller_default = class extends Controller {
 			onFocus: () => {
 				if (this.resetOnFocusValue && this.tomSelect) {
 					if (this.tomSelect.control_input.value.trim() === "") {
-						this.tomSelect.clearOptions();
-						this.tomSelect.loadedSearches = {};
-						if (typeof this.tomSelect["clearPagination"] === "function") this.tomSelect["clearPagination"]();
+						clearRemoteOptions(this.tomSelect);
 						this.tomSelect.load("");
 					}
 				}
+			},
+			onDropdownOpen: () => {
+				if (!this.tomSelect || loadedQuery === "" || this.tomSelect.inputValue() !== "") return;
+				clearRemoteOptions(this.tomSelect);
+				if (this.tomSelect.settings.shouldLoad.call(this.tomSelect, "")) this.tomSelect.load("");
 			},
 			preload: this.preload
 		});

@@ -265,6 +265,15 @@ export default class extends Controller {
     #createAutocompleteWithRemoteData(autocompleteEndpointUrl: string, minCharacterLength: number | null): TomSelect {
         const commonConfig = this.#getCommonConfig();
         const labelField = commonConfig.labelField ?? 'text';
+        let loadedQuery = '';
+        const clearRemoteOptions = (tomSelect: TomSelect): void => {
+            tomSelect.clearOptions();
+            // Defined by the virtual_scroll plugin
+            if (typeof tomSelect['clearPagination'] === 'function') {
+                tomSelect['clearPagination']();
+            }
+            loadedQuery = '';
+        };
 
         const config: RecursivePartial<TomSettings> = this.#mergeConfigs(commonConfig, {
             firstUrl: (query: string) => {
@@ -282,6 +291,7 @@ export default class extends Controller {
                     // important: next_url must be set before invoking callback()
                     .then((json) => {
                         this.setNextUrl(query, json.next_page);
+                        loadedQuery = query;
                         callback(json.results.options || json.results, json.results.optgroups || []);
                     })
                     .catch(() => callback([], []));
@@ -334,14 +344,20 @@ export default class extends Controller {
                 if (this.resetOnFocusValue && this.tomSelect) {
                     const query = this.tomSelect.control_input.value.trim();
                     if (query === '') {
-                        this.tomSelect.clearOptions();
-                        this.tomSelect.loadedSearches = {};
-                        // Defined by the virtual_scroll plugin
-                        if (typeof this.tomSelect['clearPagination'] === 'function') {
-                            this.tomSelect['clearPagination']();
-                        }
+                        clearRemoteOptions(this.tomSelect);
                         this.tomSelect.load('');
                     }
+                }
+            },
+            // selecting an option or closing the dropdown empties the input without loading its options
+            onDropdownOpen: () => {
+                if (!this.tomSelect || loadedQuery === '' || this.tomSelect.inputValue() !== '') {
+                    return;
+                }
+
+                clearRemoteOptions(this.tomSelect);
+                if (this.tomSelect.settings.shouldLoad.call(this.tomSelect, '')) {
+                    this.tomSelect.load('');
                 }
             },
             preload: this.preload,
