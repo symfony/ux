@@ -138,6 +138,9 @@ var controller_default = class extends Controller {
 	#createAutocompleteWithRemoteData(autocompleteEndpointUrl, minCharacterLength) {
 		const commonConfig = this.#getCommonConfig();
 		const labelField = commonConfig.labelField ?? "text";
+		const markChoicesLoaded = () => {
+			this.hasLoadedChoicesPreviously = true;
+		};
 		const config = this.#mergeConfigs(commonConfig, {
 			firstUrl: (query) => {
 				return `${autocompleteEndpointUrl}${autocompleteEndpointUrl.includes("?") ? "&" : "?"}query=${encodeURIComponent(query)}`;
@@ -146,6 +149,7 @@ var controller_default = class extends Controller {
 				const url = this.getUrl(query);
 				fetch(url).then((response) => response.json()).then((json) => {
 					this.setNextUrl(query, json.next_page);
+					markChoicesLoaded();
 					callback(json.results.options || json.results, json.results.optgroups || []);
 				}).catch(() => callback([], []));
 			},

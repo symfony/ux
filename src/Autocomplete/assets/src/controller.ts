@@ -272,6 +272,9 @@ export default class extends Controller {
     #createAutocompleteWithRemoteData(autocompleteEndpointUrl: string, minCharacterLength: number | null): TomSelect {
         const commonConfig = this.#getCommonConfig();
         const labelField = commonConfig.labelField ?? 'text';
+        const markChoicesLoaded = () => {
+            this.hasLoadedChoicesPreviously = true;
+        };
 
         const config: RecursivePartial<TomSettings> = this.#mergeConfigs(commonConfig, {
             firstUrl: (query: string) => {
@@ -289,6 +292,8 @@ export default class extends Controller {
                     // important: next_url must be set before invoking callback()
                     .then((json) => {
                         this.setNextUrl(query, json.next_page);
+                        // preload bypasses shouldLoad(), but still counts as the first remote load
+                        markChoicesLoaded();
                         callback(json.results.options || json.results, json.results.optgroups || []);
                     })
                     .catch(() => callback([], []));

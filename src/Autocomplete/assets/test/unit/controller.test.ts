@@ -245,6 +245,45 @@ describe('AutocompleteController', () => {
         });
     });
 
+    it('reloads preloaded remote options after clearing a selected option', async () => {
+        const { container, tomSelect } = await startAutocompleteTest(`
+            <select data-controller="autocomplete" data-autocomplete-url-value="/path/to/autocomplete">
+                <option value=""></option>
+            </select>
+        `);
+
+        const allResults = JSON.stringify({
+            results: [
+                { value: 'apple', text: 'Apple' },
+                { value: 'grape', text: 'Grape' },
+            ],
+            next_page: null,
+        });
+        fetchMock.mockResponseOnce(allResults);
+        fetchMock.mockResponseOnce(allResults);
+
+        const controlInput = tomSelect.control_input;
+        await userEvent.click(controlInput);
+        await waitFor(() => {
+            expect(container.querySelector('.option[data-value="apple"]')).toBeInTheDocument();
+        });
+
+        await userEvent.click(container.querySelector('.option[data-value="apple"]') as HTMLElement);
+        expect(tomSelect.items).toEqual(['apple']);
+
+        await userEvent.click(container.querySelector('.clear-button') as HTMLElement);
+        expect(tomSelect.items).toEqual([]);
+
+        await userEvent.click(controlInput);
+        await waitFor(() => {
+            expect(fetchMock.requests().map((request) => request.url)).toEqual([
+                '/path/to/autocomplete?query=',
+                '/path/to/autocomplete?query=',
+            ]);
+            expect(container.querySelector('.option[data-value="grape"]')).toBeInTheDocument();
+        });
+    });
+
     it('does not reload twice when resetOnFocus also refreshes after a selection', async () => {
         const { container, tomSelect } = await startAutocompleteTest(`
             <select
