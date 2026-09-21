@@ -151,8 +151,16 @@ export default class extends Controller {
         element.dataset.type = type;
         element.dataset.toastId = toastId;
         element.dataset.toastDuration = String(ms);
-        element.setAttribute('role', 'error' === type ? 'alert' : 'status');
-        element.setAttribute('aria-live', 'error' === type ? 'assertive' : 'polite');
+        // The viewport is the live region, so a toast only carries the escalation. Cleared again
+        // when a replaced toast leaves `error`, or a `promise` settling into `success` under the same
+        // id would keep interrupting.
+        if ('error' === type) {
+            element.setAttribute('role', 'alert');
+            element.setAttribute('aria-live', 'assertive');
+        } else {
+            element.removeAttribute('role');
+            element.removeAttribute('aria-live');
+        }
 
         // Every status icon ships in the markup; only the one matching the type stays visible,
         // so a toast replaced by `promise` can still switch from `loading` to `success`.
