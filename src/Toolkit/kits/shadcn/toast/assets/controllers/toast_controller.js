@@ -179,6 +179,7 @@ export default class extends Controller {
     }
 
     #absorb(records) {
+        const removed = new Set();
         let changed = false;
 
         for (const record of records) {
@@ -196,9 +197,34 @@ export default class extends Controller {
                 }
             }
 
+            // Descendants too, as above: a toast can leave inside a subtree swapped as a whole, and
+            // a removal nobody notices leaves the surviving stack on stale offsets.
             for (const node of record.removedNodes) {
-                changed ||= Node.ELEMENT_NODE === node.nodeType && node.matches('[data-slot="toast"]');
+                if (Node.ELEMENT_NODE !== node.nodeType) {
+                    continue;
+                }
+
+                const gone = node.matches('[data-slot="toast"]')
+                    ? [node]
+                    : node.querySelectorAll('[data-slot="toast"]');
+                for (const element of gone) {
+                    removed.add(element);
+                    changed = true;
+                }
             }
+        }
+
+        // Records land once the DOM has settled, so a toast that was merely moved is back inside the
+        // viewport by now: forgetting it here would clear its timer while `#hydrate()` skips it as
+        // already hydrated, leaving a toast that never dismisses.
+        for (const element of removed) {
+            if (!this.viewportTarget.contains(element)) {
+                this.#forget(element);
+            }
+        }
+
+        if (removed.size > 0) {
+            this.#refreshInteraction();
         }
 
         if (changed) {
@@ -217,6 +243,20 @@ export default class extends Controller {
         this.#watchSwipe(element);
         this.#enter(element);
         this.#startTimer(element, Number(element.dataset.toastDuration ?? this.durationValue));
+    }
+
+    /**
+     * The counterpart to `#hydrate()`. A toast can leave the viewport without going through
+     * `#dismiss()` — a Turbo Stream `remove`, a morph, a subtree swap — and both maps are keyed by the
+     * element, so without this the node stays reachable and its timer still fires, dispatching a
+     * `toast:close` for a toast that is long gone. Dropping it from `#hydrated` is what lets a node
+     * that comes back later animate in again rather than be skipped as already hydrated.
+     */
+    #forget(element) {
+        this.#hydrated.delete(element);
+        this.#clearTimer(element);
+        this.#swipeAborts.get(element)?.abort();
+        this.#swipeAborts.delete(element);
     }
 
     #reset(element) {
@@ -258,9 +298,8 @@ export default class extends Controller {
             clearTimeout(fallbackId);
             element.removeEventListener('transitionend', onTransitionEnd);
 
-            this.#swipeAborts.get(element)?.abort();
-            this.#swipeAborts.delete(element);
             const toastId = element.dataset.toastId;
+            this.#forget(element);
             element.remove();
 
             this.dispatch('close', { detail: { id: toastId } });
@@ -334,6 +373,18 @@ export default class extends Controller {
             this.#focused = on;
         }
 
+        this.#setExpanded(this.#hovered || this.#focused);
+    }
+
+    // `pointerleave` does not fire when the element under the pointer is removed, and Chrome and
+    // Safari fire no `focusout` when the focused element is (Firefox does) — closing a toast from its
+    // own close button is enough to strand `#focused`. Read both back from the DOM after a removal
+    // instead of trusting the paired events, or the region stays expanded and every timer stays paused.
+    // Hover is read off the toasts rather than the viewport, which is `pointer-events-none`: they are
+    // what the `pointerenter` and `pointerleave` listeners bubble from in the first place.
+    #refreshInteraction() {
+        this.#hovered = null !== this.viewportTarget.querySelector('[data-slot="toast"]:hover');
+        this.#focused = this.viewportTarget.contains(document.activeElement);
         this.#setExpanded(this.#hovered || this.#focused);
     }
 
