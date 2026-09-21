@@ -57,6 +57,7 @@ export default class extends Controller {
     private isObserving = false;
     private hasLoadedChoicesPreviously = false;
     private originalOptions: Array<OptionDataStructure> = [];
+    private reloadAfterSelection = false;
 
     initialize() {
         if (!this.mutationObserver) {
@@ -75,6 +76,8 @@ export default class extends Controller {
     }
 
     initializeTomSelect() {
+        this.reloadAfterSelection = false;
+
         // live components support: morphing the options causes issues, due
         // to the fact that TomSelect reorders the options when you select them
         if (this.selectElement) {
@@ -174,6 +177,10 @@ export default class extends Controller {
             // clear the text input after selecting a value
             onItemAdd: () => {
                 this.tomSelect?.setTextboxValue('');
+
+                if (this.urlValue && this.tomSelect) {
+                    this.reloadAfterSelection = true;
+                }
             },
             closeAfterSelect: true,
             // fix positioning (in the dropdown) of options added through addOption()
@@ -334,20 +341,51 @@ export default class extends Controller {
                 if (this.resetOnFocusValue && this.tomSelect) {
                     const query = this.tomSelect.control_input.value.trim();
                     if (query === '') {
-                        this.tomSelect.clearOptions();
-                        this.tomSelect.loadedSearches = {};
-                        // Defined by the virtual_scroll plugin
-                        if (typeof this.tomSelect['clearPagination'] === 'function') {
-                            this.tomSelect['clearPagination']();
-                        }
-                        this.tomSelect.load('');
+                        this.reloadAfterSelection = false;
+                        this.#reloadEmptyQuery();
                     }
                 }
+            },
+            onDropdownOpen: () => {
+                const select = this.tomSelect;
+
+                if (!select || !this.reloadAfterSelection || select.control_input.value.trim() !== '') {
+                    return;
+                }
+
+                this.reloadAfterSelection = false;
+
+                this.#clearRemoteOptions();
+
+                if (!select.settings.shouldLoad('')) {
+                    return;
+                }
+
+                select.load('');
             },
             preload: this.preload,
         });
 
         return this.#createTomSelect(config);
+    }
+
+    #reloadEmptyQuery(): void {
+        this.#clearRemoteOptions();
+        this.tomSelect?.load('');
+    }
+
+    #clearRemoteOptions(): void {
+        const select = this.tomSelect;
+        if (!select) {
+            return;
+        }
+
+        select.clearOptions();
+        select.loadedSearches = {};
+        // Defined by the virtual_scroll plugin
+        if (typeof select['clearPagination'] === 'function') {
+            select['clearPagination']();
+        }
     }
 
     private getMaxOptions(): number {

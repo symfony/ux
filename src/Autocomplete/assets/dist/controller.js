@@ -19,6 +19,7 @@ var controller_default = class extends Controller {
 	isObserving = false;
 	hasLoadedChoicesPreviously = false;
 	originalOptions = [];
+	reloadAfterSelection = false;
 	initialize() {
 		if (!this.mutationObserver) this.mutationObserver = new MutationObserver((mutations) => {
 			this.onMutations(mutations);
@@ -29,6 +30,7 @@ var controller_default = class extends Controller {
 		this.initializeTomSelect();
 	}
 	initializeTomSelect() {
+		this.reloadAfterSelection = false;
 		if (this.selectElement) this.selectElement.setAttribute("data-skip-morph", "");
 		if (this.urlValue) {
 			this.tomSelect = this.#createAutocompleteWithRemoteData(this.urlValue, this.hasMinCharactersValue ? this.minCharactersValue : null);
@@ -75,6 +77,7 @@ var controller_default = class extends Controller {
 			plugins,
 			onItemAdd: () => {
 				this.tomSelect?.setTextboxValue("");
+				if (this.urlValue && this.tomSelect) this.reloadAfterSelection = true;
 			},
 			closeAfterSelect: true,
 			onOptionAdd: (value, data) => {
@@ -174,16 +177,33 @@ var controller_default = class extends Controller {
 			onFocus: () => {
 				if (this.resetOnFocusValue && this.tomSelect) {
 					if (this.tomSelect.control_input.value.trim() === "") {
-						this.tomSelect.clearOptions();
-						this.tomSelect.loadedSearches = {};
-						if (typeof this.tomSelect["clearPagination"] === "function") this.tomSelect["clearPagination"]();
-						this.tomSelect.load("");
+						this.reloadAfterSelection = false;
+						this.#reloadEmptyQuery();
 					}
 				}
+			},
+			onDropdownOpen: () => {
+				const select = this.tomSelect;
+				if (!select || !this.reloadAfterSelection || select.control_input.value.trim() !== "") return;
+				this.reloadAfterSelection = false;
+				this.#clearRemoteOptions();
+				if (!select.settings.shouldLoad("")) return;
+				select.load("");
 			},
 			preload: this.preload
 		});
 		return this.#createTomSelect(config);
+	}
+	#reloadEmptyQuery() {
+		this.#clearRemoteOptions();
+		this.tomSelect?.load("");
+	}
+	#clearRemoteOptions() {
+		const select = this.tomSelect;
+		if (!select) return;
+		select.clearOptions();
+		select.loadedSearches = {};
+		if (typeof select["clearPagination"] === "function") select["clearPagination"]();
 	}
 	getMaxOptions() {
 		if (this.hasMaxOptionsValue) return this.maxOptionsValue;
