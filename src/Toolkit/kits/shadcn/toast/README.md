@@ -270,12 +270,16 @@ To enable RTL support, set the `dir="rtl"` attribute on the root element.
 
 ## Accessibility
 
-- `Toaster` renders the toast region as a fixed container whose items announce themselves individually,
-  so a toast is read out without stealing focus from whatever the user is doing.
-- A `Toast` renders `role="status"` with `aria-live="polite"`, or `role="alert"` with
-  `aria-live="assertive"` when `type` is `error`, so a failure interrupts while ordinary confirmations
-  wait their turn. Each toast is `aria-atomic="true"`, so its title and description are announced
-  together rather than piecemeal.
+- `Toaster` renders the toast region as a fixed container that is itself the live region
+  (`aria-live="polite"`), so a toast is read out as it lands without stealing focus from whatever the
+  user is doing. A live region has to be in the DOM before a node arrives inside it, which is why the
+  `aria-live` sits on the region rather than on the toast — a toast carrying its own is never
+  announced.
+- A `Toast` of type `error` escalates out of that politeness with `role="alert"` and
+  `aria-live="assertive"`, so a failure interrupts while ordinary confirmations wait their turn.
+- Each toast is `aria-atomic="true"`, so its title and description are announced together rather than
+  piecemeal, while the region is `aria-atomic="false"` so a new toast does not re-announce the whole
+  stack.
 - The status icon is `aria-hidden="true"`: it repeats what the text already says. Never rely on it alone
   to carry the meaning of a toast — write the type into the copy.
 - `Toast:Close` carries a translatable `label` prop, rendered as its `aria-label`. Translate it when your
