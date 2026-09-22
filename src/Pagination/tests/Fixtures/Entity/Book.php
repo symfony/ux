@@ -36,6 +36,9 @@ class Book
     #[ORM\Column(type: 'datetime_immutable')]
     private \DateTimeImmutable $publishedAt;
 
+    #[ORM\Column(type: 'datetimetz')]
+    private \DateTime $updatedAt;
+
     /** @var array<string, mixed> */
     #[ORM\Column(type: 'json')]
     private array $metadata = [];
@@ -55,6 +58,7 @@ class Book
     {
         $this->categories = new ArrayCollection();
         $this->publishedAt = new \DateTimeImmutable('2000-01-01T00:00:00+00:00');
+        $this->updatedAt = new \DateTime('2000-01-01T00:00:00+00:00');
     }
 
     public function getId(): ?int
@@ -99,6 +103,18 @@ class Book
     public function setPublishedAt(\DateTimeImmutable $publishedAt): self
     {
         $this->publishedAt = $publishedAt;
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): \DateTime
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(\DateTime $updatedAt): self
+    {
+        $this->updatedAt = $updatedAt;
 
         return $this;
     }
