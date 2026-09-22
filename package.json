@@ -9,6 +9,9 @@
         }
     },
     "type": "module",
+    "config": {
+        "baseline": "widely"
+    },
     "workspaces": [
         "src/*/assets",
         "src/*/src/Bridge/*/assets"
@@ -21,7 +24,8 @@
         "fmt": "oxfmt",
         "fmt:check": "oxfmt --check",
         "lint": "oxlint",
-        "lint:fix": "oxlint --fix"
+        "lint:fix": "oxlint --fix",
+        "lint:baseline": "node bin/check_baseline.ts"
     },
     "devDependencies": {
         "@playwright/test": "^1.58.2",
@@ -30,12 +34,16 @@
         "@testing-library/jest-dom": "^6.9.1",
         "@tsdown/css": "^0.22.0",
         "@types/node": "^22.19.11",
+        "browserslist": "^4.29.0",
+        "lightningcss": "^1.33.0",
+        "oxc-parser": "^0.150.0",
         "oxfmt": "^0.41.0",
         "oxlint": "^1.56.0",
         "pkg-types": "^2.3.0",
         "proxy-agent": "^8.0.1",
         "tinyglobby": "^0.2.15",
         "tsdown": "^0.22.0",
-        "vitest": "^4.1.0"
+        "vitest": "^4.1.0",
+        "web-features": "^3.39.0"
     }
 }

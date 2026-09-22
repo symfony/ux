@@ -22,6 +22,10 @@ infrastructure for you!
 
 Help Symfony by [sponsoring][3] its development!
 
+## Browser support
+
+Unlike most Symfony UX packages, which stay within Web Platform Baseline Widely available, this one relies on the [Notifications API](https://developer.mozilla.org/en-US/docs/Web/API/Notifications_API), which is [Baseline Limited availability](https://web.dev/baseline). This is because iOS Safari only exposes the Notifications API to web apps the user has added to their home screen.
+
 ## Resources
 
 - [Documentation](https://symfony.com/bundles/ux-notify/current/index.html)
