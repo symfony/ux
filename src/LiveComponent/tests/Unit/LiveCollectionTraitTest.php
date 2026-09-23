@@ -42,7 +42,7 @@ final class LiveCollectionTraitTest extends TestCase
         self::assertSame($expectedFormData[$component->formName], $component->formValues);
     }
 
-    public function testAddCollectionItemDoesNotReusePreviouslyRemovedIndex()
+    public function testAddCollectionItemDoesNotReusePreviouslyRemovedIndex(): void
     {
         $component = $this->createComponent([
             '' => [
