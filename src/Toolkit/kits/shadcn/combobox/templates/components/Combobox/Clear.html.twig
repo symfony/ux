@@ -1,0 +1,10 @@
+{%- set _combobox_value = inject('combobox.value', []) -%}
+{%- set combobox_clear_attrs = {
+    'data-slot': 'combobox-clear',
+    'data-combobox-target': 'clear',
+    'data-action': 'click->combobox#clear'|html_attr_type('sst'),
+    'aria-label': 'Clear selection',
+    hidden: _combobox_value is empty,
+} -%}
+{##- The clear element (e.g., an `InputGroup:Button`) that resets the selection when clicked. -#}
+{%- block content %}{% endblock -%}

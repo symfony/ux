@@ -1,0 +1,16 @@
+{%- set _combobox_value = inject('combobox.value', []) -%}
+<div
+    data-slot="combobox-chips"
+    data-combobox-target="chips"
+    {{ attributes.defaults({
+        class: 'flex min-h-8 w-full flex-wrap items-center gap-1 rounded-lg border border-input bg-transparent bg-clip-padding px-2.5 py-1 text-sm transition-colors focus-within:border-ring focus-within:ring-3 focus-within:ring-ring/50 has-aria-invalid:border-destructive has-aria-invalid:ring-3 has-aria-invalid:ring-destructive/20 has-data-[slot=combobox-chip]:px-1 dark:bg-input/30 dark:has-aria-invalid:border-destructive/50 dark:has-aria-invalid:ring-destructive/40'|tailwind_classes,
+        'data-action': 'click->combobox#focusInput'|html_attr_type('sst'),
+    }) }}
+>
+    {%- for value in _combobox_value -%}
+        <twig:Combobox:Chip value="{{ value }}">{{ value }}</twig:Combobox:Chip>
+    {%- endfor -%}
+    {##- The chips input, i.e. a `Combobox:ChipsInput`. -#}
+    {%- block content %}{% endblock -%}
+    <template data-combobox-target="chipTemplate"><twig:Combobox:Chip value="" /></template>
+</div>

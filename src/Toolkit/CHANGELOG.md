@@ -10,7 +10,6 @@
 - [Shadcn] Fix the arrow keys of `accordion` getting stuck before a disabled item
 - [Shadcn] Fix `alert-dialog` opening on page load
 - [Shadcn] Fix a closed `drawer` staying reachable with the keyboard and exposed to screen readers
-- [Shadcn] Fix the `combobox` list not lining up with its trigger
 - [Shadcn] Fix the checked radio item of `dropdown-menu` showing a ring instead of a dot
 - [Shadcn] Fix `dropdown-menu` submenus wrapping their labels
 - [Shadcn] Fix `date-picker` focusing "Previous month" instead of a day when it opens
@@ -25,6 +24,7 @@
 - [Shadcn] Fix the close button and the action of a `sonner` toast ignoring mouse clicks
 - [Shadcn] Fix the bookmark icon of the `toggle` examples not filling when pressed
 - [Shadcn] Fix the tooltip of the disabled button example of `tooltip` never opening
+- [Shadcn] Rewrite `combobox` to match the upstream Shadcn UI component, as `Combobox:*` sub-components with multiple selection
 
 ## 3.5.0
 

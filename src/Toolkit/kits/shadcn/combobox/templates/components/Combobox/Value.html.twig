@@ -1,0 +1,14 @@
+{%- props
+    ## string The text shown while nothing is selected.
+    placeholder = ''
+-%}
+{%- set _combobox_value = inject('combobox.value', []) -%}
+<span
+    data-slot="combobox-value"
+    data-combobox-target="value"
+    data-placeholder="{{ placeholder }}"
+    data-empty="{{ _combobox_value is empty ? 'true' : 'false' }}"
+    {{ attributes.defaults({
+        class: 'truncate data-[empty=true]:text-muted-foreground'|tailwind_classes,
+    }) }}
+>{{ _combobox_value is empty ? placeholder : _combobox_value|join(', ') }}</span>
