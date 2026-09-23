@@ -30,7 +30,7 @@
     },
 ) -%}
 <{{ as }}
-    data-slot="button"
+    data-slot="{{ attributes.render('data-slot')|default('button') }}"
     data-size="{{ size }}"
     data-variant="{{ variant }}"
     {{ attributes.defaults({

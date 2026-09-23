@@ -99,6 +99,16 @@ describeRecipe('shadcn/sidebar', () => {
         await expect(page.getByRole('link', { name: 'History' })).toBeVisible();
     });
 
+    test('leaves room for a menu action that opens a dropdown menu', async ({ page, gotoExample }) => {
+        await gotoExample('shadcn/sidebar/default');
+
+        const button = page
+            .getByRole('complementary', { name: 'Sidebar' })
+            .getByRole('link', { name: 'Sales & Marketing' });
+
+        await expect(button).toHaveCSS('padding-inline-end', '32px');
+    });
+
     testState('hides the sidebar off-canvas on a click on the trigger', {
         example: 'off-canvas-collapsing',
         state: 'collapsed',

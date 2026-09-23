@@ -8,6 +8,15 @@ const grantClipboard = (page: Page) => page.context().grantPermissions(['clipboa
 const readClipboard = (page: Page) => page.evaluate(() => navigator.clipboard.readText());
 
 describeRecipe('shadcn/input-group', () => {
+    test('draws the focus ring around the group when its input is focused', async ({ page, gotoExample }) => {
+        await gotoExample('shadcn/input-group/default');
+        const group = page.locator('[data-slot="input-group"]').first();
+
+        await page.getByPlaceholder('Search...').focus();
+
+        await expect(group).toHaveCSS('box-shadow', /0px 0px 0px 3px/);
+    });
+
     testState('shows a check once the URL is copied', {
         example: 'button',
         state: 'copied',

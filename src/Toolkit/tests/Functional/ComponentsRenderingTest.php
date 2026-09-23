@@ -84,7 +84,21 @@ class ComponentsRenderingTest extends WebTestCase
         $template = $twig->createTemplate($code);
         $renderedCode = $kitContextRunner->runForKit($kit, static fn () => $template->render());
 
+        self::assertNoDuplicateDataSlot($renderedCode);
         $this->assertCodeRenderedMatchesHtmlSnapshot($kit, $kit->getRecipe($recipeName), $code, $renderedCode);
+    }
+
+    private static function assertNoDuplicateDataSlot(string $html): void
+    {
+        $attribute = '\s+([^\s"\'>\/=]+)(?:\s*=\s*(?:"[^"]*"|\'[^\']*\'|[^\s"\'=<>`]+))?';
+        preg_match_all('/<[a-zA-Z][\w:-]*(?:'.$attribute.')*+\s*\/?>/', $html, $tags);
+
+        foreach ($tags[0] as $tag) {
+            preg_match_all('/'.$attribute.'/', $tag, $attributes);
+            $count = array_count_values($attributes[1])['data-slot'] ?? 0;
+
+            self::assertLessThan(2, $count, \sprintf('The browser only keeps the first "data-slot" of "%s".', $tag));
+        }
     }
 
     private function instantiateKit(string $kitName): Kit
