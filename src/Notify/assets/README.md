@@ -11,8 +11,8 @@ We **strongly recommend not installing this package directly**, but instead inst
 If you still want to install this package directly, please make sure its version exactly matches [symfony/ux-notify](https://packagist.org/packages/symfony/ux-notify) PHP package version:
 
 ```shell
-composer require symfony/ux-notify:2.23.0
-npm add @symfony/ux-notify@2.23.0
+composer require symfony/ux-notify:X.Y.Z
+npm add @symfony/ux-notify@X.Y.Z
 ```
 
 **Tip:** Your `package.json` file will be automatically modified by [Flex](https://github.com/symfony/flex) when installing or upgrading a PHP package. To prevent this behavior, ensure to **use at least Flex 1.22.0 or 2.5.0**, and run `composer config --json "extra.symfony/flex.synchronize_package_json" false`.
