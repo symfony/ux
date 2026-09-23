@@ -275,7 +275,7 @@ final class InteractsWithLiveComponentsTest extends KernelTestCase
         $testComponent->call('actionThatEmitsWithNonScalarData');
 
         $this->expectException(AssertionFailedError::class);
-        $this->expectExceptionMessage('The event "event1" data "params" expect to be "{"%count%":4}", but "{"%count%":3,"%name%":"foo"}" given.');
+        $this->expectExceptionMessage('The event "event1" data "params" is different than expected.');
         $this->assertComponentEmitEvent($testComponent, 'event1')
             ->withDataSubset(['params' => ['%count%' => 4]])
         ;
@@ -371,7 +371,7 @@ final class InteractsWithLiveComponentsTest extends KernelTestCase
         $testComponent->call('actionThatDispatchesABrowserEventWithNonScalarData');
 
         $this->expectException(AssertionFailedError::class);
-        $this->expectExceptionMessage('The event "browser-event" data "paramsKey" expect to be "{"%count%":4}", but "{"%count%":3,"%name%":"foo"}" given.');
+        $this->expectExceptionMessage('The event "browser-event" data "paramsKey" is different than expected.');
         $this->assertComponentDispatchBrowserEvent($testComponent, 'browser-event')
             ->withPayloadSubset(['paramsKey' => ['%count%' => 4]])
         ;

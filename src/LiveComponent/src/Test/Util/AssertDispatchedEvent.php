@@ -16,7 +16,7 @@ use PHPUnit\Framework\TestCase;
 final class AssertDispatchedEvent
 {
     /**
-     * @param array<string, int|float|string|bool|null> $payload
+     * @param array<string, mixed> $payload
      */
     public function __construct(
         private readonly TestCase $testCase,
@@ -37,30 +37,11 @@ final class AssertDispatchedEvent
             $this->testCase::assertSame(
                 $value,
                 $this->payload[$key],
-                \sprintf(
-                    'The event "%s" data "%s" expect to be "%s", but "%s" given.',
-                    $this->eventName,
-                    $key,
-                    self::export($value),
-                    self::export($this->payload[$key])
-                )
+                \sprintf('The event "%s" data "%s" is different than expected.', $this->eventName, $key)
             );
         }
 
         return $this;
-    }
-
-    private static function export(mixed $value): string
-    {
-        if (\is_scalar($value) || null === $value) {
-            return (string) $value;
-        }
-
-        if (\is_object($value) && !$value instanceof \Stringable) {
-            return \sprintf('object(%s)', $value::class);
-        }
-
-        return json_encode($value, \JSON_UNESCAPED_SLASHES) ?: var_export($value, true);
     }
 
     public function withPayload(array $expectedEventPayload): void
