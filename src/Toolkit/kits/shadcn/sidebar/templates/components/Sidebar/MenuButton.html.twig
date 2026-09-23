@@ -25,7 +25,7 @@
     },
 ) -%}
 <{{ as }}
-    data-slot="sidebar-menu-button"
+    data-slot="{{ attributes.render('data-slot')|default('sidebar-menu-button') }}"
     data-size="{{ size }}"
     data-active="{{ active ? 'true' : 'false' }}"
     {% if 'button' == as %}type="button"{% endif %}

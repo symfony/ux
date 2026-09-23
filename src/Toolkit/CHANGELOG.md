@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 3.6.0
+
+- [Shadcn] Fix `data-slot` being silently dropped when a component forwards one to a child component, or when a `<recipe>_<role>_attrs` bag is spread onto a `Button`: the child's own `data-slot` shadowed it, so `dialog-trigger`, `pagination-link`, `input-group-control` and a dozen others never reached the DOM (`InputGroup` now shows its focus ring again)
+
 ## 3.5.0
 
 - Add support for blocks: ready-to-use page sections built from a kit's components, installed and previewed as a unit
