@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 3.6.0
+
+- [Shadcn] Rewrite the `combobox` recipe as a composition of `Combobox:Input`, `Combobox:Content`, `Combobox:List` and `Combobox:Item` sub-components matching the upstream Shadcn UI component, and add multiple selection with chips
+
 ## 3.5.0
 
 - Add support for blocks: ready-to-use page sections built from a kit's components, installed and previewed as a unit

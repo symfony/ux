@@ -1,0 +1,24 @@
+{%- props
+    ## string The text shown in the input while nothing has been typed.
+    placeholder = ''
+-%}
+{%- set _combobox_open = inject('combobox.open', false) -%}
+{%- set _combobox_inputId = inject('combobox.inputId', null) -%}
+{%- set _combobox_listId = inject('combobox.listId', null) -%}
+<input
+    id="{{ _combobox_inputId }}"
+    type="text"
+    role="combobox"
+    autocomplete="off"
+    placeholder="{{ placeholder }}"
+    data-slot="combobox-chip-input"
+    data-combobox-target="input"
+    aria-autocomplete="list"
+    aria-haspopup="listbox"
+    aria-controls="{{ _combobox_listId }}"
+    aria-expanded="{{ _combobox_open ? 'true' : 'false' }}"
+    {{ attributes.defaults({
+        class: 'min-w-16 flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground'|tailwind_classes,
+        'data-action': 'input->combobox#filter focus->combobox#open keydown->combobox#onInputKeydown'|html_attr_type('sst'),
+    }) }}
+>

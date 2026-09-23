@@ -1,0 +1,63 @@
+{%- props
+    ## string The text shown in the input while nothing has been typed.
+    placeholder = '',
+    ## boolean Whether the button toggling the list is rendered.
+    showTrigger = true,
+    ## boolean Whether the button clearing the selection is rendered.
+    showClear = false,
+    ## boolean Whether the input is disabled.
+    disabled = false
+-%}
+{%- set _combobox_open = inject('combobox.open', false) -%}
+{%- set _combobox_value = inject('combobox.value', []) -%}
+{%- set _combobox_required = inject('combobox.required', false) -%}
+{%- set _combobox_inputId = inject('combobox.inputId', null) -%}
+{%- set _combobox_listId = inject('combobox.listId', null) -%}
+<twig:InputGroup class="w-auto">
+    <twig:InputGroup:Input
+        id="{{ _combobox_inputId }}"
+        type="text"
+        role="combobox"
+        autocomplete="off"
+        placeholder="{{ placeholder }}"
+        value="{{ _combobox_value|first|default('') }}"
+        aria-autocomplete="list"
+        aria-haspopup="listbox"
+        aria-controls="{{ _combobox_listId }}"
+        aria-expanded="{{ _combobox_open ? 'true' : 'false' }}"
+        data-combobox-target="input"
+        data-action="input->combobox#filter focus->combobox#open keydown->combobox#onInputKeydown"
+        :disabled="disabled"
+        :required="_combobox_required and _combobox_value is empty"
+        {{ ...attributes }}
+    />
+    <twig:InputGroup:Addon align="inline-end">
+        {%- if showTrigger -%}
+            <twig:Combobox:Trigger>
+                <twig:InputGroup:Button
+                    size="icon-xs"
+                    variant="ghost"
+                    aria-label="Toggle the list"
+                    :disabled="disabled"
+                    {{ ...combobox_trigger_attrs }}
+                >
+                    <twig:ux:icon name="lucide:chevron-down" class="size-4 text-muted-foreground" />
+                </twig:InputGroup:Button>
+            </twig:Combobox:Trigger>
+        {%- endif -%}
+        {%- if showClear -%}
+            <twig:Combobox:Clear>
+                <twig:InputGroup:Button
+                    size="icon-xs"
+                    variant="ghost"
+                    :disabled="disabled"
+                    {{ ...combobox_clear_attrs }}
+                >
+                    <twig:ux:icon name="lucide:x" class="size-4 text-muted-foreground" />
+                </twig:InputGroup:Button>
+            </twig:Combobox:Clear>
+        {%- endif -%}
+    </twig:InputGroup:Addon>
+    {##- Extra `InputGroup:Addon` elements rendered alongside the input. -#}
+    {{- block(outerBlocks.content) -}}
+</twig:InputGroup>

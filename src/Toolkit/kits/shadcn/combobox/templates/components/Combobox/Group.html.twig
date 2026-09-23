@@ -1,0 +1,16 @@
+{%- props
+    ## string Unique identifier used to link the group to its `Combobox:Label`.
+    id
+-%}
+{%- set _combobox_id = inject('combobox.id', 'combobox') -%}
+{%- do provide('combobox.groupLabelId', 'combobox-' ~ _combobox_id ~ '-group-' ~ id ~ '-label') -%}
+<div
+    role="group"
+    data-slot="combobox-group"
+    data-combobox-target="group"
+    aria-labelledby="{{ 'combobox-' ~ _combobox_id ~ '-group-' ~ id ~ '-label' }}"
+    {{ attributes }}
+>
+    {##- The group content, typically a `Combobox:Label` and a `Combobox:Collection`. -#}
+    {%- block content %}{% endblock -%}
+</div>
