@@ -8,7 +8,8 @@ import { parseArgs } from 'node:util';
 import { globSync } from 'tinyglobby';
 import { build } from 'tsdown';
 import { readPackageJSON } from 'pkg-types';
-import tsConfigPackage from '../tsconfig.package.json' with { type: 'json' };
+import { DEFAULT_BASELINE } from './baseline.ts';
+import { baselineTarget } from './baseline_target.ts';
 
 const args = parseArgs({
     allowPositionals: true,
@@ -67,7 +68,7 @@ async function main() {
         watch: isWatch,
         format: 'esm',
         platform: 'browser',
-        target: tsConfigPackage.compilerOptions.target,
+        target: baselineTarget(packageData.config?.baseline ?? DEFAULT_BASELINE),
         tsconfig: path.join(packageRoot, 'tsconfig.json'),
         dts: {
             entry: inputFiles.filter((inputFile) => !inputFile.endsWith('.css')),

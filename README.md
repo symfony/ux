@@ -9,7 +9,7 @@
 <p align="center">
     <a href="https://github.com/symfony/ux/releases"><img src="https://img.shields.io/github/v/tag/symfony/ux?sort=semver&label=release" alt="Latest release"></a>
     <a href="https://www.php.net/releases/8.4/"><img src="https://img.shields.io/badge/PHP-%E2%89%A5%208.4-777bb4?logo=php&logoColor=white" alt="PHP >= 8.4"></a>
-    <a href="tsconfig.package.json"><img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fsymfony%2Fux%2FHEAD%2Ftsconfig.package.json&query=%24.compilerOptions.target&label=ECMAScript&color=f7df1e&logo=javascript&logoColor=black" alt="ECMAScript target"></a>
+    <a href="https://web.dev/baseline"><img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fsymfony%2Fux%2FHEAD%2Fpackage.json&query=%24.config.baseline&label=Baseline&suffix=%20available&color=3ea55c" alt="Baseline target"></a>
     <a href="LICENSE"><img src="https://img.shields.io/github/license/symfony/ux" alt="MIT License"></a>
 </p>
 
@@ -25,6 +25,8 @@ Symfony UX leverages [Stimulus](https://stimulus.hotwired.dev/) for JavaScript
 and can integrate with [AssetMapper](https://symfony.com/doc/current/frontend/asset_mapper.html)
 or with [Webpack Encore](https://github.com/symfony/webpack-encore)
 (with the help of [Stimulus Bridge](https://github.com/symfony/stimulus-bridge))
+
+The JavaScript and CSS shipped by Symfony UX packages stay within [Baseline Widely available](https://web.dev/baseline), meaning every major browser has supported these features for at least 30 months. A package can state its own requirement, as Notify currently does.
 
 ## Resources
 

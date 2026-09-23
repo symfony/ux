@@ -1,14 +1,15 @@
 {
     "//": "This file is used to compile UX package for use in the browser.",
     "compilerOptions": {
-        "lib": ["dom", "es2015"],
-        "module": "es2015",
+        "lib": ["dom", "dom.iterable", "es2023"],
+        "module": "es2022",
         "moduleResolution": "node",
         "noUnusedLocals": true,
         "rootDir": "src",
+        "skipLibCheck": true,
         "strict": true,
         "strictPropertyInitialization": false,
-        "target": "es2022",
+        "target": "es2023",
         "removeComments": true,
         "outDir": "types",
         "baseUrl": ".",
