@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 3.6.0
+
+- Add a `redirect` Turbo Stream action, along with the `<twig:Turbo:Stream:Redirect>` Twig component
+  and the `TurboStream::redirect()` / `TurboStreamResponse::redirect()` helpers
+
 ## 3.5.0
 
 - Add support for Symfony 8.2's standalone `AssetMapperBundle`

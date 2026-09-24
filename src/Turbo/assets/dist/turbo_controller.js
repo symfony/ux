@@ -1,3 +1,4 @@
+import "./stream_actions.js";
 import { Controller } from "@hotwired/stimulus";
 import "@hotwired/turbo";
 var turbo_controller_default = class extends Controller {};

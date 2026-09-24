@@ -44,6 +44,7 @@ class ExampleRepository
             new Example(UxPackage::Turbo, 'Turbo Drive navigation', 'Navigate between pages without full page reload using Turbo Drive.', 'app_ux_turbo_drive'),
             new Example(UxPackage::Turbo, 'Turbo Frame', 'A scoped section that navigates independently from the rest of the page.', 'app_ux_turbo_frame'),
             new Example(UxPackage::Turbo, 'Turbo Stream after form submit', 'Update page content with Turbo Streams after a form submission.', 'app_ux_turbo_stream'),
+            new Example(UxPackage::Turbo, 'Turbo Stream redirect', 'Redirect the browser from a Turbo Stream, without a full page reload.', 'app_ux_turbo_stream_redirect'),
             new Example(UxPackage::Turbo, 'Turbo Broadcast — Books', 'Create, update and remove a Doctrine entity, broadcasted to all clients via Mercure.', 'app_ux_turbo_broadcast_books'),
             new Example(UxPackage::Turbo, 'Turbo Broadcast — Artists & Songs', 'Broadcast updates using Expression Language topics, scoped per artist.', 'app_ux_turbo_broadcast_artists'),
             new Example(UxPackage::Turbo, 'Turbo Broadcast — Artist via Song', 'Broadcast updates of a Doctrine entity stored as a Proxy.', 'app_ux_turbo_broadcast_artist_from_song'),
