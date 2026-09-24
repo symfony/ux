@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 300" role="img" aria-labelledby="title description">
+  <title id="title">Symfony UX Image processing and rendering pipeline</title>
+  <desc id="description">An uploaded file is inspected, processed from a profile, written to storage as an ImageAsset, then rendered as responsive HTML without storage input-output.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1">
+      <stop stop-color="#0b0d14"/>
+      <stop offset="1" stop-color="#15121a"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#ff5044"/>
+    </marker>
+  </defs>
+  <rect width="1200" height="300" rx="24" fill="url(#bg)"/>
+  <g font-family="ui-monospace, SFMono-Regular, monospace">
+    <g fill="#12151f" stroke="#3a3d49">
+      <rect x="45" y="82" width="215" height="132" rx="16"/>
+      <rect x="335" y="82" width="215" height="132" rx="16"/>
+      <rect x="625" y="82" width="215" height="132" rx="16"/>
+      <rect x="915" y="82" width="240" height="132" rx="16"/>
+    </g>
+    <g stroke="#ff5044" stroke-width="3" marker-end="url(#arrow)" filter="url(#glow)">
+      <path d="M270 148 H320"/>
+      <path d="M560 148 H610"/>
+      <path d="M850 148 H900"/>
+    </g>
+    <g fill="#ff5044" font-size="13" font-weight="700" letter-spacing="2">
+      <text x="66" y="112">01 INPUT</text>
+      <text x="356" y="112">02 PROCESS</text>
+      <text x="646" y="112">03 PERSIST</text>
+      <text x="936" y="112">04 RENDER</text>
+    </g>
+    <g fill="#f4f4f8" font-size="20" font-weight="650">
+      <text x="66" y="148">UploadedFile</text>
+      <text x="356" y="148">Named profile</text>
+      <text x="646" y="148">ImageAsset</text>
+      <text x="936" y="148">&lt;picture&gt; + srcset</text>
+    </g>
+    <g fill="#9ca0b3" font-size="13">
+      <text x="66" y="176">inspect bytes + budgets</text>
+      <text x="356" y="176">fit · crop · fill · encode</text>
+      <text x="646" y="176">storage paths + metadata</text>
+      <text x="936" y="176">metadata-only, no I/O</text>
+    </g>
+    <text x="600" y="264" fill="#ff8a80" text-anchor="middle" font-size="14">one durable contract from upload to responsive HTML</text>
+  </g>
+</svg>
