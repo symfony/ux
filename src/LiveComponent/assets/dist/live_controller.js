@@ -1827,7 +1827,7 @@ var Component = class {
 			iframe.contentWindow.document.close();
 		}
 		const closeModal = (modal) => {
-			if (modal) modal.outerHTML = "";
+			modal?.remove();
 			document.body.style.overflow = "visible";
 		};
 		modal.addEventListener("click", () => closeModal(modal));
