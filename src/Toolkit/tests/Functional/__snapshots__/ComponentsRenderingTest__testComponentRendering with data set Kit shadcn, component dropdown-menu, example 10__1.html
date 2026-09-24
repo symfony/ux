@@ -1,0 +1,64 @@
+<!--
+- Kit: Shadcn UI
+- Component: Dropdown Menu
+- Code:
+```twig
+<div class="flex items-start justify-center pt-6" style="min-height: 240px">
+    <twig:DropdownMenu id="avatar" align="end">
+        <twig:DropdownMenu:Trigger>
+            <twig:Button variant="ghost" size="icon" class="rounded-full" {{ ...dropdown_menu_trigger_attrs }}>
+                <twig:Avatar>
+                    <twig:Avatar:Image src="https://github.com/shadcn.png" alt="shadcn" />
+                    <twig:Avatar:Fallback>LR</twig:Avatar:Fallback>
+                </twig:Avatar>
+            </twig:Button>
+        </twig:DropdownMenu:Trigger>
+        <twig:DropdownMenu:Content>
+            <twig:DropdownMenu:Group>
+                <twig:DropdownMenu:Item>
+                    <twig:ux:icon name="lucide:badge-check" class="size-4" />
+                    Account
+                </twig:DropdownMenu:Item>
+                <twig:DropdownMenu:Item>
+                    <twig:ux:icon name="lucide:credit-card" class="size-4" />
+                    Billing
+                </twig:DropdownMenu:Item>
+                <twig:DropdownMenu:Item>
+                    <twig:ux:icon name="lucide:bell" class="size-4" />
+                    Notifications
+                </twig:DropdownMenu:Item>
+            </twig:DropdownMenu:Group>
+            <twig:DropdownMenu:Separator />
+            <twig:DropdownMenu:Item>
+                <twig:ux:icon name="lucide:log-out" class="size-4" />
+                Sign Out
+            </twig:DropdownMenu:Item>
+        </twig:DropdownMenu:Content>
+    </twig:DropdownMenu>
+</div>
+```
+- Rendered code (run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="flex items-start justify-center pt-6" style="min-height: 240px">
+    <div data-slot="dropdown-menu" data-state="closed" data-dropdown-menu-open-value="false" class="group/dropdown-menu relative inline-block" data-controller="dropdown-menu"><button data-slot="dropdown-menu-trigger" data-variant="ghost" data-size="icon" class="group/button inline-flex shrink-0 items-center justify-center border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50 size-8 rounded-full" type="button" id="dropdown-menu-avatar-trigger" data-dropdown-menu-target="trigger" aria-haspopup="menu" aria-controls="dropdown-menu-avatar-content" aria-expanded="false" data-state="closed" data-action="click->dropdown-menu#toggle keydown->dropdown-menu#onTriggerKeydown"><span data-slot="avatar" data-size="default" class="size-8 rounded-full after:rounded-full data-[size=lg]:size-10 data-[size=sm]:size-6 after:border-border group/avatar relative flex shrink-0 select-none after:absolute after:inset-0 after:border after:mix-blend-darken dark:after:mix-blend-lighten"><img data-slot="avatar-image" onload="this.classList.remove('hidden'); this.closest('[data-slot=avatar]')?.querySelector('[data-slot=avatar-fallback]')?.classList.add('hidden');" alt="shadcn" class="hidden rounded-full aspect-square size-full object-cover" src="https://github.com/shadcn.png">
+
+                    <span data-slot="avatar-fallback" class="bg-muted text-muted-foreground rounded-full flex size-full items-center justify-center text-sm group-data-[size=sm]/avatar:text-xs">LR</span>
+                </span>
+            </button>
+                <div id="dropdown-menu-avatar-content" role="menu" tabindex="-1" aria-labelledby="dropdown-menu-avatar-trigger" data-slot="dropdown-menu-content" data-dropdown-menu-target="content" data-state="closed" data-side="bottom" data-align="end" data-action="keydown->dropdown-menu#onContentKeydown" class="invisible scale-95 opacity-0 transition-[opacity,scale,visibility] duration-100 ease-out group-data-[state=open]/dropdown-menu:visible group-data-[state=open]/dropdown-menu:scale-100 group-data-[state=open]/dropdown-menu:opacity-100 absolute z-50 min-w-32 rounded-lg bg-popover p-1 text-popover-foreground shadow-md ring-1 ring-foreground/10 outline-hidden top-full mt-2 end-0 ltr:origin-top-right rtl:origin-top-left"><div role="group" data-slot="dropdown-menu-group"><button role="menuitem" tabindex="-1" data-slot="dropdown-menu-item" data-variant="default" data-dropdown-menu-target="item" data-close-on-select="true" data-disabled="false" aria-disabled="false" type="button" class="group/dropdown-menu-item relative flex w-full cursor-default select-none items-center gap-1.5 rounded-md px-1.5 py-1 text-sm outline-hidden transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 hover:**:text-accent-foreground focus:**:text-accent-foreground" data-action="click->dropdown-menu#closeFromItem"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M3.85 8.62a4 4 0 0 1 4.78-4.77a4 4 0 0 1 6.74 0a4 4 0 0 1 4.78 4.78a4 4 0 0 1 0 6.74a4 4 0 0 1-4.77 4.78a4 4 0 0 1-6.75 0a4 4 0 0 1-4.78-4.77a4 4 0 0 1 0-6.76"></path><path d="m9 12l2 2l4-4"></path></g></svg>
+                    Account
+                </button>
+                <button role="menuitem" tabindex="-1" data-slot="dropdown-menu-item" data-variant="default" data-dropdown-menu-target="item" data-close-on-select="true" data-disabled="false" aria-disabled="false" type="button" class="group/dropdown-menu-item relative flex w-full cursor-default select-none items-center gap-1.5 rounded-md px-1.5 py-1 text-sm outline-hidden transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 hover:**:text-accent-foreground focus:**:text-accent-foreground" data-action="click->dropdown-menu#closeFromItem"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><rect width="20" height="14" x="2" y="5" rx="2"></rect><path d="M2 10h20"></path></g></svg>
+                    Billing
+                </button>
+                <button role="menuitem" tabindex="-1" data-slot="dropdown-menu-item" data-variant="default" data-dropdown-menu-target="item" data-close-on-select="true" data-disabled="false" aria-disabled="false" type="button" class="group/dropdown-menu-item relative flex w-full cursor-default select-none items-center gap-1.5 rounded-md px-1.5 py-1 text-sm outline-hidden transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 hover:**:text-accent-foreground focus:**:text-accent-foreground" data-action="click->dropdown-menu#closeFromItem"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.268 21a2 2 0 0 0 3.464 0m-10.47-5.674A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"></path></svg>
+                    Notifications
+                </button>
+            </div>
+            <div role="separator" aria-orientation="horizontal" data-slot="dropdown-menu-separator" class="-mx-1 my-1 h-px bg-border"></div>
+
+            <button role="menuitem" tabindex="-1" data-slot="dropdown-menu-item" data-variant="default" data-dropdown-menu-target="item" data-close-on-select="true" data-disabled="false" aria-disabled="false" type="button" class="group/dropdown-menu-item relative flex w-full cursor-default select-none items-center gap-1.5 rounded-md px-1.5 py-1 text-sm outline-hidden transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 hover:**:text-accent-foreground focus:**:text-accent-foreground" data-action="click->dropdown-menu#closeFromItem"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m16 17l5-5l-5-5m5 5H9m0 9H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path></svg>
+                Sign Out
+            </button>
+        </div>
+    </div>
+</div>

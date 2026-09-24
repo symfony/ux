@@ -271,37 +271,37 @@ Add a `ux:icon` inside a `Menubar:Item` to pair each entry with an icon.
             </twig:Menubar:Trigger>
             <twig:Menubar:Content>
                 <twig:Menubar:Item>
-                    <twig:ux:icon name="lucide:file" class="me-2 size-4" />
+                    <twig:ux:icon name="lucide:file" class="size-4" />
                     New File<twig:Menubar:Shortcut>⌘N</twig:Menubar:Shortcut>
                 </twig:Menubar:Item>
                 <twig:Menubar:Item>
-                    <twig:ux:icon name="lucide:folder" class="me-2 size-4" />
+                    <twig:ux:icon name="lucide:folder" class="size-4" />
                     Open Folder
                 </twig:Menubar:Item>
                 <twig:Menubar:Separator />
                 <twig:Menubar:Item>
-                    <twig:ux:icon name="lucide:save" class="me-2 size-4" />
+                    <twig:ux:icon name="lucide:save" class="size-4" />
                     Save<twig:Menubar:Shortcut>⌘S</twig:Menubar:Shortcut>
                 </twig:Menubar:Item>
             </twig:Menubar:Content>
         </twig:Menubar:Menu>
         <twig:Menubar:Menu>
             <twig:Menubar:Trigger>
-                <twig:Button variant="ghost" size="sm" {{ ...menubar_trigger_attrs }}>Edit</twig:Button>
+                <twig:Button variant="ghost" size="sm" {{ ...menubar_trigger_attrs }}>More</twig:Button>
             </twig:Menubar:Trigger>
             <twig:Menubar:Content>
                 <twig:Menubar:Item>
-                    <twig:ux:icon name="lucide:settings" class="me-2 size-4" />
-                    Preferences
+                    <twig:ux:icon name="lucide:settings" class="size-4" />
+                    Settings
                 </twig:Menubar:Item>
                 <twig:Menubar:Item>
-                    <twig:ux:icon name="lucide:trash" class="me-2 size-4" />
-                    Delete
+                    <twig:ux:icon name="lucide:circle-help" class="size-4" />
+                    Help
                 </twig:Menubar:Item>
                 <twig:Menubar:Separator />
-                <twig:Menubar:Item>
-                    <twig:ux:icon name="lucide:help-circle" class="me-2 size-4" />
-                    Help
+                <twig:Menubar:Item variant="destructive">
+                    <twig:ux:icon name="lucide:trash" class="size-4" />
+                    Delete
                 </twig:Menubar:Item>
             </twig:Menubar:Content>
         </twig:Menubar:Menu>

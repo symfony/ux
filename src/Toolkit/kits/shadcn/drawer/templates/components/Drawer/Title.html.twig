@@ -2,7 +2,7 @@
 <h2
     id="{{ _drawer_titleId }}"
     data-slot="drawer-title"
-    {{ attributes.without('id').defaults({class: 'font-semibold text-foreground'|tailwind_classes}) }}
+    {{ attributes.without('id').defaults({class: 'text-base font-medium text-foreground'|tailwind_classes}) }}
 >
     {##- The title text of the drawer. -#}
     {%- block content %}{% endblock -%}

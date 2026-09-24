@@ -2,7 +2,7 @@
     role="menubar"
     data-slot="menubar"
     {{ attributes.defaults({
-        class: 'flex h-9 items-center space-x-1 rounded-md border bg-background p-1 shadow-xs'|tailwind_classes,
+        class: 'flex h-8 items-center gap-0.5 rounded-lg border p-[3px]'|tailwind_classes,
         'data-controller': 'menubar',
         'data-action': 'keydown.esc->menubar#closeAll',
     }) }}

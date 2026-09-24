@@ -1,4 +1,4 @@
-import { describeRecipe, expect, test, testState } from '../../../../assets/test/browser/fixtures';
+import { describeRecipe, expect, isUnderPointer, test, testState } from '../../../../assets/test/browser/fixtures';
 
 describeRecipe('shadcn/menubar', () => {
     testState('opens a menu on click', {
@@ -89,7 +89,9 @@ describeRecipe('shadcn/menubar', () => {
 
             await page.getByRole('menuitem', { name: 'Find', exact: true }).hover();
 
-            await expect(page.getByRole('menuitem', { name: 'Find Previous' })).toBeVisible();
+            const findPrevious = page.getByRole('menuitem', { name: 'Find Previous' });
+            await expect(findPrevious).toBeVisible();
+            await expect.poll(() => isUnderPointer(findPrevious)).toBe(true);
         },
     });
 
@@ -150,4 +152,30 @@ describeRecipe('shadcn/menubar', () => {
             await page.mouse.move(0, 0);
         },
     });
+
+    testState('shows icons and a destructive item', {
+        example: 'with-icons',
+        state: 'more-open',
+        act: async (page) => {
+            await page.getByRole('menuitem', { name: 'More' }).click();
+
+            await expect(page.getByRole('menuitem', { name: 'Delete' })).toHaveAttribute('data-variant', 'destructive');
+        },
+    });
+
+    for (const { example, trigger, role, name } of [
+        { example: 'checkbox-items', trigger: 'View', role: 'checkbox', name: 'Always Show Bookmarks Bar' },
+        { example: 'radio-group', trigger: 'Profiles', role: 'radio', name: 'Benoit' },
+    ] as const) {
+        test(`highlights a ${role} item focused with the keyboard`, async ({ page, gotoExample }) => {
+            await gotoExample(`shadcn/menubar/${example}`);
+            await page.getByRole('menuitem', { name: trigger }).click();
+            const control = page.getByRole(role, { name });
+
+            await page.keyboard.press('Tab');
+
+            await expect(control).toBeFocused();
+            await expect(page.locator('label', { has: control })).not.toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
+        });
+    }
 });

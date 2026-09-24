@@ -2,7 +2,7 @@
 <h2
     id="{{ _sheet_titleId }}"
     data-slot="sheet-title"
-    {{ attributes.without('id').defaults({class: 'font-semibold text-foreground'|tailwind_classes}) }}
+    {{ attributes.without('id').defaults({class: 'text-base font-medium text-foreground'|tailwind_classes}) }}
 >
     {##- The title text of the sheet. -#}
     {%- block content %}{% endblock -%}
