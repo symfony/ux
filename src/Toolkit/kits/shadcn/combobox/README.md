@@ -393,8 +393,8 @@ To enable RTL support, set the `dir="rtl"` attribute on the root element.
         <twig:Combobox:Content>
             <twig:Combobox:Empty>لم يتم العثور على فئات.</twig:Combobox:Empty>
             <twig:Combobox:List>
-                {% for label in categories.ar|keys %}
-                    <twig:Combobox:Item value="{{ label }}">{{ label }}</twig:Combobox:Item>
+                {% for category in categories.ar|keys %}
+                    <twig:Combobox:Item value="{{ category }}">{{ category }}</twig:Combobox:Item>
                 {% endfor %}
             </twig:Combobox:List>
         </twig:Combobox:Content>
@@ -408,8 +408,8 @@ To enable RTL support, set the `dir="rtl"` attribute on the root element.
         <twig:Combobox:Content>
             <twig:Combobox:Empty>לא נמצאו קטגוריות.</twig:Combobox:Empty>
             <twig:Combobox:List>
-                {% for label in categories.he|keys %}
-                    <twig:Combobox:Item value="{{ label }}">{{ label }}</twig:Combobox:Item>
+                {% for category in categories.he|keys %}
+                    <twig:Combobox:Item value="{{ category }}">{{ category }}</twig:Combobox:Item>
                 {% endfor %}
             </twig:Combobox:List>
         </twig:Combobox:Content>

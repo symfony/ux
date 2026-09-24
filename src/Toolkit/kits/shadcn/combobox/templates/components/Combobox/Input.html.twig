@@ -13,6 +13,7 @@
 {%- set _combobox_required = inject('combobox.required', false) -%}
 {%- set _combobox_inputId = inject('combobox.inputId', null) -%}
 {%- set _combobox_listId = inject('combobox.listId', null) -%}
+{%- set _combobox_input_attrs = attributes.all() -%}
 <twig:InputGroup class="w-auto">
     <twig:InputGroup:Input
         id="{{ _combobox_inputId }}"
@@ -29,7 +30,7 @@
         data-action="input->combobox#filter focus->combobox#open keydown->combobox#onInputKeydown"
         :disabled="disabled"
         :required="_combobox_required and _combobox_value is empty"
-        {{ ...attributes }}
+        {{ ..._combobox_input_attrs }}
     />
     <twig:InputGroup:Addon align="inline-end">
         {%- if showTrigger -%}
