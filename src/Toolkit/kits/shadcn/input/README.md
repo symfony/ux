@@ -234,11 +234,11 @@ A full form example with multiple inputs, a select, and a button.
             </twig:Field>
             <twig:Field>
                 <twig:Field:Label for="form-country">Country</twig:Field:Label>
-                <twig:Select id="form-country">
-                    <option value="us">United States</option>
-                    <option value="uk">United Kingdom</option>
-                    <option value="ca">Canada</option>
-                </twig:Select>
+                <twig:NativeSelect id="form-country" class="w-full">
+                    <twig:NativeSelect:Option value="us">United States</twig:NativeSelect:Option>
+                    <twig:NativeSelect:Option value="uk">United Kingdom</twig:NativeSelect:Option>
+                    <twig:NativeSelect:Option value="ca">Canada</twig:NativeSelect:Option>
+                </twig:NativeSelect>
             </twig:Field>
         </div>
         <twig:Field>

@@ -1,0 +1,12 @@
+{%- props
+    ## string Text shown while no option is selected.
+    placeholder = ''
+-%}
+<span
+    data-slot="select-value"
+    data-select-target="value"
+    data-placeholder="{{ placeholder }}"
+    {{ attributes.defaults({
+        class: 'flex flex-1 text-start'|tailwind_classes,
+    }) }}
+>{{ placeholder }}</span>

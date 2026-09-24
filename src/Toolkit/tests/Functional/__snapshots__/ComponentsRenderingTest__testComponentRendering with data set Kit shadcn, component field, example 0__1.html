@@ -40,35 +40,35 @@
                             <twig:Field:Label for="checkout-exp-month-ts6">
                                 Month
                             </twig:Field:Label>
-                            <twig:Select id="checkout-exp-month-ts6">
-                                <option value="" disabled selected>MM</option>
-                                <option value="01">01</option>
-                                <option value="02">02</option>
-                                <option value="03">03</option>
-                                <option value="04">04</option>
-                                <option value="05">05</option>
-                                <option value="06">06</option>
-                                <option value="07">07</option>
-                                <option value="08">08</option>
-                                <option value="09">09</option>
-                                <option value="10">10</option>
-                                <option value="11">11</option>
-                                <option value="12">12</option>
-                            </twig:Select>
+                            <twig:NativeSelect id="checkout-exp-month-ts6" class="w-full">
+                                <twig:NativeSelect:Option value="" disabled selected>MM</twig:NativeSelect:Option>
+                                <twig:NativeSelect:Option value="01">01</twig:NativeSelect:Option>
+                                <twig:NativeSelect:Option value="02">02</twig:NativeSelect:Option>
+                                <twig:NativeSelect:Option value="03">03</twig:NativeSelect:Option>
+                                <twig:NativeSelect:Option value="04">04</twig:NativeSelect:Option>
+                                <twig:NativeSelect:Option value="05">05</twig:NativeSelect:Option>
+                                <twig:NativeSelect:Option value="06">06</twig:NativeSelect:Option>
+                                <twig:NativeSelect:Option value="07">07</twig:NativeSelect:Option>
+                                <twig:NativeSelect:Option value="08">08</twig:NativeSelect:Option>
+                                <twig:NativeSelect:Option value="09">09</twig:NativeSelect:Option>
+                                <twig:NativeSelect:Option value="10">10</twig:NativeSelect:Option>
+                                <twig:NativeSelect:Option value="11">11</twig:NativeSelect:Option>
+                                <twig:NativeSelect:Option value="12">12</twig:NativeSelect:Option>
+                            </twig:NativeSelect>
                         </twig:Field>
                         <twig:Field>
                             <twig:Field:Label for="checkout-7j9-exp-year-f59">
                                 Year
                             </twig:Field:Label>
-                            <twig:Select>
-                                <option value="" disabled selected>YYY</option>
-                                <option value="2024">2024</option>
-                                <option value="2025">2025</option>
-                                <option value="2026">2026</option>
-                                <option value="2027">2027</option>
-                                <option value="2028">2028</option>
-                                <option value="2029">2029</option>
-                            </twig:Select>
+                            <twig:NativeSelect class="w-full">
+                                <twig:NativeSelect:Option value="" disabled selected>YYY</twig:NativeSelect:Option>
+                                <twig:NativeSelect:Option value="2024">2024</twig:NativeSelect:Option>
+                                <twig:NativeSelect:Option value="2025">2025</twig:NativeSelect:Option>
+                                <twig:NativeSelect:Option value="2026">2026</twig:NativeSelect:Option>
+                                <twig:NativeSelect:Option value="2027">2027</twig:NativeSelect:Option>
+                                <twig:NativeSelect:Option value="2028">2028</twig:NativeSelect:Option>
+                                <twig:NativeSelect:Option value="2029">2029</twig:NativeSelect:Option>
+                            </twig:NativeSelect>
                         </twig:Field>
                         <twig:Field>
                             <twig:Field:Label for="checkout-7j9-cvv">CVV</twig:Field:Label>
@@ -143,31 +143,37 @@
                     <div class="grid grid-cols-3 gap-4">
                         <div role="group" data-slot="field" data-orientation="vertical" class="group/field flex w-full gap-2 data-[invalid=true]:text-destructive flex-col *:w-full [&amp;>.sr-only]:w-auto"><label data-slot="label" class="items-center text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 group/field-label peer/field-label flex w-fit gap-2 leading-snug group-data-[disabled=true]/field:opacity-50 has-data-checked:border-primary/30 has-data-checked:bg-primary/5 has-checked:border-primary/30 has-checked:bg-primary/5 has-[>[data-slot=field]]:rounded-lg has-[>[data-slot=field]]:border *:data-[slot=field]:p-2.5 dark:has-data-checked:border-primary/20 dark:has-data-checked:bg-primary/10 dark:has-checked:border-primary/20 dark:has-checked:bg-primary/10 has-[>[data-slot=field]]:w-full has-[>[data-slot=field]]:flex-col" for="checkout-exp-month-ts6">Month
                             </label>
-                            <select class="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background data-[placeholder]:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&amp;>span]:line-clamp-1" id="checkout-exp-month-ts6"><option value="" disabled="" selected="">MM</option>
-                                <option value="01">01</option>
-                                <option value="02">02</option>
-                                <option value="03">03</option>
-                                <option value="04">04</option>
-                                <option value="05">05</option>
-                                <option value="06">06</option>
-                                <option value="07">07</option>
-                                <option value="08">08</option>
-                                <option value="09">09</option>
-                                <option value="10">10</option>
-                                <option value="11">11</option>
-                                <option value="12">12</option>
+                            <div data-slot="native-select-wrapper" data-size="default" class="group/native-select relative has-[select:disabled]:opacity-50 w-full">
+    <select data-slot="native-select" data-size="default" class="h-9 w-full min-w-0 appearance-none rounded-md border border-input bg-transparent px-3 py-2 pe-9 text-sm shadow-xs transition-[color,box-shadow] outline-none select-none selection:bg-primary selection:text-primary-foreground placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:cursor-not-allowed aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/40 data-[size=sm]:h-8 data-[size=sm]:py-1 dark:bg-input/30 dark:hover:bg-input/50 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 dark:[color-scheme:dark] [&amp;_option]:bg-background [&amp;_option]:text-foreground [&amp;_optgroup]:bg-background [&amp;_optgroup]:text-foreground" id="checkout-exp-month-ts6"><option data-slot="native-select-option" value="" disabled="" selected="">MM</option>
+                                <option data-slot="native-select-option" value="01">01</option>
+                                <option data-slot="native-select-option" value="02">02</option>
+                                <option data-slot="native-select-option" value="03">03</option>
+                                <option data-slot="native-select-option" value="04">04</option>
+                                <option data-slot="native-select-option" value="05">05</option>
+                                <option data-slot="native-select-option" value="06">06</option>
+                                <option data-slot="native-select-option" value="07">07</option>
+                                <option data-slot="native-select-option" value="08">08</option>
+                                <option data-slot="native-select-option" value="09">09</option>
+                                <option data-slot="native-select-option" value="10">10</option>
+                                <option data-slot="native-select-option" value="11">11</option>
+                                <option data-slot="native-select-option" value="12">12</option>
                             </select>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="pointer-events-none absolute top-1/2 end-3.5 size-4 -translate-y-1/2 text-muted-foreground opacity-50 select-none" aria-hidden="true" data-slot="native-select-icon"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m6 9l6 6l6-6"></path></svg>
+</div>
                         </div>
                         <div role="group" data-slot="field" data-orientation="vertical" class="group/field flex w-full gap-2 data-[invalid=true]:text-destructive flex-col *:w-full [&amp;>.sr-only]:w-auto"><label data-slot="label" class="items-center text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 group/field-label peer/field-label flex w-fit gap-2 leading-snug group-data-[disabled=true]/field:opacity-50 has-data-checked:border-primary/30 has-data-checked:bg-primary/5 has-checked:border-primary/30 has-checked:bg-primary/5 has-[>[data-slot=field]]:rounded-lg has-[>[data-slot=field]]:border *:data-[slot=field]:p-2.5 dark:has-data-checked:border-primary/20 dark:has-data-checked:bg-primary/10 dark:has-checked:border-primary/20 dark:has-checked:bg-primary/10 has-[>[data-slot=field]]:w-full has-[>[data-slot=field]]:flex-col" for="checkout-7j9-exp-year-f59">Year
                             </label>
-                            <select class="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background data-[placeholder]:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&amp;>span]:line-clamp-1"><option value="" disabled="" selected="">YYY</option>
-                                <option value="2024">2024</option>
-                                <option value="2025">2025</option>
-                                <option value="2026">2026</option>
-                                <option value="2027">2027</option>
-                                <option value="2028">2028</option>
-                                <option value="2029">2029</option>
+                            <div data-slot="native-select-wrapper" data-size="default" class="group/native-select relative has-[select:disabled]:opacity-50 w-full">
+    <select data-slot="native-select" data-size="default" class="h-9 w-full min-w-0 appearance-none rounded-md border border-input bg-transparent px-3 py-2 pe-9 text-sm shadow-xs transition-[color,box-shadow] outline-none select-none selection:bg-primary selection:text-primary-foreground placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:cursor-not-allowed aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/40 data-[size=sm]:h-8 data-[size=sm]:py-1 dark:bg-input/30 dark:hover:bg-input/50 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 dark:[color-scheme:dark] [&amp;_option]:bg-background [&amp;_option]:text-foreground [&amp;_optgroup]:bg-background [&amp;_optgroup]:text-foreground"><option data-slot="native-select-option" value="" disabled="" selected="">YYY</option>
+                                <option data-slot="native-select-option" value="2024">2024</option>
+                                <option data-slot="native-select-option" value="2025">2025</option>
+                                <option data-slot="native-select-option" value="2026">2026</option>
+                                <option data-slot="native-select-option" value="2027">2027</option>
+                                <option data-slot="native-select-option" value="2028">2028</option>
+                                <option data-slot="native-select-option" value="2029">2029</option>
                             </select>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="pointer-events-none absolute top-1/2 end-3.5 size-4 -translate-y-1/2 text-muted-foreground opacity-50 select-none" aria-hidden="true" data-slot="native-select-icon"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m6 9l6 6l6-6"></path></svg>
+</div>
                         </div>
                         <div role="group" data-slot="field" data-orientation="vertical" class="group/field flex w-full gap-2 data-[invalid=true]:text-destructive flex-col *:w-full [&amp;>.sr-only]:w-auto"><label data-slot="label" class="items-center text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 group/field-label peer/field-label flex w-fit gap-2 leading-snug group-data-[disabled=true]/field:opacity-50 has-data-checked:border-primary/30 has-data-checked:bg-primary/5 has-checked:border-primary/30 has-checked:bg-primary/5 has-[>[data-slot=field]]:rounded-lg has-[>[data-slot=field]]:border *:data-[slot=field]:p-2.5 dark:has-data-checked:border-primary/20 dark:has-data-checked:bg-primary/10 dark:has-checked:border-primary/20 dark:has-checked:bg-primary/10 has-[>[data-slot=field]]:w-full has-[>[data-slot=field]]:flex-col" for="checkout-7j9-cvv">CVV</label>
                             <input data-slot="input" class="h-8 w-full min-w-0 rounded-lg border border-input bg-transparent px-2.5 py-1 text-base transition-colors outline-none file:inline-flex file:h-6 file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:cursor-not-allowed disabled:bg-input/50 disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 md:text-sm dark:bg-input/30 dark:disabled:bg-input/80 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40" id="checkout-7j9-cvv" placeholder="123" required="">
