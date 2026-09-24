@@ -41,6 +41,7 @@ declare class export_default extends Controller {
   private isObserving;
   private hasLoadedChoicesPreviously;
   private originalOptions;
+  private reloadAfterSelection;
   initialize(): void;
   connect(): void;
   initializeTomSelect(): void;
