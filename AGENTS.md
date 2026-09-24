@@ -123,7 +123,6 @@ php vendor/bin/twig-cs-fixer lint
 ```
 src/
   <Package>/
-    .github/             # CI workflows, PR template, for subtree split
     .gitignore
     .gitattributes
     src/                 # PHP source (PSR-4)
@@ -137,11 +136,11 @@ src/
       playwright.config.ts
     config/              # Symfony DI service definitions
     composer.json
-    phpunit.xml.dist
+    phpunit.dist.xml
 apps/
   demo-native/           # Symfony app for manual testing and demos of Symfony UX Native
   e2e/                   # Symfony app for Playwright browser tests
-  encore/                # Symfony app for testing Webpack Encore and `npm install` integration
+  bundler/               # Symfony app for testing Webpack Encore, Reprise and `npm install` integration
 ```
 
 ## Important Notes
@@ -150,7 +149,7 @@ apps/
 - **pnpm workspaces**: `src/*/assets` and `src/*/src/Bridge/*/assets`.
 - **Peer dependency matrix**: JS unit tests may run against multiple peer dep versions (via `bin/unit_test_package.sh`).
 - **PHPStan**: only configured for `src/Turbo` (`phpstan.dist.neon`).
-- **Snapshot tests**: Toolkit uses PHPUnit snapshots — update with `php vendor/bin/simple-phpunit -d --update-snapshots`.
+- **Snapshot tests**: Toolkit uses PHPUnit snapshots — update with `php vendor/bin/phpunit -d --update-snapshots`.
 
 ## Before committing
 
