@@ -1,0 +1,63 @@
+---
+name: pr-authoring
+description: >
+  Hold your own work to the review standard of this repository, so that a change
+  is merge-ready when it is opened. Use when the user asks to fix an issue, to
+  add a feature, to refactor, or to make any other change to this codebase, and
+  read it before writing the first line of code.
+---
+
+# Authoring a pull request
+
+## Consult the review standard first
+
+- Read `.agents/skills/pr-review-merge-prep/SKILL.md` in full before writing code. It states what a change must satisfy to be merged here.
+- That skill speaks from the reviewer's seat, and every requirement in it applies to the code you write yourself. A reviewer will hold your pull request to it, so hold your work to it first.
+- This skill says when to consult the review skill and what to do with the answer. It repeats only the rules that apply to every keystroke, listed under House rules below, so that they hold even before that skill is open. When the two seem to disagree, the review skill decides.
+
+## Before writing code
+
+- Choose the target branch before the first commit, with the branch rules of the review skill: bugfixes on the oldest affected maintained branch (2.x or 3.x), features and deprecations on 3.x. The target decides which APIs the code may use, the minimum PHP (8.1 on 2.x, 8.4 on 3.x), which test style it follows, and where the CHANGELOG entry goes. Changing it later means rewriting the change, not rebasing it.
+- Branch from the current tip of `upstream/<base>`, in a worktree under `.claude/worktrees/<name>` when the main checkout is busy.
+- Re-derive the problem from the code, whatever the issue or the request says it is. A report describes a symptom. Work from the cause you found yourself.
+- Reproduce the current behavior with a probe or a failing test before changing anything. A fix for a problem you never saw happen cannot be verified.
+- Run the public-API challenge of the review skill against your own design before you build it, not after. Dropping a method that is not needed costs nothing at that point. Defending one that is not justified costs a whole discussion later.
+
+## While working
+
+- Keep the diff to what the request needs. Unrelated cleanups make the change harder to review, and they can pull it toward another target branch. Report what you find outside that scope, or send it as its own pull request.
+- Apply the house rules of the review skill to everything you produce: tests first, comments, tone, attribution, order of methods, plain English.
+- After any change under `src/<Package>/assets/src/`, run `pnpm run build` in `src/<Package>/assets` and commit `dist/` with the change: CI fails when `dist/` does not match a fresh build.
+
+## Running the tests
+
+- Run one package at a time: `cd src/<Package> && composer update && php vendor/bin/phpunit`, and the same from `src/<Package>/src/Bridge/<Bridge>` for a bridge. JS runs per package from `src/<Package>/assets`: `pnpm run test:unit`, and `pnpm run test:browser` when the change affects browser behavior.
+- Never run every package at once. It takes a long time, and it buries the failure you are looking for.
+- Narrow to one test file or one filter while iterating, then run the full suite of every touched package before calling the change done.
+- Read the summary line, not the exit status alone. A run can end with `Tests: N, Failures: 1`, or die on a fatal error before any banner, and colour codes sit in front of those words.
+- After every rebase or merge, rerun the tests of the patched packages. A replay that raised no conflict still produces broken code. Run the rebase or merge itself non-interactively, with `GIT_EDITOR=true`.
+- Run the style tools `AGENTS.md` lists under "Before committing" on the files you touched.
+
+## Before opening it
+
+- Review your own diff with the review skill, as if someone else had written it. Run the checks it asks a reviewer to run: revert-verify each new test, probe the edge cases, check every borrowed symbol against the declared version constraints, check that a CHANGELOG entry is warranted and sits under the unreleased version, and run the full suite of every touched package together with the style tools.
+- Apply what that pass finds. Do not file the findings in the description as known limitations, because a reviewer reads them as work left undone.
+- Squash the work into one commit. Its message is the pull request: the subject is the PR title with the package prefix (`[LiveComponent] ...`), then the table from `.github/PULL_REQUEST_TEMPLATE.md` answered for this change, then the description. Drop the template's `<!-- ... -->` hints, which are instructions to the author. Keep `Fix #<number>` in the Issues row: without the `Fix` keyword GitHub does not close the issue on merge. Leave the row empty when the change closes no issue.
+- Write the description for someone who never saw the request: the problem in one paragraph, the fix in one paragraph, and a before/after table for a behavior change. A feature also documents itself in `src/<Package>/doc/*.rst` in the same commit.
+- Say which checks you ran and what they returned. State what you did not cover just as plainly.
+- A change on 2.x gets merged up to 3.x. When 3.x needs a different shape, end the description with a `Merge-up to 3.x:` paragraph giving the declarations to add, the style that branch expects, or the resolved code itself, and say whether you ran it there. The merge-up skill reads those paragraphs back out of the merge commit, so writing one saves the merger from rediscovering the resolution.
+
+## Opening it
+
+- Opening a pull request and commenting on it are outward actions. Ask the user before the first one, unless they already asked for the pull request.
+- The user pushes: print the push command for the branch to their fork (`origin`) and let them run it. Never push a working branch to `upstream`.
+- Open the pull request from the fork with `gh pr create --fill --base <base> --head <fork-owner>:<branch>`, so the commit message becomes the title and body. Do not add `--body` or `--body-file`: they override the autofilled body.
+
+## House rules
+
+These hold whether or not the review skill is open, and they cover inherited content too, such as a commit you amend or a patch you rebase.
+
+- Use TDD: the failing test comes first, the implementation second, the full suite of the touched package last.
+- Write code comments sparingly, only where they add value the code cannot express. A test method or a test helper carries no docblock and no comment narrating it: its name and its assertions say what it checks. The comment that stays in a test is the one saying why a fixture looks wrong on purpose. Never reference an issue or a pull request from code or from tests.
+- No em-dashes. No `Co-Authored-By` trailer. No credit to Claude, to Anthropic or to any other AI tool, anywhere: code, commit messages, pull request titles and bodies, review comments, issue comments.
+- Keep a factual tone in everything published, and use plain English: common words, short sentences, one idea per sentence. Most readers are not native speakers.

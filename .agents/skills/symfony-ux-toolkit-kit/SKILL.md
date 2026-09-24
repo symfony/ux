@@ -1,9 +1,9 @@
 ---
 name: symfony-ux-toolkit-kit
 description: >
-    Generate, modify, or review Symfony UX Toolkit kit recipes (Shadcn, Flowbite, future kits).
-    Enforces conventions for manifest, Twig component docblocks, sub-components, asChild
-    `<recipe>_<role>_attrs` pattern, outer-scope propagation, Stimulus controllers, examples,
+    Generate, modify, or review Symfony UX Toolkit kit recipes (shadcn, flowbite-4, bootstrap, common).
+    Enforces conventions for manifest, README examples, Twig prop/block doc comments, sub-components,
+    asChild `<recipe>_<role>_attrs` pattern, provide()/inject() context, Stimulus controllers,
     snapshots, and PR hygiene. Use when adding/editing files under `src/Toolkit/kits/` or
     reviewing PRs touching the Toolkit.
 ---
@@ -12,14 +12,6 @@ description: >
 
 Author + review recipes for UX Toolkit. Recipes = unit shipped to end-users (Twig components + optional Stimulus controllers). Each recipe carries a `README.md` — its single doc source (description, live-preview examples, install/API), rendered as-is on ux.symfony.com.
 
-## When to Activate
-
-- User says "add recipe", "new kit recipe", "Toolkit component", "port shadcn X", or similar.
-- Any file change under `src/Toolkit/kits/<kit>/<recipe>/`.
-- Reviewing PR titled `[Toolkit][...]`.
-
----
-
 ## Core Rules
 
 1. **One PR per recipe.** Never batch multiple recipes single PR. PR title:
@@ -27,9 +19,9 @@ Author + review recipes for UX Toolkit. Recipes = unit shipped to end-users (Twi
 2. **Target `3.x`.** CHANGELOG entry under active `3.x` section in `src/Toolkit/CHANGELOG.md`.
 3. **Visual + behavioral parity** with upstream reference (Shadcn UI / Flowbite). Verify manually; attach screenshot/video to PR body for animated/interactive components.
 4. **Reuse all upstream examples.** No subset. Read both component source **and** every upstream example, then inline each as a live-preview block in the recipe `README.md` (see [Examples](#examples-conventions)).
-5. **Companion PR on `symfony/ux.symfony.com`** only when the recipe ships a Stimulus controller (register it) or new Tailwind classes (rebuild CSS) — the docs page renders automatically from the recipe `README.md`, no per-recipe template. Link in recipe PR body when opened.
+5. **No companion PR on `symfony/ux.symfony.com`.** It renders the docs page from the recipe `README.md`, registers kit Stimulus controllers from a build-time loader, and compiles kit Tailwind classes through `@source`. Only a new external asset dependency not already vendored there needs one.
 6. **Regenerate snapshots** after every recipe change + commit. CI + reviewers reject stale snapshots.
-7. **Use GitHub PR template** (Bug fix / Feature / License: MIT / Issues: Part of #3233). Fabbot fails otherwise.
+7. **Use GitHub PR template** (Bug fix / Feature / License: MIT / Issues: `Part of #3233` for shadcn recipes, the shadcn tracking issue). Fabbot fails otherwise.
 8. **Prefer Stimulus controller** over native browser features (e.g. `<details>`) when parity needs animations, ARIA sync, coordinated state. Native fine only when matches upstream UX exactly.
 
 ---
@@ -56,10 +48,10 @@ There is **no `examples/` directory** — examples live inline in `README.md` (s
 ````markdown
 # <Human Name>
 
-<One-sentence description.>    <!-- first paragraph; feeds getDescription() + manifest -->
+<One-sentence description.>    <!-- first paragraph; read by Recipe::getDescription(), the manifest has no description -->
 
 ```twig {"preview":true,"height":"300px"}
-<!-- hero preview: rich showcase, was Demo.html.twig -->
+<!-- hero preview: rich showcase -->
 <twig:Recipe ... />
 ```
 
@@ -70,7 +62,7 @@ There is **no `examples/` directory** — examples live inline in `README.md` (s
 ## Usage
 
 ```twig
-<!-- STATIC block (no preview): minimal API surface, was Usage.html.twig -->
+<!-- STATIC block (no preview): minimal API surface -->
 <twig:Recipe prop="a | b" />
 ```
 
@@ -98,7 +90,7 @@ Info-string options on a preview block (JSON after the language):
 - **`"height":"<px>"`** — iframe height (e.g. `"150px"`, `"300px"`); default `200px`.
 - **`"collapseClass":true`** — collapse long `class="..."` attributes in the Code tab (use for examples with long Tailwind class lists, e.g. `post-link`).
 
-Only two directives survive in READMEs: `::: installation` and `::: api-reference`. The old `::: example <Name>` directive (referencing `examples/<Name>.html.twig`) is **gone**.
+READMEs use exactly two directives: `::: installation` and `::: api-reference`.
 
 ---
 
@@ -115,7 +107,7 @@ Read all source files per recipe: component source carries the structure + `data
 | `apps/v4/registry/bases/radix/ui/<recipe>.tsx` | **Component source** — sub-component structure, `data-slot`/`data-state` surface, variant axes. Carries `cn-*` class names, *not* Tailwind utilities |
 | `apps/v4/registry/styles/style-nova.css` | **Canonical classes** — the `.cn-<recipe>*` rules those names resolve to, written as `@apply` Tailwind utilities. This is what a recipe's class strings are ported from |
 | `apps/v4/examples/radix/<recipe>-*.tsx` | **Usage examples** — one file per variant, drives examples list |
-| `apps/v4/content/docs/components/radix/*.mdx` | **Docs + manifest metadata** — single source of truth for titles, descriptions, section order; `description` copied verbatim to `ux/src/Toolkit/kits/shadcn/**/manifest.json` |
+| `apps/v4/content/docs/components/radix/*.mdx` | **Docs + manifest metadata** — single source of truth for titles, descriptions, section order; `description` copied verbatim as the first paragraph of the recipe `README.md` |
 
 Enumerate every example file for recipe:
 
@@ -131,7 +123,7 @@ https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/examples/
 
 ### RTL class variants
 
-**Upstream ships no RTL implementation.** The `ui-rtl/` tree this section used to diff against no longer exists, and the `.cn-*` rules in `style-nova.css` use physical properties (`text-left`, `mr-1`, `ml-1`). RTL support is therefore authored here, not ported — the upstream classes are the LTR reading, and adapting them is the recipe's job.
+**Upstream ships no RTL class variants.** The `.cn-*` rules in `style-nova.css` use physical properties (`text-left`, `mr-1`, `ml-1`). RTL support is therefore authored here, not ported — the upstream classes are the LTR reading, and adapting them is the recipe's job.
 
 **Reach for a logical utility first.** `ms-*`, `me-*`, `ps-*`, `pe-*`, `start-*`, `end-*`, `text-start`, `text-end` already flip with the text direction, so they need no variant prefix at all. Porting `mr-1` gives `me-1`, and `text-left` gives `text-start` — one token, correct in both directions.
 
@@ -171,23 +163,12 @@ Flowbite docs page = primary source: ships copy-pasteable HTML with Tailwind cla
 
 ```bash
 cd /path/to/ux             && git checkout feat/toolkit-<kit>-<recipe>
-cd /path/to/ux.symfony.com && git checkout docs/<kit>-<recipe>
+cd /path/to/ux.symfony.com && git checkout main
 # In ux.symfony.com:
 php ../link
 symfony php bin/console tailwind:build
 symfony serve -d
 ```
-
----
-
-## Companion PR on ux.symfony.com
-
-The docs page renders **automatically** from the recipe `README.md` (`RecipeDocRenderer` — no per-recipe `.md.twig`, no `toolkit_code_example`). A companion PR on `symfony/ux.symfony.com` is needed **only** when:
-
-- **The recipe ships a Stimulus controller** — add the import to `assets/toolkit-<kit>.js` (e.g. `import Alert from '@symfony/ux-toolkit/kits/<kit>/<recipe>/assets/controllers/<recipe>_controller.js';`) so the live preview can boot it.
-- **The recipe introduces new Tailwind classes** — run `symfony php bin/console tailwind:build` + commit the CSS output so previews render correctly.
-
-Attach screenshot/video of every interactive state. Link the companion PR URL in the recipe PR body before requesting review. A pure-template recipe with no new classes needs **no** companion PR.
 
 ---
 
@@ -212,7 +193,7 @@ Attach screenshot/video of every interactive state. Link the companion PR URL in
     "$schema": "../../../schema-kit-recipe-v1.json",
     "type": "component",
     "name": "<Human Name>",
-    "description": "<short, ends with a period>",
+    "version-added": "<Toolkit version the recipe first ships in, e.g. 3.5>",
     "copy-files": {
         "assets/": "assets/",
         "templates/": "templates/"
@@ -308,7 +289,7 @@ There is one home for each kind of attribute. `attributes.defaults({...})` carri
 </div>
 ```
 
-- Do NOT put `data-slot`, state `data-*`, `aria-*` or Stimulus `data-*-value` into `defaults()` — they belong as literal attributes (enforced by `AttributesDefaultsChecker`). Only `class`, `data-controller` and `data-action` belong in `defaults()`.
+- Do NOT put `data-slot`, state `data-*`, `aria-*` or Stimulus `data-*-value` into `defaults()` — they belong as literal attributes (enforced by `AttributesDefaultsChecker`). Of the `data-*`/`aria-*` keys, only `data-controller` and `data-action` belong in `defaults()`.
 - Do NOT put hardcoded HTML element attributes (like `type="checkbox"`) into `defaults()` — those are structural, not overridable.
 - **Structural / config / marker attributes stay conditional** (they are not "always render" state): `aria-orientation` on a decorative separator, `data-bs-parent`, presence-marker attributes like `data-horizontal`/`data-vertical`.
 - **Non-Tailwind kits (Bootstrap, Common)** keep their own idiom: `class` is merged *inside* `defaults()` as a plain string (`attributes.defaults({class: '...'})`, no `tailwind_classes`), there is no `data-slot`, and no `tailwind_merge`. Only the `data-slot` rule and the state-attribute rule apply there; the linter's Tailwind-only checks are skipped for them.
@@ -507,7 +488,7 @@ You can render an icon inside the badge.
 ````
 
 - Heading is **Title Case with spaces** (`With Icon`, `Custom Colors`, `Different Sizes`, `File Tree`).
-- **Two mandatory blocks live outside `## Examples`:** the **hero preview** right after the description (rich showcase, replaces `Demo.html.twig`) and the **`## Usage`** static ` ```twig ` block — minimal call surface, no `preview`, replaces `Usage.html.twig`.
+- **Two mandatory blocks live outside `## Examples`:** the **hero preview** right after the description (rich showcase) and the **`## Usage`** static ` ```twig ` block — minimal call surface, no `preview`.
 - One `### <Variant>` per upstream variant. Match upstream copy/structure where possible.
 - When upstream uses cross-cutting JS (e.g. shadcn's `language-selector`), replicate intent without inventing new infrastructure (e.g. stack two independent components in one block, see collapsible's `### RTL`).
 
@@ -539,8 +520,6 @@ php vendor/bin/phpunit
 git add tests/Functional/__snapshots__
 ```
 
-Reviewers explicitly check snapshots regenerated (`#3488`).
-
 **Orphan snapshots:** removing or reordering examples shifts the trailing indexes, so the highest-numbered `... example N__1.html` files stop regenerating + silently persist. After regenerating, inspect `git status` for leftover files + `git rm` them.
 
 **After rebase on `3.x`:** snapshot formatter may have evolved upstream. Re-run `--update-snapshots` once more after final rebase to avoid "diff in snapshots" CI failures.
@@ -554,7 +533,7 @@ Reviewers explicitly check snapshots regenerated (`#3488`).
 3. Root component, sub-components (with `<recipe>_<role>_attrs`), Stimulus controller if needed
 4. Write `README.md`: description + hero preview, `## Installation` (`::: installation`), `## Usage` static block, `## Examples` with one `### <Variant>` live-preview per upstream example (+ `### RTL` last), `## API Reference` (`::: api-reference`)
 5. Snapshots — regenerate, inspect HTML diff, commit
-6. Lint/format, CHANGELOG entry, open PR + companion PR (only if JS/CSS — see [Companion PR](#companion-pr-on-uxsymfonycom))
+6. Lint/format, CHANGELOG entry, open PR
 
 ---
 
@@ -562,13 +541,12 @@ Reviewers explicitly check snapshots regenerated (`#3488`).
 
 - [ ] Single recipe per PR
 - [ ] Targets `3.x`
-- [ ] PR template filled (Bug/Feature, License: MIT, Issues: Part of #3233)
+- [ ] PR template filled (Bug/Feature, License: MIT, Issues: `Part of #3233` for shadcn)
 - [ ] CHANGELOG entry under `3.x`
 - [ ] All upstream examples present as inline `{"preview":true}` blocks in `README.md`, `### <Variant>` headings Title Case
 - [ ] `README.md` has the hero preview + `## Usage` static block + `::: installation` / `::: api-reference` directives
 - [ ] Visual + behavioral parity verified manually (screenshot/video attached)
 - [ ] Snapshots regenerated + committed (no stale entries)
-- [ ] Companion PR on `symfony/ux.symfony.com` linked **only if** recipe ships JS or new Tailwind classes
 - [ ] `php-cs-fixer`, `twig-cs-fixer`, `pnpm run fmt`, `pnpm run lint` clean
 - [ ] `bin/ux-toolkit-kit-lint --fail-on-warning kits/<kit>` clean
 - [ ] Docs: `## <type> <Description.>` above each prop in `{% props %}` + `{##- <Description.> -#}` on the line above each rendered block (trim mirrors the block); descriptions Capitalized + ending with a period; prop types are spaceless PHPStan types; **no `Defaults to`** (defaults live in `{%- props -%}`); every rendered block documented
@@ -586,7 +564,7 @@ Reviewers explicitly check snapshots regenerated (`#3488`).
 | Anti-pattern | Fix |
 | --- | --- |
 | `{{ attributes.defaults({}) }}` with empty or no meaningful defaults | `{{ attributes }}` when no defaults needed; `{{ attributes.defaults({...}) }}` for the merged `class` (`tailwind_classes`), `data-controller`/`data-action` (+ overridable HTML defaults like `type`) |
-| `data-slot`, `aria-*`, Stimulus `data-*-value` or state `data-*` inside `defaults()` | Render them as literal attributes outside `defaults()`; keep only `class`, `data-controller`/`data-action` in `defaults()` (enforced by `AttributesDefaultsChecker`) |
+| `data-slot`, `aria-*`, Stimulus `data-*-value` or state `data-*` inside `defaults()` | Render them as literal attributes outside `defaults()`; the only `data-*` keys left in `defaults()` are `data-controller`/`data-action` (enforced by `AttributesDefaultsChecker`) |
 | State attr conditionally emitted (`{{ open ? 'data-state="open"' }}`) or bare `: false` (`data-open="{{ open ? 'true' : false }}"`) | Always emit with explicit string value (`data-state="{{ open ? 'open' : 'closed' }}"`, `... : 'false'`) |
 | Separate `class="{{ ('<base> ' ~ attributes.render('class'))\|tailwind_merge }}"` + trailing `{{ attributes }}` (Tailwind kits) | Merge inside `defaults()`: `{{ attributes.defaults({ class: '<base>'\|tailwind_classes }) }}` (keep `tailwind_merge` only for different-element cases or spreads onto an external non-mergeable component like `<twig:ux:icon>`) |
 | Variant via `{% if variant == ... %}` chains | `attributes.defaults({ class: html_cva(base, variants).apply({...})\|tailwind_classes })` |
@@ -604,7 +582,7 @@ Reviewers explicitly check snapshots regenerated (`#3488`).
 | Snapshots not regenerated / partially stale | Regenerate via `phpunit -d --update-snapshots` (not `simple-phpunit` — removed) |
 | Multiple recipes in one PR | Split into one PR per recipe |
 | PR targets `2.x` | Retarget to `3.x`, move CHANGELOG entry |
-| Companion PR opened for a docs-only recipe | Skip it — docs render from `README.md`; companion only for JS/CSS |
+| Companion PR opened on `symfony/ux.symfony.com` | Close it: docs, controllers and Tailwind classes are picked up from the recipe automatically |
 | Native `<details>`/`<summary>` when upstream has animation/ARIA parity | Replace with `<div>` + Stimulus controller |
 | Example as a separate `examples/*.html.twig` file or `::: example` directive | Inline as a ` ```twig {"preview":true} ` block in `README.md` |
 | Subset of upstream examples | Reuse full set, inline in `README.md` |
