@@ -248,6 +248,15 @@ importers:
         specifier: ^7.1.0 || ^8.0
         version: 8.0.23
 
+  src/Upload/assets:
+    devDependencies:
+      '@hotwired/stimulus':
+        specifier: ^3.0.0
+        version: 3.2.2
+      '@symfony/ux-live-component':
+        specifier: ^3.0
+        version: link:../../LiveComponent/assets
+
   src/Vue/assets:
     devDependencies:
       '@hotwired/stimulus':

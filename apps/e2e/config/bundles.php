@@ -29,4 +29,5 @@ return [
     Symfony\UX\Native\UXNativeBundle::class => ['all' => true],
     Symfony\UX\CalendarLink\UXCalendarLinkBundle::class => ['all' => true],
     Symfony\UX\Css\UXCssBundle::class => ['all' => true],
+    Symfony\UX\Upload\UXUploadBundle::class => ['all' => true],
 ];
