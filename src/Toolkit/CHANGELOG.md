@@ -28,6 +28,7 @@
 - [Shadcn] Focus the input of `input-group` when one of its addons is clicked, through a new `input-group` Stimulus controller
 - [Shadcn] Fix `InputGroup:Button` stacking the `Button` size classes on top of its own
 - [Shadcn] Fix a `data-slot` passed to `Button`, `Input`, `Label`, and other components being ignored, leaving `input-group` without its focus ring
+- [Shadcn] Rewrite `select` to match the upstream Shadcn Select, as `Select:*` sub-components; use `native-select` for a native `<select>`
 
 ## 3.5.0
 

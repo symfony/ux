@@ -1,0 +1,16 @@
+{%- props
+    ## string|null Unique identifier linking the group to its `Select:Label`, so the group is announced with a name.
+    id = null
+-%}
+{%- do provide('selectGroup.labelId', null is same as(id) ? null : 'select-group-' ~ id ~ '-label') -%}
+<div
+    role="group"
+    {% if id is not null %}aria-labelledby="select-group-{{ id }}-label"{% endif %}
+    data-slot="select-group"
+    {{ attributes.defaults({
+        class: 'scroll-my-1 p-1'|tailwind_classes,
+    }) }}
+>
+    {##- The group options, typically a `Select:Label` followed by `Select:Item` components. -#}
+    {%- block content %}{% endblock -%}
+</div>
