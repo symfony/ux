@@ -1,0 +1,100 @@
+@import './base.css';
+
+@layer ux-upload {
+    .ux-upload--dropzone .ux-upload__dropzone {
+        display: grid;
+        min-height: 12rem;
+        place-items: center;
+        align-content: center;
+        gap: 0.5rem;
+        padding: 2rem;
+        border: 2px dashed var(--ux-upload-border);
+        border-radius: var(--ux-upload-radius);
+        background: var(--ux-upload-bg);
+        text-align: center;
+        cursor: pointer;
+        transition:
+            border-color 160ms ease,
+            background-color 160ms ease;
+    }
+
+    .ux-upload--dropzone .ux-upload__dropzone:hover,
+    .ux-upload--dropzone .ux-upload__dropzone.is-active {
+        border-color: var(--ux-upload-accent);
+        background: color-mix(in srgb, var(--ux-upload-accent) 7%, var(--ux-upload-bg));
+    }
+
+    .ux-upload--dropzone .ux-upload__dropzone-icon {
+        width: 2.5rem;
+        height: 2.5rem;
+        color: var(--ux-upload-accent);
+    }
+
+    .ux-upload--dropzone .ux-upload__instruction {
+        font-weight: 650;
+    }
+
+    .ux-upload--dropzone .ux-upload__input {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        cursor: pointer;
+    }
+
+    .ux-upload--dropzone.ux-upload--previews .ux-upload__list {
+        grid-template-columns: repeat(auto-fill, minmax(min(100%, 13rem), 1fr));
+    }
+
+    .ux-upload--dropzone.ux-upload--previews .ux-upload__list > .ux-upload__dropzone {
+        grid-column: 1 / -1;
+    }
+
+    .ux-upload--dropzone.ux-upload--previews .ux-upload__list:has(.ux-upload__item) > .ux-upload__dropzone {
+        grid-column: auto;
+        min-height: 0;
+        aspect-ratio: 4 / 3;
+        order: 1;
+        padding: 1rem;
+    }
+
+    .ux-upload--dropzone.ux-upload--previews
+        .ux-upload__list:has(.ux-upload__item)
+        > .ux-upload__dropzone
+        .ux-upload__dropzone-icon {
+        width: 2rem;
+        height: 2rem;
+    }
+
+    .ux-upload--dropzone.ux-upload--previews .ux-upload__item {
+        grid-template-columns: 1fr auto;
+        grid-template-areas:
+            'visual visual'
+            'metadata status'
+            'progress progress'
+            'actions actions';
+    }
+
+    .ux-upload--dropzone.ux-upload--previews .ux-upload__visual {
+        width: 100%;
+        aspect-ratio: 4 / 3;
+    }
+
+    .ux-upload--dropzone.ux-upload--previews .ux-upload__actions {
+        justify-content: start;
+    }
+
+    @media (max-width: 36rem) {
+        .ux-upload--dropzone .ux-upload__dropzone {
+            min-height: 9rem;
+            padding: 1.25rem;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .ux-upload--dropzone .ux-upload__dropzone {
+            transition: none;
+        }
+    }
+}
