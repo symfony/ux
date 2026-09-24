@@ -257,6 +257,30 @@ final class InteractsWithLiveComponentsTest extends KernelTestCase
         ;
     }
 
+    public function testComponentEmitsExpectedPartialEventDataWithNonScalarValue(): void
+    {
+        $testComponent = $this->createLiveComponent('component_with_emit');
+
+        $testComponent->call('actionThatEmitsWithNonScalarData');
+
+        $this->assertComponentEmitEvent($testComponent, 'event1')
+            ->withDataSubset(['params' => ['%count%' => 3, '%name%' => 'foo']])
+        ;
+    }
+
+    public function testComponentEmitsUnexpectedPartialEventDataWithNonScalarValueFails(): void
+    {
+        $testComponent = $this->createLiveComponent('component_with_emit');
+
+        $testComponent->call('actionThatEmitsWithNonScalarData');
+
+        $this->expectException(AssertionFailedError::class);
+        $this->expectExceptionMessage('The event "event1" data "params" is different than expected.');
+        $this->assertComponentEmitEvent($testComponent, 'event1')
+            ->withDataSubset(['params' => ['%count%' => 4]])
+        ;
+    }
+
     public function testComponentDoesNotEmitUnexpectedEvent(): void
     {
         $testComponent = $this->createLiveComponent('component_with_emit');
@@ -326,6 +350,30 @@ final class InteractsWithLiveComponentsTest extends KernelTestCase
         $this->assertComponentDispatchBrowserEvent($testComponent, 'browser-event')
             ->withPayloadSubset(['fooKey' => 'barVal'])
             ->withPayloadSubset(['barKey' => 'fooVal'])
+        ;
+    }
+
+    public function testComponentDispatchesExpectedPartialBrowserEventDataWithNonScalarValue(): void
+    {
+        $testComponent = $this->createLiveComponent('component_with_emit');
+
+        $testComponent->call('actionThatDispatchesABrowserEventWithNonScalarData');
+
+        $this->assertComponentDispatchBrowserEvent($testComponent, 'browser-event')
+            ->withPayloadSubset(['paramsKey' => ['%count%' => 3, '%name%' => 'foo']])
+        ;
+    }
+
+    public function testComponentDispatchesUnexpectedPartialBrowserEventDataWithNonScalarValueFails(): void
+    {
+        $testComponent = $this->createLiveComponent('component_with_emit');
+
+        $testComponent->call('actionThatDispatchesABrowserEventWithNonScalarData');
+
+        $this->expectException(AssertionFailedError::class);
+        $this->expectExceptionMessage('The event "browser-event" data "paramsKey" is different than expected.');
+        $this->assertComponentDispatchBrowserEvent($testComponent, 'browser-event')
+            ->withPayloadSubset(['paramsKey' => ['%count%' => 4]])
         ;
     }
 
