@@ -88,6 +88,13 @@ class ExampleRepository
             new Example(UxPackage::Translator, 'ICU Translation with `date` and `time` arguments', 'ICU message format example using `date` and `time` arguments', 'app_ux_translator_icu_date_time'),
             new Example(UxPackage::Translator, 'ICU Translation with `number` and `percent` arguments', 'ICU message format example using `number` and `percent` arguments', 'app_ux_translator_icu_number_percent'),
             new Example(UxPackage::Translator, 'ICU Translation with `number` and `currency` arguments', 'ICU message format example using `number` and `currency` arguments', 'app_ux_translator_icu_number_currency'),
+            new Example(UxPackage::Upload, 'Single file', 'A compact upload field for one file; a file up to the chunk size is sent in one request.', 'app_ux_upload_single'),
+            new Example(UxPackage::Upload, 'Multiple files', 'The same field accepting several files at once.', 'app_ux_upload_multiple'),
+            new Example(UxPackage::Upload, 'Manual start', 'Uploads wait for the start button instead of beginning on selection.', 'app_ux_upload_manual'),
+            new Example(UxPackage::Upload, 'Minimal form theme', 'A form theme that empties every optional presentation block.', 'app_ux_upload_minimal_theme'),
+            new Example(UxPackage::Upload, 'Chunked form submission', 'A chunked upload submitted with a required title: the server reads the stored file, and a validation error keeps the upload.', 'app_ux_upload_form'),
+            new Example(UxPackage::Upload, 'Image gallery', 'A drop area with image previews for up to three files, submitted in one form.', 'app_ux_upload_gallery'),
+            new Example(UxPackage::Upload, 'File validation', 'An image field checked in the browser, then by the server policy and an application listener.', 'app_ux_upload_validation'),
             new Example(UxPackage::Vue, 'Basic Vue Component', 'A basic Vue component that displays a welcoming message', 'app_ux_vue_index'),
         ];
     }
