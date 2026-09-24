@@ -674,6 +674,65 @@ Triggers a page refresh. Pass a ``requestId`` to debounce multiple refreshes.
     <turbo-stream action="refresh" request-id="abcd-1234"></turbo-stream>
 
 
+Redirect
+""""""""
+
+.. versionadded:: 3.6
+
+    The ``redirect`` stream action and the ``<twig:Turbo:Stream:Redirect>`` Twig
+    component were introduced in Symfony UX 3.6.
+
+Sends the browser to another URL, using a Turbo Drive visit. Unlike a regular
+``RedirectResponse``, it can be combined with other stream actions in the same
+response.
+
+The visit replaces the current browsing history entry, so the back button skips
+the page the stream was rendered from:
+
+.. code-block:: html+twig
+
+    <twig:Turbo:Stream:Redirect url="{{ path('app_task_index') }}" />
+
+    {# output: #}
+    <turbo-stream action="redirect" url="/tasks"></turbo-stream>
+
+Add ``advance`` to push a new history entry instead, keeping that page reachable
+with the back button:
+
+.. code-block:: html+twig
+
+    <twig:Turbo:Stream:Redirect url="{{ path('app_task_index') }}" advance />
+
+    {# output: #}
+    <turbo-stream action="redirect" url="/tasks" advance></turbo-stream>
+
+Turbo Drive can only visit same-origin locations, so a cross-origin ``url``
+triggers a full page load instead:
+
+.. code-block:: html+twig
+
+    <twig:Turbo:Stream:Redirect url="https://symfony.com" />
+
+    {# output: #}
+    <turbo-stream action="redirect" url="https://symfony.com"></turbo-stream>
+
+.. caution::
+
+    Only ``http`` and ``https`` URLs are accepted, any other scheme is rejected.
+    Navigating to a ``javascript:`` URL would execute it, which would turn a
+    user-controlled redirect target into a XSS vulnerability.
+
+You can also use the ``TurboStreamResponse::redirect()`` method from a controller::
+
+    // src/Controller/TaskController.php
+    use Symfony\UX\Turbo\TurboStreamResponse;
+
+    if (TurboBundle::STREAM_FORMAT === $request->getPreferredFormat()) {
+        return (new TurboStreamResponse())
+            ->remove('#task_'.$task->getId())
+            ->redirect($this->generateUrl('app_task_index'));
+    }
+
 Custom Action
 """""""""""""
 

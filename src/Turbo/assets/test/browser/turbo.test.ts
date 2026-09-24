@@ -90,6 +90,24 @@ test('Can update page content with Turbo Streams after form submission', async (
     await expectNoFullPageReload(page);
 });
 
+test('Can redirect with the "redirect" Turbo Stream action', async ({ page }) => {
+    // Visit another page first, so we can tell which history entry the redirect lands on
+    await page.goto('/ux-turbo/drive');
+    await page.goto('/ux-turbo/stream-redirect');
+    await markPageAsLoaded(page);
+
+    await page.click('#submit-turbo-stream-redirect');
+
+    await page.waitForURL('**/ux-turbo/frame');
+    await expect(page.locator('#frame-initial-content')).toContainText('This is the initial frame content');
+
+    await expectNoFullPageReload(page);
+
+    // The visit replaced the history entry of the form, so going back skips it
+    await page.goBack();
+    await page.waitForURL('**/ux-turbo/drive');
+});
+
 test('turbo-mercure-stream-source connects to Mercure and receives a "connected" attribute', async ({ page }) => {
     await page.goto('/ux-turbo/broadcast/books');
 

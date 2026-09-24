@@ -69,6 +69,22 @@ final class TurboController extends AbstractController
         return $this->render('ux_turbo/stream.html.twig');
     }
 
+    #[Route('/stream-redirect', name: 'stream_redirect')]
+    public function streamRedirectAction(Request $request): Response
+    {
+        if ($request->isMethod('POST')) {
+            if (TurboBundle::STREAM_FORMAT === $request->getPreferredFormat()) {
+                $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
+
+                return $this->render('ux_turbo/stream_redirect_response.html.twig');
+            }
+
+            return $this->redirectToRoute('app_ux_turbo_frame');
+        }
+
+        return $this->render('ux_turbo/stream_redirect.html.twig');
+    }
+
     #[Route('/broadcast/books', name: 'broadcast_books', methods: ['GET', 'POST'])]
     public function broadcastBooks(Request $request, EntityManagerInterface $em): Response
     {

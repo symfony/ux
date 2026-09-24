@@ -87,6 +87,22 @@ final class TurboStream
     }
 
     /**
+     * Redirects the browser to the given URL, using a Turbo Drive visit.
+     *
+     * A cross-origin URL triggers a full page load, as Turbo Drive can only visit same-origin locations.
+     *
+     * @param bool $advance Push a new browsing history entry instead of replacing the current one
+     */
+    public static function redirect(string $url, bool $advance = false): string
+    {
+        return \sprintf(
+            '<turbo-stream action="redirect" url="%s"%s></turbo-stream>',
+            htmlspecialchars($url),
+            $advance ? ' advance' : '',
+        );
+    }
+
+    /**
      * Custom action and attributes.
      *
      * Set boolean attributes (e.g., `disabled`) by providing the attribute name as key with `null` as value.

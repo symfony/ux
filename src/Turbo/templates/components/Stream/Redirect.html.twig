@@ -1,0 +1,3 @@
+{% props url, advance = false -%}
+
+<turbo-stream action="redirect" url="{{ url }}"{% if advance %} advance{% endif %} {{- attributes }}></turbo-stream>
