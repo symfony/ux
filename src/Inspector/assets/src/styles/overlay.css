@@ -1,0 +1,65 @@
+@scope (.overlay) {
+    :scope {
+        position: fixed;
+        inset: 0;
+        z-index: 1;
+        pointer-events: none;
+    }
+
+    .box {
+        position: fixed;
+        top: 0;
+        left: 0;
+        border: 2px solid var(--framework);
+        border-radius: var(--radius-sm);
+        background: color-mix(in srgb, var(--framework), transparent 92%);
+        pointer-events: none;
+    }
+
+    .box[data-mode='hover'] {
+        border-style: dashed;
+        background: transparent;
+    }
+
+    .box[data-mode='all'],
+    .box[data-mode='event'] {
+        background: transparent;
+    }
+
+    .box[data-mode='selected'] {
+        box-shadow: 0 0 0 2px color-mix(in srgb, var(--framework), transparent 55%);
+    }
+
+    .box > span {
+        position: absolute;
+        top: 0;
+        left: -1px;
+        max-width: 12.5rem;
+        overflow: hidden;
+        padding: 0.125rem 0.25rem;
+        translate: 0 -100%;
+        border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+        background: var(--framework);
+        color: #101114;
+        font: var(--weight-strong) 0.625rem/1.25 var(--font-ui);
+        font-stretch: semi-condensed;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .box[data-mode='event'] > span {
+        translate: 0 0;
+        border-radius: 0 0 var(--radius-sm);
+        font-variant-numeric: tabular-nums;
+    }
+
+    .box[data-mode='event'].pulse {
+        animation: overlay-pulse 650ms ease-out;
+    }
+
+    @keyframes overlay-pulse {
+        30% {
+            box-shadow: 0 0 0 var(--space-2) color-mix(in srgb, var(--framework), transparent 65%);
+        }
+    }
+}

@@ -3,13 +3,20 @@
         "stimulus-bundle": "src/StimulusBundle",
         "ux-autocomplete": "src/Autocomplete",
         "ux-calendar-link": "src/CalendarLink",
-        "ux-dropzone": "src/Dropzone",
         "ux-chartjs": "src/Chartjs",
         "ux-cropperjs": "src/Cropperjs",
+        "ux-dropzone": "src/Dropzone",
         "ux-icons": "src/Icons",
+        "ux-inspector": "src/Inspector",
         "ux-live-component": "src/LiveComponent",
         "ux-map": {
-            "prefixes": [{ "from": "src/Map", "to": "", "excludes": ["src/Bridge"] }]
+            "prefixes": [
+                {
+                    "from": "src/Map",
+                    "to": "",
+                    "excludes": ["src/Bridge"]
+                }
+            ]
         },
         "ux-google-map": "src/Map/src/Bridge/Google",
         "ux-leaflet-map": "src/Map/src/Bridge/Leaflet",
