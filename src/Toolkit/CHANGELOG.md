@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 3.6.0
+
+- Add a `component_dir` configuration option to choose the directory where the Twig components of a recipe are installed, along with a `--component-dir` option on `ux:install`
+
 ## 3.5.0
 
 - Add support for blocks: ready-to-use page sections built from a kit's components, installed and previewed as a unit
