@@ -17,7 +17,7 @@ description: >
 
 ## Before writing code
 
-- Choose the target branch before the first commit, with the branch rules of the review skill: bugfixes on the oldest affected maintained branch (2.x or 3.x), features and deprecations on 3.x. The target decides which APIs the code may use, the minimum PHP (8.1 on 2.x, 8.4 on 3.x), which test style it follows, and where the CHANGELOG entry goes. Changing it later means rewriting the change, not rebasing it.
+- Choose the target branch before the first commit, using the branch rules from the review skill. Bugfixes, features and deprecations go to 3.x. 2.x only receives security fixes. Those follow the `security-triage` skill. The target decides which APIs the code may use, the minimum PHP (8.1 on 2.x, 8.4 on 3.x), which test style it follows, and where the CHANGELOG entry goes. Changing it later means rewriting the change, not rebasing it.
 - Branch from the current tip of `upstream/<base>`, in a worktree under `.claude/worktrees/<name>` when the main checkout is busy.
 - Re-derive the problem from the code, whatever the issue or the request says it is. A report describes a symptom. Work from the cause you found yourself.
 - Reproduce the current behavior with a probe or a failing test before changing anything. A fix for a problem you never saw happen cannot be verified.
