@@ -17,6 +17,7 @@
         "build": "pnpm run --filter @symfony/ux-map build; sync; pnpm run --filter !@symfony/ux-map --recursive --aggregate-output build",
         "test": "pnpm run -r --workspace-concurrency=1 test",
         "test:unit": "pnpm run -r --workspace-concurrency=1 --aggregate-output test:unit",
+        "test:unit:bin": "vitest --run --dir bin",
         "test:browser": "pnpm run -r --workspace-concurrency=1 test:browser",
         "fmt": "oxfmt",
         "fmt:check": "oxfmt --check",
