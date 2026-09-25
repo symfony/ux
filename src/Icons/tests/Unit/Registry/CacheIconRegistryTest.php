@@ -14,6 +14,7 @@ namespace Symfony\UX\Icons\Tests\Unit\Registry;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
+use Symfony\Component\Cache\Adapter\TraceableAdapter;
 use Symfony\UX\Icons\Exception\IconNotFoundException;
 use Symfony\UX\Icons\Icon;
 use Symfony\UX\Icons\Registry\CacheIconRegistry;
@@ -45,6 +46,44 @@ final class CacheIconRegistryTest extends TestCase
         $this->assertSame($icon->getInnerSvg(), $registry->get('foo-bar:baz')->getInnerSvg());
         $this->assertTrue($cache->hasItem('foo-bar--baz'));
         $this->assertSame($icon->getInnerSvg(), $registry->get('foo-bar:baz')->getInnerSvg());
+    }
+
+    public function testIconIsFetchedFromTheCacheOnlyOnce(): void
+    {
+        $cache = new TraceableAdapter(new ArrayAdapter());
+        $registry = new CacheIconRegistry(new InMemoryIconRegistry(['foo-bar:baz' => new Icon('<path d="M0 0h24v24H0z"/>')]), $cache);
+
+        $icon = $registry->get('foo-bar:baz');
+
+        $this->assertSame($icon, $registry->get('foo-bar:baz'));
+        $this->assertCount(1, $cache->getCalls());
+    }
+
+    public function testRefreshBypassesAndUpdatesTheFetchedIcon(): void
+    {
+        $inner = new InMemoryIconRegistry(['foo-bar:baz' => new Icon('<path d="old"/>')]);
+        $registry = new CacheIconRegistry($inner, new ArrayAdapter());
+        $registry->get('foo-bar:baz');
+
+        $inner->set('foo-bar:baz', new Icon('<path d="new"/>'));
+
+        $this->assertSame('<path d="new"/>', $registry->get('foo-bar:baz', true)->getInnerSvg());
+        $this->assertSame('<path d="new"/>', $registry->get('foo-bar:baz')->getInnerSvg());
+    }
+
+    public function testResetForgetsFetchedIcons(): void
+    {
+        $cache = new ArrayAdapter();
+        $registry = new CacheIconRegistry(new InMemoryIconRegistry(['foo-bar:baz' => new Icon('<path d="old"/>')]), $cache);
+        $registry->get('foo-bar:baz');
+
+        $cache->get('foo-bar--baz', static fn () => new Icon('<path d="new"/>'), \INF);
+
+        $this->assertSame('<path d="old"/>', $registry->get('foo-bar:baz')->getInnerSvg());
+
+        $registry->reset();
+
+        $this->assertSame('<path d="new"/>', $registry->get('foo-bar:baz')->getInnerSvg());
     }
 
     public static function provideInvalidNames(): iterable

@@ -42,6 +42,7 @@ return static function (ContainerConfigurator $container): void {
                 service('.ux_icons.chain_registry'),
                 service('.ux_icons.cache'),
             ])
+            ->tag('kernel.reset', ['method' => 'reset'])
 
         ->set('.ux_icons.icon_factory', IconFactory::class)
 
