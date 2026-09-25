@@ -39,6 +39,9 @@
         "symfony/twig-bundle": "^5.4|^6.0|^7.0|^8.0",
         "symfony/var-dumper": "^5.4|^6.0|^7.0|^8.0"
     },
+    "conflict": {
+        "symfony/asset-mapper": ">=8.2"
+    },
     "extra": {
         "thanks": {
             "name": "symfony/ux",
