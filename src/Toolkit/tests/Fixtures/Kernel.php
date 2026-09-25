@@ -67,6 +67,14 @@ final class Kernel extends BaseKernel
             'defaults' => [],
         ]);
 
+        // Kit icons are vendored under tests/Fixtures/icons to render offline.
+        $container->extension('ux_icons', [
+            'icon_dir' => __DIR__.'/icons',
+            'iconify' => [
+                'on_demand' => false,
+            ],
+        ]);
+
         $container->services()
             ->alias('ux_toolkit.kit.kit_factory', '.ux_toolkit.kit.kit_factory')
                 ->public()
