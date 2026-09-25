@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\Icons;
 
+use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
 use Symfony\UX\Icons\Exception\IconNotFoundException;
 use Symfony\UX\Icons\Registry\CacheIconRegistry;
 
@@ -19,7 +20,7 @@ use Symfony\UX\Icons\Registry\CacheIconRegistry;
  *
  * @internal
  */
-final class IconCacheWarmer
+final class IconCacheWarmer implements CacheWarmerInterface
 {
     public function __construct(private CacheIconRegistry $registry, private IconFinderInterface $icons)
     {
@@ -43,5 +44,30 @@ final class IconCacheWarmer
                 $onFailure($name, $e);
             }
         }
+    }
+
+    public function isOptional(): bool
+    {
+        return true;
+    }
+
+    /**
+     * Warms the icons that are not cached yet, and never fails.
+     *
+     * An icon that cannot be warmed is left to its first rendering, which reports the error.
+     */
+    public function warmUp(string $cacheDir, ?string $buildDir = null): array
+    {
+        try {
+            foreach ($this->icons->icons() as $name) {
+                try {
+                    $this->registry->get($name);
+                } catch (\Exception) {
+                }
+            }
+        } catch (\Exception) {
+        }
+
+        return [];
     }
 }

@@ -644,14 +644,19 @@ Icon Caching
 ~~~~~~~~~~~~
 
 To avoid having to parse icon files on every request, icons are cached.
-In production, you can pre-warm the cache by running the following command:
+The ``cache:warmup`` and ``cache:clear`` commands pre-warm this cache with your local icons.
+To also cache *on-demand* icons, which requires HTTP requests to the Iconify API, run the following command:
 
 .. code-block:: terminal
 
     $ php bin/console ux:icons:warm-cache
 
-This command looks in all your Twig templates for ``ux_icon()`` calls and
+Warming looks in all your Twig templates for ``ux_icon()`` calls and
 ``<twig:ux:icon>`` tags and caches the icons it finds.
+
+.. versionadded:: 3.6
+
+    Warming local icons on ``cache:warmup`` was added in UX Icons 3.6.
 
 .. caution::
 
