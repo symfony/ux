@@ -17,9 +17,10 @@ jobs:
     release:
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
+            - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
               with:
                   ref: ${{ github.ref }}
+                  persist-credentials: false
                   fetch-depth: 0
 
             - name: Verify tag is on the matching release branch
@@ -35,16 +36,13 @@ jobs:
                   fi
                   echo "Tag ${GITHUB_REF_NAME} verified as ancestor of ${BRANCH}."
 
-            - uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
-            - uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f
+            - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
+              # setup-node does not enable any package-manager cache here (no `cache:` input),
+              # so cache poisoning is not a concern on this release workflow.
+            - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # zizmor: ignore[cache-poisoning] v7.0.0
               with:
                   registry-url: 'https://registry.npmjs.org'
                   node-version-file: '.nvmrc'
-                  cache: 'pnpm'
-                  cache-dependency-path: |
-                      pnpm-lock.yaml
-                      package.json
-                      src/**/package.json
 
             - name: Install root JS dependencies
               run: pnpm install --frozen-lockfile
