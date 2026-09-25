@@ -1,0 +1,32 @@
+{%- props
+    ## string The value carried by the item, and submitted once it is selected.
+    value,
+    ## string|null The text matched while filtering; the item text content is used when omitted.
+    label = null,
+    ## boolean Whether the item is disabled.
+    disabled = false
+-%}
+{%- set _combobox_value = inject('combobox.value', []) -%}
+{%- set _selected = value in _combobox_value -%}
+<div
+    role="option"
+    data-slot="combobox-item"
+    data-combobox-target="item"
+    data-value="{{ value }}"
+    data-label="{{ label }}"
+    data-selected="{{ _selected ? 'true' : 'false' }}"
+    data-disabled="{{ disabled ? 'true' : 'false' }}"
+    aria-selected="{{ _selected ? 'true' : 'false' }}"
+    aria-disabled="{{ disabled ? 'true' : 'false' }}"
+    {{ attributes.defaults({
+        class: "group/combobox-item relative flex w-full cursor-default select-none items-center gap-2 rounded-md py-1 pe-8 ps-1.5 text-sm outline-hidden data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 data-highlighted:bg-accent data-highlighted:text-accent-foreground [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4"|tailwind_classes,
+        'data-action': 'click->combobox#select mousemove->combobox#highlight'|html_attr_type('sst'),
+    }) }}
+>
+    {##- The item label. -#}
+    {%- block content %}{% endblock -%}
+    <span
+        data-slot="combobox-item-indicator"
+        class="pointer-events-none absolute end-2 hidden size-4 items-center justify-center group-data-[selected=true]/combobox-item:flex"
+    ><twig:ux:icon name="lucide:check" class="size-4" /></span>
+</div>

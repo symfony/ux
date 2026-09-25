@@ -1,0 +1,13 @@
+{%- set _combobox_open = inject('combobox.open', false) -%}
+{%- set _combobox_contentId = inject('combobox.contentId', null) -%}
+{%- set combobox_trigger_attrs = {
+    'data-slot': 'combobox-trigger',
+    'data-combobox-target': 'trigger',
+    'data-action': 'click->combobox#toggle'|html_attr_type('sst'),
+    'aria-haspopup': 'listbox',
+    'aria-controls': _combobox_contentId,
+    'aria-expanded': _combobox_open ? 'true' : 'false',
+    'data-state': _combobox_open ? 'open' : 'closed',
+} -%}
+{##- The trigger element (e.g., a `Button`) that opens the list when clicked. -#}
+{%- block content %}{% endblock -%}
