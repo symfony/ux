@@ -12,6 +12,7 @@
 namespace Symfony\UX\Icons\Registry;
 
 use Symfony\Contracts\Cache\CacheInterface;
+use Symfony\Contracts\Service\ResetInterface;
 use Symfony\UX\Icons\Exception\IconNotFoundException;
 use Symfony\UX\Icons\Icon;
 use Symfony\UX\Icons\IconRegistryInterface;
@@ -21,22 +22,36 @@ use Symfony\UX\Icons\IconRegistryInterface;
  *
  * @internal
  */
-final class CacheIconRegistry implements IconRegistryInterface
+final class CacheIconRegistry implements IconRegistryInterface, ResetInterface
 {
+    /**
+     * @var array<string, Icon>
+     */
+    private array $icons = [];
+
     public function __construct(private IconRegistryInterface $inner, private CacheInterface $cache)
     {
     }
 
     public function get(string $name, bool $refresh = false): Icon
     {
+        if (!$refresh && isset($this->icons[$name])) {
+            return $this->icons[$name];
+        }
+
         if (!Icon::isValidName($name)) {
             throw new IconNotFoundException(\sprintf('The icon name "%s" is not valid.', $name));
         }
 
-        return $this->cache->get(
+        return $this->icons[$name] = $this->cache->get(
             Icon::nameToId($name),
             fn () => $this->inner->get($name),
             beta: $refresh ? \INF : null,
         );
+    }
+
+    public function reset(): void
+    {
+        $this->icons = [];
     }
 }
