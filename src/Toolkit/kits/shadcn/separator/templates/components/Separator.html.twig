@@ -5,7 +5,7 @@
     decorative = true
 -%}
 <div
-    data-slot="separator"
+    data-slot="{{ attributes.render('data-slot')|default('separator') }}"
     data-orientation="{{ orientation }}"
     role="{{ decorative ? 'none' : 'separator' }}"
     {{ not decorative ? 'aria-orientation="' ~ orientation ~ '"' }}
