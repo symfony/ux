@@ -1174,6 +1174,47 @@ final class DoctrineOrmAdapterTest extends TestCase
         self::assertSame([], $result->items);
     }
 
+    /**
+     * Non-regression test for cursor pagination on a Doctrine DATETIMETZ_MUTABLE column.
+     *
+     * Doctrine's built-in DateTimeTzType only accepts \DateTime instances, so
+     * the cursor value must not be normalized to \DateTimeImmutable for this type,
+     * otherwise binding the parameter fails with:
+     * "Could not convert PHP value of type DateTimeImmutable to type Doctrine\DBAL\Types\DateTimeTzType".
+     */
+    public function testCursorPaginationWithMutableDatetimeTzField(): void
+    {
+        for ($i = 1; $i <= 6; ++$i) {
+            $book = new Book();
+            $book->setTitle('Book '.$i);
+            $book->setPrice(10.0);
+            $book->setUpdatedAt(new \DateTime(\sprintf('2020-01-0%dT00:00:00+00:00', $i)));
+            $this->entityManager->persist($book);
+        }
+        $this->entityManager->flush();
+
+        $qb = $this->entityManager->createQueryBuilder()
+            ->select('b')
+            ->from(Book::class, 'b');
+        $order = $this->adapter->resolveCursorOrder($qb, ['updatedAt'], 'ASC');
+
+        $page1 = $this->adapter->sliceWithCursor($qb, null, 3, $order);
+
+        self::assertCount(3, $page1->items);
+        self::assertTrue($page1->hasNext);
+        self::assertNotNull($page1->next);
+
+        // This second call exercises the DATETIMETZ_MUTABLE cursor value normalization:
+        // it fails before the fix, because the value is bound as a \DateTimeImmutable.
+        $page2 = $this->adapter->sliceWithCursor($qb, $page1->next, 3, $order);
+
+        self::assertCount(3, $page2->items);
+
+        $firstTitles = array_map(static fn (Book $item) => $item->getTitle(), $page1->items);
+        $secondTitles = array_map(static fn (Book $item) => $item->getTitle(), $page2->items);
+        self::assertEmpty(array_intersect($firstTitles, $secondTitles), 'Pages should not have overlapping items');
+    }
+
     public function testCursorRejectsInvalidDateValues(): void
     {
         $queryBuilder = $this->entityManager->createQueryBuilder()
