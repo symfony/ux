@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 3.6.0
+
+- Warm local icons on `cache:warmup`
+
 ## 3.5.0
 
 - Add `IconFinderInterface` to register custom icon finders, providing icon names to lock and warm up in addition to the ones found in Twig templates
