@@ -166,3 +166,5 @@ jobs:
                   cache: true
 
             - run: pnpm run test:unit
+
+            - run: pnpm run test:unit:bin
