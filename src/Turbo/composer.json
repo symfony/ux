@@ -61,7 +61,8 @@
         "php-webdriver/webdriver": "^1.15"
     },
     "conflict": {
-        "symfony/flex": "<1.13"
+        "symfony/flex": "<1.13",
+        "symfony/asset-mapper": ">=8.2"
     },
     "extra": {
         "thanks": {

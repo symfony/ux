@@ -27,7 +27,8 @@
         "symfony/deprecation-contracts": "^2.5|^3"
     },
     "conflict": {
-        "symfony/flex": "<1.13"
+        "symfony/flex": "<1.13",
+        "symfony/asset-mapper": ">=8.2"
     },
     "extra": {
         "thanks": {

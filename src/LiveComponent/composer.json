@@ -60,7 +60,8 @@
     "conflict": {
         "symfony/config": "<5.4.0",
         "symfony/type-info": "<7.2",
-        "symfony/property-info": "~7.0.0"
+        "symfony/property-info": "~7.0.0",
+        "symfony/asset-mapper": ">=8.2"
     },
     "config": {
         "sort-packages": true

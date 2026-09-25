@@ -51,7 +51,8 @@
         "zenstruck/foundry": "^2.0"
     },
     "conflict": {
-        "doctrine/orm": "2.9.0 || 2.9.1"
+        "doctrine/orm": "2.9.0 || 2.9.1",
+        "symfony/asset-mapper": ">=8.2"
     },
     "config": {
         "sort-packages": true

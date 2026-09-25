@@ -28,6 +28,9 @@
         "symfony/twig-bundle": "^5.4|^6.0|^7.0|^8.0",
         "zenstruck/browser": "^1.4"
     },
+    "conflict": {
+        "symfony/asset-mapper": ">=8.2"
+    },
     "minimum-stability": "dev",
     "autoload": {
         "psr-4": {
