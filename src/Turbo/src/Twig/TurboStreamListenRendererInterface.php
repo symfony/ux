@@ -13,8 +13,6 @@ namespace Symfony\UX\Turbo\Twig;
 
 use Twig\Environment;
 
-trigger_deprecation('symfony/ux-turbo', '3.1', 'The "%s" interface is deprecated since Symfony UX 3.1, use "%s" with turbo_stream_from() or the <twig:Turbo:Stream:From> Twig component instead. It will be removed in 4.0.', TurboStreamListenRendererInterface::class, \Symfony\UX\Turbo\StreamSourceRendererInterface::class);
-
 /**
  * Render turbo stream attributes.
  *
