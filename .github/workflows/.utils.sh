@@ -63,7 +63,7 @@ before_composer_install() {
   # - version ^5 is compatible with Symfony 8, but requires PHPUnit 10+
   # PHPUnit 10+ is not really "usable", it's not compatible with PHPUnit Bridge, and there is no native deprecations handling.
   # To remove in Symfony UX 3.0
-  if [[ "$symfony_version" == "8.0.*" ]]; then
+  if [[ "$symfony_version" == "8.1.*" ]]; then
     if grep -q '"spatie/phpunit-snapshot-assertions"' composer.json; then
       composer remove symfony/phpunit-bridge --dev --no-update
       composer require phpunit/phpunit:^11 --dev --no-update
@@ -92,7 +92,7 @@ after_composer_install() {
   local symfony_version=$3
 
   # To remove in Symfony UX 3.0
-  if [[ "$symfony_version" == "8.0.*" ]]; then
+  if [[ "$symfony_version" == "8.1.*" ]]; then
     if grep -q '"spatie/phpunit-snapshot-assertions"' composer.json; then
       # The Symfony PHPUnit bridge was previously removed to allow PHPUnit 11 installation.
       # Creating a symlink to "phpunit" as "simple-phpunit" makes things easier for unit-tests.yaml workflow.
