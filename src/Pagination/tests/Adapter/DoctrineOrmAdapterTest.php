@@ -19,6 +19,7 @@ use PHPUnit\Framework\TestCase;
 use Psr\Log\AbstractLogger;
 use Symfony\UX\Pagination\Adapter\DoctrineOrmAdapter;
 use Symfony\UX\Pagination\Cursor\CursorBoundary;
+use Symfony\UX\Pagination\Cursor\CursorCodec;
 use Symfony\UX\Pagination\Cursor\CursorOrder;
 use Symfony\UX\Pagination\Exception\InvalidArgumentException;
 use Symfony\UX\Pagination\Exception\RuntimeException;
@@ -499,7 +500,10 @@ final class DoctrineOrmAdapterTest extends TestCase
 
         self::assertCount(5, $results);
         self::assertCount(5, array_unique(array_map(static fn (Author $item): int => $item->getId(), $results)));
-        self::assertCount(2, $this->queryCollector->queries());
+
+        // Identifier subquery, WHERE IN re-query, and the COUNT that
+        // OffsetPaginator always runs, even though the total is unused here.
+        self::assertCount(3, $this->queryCollector->queries());
     }
 
     /**
@@ -576,25 +580,58 @@ final class DoctrineOrmAdapterTest extends TestCase
         $queryBuilder = $this->entityManager->createQueryBuilder()
             ->select('a')
             ->from(Author::class, 'a')
-            ->where('a.id > :ux_pagination_cursor_0')
-            ->setParameter('ux_pagination_cursor_0', 8);
-        $order = $this->adapter->resolveCursorOrder(
-            $queryBuilder,
-            ['id'],
-            'ASC',
-        );
+            ->where('a.id > :min_id')
+            ->setParameter('min_id', 8);
+        $order = $this->adapter->resolveCursorOrder($queryBuilder, ['id'], 'ASC');
 
-        $result = $this->adapter->sliceWithCursor(
-            $queryBuilder,
-            new CursorBoundary([3]),
-            2,
-            $order,
-        );
+        $first = $this->adapter->sliceWithCursor($queryBuilder, null, 2, $order);
+        self::assertNotNull($first->next);
+
+        $second = $this->adapter->sliceWithCursor($queryBuilder, $first->next, 2, $order);
 
         self::assertSame(
             [9, 10],
-            array_map(static fn (Author $author): int => $author->getId(), $result->items),
+            array_map(static fn (Author $author): int => $author->getId(), $first->items),
         );
+        self::assertSame(
+            [11, 12],
+            array_map(static fn (Author $author): int => $author->getId(), $second->items),
+        );
+    }
+
+    /**
+     * Doctrine overwrites whatever is bound under the name it generates, which
+     * would silently return the wrong rows.
+     */
+    public function testCursorRejectsQueryParametersCollidingWithDoctrineCursorParameters(): void
+    {
+        $queryBuilder = $this->entityManager->createQueryBuilder()
+            ->select('a')
+            ->from(Author::class, 'a')
+            ->where('a.id <= :a_id_0')
+            ->setParameter('a_id_0', 6);
+        $order = $this->adapter->resolveCursorOrder($queryBuilder, ['id'], 'ASC');
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('The query parameter ":a_id_0" collides with the parameter Doctrine generates for cursor field "id". Rename it.');
+
+        $this->adapter->sliceWithCursor($queryBuilder, null, 2, $order);
+    }
+
+    public function testCursorRejectsCollidingParametersForAppendedTieBreakers(): void
+    {
+        $queryBuilder = $this->entityManager->createQueryBuilder()
+            ->select('a')
+            ->from(Author::class, 'a')
+            ->where('a.id <= :a_id_1')
+            ->setParameter('a_id_1', 6);
+        // 'id' is appended as a tie-breaker, landing at index 1.
+        $order = $this->adapter->resolveCursorOrder($queryBuilder, ['name'], 'ASC');
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('The query parameter ":a_id_1" collides with the parameter Doctrine generates for cursor field "id". Rename it.');
+
+        $this->adapter->sliceWithCursor($queryBuilder, null, 2, $order);
     }
 
     /**
@@ -634,6 +671,97 @@ final class DoctrineOrmAdapterTest extends TestCase
         self::assertInstanceOf(\Symfony\UX\Pagination\Cursor\CursorSlice::class, $result);
         self::assertIsBool($result->hasNext);
         self::assertCount(5, $result->items);
+    }
+
+    /**
+     * A collection join paginates through an identifier subquery and a WHERE IN
+     * re-query. Only the subquery is reversed, so rows keep the display order.
+     */
+    public function testCursorBackwardNavigationWithCollectionJoinKeepsDisplayOrder(): void
+    {
+        for ($i = 1; $i <= 15; ++$i) {
+            $author = new Author();
+            $author->setName('Author '.$i);
+
+            for ($j = 1; $j <= 2; ++$j) {
+                $book = new Book();
+                $book->setTitle('Book '.$j.' by Author '.$i);
+                $book->setAuthor($author);
+                $this->entityManager->persist($book);
+            }
+
+            $this->entityManager->persist($author);
+        }
+        $this->entityManager->flush();
+
+        $qb = $this->entityManager->createQueryBuilder()
+            ->select('DISTINCT a')
+            ->from(Author::class, 'a')
+            ->join('a.books', 'b');
+        $order = $this->adapter->resolveCursorOrder($qb, ['id'], 'ASC');
+
+        $first = $this->adapter->sliceWithCursor($qb, null, 5, $order);
+        self::assertNotNull($first->next);
+
+        $second = $this->adapter->sliceWithCursor($qb, $first->next, 5, $order);
+        self::assertSame([6, 7, 8, 9, 10], $this->idsOf($second->items));
+        self::assertNotNull($second->previous);
+
+        $back = $this->adapter->sliceWithCursor($qb, $second->previous, 5, $order);
+        self::assertSame([1, 2, 3, 4, 5], $this->idsOf($back->items));
+    }
+
+    public function testCursorPaginatesSelectNewDtoQueriesWithPublicProperties(): void
+    {
+        $this->createAuthors(5);
+
+        $qb = $this->entityManager->createQueryBuilder()
+            ->select(\sprintf('NEW %s(a.id, a.name)', OrmAuthorRow::class))
+            ->from(Author::class, 'a');
+        $order = $this->adapter->resolveCursorOrder($qb, ['id'], 'ASC');
+
+        $first = $this->adapter->sliceWithCursor($qb, null, 2, $order);
+        self::assertNotNull($first->next);
+
+        $second = $this->adapter->sliceWithCursor($qb, $first->next, 2, $order);
+
+        self::assertSame([1, 2], array_map(static fn (OrmAuthorRow $row): int => $row->id, $first->items));
+        self::assertSame([3, 4], array_map(static fn (OrmAuthorRow $row): int => $row->id, $second->items));
+    }
+
+    public function testCursorRejectsSelectNewDtoQueriesHidingTheOrderedFields(): void
+    {
+        $this->createAuthors(5);
+
+        $qb = $this->entityManager->createQueryBuilder()
+            ->select(\sprintf('NEW %s(a.id, a.name)', OrmPrivateAuthorRow::class))
+            ->from(Author::class, 'a');
+        $order = $this->adapter->resolveCursorOrder($qb, ['id'], 'ASC');
+
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage(\sprintf('Cannot read the cursor fields back from an item of type "%s".', OrmPrivateAuthorRow::class));
+
+        $this->adapter->sliceWithCursor($qb, null, 2, $order);
+    }
+
+    private function createAuthors(int $count): void
+    {
+        for ($i = 1; $i <= $count; ++$i) {
+            $author = new Author();
+            $author->setName('Author '.$i);
+            $this->entityManager->persist($author);
+        }
+        $this->entityManager->flush();
+    }
+
+    /**
+     * @param list<mixed> $items
+     *
+     * @return list<int>
+     */
+    private function idsOf(array $items): array
+    {
+        return array_map(static fn (Author $author): int => $author->getId(), $items);
     }
 
     public function testCountThrowsForNonQueryBuilder(): void
@@ -1125,7 +1253,9 @@ final class DoctrineOrmAdapterTest extends TestCase
 
         self::assertNotNull($result->next);
 
-        self::assertCount(2, $result->next->values);
+        // One opaque token, whatever the number of ordered fields.
+        self::assertCount(1, $result->next->values);
+        self::assertIsString($result->next->values[0]);
 
         // Use the cursor for next page - should work without errors
         $result2 = $this->adapter->sliceWithCursor($qb, $result->next, 2, $order);
@@ -1149,32 +1279,48 @@ final class DoctrineOrmAdapterTest extends TestCase
         $queryBuilder = $this->entityManager->createQueryBuilder()
             ->select('b')
             ->from(Book::class, 'b');
-        $order = $this->adapter->resolveCursorOrder($queryBuilder, ['metadata'], 'ASC');
 
+        // Rejected while resolving the order, so the first page already fails.
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Doctrine type "json" of cursor field "metadata" is not supported.');
 
-        $this->adapter->sliceWithCursor($queryBuilder, new CursorBoundary(['{}', 1]), 10, $order);
+        $this->adapter->resolveCursorOrder($queryBuilder, ['metadata'], 'ASC');
     }
 
-    public function testCursorNormalizesValidDateValues(): void
+    public function testCursorPaginatesOnDateFields(): void
     {
+        $author = new Author();
+        $author->setName('Author');
+        $this->entityManager->persist($author);
+
+        for ($i = 1; $i <= 5; ++$i) {
+            $book = new Book();
+            $book->setTitle('Book '.$i);
+            $book->setPrice((float) $i);
+            $book->setPublishedAt(new \DateTimeImmutable(\sprintf('2024-01-%02d 10:00:00', $i)));
+            $book->setAuthor($author);
+            $this->entityManager->persist($book);
+        }
+        $this->entityManager->flush();
+
         $queryBuilder = $this->entityManager->createQueryBuilder()
             ->select('b')
             ->from(Book::class, 'b');
         $order = $this->adapter->resolveCursorOrder($queryBuilder, ['publishedAt'], 'ASC');
 
-        $result = $this->adapter->sliceWithCursor(
-            $queryBuilder,
-            new CursorBoundary(['1999-01-01T00:00:00+00:00', 0]),
-            10,
-            $order,
-        );
+        $first = $this->adapter->sliceWithCursor($queryBuilder, null, 2, $order);
+        self::assertNotNull($first->next);
 
-        self::assertSame([], $result->items);
+        $second = $this->adapter->sliceWithCursor($queryBuilder, $first->next, 2, $order);
+
+        $firstIds = array_map(static fn (Book $book): int => $book->getId(), $first->items);
+        $secondIds = array_map(static fn (Book $book): int => $book->getId(), $second->items);
+
+        self::assertSame([1, 2], $firstIds);
+        self::assertSame([3, 4], $secondIds);
     }
 
-    public function testCursorRejectsInvalidDateValues(): void
+    public function testCursorRejectsAnUndecodableToken(): void
     {
         $queryBuilder = $this->entityManager->createQueryBuilder()
             ->select('b')
@@ -1182,9 +1328,22 @@ final class DoctrineOrmAdapterTest extends TestCase
         $order = $this->adapter->resolveCursorOrder($queryBuilder, ['publishedAt'], 'ASC');
 
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('Invalid date cursor value for field "publishedAt".');
+        $this->expectExceptionMessage('Invalid cursor value.');
 
-        $this->adapter->sliceWithCursor($queryBuilder, new CursorBoundary(['not-a-date', 1]), 10, $order);
+        $this->adapter->sliceWithCursor($queryBuilder, new CursorBoundary(['not-a-doctrine-cursor!']), 10, $order);
+    }
+
+    public function testCursorRejectsAMalformedBoundary(): void
+    {
+        $queryBuilder = $this->entityManager->createQueryBuilder()
+            ->select('b')
+            ->from(Book::class, 'b');
+        $order = $this->adapter->resolveCursorOrder($queryBuilder, ['price', 'id'], 'ASC');
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('A Doctrine ORM cursor boundary must hold exactly one non-empty cursor token.');
+
+        $this->adapter->sliceWithCursor($queryBuilder, new CursorBoundary([10, 1]), 10, $order);
     }
 
     /**
@@ -1216,11 +1375,46 @@ final class DoctrineOrmAdapterTest extends TestCase
 
         self::assertNotNull($result->next, 'Expected nextCursor to be set');
 
-        // Try to use it with 1 field - should throw exception
-        $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Cursor values count does not match cursor fields count');
+        // The adapter cannot tell an opaque token apart, so replaying a boundary
+        // against another order is caught by the fingerprint the codec signs in.
+        $codec = new CursorCodec('secret');
+        $context = $this->adapter->getCursorContext($qb, null);
+        $token = $codec->encode($result->next->values, true, $compositeOrder->getFingerprint(), $context);
 
-        $this->adapter->sliceWithCursor($qb, $result->next, 2, $this->adapter->resolveCursorOrder($qb, ['id'], 'ASC'));
+        $singleFieldOrder = $this->adapter->resolveCursorOrder($qb, ['id'], 'ASC');
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('The cursor does not match this pagination order.');
+
+        $codec->decode($token, $singleFieldOrder->getFingerprint(), $context);
+    }
+}
+
+final class OrmAuthorRow
+{
+    public function __construct(
+        public int $id,
+        public string $name,
+    ) {
+    }
+}
+
+final class OrmPrivateAuthorRow
+{
+    public function __construct(
+        private int $id,
+        private string $name,
+    ) {
+    }
+
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    public function getName(): string
+    {
+        return $this->name;
     }
 }
 

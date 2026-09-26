@@ -248,16 +248,19 @@ final class DoctrineCursorInvariantTest extends TestCase
             ->getNextCursor();
 
         self::assertNotNull($token);
+        $context = $this->adapter->getCursorContext($query, null);
+
+        // Signed against the effective order, appended identifier included...
         $effectiveOrder = $this->adapter
             ->resolveCursorOrder($query, ['name'], 'ASC')
             ->getFingerprint();
-        $decoded = $codec->decode(
-            $token,
-            $effectiveOrder,
-            $this->adapter->getCursorContext($query, null),
-        );
+        $decoded = $codec->decode($token, $effectiveOrder, $context);
+        self::assertTrue($decoded['forward']);
 
-        self::assertCount(2, $decoded['values']);
+        // ...and not against the order as it was requested.
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('The cursor does not match this pagination order.');
+        $codec->decode($token, CursorOrder::byFields(['name'], 'ASC')->getFingerprint(), $context);
     }
 
     private function createAuthors(int $count): void

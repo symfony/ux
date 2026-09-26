@@ -12,6 +12,12 @@
 namespace Symfony\UX\Pagination\Cursor;
 
 /**
+ * Position a cursor page starts from.
+ *
+ * The values are adapter-private: a field-based adapter stores one per ordered
+ * field, an adapter wrapping a source that mints its own cursors stores that
+ * cursor as a single opaque token.
+ *
  * @author Simon André <smn.andre@gmail.com>
  */
 final class CursorBoundary
