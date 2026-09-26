@@ -1,0 +1,72 @@
+{%- props
+    ## 'top-left'|'top-center'|'top-right'|'bottom-left'|'bottom-center'|'bottom-right' Corner of the screen the toast region is anchored to.
+    position = 'bottom-right',
+    ## int Auto-dismiss delay in milliseconds applied to toasts that do not set their own, where `0` keeps them until dismissed.
+    duration = 5000,
+    ## int Maximum number of toasts kept on screen; the ones beyond it fade out until a slot frees up.
+    limit = 3
+-%}
+{%- do provide('toast.duration', duration) -%}
+{%- do provide('toast.hydrated', true) -%}
+{%- set _toast_position = position|split('-') -%}
+{%- set _toast_viewport_style = html_cva(
+    base: 'group/toast-viewport pointer-events-none fixed inset-x-4 z-50 mx-auto w-auto max-w-sm outline-none sm:w-full',
+    variants: {
+        side: {
+            top: 'top-4 [--toast-direction:1] [--toast-offscreen-y:-150%]',
+            bottom: 'bottom-4 [--toast-direction:-1] [--toast-offscreen-y:150%]',
+        },
+        align: {
+            left: 'sm:mx-0 sm:start-4 sm:end-auto',
+            center: 'sm:inset-x-0 sm:mx-auto',
+            right: 'sm:mx-0 sm:end-4 sm:start-auto',
+        },
+    },
+) -%}
+{# Consumed here so `class` lands on the visible region, whose placement it is meant to change, rather than on the host below. #}
+{%- set _toast_viewport_class = (_toast_viewport_style.apply({side: _toast_position[0], align: _toast_position[1]}) ~ ' ' ~ attributes.render('class'))|tailwind_merge -%}
+<div
+    data-slot="toaster"
+    data-position="{{ position }}"
+    data-toast-duration-value="{{ duration }}"
+    data-toast-limit-value="{{ limit }}"
+    {{ attributes.defaults({
+        'data-controller': 'toast',
+    }) }}
+>
+    {# A live region has to be in the DOM before a node lands inside it, so `aria-live` belongs here
+       rather than on a `Toast`, which would never be announced. `aria-atomic="false"` keeps a new
+       toast from re-announcing the whole stack. -#}
+    <div
+        data-slot="toast-viewport"
+        data-side="{{ _toast_position[0] }}"
+        data-toast-target="viewport"
+        aria-live="polite"
+        aria-atomic="false"
+        class="{{ _toast_viewport_class }}"
+    >
+        {##- The `Toast` items rendered on page load, for instance by looping over `app.flashes`. -#}
+        {%- block toasts %}{% endblock -%}
+    </div>
+    <template data-toast-target="template">
+        <twig:Toast>
+            <twig:Toast:Content>
+                <twig:Toast:Icon type="success" />
+                <twig:Toast:Icon type="info" />
+                <twig:Toast:Icon type="warning" />
+                <twig:Toast:Icon type="error" />
+                <twig:Toast:Icon type="loading" />
+                <div class="flex min-w-0 flex-1 flex-col gap-1">
+                    <twig:Toast:Title />
+                    <twig:Toast:Description />
+                </div>
+                {# The controller fills the action through `data-toast-part`: `Button` renders its own
+                   `data-slot="button"` first, so the `data-slot` of `Toast:Action` never reaches the DOM. #}
+                <twig:Toast:Action data-toast-part="action" data-action="click->toast#close" />
+                <twig:Toast:Close />
+            </twig:Toast:Content>
+        </twig:Toast>
+    </template>
+    {##- The trigger element(s) firing `toast#add`. -#}
+    {%- block content %}{% endblock -%}
+</div>

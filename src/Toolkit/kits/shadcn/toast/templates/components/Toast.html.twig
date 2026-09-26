@@ -1,0 +1,25 @@
+{%- props
+    ## 'default'|'success'|'info'|'warning'|'error'|'loading' The toast type, which selects the status icon and the announcement politeness.
+    type = 'default',
+    ## string|null Stable identifier; adding a toast with the same one replaces it instead of stacking a new one.
+    id = null,
+    ## int|null Auto-dismiss delay in milliseconds, where `0` keeps the toast until it is dismissed.
+    duration = null
+-%}
+{%- set _toast_duration = duration ?? inject('toast.duration', 5000) -%}
+{%- set _toast_hydrated = inject('toast.hydrated', false) -%}
+<div
+    data-slot="toast"
+    data-type="{{ type }}"
+    {%- if null is not same as id %} data-toast-id="{{ id }}"{% endif %}
+    data-toast-duration="{{ _toast_duration }}"
+    {%- if _toast_hydrated %} data-starting-style{% endif %}
+    {%- if 'error' == type %} role="alert" aria-live="assertive"{% endif %}
+    aria-atomic="true"
+    {{ attributes.defaults({
+        class: "group/toast pointer-events-auto absolute end-0 z-[calc(1000-var(--toast-index))] w-full rounded-2xl border bg-popover text-popover-foreground shadow-lg will-change-transform outline-none select-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 [--gap:0.75rem] [--height:var(--toast-frontmost-height,var(--toast-height))] [--offset-y:calc((var(--toast-offset-y)+var(--toast-index)*var(--gap))*var(--toast-direction)+var(--toast-swipe-movement-y))] [--peek:0.75rem] [--scale:calc(max(0,1-(var(--toast-index)*0.1)))] [--shrink:calc(1-var(--scale))] h-(--height) [transform:translateX(var(--toast-swipe-movement-x))_translateY(calc(var(--toast-swipe-movement-y)+(var(--toast-index)*var(--peek)+var(--shrink)*var(--height))*var(--toast-direction)))_scale(var(--scale))] [transition:transform_500ms_cubic-bezier(0.22,1,0.36,1),opacity_500ms,height_150ms] after:absolute after:start-0 after:h-[calc(var(--gap)+1px)] after:w-full after:content-[''] data-expanded:h-(--toast-height) data-expanded:[transform:translateX(var(--toast-swipe-movement-x))_translateY(var(--offset-y))] data-limited:opacity-0 data-starting-style:[transform:translateY(var(--toast-offscreen-y))] [&[data-ending-style]:not([data-limited]):not([data-swipe-direction])]:[transform:translateY(var(--toast-offscreen-y))] data-ending-style:data-[swipe-direction=down]:[transform:translateY(calc(var(--toast-swipe-movement-y)+150%))] data-ending-style:data-[swipe-direction=left]:[transform:translateX(calc(var(--toast-swipe-movement-x)-150%))_translateY(var(--offset-y))] data-ending-style:data-[swipe-direction=right]:[transform:translateX(calc(var(--toast-swipe-movement-x)+150%))_translateY(var(--offset-y))] data-ending-style:data-[swipe-direction=up]:[transform:translateY(calc(var(--toast-swipe-movement-y)-150%))] data-expanded:data-ending-style:data-[swipe-direction=down]:[transform:translateY(calc(var(--toast-swipe-movement-y)+150%))] data-expanded:data-ending-style:data-[swipe-direction=left]:[transform:translateX(calc(var(--toast-swipe-movement-x)-150%))_translateY(var(--offset-y))] data-expanded:data-ending-style:data-[swipe-direction=right]:[transform:translateX(calc(var(--toast-swipe-movement-x)+150%))_translateY(var(--offset-y))] data-expanded:data-ending-style:data-[swipe-direction=up]:[transform:translateY(calc(var(--toast-swipe-movement-y)-150%))] bottom-0 origin-bottom after:top-full group-data-[side=top]/toast-viewport:top-0 group-data-[side=top]/toast-viewport:bottom-auto group-data-[side=top]/toast-viewport:origin-top group-data-[side=top]/toast-viewport:after:top-auto group-data-[side=top]/toast-viewport:after:bottom-full"|tailwind_classes,
+    }) }}
+>
+    {##- The toast body, typically a `Toast:Content`. -#}
+    {%- block content %}{% endblock -%}
+</div>

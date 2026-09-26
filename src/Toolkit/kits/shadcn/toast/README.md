@@ -1,0 +1,295 @@
+# Toast
+
+A succinct message that is displayed temporarily.
+
+```twig {"preview":true}
+<div style="min-height: 240px">
+    <twig:Toaster>
+        <twig:Button
+            variant="outline"
+            data-action="click->toast#add"
+            data-toast-title-param="Event created"
+            data-toast-description-param="Sunday, December 3 at 9:00 AM"
+            data-toast-action-label-param="Undo"
+        >
+            Show Toast
+        </twig:Button>
+    </twig:Toaster>
+</div>
+```
+
+## Installation
+
+::: installation
+
+## Usage
+
+Render `Toaster` once, usually in your base layout, and set `position` to the corner the toasts should
+appear in. Then fire toasts from any element with a `toast#add` action, configured with
+`data-toast-<name>-param` attributes: `type`, `title`, `description`, `duration`, `id` and
+`actionLabel`.
+
+```twig
+<twig:Toaster position="top-left | top-center | top-right | bottom-left | bottom-center | bottom-right" duration="5000" limit="3">
+    <twig:Button
+        data-action="click->toast#add"
+        data-toast-type-param="default | success | info | warning | error | loading"
+        data-toast-title-param="Event created"
+        data-toast-description-param="Sunday, December 3 at 9:00 AM"
+        data-toast-action-label-param="Undo"
+    >
+        Show Toast
+    </twig:Button>
+</twig:Toaster>
+```
+
+The controller also exports a `toast()` helper, so application code can raise a toast without a trigger
+element: `toast.success('Event created')`, `toast.error('Could not create event.')`, or
+`toast.promise(request, { loading: 'Creating event…', success: 'Event created.' })`.
+
+## Examples
+
+### Types
+
+Set `type` to render a status icon. The built-in renderer recognizes `success`, `info`, `warning`,
+`error` and `loading`.
+
+```twig {"preview":true}
+<div style="min-height: 320px">
+    <twig:Toaster>
+        <div class="flex flex-wrap gap-2">
+            <twig:Button
+                variant="outline"
+                data-action="click->toast#add"
+                data-toast-description-param="Event has been created."
+            >Default</twig:Button>
+            <twig:Button
+                variant="outline"
+                data-action="click->toast#add"
+                data-toast-type-param="success"
+                data-toast-description-param="Event has been created."
+            >Success</twig:Button>
+            <twig:Button
+                variant="outline"
+                data-action="click->toast#add"
+                data-toast-type-param="info"
+                data-toast-description-param="Arrive 10 minutes before the event."
+            >Info</twig:Button>
+            <twig:Button
+                variant="outline"
+                data-action="click->toast#add"
+                data-toast-type-param="warning"
+                data-toast-description-param="The event cannot start before 8:00 AM."
+            >Warning</twig:Button>
+            <twig:Button
+                variant="outline"
+                data-action="click->toast#add"
+                data-toast-type-param="error"
+                data-toast-description-param="The event could not be created."
+            >Error</twig:Button>
+        </div>
+    </twig:Toaster>
+</div>
+```
+
+### With Action
+
+Pass `actionLabel` to render an action button. Clicking it dismisses the toast and emits a
+`toast:close` event carrying the toast id.
+
+```twig {"preview":true}
+<div style="min-height: 240px">
+    <twig:Toaster>
+        <twig:Button
+            variant="outline"
+            data-action="click->toast#add"
+            data-toast-title-param="Event created"
+            data-toast-description-param="You can undo this action."
+            data-toast-action-label-param="Undo"
+        >
+            Show Toast
+        </twig:Button>
+    </twig:Toaster>
+</div>
+```
+
+### Promise
+
+Use the `toast#promise` action to update one toast as an asynchronous task moves through loading,
+success and error states.
+
+```twig {"preview":true}
+<div style="min-height: 280px">
+    <twig:Toaster>
+        <div class="flex flex-wrap gap-2">
+            <twig:Button
+                variant="outline"
+                data-action="click->toast#promise"
+                data-toast-loading-param="Creating event…"
+                data-toast-success-param="Event created."
+            >Create Event</twig:Button>
+            <twig:Button
+                variant="outline"
+                data-action="click->toast#promise"
+                data-toast-loading-param="Creating event…"
+                data-toast-error-param="Could not create event."
+                data-toast-reject-param="true"
+            >Create Event (Failing)</twig:Button>
+        </div>
+    </twig:Toaster>
+</div>
+```
+
+### Position
+
+Set `position` on `Toaster` to anchor the region to one of the six corners. Below the `sm` breakpoint
+the region spans the available width, so only the vertical side applies there.
+
+```twig {"preview":true}
+<div style="min-height: 360px">
+    <div class="flex flex-wrap justify-center gap-2">
+        <twig:Toaster position="top-left">
+            <twig:Button
+                variant="outline"
+                data-action="click->toast#add"
+                data-toast-title-param="Top left notification"
+            >Top Left</twig:Button>
+        </twig:Toaster>
+        <twig:Toaster position="top-center">
+            <twig:Button
+                variant="outline"
+                data-action="click->toast#add"
+                data-toast-title-param="Top center notification"
+            >Top Center</twig:Button>
+        </twig:Toaster>
+        <twig:Toaster position="top-right">
+            <twig:Button
+                variant="outline"
+                data-action="click->toast#add"
+                data-toast-title-param="Top right notification"
+            >Top Right</twig:Button>
+        </twig:Toaster>
+        <twig:Toaster position="bottom-left">
+            <twig:Button
+                variant="outline"
+                data-action="click->toast#add"
+                data-toast-title-param="Bottom left notification"
+            >Bottom Left</twig:Button>
+        </twig:Toaster>
+        <twig:Toaster position="bottom-center">
+            <twig:Button
+                variant="outline"
+                data-action="click->toast#add"
+                data-toast-title-param="Bottom center notification"
+            >Bottom Center</twig:Button>
+        </twig:Toaster>
+        <twig:Toaster position="bottom-right">
+            <twig:Button
+                variant="outline"
+                data-action="click->toast#add"
+                data-toast-title-param="Bottom right notification"
+            >Bottom Right</twig:Button>
+        </twig:Toaster>
+    </div>
+</div>
+```
+
+### Server Rendered
+
+Fill the `toasts` block of `Toaster` to show items on page load, for instance by looping over
+`app.flashes`. Give them `duration="0"` to keep them until they are dismissed.
+
+`Toast` items dropped into `data-slot="toast-viewport"` after the page has loaded — by a Turbo Stream,
+for instance — are picked up and animated in the same way. Use `prepend` rather than `append` so the
+newest one lands in front of the stack.
+
+```twig {"preview":true}
+<div style="min-height: 240px">
+    <twig:Toaster>
+        <twig:block name="toasts">
+            <twig:Toast type="success" duration="0">
+                <twig:Toast:Content>
+                    <twig:Toast:Icon type="success" />
+                    <div class="flex min-w-0 flex-1 flex-col gap-1">
+                        <twig:Toast:Title>Profile saved</twig:Toast:Title>
+                        <twig:Toast:Description>Your changes have been applied.</twig:Toast:Description>
+                    </div>
+                    <twig:Toast:Close />
+                </twig:Toast:Content>
+            </twig:Toast>
+            <twig:Toast type="info" duration="0">
+                <twig:Toast:Content>
+                    <twig:Toast:Icon type="info" />
+                    <div class="flex min-w-0 flex-1 flex-col gap-1">
+                        <twig:Toast:Title>Welcome back, Alice!</twig:Toast:Title>
+                    </div>
+                    <twig:Toast:Close />
+                </twig:Toast:Content>
+            </twig:Toast>
+        </twig:block>
+    </twig:Toaster>
+</div>
+```
+
+### RTL
+
+To enable RTL support, set the `dir="rtl"` attribute on the root element.
+
+```twig {"preview":true}
+<div style="min-height: 300px">
+    <twig:Toaster dir="rtl">
+        <twig:block name="toasts">
+            <twig:Toast type="success" duration="0">
+                <twig:Toast:Content>
+                    <twig:Toast:Icon type="success" />
+                    <div class="flex min-w-0 flex-1 flex-col gap-1">
+                        <twig:Toast:Title>تم إنشاء الحدث</twig:Toast:Title>
+                        <twig:Toast:Description>الأحد ٣ ديسمبر الساعة ٩:٠٠ صباحًا</twig:Toast:Description>
+                    </div>
+                    <twig:Toast:Close label="إغلاق الإشعار" />
+                </twig:Toast:Content>
+            </twig:Toast>
+        </twig:block>
+    </twig:Toaster>
+    <twig:Toaster dir="rtl" class="bottom-36">
+        <twig:block name="toasts">
+            <twig:Toast type="info" duration="0">
+                <twig:Toast:Content>
+                    <twig:Toast:Icon type="info" />
+                    <div class="flex min-w-0 flex-1 flex-col gap-1">
+                        <twig:Toast:Title>האירוע נוצר</twig:Toast:Title>
+                        <twig:Toast:Description>יום ראשון, 3 בדצמבר בשעה 9:00</twig:Toast:Description>
+                    </div>
+                    <twig:Toast:Close label="סגור התראה" />
+                </twig:Toast:Content>
+            </twig:Toast>
+        </twig:block>
+    </twig:Toaster>
+</div>
+```
+
+## Accessibility
+
+- `Toaster` renders the toast region as a fixed container that is itself the live region
+  (`aria-live="polite"`), so a toast is read out as it lands without stealing focus from whatever the
+  user is doing. A live region has to be in the DOM before a node arrives inside it, which is why the
+  `aria-live` sits on the region rather than on the toast — a toast carrying its own is never
+  announced.
+- A `Toast` of type `error` escalates out of that politeness with `role="alert"` and
+  `aria-live="assertive"`, so a failure interrupts while ordinary confirmations wait their turn.
+- Each toast is `aria-atomic="true"`, so its title and description are announced together rather than
+  piecemeal, while the region is `aria-atomic="false"` so a new toast does not re-announce the whole
+  stack.
+- The status icon is `aria-hidden="true"`: it repeats what the text already says. Never rely on it alone
+  to carry the meaning of a toast — write the type into the copy.
+- `Toast:Close` carries a translatable `label` prop, rendered as its `aria-label`. Translate it when your
+  interface is not in English.
+- Auto-dismiss timers pause while the region is hovered **or** holds keyboard focus, so a toast cannot
+  disappear from under someone tabbing into its action button.
+- Give `duration` enough time to read the toast, and do not put the only copy of important information in
+  one. A toast disappears and cannot be recalled — an action inside it is reachable by tabbing, but only
+  while it is on screen, so keep the same action available elsewhere in the page.
+
+## API Reference
+
+::: api-reference

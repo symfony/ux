@@ -1,0 +1,15 @@
+{%- props
+    ## string Accessible label of the close button; translate it when your interface is not in English.
+    label = 'Close toast'
+-%}
+<twig:Button
+    variant="ghost"
+    size="icon-sm"
+    class="relative shrink-0 text-muted-foreground after:absolute after:-inset-2 after:content-[''] hover:text-foreground"
+    aria-label="{{ label }}"
+    data-slot="toast-close"
+    data-action="click->toast#close"
+    {{ ...attributes }}
+>
+    <twig:ux:icon name="lucide:x" class="size-4" />
+</twig:Button>
