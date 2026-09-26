@@ -44,4 +44,12 @@ final class LiveCounter
 
         return LiveResponse::noRender();
     }
+
+    #[LiveAction]
+    public function incrementAndSendValue(): LiveResponse
+    {
+        ++$this->value;
+
+        return LiveResponse::data(['value' => $this->value]);
+    }
 }

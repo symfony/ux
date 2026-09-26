@@ -3,6 +3,7 @@
 ## 3.8
 
 - Add `LiveResponse::noRender()` to update the state of a component from a `LiveAction` without rendering its template
+- Add `LiveResponse::data()` to send data from a `LiveAction` to the JavaScript that called it, along with the re-rendered component
 
 ## 3.7.2
 
