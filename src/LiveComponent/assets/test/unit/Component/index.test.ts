@@ -78,6 +78,91 @@ describe('Component class', () => {
         });
     });
 
+    describe('request:started hook', () => {
+        const makeRecordingComponent = () => {
+            const requests: { actions: BackendAction[]; updated: any }[] = [];
+            const backend: BackendInterface = {
+                makeRequest(_props: any, actions: BackendAction[], updated: any): BackendRequest {
+                    requests.push({ actions, updated });
+
+                    return new BackendRequest(
+                        // @ts-expect-error Response doesn't quite match the underlying interface
+                        new Promise((resolve) => resolve(new Response('<div data-live-props-value="{}"></div>'))),
+                        [],
+                        []
+                    );
+                },
+            };
+
+            const component = new Component(
+                document.createElement('div'),
+                'test-component',
+                { firstName: '' },
+                [],
+                null,
+                backend,
+                new noopElementDriver()
+            );
+
+            return { component, requests };
+        };
+
+        it('does not send the request or start the loading state when a listener cancels it', async () => {
+            const { component, requests } = makeRecordingComponent();
+            const loadingStarted = vi.fn();
+            component.on('loading.state:started', loadingStarted);
+            component.on('request:started', (_requestConfig, controls) => {
+                controls.shouldSend = false;
+            });
+
+            component.render();
+            await new Promise((resolve) => setTimeout(resolve, 5));
+
+            expect(requests).toHaveLength(0);
+            expect(loadingStarted).not.toHaveBeenCalled();
+        });
+
+        it('sends the changes of a canceled request with the next request', async () => {
+            const { component, requests } = makeRecordingComponent();
+            let shouldSend = false;
+            component.on('request:started', (_requestConfig, controls) => {
+                controls.shouldSend = shouldSend;
+            });
+
+            component.set('firstName', 'Ryan', false);
+            component.action('save', { id: 5 }, 0);
+            await new Promise((resolve) => setTimeout(resolve, 5));
+            expect(requests).toHaveLength(0);
+
+            shouldSend = true;
+            await component.render();
+
+            expect(requests).toHaveLength(1);
+            expect(requests[0].actions).toEqual([{ name: 'save', args: { id: 5 } }]);
+            expect(requests[0].updated).toEqual({ firstName: 'Ryan' });
+        });
+
+        it('resolves the promise of a canceled request with the response of the next request', async () => {
+            const { component } = makeRecordingComponent();
+            let shouldSend = false;
+            component.on('request:started', (_requestConfig, controls) => {
+                controls.shouldSend = shouldSend;
+            });
+
+            let canceledResponse: BackendResponse | null = null;
+            component.render().then((response) => {
+                canceledResponse = response;
+            });
+            await new Promise((resolve) => setTimeout(resolve, 5));
+            expect(canceledResponse).toBeNull();
+
+            shouldSend = true;
+            const response = await component.render();
+
+            await waitFor(() => expect(canceledResponse).toBe(response));
+        });
+    });
+
     describe('file download handling', () => {
         const HTML = '<div data-controller="live" data-live-props-value="{}">rendered</div>';
 

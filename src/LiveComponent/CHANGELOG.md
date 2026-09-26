@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 3.8
+
+- Add a `controls.shouldSend` flag to the `request:started` JavaScript hook, to keep a request from being sent
+
 ## 3.7.2
 
 - Accept the stateless CSRF token of forms submitted during a live request, already protected by its required `X-Requested-With` header
