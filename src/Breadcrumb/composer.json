@@ -1,0 +1,60 @@
+{
+    "name": "symfony/ux-breadcrumb",
+    "type": "symfony-bundle",
+    "description": "Lazy, attribute-driven breadcrumb trails for Symfony applications",
+    "keywords": [
+        "symfony-ux",
+        "breadcrumb",
+        "navigation"
+    ],
+    "homepage": "https://symfony.com",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Romain Monteil",
+            "email": "monteil.romain@gmail.com"
+        },
+        {
+            "name": "Symfony Community",
+            "homepage": "https://symfony.com/contributors"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Symfony\\UX\\Breadcrumb\\": "src/"
+        },
+        "exclude-from-classmap": []
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Symfony\\UX\\Breadcrumb\\Tests\\": "tests/"
+        }
+    },
+    "require": {
+        "php": ">=8.4",
+        "symfony/config": "^7.4|^8.0",
+        "symfony/dependency-injection": "^7.4|^8.0",
+        "symfony/event-dispatcher": "^7.4|^8.0",
+        "symfony/expression-language": "^7.4|^8.0",
+        "symfony/framework-bundle": "^7.4|^8.0",
+        "symfony/http-foundation": "^7.4|^8.0",
+        "symfony/http-kernel": "^7.4|^8.0",
+        "symfony/routing": "^7.4|^8.0",
+        "symfony/translation-contracts": "^3.0",
+        "symfony/twig-bundle": "^7.4|^8.0",
+        "twig/twig": "^3.21|^4.0"
+    },
+    "require-dev": {
+        "ext-intl": "*",
+        "phpstan/phpstan": "^2.1.17",
+        "phpunit/phpunit": "^11.1|^12.0",
+        "symfony/translation": "^7.4|^8.0"
+    },
+    "extra": {
+        "thanks": {
+            "name": "symfony/ux",
+            "url": "https://github.com/symfony/ux"
+        }
+    },
+    "minimum-stability": "dev"
+}

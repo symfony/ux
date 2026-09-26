@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+    <file source-language="en" target-language="en" datatype="plaintext" original="fixtures">
+        <header>
+            <tool tool-id="symfony" tool-name="Symfony"/>
+        </header>
+        <body>
+            <trans-unit id="1">
+                <source>product.index.breadcrumb</source>
+                <target>Products</target>
+            </trans-unit>
+            <trans-unit id="2">
+                <source>product.view.breadcrumb</source>
+                <target>Product released on {released_at, date, medium}</target>
+            </trans-unit>
+            <trans-unit id="3">
+                <source>dashboard.home.breadcrumb</source>
+                <target>Dashboard</target>
+            </trans-unit>
+            <trans-unit id="4">
+                <source>product.name.breadcrumb</source>
+                <target>Product {name}</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>
