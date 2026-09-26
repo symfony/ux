@@ -363,6 +363,8 @@ export default class Component {
             requestConfig.files
         );
         this.hooks.triggerHook('loading.state:started', this.element, this.backendRequest);
+        const historyEntryKey = this.getCurrentHistoryEntryKey();
+        const requestUrl = window.location.pathname + window.location.search;
 
         this.pendingActions = remainingActions;
         this.valueStore.flushDirtyPropsToPending();
@@ -415,8 +417,9 @@ export default class Component {
                 return response;
             }
 
+            // Skip the URL update if the user navigated away while the request was pending
             const liveUrl = backendResponse.getLiveUrl();
-            if (liveUrl) {
+            if (liveUrl && this.element.isConnected && this.isOnSamePage(historyEntryKey, requestUrl)) {
                 history.replaceState(
                     history.state,
                     '',
@@ -651,6 +654,22 @@ export default class Component {
         if (isChanged) {
             this.render();
         }
+    }
+
+    /**
+     * Returns the key of the current history entry, or null when the browser does not support the Navigation API.
+     */
+    private getCurrentHistoryEntryKey(): string | null {
+        return (window as any).navigation?.currentEntry?.key ?? null;
+    }
+
+    private isOnSamePage(historyEntryKey: string | null, requestUrl: string): boolean {
+        if (this.getCurrentHistoryEntryKey() === historyEntryKey) {
+            return true;
+        }
+
+        // A jump to an anchor creates a new history entry without leaving the page
+        return window.location.pathname + window.location.search === requestUrl;
     }
 }
 
