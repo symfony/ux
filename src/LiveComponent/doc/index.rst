@@ -980,12 +980,32 @@ The following hooks are available (along with the arguments that are passed):
 
 * ``connect`` args ``(component: Component)``
 * ``disconnect`` args ``(component: Component)``
+* ``request:started`` args ``(requestConfig: any, controls: { shouldSend: boolean })``
 * ``render:started`` args ``(html: string, response: BackendResponse, controls: { shouldRender: boolean })``
 * ``render:finished`` args ``(component: Component)``
 * ``response:error`` args ``(backendResponse: BackendResponse, controls: { displayError: boolean })``
 * ``loading.state:started`` args ``(element: HTMLElement, request: BackendRequest)``
 * ``loading.state:finished`` args ``(element: HTMLElement)``
 * ``model:set`` args ``(model: string, value: any, component: Component)``
+
+.. versionadded:: 3.6
+
+    The ``controls.shouldSend`` flag of the ``request:started`` hook was added in LiveComponent 3.6.
+
+Set ``controls.shouldSend`` to ``false`` in a ``request:started`` listener to keep the request from being sent.
+For example, to send nothing while the browser is offline, and tell the user why:
+
+.. code-block:: javascript
+
+    this.component.on('request:started', (requestConfig, controls) => {
+        if (!navigator.onLine) {
+            controls.shouldSend = false;
+            this.showOfflineMessage();
+        }
+    });
+
+The changed models and the pending actions are kept, and they are sent with the next request.
+The promises returned by ``render()``, ``action()`` and ``set()`` for the canceled request resolve when that next request finishes.
 
 Loading States
 --------------
