@@ -1684,6 +1684,7 @@ var Component = class {
 		this.hooks.triggerHook("request:started", requestConfig);
 		this.backendRequest = this.backend.makeRequest(requestConfig.props, requestConfig.actions, requestConfig.updated, requestConfig.children, requestConfig.updatedPropsFromParent, requestConfig.files);
 		this.hooks.triggerHook("loading.state:started", this.element, this.backendRequest);
+		const historyEntryKey = this.getCurrentHistoryEntryKey();
 		this.pendingActions = remainingActions;
 		this.valueStore.flushDirtyPropsToPending();
 		this.isRequestPending = remainingActions.length > 0;
@@ -1710,7 +1711,7 @@ var Component = class {
 				return response;
 			}
 			const liveUrl = backendResponse.getLiveUrl();
-			if (liveUrl) history.replaceState(history.state, "", new URL(liveUrl + window.location.hash, window.location.origin));
+			if (liveUrl && this.element.isConnected && this.getCurrentHistoryEntryKey() === historyEntryKey) history.replaceState(history.state, "", new URL(liveUrl + window.location.hash, window.location.origin));
 			this.processRerender(html, backendResponse);
 			this.backendRequest = null;
 			thisPromiseResolve(backendResponse);
@@ -1844,6 +1845,9 @@ var Component = class {
 	}
 	_updateFromParentProps(props) {
 		if (this.valueStore.storeNewPropsFromParent(props)) this.render();
+	}
+	getCurrentHistoryEntryKey() {
+		return window.navigation?.currentEntry?.key ?? null;
 	}
 };
 function proxifyComponent(component) {
