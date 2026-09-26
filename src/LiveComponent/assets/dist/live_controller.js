@@ -2351,6 +2351,7 @@ var LiveControllerDefault = class LiveControllerDefault extends Controller {
 		this.createComponent();
 	}
 	connect() {
+		if (JSON.stringify(this.propsValue) !== JSON.stringify(this.component.valueStore.getOriginalProps())) this.createComponent();
 		this.connectComponent();
 		this.mutationObserver.observe(this.element, { attributes: true });
 	}
