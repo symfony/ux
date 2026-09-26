@@ -23,17 +23,19 @@ namespace Symfony\UX\Breadcrumb\Attribute;
 final class Breadcrumb
 {
     /**
-     * The two URL parameter bags differ in where the value comes from, not in where it goes:
+     * The three URL parameter bags differ in where the value comes from, not in where it goes:
      *
+     * - `$parameters` is a **map of values**, used as given. A crumb built in PHP already holds them, so it needs nothing else.
      * - `$inheritedParameters` is a **list of names** taken from the already-matched route (`_route_params`). The values exist, so nothing is evaluated.
      * - `$computedParameters` is a **map** whose values are ExpressionLanguage expressions evaluated against the controller's arguments.
      *
-     * Neither decides whether a parameter lands in the path or in the query string.
+     * None of them decides whether a parameter lands in the path or in the query string.
      * The URL generator places each name in the path when the route declares a placeholder for it, and in the query string otherwise.
-     * When both bags name the same parameter, the computed value wins.
+     * When several bags name the same parameter, the last of that list wins: a given value overrides an inherited name, and a computed one overrides both.
      *
      * `$translationParameters` is a map of expressions too, but it feeds the translator rather than the URL.
      *
+     * @param array<string, mixed>  $parameters
      * @param array<int, string>    $inheritedParameters
      * @param array<string, string> $computedParameters
      * @param array<string, string> $translationParameters
@@ -42,6 +44,7 @@ final class Breadcrumb
     public function __construct(
         public readonly string $label,
         public readonly ?string $route = null,
+        public readonly array $parameters = [],
         public readonly array $inheritedParameters = [],
         public readonly array $computedParameters = [],
         public readonly string|false|null $translationDomain = null,

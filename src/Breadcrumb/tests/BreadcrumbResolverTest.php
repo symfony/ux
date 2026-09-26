@@ -120,6 +120,64 @@ final class BreadcrumbResolverTest extends KernelTestCase
         self::assertSame('/products/published', $items[0]->url);
     }
 
+    public function testAGivenParameterFillsAPlaceholderWithoutBeingEvaluated(): void
+    {
+        $trail = $this->trail(
+            new Breadcrumb(label: 'product.view.breadcrumb', route: RouteName::ProductView->value, parameters: ['slug' => 'red-boots']),
+            new Breadcrumb(label: 'leaf', translationDomain: false),
+        );
+
+        $items = $this->resolver()->resolve($trail);
+
+        self::assertSame('/products/red-boots', $items[0]->url, 'A given value is used as-is: as an expression, red-boots would subtract two unknown variables and degrade to no URL.');
+    }
+
+    public function testAGivenParameterThatIsNotAPlaceholderLandsInTheQueryString(): void
+    {
+        $trail = $this->trail(
+            new Breadcrumb(label: 'product.index.breadcrumb', route: RouteName::ProductIndex->value, parameters: ['state' => 'published']),
+            new Breadcrumb(label: 'leaf', translationDomain: false),
+        );
+
+        $items = $this->resolver()->resolve($trail);
+
+        self::assertSame('/products?state=published', $items[0]->url);
+    }
+
+    public function testAGivenParameterWinsOverAnInheritedOneOfTheSameName(): void
+    {
+        $trail = $this->trail(
+            new Breadcrumb(
+                label: 'product.view.breadcrumb',
+                route: RouteName::ProductView->value,
+                parameters: ['slug' => 'red-boots'],
+                inheritedParameters: ['slug'],
+            ),
+            new Breadcrumb(label: 'leaf', translationDomain: false),
+        );
+
+        $items = $this->resolver()->resolve($trail);
+
+        self::assertSame('/products/red-boots', $items[0]->url);
+    }
+
+    public function testAComputedParameterWinsOverAGivenOneOfTheSameName(): void
+    {
+        $trail = $this->trail(
+            new Breadcrumb(
+                label: 'product.view.breadcrumb',
+                route: RouteName::ProductView->value,
+                parameters: ['slug' => 'red-boots'],
+                computedParameters: ['slug' => 'product.state'],
+            ),
+            new Breadcrumb(label: 'leaf', translationDomain: false),
+        );
+
+        $items = $this->resolver()->resolve($trail);
+
+        self::assertSame('/products/published', $items[0]->url);
+    }
+
     public function testATaggedExpressionFunctionProviderIsAvailableToCrumbExpressions(): void
     {
         $trail = $this->trail(
