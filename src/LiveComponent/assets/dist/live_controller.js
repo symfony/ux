@@ -1695,6 +1695,7 @@ var Component = class {
 			if (!headers.get("Content-Type")?.includes("application/vnd.live-component+html") && !headers.get("X-Live-Redirect") && !headers.has("X-Live-Remove")) {
 				const controls = { displayError: true };
 				this.valueStore.pushPendingPropsBackToDirty();
+				this.hooks.triggerHook("loading.state:finished", this.element);
 				this.hooks.triggerHook("response:error", backendResponse, controls);
 				if (controls.displayError) this.renderError(html);
 				this.backendRequest = null;
