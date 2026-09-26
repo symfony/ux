@@ -1,0 +1,246 @@
+<!--
+- Kit: Shadcn UI
+- Component: Select
+- Code:
+```twig
+<div class="mx-auto w-full max-w-64" style="min-height: 380px">
+    <twig:Select id="scrollable" class="block">
+        <twig:Select:Trigger class="w-full">
+            <twig:Select:Value placeholder="Select a timezone" />
+        </twig:Select:Trigger>
+        <twig:Select:Content>
+            <twig:Select:Group id="scrollable-north-america">
+                <twig:Select:Label>North America</twig:Select:Label>
+                <twig:Select:Item value="est">Eastern Standard Time</twig:Select:Item>
+                <twig:Select:Item value="cst">Central Standard Time</twig:Select:Item>
+                <twig:Select:Item value="mst">Mountain Standard Time</twig:Select:Item>
+                <twig:Select:Item value="pst">Pacific Standard Time</twig:Select:Item>
+                <twig:Select:Item value="akst">Alaska Standard Time</twig:Select:Item>
+                <twig:Select:Item value="hst">Hawaii Standard Time</twig:Select:Item>
+            </twig:Select:Group>
+            <twig:Select:Group id="scrollable-europe-africa">
+                <twig:Select:Label>Europe &amp; Africa</twig:Select:Label>
+                <twig:Select:Item value="gmt">Greenwich Mean Time</twig:Select:Item>
+                <twig:Select:Item value="cet">Central European Time</twig:Select:Item>
+                <twig:Select:Item value="eet">Eastern European Time</twig:Select:Item>
+                <twig:Select:Item value="west">Western European Summer Time</twig:Select:Item>
+                <twig:Select:Item value="cat">Central Africa Time</twig:Select:Item>
+                <twig:Select:Item value="eat">East Africa Time</twig:Select:Item>
+            </twig:Select:Group>
+            <twig:Select:Group id="scrollable-asia">
+                <twig:Select:Label>Asia</twig:Select:Label>
+                <twig:Select:Item value="msk">Moscow Time</twig:Select:Item>
+                <twig:Select:Item value="ist">India Standard Time</twig:Select:Item>
+                <twig:Select:Item value="cst_china">China Standard Time</twig:Select:Item>
+                <twig:Select:Item value="jst">Japan Standard Time</twig:Select:Item>
+                <twig:Select:Item value="kst">Korea Standard Time</twig:Select:Item>
+                <twig:Select:Item value="ist_indonesia">Indonesia Central Standard Time</twig:Select:Item>
+            </twig:Select:Group>
+            <twig:Select:Group id="scrollable-australia-pacific">
+                <twig:Select:Label>Australia &amp; Pacific</twig:Select:Label>
+                <twig:Select:Item value="awst">Australian Western Standard Time</twig:Select:Item>
+                <twig:Select:Item value="acst">Australian Central Standard Time</twig:Select:Item>
+                <twig:Select:Item value="aest">Australian Eastern Standard Time</twig:Select:Item>
+                <twig:Select:Item value="nzst">New Zealand Standard Time</twig:Select:Item>
+                <twig:Select:Item value="fjt">Fiji Time</twig:Select:Item>
+            </twig:Select:Group>
+            <twig:Select:Group id="scrollable-south-america">
+                <twig:Select:Label>South America</twig:Select:Label>
+                <twig:Select:Item value="art">Argentina Time</twig:Select:Item>
+                <twig:Select:Item value="bot">Bolivia Time</twig:Select:Item>
+                <twig:Select:Item value="brt">Brasilia Time</twig:Select:Item>
+                <twig:Select:Item value="clt">Chile Standard Time</twig:Select:Item>
+            </twig:Select:Group>
+        </twig:Select:Content>
+    </twig:Select>
+</div>
+```
+- Rendered code (run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="mx-auto w-full max-w-64" style="min-height: 380px">
+    <div data-slot="select" data-state="closed" data-disabled="false" data-select-open-value="false" data-select-value-value="" class="group/select relative block" data-controller="select"><button type="button" role="combobox" id="select-scrollable-trigger" data-slot="select-trigger" data-select-target="trigger" data-size="default" data-state="closed" data-has-value="false" aria-haspopup="listbox" aria-controls="select-scrollable-content" aria-expanded="false" class="flex items-center justify-between gap-1.5 rounded-lg border border-input bg-transparent py-2 pe-2 ps-2.5 text-sm whitespace-nowrap transition-colors outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 data-[has-value=false]:text-muted-foreground dark:bg-input/30 dark:hover:bg-input/50 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-1.5 *:data-[slot=select-value]:flex [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*=size-])]:size-4 h-8 w-full" data-action="click->select#toggle keydown->select#onTriggerKeydown"><span data-slot="select-value" data-select-target="value" data-placeholder="Select a timezone" class="flex flex-1 text-start">Select a timezone</span>
+
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" data-slot="select-trigger-icon" class="pointer-events-none size-4 text-muted-foreground" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m6 9l6 6l6-6"></path></svg>
+</button>
+        <div id="select-scrollable-content" data-slot="select-content" data-select-target="content" data-position="item-aligned" data-side="bottom" data-align="start" data-state="closed" aria-hidden="true" class="invisible absolute z-50 min-w-36 scale-95 overflow-hidden rounded-lg bg-popover text-popover-foreground opacity-0 shadow-md ring-1 ring-foreground/10 transition-[opacity,scale,visibility] duration-150 ease-out group-data-[state=open]/select:visible group-data-[state=open]/select:scale-100 group-data-[state=open]/select:opacity-100 top-full mt-1 start-0 ltr:origin-top-left rtl:origin-top-right" data-action="keydown->select#onContentKeydown">
+    <div hidden="" aria-hidden="true" data-slot="select-scroll-up-button" data-select-target="scrollUpButton" data-action="click->select#scrollUp" class="z-10 flex cursor-default items-center justify-center bg-popover py-1 [&amp;_svg:not([class*=size-])]:size-4">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m18 15l-6-6l-6 6"></path></svg>
+    </div>
+    <div role="listbox" aria-labelledby="select-scrollable-trigger" data-slot="select-viewport" data-select-target="viewport" data-action="scroll->select#onViewportScroll" class="max-h-72 scroll-my-1 overflow-x-hidden overflow-y-auto"><div role="group" aria-labelledby="select-group-scrollable-north-america-label" data-slot="select-group" class="scroll-my-1 p-1"><div id="select-group-scrollable-north-america-label" data-slot="select-label" class="px-1.5 py-1 text-xs text-muted-foreground">North America</div>
+                <div role="option" tabindex="-1" data-slot="select-item" data-select-target="item" data-value="est" data-disabled="false" aria-selected="false" aria-disabled="false" class="group/select-item relative flex w-full cursor-default items-center gap-1.5 rounded-md py-1 pe-8 ps-1.5 text-sm outline-none select-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*=size-])]:size-4" data-action="click->select#selectItem">
+    <span data-slot="select-item-indicator" class="pointer-events-none absolute end-2 flex size-4 items-center justify-center opacity-0 group-aria-selected/select-item:opacity-100">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+    </span>
+    <span data-slot="select-item-text" class="flex flex-1 gap-2">Eastern Standard Time</span>
+</div>
+                <div role="option" tabindex="-1" data-slot="select-item" data-select-target="item" data-value="cst" data-disabled="false" aria-selected="false" aria-disabled="false" class="group/select-item relative flex w-full cursor-default items-center gap-1.5 rounded-md py-1 pe-8 ps-1.5 text-sm outline-none select-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*=size-])]:size-4" data-action="click->select#selectItem">
+    <span data-slot="select-item-indicator" class="pointer-events-none absolute end-2 flex size-4 items-center justify-center opacity-0 group-aria-selected/select-item:opacity-100">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+    </span>
+    <span data-slot="select-item-text" class="flex flex-1 gap-2">Central Standard Time</span>
+</div>
+                <div role="option" tabindex="-1" data-slot="select-item" data-select-target="item" data-value="mst" data-disabled="false" aria-selected="false" aria-disabled="false" class="group/select-item relative flex w-full cursor-default items-center gap-1.5 rounded-md py-1 pe-8 ps-1.5 text-sm outline-none select-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*=size-])]:size-4" data-action="click->select#selectItem">
+    <span data-slot="select-item-indicator" class="pointer-events-none absolute end-2 flex size-4 items-center justify-center opacity-0 group-aria-selected/select-item:opacity-100">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+    </span>
+    <span data-slot="select-item-text" class="flex flex-1 gap-2">Mountain Standard Time</span>
+</div>
+                <div role="option" tabindex="-1" data-slot="select-item" data-select-target="item" data-value="pst" data-disabled="false" aria-selected="false" aria-disabled="false" class="group/select-item relative flex w-full cursor-default items-center gap-1.5 rounded-md py-1 pe-8 ps-1.5 text-sm outline-none select-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*=size-])]:size-4" data-action="click->select#selectItem">
+    <span data-slot="select-item-indicator" class="pointer-events-none absolute end-2 flex size-4 items-center justify-center opacity-0 group-aria-selected/select-item:opacity-100">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+    </span>
+    <span data-slot="select-item-text" class="flex flex-1 gap-2">Pacific Standard Time</span>
+</div>
+                <div role="option" tabindex="-1" data-slot="select-item" data-select-target="item" data-value="akst" data-disabled="false" aria-selected="false" aria-disabled="false" class="group/select-item relative flex w-full cursor-default items-center gap-1.5 rounded-md py-1 pe-8 ps-1.5 text-sm outline-none select-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*=size-])]:size-4" data-action="click->select#selectItem">
+    <span data-slot="select-item-indicator" class="pointer-events-none absolute end-2 flex size-4 items-center justify-center opacity-0 group-aria-selected/select-item:opacity-100">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+    </span>
+    <span data-slot="select-item-text" class="flex flex-1 gap-2">Alaska Standard Time</span>
+</div>
+                <div role="option" tabindex="-1" data-slot="select-item" data-select-target="item" data-value="hst" data-disabled="false" aria-selected="false" aria-disabled="false" class="group/select-item relative flex w-full cursor-default items-center gap-1.5 rounded-md py-1 pe-8 ps-1.5 text-sm outline-none select-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*=size-])]:size-4" data-action="click->select#selectItem">
+    <span data-slot="select-item-indicator" class="pointer-events-none absolute end-2 flex size-4 items-center justify-center opacity-0 group-aria-selected/select-item:opacity-100">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+    </span>
+    <span data-slot="select-item-text" class="flex flex-1 gap-2">Hawaii Standard Time</span>
+</div>
+            </div>
+            <div role="group" aria-labelledby="select-group-scrollable-europe-africa-label" data-slot="select-group" class="scroll-my-1 p-1"><div id="select-group-scrollable-europe-africa-label" data-slot="select-label" class="px-1.5 py-1 text-xs text-muted-foreground">Europe &amp; Africa</div>
+                <div role="option" tabindex="-1" data-slot="select-item" data-select-target="item" data-value="gmt" data-disabled="false" aria-selected="false" aria-disabled="false" class="group/select-item relative flex w-full cursor-default items-center gap-1.5 rounded-md py-1 pe-8 ps-1.5 text-sm outline-none select-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*=size-])]:size-4" data-action="click->select#selectItem">
+    <span data-slot="select-item-indicator" class="pointer-events-none absolute end-2 flex size-4 items-center justify-center opacity-0 group-aria-selected/select-item:opacity-100">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+    </span>
+    <span data-slot="select-item-text" class="flex flex-1 gap-2">Greenwich Mean Time</span>
+</div>
+                <div role="option" tabindex="-1" data-slot="select-item" data-select-target="item" data-value="cet" data-disabled="false" aria-selected="false" aria-disabled="false" class="group/select-item relative flex w-full cursor-default items-center gap-1.5 rounded-md py-1 pe-8 ps-1.5 text-sm outline-none select-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*=size-])]:size-4" data-action="click->select#selectItem">
+    <span data-slot="select-item-indicator" class="pointer-events-none absolute end-2 flex size-4 items-center justify-center opacity-0 group-aria-selected/select-item:opacity-100">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+    </span>
+    <span data-slot="select-item-text" class="flex flex-1 gap-2">Central European Time</span>
+</div>
+                <div role="option" tabindex="-1" data-slot="select-item" data-select-target="item" data-value="eet" data-disabled="false" aria-selected="false" aria-disabled="false" class="group/select-item relative flex w-full cursor-default items-center gap-1.5 rounded-md py-1 pe-8 ps-1.5 text-sm outline-none select-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*=size-])]:size-4" data-action="click->select#selectItem">
+    <span data-slot="select-item-indicator" class="pointer-events-none absolute end-2 flex size-4 items-center justify-center opacity-0 group-aria-selected/select-item:opacity-100">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+    </span>
+    <span data-slot="select-item-text" class="flex flex-1 gap-2">Eastern European Time</span>
+</div>
+                <div role="option" tabindex="-1" data-slot="select-item" data-select-target="item" data-value="west" data-disabled="false" aria-selected="false" aria-disabled="false" class="group/select-item relative flex w-full cursor-default items-center gap-1.5 rounded-md py-1 pe-8 ps-1.5 text-sm outline-none select-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*=size-])]:size-4" data-action="click->select#selectItem">
+    <span data-slot="select-item-indicator" class="pointer-events-none absolute end-2 flex size-4 items-center justify-center opacity-0 group-aria-selected/select-item:opacity-100">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+    </span>
+    <span data-slot="select-item-text" class="flex flex-1 gap-2">Western European Summer Time</span>
+</div>
+                <div role="option" tabindex="-1" data-slot="select-item" data-select-target="item" data-value="cat" data-disabled="false" aria-selected="false" aria-disabled="false" class="group/select-item relative flex w-full cursor-default items-center gap-1.5 rounded-md py-1 pe-8 ps-1.5 text-sm outline-none select-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*=size-])]:size-4" data-action="click->select#selectItem">
+    <span data-slot="select-item-indicator" class="pointer-events-none absolute end-2 flex size-4 items-center justify-center opacity-0 group-aria-selected/select-item:opacity-100">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+    </span>
+    <span data-slot="select-item-text" class="flex flex-1 gap-2">Central Africa Time</span>
+</div>
+                <div role="option" tabindex="-1" data-slot="select-item" data-select-target="item" data-value="eat" data-disabled="false" aria-selected="false" aria-disabled="false" class="group/select-item relative flex w-full cursor-default items-center gap-1.5 rounded-md py-1 pe-8 ps-1.5 text-sm outline-none select-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*=size-])]:size-4" data-action="click->select#selectItem">
+    <span data-slot="select-item-indicator" class="pointer-events-none absolute end-2 flex size-4 items-center justify-center opacity-0 group-aria-selected/select-item:opacity-100">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+    </span>
+    <span data-slot="select-item-text" class="flex flex-1 gap-2">East Africa Time</span>
+</div>
+            </div>
+            <div role="group" aria-labelledby="select-group-scrollable-asia-label" data-slot="select-group" class="scroll-my-1 p-1"><div id="select-group-scrollable-asia-label" data-slot="select-label" class="px-1.5 py-1 text-xs text-muted-foreground">Asia</div>
+                <div role="option" tabindex="-1" data-slot="select-item" data-select-target="item" data-value="msk" data-disabled="false" aria-selected="false" aria-disabled="false" class="group/select-item relative flex w-full cursor-default items-center gap-1.5 rounded-md py-1 pe-8 ps-1.5 text-sm outline-none select-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*=size-])]:size-4" data-action="click->select#selectItem">
+    <span data-slot="select-item-indicator" class="pointer-events-none absolute end-2 flex size-4 items-center justify-center opacity-0 group-aria-selected/select-item:opacity-100">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+    </span>
+    <span data-slot="select-item-text" class="flex flex-1 gap-2">Moscow Time</span>
+</div>
+                <div role="option" tabindex="-1" data-slot="select-item" data-select-target="item" data-value="ist" data-disabled="false" aria-selected="false" aria-disabled="false" class="group/select-item relative flex w-full cursor-default items-center gap-1.5 rounded-md py-1 pe-8 ps-1.5 text-sm outline-none select-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*=size-])]:size-4" data-action="click->select#selectItem">
+    <span data-slot="select-item-indicator" class="pointer-events-none absolute end-2 flex size-4 items-center justify-center opacity-0 group-aria-selected/select-item:opacity-100">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+    </span>
+    <span data-slot="select-item-text" class="flex flex-1 gap-2">India Standard Time</span>
+</div>
+                <div role="option" tabindex="-1" data-slot="select-item" data-select-target="item" data-value="cst_china" data-disabled="false" aria-selected="false" aria-disabled="false" class="group/select-item relative flex w-full cursor-default items-center gap-1.5 rounded-md py-1 pe-8 ps-1.5 text-sm outline-none select-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*=size-])]:size-4" data-action="click->select#selectItem">
+    <span data-slot="select-item-indicator" class="pointer-events-none absolute end-2 flex size-4 items-center justify-center opacity-0 group-aria-selected/select-item:opacity-100">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+    </span>
+    <span data-slot="select-item-text" class="flex flex-1 gap-2">China Standard Time</span>
+</div>
+                <div role="option" tabindex="-1" data-slot="select-item" data-select-target="item" data-value="jst" data-disabled="false" aria-selected="false" aria-disabled="false" class="group/select-item relative flex w-full cursor-default items-center gap-1.5 rounded-md py-1 pe-8 ps-1.5 text-sm outline-none select-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*=size-])]:size-4" data-action="click->select#selectItem">
+    <span data-slot="select-item-indicator" class="pointer-events-none absolute end-2 flex size-4 items-center justify-center opacity-0 group-aria-selected/select-item:opacity-100">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+    </span>
+    <span data-slot="select-item-text" class="flex flex-1 gap-2">Japan Standard Time</span>
+</div>
+                <div role="option" tabindex="-1" data-slot="select-item" data-select-target="item" data-value="kst" data-disabled="false" aria-selected="false" aria-disabled="false" class="group/select-item relative flex w-full cursor-default items-center gap-1.5 rounded-md py-1 pe-8 ps-1.5 text-sm outline-none select-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*=size-])]:size-4" data-action="click->select#selectItem">
+    <span data-slot="select-item-indicator" class="pointer-events-none absolute end-2 flex size-4 items-center justify-center opacity-0 group-aria-selected/select-item:opacity-100">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+    </span>
+    <span data-slot="select-item-text" class="flex flex-1 gap-2">Korea Standard Time</span>
+</div>
+                <div role="option" tabindex="-1" data-slot="select-item" data-select-target="item" data-value="ist_indonesia" data-disabled="false" aria-selected="false" aria-disabled="false" class="group/select-item relative flex w-full cursor-default items-center gap-1.5 rounded-md py-1 pe-8 ps-1.5 text-sm outline-none select-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*=size-])]:size-4" data-action="click->select#selectItem">
+    <span data-slot="select-item-indicator" class="pointer-events-none absolute end-2 flex size-4 items-center justify-center opacity-0 group-aria-selected/select-item:opacity-100">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+    </span>
+    <span data-slot="select-item-text" class="flex flex-1 gap-2">Indonesia Central Standard Time</span>
+</div>
+            </div>
+            <div role="group" aria-labelledby="select-group-scrollable-australia-pacific-label" data-slot="select-group" class="scroll-my-1 p-1"><div id="select-group-scrollable-australia-pacific-label" data-slot="select-label" class="px-1.5 py-1 text-xs text-muted-foreground">Australia &amp; Pacific</div>
+                <div role="option" tabindex="-1" data-slot="select-item" data-select-target="item" data-value="awst" data-disabled="false" aria-selected="false" aria-disabled="false" class="group/select-item relative flex w-full cursor-default items-center gap-1.5 rounded-md py-1 pe-8 ps-1.5 text-sm outline-none select-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*=size-])]:size-4" data-action="click->select#selectItem">
+    <span data-slot="select-item-indicator" class="pointer-events-none absolute end-2 flex size-4 items-center justify-center opacity-0 group-aria-selected/select-item:opacity-100">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+    </span>
+    <span data-slot="select-item-text" class="flex flex-1 gap-2">Australian Western Standard Time</span>
+</div>
+                <div role="option" tabindex="-1" data-slot="select-item" data-select-target="item" data-value="acst" data-disabled="false" aria-selected="false" aria-disabled="false" class="group/select-item relative flex w-full cursor-default items-center gap-1.5 rounded-md py-1 pe-8 ps-1.5 text-sm outline-none select-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*=size-])]:size-4" data-action="click->select#selectItem">
+    <span data-slot="select-item-indicator" class="pointer-events-none absolute end-2 flex size-4 items-center justify-center opacity-0 group-aria-selected/select-item:opacity-100">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+    </span>
+    <span data-slot="select-item-text" class="flex flex-1 gap-2">Australian Central Standard Time</span>
+</div>
+                <div role="option" tabindex="-1" data-slot="select-item" data-select-target="item" data-value="aest" data-disabled="false" aria-selected="false" aria-disabled="false" class="group/select-item relative flex w-full cursor-default items-center gap-1.5 rounded-md py-1 pe-8 ps-1.5 text-sm outline-none select-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*=size-])]:size-4" data-action="click->select#selectItem">
+    <span data-slot="select-item-indicator" class="pointer-events-none absolute end-2 flex size-4 items-center justify-center opacity-0 group-aria-selected/select-item:opacity-100">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+    </span>
+    <span data-slot="select-item-text" class="flex flex-1 gap-2">Australian Eastern Standard Time</span>
+</div>
+                <div role="option" tabindex="-1" data-slot="select-item" data-select-target="item" data-value="nzst" data-disabled="false" aria-selected="false" aria-disabled="false" class="group/select-item relative flex w-full cursor-default items-center gap-1.5 rounded-md py-1 pe-8 ps-1.5 text-sm outline-none select-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*=size-])]:size-4" data-action="click->select#selectItem">
+    <span data-slot="select-item-indicator" class="pointer-events-none absolute end-2 flex size-4 items-center justify-center opacity-0 group-aria-selected/select-item:opacity-100">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+    </span>
+    <span data-slot="select-item-text" class="flex flex-1 gap-2">New Zealand Standard Time</span>
+</div>
+                <div role="option" tabindex="-1" data-slot="select-item" data-select-target="item" data-value="fjt" data-disabled="false" aria-selected="false" aria-disabled="false" class="group/select-item relative flex w-full cursor-default items-center gap-1.5 rounded-md py-1 pe-8 ps-1.5 text-sm outline-none select-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*=size-])]:size-4" data-action="click->select#selectItem">
+    <span data-slot="select-item-indicator" class="pointer-events-none absolute end-2 flex size-4 items-center justify-center opacity-0 group-aria-selected/select-item:opacity-100">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+    </span>
+    <span data-slot="select-item-text" class="flex flex-1 gap-2">Fiji Time</span>
+</div>
+            </div>
+            <div role="group" aria-labelledby="select-group-scrollable-south-america-label" data-slot="select-group" class="scroll-my-1 p-1"><div id="select-group-scrollable-south-america-label" data-slot="select-label" class="px-1.5 py-1 text-xs text-muted-foreground">South America</div>
+                <div role="option" tabindex="-1" data-slot="select-item" data-select-target="item" data-value="art" data-disabled="false" aria-selected="false" aria-disabled="false" class="group/select-item relative flex w-full cursor-default items-center gap-1.5 rounded-md py-1 pe-8 ps-1.5 text-sm outline-none select-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*=size-])]:size-4" data-action="click->select#selectItem">
+    <span data-slot="select-item-indicator" class="pointer-events-none absolute end-2 flex size-4 items-center justify-center opacity-0 group-aria-selected/select-item:opacity-100">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+    </span>
+    <span data-slot="select-item-text" class="flex flex-1 gap-2">Argentina Time</span>
+</div>
+                <div role="option" tabindex="-1" data-slot="select-item" data-select-target="item" data-value="bot" data-disabled="false" aria-selected="false" aria-disabled="false" class="group/select-item relative flex w-full cursor-default items-center gap-1.5 rounded-md py-1 pe-8 ps-1.5 text-sm outline-none select-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*=size-])]:size-4" data-action="click->select#selectItem">
+    <span data-slot="select-item-indicator" class="pointer-events-none absolute end-2 flex size-4 items-center justify-center opacity-0 group-aria-selected/select-item:opacity-100">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+    </span>
+    <span data-slot="select-item-text" class="flex flex-1 gap-2">Bolivia Time</span>
+</div>
+                <div role="option" tabindex="-1" data-slot="select-item" data-select-target="item" data-value="brt" data-disabled="false" aria-selected="false" aria-disabled="false" class="group/select-item relative flex w-full cursor-default items-center gap-1.5 rounded-md py-1 pe-8 ps-1.5 text-sm outline-none select-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*=size-])]:size-4" data-action="click->select#selectItem">
+    <span data-slot="select-item-indicator" class="pointer-events-none absolute end-2 flex size-4 items-center justify-center opacity-0 group-aria-selected/select-item:opacity-100">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+    </span>
+    <span data-slot="select-item-text" class="flex flex-1 gap-2">Brasilia Time</span>
+</div>
+                <div role="option" tabindex="-1" data-slot="select-item" data-select-target="item" data-value="clt" data-disabled="false" aria-selected="false" aria-disabled="false" class="group/select-item relative flex w-full cursor-default items-center gap-1.5 rounded-md py-1 pe-8 ps-1.5 text-sm outline-none select-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*=size-])]:size-4" data-action="click->select#selectItem">
+    <span data-slot="select-item-indicator" class="pointer-events-none absolute end-2 flex size-4 items-center justify-center opacity-0 group-aria-selected/select-item:opacity-100">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+    </span>
+    <span data-slot="select-item-text" class="flex flex-1 gap-2">Chile Standard Time</span>
+</div>
+            </div>
+        </div>
+    <div hidden="" aria-hidden="true" data-slot="select-scroll-down-button" data-select-target="scrollDownButton" data-action="click->select#scrollDown" class="z-10 flex cursor-default items-center justify-center bg-popover py-1 [&amp;_svg:not([class*=size-])]:size-4">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m6 9l6 6l6-6"></path></svg>
+    </div>
+</div>
+    </div>
+</div>

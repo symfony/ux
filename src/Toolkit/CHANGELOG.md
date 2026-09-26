@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 3.6.0
+
+- [Shadcn] Rewrite the `select` recipe as a composite listbox matching the upstream Shadcn Select (`Select:Trigger`, `Select:Value`, `Select:Content`, `Select:Group`, `Select:Label`, `Select:Item`, `Select:Separator`), replacing the native `<select>` it used to render. Use the `native-select` recipe for a native control.
+
 ## 3.5.0
 
 - Add support for blocks: ready-to-use page sections built from a kit's components, installed and previewed as a unit

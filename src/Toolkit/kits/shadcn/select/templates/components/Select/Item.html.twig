@@ -1,0 +1,30 @@
+{%- props
+    ## string The value submitted when this item is selected.
+    value,
+    ## boolean Whether the item is disabled.
+    disabled = false
+-%}
+{%- set _select_value = inject('select.value', '') -%}
+{%- set _selected = value is same as(_select_value) -%}
+<div
+    role="option"
+    tabindex="-1"
+    data-slot="select-item"
+    data-select-target="item"
+    data-value="{{ value }}"
+    data-disabled="{{ disabled ? 'true' : 'false' }}"
+    aria-selected="{{ _selected ? 'true' : 'false' }}"
+    aria-disabled="{{ disabled ? 'true' : 'false' }}"
+    {{ attributes.defaults({
+        class: 'group/select-item relative flex w-full cursor-default items-center gap-1.5 rounded-md py-1 pe-8 ps-1.5 text-sm outline-none select-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*=size-])]:size-4'|tailwind_classes,
+        'data-action': 'click->select#selectItem',
+    }) }}
+>
+    <span data-slot="select-item-indicator" class="pointer-events-none absolute end-2 flex size-4 items-center justify-center opacity-0 group-aria-selected/select-item:opacity-100">
+        <twig:ux:icon name="lucide:check" class="size-4" />
+    </span>
+    <span data-slot="select-item-text" class="flex flex-1 gap-2">
+        {##- The item label. -#}
+        {%- block content %}{% endblock -%}
+    </span>
+</div>

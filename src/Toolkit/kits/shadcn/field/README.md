@@ -40,35 +40,35 @@ Combine labels, controls, and help text to compose accessible form fields and gr
                             <twig:Field:Label for="checkout-exp-month-ts6">
                                 Month
                             </twig:Field:Label>
-                            <twig:Select id="checkout-exp-month-ts6">
-                                <option value="" disabled selected>MM</option>
-                                <option value="01">01</option>
-                                <option value="02">02</option>
-                                <option value="03">03</option>
-                                <option value="04">04</option>
-                                <option value="05">05</option>
-                                <option value="06">06</option>
-                                <option value="07">07</option>
-                                <option value="08">08</option>
-                                <option value="09">09</option>
-                                <option value="10">10</option>
-                                <option value="11">11</option>
-                                <option value="12">12</option>
-                            </twig:Select>
+                            <twig:NativeSelect id="checkout-exp-month-ts6" class="w-full">
+                                <twig:NativeSelect:Option value="" disabled selected>MM</twig:NativeSelect:Option>
+                                <twig:NativeSelect:Option value="01">01</twig:NativeSelect:Option>
+                                <twig:NativeSelect:Option value="02">02</twig:NativeSelect:Option>
+                                <twig:NativeSelect:Option value="03">03</twig:NativeSelect:Option>
+                                <twig:NativeSelect:Option value="04">04</twig:NativeSelect:Option>
+                                <twig:NativeSelect:Option value="05">05</twig:NativeSelect:Option>
+                                <twig:NativeSelect:Option value="06">06</twig:NativeSelect:Option>
+                                <twig:NativeSelect:Option value="07">07</twig:NativeSelect:Option>
+                                <twig:NativeSelect:Option value="08">08</twig:NativeSelect:Option>
+                                <twig:NativeSelect:Option value="09">09</twig:NativeSelect:Option>
+                                <twig:NativeSelect:Option value="10">10</twig:NativeSelect:Option>
+                                <twig:NativeSelect:Option value="11">11</twig:NativeSelect:Option>
+                                <twig:NativeSelect:Option value="12">12</twig:NativeSelect:Option>
+                            </twig:NativeSelect>
                         </twig:Field>
                         <twig:Field>
                             <twig:Field:Label for="checkout-7j9-exp-year-f59">
                                 Year
                             </twig:Field:Label>
-                            <twig:Select>
-                                <option value="" disabled selected>YYY</option>
-                                <option value="2024">2024</option>
-                                <option value="2025">2025</option>
-                                <option value="2026">2026</option>
-                                <option value="2027">2027</option>
-                                <option value="2028">2028</option>
-                                <option value="2029">2029</option>
-                            </twig:Select>
+                            <twig:NativeSelect class="w-full">
+                                <twig:NativeSelect:Option value="" disabled selected>YYY</twig:NativeSelect:Option>
+                                <twig:NativeSelect:Option value="2024">2024</twig:NativeSelect:Option>
+                                <twig:NativeSelect:Option value="2025">2025</twig:NativeSelect:Option>
+                                <twig:NativeSelect:Option value="2026">2026</twig:NativeSelect:Option>
+                                <twig:NativeSelect:Option value="2027">2027</twig:NativeSelect:Option>
+                                <twig:NativeSelect:Option value="2028">2028</twig:NativeSelect:Option>
+                                <twig:NativeSelect:Option value="2029">2029</twig:NativeSelect:Option>
+                            </twig:NativeSelect>
                         </twig:Field>
                         <twig:Field>
                             <twig:Field:Label for="checkout-7j9-cvv">CVV</twig:Field:Label>
@@ -204,18 +204,25 @@ Combine labels, controls, and help text to compose accessible form fields and gr
 ### Select
 
 ```twig {"preview":true}
-<div class="w-full max-w-md">
+<div class="w-full max-w-md" style="min-height: 420px">
     <twig:Field>
         <twig:Field:Label for="department">Department</twig:Field:Label>
         <twig:Select id="department">
-            <option value="engineering">Engineering</option>
-            <option value="design">Design</option>
-            <option value="marketing">Marketing</option>
-            <option value="sales">Sales</option>
-            <option value="support">Customer Support</option>
-            <option value="hr">Human Resources</option>
-            <option value="finance">Finance</option>
-            <option value="operations">Operations</option>
+            <twig:Select:Trigger class="w-full">
+                <twig:Select:Value placeholder="Choose department" />
+            </twig:Select:Trigger>
+            <twig:Select:Content>
+                <twig:Select:Group>
+                    <twig:Select:Item value="engineering">Engineering</twig:Select:Item>
+                    <twig:Select:Item value="design">Design</twig:Select:Item>
+                    <twig:Select:Item value="marketing">Marketing</twig:Select:Item>
+                    <twig:Select:Item value="sales">Sales</twig:Select:Item>
+                    <twig:Select:Item value="support">Customer Support</twig:Select:Item>
+                    <twig:Select:Item value="hr">Human Resources</twig:Select:Item>
+                    <twig:Select:Item value="finance">Finance</twig:Select:Item>
+                    <twig:Select:Item value="operations">Operations</twig:Select:Item>
+                </twig:Select:Group>
+            </twig:Select:Content>
         </twig:Select>
         <twig:Field:Description>
             Select your department or area of work.
