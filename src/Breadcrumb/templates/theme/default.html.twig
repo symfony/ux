@@ -22,9 +22,7 @@
         {% set attr = {class: block('list_class')|trim ?: null} %}
         <ol{{ block('attr') }}>
             {% for item in items %}
-                {#- Only the last crumb is the current page. A mid-trail crumb without a
-                    URL is rendered as plain text rather than a link, but it is not the
-                    current page, so it must not claim aria-current. -#}
+                {#- Only the last crumb is the current page, so only it claims aria-current. -#}
                 {% set is_current = loop.last %}
                 {{ block('item') }}
             {% endfor %}

@@ -64,9 +64,8 @@ final class BreadcrumbExtension
             ? UrlGeneratorInterface::ABSOLUTE_URL
             : UrlGeneratorInterface::ABSOLUTE_PATH;
 
-        // The crumb count stands in for a revision: append() and prepend() only add, so a
-        // trail mutated after a read (the BreadcrumbTrailProvider escape hatch) misses the
-        // memo instead of serving items that silently omit the new crumb.
+        // The crumb count stands in for a revision: the trail only ever grows, so a trail
+        // mutated after a read misses the memo rather than serving stale items.
         $key = $referenceType.'@'.($this->localeAware?->getLocale() ?? '').'@'.\count($trail->all());
 
         $memo = $this->resolved[$trail] ?? [];
