@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 3.6
+
+- Export the `ComponentHooks` TypeScript type, to type hook callbacks defined outside of `Component.on()`
+
 ## 3.5
 
 - Add support for Symfony 8.2's standalone `AssetMapperBundle`
