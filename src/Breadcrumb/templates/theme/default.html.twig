@@ -1,0 +1,70 @@
+{#-
+    Deliberately unstyled: the package ships no CSS. Extend this template and override
+    the *_class blocks to attach your own classes, or ignore it entirely and walk
+    ux_breadcrumb_items() in your own markup.
+-#}
+{% block breadcrumb %}
+    {% if items is not empty %}
+        {% set root_classes = (block('root_class') ~ ' ' ~ attributes.class|default(''))|trim %}
+        {% set attr = {
+            'aria-label': 'Breadcrumb'|trans({}, 'UXBreadcrumbBundle'),
+        }|merge(attributes)|merge({
+            class: root_classes ?: null,
+        }) %}
+        <nav{{ block('attr') }}>
+            {{ block('list') }}
+        </nav>
+    {% endif %}
+{% endblock %}
+
+{% if false %}
+    {% block list %}
+        {% set attr = {class: block('list_class')|trim ?: null} %}
+        <ol{{ block('attr') }}>
+            {% for item in items %}
+                {#- The last crumb is the current page, so it is never a link even when
+                    it carries a route; a mid-trail crumb without a route degrades to a
+                    page rather than rendering href="". -#}
+                {% set is_current = loop.last or item.url is null %}
+                {{ block('item') }}
+            {% endfor %}
+        </ol>
+    {% endblock %}
+
+    {% block item %}
+        {% set attr = {class: block('item_class')|trim ?: null} %}
+        <li{{ block('attr') }}>
+            {% if is_current %}
+                {{ block('current_item') }}
+            {% else %}
+                {{ block('link_item') }}
+            {% endif %}
+        </li>
+    {% endblock %}
+
+    {% block link_item %}
+        {% set attr = {
+            href: item.url,
+            class: block('link_class')|trim ?: null,
+        } %}
+        <a{{ block('attr') }}>{{ block('item_label') }}</a>
+    {% endblock %}
+
+    {% block current_item %}
+        {% set attr = {
+            'aria-current': 'page',
+            class: block('current_class')|trim ?: null,
+        } %}
+        <span{{ block('attr') }}>{{ block('item_label') }}</span>
+    {% endblock %}
+
+    {% block item_label %}{{ item.label }}{% endblock %}
+
+    {% block root_class %}{% endblock %}
+    {% block list_class %}{% endblock %}
+    {% block item_class %}{% endblock %}
+    {% block link_class %}{% endblock %}
+    {% block current_class %}{% endblock %}
+
+    {% block attr %}{% for name, value in attr %}{% if value is same as(true) %} {{ name }}{% elseif value is not same as(false) and value is not null %} {{ name }}="{{ value }}"{% endif %}{% endfor %}{% endblock %}
+{% endif %}
