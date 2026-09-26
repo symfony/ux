@@ -43,7 +43,7 @@ async function main() {
     const inputCssFile = packageData?.config?.css_source;
     const inputFiles = [
         ...globSync('src/*controller.ts'),
-        ...(isTurbo ? ['src/mercure_stream_source_element.ts'] : []),
+        ...(isTurbo ? ['src/mercure_stream_source_element.ts', 'src/stream_actions.ts'] : []),
         ...(isStimulusBundle ? ['src/loader.ts', 'src/controllers.ts'] : []),
         ...(isReactOrVue ? ['src/loader.ts', 'src/components.ts'] : []),
         ...(inputCssFile ? [inputCssFile] : []),

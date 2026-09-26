@@ -106,6 +106,16 @@ class TurboStreamResponse extends Response
     }
 
     /**
+     * @return $this
+     */
+    public function redirect(string $url, bool $advance = false): static
+    {
+        $this->setContent($this->getContent().TurboStream::redirect($url, $advance));
+
+        return $this;
+    }
+
+    /**
      * Custom action and attributes.
      *
      * Set boolean attributes (e.g., `disabled`) by providing the attribute name as key with `null` as value.

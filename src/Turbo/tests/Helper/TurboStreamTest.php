@@ -75,6 +75,24 @@ class TurboStreamTest extends TestCase
         );
     }
 
+    public function testRedirect(): void
+    {
+        $this->assertSame(<<<EOHTML
+            <turbo-stream action="redirect" url="/tasks?a=1&amp;b=2"></turbo-stream>
+            EOHTML,
+            TurboStream::redirect('/tasks?a=1&b=2')
+        );
+    }
+
+    public function testRedirectWithAdvance(): void
+    {
+        $this->assertSame(<<<EOHTML
+            <turbo-stream action="redirect" url="/tasks" advance></turbo-stream>
+            EOHTML,
+            TurboStream::redirect('/tasks', advance: true)
+        );
+    }
+
     public function testCustom(): void
     {
         $this->assertSame(<<<EOHTML
