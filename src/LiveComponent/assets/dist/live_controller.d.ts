@@ -114,6 +114,7 @@ declare class Component {
   private requestDebounceTimeout;
   private nextRequestPromise;
   private nextRequestPromiseResolve;
+  private nextRequestPromiseReject;
   private externalMutationTracker;
   constructor(element: HTMLElement, name: string, props: any, listeners: Array<{
     event: string;
