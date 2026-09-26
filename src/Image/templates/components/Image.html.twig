@@ -1,0 +1,12 @@
+{%- set imgAttributes = attributes.defaults(rendered.imgAttributes) -%}
+{%- set resolvedSizes = attributes.all().sizes ?? rendered.imgAttributes.sizes ?? null -%}
+{%- if rendered.sources is empty -%}
+    <img{{ imgAttributes }} />
+{%- else -%}
+    <picture>
+        {%- for source in rendered.sources -%}
+            <source type="{{ source.type }}" srcset="{{ source.srcset }}"{% if resolvedSizes is not null %} sizes="{{ resolvedSizes }}"{% endif %} />
+        {%- endfor -%}
+        <img{{ imgAttributes }} />
+    </picture>
+{%- endif -%}
