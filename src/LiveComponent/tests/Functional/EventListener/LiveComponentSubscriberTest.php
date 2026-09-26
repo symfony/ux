@@ -762,4 +762,64 @@ final class LiveComponentSubscriberTest extends KernelTestCase
             ->assertHeaderEquals('X-Live-Html-Length', null)
         ;
     }
+
+    public function testDataRidesAlongTheRenderedComponent(): void
+    {
+        $dehydrated = $this->dehydrateComponent($this->mountComponent('live_data'));
+
+        $result = $this->postDataAction('search', $dehydrated->getProps(), ['query' => 'foo']);
+
+        self::assertStringContainsString('data-live-props-value', $result['html']);
+        self::assertStringContainsString('<span id="count">1</span>', $result['html']);
+        self::assertSame(['query' => 'foo', 'results' => ['résumé', 'foo']], json_decode($result['data'], true));
+        self::assertSame('application/json', $result['headers']->get('X-Live-Data-Type'));
+        self::assertSame('application/vnd.live-component+html', $result['headers']->get('Content-Type'));
+        self::assertSame((string) (\strlen($result['html']) + \strlen($result['data'])), $result['headers']->get('Content-Length'));
+        self::assertFalse($result['headers']->has('X-Live-Download-Filename'));
+        self::assertFalse($result['headers']->has('X-Live-Download-Type'));
+    }
+
+    public function testDataAsAStringIsSentAsIs(): void
+    {
+        $dehydrated = $this->dehydrateComponent($this->mountComponent('live_data'));
+
+        $result = $this->postDataAction('searchAsXml', $dehydrated->getProps());
+
+        self::assertSame('<results><result>foo</result></results>', $result['data']);
+        self::assertSame('application/xml', $result['headers']->get('X-Live-Data-Type'));
+        self::assertStringContainsString('<span id="count">1</span>', $result['html']);
+    }
+
+    public function testDataKeepsBytesThatAreNotValidUtf8(): void
+    {
+        $dehydrated = $this->dehydrateComponent($this->mountComponent('live_data'));
+
+        $result = $this->postDataAction('binary', $dehydrated->getProps());
+
+        self::assertSame("\x00\x01\x02\xFF\xFE", $result['data']);
+    }
+
+    /**
+     * @return array{html: string, data: string, headers: \Symfony\Component\HttpFoundation\HeaderBag}
+     */
+    private function postDataAction(string $action, array $props, array $args = []): array
+    {
+        $browser = $this->browser()
+            ->throwExceptions()
+            ->post('/_components/live_data/'.$action, [
+                'body' => ['data' => json_encode(['props' => $props, 'args' => $args])],
+            ])
+            ->assertStatus(200)
+        ;
+
+        $body = $browser->client()->getInternalResponse()->getContent();
+        $headers = $browser->client()->getResponse()->headers;
+        $htmlLength = (int) $headers->get('X-Live-Html-Length');
+
+        return [
+            'html' => substr($body, 0, $htmlLength),
+            'data' => substr($body, $htmlLength),
+            'headers' => $headers,
+        ];
+    }
 }

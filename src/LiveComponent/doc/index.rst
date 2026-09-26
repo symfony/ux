@@ -1417,6 +1417,91 @@ the removal response.
 Like the download responses, ``LiveResponse::remove()`` can only be returned from a
 ``LiveAction`` or a ``LiveListener``, over POST.
 
+.. _sending-data-to-javascript:
+
+Sending Data to JavaScript
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. versionadded:: 3.6
+
+    ``LiveResponse::data()`` was added in LiveComponent 3.6.
+
+When you call an action from :ref:`your own JavaScript <working-in-javascript>`, the action can send data back to that code.
+Return ``LiveResponse::data()``::
+
+    // src/Twig/Components/ProductSearch.php
+    namespace App\Twig\Components;
+
+    use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
+    use Symfony\UX\LiveComponent\Attribute\LiveAction;
+    use Symfony\UX\LiveComponent\Attribute\LiveArg;
+    use Symfony\UX\LiveComponent\Attribute\LiveProp;
+    use Symfony\UX\LiveComponent\DefaultActionTrait;
+    use Symfony\UX\LiveComponent\LiveResponse;
+
+    #[AsLiveComponent]
+    class ProductSearch
+    {
+        use DefaultActionTrait;
+
+        #[LiveProp]
+        public string $query = '';
+
+        #[LiveAction]
+        public function search(ProductRepository $repository, #[LiveArg] string $query): LiveResponse
+        {
+            $this->query = $query;
+
+            return LiveResponse::data([
+                'total' => $repository->countMatching($query),
+            ]);
+        }
+    }
+
+The component re-renders as usual, so ``query`` is up to date on the page.
+The data rides along with the render, and the promise returned by ``component.action()`` resolves with it once the component has re-rendered:
+
+.. code-block:: javascript
+
+    const response = await this.component.action('search', { query: 'lamp' });
+    const data = await response.getData()?.json();
+
+    console.log(data.total);
+
+``getData()`` returns a standard `Response`_, so you read the data with ``json()``, ``text()``, ``blob()`` or ``arrayBuffer()``.
+Each call returns a new ``Response``, so you can read the data more than once.
+It returns ``null`` when the action sent no data.
+
+Arrays, scalars, ``null`` and ``\JsonSerializable`` objects are encoded to JSON, with the same options as a ``JsonResponse``, and sent as ``application/json``.
+Pass a second argument to use another JSON content type, such as ``application/problem+json``.
+
+A string is sent as is, so it can be any format.
+Its content type is then required::
+
+    #[LiveAction]
+    public function search(SerializerInterface $serializer, #[LiveArg] string $query): LiveResponse
+    {
+        $this->query = $query;
+
+        return LiveResponse::data($serializer->serialize($this->findProducts(), 'xml'), 'application/xml');
+    }
+
+.. code-block:: javascript
+
+    const response = await this.component.action('search', { query: 'lamp' });
+    const xml = await response.getData()?.text();
+    const products = new DOMParser().parseFromString(xml, 'application/xml');
+
+Only the code that awaits ``component.action()`` receives the data.
+When the action is triggered by a ``data-action="live#action"`` button, the component re-renders and the data is ignored.
+
+.. note::
+
+    The same rules apply as for the :ref:`download responses <downloads>`.
+    You can only return ``LiveResponse::data()`` from a ``LiveAction`` or a ``LiveListener``, over POST, never from the default action.
+    If several actions of a batch return a ``LiveResponse``, the last one wins.
+    The data is held in memory in the browser, so keep it small and use a download for files.
+
 .. _working-with-files:
 
 Files
@@ -4283,4 +4368,5 @@ promise. However, any internal implementation in the JavaScript files
 .. _`Stimulus action parameter`: https://stimulus.hotwired.dev/reference/actions#action-parameters
 .. _`@symfony/ux-live-component npm package`: https://www.npmjs.com/package/@symfony/ux-live-component
 .. _`credentials option of the fetch() API`: https://developer.mozilla.org/en-US/docs/Web/API/fetch#credentials
+.. _`Response`: https://developer.mozilla.org/en-US/docs/Web/API/Response
 .. _`Symfony MakerBundle`: https://github.com/symfony/maker-bundle

@@ -274,6 +274,99 @@ describe('Component class', () => {
         });
     });
 
+    describe('data sent by the action', () => {
+        const HTML = '<div data-controller="live" data-live-props-value="{}">rendered</div>';
+
+        class renderingDriver extends noopElementDriver {
+            constructor(private props: any = {}) {
+                super();
+            }
+            getComponentProps(): any {
+                return this.props;
+            }
+            getEventsToEmit(): Array<any> {
+                return [];
+            }
+            getBrowserEventsToDispatch(): Array<any> {
+                return [];
+            }
+        }
+
+        const makeComponent = (data: string, type: string, serverProps: any = {}): Component => {
+            const encoder = new TextEncoder();
+            const htmlBytes = encoder.encode(HTML);
+            const dataBytes = encoder.encode(data);
+            const body = new Uint8Array(htmlBytes.length + dataBytes.length);
+            body.set(htmlBytes, 0);
+            body.set(dataBytes, htmlBytes.length);
+
+            const headers = {
+                'Content-Type': 'application/vnd.live-component+html',
+                'X-Live-Html-Length': String(htmlBytes.length),
+                'X-Live-Data-Type': type,
+            };
+
+            const backend: MockBackend = {
+                actions: [],
+                makeRequest(_data: any, actions: BackendAction[]): BackendRequest {
+                    this.actions = actions;
+
+                    return new BackendRequest(
+                        // @ts-expect-error Response doesn't quite match the underlying interface
+                        new Promise((resolve) => resolve(new Response(body, { headers }))),
+                        [],
+                        []
+                    );
+                },
+            };
+
+            return new Component(
+                document.createElement('div'),
+                'test-component',
+                { firstName: '' },
+                [],
+                null,
+                backend,
+                new renderingDriver(serverProps)
+            );
+        };
+
+        it('resolves the action with the data once the component re-rendered', async () => {
+            const component = makeComponent('{"total":2}', 'application/json', { firstName: 'Kevin', searchCount: 1 });
+
+            const response = await component.action('search', { query: 'foo' });
+
+            expect(component.element.textContent).toBe('rendered');
+            expect(component.getData('searchCount')).toBe(1);
+            expect(await response.getData()?.json()).toEqual({ total: 2 });
+        });
+
+        it('hands over data that is not JSON', async () => {
+            const component = makeComponent('<total>2</total>', 'application/xml');
+
+            const response = await component.action('search');
+
+            expect(response.getData()?.headers.get('Content-Type')).toBe('application/xml');
+            expect(await response.getData()?.text()).toBe('<total>2</total>');
+        });
+
+        it('triggers no download', async () => {
+            const createObjectURL = URL.createObjectURL;
+            URL.createObjectURL = vi.fn(() => 'blob:mock-url');
+            const appendChild = vi.spyOn(document.body, 'appendChild');
+
+            try {
+                await makeComponent('{"total":2}', 'application/json').action('search');
+
+                expect(appendChild).not.toHaveBeenCalled();
+                expect(URL.createObjectURL).not.toHaveBeenCalled();
+            } finally {
+                appendChild.mockRestore();
+                URL.createObjectURL = createObjectURL;
+            }
+        });
+    });
+
     describe('component removal', () => {
         // the noop driver throws on every method: a request needs one that answers
         class renderingDriver extends noopElementDriver {
