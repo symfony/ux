@@ -1,0 +1,97 @@
+{
+    "color": {
+        "palette": {
+            "$type": "color",
+            "surface": {
+                "$value": {
+                    "colorSpace": "srgb",
+                    "components": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            },
+            "surface-subtle": {
+                "$value": {
+                    "colorSpace": "srgb",
+                    "components": [
+                        0.9725,
+                        0.9765,
+                        0.9804
+                    ]
+                }
+            },
+            "surface-raised": {
+                "$value": {
+                    "colorSpace": "srgb",
+                    "components": [
+                        0.9137,
+                        0.9255,
+                        0.9373
+                    ]
+                }
+            },
+            "text": {
+                "$value": {
+                    "colorSpace": "srgb",
+                    "components": [
+                        0.1294,
+                        0.1451,
+                        0.1608
+                    ]
+                }
+            },
+            "text-muted": {
+                "$value": {
+                    "colorSpace": "srgb",
+                    "components": [
+                        0.4235,
+                        0.4588,
+                        0.4902
+                    ]
+                }
+            },
+            "text-faint": {
+                "$value": {
+                    "colorSpace": "srgb",
+                    "components": [
+                        0.6784,
+                        0.7098,
+                        0.7412
+                    ]
+                }
+            },
+            "line": {
+                "$value": {
+                    "colorSpace": "srgb",
+                    "components": [
+                        0.8549,
+                        0.8706,
+                        0.8824
+                    ]
+                }
+            },
+            "line-subtle": {
+                "$value": {
+                    "colorSpace": "srgb",
+                    "components": [
+                        0.9137,
+                        0.9255,
+                        0.9373
+                    ]
+                }
+            },
+            "code": {
+                "$value": {
+                    "colorSpace": "srgb",
+                    "components": [
+                        0.8118,
+                        0.0,
+                        0.4039
+                    ]
+                }
+            }
+        }
+    }
+}
