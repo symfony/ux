@@ -15,8 +15,10 @@ composer require symfony/ux-breadcrumb
 
 ## Usage
 
+The attribute targets both classes and methods, so a controller with several actions puts the shared head of the trail on the class and lets each action add its own leaves:
+
 ```php
-// src/Controller/ProductViewController.php
+// src/Controller/ProductController.php
 namespace App\Controller;
 
 use App\Entity\Product;
@@ -25,6 +27,52 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\UX\Breadcrumb\Attribute\Breadcrumb;
 
+#[Route('/products', name: 'product_')]
+#[Breadcrumb(label: 'product.index.breadcrumb', route: 'product_index')]
+final class ProductController extends AbstractController
+{
+    #[Route('', name: 'index')]
+    public function index(): Response
+    {
+        return $this->render('product/index.html.twig');
+    }
+
+    #[Route('/{slug}', name: 'view')]
+    #[Breadcrumb(label: 'product.view.breadcrumb', translationParameters: ['name' => 'product.name'])]
+    public function view(Product $product): Response
+    {
+        return $this->render('product/view.html.twig');
+    }
+
+    #[Route('/{slug}/edit', name: 'edit')]
+    #[Breadcrumb(label: 'product.view.breadcrumb', route: 'product_view', inheritedParameters: ['slug'])]
+    #[Breadcrumb(label: 'product.edit.breadcrumb')]
+    public function edit(Product $product): Response
+    {
+        return $this->render('product/edit.html.twig');
+    }
+}
+```
+
+```twig
+{# templates/product/view.html.twig #}
+{{ ux_breadcrumb() }}
+```
+
+Class-level crumbs always come before the action's own, so those three actions produce:
+
+| Action  | Trail                                 |
+| ------- | ------------------------------------- |
+| `index` | Products                              |
+| `view`  | Products, then the product            |
+| `edit`  | Products, then the product, then Edit |
+
+`index` declares no crumb of its own, so it gets the class trail alone, which is usually what a section index page wants.
+`edit` declares two, because an action may add more than one level below the shared head.
+
+An invokable controller works the same way, with everything on the class since there is only one action:
+
+```php
 #[Breadcrumb(label: 'product.index.breadcrumb', route: 'product_index')]
 #[Breadcrumb(label: 'product.view.breadcrumb', translationParameters: ['name' => 'product.name'])]
 final class ProductViewController extends AbstractController
@@ -37,10 +85,7 @@ final class ProductViewController extends AbstractController
 }
 ```
 
-```twig
-{# templates/product/view.html.twig #}
-{{ ux_breadcrumb() }}
-```
+Sibling invokable controllers each repeat the ancestry they share, so a controller with several actions is the better fit whenever a group of pages shares a head.
 
 The crumbs are declared in trail order, top to bottom.
 The last one is the current page: it is rendered as plain text carrying `aria-current="page"`, never as a link.

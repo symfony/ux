@@ -119,6 +119,25 @@ final class BreadcrumbListenerTest extends KernelTestCase
         self::assertInstanceOf(Product::class, $trail->context['product']);
     }
 
+    public function testAClassLevelCrumbIsSharedByEveryActionOfAController(): void
+    {
+        self::assertSame(
+            ['product.index.breadcrumb'],
+            $this->labels('/admin/products'),
+            'An action declaring no crumb of its own gets the class trail alone.',
+        );
+        self::assertSame(
+            ['product.index.breadcrumb', 'product.view.breadcrumb'],
+            $this->labels('/admin/products/blue-sneakers'),
+            'Class-level crumbs come before the action\'s own.',
+        );
+        self::assertSame(
+            ['product.index.breadcrumb', 'product.view.breadcrumb', 'product.edit.breadcrumb'],
+            $this->labels('/admin/products/blue-sneakers/edit'),
+            'An action may add several leaves below the shared head.',
+        );
+    }
+
     public function testARootCrumbExpressionIsScannedIntoTheContext(): void
     {
         $trail = $this->handle('/products/blue-sneakers/plain', environment: 'expression_root_provider');
@@ -135,6 +154,17 @@ final class BreadcrumbListenerTest extends KernelTestCase
         }
 
         return 0;
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function labels(string $uri): array
+    {
+        return array_map(
+            static fn (Breadcrumb $crumb): string => $crumb->label,
+            $this->handle($uri)->all(),
+        );
     }
 
     private function handle(string $uri, string $environment = 'test'): BreadcrumbTrail
