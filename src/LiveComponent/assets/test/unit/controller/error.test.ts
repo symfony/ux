@@ -62,6 +62,41 @@ describe('LiveController Error Handling', () => {
         await waitFor(() => expect(test.element).toHaveTextContent('Current count: 10'));
     });
 
+    it('sends a request queued while the previous one fails', async () => {
+        const test = await createTest(
+            { name: 'Bob', counter: 4 },
+            (data: any) => `
+            <div ${initComponent(data)}>
+                Name: ${data.name}, count: ${data.counter}
+                <button data-action="live#action" data-live-action-param="save">Save</button>
+            </div>
+        `
+        );
+
+        test.expectsAjaxCall()
+            .expectUpdatedData({ name: 'Ryan' })
+            .expectActionCalled('save')
+            .serverWillReturnCustomResponse(500, '<html><body><h1>An error occurred</h1></body></html>')
+            .delayResponse(50);
+
+        test.component.set('name', 'Ryan');
+        getByText(test.element, 'Save').click();
+        await waitFor(() => expect(test.element).toHaveAttribute('aria-busy', 'true'));
+
+        test.expectsAjaxCall()
+            .expectUpdatedData({ name: 'Ryan' })
+            .expectActionCalled('increment')
+            .serverWillChangeProps((data: any) => {
+                data.counter = 5;
+            });
+
+        const queuedRequest = test.component.action('increment');
+
+        await waitFor(() => expect(getErrorElement()).not.toBeNull());
+        await waitFor(() => expect(test.element).toHaveTextContent('Name: Ryan, count: 5'));
+        await queuedRequest;
+    });
+
     it('displays a modal on any non-component response', async () => {
         const test = await createTest(
             {},
