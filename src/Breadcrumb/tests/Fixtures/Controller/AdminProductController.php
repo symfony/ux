@@ -15,11 +15,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\UX\Breadcrumb\Attribute\Breadcrumb;
 use Symfony\UX\Breadcrumb\Tests\Fixtures\Product;
 
-/**
- * A controller with several actions: the shared head of the trail sits on the class and
- * each action adds its own leaves. An action declaring no crumb of its own gets the
- * class trail alone.
- */
 #[Breadcrumb(label: 'product.index.breadcrumb', route: 'admin_product_index')]
 final class AdminProductController
 {
