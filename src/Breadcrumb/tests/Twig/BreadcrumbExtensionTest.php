@@ -116,6 +116,20 @@ final class BreadcrumbExtensionTest extends KernelTestCase
         self::assertSame([], $this->extension()->getBreadcrumb());
     }
 
+    public function testATrailMutatedAfterAReadIsResolvedAgain(): void
+    {
+        $trail = $this->trailWithOneCrumb();
+        $extension = $this->extensionFor($trail);
+
+        $before = $extension->getBreadcrumb();
+        $trail->append(new Breadcrumb(label: 'Appended later', translationDomain: false));
+        $after = $extension->getBreadcrumb();
+
+        self::assertCount(1, $before);
+        self::assertCount(2, $after, 'A crumb appended after a read must not be swallowed by the memo.');
+        self::assertSame('Appended later', $after[1]->label);
+    }
+
     private function trailWithOneCrumb(): BreadcrumbTrail
     {
         $trail = new BreadcrumbTrail('product_index');

@@ -95,9 +95,9 @@ When both bags name the same parameter, the computed value wins.
 
 Only the controller arguments a crumb expression actually names are kept on the trail, so the whole argument list, and notably the ``Request``, is not pinned into the request attributes until render time.
 
-URL generation degrades rather than throwing: a crumb pointing at an unknown
-route, or at one whose required parameters are missing, resolves to
-``url === null`` and renders as plain text.
+Resolution degrades rather than throwing.
+A crumb pointing at an unknown route, at one whose required parameters are missing, or carrying an expression that cannot be evaluated against this action's arguments, resolves to ``url === null`` and renders as plain text.
+A translation parameter that cannot be evaluated leaves its placeholder in the label rather than taking the page down.
 
 Rendering
 ---------
@@ -125,9 +125,8 @@ and ``extra``. Rendering them yourself is the expected path:
         </nav>
     {% endif %}
 
-The last crumb is the current page, so it is never a link even when it carries a
-route; a mid-trail crumb without a route degrades to a page rather than rendering
-an empty ``href``.
+The last crumb is the current page, so it is never a link even when it carries a route.
+A mid-trail crumb without a route renders as plain text rather than an empty ``href``, but it is not the current page, so only the last crumb carries ``aria-current="page"``.
 
 ``ux_breadcrumb()`` renders the bundled, deliberately unstyled theme. Extend it and
 override its ``*_class`` blocks to attach your own classes:
@@ -143,6 +142,7 @@ override its ``*_class`` blocks to attach your own classes:
 
     {% block list_class %}flex items-center gap-2{% endblock %}
     {% block current_class %}font-medium{% endblock %}
+    {% block plain_class %}text-gray-400{% endblock %}
 
 Carrying your own data on a crumb
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
