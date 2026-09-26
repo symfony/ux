@@ -22,6 +22,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Yaml\Yaml;
 use Symfony\Contracts\Service\ServiceProviderInterface;
 use Symfony\UX\DesignTokens\Exception\InvalidArgumentException;
 use Symfony\UX\DesignTokens\Exception\LogicException;
@@ -37,37 +38,29 @@ use Symfony\UX\DesignTokens\TokenRegistryInterface;
  */
 #[AsCommand(
     name: 'ux:design-tokens:export',
-    description: 'Export design tokens to a file (DTCG, CSS, JavaScript)',
+    description: 'Export design tokens to a file (DTCG, CSS, JavaScript, Tailwind, DESIGN.md)',
 )]
 final class ExportCommand extends Command
 {
-    /**
-     * Contents are not typed: the locator is fed by a tag, so each service is
-     * checked against GeneratorInterface when it is pulled out.
-     */
-    private readonly Formats $generators;
-
     /**
      * @param ServiceProviderInterface<mixed> $generators keyed by the "format" tag attribute
      */
     public function __construct(
         private readonly TokenRegistryInterface $tokenRegistry,
-        ServiceProviderInterface $generators,
+        private readonly ServiceProviderInterface $generators,
         private readonly string $cssPrefix = 'dt',
         private readonly ColorScheme $colorScheme = new ColorScheme(),
         private readonly Filesystem $filesystem = new Filesystem(),
     ) {
-        $this->generators = new Formats($generators);
-
         parent::__construct();
     }
 
     protected function configure(): void
     {
         $this
-            ->addArgument('format', InputArgument::REQUIRED, \sprintf('Output format (%s)', implode(', ', $this->generators->names())))
+            ->addArgument('format', InputArgument::REQUIRED, \sprintf('Output format (%s)', implode(', ', $this->formats())))
             ->addArgument('output', InputArgument::OPTIONAL, 'Output file path (stdout if omitted)')
-            ->addOption('title', null, InputOption::VALUE_REQUIRED, 'Page title, for formats that have one', 'Design System')
+            ->addOption('title', null, InputOption::VALUE_REQUIRED, 'Page title (for design.md)', 'Design System')
             ->addOption('input', null, InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'Resolver input as name=value, repeatable')
             ->addOption('all-permutations', null, InputOption::VALUE_NONE, 'Write one file per Resolver permutation, using the output path as a template')
             ->addOption('css-prefix', null, InputOption::VALUE_REQUIRED, 'Application prefix for CSS variables', $this->cssPrefix)
@@ -97,18 +90,20 @@ final class ExportCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        /** @var string $requested */
-        $requested = $input->getArgument('format');
-        $format = $this->generators->find($requested);
+        /** @var string $format */
+        $format = $input->getArgument('format');
 
-        if (null === $format) {
-            $io->error(\sprintf('Unknown format "%s". Available: %s', $requested, implode(', ', $this->generators->names())));
+        if (!$this->generators->has($format)) {
+            if ('design.md' === $format && !class_exists(Yaml::class)) {
+                $io->error('The design.md format needs symfony/yaml. Try running "composer require symfony/yaml".');
+
+                return Command::INVALID;
+            }
+            $io->error(\sprintf('Unknown format "%s". Available: %s', $format, implode(', ', $this->formats())));
 
             return Command::INVALID;
         }
 
-        // The locator is fed by a tag, so a wrongly tagged service is reported
-        // here instead of surfacing as a TypeError further down.
         $generator = $this->generators->get($format);
         if (!$generator instanceof GeneratorInterface) {
             $io->error(\sprintf('The service registered for the "%s" export format must implement %s.', $format, GeneratorInterface::class));
@@ -168,9 +163,6 @@ final class ExportCommand extends Command
         return Command::SUCCESS;
     }
 
-    /**
-     * Write one file per Resolver permutation.
-     */
     private function exportPermutations(
         SymfonyStyle $io,
         GeneratorInterface $generator,
@@ -184,8 +176,7 @@ final class ExportCommand extends Command
             throw new LogicException('Exporting every permutation needs a Resolver document. Configure "ux_design_tokens.resolver.path".');
         }
 
-        // Two contexts such as "a b" and "a-b" reduce to one file name; writing
-        // both would silently keep only the last.
+        // "a b" and "a-b" reduce to one file name.
         $paths = [];
         foreach ($permutations as $index => $inputs) {
             $path = $this->permutationPath($outputPath, $inputs);
@@ -230,10 +221,6 @@ final class ExportCommand extends Command
         $title = $input->getOption('title');
         \assert(\is_string($title));
 
-        // Any format may read these: a page title, the prefix of CSS custom
-        // properties, and the dark resolution the CSS writes next to the light
-        // one. Without a color scheme in the Resolver, there is only one
-        // resolution.
         $contexts = $this->colorScheme->contexts($this->tokenRegistry->getModifiers(), $inputs);
 
         return $generator->generate($this->tokenRegistry->all($contexts[0] ?? $inputs), [
@@ -243,19 +230,13 @@ final class ExportCommand extends Command
         ]);
     }
 
-    /**
-     * Insert the selected inputs before the extension, so several permutations
-     * can be written next to each other without overwriting one another.
-     *
-     * @param array<string, string|int|float> $inputs
-     */
+    /** @param array<string, string|int|float> $inputs */
     private function permutationPath(string $outputPath, array $inputs): string
     {
         ksort($inputs);
         $parts = [];
         foreach ($inputs as $name => $value) {
-            // Names and contexts come from a Resolver document, so they are
-            // reduced to a safe segment before they reach a path.
+            // Resolver names reach a file path: keep a safe segment.
             $parts[] = self::slug($name).'-'.self::slug((string) $value);
         }
         if ([] === $parts) {
@@ -264,8 +245,7 @@ final class ExportCommand extends Command
 
         $suffix = '.'.implode('.', $parts);
 
-        // `.tokens.json` and `.resolver.json` carry meaning as a whole, so the
-        // suffix goes in front of the pair rather than between its halves.
+        // The suffix goes before `.tokens.json` or `.resolver.json`, not inside.
         foreach (['.tokens.json', '.resolver.json'] as $compound) {
             if (str_ends_with($outputPath, $compound)) {
                 return substr($outputPath, 0, -\strlen($compound)).$suffix.$compound;
@@ -312,7 +292,7 @@ final class ExportCommand extends Command
     public function complete(CompletionInput $input, CompletionSuggestions $suggestions): void
     {
         if ($input->mustSuggestArgumentValuesFor('format')) {
-            $suggestions->suggestValues($this->generators->names());
+            $suggestions->suggestValues($this->formats());
         }
         if ($input->mustSuggestOptionValuesFor('input')) {
             $pairs = [];
@@ -323,5 +303,11 @@ final class ExportCommand extends Command
             }
             $suggestions->suggestValues(array_keys($pairs));
         }
+    }
+
+    /** @return list<string> */
+    private function formats(): array
+    {
+        return array_map(strval(...), array_keys($this->generators->getProvidedServices()));
     }
 }

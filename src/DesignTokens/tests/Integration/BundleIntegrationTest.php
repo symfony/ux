@@ -17,8 +17,10 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\UX\DesignTokens\Bridge\Tailwind\ThemeImporter;
 use Symfony\UX\DesignTokens\CacheWarmer\DesignTokensCacheWarmer;
 use Symfony\UX\DesignTokens\Command\ExportCommand;
+use Symfony\UX\DesignTokens\Command\ImportCommand;
 use Symfony\UX\DesignTokens\Command\LintDesignTokensCommand;
 use Symfony\UX\DesignTokens\TokenRegistry;
 use Symfony\UX\DesignTokens\TokenRegistryInterface;
@@ -32,7 +34,9 @@ use Twig\Environment;
 #[CoversClass(TokenRegistry::class)]
 #[CoversClass(DesignTokenExtension::class)]
 #[CoversClass(ExportCommand::class)]
+#[CoversClass(ImportCommand::class)]
 #[CoversClass(LintDesignTokensCommand::class)]
+#[CoversClass(ThemeImporter::class)]
 #[CoversClass(DtcgValidator::class)]
 #[CoversClass(Normalizer::class)]
 #[CoversClass(DesignTokensCacheWarmer::class)]
@@ -177,7 +181,7 @@ final class BundleIntegrationTest extends TestCase
     /** @return iterable<string, array{string}> */
     public static function shippedFormats(): iterable
     {
-        foreach (['dtcg', 'css', 'javascript'] as $format) {
+        foreach (['dtcg', 'css', 'javascript', 'design.md', 'tailwind'] as $format) {
             yield $format => [$format];
         }
     }
@@ -238,6 +242,17 @@ final class BundleIntegrationTest extends TestCase
 
         $contextualToken = $twig->createTemplate('{{ ux_token("font.size.body", {surface: "docs"}) }}')->render();
         self::assertSame('1.125rem', $contextualToken);
+    }
+
+    public function testTailwindImporterServiceAndCommandAreDiscovered(): void
+    {
+        $kernel = $this->boot([]);
+        $importer = $kernel->getContainer()->get('.ux_design_tokens.importer.tailwind');
+        self::assertInstanceOf(ThemeImporter::class, $importer);
+        self::assertSame('color', $importer->import('@theme { --color-brand: #336699; }')['color']['brand']['$type']);
+
+        $command = new Application($kernel)->find('ux:design-tokens:import');
+        self::assertSame('ux:design-tokens:import', $command->getName());
     }
 
     public function testLintServicesAndCommandsAreDiscovered(): void

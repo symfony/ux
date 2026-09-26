@@ -18,6 +18,8 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Tester\CommandCompletionTester;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\DependencyInjection\ServiceLocator;
+use Symfony\UX\DesignTokens\Bridge\GoogleDesignMd\DesignMdGenerator;
+use Symfony\UX\DesignTokens\Bridge\Tailwind\ThemeGenerator;
 use Symfony\UX\DesignTokens\Command\ExportCommand;
 use Symfony\UX\DesignTokens\Generator\ColorScheme;
 use Symfony\UX\DesignTokens\Generator\CssGenerator;
@@ -80,12 +82,14 @@ final class ExportCommandTest extends TestCase
     {
         yield 'css' => [['format' => 'css'], [':root {', '--dt-color-brand']];
         yield 'css with an explicit application prefix' => [['format' => 'css', '--css-prefix' => 'my'], ['--my-color-brand']];
-        yield 'format spelled in another case' => [['format' => 'CSS'], [':root {']];
+        yield 'tailwind theme' => [['format' => 'tailwind'], ['@theme static {', '--color-brand:', '--spacing-md: 16px;']];
         yield 'javascript' => [['format' => 'javascript'], [
             'export const tokens = Object.freeze(JSON.parse(',
             '\\"color.brand\\":\\"color(srgb 0.2 0.4 0.8)\\"',
             'export function token(path)',
         ]];
+        yield 'design.md' => [['format' => 'design.md'], ['version: alpha', '# Design System']];
+        yield 'design.md with a custom title' => [['format' => 'design.md', '--title' => 'Acme Corp'], ['Acme Corp']];
     }
 
     /** @param array<string, mixed> $input */
@@ -256,7 +260,7 @@ final class ExportCommandTest extends TestCase
         self::assertSame(2, $generator->context[GeneratorInterface::DARK_TOKENS]['theme']->getValue());
     }
 
-    public function testAFormatKeyedByAServiceIdIsFoundWhateverItsCase(): void
+    public function testAFormatKeyedByAServiceIdIsFound(): void
     {
         $generator = new class implements GeneratorInterface {
             public function generate(array $resolvedTokens, array $context = []): string
@@ -267,7 +271,6 @@ final class ExportCommandTest extends TestCase
         $tester = new CommandTester(new ExportCommand($this->tokenRegistry, new ServiceLocator(['App\\Export\\Scss' => static fn (): GeneratorInterface => $generator])));
 
         self::assertSame(Command::SUCCESS, $tester->execute(['format' => 'App\\Export\\Scss']));
-        self::assertSame(Command::SUCCESS, $tester->execute(['format' => 'app\\export\\scss']));
         self::assertSame('custom', $tester->getDisplay());
     }
 
@@ -322,6 +325,8 @@ final class ExportCommandTest extends TestCase
             'dtcg' => static fn (): GeneratorInterface => new DtcgGenerator(),
             'css' => static fn (): GeneratorInterface => new CssGenerator(),
             'javascript' => static fn (): GeneratorInterface => new JavaScriptGenerator(),
+            'design.md' => static fn (): GeneratorInterface => new DesignMdGenerator(),
+            'tailwind' => static fn (): GeneratorInterface => new ThemeGenerator(),
         ]);
 
         return new ExportCommand($registry, $generators);

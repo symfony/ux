@@ -118,6 +118,7 @@ final class CompositeMemberProjectionTest extends TestCase
         sort($callers);
 
         self::assertSame(['ColorToken.php',
+            'DesignMdGenerator.php',
             'DimensionToken.php',
             'DurationToken.php',
             'GradientToken.php',

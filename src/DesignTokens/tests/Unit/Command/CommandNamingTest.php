@@ -17,6 +17,7 @@ use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\UX\DesignTokens\Command\DebugTokensCommand;
 use Symfony\UX\DesignTokens\Command\ExportCommand;
+use Symfony\UX\DesignTokens\Command\ImportCommand;
 use Symfony\UX\DesignTokens\Command\LintDesignTokensCommand;
 
 final class CommandNamingTest extends TestCase
@@ -26,6 +27,7 @@ final class CommandNamingTest extends TestCase
     {
         yield 'debug' => [DebugTokensCommand::class, 'debug:design-tokens'];
         yield 'export' => [ExportCommand::class, 'ux:design-tokens:export'];
+        yield 'import' => [ImportCommand::class, 'ux:design-tokens:import'];
         yield 'lint' => [LintDesignTokensCommand::class, 'lint:design-tokens'];
     }
 

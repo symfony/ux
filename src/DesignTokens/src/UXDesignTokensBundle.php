@@ -24,15 +24,13 @@ use Symfony\UX\DesignTokens\CacheWarmer\StylesheetCache;
 use Symfony\UX\DesignTokens\Exception\InvalidArgumentException;
 use Symfony\UX\DesignTokens\Exception\RuntimeException;
 use Symfony\UX\DesignTokens\Generator\GeneratorInterface;
+use Symfony\UX\DesignTokens\Importer\ImporterInterface;
 
 /**
- * Symfony UX bundle for W3C DTCG 2025.10 design tokens.
- *
  * @author Simon André <smn.andre@gmail.com>
  */
 final class UXDesignTokensBundle extends AbstractBundle
 {
-    /** AssetMapper namespace of the rendered stylesheets. */
     public const ASSET_NAMESPACE = 'design-tokens';
 
     protected string $extensionAlias = 'ux_design_tokens';
@@ -47,7 +45,7 @@ final class UXDesignTokensBundle extends AbstractBundle
         $definition->rootNode()
             ->children()
                 ->arrayNode('paths')
-                    ->info('Paths to W3C DTCG JSON token files, loaded and merged in order.')
+                    ->info('DTCG token files, merged in order.')
                     ->scalarPrototype()->cannotBeEmpty()->end()
                     ->defaultValue([])
                 ->end()
@@ -134,8 +132,6 @@ final class UXDesignTokensBundle extends AbstractBundle
             ? $this->resolveProjectPath($resolver['path'], $projectDir, $builder)
             : null;
 
-        // Build parameters: the dot prefix removes them once the container is
-        // compiled, so the configuration does not become public surface.
         $container->parameters()
             ->set('.ux_design_tokens.paths', $paths)
             ->set('.ux_design_tokens.resolver_path', $resolverPath)
@@ -147,8 +143,7 @@ final class UXDesignTokensBundle extends AbstractBundle
             ->set('.ux_design_tokens.css_prefix', $config['css_prefix'])
         ;
 
-        // A path built from an environment variable is only known once the
-        // container runs, so there is nothing to stat and nothing to track.
+        // A path built from an environment variable is unknown until runtime.
         foreach ([...$paths, $resolverPath] as $path) {
             if (!\is_string($path) || $this->holdsEnvPlaceholder($path, $builder)) {
                 continue;
@@ -160,16 +155,15 @@ final class UXDesignTokensBundle extends AbstractBundle
             }
         }
 
-        // Any service implementing GeneratorInterface joins ux:design-tokens:export.
-        // Registering the tag here keeps the contract free of container
-        // concerns; a "format" tag attribute names it.
         $builder->registerForAutoconfiguration(GeneratorInterface::class)
             ->addTag('ux_design_tokens.generator');
 
+        $builder->registerForAutoconfiguration(ImporterInterface::class)
+            ->addTag('ux_design_tokens.importer');
+
         $container->import('../config/services.php');
 
-        // A stylesheet written before a configuration change must not be
-        // served after it.
+        // Invalidates a stylesheet written with another configuration.
         $builder->getDefinition('.ux_design_tokens.stylesheet_cache')->replaceArgument(6, hash('xxh128', serialize([
             $paths,
             $resolverPath,
@@ -178,8 +172,6 @@ final class UXDesignTokensBundle extends AbstractBundle
             $config['css_prefix'],
         ])));
 
-        // The template helpers are an integration, not the entry point: a
-        // mailer, a PDF or a console command reads tokens without Twig.
         $bundles = $builder->hasParameter('kernel.bundles') ? $builder->getParameter('kernel.bundles') : [];
 
         if (\is_array($bundles) && isset($bundles['FrameworkBundle'])) {
@@ -196,13 +188,6 @@ final class UXDesignTokensBundle extends AbstractBundle
     }
 
     /**
-     * Directories the document loader may read from.
-     *
-     * The project directory covers the usual layout. The directory of every
-     * configured source is added on top of it, resolved through its symlinks,
-     * so a token package installed as a Composer path repository keeps working
-     * while a `$ref` climbing out of the project does not.
-     *
      * @param list<string> $paths
      *
      * @return list<string>
@@ -219,15 +204,6 @@ final class UXDesignTokensBundle extends AbstractBundle
         return array_keys($roots);
     }
 
-    /**
-     * Whether a configured value is built from an environment variable.
-     *
-     * Such a value is only known once the container runs, so the bundle passes
-     * it through instead of treating it as a path: prefixing the project
-     * directory onto it would yield "<project>//absolute/path" at runtime.
-     * A compiled container carries the resolved `env_*` placeholder, while an
-     * extension invoked directly still sees the `%env()%` syntax.
-     */
     private function holdsEnvPlaceholder(string $value, ContainerBuilder $builder): bool
     {
         if (str_contains($value, '%env(')) {
@@ -240,13 +216,6 @@ final class UXDesignTokensBundle extends AbstractBundle
         return [] !== $envs;
     }
 
-    /**
-     * Serve the rendered stylesheets as versioned assets.
-     *
-     * The cache warmer writes them into the build directory; mapping that
-     * directory is what turns them into an URL the browser can cache, instead
-     * of bytes repeated in every response.
-     */
     public function prependExtension(ContainerConfigurator $container, ContainerBuilder $builder): void
     {
         if (!$this->isAssetMapperAvailable($builder)) {
