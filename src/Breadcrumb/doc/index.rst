@@ -11,6 +11,10 @@ with a repeatable ``#[Breadcrumb]`` attribute. The trail is collected unresolved
 onto the request, and only turned into labels and URLs when a template asks for
 it.
 
+What the attribute cannot state up front, such as a trail whose depth is only known
+once the entities are loaded, a controller adds to the collected trail itself. The two
+are peers: see `Building the trail at runtime`_.
+
 That laziness is the point. Crumb expressions routinely dereference Doctrine
 associations, so resolving them on every request that merely *matched* such a
 controller would trigger lazy-loading queries for nothing. A redirect, a Turbo
@@ -111,15 +115,17 @@ The attribute
 
 * ``label`` (``string``): the translation key, or the literal label when ``translationDomain`` is ``false``
 * ``route`` (``?string``): name of the route to link to
+* ``parameters`` (``array<string, mixed>``): a **map of values**, used as given
 * ``inheritedParameters`` (``array<int, string>``): a **list of names** taken from the matched route
 * ``computedParameters`` (``array<string, string>``): a **map** of expressions, evaluated against the controller's arguments
 * ``translationDomain`` (``string|false|null``): ``null`` for the default domain, a domain name, or ``false`` to skip translation
 * ``translationParameters`` (``array<string, string>``): a **map** of expressions, fed to the translator
 * ``extra`` (``array<string, mixed>``): arbitrary data forwarded untouched to the resolved item, never read by the bundle
 
-The two URL parameter bags differ in where the value comes from, not in where it goes:
+The three URL parameter bags differ in where the value comes from, not in where it goes:
 
-* ``inheritedParameters`` is a **list of names** taken from the already-matched route (``_route_params``). The values exist, so nothing is evaluated.
+* ``parameters`` is a **map of values**, used as given. Nothing is evaluated, so this is the bag that carries a constant, and the one a crumb built in PHP uses.
+* ``inheritedParameters`` is a **list of names** taken from the already-matched route (``_route_params``). The values exist, so nothing is evaluated either.
 * ``computedParameters`` is a **map** whose values are ExpressionLanguage expressions evaluated against the controller's arguments.
 
 ``translationParameters`` is a map of expressions too, but it feeds the translator rather than the URL.
@@ -129,6 +135,7 @@ The two URL parameter bags differ in where the value comes from, not in where it
     #[Breadcrumb(
         label: 'product.view.breadcrumb',
         route: ProductRouteName::View->value,
+        parameters: ['page' => 1],
         inheritedParameters: ['slug'],
         computedParameters: ['state' => 'product.state'],
         translationParameters: ['name' => 'product.name'],
@@ -137,16 +144,82 @@ The two URL parameter bags differ in where the value comes from, not in where it
 A route name is a string, as everywhere else in Symfony.
 If your application keeps its route names in a backed enum, pass the case's ``->value``, which is a valid constant expression in an attribute argument.
 
-Neither bag decides whether a parameter lands in the path or in the query string.
-The URL generator places each name in the path when the route declares a placeholder for it, and in the query string otherwise, so the example above generates ``/products?state=published`` while ``slug`` fills the ``{slug}`` placeholder.
-An inherited name the route has no placeholder for lands in the query string just the same.
-When both bags name the same parameter, the computed value wins.
+None of the bags decides whether a parameter lands in the path or in the query string.
+The URL generator places each name in the path when the route declares a placeholder for it, and in the query string otherwise, so in the example above ``slug`` fills the ``{slug}`` placeholder while ``page`` and ``state`` land in the query string.
+When several bags name the same parameter, the last of that list wins: a given value overrides an inherited name, and a computed one overrides both.
 
 Only the controller arguments a crumb expression actually names are kept on the trail, so the whole argument list, and notably the ``Request``, is not pinned into the request attributes until render time.
 
 Resolution degrades rather than throwing.
 A crumb pointing at an unknown route, at one whose required parameters are missing, or carrying an expression that cannot be evaluated against this action's arguments, resolves to ``url === null`` and renders as plain text.
 A translation parameter that cannot be evaluated leaves its placeholder in the label rather than taking the page down.
+
+Building the trail at runtime
+-----------------------------
+
+A trail whose depth is only known once the entities are loaded cannot be written as a
+fixed list of attributes. Inject ``BreadcrumbTrailProvider``, ask it for the trail the
+listener already built, and add to it::
+
+    // src/Controller/CategoryController.php
+    namespace App\Controller;
+
+    use App\Entity\Category;
+    use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+    use Symfony\Component\HttpFoundation\Response;
+    use Symfony\Component\Routing\Attribute\Route;
+    use Symfony\UX\Breadcrumb\Attribute\Breadcrumb;
+    use Symfony\UX\Breadcrumb\BreadcrumbTrailProvider;
+
+    #[Breadcrumb(label: 'category.index.breadcrumb', route: 'category_index')]
+    final class CategoryController extends AbstractController
+    {
+        #[Route('/categories/{slug}', name: 'category_view')]
+        public function view(Category $category, BreadcrumbTrailProvider $trailProvider): Response
+        {
+            $chain = [];
+            for ($node = $category; null !== $node; $node = $node->getParent()) {
+                $chain[] = new Breadcrumb(
+                    label: $node->getName(),
+                    route: 'category_view',
+                    parameters: ['slug' => $node->getSlug()],
+                    translationDomain: false,
+                );
+            }
+
+            $trailProvider->getTrail()?->append(...array_reverse($chain));
+
+            return $this->render('category/view.html.twig');
+        }
+    }
+
+The class attribute states the part of the trail that never changes, and the controller
+adds as many levels as the category happens to be deep. Every level of the chain is built
+the same way, the deepest one included, which changes nothing on the page: the current
+crumb is never a link.
+
+``getTrail()`` returns ``null`` when there is no trail to add to, outside a request or
+before the listener has run, which happens on the controller arguments event. Hence the
+``?->``.
+It reads the **main** request on purpose, so a crumb appended from a
+``{{ render(controller(...)) }}`` fragment lands on the page's trail rather than on one
+that nothing renders.
+
+``BreadcrumbTrail`` is a small mutable list of unresolved crumbs:
+
+* ``append(Breadcrumb ...$crumbs)`` adds below what is already there. Root crumbs and the attribute's are collected before the controller runs, so an appended crumb is always deeper than those.
+* ``prepend(Breadcrumb ...$crumbs)`` adds above them all, root crumbs included.
+* ``all()`` returns the crumbs, and ``isEmpty()`` says whether there are any, for a controller that decides what to add from what is already there.
+
+Both take any number of crumbs, so a variable depth is a loop and a spread, as above.
+
+A crumb built here already holds its values, so it passes ``parameters`` and a literal
+label with ``translationDomain: false``. The two expression bags are evaluated against the
+controller arguments the listener captured, which a crumb appended later has no say over.
+
+Adding a crumb stays cheap: nothing is resolved until a template asks for it, and a crumb
+appended after a first ``ux_breadcrumb_items()`` call is picked up rather than served from
+the memo.
 
 Rendering
 ---------
@@ -331,33 +404,6 @@ Nor is the controller list fully known at warmup: controllers registered as serv
 
 Finally, the bundle sets no HTTP cache headers and takes no view on page caching.
 That is the application's call, and a trail carrying per-entity or per-user labels is exactly what should stay out of a shared HTTP cache.
-
-Crumbs only known at runtime
-----------------------------
-
-Inject ``BreadcrumbTrailProvider`` to append to the trail the listener already
-built::
-
-    // src/Controller/ProductViewController.php
-    namespace App\Controller;
-
-    use App\Entity\Product;
-    use Symfony\Component\HttpFoundation\Response;
-    use Symfony\UX\Breadcrumb\Attribute\Breadcrumb;
-    use Symfony\UX\Breadcrumb\BreadcrumbTrailProvider;
-
-    final class ProductViewController
-    {
-        public function __invoke(Product $product, BreadcrumbTrailProvider $trailProvider): Response
-        {
-            $trailProvider->getTrail()?->append(new Breadcrumb(
-                label: $product->getName(),
-                translationDomain: false,
-            ));
-
-            // ...
-        }
-    }
 
 Configuration
 -------------

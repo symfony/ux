@@ -83,20 +83,56 @@ final class UXBreadcrumbIntegrationTest extends KernelTestCase
     public function testAControllerCanAppendACrumbAtRuntime(): void
     {
         $twig = $this->twigForRequest('/products');
-        $container = self::getContainer();
 
-        $trailProvider = $container->get('ux_breadcrumb.trail_provider');
-        self::assertInstanceOf(BreadcrumbTrailProvider::class, $trailProvider);
-
-        $trail = $trailProvider->getTrail();
-        self::assertInstanceOf(BreadcrumbTrail::class, $trail);
-        $trail->append(new Breadcrumb(
+        $this->trail()->append(new Breadcrumb(
             label: 'Blue sneakers',
             translationDomain: false,
         ));
 
         $labels = $twig->createTemplate('{{ ux_breadcrumb_items()|map(i => i.label)|join("|") }}')->render();
         self::assertSame('Dashboard|Products|Blue sneakers', $labels);
+    }
+
+    public function testACrumbAppendedAtRuntimeCanCarryItsOwnRouteParameters(): void
+    {
+        $twig = $this->twigForRequest('/products');
+
+        $this->trail()->append(
+            new Breadcrumb(
+                label: 'Blue sneakers',
+                route: 'product_view',
+                parameters: ['slug' => 'blue-sneakers'],
+                translationDomain: false,
+            ),
+            new Breadcrumb(label: 'Edit', translationDomain: false),
+        );
+
+        $html = $twig->createTemplate('{{ ux_breadcrumb() }}')->render();
+        self::assertStringContainsString('<a href="/products/blue-sneakers">Blue sneakers</a>', $html);
+    }
+
+    public function testACrumbPrependedAtRuntimeLandsAboveTheRootCrumb(): void
+    {
+        $twig = $this->twigForRequest('/products');
+
+        $this->trail()->prepend(new Breadcrumb(
+            label: 'Everything',
+            translationDomain: false,
+        ));
+
+        $labels = $twig->createTemplate('{{ ux_breadcrumb_items()|map(i => i.label)|join("|") }}')->render();
+        self::assertSame('Everything|Dashboard|Products', $labels);
+    }
+
+    private function trail(): BreadcrumbTrail
+    {
+        $trailProvider = self::getContainer()->get('ux_breadcrumb.trail_provider');
+        self::assertInstanceOf(BreadcrumbTrailProvider::class, $trailProvider);
+
+        $trail = $trailProvider->getTrail();
+        self::assertInstanceOf(BreadcrumbTrail::class, $trail);
+
+        return $trail;
     }
 
     private function twigForRequest(string $uri): Environment

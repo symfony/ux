@@ -25,6 +25,7 @@ final class BreadcrumbTest extends TestCase
 
         self::assertSame('product.index.breadcrumb', $crumb->label);
         self::assertNull($crumb->route);
+        self::assertSame([], $crumb->parameters);
         self::assertSame([], $crumb->inheritedParameters);
         self::assertSame([], $crumb->computedParameters);
         self::assertNull($crumb->translationDomain);
@@ -37,6 +38,7 @@ final class BreadcrumbTest extends TestCase
         $crumb = new Breadcrumb(
             label: 'product.view.breadcrumb',
             route: RouteName::ProductView->value,
+            parameters: ['page' => 2],
             inheritedParameters: ['slug'],
             computedParameters: ['state' => 'product.state'],
             translationDomain: 'admin',
@@ -46,6 +48,7 @@ final class BreadcrumbTest extends TestCase
 
         self::assertSame('product.view.breadcrumb', $crumb->label);
         self::assertSame(RouteName::ProductView->value, $crumb->route);
+        self::assertSame(['page' => 2], $crumb->parameters);
         self::assertSame(['slug'], $crumb->inheritedParameters);
         self::assertSame(['state' => 'product.state'], $crumb->computedParameters);
         self::assertSame('admin', $crumb->translationDomain);
