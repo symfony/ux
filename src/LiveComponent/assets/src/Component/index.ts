@@ -24,6 +24,11 @@ export type ComponentHooks = {
     connect: (component: Component) => MaybePromise;
     disconnect: (component: Component) => MaybePromise;
     'request:started': (requestConfig: any) => MaybePromise;
+    'render:started': (
+        html: string,
+        backendResponse: BackendResponse,
+        controls: { shouldRender: boolean }
+    ) => MaybePromise;
     'render:finished': (component: Component) => MaybePromise;
     'response:error': (backendResponse: BackendResponse, controls: { displayError: boolean }) => MaybePromise;
     'loading.state:started': (element: HTMLElement, request: BackendRequest) => MaybePromise;
