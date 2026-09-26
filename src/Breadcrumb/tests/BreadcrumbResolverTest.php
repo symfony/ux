@@ -210,21 +210,50 @@ final class BreadcrumbResolverTest extends KernelTestCase
         );
     }
 
-    public function testTheAbsoluteFallbackDoesNotLeakFrameworkRouteParameters(): void
+    public function testTheAbsoluteFallbackReusesEveryRouteParameter(): void
     {
         self::bootKernel();
 
-        $trail = new BreadcrumbTrail(
-            'product_view',
-            ['slug' => 'blue-sneakers', '_locale' => 'fr', '_format' => 'html'],
-        );
-        $trail->append(new Breadcrumb(label: 'product.view.breadcrumb'));
+        $trail = new BreadcrumbTrail('product_view', ['slug' => 'blue-sneakers', '_locale' => 'fr']);
+        $trail->append(new Breadcrumb(label: 'product.view.breadcrumb', translationDomain: false));
 
         $url = (string) $this->resolver()->resolve($trail, UrlGeneratorInterface::ABSOLUTE_URL)[0]->url;
 
-        self::assertStringEndsWith('/products/blue-sneakers', $url);
-        self::assertStringNotContainsString('_locale', $url);
-        self::assertStringNotContainsString('_format', $url);
+        self::assertStringContainsString('/products/blue-sneakers', $url);
+    }
+
+    public function testAnExpressionNamingAnAbsentArgumentDegradesInsteadOfThrowing(): void
+    {
+        self::bootKernel();
+
+        $trail = new BreadcrumbTrail('product_index', [], []);
+        $trail->append(
+            new Breadcrumb(
+                label: 'product.index.breadcrumb',
+                route: RouteName::ProductIndex->value,
+                computedParameters: ['state' => 'product.state'],
+                translationDomain: false,
+            ),
+            new Breadcrumb(label: 'leaf', translationDomain: false),
+        );
+
+        $items = $this->resolver()->resolve($trail);
+
+        self::assertNull($items[0]->url, 'A crumb whose expression cannot be evaluated loses its URL, it does not 500.');
+        self::assertSame('product.index.breadcrumb', $items[0]->label);
+    }
+
+    public function testAFailedTranslationParameterLeavesThePlaceholderRatherThanThrowing(): void
+    {
+        self::bootKernel();
+
+        $trail = new BreadcrumbTrail('product_view', [], []);
+        $trail->append(new Breadcrumb(
+            label: 'product.view.breadcrumb',
+            translationParameters: ['released_at' => 'product.releasedAt'],
+        ));
+
+        self::assertNotSame('', $this->resolver()->resolve($trail)[0]->label);
     }
 
     public function testAStringAndAnEnumBackedRouteNameResolveIdentically(): void

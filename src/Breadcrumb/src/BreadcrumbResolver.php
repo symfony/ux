@@ -22,6 +22,8 @@ use Symfony\UX\Breadcrumb\Attribute\Breadcrumb;
  * Intentionally interface-less: this one is internal to the package with a single caller (BreadcrumbExtension), no cross-layer inversion to satisfy and no test double.
  * The tests use the real service from the container.
  *
+ * @internal
+ *
  * @author Romain Monteil <monteil.romain@gmail.com>
  */
 final class BreadcrumbResolver
@@ -72,9 +74,17 @@ final class BreadcrumbResolver
             return $crumb->label;
         }
 
+        try {
+            $parameters = $this->evaluate($crumb->translationParameters, $trail->context);
+        } catch (\Throwable) {
+            // An expression that cannot be evaluated leaves its placeholder in the
+            // label rather than taking the page down.
+            $parameters = [];
+        }
+
         return $this->translator->trans(
             $crumb->label,
-            $this->evaluate($crumb->translationParameters, $trail->context),
+            $parameters,
             $crumb->translationDomain ?? $this->defaultTranslationDomain,
         );
     }
@@ -99,14 +109,17 @@ final class BreadcrumbResolver
             return null;
         }
 
-        $parameters = $isCurrent && null === $crumb->route
-            ? $this->currentRouteParameters($trail)
-            : array_merge(
-                $this->inheritedParameters($crumb, $trail),
-                $this->evaluate($crumb->computedParameters, $trail->context),
-            );
-
         try {
+            // Evaluation sits inside the try: an expression naming an argument this
+            // action never received degrades to a link-less crumb, like a route that
+            // cannot be generated.
+            $parameters = $isCurrent && null === $crumb->route
+                ? $trail->routeParameters
+                : array_merge(
+                    $this->inheritedParameters($crumb, $trail),
+                    $this->evaluate($crumb->computedParameters, $trail->context),
+                );
+
             return $this->urlGenerator->generate($route, $parameters, $referenceType);
         } catch (\Throwable) {
             return null;
@@ -120,21 +133,6 @@ final class BreadcrumbResolver
         }
 
         return $fallBackToCurrentRoute && '' !== $trail->route ? $trail->route : null;
-    }
-
-    /**
-     * When the current page falls back to the trail's own route, its parameters are reused wholesale, minus the framework's internals.
-     * RouterListener strips only `_route`, `_controller` and `_query` from `_route_params`, so `_locale` and `_format` would otherwise surface as query string noise on the canonical URL.
-     *
-     * @return array<string, mixed>
-     */
-    private function currentRouteParameters(BreadcrumbTrail $trail): array
-    {
-        return array_filter(
-            $trail->routeParameters,
-            static fn (string $key): bool => !str_starts_with($key, '_'),
-            \ARRAY_FILTER_USE_KEY,
-        );
     }
 
     /**

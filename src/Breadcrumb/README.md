@@ -42,8 +42,8 @@ final class ProductViewController extends AbstractController
 {{ ux_breadcrumb() }}
 ```
 
-The crumbs are declared in trail order, top to bottom. The last one is the current
-page: it is rendered as plain text carrying `aria-current="page"`, never as a link.
+The crumbs are declared in trail order, top to bottom.
+The last one is the current page: it is rendered as plain text carrying `aria-current="page"`, never as a link.
 
 ## The `#[Breadcrumb]` attribute
 
@@ -97,8 +97,8 @@ Rendering the trail yourself is the expected path:
             {% for item in items %}
                 <li>
                     {# The last crumb is the current page, so it is never a link even when it
-                       carries a route; a mid-trail crumb without a route degrades to a page
-                       rather than rendering href="". #}
+                       carries a route. A mid-trail crumb without a route renders as plain
+                       text rather than an empty href, and is not the current page. #}
                     {% if not loop.last and item.url is not null %}
                         <a href="{{ item.url }}">{{ item.label }}</a>
                     {% else %}
@@ -125,6 +125,7 @@ Extend it and override its `*_class` blocks to attach your own classes:
 
 {% block list_class %}flex items-center gap-2{% endblock %}
 {% block current_class %}font-medium{% endblock %}
+{% block plain_class %}text-gray-400{% endblock %}
 ```
 
 ### Carrying your own data on a crumb

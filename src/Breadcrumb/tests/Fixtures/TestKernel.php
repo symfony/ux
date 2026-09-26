@@ -23,6 +23,7 @@ use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 use Symfony\UX\Breadcrumb\Tests\Fixtures\Controller\DashboardHomeController;
 use Symfony\UX\Breadcrumb\Tests\Fixtures\Controller\PlainController;
 use Symfony\UX\Breadcrumb\Tests\Fixtures\Controller\ProductIndexController;
+use Symfony\UX\Breadcrumb\Tests\Fixtures\Controller\ProductPlainController;
 use Symfony\UX\Breadcrumb\Tests\Fixtures\Controller\ProductRedirectController;
 use Symfony\UX\Breadcrumb\Tests\Fixtures\Controller\ProductViewController;
 use Symfony\UX\Breadcrumb\UXBreadcrumbBundle;
@@ -61,6 +62,7 @@ final class TestKernel extends Kernel
         $routes->add('product_index', '/products')->controller(ProductIndexController::class);
         $routes->add('product_view', '/products/{slug}')->controller(ProductViewController::class);
         $routes->add('product_redirect', '/products/{slug}/redirect')->controller(ProductRedirectController::class);
+        $routes->add('product_plain', '/products/{slug}/plain')->controller(ProductPlainController::class);
         $routes->add('plain', '/plain')->controller(PlainController::class);
     }
 
@@ -93,6 +95,7 @@ final class TestKernel extends Kernel
                 DashboardHomeController::class,
                 PlainController::class,
                 ProductIndexController::class,
+                ProductPlainController::class,
                 ProductRedirectController::class,
                 ProductViewController::class,
             ] as $controller) {
@@ -110,7 +113,10 @@ final class TestKernel extends Kernel
             $container->register(FilterStateExpressionFunctionProvider::class, FilterStateExpressionFunctionProvider::class)
                 ->addTag('ux_breadcrumb.expression_function_provider');
 
-            if ('no_root_provider' !== $this->environment) {
+            if ('expression_root_provider' === $this->environment) {
+                $container->register(ExpressionRootCrumbProvider::class, ExpressionRootCrumbProvider::class)
+                    ->setAutoconfigured(true);
+            } elseif ('no_root_provider' !== $this->environment) {
                 $container->register(RootCrumbProvider::class, RootCrumbProvider::class)
                     ->setAutoconfigured(true);
             }
