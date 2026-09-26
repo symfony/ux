@@ -106,6 +106,18 @@
             ".editorconfig"
         ]
     },
+    "symfony/lock": {
+        "version": "8.1",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "5.2",
+            "ref": "8e937ff2b4735d110af1770f242c1107fdab4c8e"
+        },
+        "files": [
+            "config/packages/lock.yaml"
+        ]
+    },
     "symfony/maker-bundle": {
         "version": "1.64",
         "recipe": {
@@ -381,6 +393,9 @@
         "files": [
             "config/packages/twig_component.yaml"
         ]
+    },
+    "symfony/ux-upload": {
+        "version": "3.x-dev"
     },
     "symfony/ux-vue": {
         "version": "2.29",
