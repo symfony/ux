@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import { getByText, waitFor } from '@testing-library/dom';
+import { getByTestId, getByText, waitFor } from '@testing-library/dom';
 import { afterEach, describe, expect, it } from 'vitest';
 import type BackendResponse from '../../../src/Backend/BackendResponse';
 import { createTest, initComponent, shutdownTests } from '../../tools';
@@ -119,5 +119,100 @@ describe('LiveController Error Handling', () => {
         await waitFor(() => expect(isHookCalled).toBe(true));
         const errorContainer = getErrorElement();
         expect(errorContainer).toBeNull();
+    });
+
+    it('recovers when the request fails before a response is received', async () => {
+        const test = await createTest(
+            { counter: 4 },
+            (data: any) => `
+            <div ${initComponent(data)} data-loading="addClass(is-loading)">
+                Current count: ${data.counter}
+            </div>
+        `
+        );
+
+        test.expectsAjaxCall().requestWillFail().expectActionCalled('save').delayResponse(10);
+
+        const promise = test.component.action('save');
+        await waitFor(() => expect(test.element).toHaveClass('is-loading'));
+        expect(test.element).toHaveAttribute('aria-busy', 'true');
+
+        await expect(promise).rejects.toThrow('Failed to fetch');
+        expect(test.element).not.toHaveClass('is-loading');
+        expect(test.element).not.toHaveAttribute('aria-busy');
+        expect(getErrorElement()).toBeNull();
+
+        test.expectsAjaxCall().serverWillChangeProps((data: any) => {
+            data.counter = 10;
+        });
+
+        await test.component.render();
+        expect(test.element).toHaveTextContent('Current count: 10');
+    });
+
+    it('sends the unsaved model changes again after a failed request', async () => {
+        const test = await createTest(
+            { name: 'Ryan' },
+            (data: any) => `
+            <div ${initComponent(data)}>
+                Name: ${data.name}
+            </div>
+        `
+        );
+
+        test.expectsAjaxCall().expectUpdatedData({ name: 'Kevin' }).requestWillFail();
+
+        await expect(test.component.set('name', 'Kevin', true)).rejects.toThrow('Failed to fetch');
+
+        test.expectsAjaxCall().expectUpdatedData({ name: 'Kevin' });
+
+        await test.component.render();
+        expect(test.element).toHaveTextContent('Name: Kevin');
+    });
+
+    it('sends a request queued while the previous one fails without a response', async () => {
+        const test = await createTest(
+            { counter: 4 },
+            (data: any) => `
+            <div ${initComponent(data)}>
+                Current count: ${data.counter}
+            </div>
+        `
+        );
+
+        test.expectsAjaxCall().requestWillFail().expectActionCalled('save').delayResponse(50);
+
+        const failedPromise = test.component.action('save');
+        await waitFor(() => expect(test.element).toHaveAttribute('aria-busy', 'true'));
+
+        test.expectsAjaxCall()
+            .expectActionCalled('increment')
+            .serverWillChangeProps((data: any) => {
+                data.counter = 5;
+            });
+
+        const queuedPromise = test.component.action('increment');
+
+        await expect(failedPromise).rejects.toThrow('Failed to fetch');
+        await queuedPromise;
+        expect(test.element).toHaveTextContent('Current count: 5');
+    });
+
+    it('does not apply a delayed loading directive after a failed request', async () => {
+        const test = await createTest(
+            {},
+            (data: any) => `
+            <div ${initComponent(data)}>
+                <span data-loading="delay(20)|addClass(is-loading)" data-testid="loading-element">Loading...</span>
+            </div>
+        `
+        );
+
+        test.expectsAjaxCall().requestWillFail();
+
+        await expect(test.component.render()).rejects.toThrow('Failed to fetch');
+        await new Promise((resolve) => setTimeout(resolve, 50));
+
+        expect(getByTestId(test.element, 'loading-element')).not.toHaveClass('is-loading');
     });
 });
