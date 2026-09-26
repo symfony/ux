@@ -119,9 +119,13 @@ final class BreadcrumbListenerTest extends KernelTestCase
         self::assertInstanceOf(Product::class, $trail->context['product']);
     }
 
-    /**
-     * @param array<string, mixed> $subscribedEvents
-     */
+    public function testARootCrumbExpressionIsScannedIntoTheContext(): void
+    {
+        $trail = $this->handle('/products/blue-sneakers/plain', environment: 'expression_root_provider');
+
+        self::assertArrayHasKey('product', $trail->context, 'A root crumb naming an argument must pin it on the trail.');
+    }
+
     private static function priorityOf(array $subscribedEvents): int
     {
         $listener = $subscribedEvents[KernelEvents::CONTROLLER_ARGUMENTS] ?? null;
