@@ -24,6 +24,8 @@ use Symfony\UX\Breadcrumb\RootCrumbProviderInterface;
  *
  * Nothing is translated or turned into a URL here. See BreadcrumbResolver.
  *
+ * @internal
+ *
  * @author Romain Monteil <monteil.romain@gmail.com>
  */
 final class BreadcrumbListener implements EventSubscriberInterface
@@ -72,17 +74,21 @@ final class BreadcrumbListener implements EventSubscriberInterface
         /** @var list<Breadcrumb> $crumbs */
         $crumbs = array_values($event->getAttributes(Breadcrumb::class));
 
+        // Providers run unconditionally: a lone root crumb is the intended breadcrumb
+        // of a section's home page, which declares none of its own.
+        $roots = $this->roots($route, $request);
+
+        // Root crumbs carry expressions like any other crumb, so they have to be
+        // scanned into the context too, which means collecting them before the trail.
         $trail = new BreadcrumbTrail(
             $route,
             $routeParameters,
-            $this->context($crumbs, $event->getNamedArguments()),
+            $this->context([...$roots, ...$crumbs], $event->getNamedArguments()),
         );
 
         $trail->append(...$crumbs);
 
-        // Providers run unconditionally: a lone root crumb is the intended breadcrumb
-        // of a section's home page, which declares none of its own.
-        if ([] !== $roots = $this->roots($route, $request)) {
+        if ([] !== $roots) {
             $trail->prepend(...$roots);
         }
 

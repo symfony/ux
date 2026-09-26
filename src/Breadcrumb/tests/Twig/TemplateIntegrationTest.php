@@ -74,7 +74,7 @@ final class TemplateIntegrationTest extends TestCase
         ]);
 
         self::assertStringNotContainsString('<a href=""', $html);
-        self::assertSame(2, substr_count($html, 'aria-current="page"'));
+        self::assertSame(1, substr_count($html, 'aria-current="page"'), 'Only the current page claims aria-current.');
     }
 
     public function testExtraDataIsReachableFromAnOverridingTheme(): void
