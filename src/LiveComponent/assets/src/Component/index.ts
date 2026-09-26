@@ -358,6 +358,7 @@ export default class Component {
             requestConfig.files
         );
         this.hooks.triggerHook('loading.state:started', this.element, this.backendRequest);
+        const historyEntryKey = this.getCurrentHistoryEntryKey();
 
         this.pendingActions = remainingActions;
         this.valueStore.flushDirtyPropsToPending();
@@ -409,8 +410,9 @@ export default class Component {
                 return response;
             }
 
+            // Skip the URL update if the user navigated away while the request was pending
             const liveUrl = backendResponse.getLiveUrl();
-            if (liveUrl) {
+            if (liveUrl && this.element.isConnected && this.getCurrentHistoryEntryKey() === historyEntryKey) {
                 history.replaceState(
                     history.state,
                     '',
@@ -645,6 +647,13 @@ export default class Component {
         if (isChanged) {
             this.render();
         }
+    }
+
+    /**
+     * Returns the key of the current history entry, or null when the browser does not support the Navigation API.
+     */
+    private getCurrentHistoryEntryKey(): string | null {
+        return (window as any).navigation?.currentEntry?.key ?? null;
     }
 }
 
