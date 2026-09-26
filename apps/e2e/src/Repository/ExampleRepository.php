@@ -56,6 +56,7 @@ class ExampleRepository
             new Example(UxPackage::LiveComponent, 'With DTO and dedicated HydrationExtension', 'A live component that uses a DTO along with dedicated HydrationExtension to hydrate/dehydrate the DTO.', 'app_ux_live_component_with_dto_and_hydration_extension'),
             new Example(UxPackage::LiveComponent, 'Item list', 'A live component with LiveProp, LiveAction and LiveArg.', 'app_ux_live_component_item_list'),
             new Example(UxPackage::LiveComponent, 'With aliased LiveProps', 'A live component with LiveProps statically and dynamically aliased.', 'app_ux_live_component_with_aliased_live_props'),
+            new Example(UxPackage::LiveComponent, 'With a child form', 'A live component that re-renders around a child live component whose root element is a form with a field named "id".', 'app_ux_live_component_with_form_child'),
             new Example(UxPackage::Map, 'Basic map (Leaflet)', 'A basic map centered on Paris with zoom level 12', 'app_ux_map_basic', ['renderer' => 'leaflet']),
             new Example(UxPackage::Map, 'Basic map (Google)', 'A basic map centered on Paris with zoom level 12', 'app_ux_map_basic', ['renderer' => 'google']),
             new Example(UxPackage::Map, 'With markers, fit bounds (Leaflet)', 'A map with 2 markers, and the bounds are automatically adjusted to fit both markers', 'app_ux_map_with_markers_and_fit_bounds_to_markers', ['renderer' => 'leaflet']),

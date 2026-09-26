@@ -79,4 +79,10 @@ final class LiveComponentController extends AbstractController
     {
         return $this->render('ux_live_component/with_aliased_live_props.html.twig');
     }
+
+    #[Route('/with-form-child', name: 'with_form_child')]
+    public function withFormChild(): Response
+    {
+        return $this->render('ux_live_component/with_form_child.html.twig');
+    }
 }
