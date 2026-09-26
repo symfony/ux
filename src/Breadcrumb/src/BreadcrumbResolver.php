@@ -77,8 +77,6 @@ final class BreadcrumbResolver
         try {
             $parameters = $this->evaluate($crumb->translationParameters, $trail->context);
         } catch (\Throwable) {
-            // An expression that cannot be evaluated leaves its placeholder in the
-            // label rather than taking the page down.
             $parameters = [];
         }
 
@@ -110,9 +108,7 @@ final class BreadcrumbResolver
         }
 
         try {
-            // Evaluation sits inside the try: an expression naming an argument this
-            // action never received degrades to a link-less crumb, like a route that
-            // cannot be generated.
+            // Evaluation belongs inside the try: a failing expression must degrade, not throw.
             $parameters = $isCurrent && null === $crumb->route
                 ? $trail->routeParameters
                 : array_merge(

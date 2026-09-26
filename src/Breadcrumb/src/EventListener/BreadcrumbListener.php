@@ -42,12 +42,9 @@ final class BreadcrumbListener implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            // Low enough to run after every listener that can still rewrite the
-            // controller's arguments, so getNamedArguments() is final. The one to
-            // clear is RequestPayloadValueResolver, which maps #[MapQueryString],
-            // #[MapRequestPayload] and #[MapUploadedFile] arguments into their DTOs:
-            // it sits at -10100 on Symfony 8.x and at 0 on 7.4, so a crumb expression
-            // naming a mapped argument would read the raw attribute at any higher one.
+            // Must clear RequestPayloadValueResolver, which maps the #[Map*] arguments
+            // into their DTOs at -10100 on Symfony 8.x and at 0 on 7.4, so that
+            // getNamedArguments() is final by the time a crumb expression reads it.
             KernelEvents::CONTROLLER_ARGUMENTS => [
                 ['buildTrail', -10200],
             ],
@@ -74,12 +71,8 @@ final class BreadcrumbListener implements EventSubscriberInterface
         /** @var list<Breadcrumb> $crumbs */
         $crumbs = array_values($event->getAttributes(Breadcrumb::class));
 
-        // Providers run unconditionally: a lone root crumb is the intended breadcrumb
-        // of a section's home page, which declares none of its own.
         $roots = $this->roots($route, $request);
 
-        // Root crumbs carry expressions like any other crumb, so they have to be
-        // scanned into the context too, which means collecting them before the trail.
         $trail = new BreadcrumbTrail(
             $route,
             $routeParameters,
