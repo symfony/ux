@@ -43,6 +43,12 @@ export default class implements PluginInterface {
                 throw new Error('missing id');
             }
 
+            // the inner HTML of a data-skip-morph element is replaced, not morphed,
+            // so an empty preserved child would be lost: let the server render it fully
+            if (this.isInsideSkipMorphElement(child)) {
+                return;
+            }
+
             fingerprints[child.id] = {
                 fingerprint: child.fingerprint as string,
                 tag: child.element.tagName.toLowerCase(),
@@ -79,5 +85,15 @@ export default class implements PluginInterface {
 
     private getChildren(): Component[] {
         return findChildren(this.component);
+    }
+
+    private isInsideSkipMorphElement(child: Component): boolean {
+        const skipMorphElement = child.element.parentElement?.closest('[data-skip-morph]');
+
+        return (
+            !!skipMorphElement &&
+            skipMorphElement !== this.component.element &&
+            this.component.element.contains(skipMorphElement)
+        );
     }
 }
