@@ -95,7 +95,7 @@ export function executeMorphdom(
         };
 
         rootToElement.querySelectorAll('[data-live-preserve]').forEach((newElement) => {
-            const id = newElement.id;
+            const id = newElement.getAttribute('id');
 
             if (!id) {
                 throw new Error('The data-live-preserve attribute requires an id attribute to be set on the element');
@@ -123,8 +123,9 @@ export function executeMorphdom(
                         return true;
                     }
 
-                    if (fromEl.id && originalElementsToPreserve.has(fromEl.id)) {
-                        if (fromEl.id === toEl.id) {
+                    const fromId = fromEl.getAttribute('id');
+                    if (fromId && originalElementsToPreserve.has(fromId)) {
+                        if (fromId === toEl.getAttribute('id')) {
                             // the preserved elements match, prevent morph and
                             // keep the original element
                             return false;
@@ -135,7 +136,7 @@ export function executeMorphdom(
                         // to avoid the original element being morphed, we swap
                         // it for a clone, manually morph the clone, and then
                         // skip trying to morph the original element (we want it untouched)
-                        const clonedFromEl = markElementAsNeedingPostMorphSwap(fromEl.id, true);
+                        const clonedFromEl = markElementAsNeedingPostMorphSwap(fromId, true);
                         if (!clonedFromEl) {
                             throw new Error('missing clone');
                         }
@@ -242,7 +243,7 @@ export function executeMorphdom(
                     // the id has changed. So, even if a <div id="foo"> appears on the
                     // same place as a <div id="bar">, we replace the content to get
                     // totally fresh internals.
-                    if (fromEl.hasAttribute('data-skip-morph') || (fromEl.id && fromEl.id !== toEl.id)) {
+                    if (fromEl.hasAttribute('data-skip-morph') || (fromId && fromId !== toEl.getAttribute('id'))) {
                         fromEl.innerHTML = toEl.innerHTML;
 
                         return true;
@@ -262,13 +263,14 @@ export function executeMorphdom(
                         return true;
                     }
 
-                    if (node.id && originalElementsToPreserve.has(node.id)) {
+                    const id = node.getAttribute('id');
+                    if (id && originalElementsToPreserve.has(id)) {
                         // a preserved element is being removed
                         // to avoid the original element being destroyed (but still
                         // allowing this spot on the dom to be removed),
                         // clone the original element and place it into the
                         // new position after morphing
-                        markElementAsNeedingPostMorphSwap(node.id, false);
+                        markElementAsNeedingPostMorphSwap(id, false);
 
                         // allow this to be morphed to the new element
                         return true;
