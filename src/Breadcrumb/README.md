@@ -4,6 +4,7 @@
 possibly significantly, before its first stable release.
 
 Declare the breadcrumb trail of a page on its controller, with a repeatable `#[Breadcrumb]` attribute.
+What the attribute cannot state up front, such as a trail whose depth is only known once the entities are loaded, a controller adds to the collected trail itself.
 The trail is collected unresolved onto the request, and only turned into labels and URLs when a template asks for it.
 A redirect, a Turbo Stream or a JSON response pays nothing, even when the crumbs interpolate Doctrine associations.
 
@@ -96,15 +97,17 @@ The last one is the current page: it is rendered as plain text carrying `aria-cu
 | ----------------------- | ----------------------- | -------------------------------------------------------------------------------------------- |
 | `label`                 | `string`                | The translation key, or the literal label with `translationDomain: false`                    |
 | `route`                 | `?string`               | Name of the route to link to                                                                 |
+| `parameters`            | `array<string, mixed>`  | **A map of values**, used as given: a constant, or what a crumb built in PHP already holds   |
 | `inheritedParameters`   | `array<int, string>`    | **A list of names** taken from the matched route                                             |
 | `computedParameters`    | `array<string, string>` | **A map** of ExpressionLanguage expressions, evaluated against the controller's arguments    |
 | `translationDomain`     | `string\|false\|null`   | `null` = default domain, a string = that domain, `false` = do not translate                  |
 | `translationParameters` | `array<string, string>` | **A map** of ExpressionLanguage expressions, fed to the translator                           |
 | `extra`                 | `array<string, mixed>`  | Arbitrary data forwarded untouched to the resolved item, such as an icon name or a CSS class |
 
-Note the deliberate asymmetry between the three parameter bags:
+Note the deliberate asymmetry between the four parameter bags:
 
-- `inheritedParameters` is a **list of names** taken from the already-matched route (`_route_params`). The values exist, so nothing is evaluated.
+- `parameters` is a **map of values**, used as given. Nothing is evaluated, so this is the bag that carries a constant, and the one a crumb built in PHP uses.
+- `inheritedParameters` is a **list of names** taken from the already-matched route (`_route_params`). The values exist, so nothing is evaluated either.
 - `computedParameters` is a **map** whose values are ExpressionLanguage expressions evaluated against the controller's arguments.
 
 `translationParameters` is a map of expressions too, but it feeds the translator rather than the URL.
@@ -113,6 +116,7 @@ Note the deliberate asymmetry between the three parameter bags:
 #[Breadcrumb(
     label: 'product.view.breadcrumb',
     route: ProductRouteName::View->value,
+    parameters: ['page' => 1],                               // as given -> ?page=1
     inheritedParameters: ['slug'],                           // reuse {slug} from the current route
     computedParameters: ['state' => 'product.state'],        // evaluate -> ?state=published
     translationParameters: ['name' => 'product.name'],       // evaluate -> ICU placeholder
@@ -122,11 +126,61 @@ Note the deliberate asymmetry between the three parameter bags:
 A route name is a string, as everywhere else in Symfony.
 If your application keeps its route names in a backed enum, pass the case's `->value`, which is a valid constant expression in an attribute argument.
 
-Neither bag decides whether a parameter lands in the path or in the query string.
+None of the bags decides whether a parameter lands in the path or in the query string.
 The URL generator places each name in the path when the route declares a placeholder for it, and in the query string otherwise.
-When both bags name the same parameter, the computed value wins.
+When several bags name the same parameter, the last of that list wins: a given value overrides an inherited name, and a computed one overrides both.
 
 Only the controller arguments a crumb expression actually names are kept on the trail, so the whole argument list, and notably the `Request`, is not pinned into the request attributes until render time.
+
+## Building the trail at runtime
+
+A trail whose depth is only known once the entities are loaded cannot be written as a fixed list of attributes.
+Inject `BreadcrumbTrailProvider`, ask it for the trail the listener already built, and add to it:
+
+```php
+#[Breadcrumb(label: 'category.index.breadcrumb', route: 'category_index')]
+final class CategoryController extends AbstractController
+{
+    #[Route('/categories/{slug}', name: 'category_view')]
+    public function view(Category $category, BreadcrumbTrailProvider $trailProvider): Response
+    {
+        $chain = [];
+        for ($node = $category; null !== $node; $node = $node->getParent()) {
+            $chain[] = new Breadcrumb(
+                label: $node->getName(),
+                route: 'category_view',
+                parameters: ['slug' => $node->getSlug()],
+                translationDomain: false,
+            );
+        }
+
+        $trailProvider->getTrail()?->append(...array_reverse($chain));
+
+        return $this->render('category/view.html.twig');
+    }
+}
+```
+
+The class attribute states the part of the trail that never changes, and the controller adds as many levels as the category happens to be deep.
+Every level of the chain is built the same way, the deepest one included, which changes nothing on the page: the current crumb is never a link.
+
+`getTrail()` returns `null` when there is no trail to add to, outside a request or before the listener has run, which happens on the controller arguments event. Hence the `?->`.
+It reads the **main** request on purpose, so a crumb appended from a `{{ render(controller(...)) }}` fragment lands on the page's trail rather than on one that nothing renders.
+
+`BreadcrumbTrail` is a small mutable list of unresolved crumbs:
+
+| Method                           | Effect                                                                                                                               |
+| -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| `append(Breadcrumb ...$crumbs)`  | Adds below what is already there. Root and attribute crumbs are collected before the controller runs, so an appended crumb is deeper |
+| `prepend(Breadcrumb ...$crumbs)` | Adds above them all, root crumbs included                                                                                            |
+| `all()` and `isEmpty()`          | Read what is already there, for a controller that decides what to add from it                                                        |
+
+Both take any number of crumbs, so a variable depth is a loop and a spread, as above.
+
+A crumb built here already holds its values, so it passes `parameters` and a literal label with `translationDomain: false`.
+The two expression bags are evaluated against the controller arguments the listener captured, which a crumb appended later has no say over.
+
+Adding a crumb stays cheap: nothing is resolved until a template asks for it, and a crumb appended after a first `ux_breadcrumb_items()` call is picked up rather than served from the memo.
 
 ## Twig
 
@@ -266,22 +320,6 @@ The tag is deliberately not autoconfigured: `ExpressionFunctionProviderInterface
 also implemented for the routing and security expression languages, and tagging every
 one of them here would be wrong. Point `expression_language` at your own service id to
 replace the whole thing.
-
-### Crumbs only known at runtime
-
-Inject `BreadcrumbTrailProvider` to append to the trail the listener already built:
-
-```php
-public function __invoke(Product $product, BreadcrumbTrailProvider $trailProvider): Response
-{
-    $trailProvider->getTrail()?->append(new Breadcrumb(
-        label: $product->getName(),
-        translationDomain: false,
-    ));
-
-    // ...
-}
-```
 
 ## Configuration
 

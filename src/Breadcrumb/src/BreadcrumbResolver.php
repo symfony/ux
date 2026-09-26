@@ -113,6 +113,7 @@ final class BreadcrumbResolver
                 ? $trail->routeParameters
                 : array_merge(
                     $this->inheritedParameters($crumb, $trail),
+                    $crumb->parameters,
                     $this->evaluate($crumb->computedParameters, $trail->context),
                 );
 
