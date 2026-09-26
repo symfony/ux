@@ -20,6 +20,7 @@ use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
+use Symfony\UX\Breadcrumb\Tests\Fixtures\Controller\AdminProductController;
 use Symfony\UX\Breadcrumb\Tests\Fixtures\Controller\DashboardHomeController;
 use Symfony\UX\Breadcrumb\Tests\Fixtures\Controller\PlainController;
 use Symfony\UX\Breadcrumb\Tests\Fixtures\Controller\ProductIndexController;
@@ -62,6 +63,9 @@ final class TestKernel extends Kernel
         $routes->add('product_index', '/products')->controller(ProductIndexController::class);
         $routes->add('product_view', '/products/{slug}')->controller(ProductViewController::class);
         $routes->add('product_redirect', '/products/{slug}/redirect')->controller(ProductRedirectController::class);
+        $routes->add('admin_product_index', '/admin/products')->controller([AdminProductController::class, 'index']);
+        $routes->add('admin_product_view', '/admin/products/{slug}')->controller([AdminProductController::class, 'view']);
+        $routes->add('admin_product_edit', '/admin/products/{slug}/edit')->controller([AdminProductController::class, 'edit']);
         $routes->add('product_plain', '/products/{slug}/plain')->controller(ProductPlainController::class);
         $routes->add('plain', '/plain')->controller(PlainController::class);
     }
@@ -92,6 +96,7 @@ final class TestKernel extends Kernel
             $container->loadFromExtension('ux_breadcrumb', []);
 
             foreach ([
+                AdminProductController::class,
                 DashboardHomeController::class,
                 PlainController::class,
                 ProductIndexController::class,
