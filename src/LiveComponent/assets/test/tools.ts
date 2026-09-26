@@ -178,6 +178,7 @@ class MockedAjaxCall {
     private delayResponseTime?: number = 0;
     private customResponseStatusCode?: number;
     private customResponseHTML?: string;
+    private requestError?: Error;
 
     constructor(test: FunctionalTest) {
         this.test = test;
@@ -235,8 +236,14 @@ class MockedAjaxCall {
     }
 
     createBackendRequest(): BackendRequest {
-        const promise: Promise<Response> = new Promise((resolve) => {
+        const promise: Promise<Response> = new Promise((resolve, reject) => {
             setTimeout(() => {
+                if (this.requestError) {
+                    reject(this.requestError);
+
+                    return;
+                }
+
                 let newProps = JSON.parse(JSON.stringify(this.test.component.valueStore.getOriginalProps()));
 
                 // this should be a simple, top-level property update
@@ -358,6 +365,12 @@ class MockedAjaxCall {
     serverWillReturnCustomResponse(statusCode: number, responseHTML: string): MockedAjaxCall {
         this.customResponseStatusCode = statusCode;
         this.customResponseHTML = responseHTML;
+
+        return this;
+    }
+
+    requestWillFail(error: Error = new TypeError('Failed to fetch')): MockedAjaxCall {
+        this.requestError = error;
 
         return this;
     }
