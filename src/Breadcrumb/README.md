@@ -11,7 +11,7 @@ Nothing is translated or turned into a URL until a template asks for it.
 final class ProductController extends AbstractController
 {
     #[Route('', name: 'index')]
-    #[Breadcrumb(label: 'product.index.breadcrumb', route: 'product_index')]
+    #[Breadcrumb(label: 'Products', route: 'product_index')]
     public function index(): Response
     {
         return $this->render('product/index.html.twig');
@@ -30,7 +30,7 @@ final class ProductController extends AbstractController
     }
 
     #[Route('/{slug}/edit', name: 'edit')]
-    #[Breadcrumb(label: 'product.edit.breadcrumb', parent: [self::class, 'view'])]
+    #[Breadcrumb(label: 'Edit', parent: [self::class, 'view'])]
     public function edit(Product $product): Response
     {
         return $this->render('product/edit.html.twig');
