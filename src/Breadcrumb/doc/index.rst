@@ -54,14 +54,14 @@ The attribute targets both classes and methods, so a controller with several act
         }
 
         #[Route('/{slug}', name: 'view')]
-        #[Breadcrumb(label: 'product.view.breadcrumb', translationParameters: ['name' => new Expression('product.name')])]
+        #[Breadcrumb(label: new Expression('product.name'))]
         public function view(Product $product): Response
         {
             return $this->render('product/view.html.twig');
         }
 
         #[Route('/{slug}/edit', name: 'edit')]
-        #[Breadcrumb(label: 'product.view.breadcrumb', route: 'product_view', parameters: ['slug'])]
+        #[Breadcrumb(label: new Expression('product.name'), route: 'product_view', parameters: ['slug'])]
         #[Breadcrumb(label: 'product.edit.breadcrumb')]
         public function edit(Product $product): Response
         {
@@ -175,7 +175,7 @@ A route whose controller is a service id rather than a class cannot be followed;
 The attribute
 -------------
 
-* ``label`` (``string``): the translation key, or the literal label when ``translationDomain`` is ``false``
+* ``label`` (``string|Expression``): the translation key, the literal label when ``translationDomain`` is ``false``, or an ``Expression`` computing the label, see `Computed labels`_
 * ``route`` (``?string``): name of the route to link to
 * ``parameters`` (``array<int|string, mixed>``): the URL parameters, inherited from the matched route, given, or computed, see below
 * ``translationDomain`` (``string|false|null``): ``null`` for the default domain, a domain name, or ``false`` to skip translation
@@ -218,6 +218,21 @@ Only the controller arguments a crumb expression actually names are kept on the 
 Resolution degrades rather than throwing.
 A crumb pointing at an unknown route, at one whose required parameters are missing, or carrying an expression that cannot be evaluated against this action's arguments, resolves to ``url === null`` and renders as plain text.
 A translation parameter that cannot be evaluated leaves its placeholder in the label rather than taking the page down.
+
+Computed labels
+~~~~~~~~~~~~~~~
+
+A crumb that shows an entity's own name, such as a product page, gives an ``Expression`` as its ``label``.
+It is evaluated against the controller's arguments, like the other expressions of the crumb::
+
+    #[Breadcrumb(label: new Expression('product.name'))]
+
+The value is the label itself, not a translation key, so it needs no ``translationDomain: false``.
+A value that should be translated is returned as a ``TranslatableInterface``, such as a ``TranslatableMessage`` or a translatable enum, and the translator is handed to it.
+An ``Expression`` label therefore takes no ``translationDomain`` and no ``translationParameters``: passing either throws an ``InvalidArgumentException``.
+
+An ``Expression`` label that cannot be evaluated, or whose value is neither a scalar, a ``Stringable`` nor a ``TranslatableInterface``, resolves to an empty label rather than taking the page down.
+This happens to an ancestor whose expression names an argument the current action does not have.
 
 Building the trail at runtime
 -----------------------------

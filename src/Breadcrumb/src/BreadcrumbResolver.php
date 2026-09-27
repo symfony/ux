@@ -14,6 +14,7 @@ namespace Symfony\UX\Breadcrumb;
 use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Contracts\Translation\TranslatableInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\UX\Breadcrumb\Attribute\Breadcrumb;
 
@@ -71,6 +72,10 @@ final class BreadcrumbResolver
      */
     private function label(Breadcrumb $crumb, BreadcrumbTrail $trail): string
     {
+        if ($crumb->label instanceof Expression) {
+            return $this->expressionLabel($crumb->label, $trail);
+        }
+
         if (false === $crumb->translationDomain || null === $this->translator) {
             return $crumb->label;
         }
@@ -86,6 +91,25 @@ final class BreadcrumbResolver
             $parameters,
             $crumb->translationDomain ?? $this->defaultTranslationDomain,
         );
+    }
+
+    /**
+     * The value is the label itself, not a translation key, unless it is a TranslatableInterface.
+     * A value that cannot be evaluated or turned into a string degrades to an empty label.
+     */
+    private function expressionLabel(Expression $label, BreadcrumbTrail $trail): string
+    {
+        try {
+            $value = $this->expressionLanguage->evaluate($label, $trail->context);
+        } catch (\Throwable) {
+            return '';
+        }
+
+        if ($value instanceof TranslatableInterface && null !== $this->translator) {
+            return $value->trans($this->translator);
+        }
+
+        return \is_scalar($value) || $value instanceof \Stringable ? (string) $value : '';
     }
 
     /**

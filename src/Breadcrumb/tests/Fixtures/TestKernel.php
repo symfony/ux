@@ -26,6 +26,7 @@ use Symfony\UX\Breadcrumb\Tests\Fixtures\Controller\DashboardHomeController;
 use Symfony\UX\Breadcrumb\Tests\Fixtures\Controller\PlainController;
 use Symfony\UX\Breadcrumb\Tests\Fixtures\Controller\ProductEditController;
 use Symfony\UX\Breadcrumb\Tests\Fixtures\Controller\ProductIndexController;
+use Symfony\UX\Breadcrumb\Tests\Fixtures\Controller\ProductNameController;
 use Symfony\UX\Breadcrumb\Tests\Fixtures\Controller\ProductPlainController;
 use Symfony\UX\Breadcrumb\Tests\Fixtures\Controller\ProductRedirectController;
 use Symfony\UX\Breadcrumb\Tests\Fixtures\Controller\ProductViewController;
@@ -73,6 +74,7 @@ final class TestKernel extends Kernel
         $routes->add('catalog_view', '/catalog/{slug}')->controller([CatalogController::class, 'view']);
         $routes->add('catalog_edit', '/catalog/{slug}/edit')->controller([CatalogController::class, 'edit']);
         $routes->add('catalog_history', '/catalog/{slug}/history')->controller([CatalogController::class, 'history']);
+        $routes->add('product_name', '/products/{slug}/name')->controller(ProductNameController::class);
         $routes->add('product_plain', '/products/{slug}/plain')->controller(ProductPlainController::class);
         $routes->add('plain', '/plain')->controller(PlainController::class);
     }
@@ -109,6 +111,7 @@ final class TestKernel extends Kernel
                 PlainController::class,
                 ProductEditController::class,
                 ProductIndexController::class,
+                ProductNameController::class,
                 ProductPlainController::class,
                 ProductRedirectController::class,
                 ProductViewController::class,
