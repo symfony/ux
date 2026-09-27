@@ -1,0 +1,2675 @@
+{
+  "source": "packages/parser/__tests__/output.test.ts",
+  "cases": [
+    {
+      "id": "fixture::packages/parser/__tests__/output.test.ts::extract to css output pipeline > arbitrary selectors::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/output.test.ts",
+        "test": "extract to css output pipeline > arbitrary selectors",
+        "line": 949
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          ".closed > &": {
+            "color": "green.100",
+            "_dark": {
+              "color": "green.900"
+            }
+          },
+          "& + &": {
+            "margin": "-2px",
+            "_hover": {
+              "margin": 0
+            }
+          },
+          "&[data-state='open']": {
+            "cursor": "pointer",
+            "_before": {
+              "content": "\"👋\""
+            }
+          }
+        }
+      ],
+      "expected": {
+        "css": "@layer utilities {\n  :is(.\\[\\&_\\+_\\&\\]\\:m_-2px) + :is(.\\[\\&_\\+_\\&\\]\\:m_-2px) {\n    margin: -2px;\n}\n\n  .closed > .\\[\\.closed_\\>_\\&\\]\\:c_green\\.100 {\n    color: var(--colors-green-100);\n}\n\n  .\\[\\&\\[data-state\\=\\'open\\'\\]\\]\\:cursor_pointer[data-state='open'] {\n    cursor: pointer;\n}\n\n  :is(.\\[\\&_\\+_\\&\\]\\:hover\\:m_0) + :is(.\\[\\&_\\+_\\&\\]\\:hover\\:m_0):is(:hover, [data-hover]) {\n    margin: var(--spacing-0);\n}\n\n  [data-theme=dark] .closed > .\\[\\.closed_\\>_\\&\\]\\:dark\\:c_green\\.900,.dark .closed > .\\[\\.closed_\\>_\\&\\]\\:dark\\:c_green\\.900,.closed > .\\[\\.closed_\\>_\\&\\]\\:dark\\:c_green\\.900.dark,.closed > .\\[\\.closed_\\>_\\&\\]\\:dark\\:c_green\\.900[data-theme=dark] {\n    color: var(--colors-green-900);\n}\n\n  .\\[\\&\\[data-state\\=\\'open\\'\\]\\]\\:before\\:content_\\\"👋\\\"[data-state='open']::before {\n    content: \"👋\";\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/output.test.ts::extract to css output pipeline > array syntax - conditional in middle::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/output.test.ts",
+        "test": "extract to css output pipeline > array syntax - conditional in middle",
+        "line": 2452
+      },
+      "userConfig": null,
+      "inputs": [],
+      "expected": {
+        "css": "@layer utilities {\n  .py_2 {\n    padding-block: var(--spacing-2);\n}\n\n  @media screen and (min-width: 40rem) {\n    .sm\\:py_2 {\n      padding-block: var(--spacing-2);\n}\n    .sm\\:py_3 {\n      padding-block: var(--spacing-3);\n}\n}\n\n  @media screen and (min-width: 48rem) {\n    .md\\:py_4 {\n      padding-block: var(--spacing-4);\n}\n}\n}"
+      },
+      "unsupported": "extracted non-css items (jsx-pattern)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/output.test.ts::extract to css output pipeline > array syntax - simple conditional::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/output.test.ts",
+        "test": "extract to css output pipeline > array syntax - simple conditional",
+        "line": 2405
+      },
+      "userConfig": null,
+      "inputs": [],
+      "expected": {
+        "css": "@layer utilities {\n  .pl_0 {\n    padding-left: var(--spacing-0);\n}\n\n  .pl_4 {\n    padding-left: var(--spacing-4);\n}\n}"
+      },
+      "unsupported": "extracted non-css items (jsx-pattern)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/output.test.ts::extract to css output pipeline > array syntax - simple::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/output.test.ts",
+        "test": "extract to css output pipeline > array syntax - simple",
+        "line": 2368
+      },
+      "userConfig": null,
+      "inputs": [],
+      "expected": {
+        "css": "@layer utilities {\n  .pl_0 {\n    padding-left: var(--spacing-0);\n}\n}"
+      },
+      "unsupported": "extracted non-css items (jsx-pattern)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/output.test.ts::extract to css output pipeline > array syntax within config recipes::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/output.test.ts",
+        "test": "extract to css output pipeline > array syntax within config recipes",
+        "line": 2657
+      },
+      "userConfig": {
+        "theme": {
+          "extend": {
+            "recipes": {
+              "card": {
+                "className": "card",
+                "base": {
+                  "color": [
+                    "blue",
+                    "red"
+                  ]
+                },
+                "variants": {
+                  "size": {
+                    "sm": {
+                      "borderRadius": [
+                        "sm"
+                      ],
+                      "padding": [
+                        "2"
+                      ],
+                      "margin": "4"
+                    }
+                  }
+                },
+                "defaultVariants": {
+                  "size": "sm"
+                }
+              }
+            }
+          }
+        }
+      },
+      "configPatch": {
+        "theme": {
+          "recipes": {
+            "card": {
+              "$value": {
+                "className": "card",
+                "base": {
+                  "color": [
+                    "blue",
+                    "red"
+                  ]
+                },
+                "variants": {
+                  "size": {
+                    "sm": {
+                      "borderRadius": [
+                        "sm"
+                      ],
+                      "padding": [
+                        "2"
+                      ],
+                      "margin": "4"
+                    }
+                  }
+                },
+                "defaultVariants": {
+                  "size": "sm"
+                }
+              }
+            }
+          }
+        }
+      },
+      "inputs": [
+        {
+          "fontSize": [
+            2,
+            5
+          ]
+        }
+      ],
+      "expected": {
+        "css": "@layer recipes {\n  @layer _base {\n    .card {\n      color: blue;\n}\n\n    @media screen and (min-width: 40rem) {\n      .card {\n        color: red;\n}\n}\n}\n\n  .card--size_sm {\n    padding: var(--spacing-2);\n    margin: var(--spacing-4);\n    border-radius: var(--radii-sm);\n}\n}\n\n@layer utilities {\n  .fs_2 {\n    font-size: 2px;\n}\n\n  @media screen and (min-width: 40rem) {\n    .sm\\:fs_5 {\n      font-size: 5px;\n}\n}\n}"
+      },
+      "unsupported": "extracted non-css items (recipe)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/output.test.ts::extract to css output pipeline > assets::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/output.test.ts",
+        "test": "extract to css output pipeline > assets",
+        "line": 3491
+      },
+      "userConfig": {
+        "theme": {
+          "tokens": {
+            "assets": {
+              "checkbox": {
+                "value": {
+                  "type": "svg",
+                  "value": "<svg xmlns=\"http://www.w3.org/2000/svg\" fill=\"none\" viewBox=\"0 0 16 16\"><path stroke=\"white\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M4 8h8\"/></svg>"
+                }
+              }
+            }
+          }
+        }
+      },
+      "configPatch": {
+        "theme": {
+          "tokens": {
+            "aspectRatios": null,
+            "borders": null,
+            "easings": null,
+            "durations": null,
+            "radii": null,
+            "fontWeights": null,
+            "lineHeights": null,
+            "fonts": null,
+            "letterSpacings": null,
+            "fontSizes": null,
+            "shadows": null,
+            "colors": null,
+            "blurs": null,
+            "spacing": null,
+            "sizes": null,
+            "animations": null,
+            "assets": {
+              "$value": {
+                "checkbox": {
+                  "value": {
+                    "type": "svg",
+                    "value": "<svg xmlns=\"http://www.w3.org/2000/svg\" fill=\"none\" viewBox=\"0 0 16 16\"><path stroke=\"white\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M4 8h8\"/></svg>"
+                  }
+                }
+              }
+            }
+          },
+          "$order": [
+            "tokens",
+            "keyframes",
+            "breakpoints",
+            "textStyles",
+            "containerSizes",
+            "semanticTokens",
+            "recipes",
+            "slotRecipes"
+          ]
+        }
+      },
+      "inputs": [
+        {
+          "backgroundImage": "checkbox"
+        }
+      ],
+      "expected": {
+        "css": "@layer utilities {\n  .bg-i_checkbox {\n    background-image: var(--assets-checkbox);\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/output.test.ts::extract to css output pipeline > basic usage with multiple style objects::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/output.test.ts",
+        "test": "extract to css output pipeline > basic usage with multiple style objects",
+        "line": 239
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          "mx": "3",
+          "paddingTop": "4"
+        },
+        {
+          "mx": "10",
+          "pt": "6"
+        }
+      ],
+      "expected": {
+        "css": "@layer utilities {\n  .mx_3 {\n    margin-inline: var(--spacing-3);\n}\n\n  .mx_10 {\n    margin-inline: var(--spacing-10);\n}\n\n  .pt_4 {\n    padding-top: var(--spacing-4);\n}\n\n  .pt_6 {\n    padding-top: var(--spacing-6);\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/output.test.ts::extract to css output pipeline > basic usage::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/output.test.ts",
+        "test": "extract to css output pipeline > basic usage",
+        "line": 93
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          "position": "relative",
+          "inset": 0,
+          "color": "blue.100",
+          "backgroundImage": "url(\"https://raw.githubusercontent.com/chakra-ui/chakra-ui/main/media/logo-colored@2x.png?raw=true\")",
+          "border": "1px solid token(colors.yellow.100)",
+          "--shadow": {
+            "base": "colors.orange.100",
+            "_dark": "colors.gray.800"
+          },
+          "boxShadow": "0 0 0 4px var(--shadow)",
+          "outlineColor": "var(--colors-pink-200)"
+        }
+      ],
+      "expected": {
+        "css": "@layer utilities {\n  .\\--shadow_colors\\.orange\\.100 {\n    --shadow: var(--colors-orange-100);\n}\n\n  .inset_0 {\n    inset: var(--spacing-0);\n}\n\n  .bd_1px_solid_token\\(colors\\.yellow\\.100\\) {\n    border: 1px solid var(--colors-yellow-100);\n}\n\n  .p_2 {\n    padding: var(--spacing-2);\n}\n\n  .pos_relative {\n    position: relative;\n}\n\n  .c_blue\\.100 {\n    color: var(--colors-blue-100);\n}\n\n  .bg-i_url\\(\\\"https\\:\\/\\/raw\\.githubusercontent\\.com\\/chakra-ui\\/chakra-ui\\/main\\/media\\/logo-colored\\@2x\\.png\\?raw\\=true\\\"\\) {\n    background-image: url(\"https://raw.githubusercontent.com/chakra-ui/chakra-ui/main/media/logo-colored@2x.png?raw=true\");\n}\n\n  .bx-sh_0_0_0_4px_var\\(--shadow\\) {\n    box-shadow: 0 0 0 4px var(--shadow);\n}\n\n  .ring-c_var\\(--colors-pink-200\\) {\n    outline-color: var(--colors-pink-200);\n}\n\n  .debug_true {\n    outline: 1px solid blue !important;\n}\n\n  .debug_true>* {\n    outline: 1px solid red !important;\n}\n\n  [data-theme=dark] .dark\\:--shadow_colors\\.gray\\.800,.dark .dark\\:--shadow_colors\\.gray\\.800,.dark\\:--shadow_colors\\.gray\\.800.dark,.dark\\:--shadow_colors\\.gray\\.800[data-theme=dark] {\n    --shadow: var(--colors-gray-800);\n}\n\n  .hover\\:c_\\#2ecc71:is(:hover, [data-hover]) {\n    color: #2ecc71;\n}\n\n  .hover\\:bg-c_var\\(--some-bg\\):is(:hover, [data-hover]) {\n    background-color: var(--some-bg);\n}\n\n  @media screen and (min-width: 48rem) {\n    .md\\:p_4 {\n      padding: var(--spacing-4);\n}\n    .md\\:m_1px {\n      margin: 1px;\n}\n    .md\\:c_red\\.100 {\n      color: var(--colors-red-100);\n}\n    [data-theme=dark] .md\\:dark\\:hover\\:m_-2:is(:hover, [data-hover]),.dark .md\\:dark\\:hover\\:m_-2:is(:hover, [data-hover]),.md\\:dark\\:hover\\:m_-2.dark:is(:hover, [data-hover]),.md\\:dark\\:hover\\:m_-2[data-theme=dark]:is(:hover, [data-hover]) {\n      margin: calc(var(--spacing-2) * -1);\n}\n}\n\n  @media screen and (min-width: 48rem) {\n    @media screen and (min-width: 40rem) {\n      .md\\:sm\\:m_4px {\n        margin: 4px;\n}\n}\n}\n}"
+      },
+      "unsupported": "extracted non-css items (jsx-factory)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/output.test.ts::extract to css output pipeline > colorPalette with DEFAULT::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/output.test.ts",
+        "test": "extract to css output pipeline > colorPalette with DEFAULT",
+        "line": 3392
+      },
+      "userConfig": {
+        "theme": {
+          "extend": {
+            "semanticTokens": {
+              "colors": {
+                "bg": {
+                  "primary": {
+                    "DEFAULT": {
+                      "value": "{colors.yellow.500}"
+                    },
+                    "base": {
+                      "value": "{colors.yellow.500}"
+                    },
+                    "hover": {
+                      "value": "{colors.yellow.300}"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "configPatch": {
+        "theme": {
+          "semanticTokens": {
+            "colors": {
+              "bg": {
+                "$value": {
+                  "primary": {
+                    "DEFAULT": {
+                      "value": "{colors.yellow.500}"
+                    },
+                    "base": {
+                      "value": "{colors.yellow.500}"
+                    },
+                    "hover": {
+                      "value": "{colors.yellow.300}"
+                    }
+                  }
+                }
+              }
+            },
+            "$order": [
+              "spacing",
+              "colors"
+            ]
+          }
+        }
+      },
+      "inputs": [
+        {
+          "colorPalette": "bg.primary",
+          "backgroundColor": "colorPalette"
+        }
+      ],
+      "expected": {
+        "css": "@layer utilities {\n  .color-palette_bg\\.primary {\n    --colors-color-palette: var(--colors-bg-primary);\n    --colors-color-palette-base: var(--colors-bg-primary-base);\n    --colors-color-palette-hover: var(--colors-bg-primary-hover);\n}\n\n  .bg-c_colorPalette {\n    background-color: var(--colors-color-palette);\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/output.test.ts::extract to css output pipeline > colorPalette::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/output.test.ts",
+        "test": "extract to css output pipeline > colorPalette",
+        "line": 1020
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          "colorPalette": "blue",
+          "bg": "colorPalette.100",
+          "_hover": {
+            "color": "colorPalette.300"
+          }
+        }
+      ],
+      "expected": {
+        "css": "@layer utilities {\n  .bg_colorPalette\\.100 {\n    background: var(--colors-color-palette-100);\n}\n\n  .color-palette_blue {\n    --colors-color-palette-50: var(--colors-blue-50);\n    --colors-color-palette-100: var(--colors-blue-100);\n    --colors-color-palette-200: var(--colors-blue-200);\n    --colors-color-palette-300: var(--colors-blue-300);\n    --colors-color-palette-400: var(--colors-blue-400);\n    --colors-color-palette-500: var(--colors-blue-500);\n    --colors-color-palette-600: var(--colors-blue-600);\n    --colors-color-palette-700: var(--colors-blue-700);\n    --colors-color-palette-800: var(--colors-blue-800);\n    --colors-color-palette-900: var(--colors-blue-900);\n    --colors-color-palette-950: var(--colors-blue-950);\n}\n\n  .hover\\:c_colorPalette\\.300:is(:hover, [data-hover]) {\n    color: var(--colors-color-palette-300);\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/output.test.ts::extract to css output pipeline > config.outdir detection in nested folder with baseUrl::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/output.test.ts",
+        "test": "extract to css output pipeline > config.outdir detection in nested folder with baseUrl",
+        "line": 3891
+      },
+      "userConfig": {
+        "outdir": "./src/styled-system"
+      },
+      "configPatch": {
+        "outdir": {
+          "$value": "./src/styled-system"
+        },
+        "tsconfig": {
+          "$value": {
+            "compilerOptions": {
+              "baseUrl": "./src"
+            }
+          }
+        }
+      },
+      "inputs": [],
+      "expected": {
+        "css": "@layer utilities {\n  .p_4 {\n    padding: var(--spacing-4);\n}\n\n  .li-t_disc {\n    list-style-type: disc;\n}\n\n  .li-t_decimal {\n    list-style-type: decimal;\n}\n\n  .bd-l-w_4px {\n    border-left-width: 4px;\n}\n\n  .border-left-style_solid {\n    border-left-style: solid;\n}\n\n  .bd-l-c_border\\.default {\n    border-left-color: border.default;\n}\n\n  .pl_4 {\n    padding-left: var(--spacing-4);\n}\n}"
+      },
+      "unsupported": "extracted non-css items (jsx, jsx-factory)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/output.test.ts::extract to css output pipeline > config.outdir detection with baseUrl::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/output.test.ts",
+        "test": "extract to css output pipeline > config.outdir detection with baseUrl",
+        "line": 3772
+      },
+      "userConfig": {
+        "outdir": "./styled-system"
+      },
+      "configPatch": {
+        "outdir": {
+          "$value": "./styled-system"
+        },
+        "tsconfig": {
+          "$value": {
+            "compilerOptions": {
+              "baseUrl": "."
+            }
+          }
+        }
+      },
+      "inputs": [],
+      "expected": {
+        "css": "@layer utilities {\n  .p_4 {\n    padding: var(--spacing-4);\n}\n\n  .li-t_disc {\n    list-style-type: disc;\n}\n\n  .li-t_decimal {\n    list-style-type: decimal;\n}\n\n  .bd-l-w_4px {\n    border-left-width: 4px;\n}\n\n  .border-left-style_solid {\n    border-left-style: solid;\n}\n\n  .bd-l-c_border\\.default {\n    border-left-color: border.default;\n}\n\n  .pl_4 {\n    padding-left: var(--spacing-4);\n}\n}"
+      },
+      "unsupported": "extracted non-css items (jsx, jsx-factory)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/output.test.ts::extract to css output pipeline > css with base::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/output.test.ts",
+        "test": "extract to css output pipeline > css with base",
+        "line": 15
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          "base": {
+            "color": "blue"
+          },
+          "md": {
+            "color": "red"
+          }
+        }
+      ],
+      "expected": {
+        "css": "@layer utilities {\n  .c_blue {\n    color: blue;\n}\n\n  @media screen and (min-width: 48rem) {\n    .md\\:c_red {\n      color: red;\n}\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/output.test.ts::extract to css output pipeline > custom matchTag in extend mode preserves panda component matching::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/output.test.ts",
+        "test": "extract to css output pipeline > custom matchTag in extend mode preserves panda component matching",
+        "line": 3213
+      },
+      "unsupported": "config hooks"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/output.test.ts::extract to css output pipeline > custom matchTag in override mode controls panda component matching::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/output.test.ts",
+        "test": "extract to css output pipeline > custom matchTag in override mode controls panda component matching",
+        "line": 3259
+      },
+      "unsupported": "config hooks"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/output.test.ts::extract to css output pipeline > custom matchTag::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/output.test.ts",
+        "test": "extract to css output pipeline > custom matchTag",
+        "line": 3146
+      },
+      "unsupported": "config hooks"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/output.test.ts::extract to css output pipeline > cva and factory recipes::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/output.test.ts",
+        "test": "extract to css output pipeline > cva and factory recipes",
+        "line": 1509
+      },
+      "userConfig": null,
+      "inputs": [
+        {}
+      ],
+      "expected": {
+        "css": "@layer utilities {\n  .bg_red\\.900 {\n    background: var(--colors-red-900);\n}\n\n  .c_blue\\.100 {\n    color: var(--colors-blue-100);\n}\n\n  .c_green\\.100 {\n    color: var(--colors-green-100);\n}\n\n  .c_rose\\.100 {\n    color: var(--colors-rose-100);\n}\n\n  .c_sky\\.100 {\n    color: var(--colors-sky-100);\n}\n}"
+      },
+      "unsupported": "extracted non-css items (cva, jsx)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/output.test.ts::extract to css output pipeline > default matchTag / matchTagProp::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/output.test.ts",
+        "test": "extract to css output pipeline > default matchTag / matchTagProp",
+        "line": 3070
+      },
+      "userConfig": null,
+      "inputs": [],
+      "expected": {
+        "css": "@layer utilities {\n  .p_4 {\n    padding: var(--spacing-4);\n}\n\n  .gap_8px {\n    gap: 8px;\n}\n\n  .d_flex {\n    display: flex;\n}\n\n  .flex-d_column {\n    flex-direction: column;\n}\n\n  .fs_12px {\n    font-size: 12px;\n}\n\n  .content_this_will_be_extrated {\n    content: this will be extrated;\n}\n}"
+      },
+      "unsupported": "extracted non-css items (jsx-pattern, jsx)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/output.test.ts::extract to css output pipeline > empty rules::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/output.test.ts",
+        "test": "extract to css output pipeline > empty rules",
+        "line": 656
+      },
+      "userConfig": null,
+      "inputs": [],
+      "expected": {
+        "css": ""
+      },
+      "unsupported": "extracted non-css items (jsx)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/output.test.ts::extract to css output pipeline > extract aliased {xxx}.raw::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/output.test.ts",
+        "test": "extract to css output pipeline > extract aliased {xxx}.raw",
+        "line": 3033
+      },
+      "userConfig": null,
+      "inputs": [],
+      "expected": {
+        "css": "@layer recipes {\n  .card--rounded_true {\n    border-radius: 0.375rem;\n}\n}"
+      },
+      "unsupported": "extracted non-css items (recipe)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/output.test.ts::extract to css output pipeline > factory css - tagged template literal::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/output.test.ts",
+        "test": "extract to css output pipeline > factory css - tagged template literal",
+        "line": 1438
+      },
+      "userConfig": {
+        "syntax": "template-literal"
+      },
+      "configPatch": {
+        "syntax": {
+          "$value": "template-literal"
+        }
+      },
+      "inputs": [
+        {
+          "color": "var(--colors-purple-100)"
+        }
+      ],
+      "expected": {
+        "css": "@layer utilities {\n  .color_var\\(--colors-purple-100\\) {\n    color: var(--colors-purple-100);\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/output.test.ts::extract to css output pipeline > factory css::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/output.test.ts",
+        "test": "extract to css output pipeline > factory css",
+        "line": 1392
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          "color": "red.100"
+        },
+        {
+          "color": "yellow.100"
+        }
+      ],
+      "expected": {
+        "css": "@layer utilities {\n  .c_red\\.100 {\n    color: var(--colors-red-100);\n}\n\n  .c_yellow\\.100 {\n    color: var(--colors-yellow-100);\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/output.test.ts::extract to css output pipeline > flat and nested object on same key::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/output.test.ts",
+        "test": "extract to css output pipeline > flat and nested object on same key",
+        "line": 3536
+      },
+      "userConfig": {
+        "presets": [
+          {
+            "name": "preset",
+            "theme": {
+              "extend": {
+                "tokens": {
+                  "colors": {
+                    "black": {
+                      "value": "black"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "theme": {
+          "extend": {
+            "tokens": {
+              "colors": {
+                "black": {
+                  "0": {
+                    "value": "black"
+                  },
+                  "10": {
+                    "value": "black/10"
+                  },
+                  "20": {
+                    "value": "black/20"
+                  },
+                  "30": {
+                    "value": "black/30"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "configPatch": {
+        "theme": {
+          "tokens": {
+            "colors": {
+              "black": {
+                "0": {
+                  "$value": {
+                    "value": "black"
+                  }
+                },
+                "10": {
+                  "$value": {
+                    "value": "black/10"
+                  }
+                },
+                "20": {
+                  "$value": {
+                    "value": "black/20"
+                  }
+                },
+                "30": {
+                  "$value": {
+                    "value": "black/30"
+                  }
+                },
+                "value": null,
+                "DEFAULT": {
+                  "$value": {
+                    "value": "#000"
+                  }
+                }
+              },
+              "$order": [
+                "current",
+                "white",
+                "transparent",
+                "rose",
+                "pink",
+                "fuchsia",
+                "purple",
+                "violet",
+                "indigo",
+                "blue",
+                "sky",
+                "cyan",
+                "teal",
+                "emerald",
+                "green",
+                "lime",
+                "yellow",
+                "amber",
+                "orange",
+                "red",
+                "neutral",
+                "stone",
+                "zinc",
+                "gray",
+                "slate",
+                "deep",
+                "black"
+              ]
+            },
+            "$order": [
+              "aspectRatios",
+              "borders",
+              "easings",
+              "durations",
+              "radii",
+              "fontWeights",
+              "lineHeights",
+              "fonts",
+              "letterSpacings",
+              "fontSizes",
+              "shadows",
+              "blurs",
+              "spacing",
+              "sizes",
+              "animations",
+              "colors"
+            ]
+          }
+        }
+      },
+      "inputs": [
+        {
+          "color": "black",
+          "backgroundColor": "black.10",
+          "borderColor": "black.20"
+        }
+      ],
+      "expected": {
+        "css": "@layer utilities {\n  .bd-c_black\\.20 {\n    border-color: var(--colors-black-20);\n}\n\n  .c_black {\n    color: var(--colors-black);\n}\n\n  .bg-c_black\\.10 {\n    background-color: var(--colors-black-10);\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/output.test.ts::extract to css output pipeline > grid pattern minChildWidth not interpreted as token value::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/output.test.ts",
+        "test": "extract to css output pipeline > grid pattern minChildWidth not interpreted as token value",
+        "line": 2753
+      },
+      "userConfig": null,
+      "inputs": [],
+      "expected": {
+        "css": "@layer utilities {\n  .gap_8 {\n    gap: var(--spacing-8);\n}\n\n  .d_grid {\n    display: grid;\n}\n\n  .grid-tc_repeat\\(auto-fit\\,_minmax\\(80px\\,_1fr\\)\\) {\n    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));\n}\n\n  .grid-tc_repeat\\(auto-fit\\,_minmax\\(token\\(sizes\\.20\\,_20\\)\\,_1fr\\)\\) {\n    grid-template-columns: repeat(auto-fit, minmax(var(--sizes-20, 20), 1fr));\n}\n}"
+      },
+      "unsupported": "extracted non-css items (pattern)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/output.test.ts::extract to css output pipeline > import map as string::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/output.test.ts",
+        "test": "extract to css output pipeline > import map as string",
+        "line": 2250
+      },
+      "userConfig": {
+        "outdir": "anywhere",
+        "importMap": "string-import-map"
+      },
+      "configPatch": {
+        "outdir": {
+          "$value": "anywhere"
+        },
+        "importMap": {
+          "$value": "string-import-map"
+        }
+      },
+      "inputs": [
+        {
+          "mx": "3"
+        }
+      ],
+      "expected": {
+        "css": "@layer recipes {\n  @layer _base {\n    .buttonStyle {\n      display: inline-flex;\n      align-items: center;\n      justify-content: center;\n}\n\n    .buttonStyle:is(:hover, [data-hover]) {\n      background-color: var(--colors-red-200);\n      font-size: var(--font-sizes-3xl);\n      color: var(--colors-white);\n}\n}\n\n  .buttonStyle--size_md {\n    padding: 0 0.75rem;\n    height: 3rem;\n    min-width: 3rem;\n}\n\n  .buttonStyle--variant_solid {\n    background-color: blue;\n    color: var(--colors-white);\n}\n\n  .buttonStyle--variant_solid[data-disabled] {\n    background-color: gray;\n    color: var(--colors-black);\n    font-size: var(--font-sizes-2xl);\n}\n\n  .buttonStyle--variant_solid:is(:hover, [data-hover]) {\n    background-color: darkblue;\n}\n}\n\n@layer utilities {\n  .mx_3 {\n    margin-inline: var(--spacing-3);\n}\n\n  .gap_8px {\n    gap: 8px;\n}\n\n  .d_flex {\n    display: flex;\n}\n\n  .flex-d_column {\n    flex-direction: column;\n}\n\n  .c_red {\n    color: red;\n}\n}"
+      },
+      "unsupported": "extracted non-css items (pattern, recipe, jsx-pattern)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/output.test.ts::extract to css output pipeline > import map::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/output.test.ts",
+        "test": "extract to css output pipeline > import map",
+        "line": 2118
+      },
+      "userConfig": {
+        "outdir": "anywhere",
+        "importMap": {
+          "css": "controlled-import-map/css",
+          "recipes": "controlled-import-map/common",
+          "patterns": "controlled-import-map/common",
+          "jsx": "controlled-import-map"
+        }
+      },
+      "configPatch": {
+        "outdir": {
+          "$value": "anywhere"
+        },
+        "importMap": {
+          "$value": {
+            "css": "controlled-import-map/css",
+            "recipes": "controlled-import-map/common",
+            "patterns": "controlled-import-map/common",
+            "jsx": "controlled-import-map"
+          }
+        }
+      },
+      "inputs": [
+        {
+          "mx": "3"
+        }
+      ],
+      "expected": {
+        "css": "@layer recipes {\n  @layer _base {\n    .buttonStyle {\n      display: inline-flex;\n      align-items: center;\n      justify-content: center;\n}\n\n    .buttonStyle:is(:hover, [data-hover]) {\n      background-color: var(--colors-red-200);\n      font-size: var(--font-sizes-3xl);\n      color: var(--colors-white);\n}\n}\n\n  .buttonStyle--size_md {\n    padding: 0 0.75rem;\n    height: 3rem;\n    min-width: 3rem;\n}\n\n  .buttonStyle--variant_solid {\n    background-color: blue;\n    color: var(--colors-white);\n}\n\n  .buttonStyle--variant_solid[data-disabled] {\n    background-color: gray;\n    color: var(--colors-black);\n    font-size: var(--font-sizes-2xl);\n}\n\n  .buttonStyle--variant_solid:is(:hover, [data-hover]) {\n    background-color: darkblue;\n}\n}\n\n@layer utilities {\n  .mx_3 {\n    margin-inline: var(--spacing-3);\n}\n\n  .gap_8px {\n    gap: 8px;\n}\n\n  .d_flex {\n    display: flex;\n}\n\n  .flex-d_column {\n    flex-direction: column;\n}\n\n  .c_red {\n    color: red;\n}\n}"
+      },
+      "unsupported": "extracted non-css items (pattern, recipe, jsx-pattern)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/output.test.ts::extract to css output pipeline > issue 1062: expand colorPalette flexibility > should extract color palette with more than one level of nesting::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/output.test.ts",
+        "test": "extract to css output pipeline > issue 1062: expand colorPalette flexibility > should extract color palette with more than one level of nesting",
+        "line": 1109
+      },
+      "userConfig": {
+        "theme": {
+          "extend": {
+            "semanticTokens": {
+              "colors": {
+                "button": {
+                  "dark": {
+                    "value": "navy"
+                  },
+                  "light": {
+                    "DEFAULT": {
+                      "value": "skyblue"
+                    },
+                    "accent": {
+                      "DEFAULT": {
+                        "value": "cyan"
+                      },
+                      "secondary": {
+                        "value": "blue"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "configPatch": {
+        "theme": {
+          "semanticTokens": {
+            "colors": {
+              "button": {
+                "dark": {
+                  "$value": {
+                    "value": "navy"
+                  }
+                },
+                "light": {
+                  "$value": {
+                    "DEFAULT": {
+                      "value": "skyblue"
+                    },
+                    "accent": {
+                      "DEFAULT": {
+                        "value": "cyan"
+                      },
+                      "secondary": {
+                        "value": "blue"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "$order": [
+              "spacing",
+              "colors"
+            ]
+          }
+        }
+      },
+      "inputs": [
+        {
+          "colorPalette": "button",
+          "color": "colorPalette.light",
+          "backgroundColor": "colorPalette.dark",
+          "_hover": {
+            "color": "colorPalette.light.accent",
+            "background": "colorPalette.light.accent.secondary"
+          }
+        },
+        {
+          "colorPalette": "button.light",
+          "color": "colorPalette.accent",
+          "background": "colorPalette.accent.secondary"
+        },
+        {
+          "colorPalette": "button.light.accent",
+          "color": "colorPalette.secondary"
+        }
+      ],
+      "expected": {
+        "css": "@layer utilities {\n  .bg_colorPalette\\.accent\\.secondary {\n    background: var(--colors-color-palette-accent-secondary);\n}\n\n  .color-palette_button {\n    --colors-color-palette-thick: var(--colors-button-thick);\n    --colors-color-palette-card-body: var(--colors-button-card-body);\n    --colors-color-palette-card-heading: var(--colors-button-card-heading);\n    --colors-color-palette-dark: var(--colors-button-dark);\n    --colors-color-palette-light: var(--colors-button-light);\n    --colors-color-palette-light-accent: var(--colors-button-light-accent);\n    --colors-color-palette-light-accent-secondary: var(--colors-button-light-accent-secondary);\n}\n\n  .c_colorPalette\\.light {\n    color: var(--colors-color-palette-light);\n}\n\n  .bg-c_colorPalette\\.dark {\n    background-color: var(--colors-color-palette-dark);\n}\n\n  .color-palette_button\\.light {\n    --colors-color-palette: var(--colors-button-light);\n    --colors-color-palette-accent: var(--colors-button-light-accent);\n    --colors-color-palette-accent-secondary: var(--colors-button-light-accent-secondary);\n}\n\n  .c_colorPalette\\.accent {\n    color: var(--colors-color-palette-accent);\n}\n\n  .color-palette_button\\.light\\.accent {\n    --colors-color-palette: var(--colors-button-light-accent);\n    --colors-color-palette-secondary: var(--colors-button-light-accent-secondary);\n}\n\n  .c_colorPalette\\.secondary {\n    color: var(--colors-color-palette-secondary);\n}\n\n  .hover\\:bg_colorPalette\\.light\\.accent\\.secondary:is(:hover, [data-hover]) {\n    background: var(--colors-color-palette-light-accent-secondary);\n}\n\n  .hover\\:c_colorPalette\\.light\\.accent:is(:hover, [data-hover]) {\n    color: var(--colors-color-palette-light-accent);\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/output.test.ts::extract to css output pipeline > jsx patterns + custom wrapper::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/output.test.ts",
+        "test": "extract to css output pipeline > jsx patterns + custom wrapper",
+        "line": 1316
+      },
+      "userConfig": {
+        "patterns": {
+          "extend": {
+            "stack": {
+              "jsx": [
+                "CustomStack"
+              ]
+            }
+          }
+        }
+      },
+      "configPatch": {},
+      "inputs": [],
+      "expected": {
+        "css": "@layer utilities {\n  .gap_8px {\n    gap: 8px;\n}\n\n  .d_flex {\n    display: flex;\n}\n\n  .flex-d_column {\n    flex-direction: column;\n}\n\n  .ai_center {\n    align-items: center;\n}\n\n  .ai_flex-end {\n    align-items: flex-end;\n}\n}"
+      },
+      "unsupported": "extracted non-css items (pattern, jsx-pattern)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/output.test.ts::extract to css output pipeline > multiple css alias::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/output.test.ts",
+        "test": "extract to css output pipeline > multiple css alias",
+        "line": 3302
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          "display": "flex"
+        },
+        {
+          "flexDirection": "column"
+        }
+      ],
+      "expected": {
+        "css": "@layer utilities {\n  .d_flex {\n    display: flex;\n}\n\n  .flex-d_column {\n    flex-direction: column;\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/output.test.ts::extract to css output pipeline > multiple recipes on 1 component using {recipe}.raw::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/output.test.ts",
+        "test": "extract to css output pipeline > multiple recipes on 1 component using {recipe}.raw",
+        "line": 507
+      },
+      "userConfig": {
+        "theme": {
+          "extend": {
+            "recipes": {
+              "pinkRecipe": {
+                "className": "pinkRecipe",
+                "jsx": [
+                  "ComponentWithMultipleRecipes"
+                ],
+                "base": {
+                  "color": "pink.100"
+                },
+                "variants": {
+                  "variant": {
+                    "small": {
+                      "fontSize": "sm"
+                    }
+                  }
+                }
+              },
+              "sizeRecipe": {
+                "className": "sizeRecipe",
+                "jsx": [
+                  "ComponentWithMultipleRecipes"
+                ],
+                "variants": {
+                  "size": {
+                    "medium": {
+                      "fontSize": "md"
+                    },
+                    "large": {
+                      "fontSize": "lg"
+                    }
+                  }
+                }
+              },
+              "bgRecipe": {
+                "className": "bgRecipe",
+                "jsx": [
+                  "ComponentWithMultipleRecipes"
+                ],
+                "variants": {
+                  "color": {
+                    "yellow": {
+                      "backgroundColor": "yellow.100"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "configPatch": {
+        "theme": {
+          "recipes": {
+            "pinkRecipe": {
+              "$value": {
+                "className": "pinkRecipe",
+                "jsx": [
+                  "ComponentWithMultipleRecipes"
+                ],
+                "base": {
+                  "color": "pink.100"
+                },
+                "variants": {
+                  "variant": {
+                    "small": {
+                      "fontSize": "sm"
+                    }
+                  }
+                }
+              }
+            },
+            "sizeRecipe": {
+              "$value": {
+                "className": "sizeRecipe",
+                "jsx": [
+                  "ComponentWithMultipleRecipes"
+                ],
+                "variants": {
+                  "size": {
+                    "medium": {
+                      "fontSize": "md"
+                    },
+                    "large": {
+                      "fontSize": "lg"
+                    }
+                  }
+                }
+              }
+            },
+            "bgRecipe": {
+              "$value": {
+                "className": "bgRecipe",
+                "jsx": [
+                  "ComponentWithMultipleRecipes"
+                ],
+                "variants": {
+                  "color": {
+                    "yellow": {
+                      "backgroundColor": "yellow.100"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "inputs": [],
+      "expected": {
+        "css": "@layer recipes {\n  @layer _base {\n    .pinkRecipe {\n      color: var(--colors-pink-100);\n}\n}\n\n  .pinkRecipe--variant_small {\n    font-size: var(--font-sizes-sm);\n}\n\n  .sizeRecipe--size_medium {\n    font-size: var(--font-sizes-md);\n}\n\n  .bgRecipe--color_yellow {\n    background-color: var(--colors-yellow-100);\n}\n}"
+      },
+      "unsupported": "extracted non-css items (recipe, jsx-recipe)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/output.test.ts::extract to css output pipeline > multiple recipes on 1 component::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/output.test.ts",
+        "test": "extract to css output pipeline > multiple recipes on 1 component",
+        "line": 297
+      },
+      "userConfig": {
+        "theme": {
+          "extend": {
+            "recipes": {
+              "pinkRecipe": {
+                "className": "pinkRecipe",
+                "jsx": [
+                  "ComponentWithMultipleRecipes"
+                ],
+                "base": {
+                  "color": "pink.100"
+                },
+                "variants": {
+                  "variant": {
+                    "small": {
+                      "fontSize": "sm"
+                    }
+                  }
+                }
+              },
+              "greenRecipe": {
+                "className": "greenRecipe",
+                "jsx": [
+                  "ComponentWithMultipleRecipes"
+                ],
+                "base": {
+                  "color": "green.100"
+                },
+                "variants": {
+                  "variant": {
+                    "small": {
+                      "fontSize": "sm"
+                    }
+                  }
+                }
+              },
+              "blueRecipe": {
+                "className": "blueRecipe",
+                "jsx": [
+                  "ComponentWithMultipleRecipes"
+                ],
+                "base": {
+                  "color": "blue.100"
+                },
+                "variants": {
+                  "variant": {
+                    "small": {
+                      "fontSize": "sm"
+                    }
+                  }
+                }
+              },
+              "sizeRecipe": {
+                "className": "sizeRecipe",
+                "jsx": [
+                  "ComponentWithMultipleRecipes"
+                ],
+                "variants": {
+                  "size": {
+                    "medium": {
+                      "fontSize": "md"
+                    },
+                    "large": {
+                      "fontSize": "lg"
+                    }
+                  }
+                }
+              },
+              "bgRecipe": {
+                "className": "bgRecipe",
+                "jsx": [
+                  "ComponentWithMultipleRecipes"
+                ],
+                "variants": {
+                  "color": {
+                    "yellow": {
+                      "backgroundColor": "yellow.100"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "configPatch": {
+        "theme": {
+          "recipes": {
+            "pinkRecipe": {
+              "$value": {
+                "className": "pinkRecipe",
+                "jsx": [
+                  "ComponentWithMultipleRecipes"
+                ],
+                "base": {
+                  "color": "pink.100"
+                },
+                "variants": {
+                  "variant": {
+                    "small": {
+                      "fontSize": "sm"
+                    }
+                  }
+                }
+              }
+            },
+            "greenRecipe": {
+              "$value": {
+                "className": "greenRecipe",
+                "jsx": [
+                  "ComponentWithMultipleRecipes"
+                ],
+                "base": {
+                  "color": "green.100"
+                },
+                "variants": {
+                  "variant": {
+                    "small": {
+                      "fontSize": "sm"
+                    }
+                  }
+                }
+              }
+            },
+            "blueRecipe": {
+              "$value": {
+                "className": "blueRecipe",
+                "jsx": [
+                  "ComponentWithMultipleRecipes"
+                ],
+                "base": {
+                  "color": "blue.100"
+                },
+                "variants": {
+                  "variant": {
+                    "small": {
+                      "fontSize": "sm"
+                    }
+                  }
+                }
+              }
+            },
+            "sizeRecipe": {
+              "$value": {
+                "className": "sizeRecipe",
+                "jsx": [
+                  "ComponentWithMultipleRecipes"
+                ],
+                "variants": {
+                  "size": {
+                    "medium": {
+                      "fontSize": "md"
+                    },
+                    "large": {
+                      "fontSize": "lg"
+                    }
+                  }
+                }
+              }
+            },
+            "bgRecipe": {
+              "$value": {
+                "className": "bgRecipe",
+                "jsx": [
+                  "ComponentWithMultipleRecipes"
+                ],
+                "variants": {
+                  "color": {
+                    "yellow": {
+                      "backgroundColor": "yellow.100"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "inputs": [],
+      "expected": {
+        "css": "@layer recipes {\n  @layer _base {\n    .pinkRecipe {\n      color: var(--colors-pink-100);\n}\n\n    .greenRecipe {\n      color: var(--colors-green-100);\n}\n\n    .blueRecipe {\n      color: var(--colors-blue-100);\n}\n}\n\n  .pinkRecipe--variant_small,.greenRecipe--variant_small,.blueRecipe--variant_small {\n    font-size: var(--font-sizes-sm);\n}\n\n  .sizeRecipe--size_medium {\n    font-size: var(--font-sizes-md);\n}\n\n  .bgRecipe--color_yellow {\n    background-color: var(--colors-yellow-100);\n}\n}\n\n@layer utilities {\n  .c_yellow {\n    color: yellow;\n}\n}"
+      },
+      "unsupported": "extracted non-css items (recipe, jsx-recipe)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/output.test.ts::extract to css output pipeline > patterns::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/output.test.ts",
+        "test": "extract to css output pipeline > patterns",
+        "line": 1247
+      },
+      "userConfig": null,
+      "inputs": [],
+      "expected": {
+        "css": "@layer utilities {\n  .gap_8px {\n    gap: 8px;\n}\n\n  .d_flex {\n    display: flex;\n}\n\n  .flex-d_column {\n    flex-direction: column;\n}\n\n  .ai_center {\n    align-items: center;\n}\n\n  .jc_flex-end {\n    justify-content: flex-end;\n}\n\n  .flex-d_row {\n    flex-direction: row;\n}\n}"
+      },
+      "unsupported": "extracted non-css items (pattern)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/output.test.ts::extract to css output pipeline > recipe issue::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/output.test.ts",
+        "test": "extract to css output pipeline > recipe issue",
+        "line": 2963
+      },
+      "userConfig": null,
+      "inputs": [
+        {},
+        {}
+      ],
+      "expected": {
+        "css": "@layer recipes {\n  .card--rounded_true {\n    border-radius: 0.375rem;\n}\n}"
+      },
+      "unsupported": "extracted non-css items (jsx-recipe, jsx)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/output.test.ts::extract to css output pipeline > recipes default className based on key::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/output.test.ts",
+        "test": "extract to css output pipeline > recipes default className based on key",
+        "line": 3988
+      },
+      "userConfig": {
+        "theme": {
+          "extend": {
+            "recipes": {
+              "testRecipe": {
+                "base": {
+                  "display": "flex"
+                }
+              }
+            }
+          }
+        }
+      },
+      "configPatch": {
+        "theme": {
+          "recipes": {
+            "testRecipe": {
+              "$value": {
+                "base": {
+                  "display": "flex"
+                }
+              }
+            }
+          }
+        }
+      },
+      "inputs": [],
+      "expected": {
+        "css": "@layer recipes {\n  @layer _base {\n    .testRecipe {\n      display: flex;\n}\n    }\n}"
+      },
+      "unsupported": "extracted non-css items (recipe)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/output.test.ts::extract to css output pipeline > runtime conditions::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/output.test.ts",
+        "test": "extract to css output pipeline > runtime conditions",
+        "line": 891
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          "color": "blue.100"
+        },
+        {
+          "color": "red.100"
+        },
+        {}
+      ],
+      "expected": {
+        "css": "@layer utilities {\n  .c_blue\\.100 {\n    color: var(--colors-blue-100);\n}\n\n  .c_red\\.100 {\n    color: var(--colors-red-100);\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/output.test.ts::extract to css output pipeline > should allow JSX props along with recipe components::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/output.test.ts",
+        "test": "extract to css output pipeline > should allow JSX props along with recipe components",
+        "line": 1822
+      },
+      "userConfig": {
+        "outdir": "styled-system",
+        "jsxFactory": "styled",
+        "theme": {
+          "extend": {
+            "recipes": {
+              "button": {
+                "className": "my-button",
+                "jsx": [
+                  {}
+                ]
+              }
+            }
+          }
+        }
+      },
+      "configPatch": {
+        "theme": {
+          "recipes": {
+            "button": {
+              "$value": {
+                "className": "my-button",
+                "jsx": [
+                  {}
+                ]
+              }
+            }
+          }
+        }
+      },
+      "inputs": [],
+      "expected": {
+        "css": "@layer utilities {\n  .p_10 {\n    padding: var(--spacing-10);\n}\n\n  .bg-c_tomato {\n    background-color: tomato;\n}\n\n  .bg-c_yellow {\n    background-color: yellow;\n}\n\n  .c_pink {\n    color: pink;\n}\n\n  .c_purple {\n    color: purple;\n}\n}"
+      },
+      "unsupported": "extracted non-css items (cva, jsx-recipe)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/output.test.ts::extract to css output pipeline > should evaluate ${fn}.raw inside another ${fn}.raw to allow for composition::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/output.test.ts",
+        "test": "extract to css output pipeline > should evaluate ${fn}.raw inside another ${fn}.raw to allow for composition",
+        "line": 1939
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          "&:not(:first-child)": {
+            "marginBlockEnd": "1em"
+          }
+        },
+        {
+          "maxWidth": "800px",
+          "& p": {
+            "&:not(:first-child)": {
+              "marginBlockStart": "1em"
+            }
+          },
+          "& h1": {
+            "&:not(:first-child)": {
+              "marginBlockEnd": "1em"
+            }
+          },
+          "& h2": {
+            "&:not(:first-child)": {
+              "marginBlockEnd": "1em"
+            }
+          }
+        }
+      ],
+      "expected": {
+        "css": "@layer utilities {\n  .max-w_800px {\n    max-width: 800px;\n}\n\n  .\\[\\&\\:not\\(\\:first-child\\)\\]\\:mbe_1em:not(:first-child) {\n    margin-block-end: 1em;\n}\n\n  .\\[\\&_p\\]\\:\\[\\&\\:not\\(\\:first-child\\)\\]\\:mbs_1em p:not(:first-child) {\n    margin-block-start: 1em;\n}\n\n  .\\[\\&_h1\\]\\:\\[\\&\\:not\\(\\:first-child\\)\\]\\:mbe_1em h1:not(:first-child),.\\[\\&_h2\\]\\:\\[\\&\\:not\\(\\:first-child\\)\\]\\:mbe_1em h2:not(:first-child) {\n    margin-block-end: 1em;\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/output.test.ts::extract to css output pipeline > should evaluate variants supplied a function::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/output.test.ts",
+        "test": "extract to css output pipeline > should evaluate variants supplied a function",
+        "line": 2032
+      },
+      "userConfig": null,
+      "inputs": [],
+      "expected": {
+        "css": "@layer utilities {\n  .px_token\\(spacing\\.1\\) {\n    padding-inline: var(--spacing-1);\n}\n\n  .px_token\\(spacing\\.2\\) {\n    padding-inline: var(--spacing-2);\n}\n\n  .px_token\\(spacing\\.3\\) {\n    padding-inline: var(--spacing-3);\n}\n\n  .py_token\\(spacing\\.1\\) {\n    padding-block: var(--spacing-1);\n}\n\n  .py_token\\(spacing\\.2\\) {\n    padding-block: var(--spacing-2);\n}\n\n  .py_token\\(spacing\\.3\\) {\n    padding-block: var(--spacing-3);\n}\n}"
+      },
+      "unsupported": "extracted non-css items (cva)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/output.test.ts::extract to css output pipeline > should extract config recipes::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/output.test.ts",
+        "test": "extract to css output pipeline > should extract config recipes",
+        "line": 1632
+      },
+      "userConfig": {
+        "theme": {
+          "extend": {
+            "recipes": {
+              "button": {
+                "className": "button",
+                "jsx": [
+                  "Button",
+                  {}
+                ],
+                "description": "A button styles",
+                "base": {
+                  "fontSize": "lg"
+                },
+                "variants": {
+                  "size": {
+                    "sm": {
+                      "padding": "2",
+                      "borderRadius": "sm"
+                    },
+                    "md": {
+                      "padding": "4",
+                      "borderRadius": "md"
+                    }
+                  },
+                  "variant": {
+                    "primary": {
+                      "color": "white",
+                      "backgroundColor": "blue.500"
+                    },
+                    "danger": {
+                      "color": "white",
+                      "backgroundColor": "red.500"
+                    },
+                    "secondary": {
+                      "color": "pink.300",
+                      "backgroundColor": "green.500"
+                    }
+                  }
+                },
+                "compoundVariants": [
+                  {
+                    "variant": "danger",
+                    "size": "md",
+                    "css": {
+                      "zIndex": 100
+                    }
+                  }
+                ]
+              },
+              "anotherButton": {
+                "className": "anotherButton",
+                "jsx": [
+                  "AnotherButton"
+                ],
+                "variants": {
+                  "spacing": {
+                    "sm": {
+                      "padding": "2",
+                      "borderRadius": "sm"
+                    },
+                    "md": {
+                      "padding": "4",
+                      "borderRadius": "md"
+                    }
+                  }
+                }
+              },
+              "complexButton": {
+                "className": "complexButton",
+                "jsx": [
+                  "ComplexButton",
+                  {}
+                ],
+                "variants": {
+                  "color": {
+                    "blue": {
+                      "color": "blue.500"
+                    },
+                    "red": {
+                      "color": "red.500"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "configPatch": {
+        "theme": {
+          "recipes": {
+            "button": {
+              "$value": {
+                "className": "button",
+                "jsx": [
+                  "Button",
+                  {}
+                ],
+                "description": "A button styles",
+                "base": {
+                  "fontSize": "lg"
+                },
+                "variants": {
+                  "size": {
+                    "sm": {
+                      "padding": "2",
+                      "borderRadius": "sm"
+                    },
+                    "md": {
+                      "padding": "4",
+                      "borderRadius": "md"
+                    }
+                  },
+                  "variant": {
+                    "primary": {
+                      "color": "white",
+                      "backgroundColor": "blue.500"
+                    },
+                    "danger": {
+                      "color": "white",
+                      "backgroundColor": "red.500"
+                    },
+                    "secondary": {
+                      "color": "pink.300",
+                      "backgroundColor": "green.500"
+                    }
+                  }
+                },
+                "compoundVariants": [
+                  {
+                    "variant": "danger",
+                    "size": "md",
+                    "css": {
+                      "zIndex": 100
+                    }
+                  }
+                ]
+              }
+            },
+            "anotherButton": {
+              "$value": {
+                "className": "anotherButton",
+                "jsx": [
+                  "AnotherButton"
+                ],
+                "variants": {
+                  "spacing": {
+                    "sm": {
+                      "padding": "2",
+                      "borderRadius": "sm"
+                    },
+                    "md": {
+                      "padding": "4",
+                      "borderRadius": "md"
+                    }
+                  }
+                }
+              }
+            },
+            "complexButton": {
+              "$value": {
+                "className": "complexButton",
+                "jsx": [
+                  "ComplexButton",
+                  {}
+                ],
+                "variants": {
+                  "color": {
+                    "blue": {
+                      "color": "blue.500"
+                    },
+                    "red": {
+                      "color": "red.500"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "inputs": [
+        {}
+      ],
+      "expected": {
+        "css": "@layer recipes {\n  @layer _base {\n    .button {\n      font-size: var(--font-sizes-lg);\n}\n}\n\n  .button--size_md {\n    padding: var(--spacing-4);\n    border-radius: var(--radii-md);\n}\n\n  .button--variant_danger {\n    color: var(--colors-white);\n    background-color: var(--colors-red-500);\n}\n\n  .anotherButton--spacing_sm {\n    padding: var(--spacing-2);\n    border-radius: var(--radii-sm);\n}\n\n  .complexButton--color_blue {\n    color: var(--colors-blue-500);\n}\n}\n\n@layer utilities {\n  .gap_8px {\n    gap: 8px;\n}\n\n  .z_100 {\n    z-index: 100;\n}\n\n  .d_flex {\n    display: flex;\n}\n\n  .flex-d_column {\n    flex-direction: column;\n}\n}"
+      },
+      "unsupported": "extracted non-css items (recipe, jsx-pattern, jsx-recipe)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/output.test.ts::extract to css output pipeline > slot recipes with textStyles::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/output.test.ts",
+        "test": "extract to css output pipeline > slot recipes with textStyles",
+        "line": 3640
+      },
+      "userConfig": {
+        "eject": true,
+        "theme": {
+          "breakpoints": {
+            "sm": "480px"
+          },
+          "slotRecipes": {
+            "cta": {
+              "className": "cta",
+              "slots": [
+                "heading",
+                "text",
+                "wrapper"
+              ],
+              "base": {},
+              "variants": {
+                "level": {
+                  "1": {
+                    "heading": {
+                      "textStyle": "heading-1",
+                      "color": {
+                        "base": "green",
+                        "sm": "red"
+                      },
+                      "marginBottom": {
+                        "base": "20px",
+                        "sm": "40px"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "textStyles": {
+            "heading-1": {
+              "description": "Heading 1",
+              "value": {
+                "fontWeight": "bold",
+                "fontSize": {
+                  "base": "2px",
+                  "sm": "40px"
+                },
+                "textTransform": "uppercase"
+              }
+            }
+          }
+        }
+      },
+      "configPatch": {
+        "conditions": null,
+        "theme": {
+          "keyframes": null,
+          "tokens": null,
+          "containerSizes": null,
+          "semanticTokens": null,
+          "recipes": null,
+          "breakpoints": {
+            "md": null,
+            "lg": null,
+            "xl": null,
+            "2xl": null,
+            "sm": {
+              "$value": "480px"
+            }
+          },
+          "slotRecipes": {
+            "checkbox": null,
+            "badge": null,
+            "cta": {
+              "$value": {
+                "className": "cta",
+                "slots": [
+                  "heading",
+                  "text",
+                  "wrapper"
+                ],
+                "base": {},
+                "variants": {
+                  "level": {
+                    "1": {
+                      "heading": {
+                        "textStyle": "heading-1",
+                        "color": {
+                          "base": "green",
+                          "sm": "red"
+                        },
+                        "marginBottom": {
+                          "base": "20px",
+                          "sm": "40px"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "textStyles": {
+            "headline": null,
+            "heading-1": {
+              "$value": {
+                "description": "Heading 1",
+                "value": {
+                  "fontWeight": "bold",
+                  "fontSize": {
+                    "base": "2px",
+                    "sm": "40px"
+                  },
+                  "textTransform": "uppercase"
+                }
+              }
+            }
+          },
+          "$order": [
+            "breakpoints",
+            "slotRecipes",
+            "textStyles"
+          ]
+        },
+        "eject": {
+          "$value": true
+        },
+        "utilities": {
+          "aspectRatio": null,
+          "boxDecorationBreak": null,
+          "zIndex": null,
+          "boxSizing": null,
+          "objectPosition": null,
+          "objectFit": null,
+          "overscrollBehavior": null,
+          "overscrollBehaviorX": null,
+          "overscrollBehaviorY": null,
+          "position": null,
+          "top": null,
+          "left": null,
+          "inset": null,
+          "insetInline": null,
+          "insetBlock": null,
+          "insetBlockEnd": null,
+          "insetBlockStart": null,
+          "insetInlineEnd": null,
+          "insetInlineStart": null,
+          "right": null,
+          "bottom": null,
+          "float": null,
+          "visibility": null,
+          "display": null,
+          "hideFrom": null,
+          "hideBelow": null,
+          "flexBasis": null,
+          "flex": null,
+          "flexDirection": null,
+          "flexGrow": null,
+          "flexShrink": null,
+          "gridTemplateColumns": null,
+          "gridTemplateRows": null,
+          "gridColumn": null,
+          "gridRow": null,
+          "gridColumnStart": null,
+          "gridColumnEnd": null,
+          "gridAutoFlow": null,
+          "gridAutoColumns": null,
+          "gridAutoRows": null,
+          "gap": null,
+          "gridGap": null,
+          "gridRowGap": null,
+          "gridColumnGap": null,
+          "rowGap": null,
+          "columnGap": null,
+          "justifyContent": null,
+          "alignContent": null,
+          "alignItems": null,
+          "alignSelf": null,
+          "padding": null,
+          "paddingLeft": null,
+          "paddingRight": null,
+          "paddingTop": null,
+          "paddingBottom": null,
+          "paddingBlock": null,
+          "paddingBlockEnd": null,
+          "paddingBlockStart": null,
+          "paddingInline": null,
+          "paddingInlineEnd": null,
+          "paddingInlineStart": null,
+          "marginLeft": null,
+          "marginRight": null,
+          "marginTop": null,
+          "marginBottom": null,
+          "margin": null,
+          "marginBlock": null,
+          "marginBlockEnd": null,
+          "marginBlockStart": null,
+          "marginInline": null,
+          "marginInlineEnd": null,
+          "marginInlineStart": null,
+          "spaceX": null,
+          "spaceY": null,
+          "outlineWidth": null,
+          "outlineColor": null,
+          "outline": null,
+          "outlineOffset": null,
+          "focusRing": null,
+          "focusVisibleRing": null,
+          "focusRingColor": null,
+          "focusRingOffset": null,
+          "focusRingWidth": null,
+          "focusRingStyle": null,
+          "divideX": null,
+          "divideY": null,
+          "divideColor": null,
+          "divideStyle": null,
+          "width": null,
+          "inlineSize": null,
+          "minWidth": null,
+          "minInlineSize": null,
+          "maxWidth": null,
+          "maxInlineSize": null,
+          "height": null,
+          "blockSize": null,
+          "minHeight": null,
+          "minBlockSize": null,
+          "maxHeight": null,
+          "maxBlockSize": null,
+          "boxSize": null,
+          "color": null,
+          "fontFamily": null,
+          "fontSize": null,
+          "fontSizeAdjust": null,
+          "fontPalette": null,
+          "fontKerning": null,
+          "fontFeatureSettings": null,
+          "fontWeight": null,
+          "fontSmoothing": null,
+          "fontVariant": null,
+          "fontVariantAlternates": null,
+          "fontVariantCaps": null,
+          "fontVariationSettings": null,
+          "fontVariantNumeric": null,
+          "letterSpacing": null,
+          "lineHeight": null,
+          "textAlign": null,
+          "textDecoration": null,
+          "textDecorationColor": null,
+          "textEmphasisColor": null,
+          "textDecorationStyle": null,
+          "textDecorationThickness": null,
+          "textUnderlineOffset": null,
+          "textTransform": null,
+          "textIndent": null,
+          "textShadow": null,
+          "textShadowColor": null,
+          "WebkitTextFillColor": null,
+          "textOverflow": null,
+          "verticalAlign": null,
+          "wordBreak": null,
+          "textWrap": null,
+          "truncate": null,
+          "lineClamp": null,
+          "listStyleType": null,
+          "listStylePosition": null,
+          "listStyleImage": null,
+          "listStyle": null,
+          "backgroundPosition": null,
+          "backgroundPositionX": null,
+          "backgroundPositionY": null,
+          "backgroundAttachment": null,
+          "backgroundClip": null,
+          "background": null,
+          "backgroundColor": null,
+          "backgroundOrigin": null,
+          "backgroundImage": null,
+          "backgroundRepeat": null,
+          "backgroundBlendMode": null,
+          "backgroundSize": null,
+          "backgroundGradient": null,
+          "backgroundLinear": null,
+          "backgroundRadial": null,
+          "backgroundConic": null,
+          "textGradient": null,
+          "gradientFromPosition": null,
+          "gradientToPosition": null,
+          "gradientFrom": null,
+          "gradientTo": null,
+          "gradientVia": null,
+          "gradientViaPosition": null,
+          "borderRadius": null,
+          "borderTopLeftRadius": null,
+          "borderTopRightRadius": null,
+          "borderBottomRightRadius": null,
+          "borderBottomLeftRadius": null,
+          "borderTopRadius": null,
+          "borderRightRadius": null,
+          "borderBottomRadius": null,
+          "borderLeftRadius": null,
+          "borderStartStartRadius": null,
+          "borderStartEndRadius": null,
+          "borderStartRadius": null,
+          "borderEndStartRadius": null,
+          "borderEndEndRadius": null,
+          "borderEndRadius": null,
+          "border": null,
+          "borderWidth": null,
+          "borderTopWidth": null,
+          "borderLeftWidth": null,
+          "borderRightWidth": null,
+          "borderBottomWidth": null,
+          "borderBlockStartWidth": null,
+          "borderBlockEndWidth": null,
+          "borderColor": null,
+          "borderInline": null,
+          "borderInlineWidth": null,
+          "borderInlineColor": null,
+          "borderBlock": null,
+          "borderBlockWidth": null,
+          "borderBlockColor": null,
+          "borderLeft": null,
+          "borderLeftColor": null,
+          "borderInlineStart": null,
+          "borderInlineStartWidth": null,
+          "borderInlineStartColor": null,
+          "borderRight": null,
+          "borderRightColor": null,
+          "borderInlineEnd": null,
+          "borderInlineEndWidth": null,
+          "borderInlineEndColor": null,
+          "borderTop": null,
+          "borderTopColor": null,
+          "borderBottom": null,
+          "borderBottomColor": null,
+          "borderBlockEnd": null,
+          "borderBlockEndColor": null,
+          "borderBlockStart": null,
+          "borderBlockStartColor": null,
+          "opacity": null,
+          "boxShadow": null,
+          "boxShadowColor": null,
+          "mixBlendMode": null,
+          "filter": null,
+          "brightness": null,
+          "contrast": null,
+          "grayscale": null,
+          "hueRotate": null,
+          "invert": null,
+          "saturate": null,
+          "sepia": null,
+          "dropShadow": null,
+          "blur": null,
+          "backdropFilter": null,
+          "backdropBlur": null,
+          "backdropBrightness": null,
+          "backdropContrast": null,
+          "backdropGrayscale": null,
+          "backdropHueRotate": null,
+          "backdropInvert": null,
+          "backdropOpacity": null,
+          "backdropSaturate": null,
+          "backdropSepia": null,
+          "borderCollapse": null,
+          "borderSpacing": null,
+          "borderSpacingX": null,
+          "borderSpacingY": null,
+          "tableLayout": null,
+          "transitionTimingFunction": null,
+          "transitionDelay": null,
+          "transitionDuration": null,
+          "transitionProperty": null,
+          "transition": null,
+          "animation": null,
+          "animationName": null,
+          "animationTimingFunction": null,
+          "animationDuration": null,
+          "animationDelay": null,
+          "animationPlayState": null,
+          "animationComposition": null,
+          "animationFillMode": null,
+          "animationDirection": null,
+          "animationIterationCount": null,
+          "animationRange": null,
+          "animationState": null,
+          "animationRangeStart": null,
+          "animationRangeEnd": null,
+          "animationTimeline": null,
+          "transformOrigin": null,
+          "transformBox": null,
+          "transformStyle": null,
+          "transform": null,
+          "rotate": null,
+          "rotateX": null,
+          "rotateY": null,
+          "rotateZ": null,
+          "scale": null,
+          "scaleX": null,
+          "scaleY": null,
+          "translate": null,
+          "translateX": null,
+          "translateY": null,
+          "translateZ": null,
+          "accentColor": null,
+          "caretColor": null,
+          "scrollBehavior": null,
+          "scrollbar": null,
+          "scrollbarColor": null,
+          "scrollbarGutter": null,
+          "scrollbarWidth": null,
+          "scrollMargin": null,
+          "scrollMarginLeft": null,
+          "scrollMarginRight": null,
+          "scrollMarginTop": null,
+          "scrollMarginBottom": null,
+          "scrollMarginBlock": null,
+          "scrollMarginBlockEnd": null,
+          "scrollMarginBlockStart": null,
+          "scrollMarginInline": null,
+          "scrollMarginInlineEnd": null,
+          "scrollMarginInlineStart": null,
+          "scrollPadding": null,
+          "scrollPaddingBlock": null,
+          "scrollPaddingBlockStart": null,
+          "scrollPaddingBlockEnd": null,
+          "scrollPaddingInline": null,
+          "scrollPaddingInlineEnd": null,
+          "scrollPaddingInlineStart": null,
+          "scrollPaddingLeft": null,
+          "scrollPaddingRight": null,
+          "scrollPaddingTop": null,
+          "scrollPaddingBottom": null,
+          "scrollSnapAlign": null,
+          "scrollSnapStop": null,
+          "scrollSnapType": null,
+          "scrollSnapStrictness": null,
+          "scrollSnapMargin": null,
+          "scrollSnapMarginTop": null,
+          "scrollSnapMarginBottom": null,
+          "scrollSnapMarginLeft": null,
+          "scrollSnapMarginRight": null,
+          "scrollSnapCoordinate": null,
+          "scrollSnapDestination": null,
+          "scrollSnapPointsX": null,
+          "scrollSnapPointsY": null,
+          "scrollSnapTypeX": null,
+          "scrollSnapTypeY": null,
+          "scrollTimeline": null,
+          "scrollTimelineAxis": null,
+          "scrollTimelineName": null,
+          "touchAction": null,
+          "userSelect": null,
+          "overflow": null,
+          "overflowWrap": null,
+          "overflowX": null,
+          "overflowY": null,
+          "overflowAnchor": null,
+          "overflowBlock": null,
+          "overflowInline": null,
+          "overflowClipBox": null,
+          "overflowClipMargin": null,
+          "overscrollBehaviorBlock": null,
+          "overscrollBehaviorInline": null,
+          "fill": null,
+          "stroke": null,
+          "strokeWidth": null,
+          "strokeDasharray": null,
+          "strokeDashoffset": null,
+          "strokeLinecap": null,
+          "strokeLinejoin": null,
+          "strokeMiterlimit": null,
+          "strokeOpacity": null,
+          "srOnly": null,
+          "debug": null,
+          "appearance": null,
+          "backfaceVisibility": null,
+          "clipPath": null,
+          "hyphens": null,
+          "mask": null,
+          "maskImage": null,
+          "maskSize": null,
+          "textSizeAdjust": null,
+          "container": null,
+          "containerName": null,
+          "containerType": null,
+          "cursor": null
+        }
+      },
+      "inputs": [
+        {
+          "textStyle": "heading-1"
+        }
+      ],
+      "expected": {
+        "css": "@layer recipes.slots {\n  .cta__heading--level_1 {\n    font-weight: bold;\n    font-size: 2px;\n    text-transform: uppercase;\n    color: green;\n    margin-bottom: 20px;\n}\n\n  @media screen and (min-width: 30rem) {\n    .cta__heading--level_1 {\n      font-size: 40px;\n      color: red;\n      margin-bottom: 40px;\n}\n}\n}\n\n@layer utilities {\n  @layer compositions {\n    .textStyle_heading-1 {\n      font-weight: bold;\n      font-size: 2px;\n      text-transform: uppercase;\n}\n\n    @media screen and (min-width: 30rem) {\n      .textStyle_heading-1 {\n        font-size: 40px;\n}\n}\n}\n}"
+      },
+      "unsupported": "extracted non-css items (recipe, jsx-recipe)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/output.test.ts::extract to css output pipeline > slotRecipes default className based on key::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/output.test.ts",
+        "test": "extract to css output pipeline > slotRecipes default className based on key",
+        "line": 4033
+      },
+      "userConfig": {
+        "theme": {
+          "extend": {
+            "slotRecipes": {
+              "testSlotRecipe": {
+                "slots": [
+                  "root"
+                ],
+                "base": {
+                  "root": {
+                    "display": "flex"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "configPatch": {
+        "theme": {
+          "slotRecipes": {
+            "testSlotRecipe": {
+              "$value": {
+                "slots": [
+                  "root"
+                ],
+                "base": {
+                  "root": {
+                    "display": "flex"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "inputs": [],
+      "expected": {
+        "css": "@layer recipes.slots {\n  @layer _base {\n    .testSlotRecipe__root {\n      display: flex;\n}\n    }\n}"
+      },
+      "unsupported": "extracted non-css items (recipe)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/output.test.ts::extract to css output pipeline > strictTokens arbitrary value escape hatch::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/output.test.ts",
+        "test": "extract to css output pipeline > strictTokens arbitrary value escape hatch",
+        "line": 2898
+      },
+      "userConfig": {
+        "strictTokens": true
+      },
+      "configPatch": {
+        "strictTokens": {
+          "$value": true
+        }
+      },
+      "inputs": [
+        {
+          "color": "[#fff]",
+          "bg": "red.300",
+          "bgColor": "[rgb(51 155 240)]",
+          "outlineColor": "[rgb(51 155 240)!]",
+          "borderColor": "[rgb(51 155 240)!important]"
+        }
+      ],
+      "expected": {
+        "css": "@layer utilities {\n  .bg_red\\.300 {\n    background: var(--colors-red-300);\n}\n\n  .bd-c_\\[rgb\\(51_155_240\\)\\]\\! {\n    border-color: rgb(51 155 240) !important;\n}\n\n  .c_\\[\\#fff\\] {\n    color: #fff;\n}\n\n  .bg-c_\\[rgb\\(51_155_240\\)\\] {\n    background-color: rgb(51 155 240);\n}\n\n  .ring-c_\\[rgb\\(51_155_240\\)\\]\\! {\n    outline-color: rgb(51 155 240) !important;\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/output.test.ts::extract to css output pipeline > string literal - css::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/output.test.ts",
+        "test": "extract to css output pipeline > string literal - css",
+        "line": 839
+      },
+      "userConfig": {
+        "syntax": "template-literal"
+      },
+      "configPatch": {
+        "syntax": {
+          "$value": "template-literal"
+        }
+      },
+      "inputs": [
+        {
+          "background": "transparent",
+          "border-radius": "3px",
+          "border": "1px solid var(--accent-color)",
+          "color": "token(colors.blue.100)"
+        }
+      ],
+      "expected": {
+        "css": "@layer utilities {\n  .background_transparent {\n    background: transparent;\n}\n\n  .border_1px_solid_var\\(--accent-color\\) {\n    border: 1px solid var(--accent-color);\n}\n\n  .border-radius_3px {\n    border-radius: 3px;\n}\n\n  .color_token\\(colors\\.blue\\.100\\) {\n    color: var(--colors-blue-100);\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/output.test.ts::extract to css output pipeline > string literal - factory::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/output.test.ts",
+        "test": "extract to css output pipeline > string literal - factory",
+        "line": 715
+      },
+      "userConfig": {
+        "syntax": "template-literal"
+      },
+      "configPatch": {
+        "syntax": {
+          "$value": "template-literal"
+        }
+      },
+      "inputs": [
+        {
+          "color": "lightgreen",
+          "& > strong": {
+            "color": "hotpink"
+          }
+        },
+        {
+          "background": "transparent",
+          "border-radius": "3px",
+          "border": "1px solid var(--accent-color)",
+          "color": "token(colors.blue.100)",
+          "display": "inline-block",
+          "margin": "0.5rem 1rem",
+          "padding": "0.5rem 0",
+          "transition": "all 200ms ease-in-out",
+          "width": "11rem",
+          "&:hover": {
+            "filter": "brightness(0.85)",
+            "&:disabled": {
+              "filter": "brightness(1)"
+            }
+          },
+          "@media (min-width: 768px)": {
+            "padding": "1rem 0",
+            "&:disabled": {
+              "filter": "brightness(1)"
+            }
+          }
+        }
+      ],
+      "expected": {
+        "css": "@layer utilities {\n  .background_transparent {\n    background: transparent;\n}\n\n  .border_1px_solid_var\\(--accent-color\\) {\n    border: 1px solid var(--accent-color);\n}\n\n  .margin_0\\.5rem_1rem {\n    margin: 0.5rem 1rem;\n}\n\n  .padding_0\\.5rem_0 {\n    padding: 0.5rem 0;\n}\n\n  .transition_all_200ms_ease-in-out {\n    transition: all 200ms ease-in-out;\n}\n\n  .color_lightgreen {\n    color: lightgreen;\n}\n\n  .border-radius_3px {\n    border-radius: 3px;\n}\n\n  .color_token\\(colors\\.blue\\.100\\) {\n    color: var(--colors-blue-100);\n}\n\n  .display_inline-block {\n    display: inline-block;\n}\n\n  .width_11rem {\n    width: 11rem;\n}\n\n  .\\[\\&_\\>_strong\\]\\:color_hotpink > strong {\n    color: hotpink;\n}\n\n  .\\[\\&\\:hover\\]\\:filter_brightness\\(0\\.85\\):hover {\n    filter: brightness(0.85);\n}\n\n  .\\[\\&\\:hover\\]\\:\\[\\&\\:disabled\\]\\:filter_brightness\\(1\\):hover:disabled {\n    filter: brightness(1);\n}\n\n  @media (min-width: 768px) {\n    .\\[\\@media_\\(min-width\\:_768px\\)\\]\\:padding_1rem_0 {\n      padding: 1rem 0;\n}\n    .\\[\\@media_\\(min-width\\:_768px\\)\\]\\:\\[\\&\\:disabled\\]\\:filter_brightness\\(1\\):disabled {\n      filter: brightness(1);\n}\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/output.test.ts::extract to css output pipeline > styled FactoryOptions defaultProps extraction::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/output.test.ts",
+        "test": "extract to css output pipeline > styled FactoryOptions defaultProps extraction",
+        "line": 2537
+      },
+      "userConfig": {
+        "theme": {
+          "extend": {
+            "recipes": {
+              "button": {
+                "className": "button",
+                "jsx": [
+                  "Button"
+                ],
+                "base": {
+                  "color": "sky.100",
+                  "bg": "red.900"
+                },
+                "variants": {
+                  "size": {
+                    "sm": {
+                      "borderRadius": "sm"
+                    },
+                    "md": {
+                      "borderRadius": "md"
+                    }
+                  },
+                  "variant": {
+                    "first": {
+                      "backgroundColor": "blue.500"
+                    },
+                    "second": {
+                      "backgroundColor": "red.500"
+                    }
+                  }
+                },
+                "defaultVariants": {
+                  "size": "sm"
+                }
+              }
+            }
+          }
+        }
+      },
+      "configPatch": {
+        "theme": {
+          "recipes": {
+            "button": {
+              "$value": {
+                "className": "button",
+                "jsx": [
+                  "Button"
+                ],
+                "base": {
+                  "color": "sky.100",
+                  "bg": "red.900"
+                },
+                "variants": {
+                  "size": {
+                    "sm": {
+                      "borderRadius": "sm"
+                    },
+                    "md": {
+                      "borderRadius": "md"
+                    }
+                  },
+                  "variant": {
+                    "first": {
+                      "backgroundColor": "blue.500"
+                    },
+                    "second": {
+                      "backgroundColor": "red.500"
+                    }
+                  }
+                },
+                "defaultVariants": {
+                  "size": "sm"
+                }
+              }
+            }
+          }
+        }
+      },
+      "inputs": [
+        {}
+      ],
+      "expected": {
+        "css": "@layer recipes {\n  @layer _base {\n    .button {\n      background: var(--colors-red-900);\n      color: var(--colors-sky-100);\n}\n}\n\n  .button--size_md {\n    border-radius: var(--radii-md);\n}\n\n  .button--variant_second {\n    background-color: var(--colors-red-500);\n}\n\n  .button--size_sm {\n    border-radius: var(--radii-sm);\n}\n}\n\n@layer utilities {\n  .c_amber\\.400 {\n    color: var(--colors-amber-400);\n}\n\n  [data-theme=dark] .dark\\:c_sky\\.300,.dark .dark\\:c_sky\\.300,.dark\\:c_sky\\.300.dark,.dark\\:c_sky\\.300[data-theme=dark] {\n    color: var(--colors-sky-300);\n}\n\n  .hover\\:c_amber\\.500:is(:hover, [data-hover]) {\n    color: var(--colors-amber-500);\n}\n\n  [data-theme=dark] .hover\\:dark\\:c_sky\\.200:is(:hover, [data-hover]),.dark .hover\\:dark\\:c_sky\\.200:is(:hover, [data-hover]),.hover\\:dark\\:c_sky\\.200:is(:hover, [data-hover]).dark,.hover\\:dark\\:c_sky\\.200:is(:hover, [data-hover])[data-theme=dark] {\n    color: var(--colors-sky-200);\n}\n}"
+      },
+      "unsupported": "extracted non-css items (jsx-recipe)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/output.test.ts::extract to css output pipeline > token fn in at-rules::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/output.test.ts",
+        "test": "extract to css output pipeline > token fn in at-rules",
+        "line": 2816
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          "@container (min-width: token(sizes.xl))": {
+            "color": "green.300"
+          },
+          "@media (min-width: token(sizes.2xl))": {
+            "color": "red.300"
+          },
+          "@container (min-width: {sizes.4xl})": {
+            "display": "flex"
+          }
+        }
+      ],
+      "expected": {
+        "css": "@layer utilities {\n  @container (min-width: 36rem) {\n    .\\[\\@container_\\(min-width\\:_token\\(sizes\\.xl\\)\\)\\]\\:c_green\\.300 {\n      color: var(--colors-green-300);\n}\n}\n\n  @media (min-width: 42rem) {\n    .\\[\\@media_\\(min-width\\:_token\\(sizes\\.2xl\\)\\)\\]\\:c_red\\.300 {\n      color: var(--colors-red-300);\n}\n}\n\n  @container (min-width: 56rem) {\n    .\\[\\@container_\\(min-width\\:_\\{sizes\\.4xl\\}\\)\\]\\:d_flex {\n      display: flex;\n}\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/output.test.ts::extract to css output pipeline > tokens starting with 0::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/output.test.ts",
+        "test": "extract to css output pipeline > tokens starting with 0",
+        "line": 3451
+      },
+      "userConfig": {
+        "theme": {
+          "tokens": {
+            "spacing": {
+              "025": {
+                "value": "0.125rem"
+              }
+            }
+          }
+        }
+      },
+      "configPatch": {
+        "theme": {
+          "tokens": {
+            "aspectRatios": null,
+            "borders": null,
+            "easings": null,
+            "durations": null,
+            "radii": null,
+            "fontWeights": null,
+            "lineHeights": null,
+            "fonts": null,
+            "letterSpacings": null,
+            "fontSizes": null,
+            "shadows": null,
+            "colors": null,
+            "blurs": null,
+            "sizes": null,
+            "animations": null,
+            "spacing": {
+              "0": null,
+              "1": null,
+              "2": null,
+              "3": null,
+              "4": null,
+              "5": null,
+              "6": null,
+              "7": null,
+              "8": null,
+              "9": null,
+              "10": null,
+              "11": null,
+              "12": null,
+              "14": null,
+              "16": null,
+              "20": null,
+              "24": null,
+              "28": null,
+              "32": null,
+              "36": null,
+              "40": null,
+              "44": null,
+              "48": null,
+              "52": null,
+              "56": null,
+              "60": null,
+              "64": null,
+              "72": null,
+              "80": null,
+              "96": null,
+              "0.5": null,
+              "1.5": null,
+              "2.5": null,
+              "3.5": null,
+              "4.5": null,
+              "5.5": null,
+              "025": {
+                "$value": {
+                  "value": "0.125rem"
+                }
+              }
+            }
+          },
+          "$order": [
+            "tokens",
+            "keyframes",
+            "breakpoints",
+            "textStyles",
+            "containerSizes",
+            "semanticTokens",
+            "recipes",
+            "slotRecipes"
+          ]
+        }
+      },
+      "inputs": [
+        {
+          "margin": "025"
+        }
+      ],
+      "expected": {
+        "css": "@layer utilities {\n  .m_025 {\n    margin: var(--spacing-025);\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/output.test.ts::extract to css output pipeline > urls as value::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/output.test.ts",
+        "test": "extract to css output pipeline > urls as value",
+        "line": 2868
+      },
+      "userConfig": {
+        "strictTokens": true
+      },
+      "configPatch": {
+        "strictTokens": {
+          "$value": true
+        }
+      },
+      "inputs": [],
+      "expected": {
+        "css": ""
+      },
+      "unsupported": "extracted non-css items (jsx)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/output.test.ts::extract to css output pipeline > weird conditions mixing::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/output.test.ts",
+        "test": "extract to css output pipeline > weird conditions mixing",
+        "line": 3352
+      },
+      "userConfig": {
+        "conditions": {
+          "weirdCondition": [
+            "@media (hover: hover) and (pointer: fine)",
+            "&:hover",
+            "& > div",
+            "span &",
+            "& ~ &"
+          ]
+        }
+      },
+      "configPatch": {
+        "conditions": {
+          "weirdCondition": {
+            "$value": [
+              "@media (hover: hover) and (pointer: fine)",
+              "&:hover",
+              "& > div",
+              "span &",
+              "& ~ &"
+            ]
+          }
+        }
+      },
+      "inputs": [
+        {
+          "_weirdCondition": {
+            "color": "red"
+          }
+        }
+      ],
+      "expected": {
+        "css": "@layer utilities {\n  @media (hover: hover) and (pointer: fine) {\n    :is(span .weirdCondition\\:c_red:hover > div) ~ :is(span .weirdCondition\\:c_red:hover > div) {\n      color: red;\n}\n}\n}"
+      }
+    }
+  ]
+}

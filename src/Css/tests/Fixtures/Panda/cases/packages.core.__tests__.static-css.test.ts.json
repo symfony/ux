@@ -1,0 +1,3110 @@
+{
+  "source": "packages/core/__tests__/static-css.test.ts",
+  "cases": [
+    {
+      "id": "fixture::packages/core/__tests__/static-css.test.ts::static-css > all recipes::1",
+      "kind": "static-css",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/static-css.test.ts",
+        "test": "static-css > all recipes",
+        "line": 40
+      },
+      "configPatch": {
+        "theme": {
+          "tokens": {
+            "colors": {
+              "current": null,
+              "black": null,
+              "white": null,
+              "transparent": null,
+              "rose": null,
+              "pink": null,
+              "fuchsia": null,
+              "purple": null,
+              "violet": null,
+              "indigo": null,
+              "sky": null,
+              "cyan": null,
+              "teal": null,
+              "emerald": null,
+              "lime": null,
+              "yellow": null,
+              "amber": null,
+              "orange": null,
+              "neutral": null,
+              "stone": null,
+              "zinc": null,
+              "gray": null,
+              "slate": null,
+              "deep": null,
+              "red": {
+                "50": null,
+                "100": null,
+                "200": {
+                  "value": {
+                    "$value": "red.200"
+                  }
+                },
+                "300": null,
+                "400": null,
+                "500": null,
+                "600": null,
+                "700": null,
+                "800": null,
+                "900": null,
+                "950": null
+              },
+              "blue": {
+                "50": null,
+                "100": null,
+                "200": {
+                  "value": {
+                    "$value": "blue.200"
+                  }
+                },
+                "300": null,
+                "400": null,
+                "500": null,
+                "600": null,
+                "700": null,
+                "800": null,
+                "900": null,
+                "950": null
+              },
+              "green": {
+                "50": null,
+                "100": null,
+                "200": {
+                  "value": {
+                    "$value": "green.200"
+                  }
+                },
+                "300": null,
+                "400": null,
+                "500": null,
+                "600": null,
+                "700": null,
+                "800": null,
+                "900": null,
+                "950": null
+              },
+              "$order": [
+                "red",
+                "blue",
+                "green"
+              ]
+            },
+            "spacing": {
+              "0": null,
+              "1": null,
+              "2": null,
+              "3": null,
+              "4": null,
+              "5": null,
+              "6": null,
+              "7": null,
+              "8": null,
+              "9": null,
+              "10": null,
+              "11": null,
+              "12": null,
+              "14": null,
+              "16": null,
+              "20": {
+                "value": {
+                  "$value": "20px"
+                }
+              },
+              "24": null,
+              "28": null,
+              "32": null,
+              "36": null,
+              "40": {
+                "value": {
+                  "$value": "40px"
+                }
+              },
+              "44": null,
+              "48": null,
+              "52": null,
+              "56": null,
+              "60": {
+                "value": {
+                  "$value": "60px"
+                }
+              },
+              "64": null,
+              "72": null,
+              "80": null,
+              "96": null,
+              "0.5": null,
+              "1.5": null,
+              "2.5": null,
+              "3.5": null,
+              "4.5": null,
+              "5.5": null
+            },
+            "sizes": {
+              "0": null,
+              "1": null,
+              "2": null,
+              "3": null,
+              "4": null,
+              "5": null,
+              "6": null,
+              "7": null,
+              "8": null,
+              "9": null,
+              "10": null,
+              "11": null,
+              "12": null,
+              "14": null,
+              "16": null,
+              "20": {
+                "value": {
+                  "$value": "20px"
+                }
+              },
+              "24": null,
+              "28": null,
+              "32": null,
+              "36": null,
+              "40": {
+                "value": {
+                  "$value": "40px"
+                }
+              },
+              "44": null,
+              "48": null,
+              "52": null,
+              "56": null,
+              "60": {
+                "value": {
+                  "$value": "60px"
+                }
+              },
+              "64": null,
+              "72": null,
+              "80": null,
+              "96": null,
+              "0.5": null,
+              "1.5": null,
+              "2.5": null,
+              "3.5": null,
+              "4.5": null,
+              "5.5": null,
+              "xs": null,
+              "sm": null,
+              "md": null,
+              "lg": null,
+              "xl": null,
+              "2xl": null,
+              "3xl": null,
+              "4xl": null,
+              "5xl": null,
+              "6xl": null,
+              "7xl": null,
+              "8xl": null,
+              "prose": null,
+              "full": null,
+              "min": null,
+              "max": null,
+              "fit": null
+            }
+          },
+          "semanticTokens": {
+            "colors": null,
+            "spacing": null
+          }
+        }
+      },
+      "inputs": [
+        {
+          "recipes": "*"
+        }
+      ],
+      "expected": {
+        "styles": [
+          {
+            "color": "ButtonHighlight"
+          }
+        ],
+        "css": "@layer recipes {\n  @layer _base {\n    .textStyle {\n      font-family: var(--fonts-mono);\n}\n\n    .textStyle > :not([hidden]) ~ :not([hidden]) {\n      border-inline-start-width: 20px;\n      border-inline-end-width: 0px;\n}\n\n    [data-theme=dark] .tooltipStyle[data-tooltip],.dark .tooltipStyle[data-tooltip],.tooltipStyle[data-tooltip].dark,.tooltipStyle[data-tooltip][data-theme=dark],[data-theme=dark] .tooltipStyle [data-tooltip],.dark .tooltipStyle [data-tooltip],.tooltipStyle [data-tooltip].dark,.tooltipStyle [data-tooltip][data-theme=dark] {\n      color: red;\n}\n\n    .buttonStyle {\n      display: inline-flex;\n      align-items: center;\n      justify-content: center;\n}\n\n    .buttonStyle:is(:hover, [data-hover]) {\n      background-color: var(--colors-red-200);\n      font-size: var(--font-sizes-3xl);\n      color: white;\n}\n}\n\n  .textStyle--size_h1 {\n    font-size: 5rem;\n    line-height: 1em;\n    font-weight: 800;\n}\n\n  .textStyle--size_h2 {\n    font-size: 3rem;\n    line-height: 1.2em;\n    font-weight: 700;\n    letter-spacing: -0.03em;\n}\n\n  .card--rounded_true {\n    border-radius: 0.375rem;\n}\n\n  .buttonStyle--size_md {\n    padding: 0 0.75rem;\n    height: 3rem;\n    min-width: 3rem;\n}\n\n  .buttonStyle--variant_solid {\n    background-color: blue;\n    color: white;\n}\n\n  .buttonStyle--variant_solid[data-disabled] {\n    background-color: gray;\n    color: black;\n    font-size: var(--font-sizes-2xl);\n}\n\n  .buttonStyle--variant_solid:is(:hover, [data-hover]) {\n    background-color: darkblue;\n}\n\n  .buttonStyle--size_sm {\n    padding: 0 0.5rem;\n    height: 2.5rem;\n    min-width: 2.5rem;\n}\n\n  .buttonStyle--variant_outline {\n    border: 1px solid blue;\n    background-color: transparent;\n    color: blue;\n}\n\n  .buttonStyle--variant_outline[data-disabled] {\n    border: 1px solid gray;\n    background-color: transparent;\n    color: gray;\n}\n\n  .buttonStyle--variant_outline:is(:hover, [data-hover]) {\n    background-color: blue;\n    color: white;\n}\n}\n\n@layer recipes.slots {\n  @layer _base {\n    .checkbox__root {\n      gap: 2px;\n      display: flex;\n      align-items: center;\n}\n\n    .checkbox__control {\n      border-width: 1px;\n      border-radius: var(--radii-sm);\n}\n\n    .checkbox__label {\n      margin-inline-start: 2px;\n}\n\n    .badge__title {\n      background: red.300;\n      border-radius: var(--radii-sm);\n}\n}\n\n  .checkbox__control--size_sm {\n    font-size: 2rem;\n    font-weight: var(--font-weights-bold);\n    width: var(--sizes-8);\n    height: var(--sizes-8);\n}\n\n  .checkbox__label--size_sm {\n    font-size: var(--font-sizes-sm);\n}\n\n  .checkbox__control--size_md {\n    width: var(--sizes-10);\n    height: var(--sizes-10);\n}\n\n  .checkbox__label--size_md {\n    font-size: var(--font-sizes-md);\n}\n\n  .checkbox__control--size_lg {\n    width: var(--sizes-12);\n    height: var(--sizes-12);\n}\n\n  .checkbox__label--size_lg {\n    font-size: var(--font-sizes-lg);\n}\n\n  .badge__title--size_sm {\n    padding-inline: var(--spacing-4);\n}\n\n  .badge__body--size_sm {\n    color: red;\n}\n\n  .badge__title--raised_true {\n    box-shadow: var(--shadows-md);\n}\n}\n\n@layer utilities {\n  .c_ButtonHighlight {\n    color: ButtonHighlight;\n}\n}"
+      },
+      "unsupported": "static css for recipes"
+    },
+    {
+      "id": "fixture::packages/core/__tests__/static-css.test.ts::static-css > arbitrary condition or selector::1",
+      "kind": "static-css",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/static-css.test.ts",
+        "test": "static-css > arbitrary condition or selector",
+        "line": 40
+      },
+      "configPatch": {
+        "theme": {
+          "tokens": {
+            "colors": {
+              "current": null,
+              "black": null,
+              "white": null,
+              "transparent": null,
+              "rose": null,
+              "pink": null,
+              "fuchsia": null,
+              "purple": null,
+              "violet": null,
+              "indigo": null,
+              "sky": null,
+              "cyan": null,
+              "teal": null,
+              "emerald": null,
+              "lime": null,
+              "yellow": null,
+              "amber": null,
+              "orange": null,
+              "neutral": null,
+              "stone": null,
+              "zinc": null,
+              "gray": null,
+              "slate": null,
+              "deep": null,
+              "red": {
+                "50": null,
+                "100": null,
+                "200": {
+                  "value": {
+                    "$value": "red.200"
+                  }
+                },
+                "300": null,
+                "400": null,
+                "500": null,
+                "600": null,
+                "700": null,
+                "800": null,
+                "900": null,
+                "950": null
+              },
+              "blue": {
+                "50": null,
+                "100": null,
+                "200": {
+                  "value": {
+                    "$value": "blue.200"
+                  }
+                },
+                "300": null,
+                "400": null,
+                "500": null,
+                "600": null,
+                "700": null,
+                "800": null,
+                "900": null,
+                "950": null
+              },
+              "green": {
+                "50": null,
+                "100": null,
+                "200": {
+                  "value": {
+                    "$value": "green.200"
+                  }
+                },
+                "300": null,
+                "400": null,
+                "500": null,
+                "600": null,
+                "700": null,
+                "800": null,
+                "900": null,
+                "950": null
+              },
+              "$order": [
+                "red",
+                "blue",
+                "green"
+              ]
+            },
+            "spacing": {
+              "0": null,
+              "1": null,
+              "2": null,
+              "3": null,
+              "4": null,
+              "5": null,
+              "6": null,
+              "7": null,
+              "8": null,
+              "9": null,
+              "10": null,
+              "11": null,
+              "12": null,
+              "14": null,
+              "16": null,
+              "20": {
+                "value": {
+                  "$value": "20px"
+                }
+              },
+              "24": null,
+              "28": null,
+              "32": null,
+              "36": null,
+              "40": {
+                "value": {
+                  "$value": "40px"
+                }
+              },
+              "44": null,
+              "48": null,
+              "52": null,
+              "56": null,
+              "60": {
+                "value": {
+                  "$value": "60px"
+                }
+              },
+              "64": null,
+              "72": null,
+              "80": null,
+              "96": null,
+              "0.5": null,
+              "1.5": null,
+              "2.5": null,
+              "3.5": null,
+              "4.5": null,
+              "5.5": null
+            },
+            "sizes": {
+              "0": null,
+              "1": null,
+              "2": null,
+              "3": null,
+              "4": null,
+              "5": null,
+              "6": null,
+              "7": null,
+              "8": null,
+              "9": null,
+              "10": null,
+              "11": null,
+              "12": null,
+              "14": null,
+              "16": null,
+              "20": {
+                "value": {
+                  "$value": "20px"
+                }
+              },
+              "24": null,
+              "28": null,
+              "32": null,
+              "36": null,
+              "40": {
+                "value": {
+                  "$value": "40px"
+                }
+              },
+              "44": null,
+              "48": null,
+              "52": null,
+              "56": null,
+              "60": {
+                "value": {
+                  "$value": "60px"
+                }
+              },
+              "64": null,
+              "72": null,
+              "80": null,
+              "96": null,
+              "0.5": null,
+              "1.5": null,
+              "2.5": null,
+              "3.5": null,
+              "4.5": null,
+              "5.5": null,
+              "xs": null,
+              "sm": null,
+              "md": null,
+              "lg": null,
+              "xl": null,
+              "2xl": null,
+              "3xl": null,
+              "4xl": null,
+              "5xl": null,
+              "6xl": null,
+              "7xl": null,
+              "8xl": null,
+              "prose": null,
+              "full": null,
+              "min": null,
+              "max": null,
+              "fit": null
+            }
+          },
+          "semanticTokens": {
+            "colors": null,
+            "spacing": null
+          }
+        }
+      },
+      "inputs": [
+        {
+          "css": [
+            {
+              "properties": {
+                "fontSize": [
+                  "7xl",
+                  "8xl"
+                ]
+              },
+              "conditions": [
+                "@media (min-width: 24rem)",
+                ".mobile &"
+              ]
+            }
+          ]
+        }
+      ],
+      "expected": {
+        "styles": [
+          {
+            "fontSize": {
+              "base": "7xl",
+              "@media (min-width: 24rem)": "7xl",
+              ".mobile &": "7xl"
+            }
+          },
+          {
+            "fontSize": {
+              "base": "8xl",
+              "@media (min-width: 24rem)": "8xl",
+              ".mobile &": "8xl"
+            }
+          }
+        ],
+        "css": "@layer utilities {\n  .fs_7xl {\n    font-size: var(--font-sizes-7xl);\n}\n\n  .fs_8xl {\n    font-size: var(--font-sizes-8xl);\n}\n\n  .mobile .\\[\\.mobile_\\&\\]\\:fs_7xl {\n    font-size: var(--font-sizes-7xl);\n}\n\n  .mobile .\\[\\.mobile_\\&\\]\\:fs_8xl {\n    font-size: var(--font-sizes-8xl);\n}\n\n  @media (min-width: 24rem) {\n    .\\[\\@media_\\(min-width\\:_24rem\\)\\]\\:fs_7xl {\n      font-size: var(--font-sizes-7xl);\n}\n    .\\[\\@media_\\(min-width\\:_24rem\\)\\]\\:fs_8xl {\n      font-size: var(--font-sizes-8xl);\n}\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/core/__tests__/static-css.test.ts::static-css > container query::1",
+      "kind": "static-css",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/static-css.test.ts",
+        "test": "static-css > container query",
+        "line": 2177
+      },
+      "configPatch": {
+        "theme": {
+          "tokens": {
+            "colors": {
+              "current": null,
+              "black": null,
+              "white": null,
+              "transparent": null,
+              "rose": null,
+              "pink": null,
+              "fuchsia": null,
+              "purple": null,
+              "violet": null,
+              "indigo": null,
+              "sky": null,
+              "cyan": null,
+              "teal": null,
+              "emerald": null,
+              "lime": null,
+              "yellow": null,
+              "amber": null,
+              "orange": null,
+              "neutral": null,
+              "stone": null,
+              "zinc": null,
+              "gray": null,
+              "slate": null,
+              "deep": null,
+              "red": {
+                "50": null,
+                "100": null,
+                "200": {
+                  "value": {
+                    "$value": "red.200"
+                  }
+                },
+                "300": null,
+                "400": null,
+                "500": null,
+                "600": null,
+                "700": null,
+                "800": null,
+                "900": null,
+                "950": null
+              },
+              "blue": {
+                "50": null,
+                "100": null,
+                "200": {
+                  "value": {
+                    "$value": "blue.200"
+                  }
+                },
+                "300": null,
+                "400": null,
+                "500": null,
+                "600": null,
+                "700": null,
+                "800": null,
+                "900": null,
+                "950": null
+              },
+              "green": {
+                "50": null,
+                "100": null,
+                "200": {
+                  "value": {
+                    "$value": "green.200"
+                  }
+                },
+                "300": null,
+                "400": null,
+                "500": null,
+                "600": null,
+                "700": null,
+                "800": null,
+                "900": null,
+                "950": null
+              },
+              "$order": [
+                "red",
+                "blue",
+                "green"
+              ]
+            },
+            "spacing": {
+              "0": null,
+              "1": null,
+              "2": null,
+              "3": null,
+              "4": null,
+              "5": null,
+              "6": null,
+              "7": null,
+              "8": null,
+              "9": null,
+              "10": null,
+              "11": null,
+              "12": null,
+              "14": null,
+              "16": null,
+              "20": {
+                "value": {
+                  "$value": "20px"
+                }
+              },
+              "24": null,
+              "28": null,
+              "32": null,
+              "36": null,
+              "40": {
+                "value": {
+                  "$value": "40px"
+                }
+              },
+              "44": null,
+              "48": null,
+              "52": null,
+              "56": null,
+              "60": {
+                "value": {
+                  "$value": "60px"
+                }
+              },
+              "64": null,
+              "72": null,
+              "80": null,
+              "96": null,
+              "0.5": null,
+              "1.5": null,
+              "2.5": null,
+              "3.5": null,
+              "4.5": null,
+              "5.5": null
+            },
+            "sizes": {
+              "0": null,
+              "1": null,
+              "2": null,
+              "3": null,
+              "4": null,
+              "5": null,
+              "6": null,
+              "7": null,
+              "8": null,
+              "9": null,
+              "10": null,
+              "11": null,
+              "12": null,
+              "14": null,
+              "16": null,
+              "20": {
+                "value": {
+                  "$value": "20px"
+                }
+              },
+              "24": null,
+              "28": null,
+              "32": null,
+              "36": null,
+              "40": {
+                "value": {
+                  "$value": "40px"
+                }
+              },
+              "44": null,
+              "48": null,
+              "52": null,
+              "56": null,
+              "60": {
+                "value": {
+                  "$value": "60px"
+                }
+              },
+              "64": null,
+              "72": null,
+              "80": null,
+              "96": null,
+              "0.5": null,
+              "1.5": null,
+              "2.5": null,
+              "3.5": null,
+              "4.5": null,
+              "5.5": null,
+              "xs": null,
+              "sm": null,
+              "md": null,
+              "lg": null,
+              "xl": null,
+              "2xl": null,
+              "3xl": null,
+              "4xl": null,
+              "5xl": null,
+              "6xl": null,
+              "7xl": null,
+              "8xl": null,
+              "prose": null,
+              "full": null,
+              "min": null,
+              "max": null,
+              "fit": null
+            }
+          },
+          "semanticTokens": {
+            "colors": null,
+            "spacing": null
+          },
+          "containerNames": {
+            "$value": [
+              "",
+              "pb"
+            ]
+          }
+        }
+      },
+      "inputs": [
+        {
+          "css": [
+            {
+              "properties": {
+                "fontSize": [
+                  "7xl",
+                  "8xl"
+                ],
+                "fontWeight": [
+                  "*"
+                ]
+              },
+              "conditions": [
+                "@pb/sm",
+                "@pb/md"
+              ]
+            }
+          ]
+        }
+      ],
+      "expected": {
+        "styles": [
+          {
+            "fontSize": {
+              "base": "7xl",
+              "@pb/sm": "7xl",
+              "@pb/md": "7xl"
+            }
+          },
+          {
+            "fontSize": {
+              "base": "8xl",
+              "@pb/sm": "8xl",
+              "@pb/md": "8xl"
+            }
+          },
+          {
+            "fontWeight": {
+              "base": "thin",
+              "@pb/sm": "thin",
+              "@pb/md": "thin"
+            }
+          },
+          {
+            "fontWeight": {
+              "base": "extralight",
+              "@pb/sm": "extralight",
+              "@pb/md": "extralight"
+            }
+          },
+          {
+            "fontWeight": {
+              "base": "light",
+              "@pb/sm": "light",
+              "@pb/md": "light"
+            }
+          },
+          {
+            "fontWeight": {
+              "base": "normal",
+              "@pb/sm": "normal",
+              "@pb/md": "normal"
+            }
+          },
+          {
+            "fontWeight": {
+              "base": "medium",
+              "@pb/sm": "medium",
+              "@pb/md": "medium"
+            }
+          },
+          {
+            "fontWeight": {
+              "base": "semibold",
+              "@pb/sm": "semibold",
+              "@pb/md": "semibold"
+            }
+          },
+          {
+            "fontWeight": {
+              "base": "bold",
+              "@pb/sm": "bold",
+              "@pb/md": "bold"
+            }
+          },
+          {
+            "fontWeight": {
+              "base": "extrabold",
+              "@pb/sm": "extrabold",
+              "@pb/md": "extrabold"
+            }
+          },
+          {
+            "fontWeight": {
+              "base": "black",
+              "@pb/sm": "black",
+              "@pb/md": "black"
+            }
+          }
+        ],
+        "css": "@layer utilities {\n  .fs_7xl {\n    font-size: var(--font-sizes-7xl);\n}\n\n  .fs_8xl {\n    font-size: var(--font-sizes-8xl);\n}\n\n  .fw_thin {\n    font-weight: var(--font-weights-thin);\n}\n\n  .fw_extralight {\n    font-weight: var(--font-weights-extralight);\n}\n\n  .fw_light {\n    font-weight: var(--font-weights-light);\n}\n\n  .fw_normal {\n    font-weight: var(--font-weights-normal);\n}\n\n  .fw_medium {\n    font-weight: var(--font-weights-medium);\n}\n\n  .fw_semibold {\n    font-weight: var(--font-weights-semibold);\n}\n\n  .fw_bold {\n    font-weight: var(--font-weights-bold);\n}\n\n  .fw_extrabold {\n    font-weight: var(--font-weights-extrabold);\n}\n\n  .fw_black {\n    font-weight: var(--font-weights-black);\n}\n\n  @container pb (min-width: 24rem) {\n    .\\@pb\\/sm\\:fs_7xl {\n      font-size: var(--font-sizes-7xl);\n}\n    .\\@pb\\/sm\\:fs_8xl {\n      font-size: var(--font-sizes-8xl);\n}\n    .\\@pb\\/sm\\:fw_thin {\n      font-weight: var(--font-weights-thin);\n}\n    .\\@pb\\/sm\\:fw_extralight {\n      font-weight: var(--font-weights-extralight);\n}\n    .\\@pb\\/sm\\:fw_light {\n      font-weight: var(--font-weights-light);\n}\n    .\\@pb\\/sm\\:fw_normal {\n      font-weight: var(--font-weights-normal);\n}\n    .\\@pb\\/sm\\:fw_medium {\n      font-weight: var(--font-weights-medium);\n}\n    .\\@pb\\/sm\\:fw_semibold {\n      font-weight: var(--font-weights-semibold);\n}\n    .\\@pb\\/sm\\:fw_bold {\n      font-weight: var(--font-weights-bold);\n}\n    .\\@pb\\/sm\\:fw_extrabold {\n      font-weight: var(--font-weights-extrabold);\n}\n    .\\@pb\\/sm\\:fw_black {\n      font-weight: var(--font-weights-black);\n}\n}\n\n  @container pb (min-width: 28rem) {\n    .\\@pb\\/md\\:fs_7xl {\n      font-size: var(--font-sizes-7xl);\n}\n    .\\@pb\\/md\\:fs_8xl {\n      font-size: var(--font-sizes-8xl);\n}\n    .\\@pb\\/md\\:fw_thin {\n      font-weight: var(--font-weights-thin);\n}\n    .\\@pb\\/md\\:fw_extralight {\n      font-weight: var(--font-weights-extralight);\n}\n    .\\@pb\\/md\\:fw_light {\n      font-weight: var(--font-weights-light);\n}\n    .\\@pb\\/md\\:fw_normal {\n      font-weight: var(--font-weights-normal);\n}\n    .\\@pb\\/md\\:fw_medium {\n      font-weight: var(--font-weights-medium);\n}\n    .\\@pb\\/md\\:fw_semibold {\n      font-weight: var(--font-weights-semibold);\n}\n    .\\@pb\\/md\\:fw_bold {\n      font-weight: var(--font-weights-bold);\n}\n    .\\@pb\\/md\\:fw_extrabold {\n      font-weight: var(--font-weights-extrabold);\n}\n    .\\@pb\\/md\\:fw_black {\n      font-weight: var(--font-weights-black);\n}\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/core/__tests__/static-css.test.ts::static-css > recipe + compoundVariants::1",
+      "kind": "static-css",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/static-css.test.ts",
+        "test": "static-css > recipe + compoundVariants",
+        "line": 2097
+      },
+      "configPatch": {
+        "theme": {
+          "keyframes": null,
+          "breakpoints": null,
+          "tokens": null,
+          "textStyles": null,
+          "containerSizes": null,
+          "semanticTokens": null,
+          "slotRecipes": null,
+          "recipes": {
+            "withCompound": {
+              "$value": {
+                "className": "withCompound",
+                "base": {
+                  "fontSize": "1px"
+                },
+                "variants": {
+                  "size": {
+                    "sm": {
+                      "fontSize": "2px"
+                    }
+                  }
+                },
+                "compoundVariants": [
+                  {
+                    "size": [
+                      "sm"
+                    ],
+                    "css": {
+                      "fontSize": "3px",
+                      "_hover": {
+                        "fontSize": "4px",
+                        "_dark": {
+                          "fontSize": "5px"
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "inputs": [
+        {
+          "recipes": {
+            "withCompound": [
+              "*"
+            ]
+          }
+        }
+      ],
+      "expected": {
+        "styles": [
+          {
+            "fontSize": "3px"
+          },
+          {
+            "_hover": {
+              "fontSize": "4px",
+              "_dark": {
+                "fontSize": "5px"
+              }
+            }
+          }
+        ],
+        "css": "@layer recipes {\n  @layer _base {\n    .withCompound {\n      font-size: 1px;\n}\n}\n\n  .withCompound--size_sm {\n    font-size: 2px;\n}\n}\n\n@layer utilities {\n  .fs_3px {\n    font-size: 3px;\n}\n\n  .hover\\:fs_4px:is(:hover, [data-hover]) {\n    font-size: 4px;\n}\n\n  [data-theme=dark] .hover\\:dark\\:fs_5px:is(:hover, [data-hover]),.dark .hover\\:dark\\:fs_5px:is(:hover, [data-hover]),.hover\\:dark\\:fs_5px:is(:hover, [data-hover]).dark,.hover\\:dark\\:fs_5px:is(:hover, [data-hover])[data-theme=dark] {\n    font-size: 5px;\n}\n}"
+      },
+      "unsupported": "static css for recipes"
+    },
+    {
+      "id": "fixture::packages/core/__tests__/static-css.test.ts::static-css > simple pattern::1",
+      "kind": "static-css",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/static-css.test.ts",
+        "test": "static-css > simple pattern",
+        "line": 40
+      },
+      "configPatch": {
+        "theme": {
+          "tokens": {
+            "colors": {
+              "current": null,
+              "black": null,
+              "white": null,
+              "transparent": null,
+              "rose": null,
+              "pink": null,
+              "fuchsia": null,
+              "purple": null,
+              "violet": null,
+              "indigo": null,
+              "sky": null,
+              "cyan": null,
+              "teal": null,
+              "emerald": null,
+              "lime": null,
+              "yellow": null,
+              "amber": null,
+              "orange": null,
+              "neutral": null,
+              "stone": null,
+              "zinc": null,
+              "gray": null,
+              "slate": null,
+              "deep": null,
+              "red": {
+                "50": null,
+                "100": null,
+                "200": {
+                  "value": {
+                    "$value": "red.200"
+                  }
+                },
+                "300": null,
+                "400": null,
+                "500": null,
+                "600": null,
+                "700": null,
+                "800": null,
+                "900": null,
+                "950": null
+              },
+              "blue": {
+                "50": null,
+                "100": null,
+                "200": {
+                  "value": {
+                    "$value": "blue.200"
+                  }
+                },
+                "300": null,
+                "400": null,
+                "500": null,
+                "600": null,
+                "700": null,
+                "800": null,
+                "900": null,
+                "950": null
+              },
+              "green": {
+                "50": null,
+                "100": null,
+                "200": {
+                  "value": {
+                    "$value": "green.200"
+                  }
+                },
+                "300": null,
+                "400": null,
+                "500": null,
+                "600": null,
+                "700": null,
+                "800": null,
+                "900": null,
+                "950": null
+              },
+              "$order": [
+                "red",
+                "blue",
+                "green"
+              ]
+            },
+            "spacing": {
+              "0": null,
+              "1": null,
+              "2": null,
+              "3": null,
+              "4": null,
+              "5": null,
+              "6": null,
+              "7": null,
+              "8": null,
+              "9": null,
+              "10": null,
+              "11": null,
+              "12": null,
+              "14": null,
+              "16": null,
+              "20": {
+                "value": {
+                  "$value": "20px"
+                }
+              },
+              "24": null,
+              "28": null,
+              "32": null,
+              "36": null,
+              "40": {
+                "value": {
+                  "$value": "40px"
+                }
+              },
+              "44": null,
+              "48": null,
+              "52": null,
+              "56": null,
+              "60": {
+                "value": {
+                  "$value": "60px"
+                }
+              },
+              "64": null,
+              "72": null,
+              "80": null,
+              "96": null,
+              "0.5": null,
+              "1.5": null,
+              "2.5": null,
+              "3.5": null,
+              "4.5": null,
+              "5.5": null
+            },
+            "sizes": {
+              "0": null,
+              "1": null,
+              "2": null,
+              "3": null,
+              "4": null,
+              "5": null,
+              "6": null,
+              "7": null,
+              "8": null,
+              "9": null,
+              "10": null,
+              "11": null,
+              "12": null,
+              "14": null,
+              "16": null,
+              "20": {
+                "value": {
+                  "$value": "20px"
+                }
+              },
+              "24": null,
+              "28": null,
+              "32": null,
+              "36": null,
+              "40": {
+                "value": {
+                  "$value": "40px"
+                }
+              },
+              "44": null,
+              "48": null,
+              "52": null,
+              "56": null,
+              "60": {
+                "value": {
+                  "$value": "60px"
+                }
+              },
+              "64": null,
+              "72": null,
+              "80": null,
+              "96": null,
+              "0.5": null,
+              "1.5": null,
+              "2.5": null,
+              "3.5": null,
+              "4.5": null,
+              "5.5": null,
+              "xs": null,
+              "sm": null,
+              "md": null,
+              "lg": null,
+              "xl": null,
+              "2xl": null,
+              "3xl": null,
+              "4xl": null,
+              "5xl": null,
+              "6xl": null,
+              "7xl": null,
+              "8xl": null,
+              "prose": null,
+              "full": null,
+              "min": null,
+              "max": null,
+              "fit": null
+            }
+          },
+          "semanticTokens": {
+            "colors": null,
+            "spacing": null
+          }
+        }
+      },
+      "inputs": [
+        {
+          "patterns": {
+            "aspectRatio": [
+              {
+                "properties": {
+                  "ratio": [
+                    "4/3",
+                    "16/9",
+                    "1/1"
+                  ]
+                }
+              },
+              {
+                "properties": {
+                  "ratio": [
+                    "1/4"
+                  ]
+                },
+                "conditions": [
+                  "md"
+                ]
+              }
+            ],
+            "spacer": [
+              {
+                "properties": {
+                  "size": [
+                    "sm",
+                    "md",
+                    "lg"
+                  ]
+                }
+              }
+            ],
+            "circle": [
+              {
+                "properties": {
+                  "size": [
+                    "sm",
+                    "md",
+                    "lg"
+                  ]
+                }
+              }
+            ],
+            "bleed": [
+              {
+                "properties": {
+                  "inline": [
+                    "*"
+                  ]
+                }
+              }
+            ],
+            "divider": [
+              {
+                "properties": {
+                  "orientation": [
+                    "*"
+                  ],
+                  "thickness": [
+                    "*"
+                  ]
+                }
+              }
+            ],
+            "float": [
+              "*"
+            ]
+          }
+        }
+      ],
+      "expected": {
+        "styles": [],
+        "css": "@layer utilities {\n  .\\--bleed-x_token\\(spacing\\.20\\,_20\\) {\n    --bleed-x: var(--spacing-20, 20);\n}\n\n  .\\--bleed-y_token\\(spacing\\.0\\,_0\\) {\n    --bleed-y: 0;\n}\n\n  .\\--bleed-x_token\\(spacing\\.40\\,_40\\) {\n    --bleed-x: var(--spacing-40, 40);\n}\n\n  .\\--bleed-x_token\\(spacing\\.60\\,_60\\) {\n    --bleed-x: var(--spacing-60, 60);\n}\n\n  .\\--bleed-x_token\\(spacing\\.auto\\,_auto\\) {\n    --bleed-x: auto;\n}\n\n  .\\--bleed-x_token\\(spacing\\.-20\\,_-20\\) {\n    --bleed-x: calc(var(--spacing-20) * -1, -20);\n}\n\n  .\\--bleed-x_token\\(spacing\\.-40\\,_-40\\) {\n    --bleed-x: calc(var(--spacing-40) * -1, -40);\n}\n\n  .\\--bleed-x_token\\(spacing\\.-60\\,_-60\\) {\n    --bleed-x: calc(var(--spacing-60) * -1, -60);\n}\n\n  .\\--thickness_1px {\n    --thickness: 1px;\n}\n\n  .\\--thickness_20 {\n    --thickness: 20;\n}\n\n  .\\--thickness_40 {\n    --thickness: 40;\n}\n\n  .\\--thickness_60 {\n    --thickness: 60;\n}\n\n  .\\--thickness_breakpoint-sm {\n    --thickness: breakpoint-sm;\n}\n\n  .\\--thickness_breakpoint-md {\n    --thickness: breakpoint-md;\n}\n\n  .\\--thickness_breakpoint-lg {\n    --thickness: breakpoint-lg;\n}\n\n  .\\--thickness_breakpoint-xl {\n    --thickness: breakpoint-xl;\n}\n\n  .\\--thickness_breakpoint-2xl {\n    --thickness: breakpoint-2xl;\n}\n\n  .flex_0_0_token\\(spacing\\.sm\\,_sm\\) {\n    flex: 0 0 sm;\n}\n\n  .flex_0_0_token\\(spacing\\.md\\,_md\\) {\n    flex: 0 0 md;\n}\n\n  .flex_0_0_token\\(spacing\\.lg\\,_lg\\) {\n    flex: 0 0 lg;\n}\n\n  .flex_0_0_auto {\n    flex: 0 0 auto;\n}\n\n  .bdr_9999px {\n    border-radius: 9999px;\n}\n\n  .mx_calc\\(var\\(--bleed-x\\,_0\\)_\\*_-1\\) {\n    margin-inline: calc(var(--bleed-x, 0) * -1);\n}\n\n  .my_calc\\(var\\(--bleed-y\\,_0\\)_\\*_-1\\) {\n    margin-block: calc(var(--bleed-y, 0) * -1);\n}\n\n  .pos_relative {\n    position: relative;\n}\n\n  .as_stretch {\n    align-self: stretch;\n}\n\n  .justify-self_stretch {\n    justify-self: stretch;\n}\n\n  .d_flex {\n    display: flex;\n}\n\n  .ai_center {\n    align-items: center;\n}\n\n  .jc_center {\n    justify-content: center;\n}\n\n  .bd-be-w_var\\(--thickness\\) {\n    border-block-end-width: var(--thickness);\n}\n\n  .bd-e-w_var\\(--thickness\\) {\n    border-inline-end-width: var(--thickness);\n}\n\n  .d_inline-flex {\n    display: inline-flex;\n}\n\n  .pos_absolute {\n    position: absolute;\n}\n\n  .inset-bs_0 {\n    inset-block-start: 0;\n}\n\n  .inset-be_auto {\n    inset-block-end: auto;\n}\n\n  .inset-s_auto {\n    inset-inline-start: auto;\n}\n\n  .inset-e_20 {\n    inset-inline-end: var(--spacing-20);\n}\n\n  .translate_50\\%_-50\\% {\n    translate: 50% -50%;\n}\n\n  .inset-e_40 {\n    inset-inline-end: var(--spacing-40);\n}\n\n  .inset-e_60 {\n    inset-inline-end: var(--spacing-60);\n}\n\n  .inset-e_-20 {\n    inset-inline-end: calc(var(--spacing-20) * -1);\n}\n\n  .inset-e_-40 {\n    inset-inline-end: calc(var(--spacing-40) * -1);\n}\n\n  .inset-e_-60 {\n    inset-inline-end: calc(var(--spacing-60) * -1);\n}\n\n  .inset-bs_20 {\n    inset-block-start: var(--spacing-20);\n}\n\n  .inset-e_0 {\n    inset-inline-end: 0;\n}\n\n  .inset-bs_40 {\n    inset-block-start: var(--spacing-40);\n}\n\n  .inset-bs_60 {\n    inset-block-start: var(--spacing-60);\n}\n\n  .inset-bs_-20 {\n    inset-block-start: calc(var(--spacing-20) * -1);\n}\n\n  .inset-bs_-40 {\n    inset-block-start: calc(var(--spacing-40) * -1);\n}\n\n  .inset-bs_-60 {\n    inset-block-start: calc(var(--spacing-60) * -1);\n}\n\n  .inset-bs_auto {\n    inset-block-start: auto;\n}\n\n  .inset-be_0 {\n    inset-block-end: 0;\n}\n\n  .translate_50\\%_50\\% {\n    translate: 50% 50%;\n}\n\n  .inset-s_0 {\n    inset-inline-start: 0;\n}\n\n  .inset-e_auto {\n    inset-inline-end: auto;\n}\n\n  .translate_-50\\%_50\\% {\n    translate: -50% 50%;\n}\n\n  .translate_-50\\%_-50\\% {\n    translate: -50% -50%;\n}\n\n  .inset-s_50\\% {\n    inset-inline-start: 50%;\n}\n\n  .inset-e_50\\% {\n    inset-inline-end: 50%;\n}\n\n  .inset-bs_50\\% {\n    inset-block-start: 50%;\n}\n\n  .inset-be_50\\% {\n    inset-block-end: 50%;\n}\n\n  .w_sm {\n    width: sm;\n}\n\n  .h_sm {\n    height: sm;\n}\n\n  .w_md {\n    width: md;\n}\n\n  .h_md {\n    height: md;\n}\n\n  .w_lg {\n    width: lg;\n}\n\n  .h_lg {\n    height: lg;\n}\n\n  .w_100\\% {\n    width: 100%;\n}\n\n  .h_100\\% {\n    height: 100%;\n}\n\n  .\\[\\&\\>\\*\\]\\:inset_0>* {\n    inset: 0;\n}\n\n  .\\[\\&\\>\\*\\]\\:ov_hidden>* {\n    overflow: hidden;\n}\n\n  .before\\:content_\\\"\\\"::before {\n    content: \"\";\n}\n\n  .before\\:d_block::before {\n    display: block;\n}\n\n  .\\[\\&\\>\\*\\]\\:d_flex>* {\n    display: flex;\n}\n\n  .\\[\\&\\>\\*\\]\\:jc_center>* {\n    justify-content: center;\n}\n\n  .\\[\\&\\>\\*\\]\\:ai_center>* {\n    align-items: center;\n}\n\n  .\\[\\&\\>\\*\\]\\:pos_absolute>* {\n    position: absolute;\n}\n\n  .\\[\\&\\>img\\,_\\&\\>video\\]\\:obj-f_cover>img,.\\[\\&\\>img\\,_\\&\\>video\\]\\:obj-f_cover>video {\n    object-fit: cover;\n}\n\n  .before\\:h_0::before {\n    height: 0;\n}\n\n  .before\\:pb_NaN\\%::before {\n    padding-bottom: NaN%;\n}\n\n  .\\[\\&\\>\\*\\]\\:w_100\\%>* {\n    width: 100%;\n}\n\n  .\\[\\&\\>\\*\\]\\:h_100\\%>* {\n    height: 100%;\n}\n\n  @media screen and (min-width: 48rem) {\n    .md\\:pos_relative {\n      position: relative;\n}\n    .md\\:\\[\\&\\>\\*\\]\\:inset_0>* {\n      inset: 0;\n}\n    .md\\:\\[\\&\\>\\*\\]\\:ov_hidden>* {\n      overflow: hidden;\n}\n    .md\\:before\\:content_\\\"\\\"::before {\n      content: \"\";\n}\n    .md\\:before\\:d_block::before {\n      display: block;\n}\n    .md\\:\\[\\&\\>\\*\\]\\:d_flex>* {\n      display: flex;\n}\n    .md\\:\\[\\&\\>\\*\\]\\:jc_center>* {\n      justify-content: center;\n}\n    .md\\:\\[\\&\\>\\*\\]\\:ai_center>* {\n      align-items: center;\n}\n    .md\\:\\[\\&\\>\\*\\]\\:pos_absolute>* {\n      position: absolute;\n}\n    .md\\:\\[\\&\\>img\\,_\\&\\>video\\]\\:obj-f_cover>img,.md\\:\\[\\&\\>img\\,_\\&\\>video\\]\\:obj-f_cover>video {\n      object-fit: cover;\n}\n    .md\\:before\\:h_0::before {\n      height: 0;\n}\n    .md\\:before\\:pb_NaN\\%::before {\n      padding-bottom: NaN%;\n}\n    .md\\:\\[\\&\\>\\*\\]\\:w_100\\%>* {\n      width: 100%;\n}\n    .md\\:\\[\\&\\>\\*\\]\\:h_100\\%>* {\n      height: 100%;\n}\n}\n}"
+      },
+      "unsupported": "static css for patterns"
+    },
+    {
+      "id": "fixture::packages/core/__tests__/static-css.test.ts::static-css > simple recipe::1",
+      "kind": "static-css",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/static-css.test.ts",
+        "test": "static-css > simple recipe",
+        "line": 40
+      },
+      "configPatch": {
+        "theme": {
+          "tokens": {
+            "colors": {
+              "current": null,
+              "black": null,
+              "white": null,
+              "transparent": null,
+              "rose": null,
+              "pink": null,
+              "fuchsia": null,
+              "purple": null,
+              "violet": null,
+              "indigo": null,
+              "sky": null,
+              "cyan": null,
+              "teal": null,
+              "emerald": null,
+              "lime": null,
+              "yellow": null,
+              "amber": null,
+              "orange": null,
+              "neutral": null,
+              "stone": null,
+              "zinc": null,
+              "gray": null,
+              "slate": null,
+              "deep": null,
+              "red": {
+                "50": null,
+                "100": null,
+                "200": {
+                  "value": {
+                    "$value": "red.200"
+                  }
+                },
+                "300": null,
+                "400": null,
+                "500": null,
+                "600": null,
+                "700": null,
+                "800": null,
+                "900": null,
+                "950": null
+              },
+              "blue": {
+                "50": null,
+                "100": null,
+                "200": {
+                  "value": {
+                    "$value": "blue.200"
+                  }
+                },
+                "300": null,
+                "400": null,
+                "500": null,
+                "600": null,
+                "700": null,
+                "800": null,
+                "900": null,
+                "950": null
+              },
+              "green": {
+                "50": null,
+                "100": null,
+                "200": {
+                  "value": {
+                    "$value": "green.200"
+                  }
+                },
+                "300": null,
+                "400": null,
+                "500": null,
+                "600": null,
+                "700": null,
+                "800": null,
+                "900": null,
+                "950": null
+              },
+              "$order": [
+                "red",
+                "blue",
+                "green"
+              ]
+            },
+            "spacing": {
+              "0": null,
+              "1": null,
+              "2": null,
+              "3": null,
+              "4": null,
+              "5": null,
+              "6": null,
+              "7": null,
+              "8": null,
+              "9": null,
+              "10": null,
+              "11": null,
+              "12": null,
+              "14": null,
+              "16": null,
+              "20": {
+                "value": {
+                  "$value": "20px"
+                }
+              },
+              "24": null,
+              "28": null,
+              "32": null,
+              "36": null,
+              "40": {
+                "value": {
+                  "$value": "40px"
+                }
+              },
+              "44": null,
+              "48": null,
+              "52": null,
+              "56": null,
+              "60": {
+                "value": {
+                  "$value": "60px"
+                }
+              },
+              "64": null,
+              "72": null,
+              "80": null,
+              "96": null,
+              "0.5": null,
+              "1.5": null,
+              "2.5": null,
+              "3.5": null,
+              "4.5": null,
+              "5.5": null
+            },
+            "sizes": {
+              "0": null,
+              "1": null,
+              "2": null,
+              "3": null,
+              "4": null,
+              "5": null,
+              "6": null,
+              "7": null,
+              "8": null,
+              "9": null,
+              "10": null,
+              "11": null,
+              "12": null,
+              "14": null,
+              "16": null,
+              "20": {
+                "value": {
+                  "$value": "20px"
+                }
+              },
+              "24": null,
+              "28": null,
+              "32": null,
+              "36": null,
+              "40": {
+                "value": {
+                  "$value": "40px"
+                }
+              },
+              "44": null,
+              "48": null,
+              "52": null,
+              "56": null,
+              "60": {
+                "value": {
+                  "$value": "60px"
+                }
+              },
+              "64": null,
+              "72": null,
+              "80": null,
+              "96": null,
+              "0.5": null,
+              "1.5": null,
+              "2.5": null,
+              "3.5": null,
+              "4.5": null,
+              "5.5": null,
+              "xs": null,
+              "sm": null,
+              "md": null,
+              "lg": null,
+              "xl": null,
+              "2xl": null,
+              "3xl": null,
+              "4xl": null,
+              "5xl": null,
+              "6xl": null,
+              "7xl": null,
+              "8xl": null,
+              "prose": null,
+              "full": null,
+              "min": null,
+              "max": null,
+              "fit": null
+            }
+          },
+          "semanticTokens": {
+            "colors": null,
+            "spacing": null
+          }
+        }
+      },
+      "inputs": [
+        {
+          "recipes": {
+            "buttonStyle": [
+              {
+                "size": [
+                  "md"
+                ],
+                "conditions": [
+                  "md"
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "expected": {
+        "styles": [],
+        "css": "@layer recipes {\n  @layer _base {\n    .buttonStyle {\n      display: inline-flex;\n      align-items: center;\n      justify-content: center;\n}\n\n    .buttonStyle:is(:hover, [data-hover]) {\n      background-color: var(--colors-red-200);\n      font-size: var(--font-sizes-3xl);\n      color: white;\n}\n}\n\n  .buttonStyle--size_md {\n    padding: 0 0.75rem;\n    height: 3rem;\n    min-width: 3rem;\n}\n\n  .buttonStyle--variant_solid {\n    background-color: blue;\n    color: white;\n}\n\n  .buttonStyle--variant_solid[data-disabled] {\n    background-color: gray;\n    color: black;\n    font-size: var(--font-sizes-2xl);\n}\n\n  .buttonStyle--variant_solid:is(:hover, [data-hover]) {\n    background-color: darkblue;\n}\n\n  @media screen and (min-width: 48rem) {\n    .md\\:buttonStyle--size_md {\n      padding: 0 0.75rem;\n      height: 3rem;\n      min-width: 3rem;\n}\n}\n}"
+      },
+      "unsupported": "static css for recipes"
+    },
+    {
+      "id": "fixture::packages/core/__tests__/static-css.test.ts::static-css > slot recipe::1",
+      "kind": "static-css",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/static-css.test.ts",
+        "test": "static-css > slot recipe",
+        "line": 40
+      },
+      "configPatch": {
+        "theme": {
+          "tokens": {
+            "colors": {
+              "current": null,
+              "black": null,
+              "white": null,
+              "transparent": null,
+              "rose": null,
+              "pink": null,
+              "fuchsia": null,
+              "purple": null,
+              "violet": null,
+              "indigo": null,
+              "sky": null,
+              "cyan": null,
+              "teal": null,
+              "emerald": null,
+              "lime": null,
+              "yellow": null,
+              "amber": null,
+              "orange": null,
+              "neutral": null,
+              "stone": null,
+              "zinc": null,
+              "gray": null,
+              "slate": null,
+              "deep": null,
+              "red": {
+                "50": null,
+                "100": null,
+                "200": {
+                  "value": {
+                    "$value": "red.200"
+                  }
+                },
+                "300": null,
+                "400": null,
+                "500": null,
+                "600": null,
+                "700": null,
+                "800": null,
+                "900": null,
+                "950": null
+              },
+              "blue": {
+                "50": null,
+                "100": null,
+                "200": {
+                  "value": {
+                    "$value": "blue.200"
+                  }
+                },
+                "300": null,
+                "400": null,
+                "500": null,
+                "600": null,
+                "700": null,
+                "800": null,
+                "900": null,
+                "950": null
+              },
+              "green": {
+                "50": null,
+                "100": null,
+                "200": {
+                  "value": {
+                    "$value": "green.200"
+                  }
+                },
+                "300": null,
+                "400": null,
+                "500": null,
+                "600": null,
+                "700": null,
+                "800": null,
+                "900": null,
+                "950": null
+              },
+              "$order": [
+                "red",
+                "blue",
+                "green"
+              ]
+            },
+            "spacing": {
+              "0": null,
+              "1": null,
+              "2": null,
+              "3": null,
+              "4": null,
+              "5": null,
+              "6": null,
+              "7": null,
+              "8": null,
+              "9": null,
+              "10": null,
+              "11": null,
+              "12": null,
+              "14": null,
+              "16": null,
+              "20": {
+                "value": {
+                  "$value": "20px"
+                }
+              },
+              "24": null,
+              "28": null,
+              "32": null,
+              "36": null,
+              "40": {
+                "value": {
+                  "$value": "40px"
+                }
+              },
+              "44": null,
+              "48": null,
+              "52": null,
+              "56": null,
+              "60": {
+                "value": {
+                  "$value": "60px"
+                }
+              },
+              "64": null,
+              "72": null,
+              "80": null,
+              "96": null,
+              "0.5": null,
+              "1.5": null,
+              "2.5": null,
+              "3.5": null,
+              "4.5": null,
+              "5.5": null
+            },
+            "sizes": {
+              "0": null,
+              "1": null,
+              "2": null,
+              "3": null,
+              "4": null,
+              "5": null,
+              "6": null,
+              "7": null,
+              "8": null,
+              "9": null,
+              "10": null,
+              "11": null,
+              "12": null,
+              "14": null,
+              "16": null,
+              "20": {
+                "value": {
+                  "$value": "20px"
+                }
+              },
+              "24": null,
+              "28": null,
+              "32": null,
+              "36": null,
+              "40": {
+                "value": {
+                  "$value": "40px"
+                }
+              },
+              "44": null,
+              "48": null,
+              "52": null,
+              "56": null,
+              "60": {
+                "value": {
+                  "$value": "60px"
+                }
+              },
+              "64": null,
+              "72": null,
+              "80": null,
+              "96": null,
+              "0.5": null,
+              "1.5": null,
+              "2.5": null,
+              "3.5": null,
+              "4.5": null,
+              "5.5": null,
+              "xs": null,
+              "sm": null,
+              "md": null,
+              "lg": null,
+              "xl": null,
+              "2xl": null,
+              "3xl": null,
+              "4xl": null,
+              "5xl": null,
+              "6xl": null,
+              "7xl": null,
+              "8xl": null,
+              "prose": null,
+              "full": null,
+              "min": null,
+              "max": null,
+              "fit": null
+            }
+          },
+          "semanticTokens": {
+            "colors": null,
+            "spacing": null
+          }
+        }
+      },
+      "inputs": [
+        {
+          "recipes": {
+            "checkbox": [
+              {
+                "size": [
+                  "lg"
+                ],
+                "conditions": [
+                  "lg"
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "expected": {
+        "styles": [],
+        "css": "@layer recipes.slots {\n  @layer _base {\n    .checkbox__root {\n      gap: 2px;\n      display: flex;\n      align-items: center;\n}\n\n    .checkbox__control {\n      border-width: 1px;\n      border-radius: var(--radii-sm);\n}\n\n    .checkbox__label {\n      margin-inline-start: 2px;\n}\n}\n\n  .checkbox__control--size_sm {\n    font-size: 2rem;\n    font-weight: var(--font-weights-bold);\n    width: var(--sizes-8);\n    height: var(--sizes-8);\n}\n\n  .checkbox__label--size_sm {\n    font-size: var(--font-sizes-sm);\n}\n\n  .checkbox__control--size_lg {\n    width: var(--sizes-12);\n    height: var(--sizes-12);\n}\n\n  .checkbox__label--size_lg {\n    font-size: var(--font-sizes-lg);\n}\n\n  @media screen and (min-width: 64rem) {\n    .lg\\:checkbox__control--size_lg {\n      width: var(--sizes-12);\n      height: var(--sizes-12);\n}\n    .lg\\:checkbox__label--size_lg {\n      font-size: var(--font-sizes-lg);\n}\n}\n}"
+      },
+      "unsupported": "static css for recipes"
+    },
+    {
+      "id": "fixture::packages/core/__tests__/static-css.test.ts::static-css > using * as RecipeRule::1",
+      "kind": "static-css",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/static-css.test.ts",
+        "test": "static-css > using * as RecipeRule",
+        "line": 40
+      },
+      "configPatch": {
+        "theme": {
+          "tokens": {
+            "colors": {
+              "current": null,
+              "black": null,
+              "white": null,
+              "transparent": null,
+              "rose": null,
+              "pink": null,
+              "fuchsia": null,
+              "purple": null,
+              "violet": null,
+              "indigo": null,
+              "sky": null,
+              "cyan": null,
+              "teal": null,
+              "emerald": null,
+              "lime": null,
+              "yellow": null,
+              "amber": null,
+              "orange": null,
+              "neutral": null,
+              "stone": null,
+              "zinc": null,
+              "gray": null,
+              "slate": null,
+              "deep": null,
+              "red": {
+                "50": null,
+                "100": null,
+                "200": {
+                  "value": {
+                    "$value": "red.200"
+                  }
+                },
+                "300": null,
+                "400": null,
+                "500": null,
+                "600": null,
+                "700": null,
+                "800": null,
+                "900": null,
+                "950": null
+              },
+              "blue": {
+                "50": null,
+                "100": null,
+                "200": {
+                  "value": {
+                    "$value": "blue.200"
+                  }
+                },
+                "300": null,
+                "400": null,
+                "500": null,
+                "600": null,
+                "700": null,
+                "800": null,
+                "900": null,
+                "950": null
+              },
+              "green": {
+                "50": null,
+                "100": null,
+                "200": {
+                  "value": {
+                    "$value": "green.200"
+                  }
+                },
+                "300": null,
+                "400": null,
+                "500": null,
+                "600": null,
+                "700": null,
+                "800": null,
+                "900": null,
+                "950": null
+              },
+              "$order": [
+                "red",
+                "blue",
+                "green"
+              ]
+            },
+            "spacing": {
+              "0": null,
+              "1": null,
+              "2": null,
+              "3": null,
+              "4": null,
+              "5": null,
+              "6": null,
+              "7": null,
+              "8": null,
+              "9": null,
+              "10": null,
+              "11": null,
+              "12": null,
+              "14": null,
+              "16": null,
+              "20": {
+                "value": {
+                  "$value": "20px"
+                }
+              },
+              "24": null,
+              "28": null,
+              "32": null,
+              "36": null,
+              "40": {
+                "value": {
+                  "$value": "40px"
+                }
+              },
+              "44": null,
+              "48": null,
+              "52": null,
+              "56": null,
+              "60": {
+                "value": {
+                  "$value": "60px"
+                }
+              },
+              "64": null,
+              "72": null,
+              "80": null,
+              "96": null,
+              "0.5": null,
+              "1.5": null,
+              "2.5": null,
+              "3.5": null,
+              "4.5": null,
+              "5.5": null
+            },
+            "sizes": {
+              "0": null,
+              "1": null,
+              "2": null,
+              "3": null,
+              "4": null,
+              "5": null,
+              "6": null,
+              "7": null,
+              "8": null,
+              "9": null,
+              "10": null,
+              "11": null,
+              "12": null,
+              "14": null,
+              "16": null,
+              "20": {
+                "value": {
+                  "$value": "20px"
+                }
+              },
+              "24": null,
+              "28": null,
+              "32": null,
+              "36": null,
+              "40": {
+                "value": {
+                  "$value": "40px"
+                }
+              },
+              "44": null,
+              "48": null,
+              "52": null,
+              "56": null,
+              "60": {
+                "value": {
+                  "$value": "60px"
+                }
+              },
+              "64": null,
+              "72": null,
+              "80": null,
+              "96": null,
+              "0.5": null,
+              "1.5": null,
+              "2.5": null,
+              "3.5": null,
+              "4.5": null,
+              "5.5": null,
+              "xs": null,
+              "sm": null,
+              "md": null,
+              "lg": null,
+              "xl": null,
+              "2xl": null,
+              "3xl": null,
+              "4xl": null,
+              "5xl": null,
+              "6xl": null,
+              "7xl": null,
+              "8xl": null,
+              "prose": null,
+              "full": null,
+              "min": null,
+              "max": null,
+              "fit": null
+            }
+          },
+          "semanticTokens": {
+            "colors": null,
+            "spacing": null
+          }
+        }
+      },
+      "inputs": [
+        {
+          "css": [],
+          "recipes": {
+            "buttonStyle": [
+              "*"
+            ]
+          }
+        }
+      ],
+      "expected": {
+        "styles": [],
+        "css": "@layer recipes {\n  @layer _base {\n    .buttonStyle {\n      display: inline-flex;\n      align-items: center;\n      justify-content: center;\n}\n\n    .buttonStyle:is(:hover, [data-hover]) {\n      background-color: var(--colors-red-200);\n      font-size: var(--font-sizes-3xl);\n      color: white;\n}\n}\n\n  .buttonStyle--size_md {\n    padding: 0 0.75rem;\n    height: 3rem;\n    min-width: 3rem;\n}\n\n  .buttonStyle--variant_solid {\n    background-color: blue;\n    color: white;\n}\n\n  .buttonStyle--variant_solid[data-disabled] {\n    background-color: gray;\n    color: black;\n    font-size: var(--font-sizes-2xl);\n}\n\n  .buttonStyle--variant_solid:is(:hover, [data-hover]) {\n    background-color: darkblue;\n}\n\n  .buttonStyle--size_sm {\n    padding: 0 0.5rem;\n    height: 2.5rem;\n    min-width: 2.5rem;\n}\n\n  .buttonStyle--variant_outline {\n    border: 1px solid blue;\n    background-color: transparent;\n    color: blue;\n}\n\n  .buttonStyle--variant_outline[data-disabled] {\n    border: 1px solid gray;\n    background-color: transparent;\n    color: gray;\n}\n\n  .buttonStyle--variant_outline:is(:hover, [data-hover]) {\n    background-color: blue;\n    color: white;\n}\n}"
+      },
+      "unsupported": "static css for recipes"
+    },
+    {
+      "id": "fixture::packages/core/__tests__/static-css.test.ts::static-css > using * in CssRule and conditions list::1",
+      "kind": "static-css",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/static-css.test.ts",
+        "test": "static-css > using * in CssRule and conditions list",
+        "line": 40
+      },
+      "configPatch": {
+        "theme": {
+          "tokens": {
+            "colors": {
+              "current": null,
+              "black": null,
+              "white": null,
+              "transparent": null,
+              "rose": null,
+              "pink": null,
+              "fuchsia": null,
+              "purple": null,
+              "violet": null,
+              "indigo": null,
+              "sky": null,
+              "cyan": null,
+              "teal": null,
+              "emerald": null,
+              "lime": null,
+              "yellow": null,
+              "amber": null,
+              "orange": null,
+              "neutral": null,
+              "stone": null,
+              "zinc": null,
+              "gray": null,
+              "slate": null,
+              "deep": null,
+              "red": {
+                "50": null,
+                "100": null,
+                "200": {
+                  "value": {
+                    "$value": "red.200"
+                  }
+                },
+                "300": null,
+                "400": null,
+                "500": null,
+                "600": null,
+                "700": null,
+                "800": null,
+                "900": null,
+                "950": null
+              },
+              "blue": {
+                "50": null,
+                "100": null,
+                "200": {
+                  "value": {
+                    "$value": "blue.200"
+                  }
+                },
+                "300": null,
+                "400": null,
+                "500": null,
+                "600": null,
+                "700": null,
+                "800": null,
+                "900": null,
+                "950": null
+              },
+              "green": {
+                "50": null,
+                "100": null,
+                "200": {
+                  "value": {
+                    "$value": "green.200"
+                  }
+                },
+                "300": null,
+                "400": null,
+                "500": null,
+                "600": null,
+                "700": null,
+                "800": null,
+                "900": null,
+                "950": null
+              },
+              "$order": [
+                "red",
+                "blue",
+                "green"
+              ]
+            },
+            "spacing": {
+              "0": null,
+              "1": null,
+              "2": null,
+              "3": null,
+              "4": null,
+              "5": null,
+              "6": null,
+              "7": null,
+              "8": null,
+              "9": null,
+              "10": null,
+              "11": null,
+              "12": null,
+              "14": null,
+              "16": null,
+              "20": {
+                "value": {
+                  "$value": "20px"
+                }
+              },
+              "24": null,
+              "28": null,
+              "32": null,
+              "36": null,
+              "40": {
+                "value": {
+                  "$value": "40px"
+                }
+              },
+              "44": null,
+              "48": null,
+              "52": null,
+              "56": null,
+              "60": {
+                "value": {
+                  "$value": "60px"
+                }
+              },
+              "64": null,
+              "72": null,
+              "80": null,
+              "96": null,
+              "0.5": null,
+              "1.5": null,
+              "2.5": null,
+              "3.5": null,
+              "4.5": null,
+              "5.5": null
+            },
+            "sizes": {
+              "0": null,
+              "1": null,
+              "2": null,
+              "3": null,
+              "4": null,
+              "5": null,
+              "6": null,
+              "7": null,
+              "8": null,
+              "9": null,
+              "10": null,
+              "11": null,
+              "12": null,
+              "14": null,
+              "16": null,
+              "20": {
+                "value": {
+                  "$value": "20px"
+                }
+              },
+              "24": null,
+              "28": null,
+              "32": null,
+              "36": null,
+              "40": {
+                "value": {
+                  "$value": "40px"
+                }
+              },
+              "44": null,
+              "48": null,
+              "52": null,
+              "56": null,
+              "60": {
+                "value": {
+                  "$value": "60px"
+                }
+              },
+              "64": null,
+              "72": null,
+              "80": null,
+              "96": null,
+              "0.5": null,
+              "1.5": null,
+              "2.5": null,
+              "3.5": null,
+              "4.5": null,
+              "5.5": null,
+              "xs": null,
+              "sm": null,
+              "md": null,
+              "lg": null,
+              "xl": null,
+              "2xl": null,
+              "3xl": null,
+              "4xl": null,
+              "5xl": null,
+              "6xl": null,
+              "7xl": null,
+              "8xl": null,
+              "prose": null,
+              "full": null,
+              "min": null,
+              "max": null,
+              "fit": null
+            }
+          },
+          "semanticTokens": {
+            "colors": null,
+            "spacing": null
+          }
+        }
+      },
+      "inputs": [
+        {
+          "css": [
+            {
+              "properties": {
+                "color": [
+                  "*"
+                ]
+              },
+              "conditions": [
+                "hover",
+                "focus"
+              ]
+            }
+          ]
+        }
+      ],
+      "expected": {
+        "styles": [
+          {
+            "color": {
+              "base": "red.200",
+              "_hover": "red.200",
+              "_focus": "red.200"
+            }
+          },
+          {
+            "color": {
+              "base": "blue.200",
+              "_hover": "blue.200",
+              "_focus": "blue.200"
+            }
+          },
+          {
+            "color": {
+              "base": "green.200",
+              "_hover": "green.200",
+              "_focus": "green.200"
+            }
+          },
+          {
+            "color": {
+              "base": "colorPalette.200",
+              "_hover": "colorPalette.200",
+              "_focus": "colorPalette.200"
+            }
+          }
+        ],
+        "css": "@layer utilities {\n  .c_red\\.200 {\n    color: var(--colors-red-200);\n}\n\n  .c_blue\\.200 {\n    color: var(--colors-blue-200);\n}\n\n  .c_green\\.200 {\n    color: var(--colors-green-200);\n}\n\n  .c_colorPalette\\.200 {\n    color: var(--colors-color-palette-200);\n}\n\n  .focus\\:c_red\\.200:is(:focus, [data-focus]) {\n    color: var(--colors-red-200);\n}\n\n  .focus\\:c_blue\\.200:is(:focus, [data-focus]) {\n    color: var(--colors-blue-200);\n}\n\n  .focus\\:c_green\\.200:is(:focus, [data-focus]) {\n    color: var(--colors-green-200);\n}\n\n  .focus\\:c_colorPalette\\.200:is(:focus, [data-focus]) {\n    color: var(--colors-color-palette-200);\n}\n\n  .hover\\:c_red\\.200:is(:hover, [data-hover]) {\n    color: var(--colors-red-200);\n}\n\n  .hover\\:c_blue\\.200:is(:hover, [data-hover]) {\n    color: var(--colors-blue-200);\n}\n\n  .hover\\:c_green\\.200:is(:hover, [data-hover]) {\n    color: var(--colors-green-200);\n}\n\n  .hover\\:c_colorPalette\\.200:is(:hover, [data-hover]) {\n    color: var(--colors-color-palette-200);\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/core/__tests__/static-css.test.ts::static-css > using * in CssRule::1",
+      "kind": "static-css",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/static-css.test.ts",
+        "test": "static-css > using * in CssRule",
+        "line": 40
+      },
+      "configPatch": {
+        "theme": {
+          "tokens": {
+            "colors": {
+              "current": null,
+              "black": null,
+              "white": null,
+              "transparent": null,
+              "rose": null,
+              "pink": null,
+              "fuchsia": null,
+              "purple": null,
+              "violet": null,
+              "indigo": null,
+              "sky": null,
+              "cyan": null,
+              "teal": null,
+              "emerald": null,
+              "lime": null,
+              "yellow": null,
+              "amber": null,
+              "orange": null,
+              "neutral": null,
+              "stone": null,
+              "zinc": null,
+              "gray": null,
+              "slate": null,
+              "deep": null,
+              "red": {
+                "50": null,
+                "100": null,
+                "200": {
+                  "value": {
+                    "$value": "red.200"
+                  }
+                },
+                "300": null,
+                "400": null,
+                "500": null,
+                "600": null,
+                "700": null,
+                "800": null,
+                "900": null,
+                "950": null
+              },
+              "blue": {
+                "50": null,
+                "100": null,
+                "200": {
+                  "value": {
+                    "$value": "blue.200"
+                  }
+                },
+                "300": null,
+                "400": null,
+                "500": null,
+                "600": null,
+                "700": null,
+                "800": null,
+                "900": null,
+                "950": null
+              },
+              "green": {
+                "50": null,
+                "100": null,
+                "200": {
+                  "value": {
+                    "$value": "green.200"
+                  }
+                },
+                "300": null,
+                "400": null,
+                "500": null,
+                "600": null,
+                "700": null,
+                "800": null,
+                "900": null,
+                "950": null
+              },
+              "$order": [
+                "red",
+                "blue",
+                "green"
+              ]
+            },
+            "spacing": {
+              "0": null,
+              "1": null,
+              "2": null,
+              "3": null,
+              "4": null,
+              "5": null,
+              "6": null,
+              "7": null,
+              "8": null,
+              "9": null,
+              "10": null,
+              "11": null,
+              "12": null,
+              "14": null,
+              "16": null,
+              "20": {
+                "value": {
+                  "$value": "20px"
+                }
+              },
+              "24": null,
+              "28": null,
+              "32": null,
+              "36": null,
+              "40": {
+                "value": {
+                  "$value": "40px"
+                }
+              },
+              "44": null,
+              "48": null,
+              "52": null,
+              "56": null,
+              "60": {
+                "value": {
+                  "$value": "60px"
+                }
+              },
+              "64": null,
+              "72": null,
+              "80": null,
+              "96": null,
+              "0.5": null,
+              "1.5": null,
+              "2.5": null,
+              "3.5": null,
+              "4.5": null,
+              "5.5": null
+            },
+            "sizes": {
+              "0": null,
+              "1": null,
+              "2": null,
+              "3": null,
+              "4": null,
+              "5": null,
+              "6": null,
+              "7": null,
+              "8": null,
+              "9": null,
+              "10": null,
+              "11": null,
+              "12": null,
+              "14": null,
+              "16": null,
+              "20": {
+                "value": {
+                  "$value": "20px"
+                }
+              },
+              "24": null,
+              "28": null,
+              "32": null,
+              "36": null,
+              "40": {
+                "value": {
+                  "$value": "40px"
+                }
+              },
+              "44": null,
+              "48": null,
+              "52": null,
+              "56": null,
+              "60": {
+                "value": {
+                  "$value": "60px"
+                }
+              },
+              "64": null,
+              "72": null,
+              "80": null,
+              "96": null,
+              "0.5": null,
+              "1.5": null,
+              "2.5": null,
+              "3.5": null,
+              "4.5": null,
+              "5.5": null,
+              "xs": null,
+              "sm": null,
+              "md": null,
+              "lg": null,
+              "xl": null,
+              "2xl": null,
+              "3xl": null,
+              "4xl": null,
+              "5xl": null,
+              "6xl": null,
+              "7xl": null,
+              "8xl": null,
+              "prose": null,
+              "full": null,
+              "min": null,
+              "max": null,
+              "fit": null
+            }
+          },
+          "semanticTokens": {
+            "colors": null,
+            "spacing": null
+          }
+        }
+      },
+      "inputs": [
+        {
+          "css": [
+            {
+              "properties": {
+                "margin": [
+                  "*"
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "expected": {
+        "styles": [
+          {
+            "margin": "20"
+          },
+          {
+            "margin": "40"
+          },
+          {
+            "margin": "60"
+          },
+          {
+            "margin": "auto"
+          },
+          {
+            "margin": "-20"
+          },
+          {
+            "margin": "-40"
+          },
+          {
+            "margin": "-60"
+          }
+        ],
+        "css": "@layer utilities {\n  .m_20 {\n    margin: var(--spacing-20);\n}\n\n  .m_40 {\n    margin: var(--spacing-40);\n}\n\n  .m_60 {\n    margin: var(--spacing-60);\n}\n\n  .m_auto {\n    margin: auto;\n}\n\n  .m_-20 {\n    margin: calc(var(--spacing-20) * -1);\n}\n\n  .m_-40 {\n    margin: calc(var(--spacing-40) * -1);\n}\n\n  .m_-60 {\n    margin: calc(var(--spacing-60) * -1);\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/core/__tests__/static-css.test.ts::static-css > using * in CssRule::2",
+      "kind": "static-css",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/static-css.test.ts",
+        "test": "static-css > using * in CssRule",
+        "line": 40
+      },
+      "configPatch": {
+        "theme": {
+          "tokens": {
+            "colors": {
+              "current": null,
+              "black": null,
+              "white": null,
+              "transparent": null,
+              "rose": null,
+              "pink": null,
+              "fuchsia": null,
+              "purple": null,
+              "violet": null,
+              "indigo": null,
+              "sky": null,
+              "cyan": null,
+              "teal": null,
+              "emerald": null,
+              "lime": null,
+              "yellow": null,
+              "amber": null,
+              "orange": null,
+              "neutral": null,
+              "stone": null,
+              "zinc": null,
+              "gray": null,
+              "slate": null,
+              "deep": null,
+              "red": {
+                "50": null,
+                "100": null,
+                "200": {
+                  "value": {
+                    "$value": "red.200"
+                  }
+                },
+                "300": null,
+                "400": null,
+                "500": null,
+                "600": null,
+                "700": null,
+                "800": null,
+                "900": null,
+                "950": null
+              },
+              "blue": {
+                "50": null,
+                "100": null,
+                "200": {
+                  "value": {
+                    "$value": "blue.200"
+                  }
+                },
+                "300": null,
+                "400": null,
+                "500": null,
+                "600": null,
+                "700": null,
+                "800": null,
+                "900": null,
+                "950": null
+              },
+              "green": {
+                "50": null,
+                "100": null,
+                "200": {
+                  "value": {
+                    "$value": "green.200"
+                  }
+                },
+                "300": null,
+                "400": null,
+                "500": null,
+                "600": null,
+                "700": null,
+                "800": null,
+                "900": null,
+                "950": null
+              },
+              "$order": [
+                "red",
+                "blue",
+                "green"
+              ]
+            },
+            "spacing": {
+              "0": null,
+              "1": null,
+              "2": null,
+              "3": null,
+              "4": null,
+              "5": null,
+              "6": null,
+              "7": null,
+              "8": null,
+              "9": null,
+              "10": null,
+              "11": null,
+              "12": null,
+              "14": null,
+              "16": null,
+              "20": {
+                "value": {
+                  "$value": "20px"
+                }
+              },
+              "24": null,
+              "28": null,
+              "32": null,
+              "36": null,
+              "40": {
+                "value": {
+                  "$value": "40px"
+                }
+              },
+              "44": null,
+              "48": null,
+              "52": null,
+              "56": null,
+              "60": {
+                "value": {
+                  "$value": "60px"
+                }
+              },
+              "64": null,
+              "72": null,
+              "80": null,
+              "96": null,
+              "0.5": null,
+              "1.5": null,
+              "2.5": null,
+              "3.5": null,
+              "4.5": null,
+              "5.5": null
+            },
+            "sizes": {
+              "0": null,
+              "1": null,
+              "2": null,
+              "3": null,
+              "4": null,
+              "5": null,
+              "6": null,
+              "7": null,
+              "8": null,
+              "9": null,
+              "10": null,
+              "11": null,
+              "12": null,
+              "14": null,
+              "16": null,
+              "20": {
+                "value": {
+                  "$value": "20px"
+                }
+              },
+              "24": null,
+              "28": null,
+              "32": null,
+              "36": null,
+              "40": {
+                "value": {
+                  "$value": "40px"
+                }
+              },
+              "44": null,
+              "48": null,
+              "52": null,
+              "56": null,
+              "60": {
+                "value": {
+                  "$value": "60px"
+                }
+              },
+              "64": null,
+              "72": null,
+              "80": null,
+              "96": null,
+              "0.5": null,
+              "1.5": null,
+              "2.5": null,
+              "3.5": null,
+              "4.5": null,
+              "5.5": null,
+              "xs": null,
+              "sm": null,
+              "md": null,
+              "lg": null,
+              "xl": null,
+              "2xl": null,
+              "3xl": null,
+              "4xl": null,
+              "5xl": null,
+              "6xl": null,
+              "7xl": null,
+              "8xl": null,
+              "prose": null,
+              "full": null,
+              "min": null,
+              "max": null,
+              "fit": null
+            }
+          },
+          "semanticTokens": {
+            "colors": null,
+            "spacing": null
+          }
+        }
+      },
+      "inputs": [
+        {
+          "css": [
+            {
+              "properties": {
+                "padding": [
+                  "*"
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "expected": {
+        "styles": [
+          {
+            "padding": "20"
+          },
+          {
+            "padding": "40"
+          },
+          {
+            "padding": "60"
+          },
+          {
+            "padding": "-20"
+          },
+          {
+            "padding": "-40"
+          },
+          {
+            "padding": "-60"
+          }
+        ],
+        "css": "@layer utilities {\n  .p_20 {\n    padding: var(--spacing-20);\n}\n\n  .p_40 {\n    padding: var(--spacing-40);\n}\n\n  .p_60 {\n    padding: var(--spacing-60);\n}\n\n  .p_-20 {\n    padding: calc(var(--spacing-20) * -1);\n}\n\n  .p_-40 {\n    padding: calc(var(--spacing-40) * -1);\n}\n\n  .p_-60 {\n    padding: calc(var(--spacing-60) * -1);\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/core/__tests__/static-css.test.ts::static-css > works::1",
+      "kind": "static-css",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/static-css.test.ts",
+        "test": "static-css > works",
+        "line": 40
+      },
+      "configPatch": {
+        "theme": {
+          "tokens": {
+            "colors": {
+              "current": null,
+              "black": null,
+              "white": null,
+              "transparent": null,
+              "rose": null,
+              "pink": null,
+              "fuchsia": null,
+              "purple": null,
+              "violet": null,
+              "indigo": null,
+              "sky": null,
+              "cyan": null,
+              "teal": null,
+              "emerald": null,
+              "lime": null,
+              "yellow": null,
+              "amber": null,
+              "orange": null,
+              "neutral": null,
+              "stone": null,
+              "zinc": null,
+              "gray": null,
+              "slate": null,
+              "deep": null,
+              "red": {
+                "50": null,
+                "100": null,
+                "200": {
+                  "value": {
+                    "$value": "red.200"
+                  }
+                },
+                "300": null,
+                "400": null,
+                "500": null,
+                "600": null,
+                "700": null,
+                "800": null,
+                "900": null,
+                "950": null
+              },
+              "blue": {
+                "50": null,
+                "100": null,
+                "200": {
+                  "value": {
+                    "$value": "blue.200"
+                  }
+                },
+                "300": null,
+                "400": null,
+                "500": null,
+                "600": null,
+                "700": null,
+                "800": null,
+                "900": null,
+                "950": null
+              },
+              "green": {
+                "50": null,
+                "100": null,
+                "200": {
+                  "value": {
+                    "$value": "green.200"
+                  }
+                },
+                "300": null,
+                "400": null,
+                "500": null,
+                "600": null,
+                "700": null,
+                "800": null,
+                "900": null,
+                "950": null
+              },
+              "$order": [
+                "red",
+                "blue",
+                "green"
+              ]
+            },
+            "spacing": {
+              "0": null,
+              "1": null,
+              "2": null,
+              "3": null,
+              "4": null,
+              "5": null,
+              "6": null,
+              "7": null,
+              "8": null,
+              "9": null,
+              "10": null,
+              "11": null,
+              "12": null,
+              "14": null,
+              "16": null,
+              "20": {
+                "value": {
+                  "$value": "20px"
+                }
+              },
+              "24": null,
+              "28": null,
+              "32": null,
+              "36": null,
+              "40": {
+                "value": {
+                  "$value": "40px"
+                }
+              },
+              "44": null,
+              "48": null,
+              "52": null,
+              "56": null,
+              "60": {
+                "value": {
+                  "$value": "60px"
+                }
+              },
+              "64": null,
+              "72": null,
+              "80": null,
+              "96": null,
+              "0.5": null,
+              "1.5": null,
+              "2.5": null,
+              "3.5": null,
+              "4.5": null,
+              "5.5": null
+            },
+            "sizes": {
+              "0": null,
+              "1": null,
+              "2": null,
+              "3": null,
+              "4": null,
+              "5": null,
+              "6": null,
+              "7": null,
+              "8": null,
+              "9": null,
+              "10": null,
+              "11": null,
+              "12": null,
+              "14": null,
+              "16": null,
+              "20": {
+                "value": {
+                  "$value": "20px"
+                }
+              },
+              "24": null,
+              "28": null,
+              "32": null,
+              "36": null,
+              "40": {
+                "value": {
+                  "$value": "40px"
+                }
+              },
+              "44": null,
+              "48": null,
+              "52": null,
+              "56": null,
+              "60": {
+                "value": {
+                  "$value": "60px"
+                }
+              },
+              "64": null,
+              "72": null,
+              "80": null,
+              "96": null,
+              "0.5": null,
+              "1.5": null,
+              "2.5": null,
+              "3.5": null,
+              "4.5": null,
+              "5.5": null,
+              "xs": null,
+              "sm": null,
+              "md": null,
+              "lg": null,
+              "xl": null,
+              "2xl": null,
+              "3xl": null,
+              "4xl": null,
+              "5xl": null,
+              "6xl": null,
+              "7xl": null,
+              "8xl": null,
+              "prose": null,
+              "full": null,
+              "min": null,
+              "max": null,
+              "fit": null
+            }
+          },
+          "semanticTokens": {
+            "colors": null,
+            "spacing": null
+          }
+        }
+      },
+      "inputs": [
+        {
+          "css": [
+            {
+              "conditions": [
+                "sm",
+                "md"
+              ],
+              "properties": {
+                "margin": [
+                  "20px",
+                  "40px"
+                ],
+                "padding": [
+                  "20px",
+                  "40px",
+                  "60px"
+                ]
+              }
+            },
+            {
+              "conditions": [
+                "light",
+                "dark"
+              ],
+              "properties": {
+                "color": [
+                  "*"
+                ]
+              }
+            }
+          ],
+          "recipes": {
+            "buttonStyle": [
+              {
+                "size": [
+                  "sm",
+                  "md"
+                ],
+                "conditions": [
+                  "sm",
+                  "md"
+                ]
+              },
+              {
+                "variant": [
+                  "primary",
+                  "secondary"
+                ]
+              }
+            ],
+            "tooltipStyle": [
+              "*"
+            ]
+          }
+        }
+      ],
+      "expected": {
+        "styles": [
+          {
+            "margin": {
+              "base": "20px",
+              "sm": "20px",
+              "md": "20px"
+            }
+          },
+          {
+            "margin": {
+              "base": "40px",
+              "sm": "40px",
+              "md": "40px"
+            }
+          },
+          {
+            "padding": {
+              "base": "20px",
+              "sm": "20px",
+              "md": "20px"
+            }
+          },
+          {
+            "padding": {
+              "base": "40px",
+              "sm": "40px",
+              "md": "40px"
+            }
+          },
+          {
+            "padding": {
+              "base": "60px",
+              "sm": "60px",
+              "md": "60px"
+            }
+          },
+          {
+            "color": {
+              "base": "red.200",
+              "_light": "red.200",
+              "_dark": "red.200"
+            }
+          },
+          {
+            "color": {
+              "base": "blue.200",
+              "_light": "blue.200",
+              "_dark": "blue.200"
+            }
+          },
+          {
+            "color": {
+              "base": "green.200",
+              "_light": "green.200",
+              "_dark": "green.200"
+            }
+          },
+          {
+            "color": {
+              "base": "colorPalette.200",
+              "_light": "colorPalette.200",
+              "_dark": "colorPalette.200"
+            }
+          }
+        ],
+        "css": "@layer recipes {\n  @layer _base {\n    .buttonStyle {\n      display: inline-flex;\n      align-items: center;\n      justify-content: center;\n}\n\n    .buttonStyle:is(:hover, [data-hover]) {\n      background-color: var(--colors-red-200);\n      font-size: var(--font-sizes-3xl);\n      color: white;\n}\n\n    [data-theme=dark] .tooltipStyle[data-tooltip],.dark .tooltipStyle[data-tooltip],.tooltipStyle[data-tooltip].dark,.tooltipStyle[data-tooltip][data-theme=dark],[data-theme=dark] .tooltipStyle [data-tooltip],.dark .tooltipStyle [data-tooltip],.tooltipStyle [data-tooltip].dark,.tooltipStyle [data-tooltip][data-theme=dark] {\n      color: red;\n}\n}\n\n  .buttonStyle--size_md {\n    padding: 0 0.75rem;\n    height: 3rem;\n    min-width: 3rem;\n}\n\n  .buttonStyle--variant_solid {\n    background-color: blue;\n    color: white;\n}\n\n  .buttonStyle--variant_solid[data-disabled] {\n    background-color: gray;\n    color: black;\n    font-size: var(--font-sizes-2xl);\n}\n\n  .buttonStyle--variant_solid:is(:hover, [data-hover]) {\n    background-color: darkblue;\n}\n\n  .buttonStyle--size_sm {\n    padding: 0 0.5rem;\n    height: 2.5rem;\n    min-width: 2.5rem;\n}\n\n  @media screen and (min-width: 40rem) {\n    .sm\\:buttonStyle--size_sm {\n      padding: 0 0.5rem;\n      height: 2.5rem;\n      min-width: 2.5rem;\n}\n    .sm\\:buttonStyle--size_md {\n      padding: 0 0.75rem;\n      height: 3rem;\n      min-width: 3rem;\n}\n}\n\n  @media screen and (min-width: 48rem) {\n    .md\\:buttonStyle--size_sm {\n      padding: 0 0.5rem;\n      height: 2.5rem;\n      min-width: 2.5rem;\n}\n    .md\\:buttonStyle--size_md {\n      padding: 0 0.75rem;\n      height: 3rem;\n      min-width: 3rem;\n}\n}\n}\n\n@layer utilities {\n  .m_20px {\n    margin: 20px;\n}\n\n  .m_40px {\n    margin: 40px;\n}\n\n  .p_20px {\n    padding: 20px;\n}\n\n  .p_40px {\n    padding: 40px;\n}\n\n  .p_60px {\n    padding: 60px;\n}\n\n  .c_red\\.200 {\n    color: var(--colors-red-200);\n}\n\n  .c_blue\\.200 {\n    color: var(--colors-blue-200);\n}\n\n  .c_green\\.200 {\n    color: var(--colors-green-200);\n}\n\n  .c_colorPalette\\.200 {\n    color: var(--colors-color-palette-200);\n}\n\n  [data-theme=light] .light\\:c_red\\.200,.light .light\\:c_red\\.200,.light\\:c_red\\.200.light,.light\\:c_red\\.200[data-theme=light],[data-theme=dark] .dark\\:c_red\\.200,.dark .dark\\:c_red\\.200,.dark\\:c_red\\.200.dark,.dark\\:c_red\\.200[data-theme=dark] {\n    color: var(--colors-red-200);\n}\n\n  [data-theme=light] .light\\:c_blue\\.200,.light .light\\:c_blue\\.200,.light\\:c_blue\\.200.light,.light\\:c_blue\\.200[data-theme=light],[data-theme=dark] .dark\\:c_blue\\.200,.dark .dark\\:c_blue\\.200,.dark\\:c_blue\\.200.dark,.dark\\:c_blue\\.200[data-theme=dark] {\n    color: var(--colors-blue-200);\n}\n\n  [data-theme=light] .light\\:c_green\\.200,.light .light\\:c_green\\.200,.light\\:c_green\\.200.light,.light\\:c_green\\.200[data-theme=light],[data-theme=dark] .dark\\:c_green\\.200,.dark .dark\\:c_green\\.200,.dark\\:c_green\\.200.dark,.dark\\:c_green\\.200[data-theme=dark] {\n    color: var(--colors-green-200);\n}\n\n  [data-theme=light] .light\\:c_colorPalette\\.200,.light .light\\:c_colorPalette\\.200,.light\\:c_colorPalette\\.200.light,.light\\:c_colorPalette\\.200[data-theme=light],[data-theme=dark] .dark\\:c_colorPalette\\.200,.dark .dark\\:c_colorPalette\\.200,.dark\\:c_colorPalette\\.200.dark,.dark\\:c_colorPalette\\.200[data-theme=dark] {\n    color: var(--colors-color-palette-200);\n}\n\n  @media screen and (min-width: 40rem) {\n    .sm\\:m_20px {\n      margin: 20px;\n}\n    .sm\\:m_40px {\n      margin: 40px;\n}\n    .sm\\:p_20px {\n      padding: 20px;\n}\n    .sm\\:p_40px {\n      padding: 40px;\n}\n    .sm\\:p_60px {\n      padding: 60px;\n}\n}\n\n  @media screen and (min-width: 48rem) {\n    .md\\:m_20px {\n      margin: 20px;\n}\n    .md\\:m_40px {\n      margin: 40px;\n}\n    .md\\:p_20px {\n      padding: 20px;\n}\n    .md\\:p_40px {\n      padding: 40px;\n}\n    .md\\:p_60px {\n      padding: 60px;\n}\n}\n}"
+      },
+      "unsupported": "static css for recipes"
+    },
+    {
+      "id": "fixture::packages/core/__tests__/static-css.test.ts::static-css caching > recipes: \"*\" should override individual recipe staticCss config::1",
+      "kind": "static-css",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/static-css.test.ts",
+        "test": "static-css caching > recipes: \"*\" should override individual recipe staticCss config",
+        "line": 2505
+      },
+      "configPatch": {
+        "theme": {
+          "recipes": {
+            "textStyle": null,
+            "tooltipStyle": null,
+            "cardStyle": null,
+            "buttonStyle": null,
+            "testRecipe": {
+              "$value": {
+                "className": "testRecipe",
+                "base": {
+                  "display": "flex"
+                },
+                "variants": {
+                  "size": {
+                    "sm": {
+                      "fontSize": "12px"
+                    },
+                    "md": {
+                      "fontSize": "14px"
+                    },
+                    "lg": {
+                      "fontSize": "16px"
+                    }
+                  },
+                  "variant": {
+                    "primary": {
+                      "color": "blue"
+                    },
+                    "secondary": {
+                      "color": "gray"
+                    }
+                  }
+                },
+                "staticCss": [
+                  {
+                    "size": [
+                      "sm"
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "inputs": [
+        {
+          "recipes": "*"
+        }
+      ],
+      "expected": {
+        "styles": [
+          {
+            "color": "ButtonHighlight"
+          }
+        ],
+        "css": "@layer recipes {\n  @layer _base {\n    .testRecipe {\n      display: flex;\n}\n}\n\n  .testRecipe--size_sm {\n    font-size: 12px;\n}\n\n  .testRecipe--size_md {\n    font-size: 14px;\n}\n\n  .testRecipe--size_lg {\n    font-size: 16px;\n}\n\n  .testRecipe--variant_primary {\n    color: blue;\n}\n\n  .testRecipe--variant_secondary {\n    color: gray;\n}\n}\n\n@layer recipes.slots {\n  @layer _base {\n    .checkbox__root {\n      gap: var(--spacing-2);\n      display: flex;\n      align-items: center;\n}\n\n    .checkbox__control {\n      border-width: 1px;\n      border-radius: var(--radii-sm);\n}\n\n    .checkbox__label {\n      margin-inline-start: var(--spacing-2);\n}\n\n    .badge__title {\n      background: var(--colors-red-300);\n      border-radius: var(--radii-sm);\n}\n}\n\n  .checkbox__control--size_sm {\n    font-size: 2rem;\n    font-weight: var(--font-weights-bold);\n    width: var(--sizes-8);\n    height: var(--sizes-8);\n}\n\n  .checkbox__label--size_sm {\n    font-size: var(--font-sizes-sm);\n}\n\n  .checkbox__control--size_md {\n    width: var(--sizes-10);\n    height: var(--sizes-10);\n}\n\n  .checkbox__label--size_md {\n    font-size: var(--font-sizes-md);\n}\n\n  .checkbox__control--size_lg {\n    width: var(--sizes-12);\n    height: var(--sizes-12);\n}\n\n  .checkbox__label--size_lg {\n    font-size: var(--font-sizes-lg);\n}\n\n  .badge__title--size_sm {\n    padding-inline: var(--spacing-4);\n}\n\n  .badge__body--size_sm {\n    color: red;\n}\n\n  .badge__title--raised_true {\n    box-shadow: var(--shadows-md);\n}\n}\n\n@layer utilities {\n  .c_ButtonHighlight {\n    color: ButtonHighlight;\n}\n}"
+      },
+      "unsupported": "static css for recipes"
+    }
+  ]
+}

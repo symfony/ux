@@ -1,0 +1,12 @@
+ux_css:
+    tokens:
+        colors:
+            danger: '#dc2626'
+            primary: '#2563eb'
+        spacing:
+            '4': '1rem'
+            '8': '2rem'
+    static_css:
+        css:
+            - properties:
+                  color: [danger, primary]

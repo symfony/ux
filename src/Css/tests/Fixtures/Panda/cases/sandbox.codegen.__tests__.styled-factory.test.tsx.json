@@ -1,0 +1,590 @@
+{
+  "source": "sandbox/codegen/__tests__/styled-factory.test.tsx",
+  "cases": [
+    {
+      "id": "react::sandbox/codegen/__tests__/styled-factory.test.tsx::styled factory - button recipe > *Css prop aliases on compound component::1",
+      "kind": "codegen-css",
+      "config": "codegen-react",
+      "source": {
+        "file": "sandbox/codegen/__tests__/styled-factory.test.tsx",
+        "test": "styled factory - button recipe > *Css prop aliases on compound component",
+        "line": null
+      },
+      "inputs": [
+        {},
+        {},
+        {
+          "display": "flex"
+        }
+      ],
+      "expected": {
+        "className": "d_flex"
+      }
+    },
+    {
+      "id": "react::sandbox/codegen/__tests__/styled-factory.test.tsx::styled factory - button recipe > *Css prop aliases on compound component::2",
+      "kind": "codegen-css",
+      "config": "codegen-react",
+      "source": {
+        "file": "sandbox/codegen/__tests__/styled-factory.test.tsx",
+        "test": "styled factory - button recipe > *Css prop aliases on compound component",
+        "line": null
+      },
+      "inputs": [
+        {},
+        {},
+        {
+          "color": "red.200"
+        }
+      ],
+      "expected": {
+        "className": "c_red.200"
+      }
+    },
+    {
+      "id": "react::sandbox/codegen/__tests__/styled-factory.test.tsx::styled factory - button recipe > all together::1",
+      "kind": "codegen-css",
+      "config": "codegen-react",
+      "source": {
+        "file": "sandbox/codegen/__tests__/styled-factory.test.tsx",
+        "test": "styled factory - button recipe > all together",
+        "line": null
+      },
+      "inputs": [
+        {
+          "color": "green"
+        },
+        {
+          "mx": "2"
+        },
+        {
+          "color": "red.200",
+          "fontSize": "xl"
+        }
+      ],
+      "expected": {
+        "className": "c_red.200 mx_2 fs_xl"
+      }
+    },
+    {
+      "id": "react::sandbox/codegen/__tests__/styled-factory.test.tsx::styled factory - button recipe > array css prop::1",
+      "kind": "codegen-css",
+      "config": "codegen-react",
+      "source": {
+        "file": "sandbox/codegen/__tests__/styled-factory.test.tsx",
+        "test": "styled factory - button recipe > array css prop",
+        "line": null
+      },
+      "inputs": [
+        {},
+        {},
+        [
+          {
+            "color": "blue.300",
+            "backgroundColor": "yellow.300"
+          },
+          {
+            "backgroundColor": "green.300"
+          }
+        ]
+      ],
+      "expected": {
+        "className": "c_blue.300 bg-c_green.300"
+      }
+    },
+    {
+      "id": "react::sandbox/codegen/__tests__/styled-factory.test.tsx::styled factory - button recipe > base styles::1",
+      "kind": "codegen-css",
+      "config": "codegen-react",
+      "source": {
+        "file": "sandbox/codegen/__tests__/styled-factory.test.tsx",
+        "test": "styled factory - button recipe > base styles",
+        "line": null
+      },
+      "inputs": [
+        {},
+        {},
+        null
+      ],
+      "expected": {
+        "className": ""
+      },
+      "undefinedValues": true
+    },
+    {
+      "id": "react::sandbox/codegen/__tests__/styled-factory.test.tsx::styled factory - button recipe > box pattern::1",
+      "kind": "codegen-css",
+      "config": "codegen-react",
+      "source": {
+        "file": "sandbox/codegen/__tests__/styled-factory.test.tsx",
+        "test": "styled factory - button recipe > box pattern",
+        "line": null
+      },
+      "inputs": [
+        {},
+        {
+          "color": "red.300"
+        },
+        null
+      ],
+      "expected": {
+        "className": "c_red.300"
+      },
+      "undefinedValues": true
+    },
+    {
+      "id": "react::sandbox/codegen/__tests__/styled-factory.test.tsx::styled factory - button recipe > compound variants::1",
+      "kind": "codegen-css",
+      "config": "codegen-react",
+      "source": {
+        "file": "sandbox/codegen/__tests__/styled-factory.test.tsx",
+        "test": "styled factory - button recipe > compound variants",
+        "line": null
+      },
+      "inputs": [
+        {
+          "color": "blue"
+        },
+        {},
+        null
+      ],
+      "expected": {
+        "className": "c_blue"
+      },
+      "undefinedValues": true
+    },
+    {
+      "id": "react::sandbox/codegen/__tests__/styled-factory.test.tsx::styled factory - button recipe > css prop with variant::1",
+      "kind": "codegen-css",
+      "config": "codegen-react",
+      "source": {
+        "file": "sandbox/codegen/__tests__/styled-factory.test.tsx",
+        "test": "styled factory - button recipe > css prop with variant",
+        "line": null
+      },
+      "inputs": [
+        {},
+        {},
+        {
+          "color": "red.100",
+          "fontSize": "md"
+        }
+      ],
+      "expected": {
+        "className": "c_red.100 fs_md"
+      }
+    },
+    {
+      "id": "react::sandbox/codegen/__tests__/styled-factory.test.tsx::styled factory - button recipe > css prop::1",
+      "kind": "codegen-css",
+      "config": "codegen-react",
+      "source": {
+        "file": "sandbox/codegen/__tests__/styled-factory.test.tsx",
+        "test": "styled factory - button recipe > css prop",
+        "line": null
+      },
+      "inputs": [
+        {},
+        {},
+        {
+          "color": "red.100",
+          "fontSize": "md"
+        }
+      ],
+      "expected": {
+        "className": "c_red.100 fs_md"
+      }
+    },
+    {
+      "id": "react::sandbox/codegen/__tests__/styled-factory.test.tsx::styled factory - button recipe > custom className::1",
+      "kind": "codegen-css",
+      "config": "codegen-react",
+      "source": {
+        "file": "sandbox/codegen/__tests__/styled-factory.test.tsx",
+        "test": "styled factory - button recipe > custom className",
+        "line": null
+      },
+      "inputs": [
+        {},
+        {},
+        null
+      ],
+      "expected": {
+        "className": ""
+      },
+      "undefinedValues": true
+    },
+    {
+      "id": "react::sandbox/codegen/__tests__/styled-factory.test.tsx::styled factory - button recipe > html props::1",
+      "kind": "codegen-css",
+      "config": "codegen-react",
+      "source": {
+        "file": "sandbox/codegen/__tests__/styled-factory.test.tsx",
+        "test": "styled factory - button recipe > html props",
+        "line": null
+      },
+      "inputs": [
+        {},
+        {
+          "height": "123"
+        },
+        null
+      ],
+      "expected": {
+        "className": "h_123"
+      },
+      "undefinedValues": true
+    },
+    {
+      "id": "react::sandbox/codegen/__tests__/styled-factory.test.tsx::styled factory - button recipe > stack pattern::1",
+      "kind": "codegen-css",
+      "config": "codegen-react",
+      "source": {
+        "file": "sandbox/codegen/__tests__/styled-factory.test.tsx",
+        "test": "styled factory - button recipe > stack pattern",
+        "line": null
+      },
+      "inputs": [
+        {},
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "8px",
+          "color": "red.400"
+        },
+        null
+      ],
+      "expected": {
+        "className": "d_flex flex-d_column gap_8px c_red.400"
+      },
+      "undefinedValues": true
+    },
+    {
+      "id": "react::sandbox/codegen/__tests__/styled-factory.test.tsx::styled factory - button recipe > style prop with variant::1",
+      "kind": "codegen-css",
+      "config": "codegen-react",
+      "source": {
+        "file": "sandbox/codegen/__tests__/styled-factory.test.tsx",
+        "test": "styled factory - button recipe > style prop with variant",
+        "line": null
+      },
+      "inputs": [
+        {},
+        {
+          "mx": "2"
+        },
+        null
+      ],
+      "expected": {
+        "className": "mx_2"
+      },
+      "undefinedValues": true
+    },
+    {
+      "id": "react::sandbox/codegen/__tests__/styled-factory.test.tsx::styled factory - button recipe > style prop::1",
+      "kind": "codegen-css",
+      "config": "codegen-react",
+      "source": {
+        "file": "sandbox/codegen/__tests__/styled-factory.test.tsx",
+        "test": "styled factory - button recipe > style prop",
+        "line": null
+      },
+      "inputs": [
+        {},
+        {
+          "mx": "2"
+        },
+        null
+      ],
+      "expected": {
+        "className": "mx_2"
+      },
+      "undefinedValues": true
+    },
+    {
+      "id": "react::sandbox/codegen/__tests__/styled-factory.test.tsx::styled factory - button recipe > variant styles::1",
+      "kind": "codegen-css",
+      "config": "codegen-react",
+      "source": {
+        "file": "sandbox/codegen/__tests__/styled-factory.test.tsx",
+        "test": "styled factory - button recipe > variant styles",
+        "line": null
+      },
+      "inputs": [
+        {},
+        {},
+        null
+      ],
+      "expected": {
+        "className": ""
+      },
+      "undefinedValues": true
+    },
+    {
+      "id": "react::sandbox/codegen/__tests__/styled-factory.test.tsx::styled factory - cva > all together::1",
+      "kind": "codegen-css",
+      "config": "codegen-react",
+      "source": {
+        "file": "sandbox/codegen/__tests__/styled-factory.test.tsx",
+        "test": "styled factory - cva > all together",
+        "line": null
+      },
+      "inputs": [
+        {
+          "color": "red.500",
+          "background": "blue.500",
+          "_hover": {
+            "color": "red.600",
+            "background": "blue.600"
+          },
+          "fontSize": "lg",
+          "paddingInline": "123px",
+          "paddingBlock": "md",
+          "zIndex": 1
+        },
+        {
+          "mx": "2"
+        },
+        {
+          "color": "red.200",
+          "fontSize": "xl"
+        }
+      ],
+      "expected": {
+        "className": "c_red.200 bg_blue.500 hover:c_red.600 hover:bg_blue.600 fs_xl px_123px py_md z_1 mx_2"
+      }
+    },
+    {
+      "id": "react::sandbox/codegen/__tests__/styled-factory.test.tsx::styled factory - cva > base styles::1",
+      "kind": "codegen-css",
+      "config": "codegen-react",
+      "source": {
+        "file": "sandbox/codegen/__tests__/styled-factory.test.tsx",
+        "test": "styled factory - cva > base styles",
+        "line": null
+      },
+      "inputs": [
+        {
+          "color": "red.500",
+          "bg": "blue.500",
+          "_hover": {
+            "color": "red.600",
+            "bg": "blue.600"
+          }
+        },
+        {},
+        null
+      ],
+      "expected": {
+        "className": "c_red.500 bg_blue.500 hover:c_red.600 hover:bg_blue.600"
+      },
+      "undefinedValues": true
+    },
+    {
+      "id": "react::sandbox/codegen/__tests__/styled-factory.test.tsx::styled factory - cva > compound variants::1",
+      "kind": "codegen-css",
+      "config": "codegen-react",
+      "source": {
+        "file": "sandbox/codegen/__tests__/styled-factory.test.tsx",
+        "test": "styled factory - cva > compound variants",
+        "line": null
+      },
+      "inputs": [
+        {
+          "color": "red.500",
+          "background": "blue.500",
+          "_hover": {
+            "color": "red.600",
+            "background": "blue.600"
+          },
+          "fontSize": "lg",
+          "paddingInline": "123px",
+          "paddingBlock": "md",
+          "zIndex": 1
+        },
+        {},
+        null
+      ],
+      "expected": {
+        "className": "c_red.500 bg_blue.500 hover:c_red.600 hover:bg_blue.600 fs_lg px_123px py_md z_1"
+      },
+      "undefinedValues": true
+    },
+    {
+      "id": "react::sandbox/codegen/__tests__/styled-factory.test.tsx::styled factory - cva > css prop with variant::1",
+      "kind": "codegen-css",
+      "config": "codegen-react",
+      "source": {
+        "file": "sandbox/codegen/__tests__/styled-factory.test.tsx",
+        "test": "styled factory - cva > css prop with variant",
+        "line": null
+      },
+      "inputs": [
+        {
+          "color": "red.500",
+          "background": "blue.500",
+          "_hover": {
+            "color": "red.600",
+            "background": "blue.600"
+          },
+          "fontSize": "sm",
+          "paddingInline": "sm",
+          "paddingBlock": "xs"
+        },
+        {},
+        {
+          "color": "red.100",
+          "fontSize": "md"
+        }
+      ],
+      "expected": {
+        "className": "c_red.100 bg_blue.500 hover:c_red.600 hover:bg_blue.600 fs_md px_sm py_xs"
+      }
+    },
+    {
+      "id": "react::sandbox/codegen/__tests__/styled-factory.test.tsx::styled factory - cva > css prop::1",
+      "kind": "codegen-css",
+      "config": "codegen-react",
+      "source": {
+        "file": "sandbox/codegen/__tests__/styled-factory.test.tsx",
+        "test": "styled factory - cva > css prop",
+        "line": null
+      },
+      "inputs": [
+        {
+          "color": "red.500",
+          "bg": "blue.500",
+          "_hover": {
+            "color": "red.600",
+            "bg": "blue.600"
+          }
+        },
+        {},
+        {
+          "color": "red.100",
+          "fontSize": "md"
+        }
+      ],
+      "expected": {
+        "className": "c_red.100 bg_blue.500 hover:c_red.600 hover:bg_blue.600 fs_md"
+      }
+    },
+    {
+      "id": "react::sandbox/codegen/__tests__/styled-factory.test.tsx::styled factory - cva > custom className::1",
+      "kind": "codegen-css",
+      "config": "codegen-react",
+      "source": {
+        "file": "sandbox/codegen/__tests__/styled-factory.test.tsx",
+        "test": "styled factory - cva > custom className",
+        "line": null
+      },
+      "inputs": [
+        {
+          "color": "red.500",
+          "background": "blue.500",
+          "_hover": {
+            "color": "red.600",
+            "background": "blue.600"
+          },
+          "fontSize": "sm",
+          "paddingInline": "sm",
+          "paddingBlock": "xs"
+        },
+        {},
+        null
+      ],
+      "expected": {
+        "className": "c_red.500 bg_blue.500 hover:c_red.600 hover:bg_blue.600 fs_sm px_sm py_xs"
+      },
+      "undefinedValues": true
+    },
+    {
+      "id": "react::sandbox/codegen/__tests__/styled-factory.test.tsx::styled factory - cva > style prop with variant::1",
+      "kind": "codegen-css",
+      "config": "codegen-react",
+      "source": {
+        "file": "sandbox/codegen/__tests__/styled-factory.test.tsx",
+        "test": "styled factory - cva > style prop with variant",
+        "line": null
+      },
+      "inputs": [
+        {
+          "color": "red.500",
+          "background": "blue.500",
+          "_hover": {
+            "color": "red.600",
+            "background": "blue.600"
+          },
+          "fontSize": "sm",
+          "paddingInline": "sm",
+          "paddingBlock": "xs"
+        },
+        {
+          "mx": "2"
+        },
+        null
+      ],
+      "expected": {
+        "className": "c_red.500 bg_blue.500 hover:c_red.600 hover:bg_blue.600 fs_sm px_sm py_xs mx_2"
+      },
+      "undefinedValues": true
+    },
+    {
+      "id": "react::sandbox/codegen/__tests__/styled-factory.test.tsx::styled factory - cva > style prop::1",
+      "kind": "codegen-css",
+      "config": "codegen-react",
+      "source": {
+        "file": "sandbox/codegen/__tests__/styled-factory.test.tsx",
+        "test": "styled factory - cva > style prop",
+        "line": null
+      },
+      "inputs": [
+        {
+          "color": "red.500",
+          "bg": "blue.500",
+          "_hover": {
+            "color": "red.600",
+            "bg": "blue.600"
+          }
+        },
+        {
+          "mx": "2"
+        },
+        null
+      ],
+      "expected": {
+        "className": "c_red.500 bg_blue.500 hover:c_red.600 hover:bg_blue.600 mx_2"
+      },
+      "undefinedValues": true
+    },
+    {
+      "id": "react::sandbox/codegen/__tests__/styled-factory.test.tsx::styled factory - cva > variant styles::1",
+      "kind": "codegen-css",
+      "config": "codegen-react",
+      "source": {
+        "file": "sandbox/codegen/__tests__/styled-factory.test.tsx",
+        "test": "styled factory - cva > variant styles",
+        "line": null
+      },
+      "inputs": [
+        {
+          "color": "red.500",
+          "background": "blue.500",
+          "_hover": {
+            "color": "red.600",
+            "background": "blue.600"
+          },
+          "fontSize": "sm",
+          "paddingInline": "sm",
+          "paddingBlock": "xs"
+        },
+        {},
+        null
+      ],
+      "expected": {
+        "className": "c_red.500 bg_blue.500 hover:c_red.600 hover:bg_blue.600 fs_sm px_sm py_xs"
+      },
+      "undefinedValues": true
+    }
+  ]
+}

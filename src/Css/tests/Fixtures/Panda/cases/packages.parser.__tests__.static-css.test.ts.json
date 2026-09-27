@@ -1,0 +1,201 @@
+{
+  "source": "packages/parser/__tests__/static-css.test.ts",
+  "cases": [
+    {
+      "id": "fixture::packages/parser/__tests__/static-css.test.ts::static css > recipe with base::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/static-css.test.ts",
+        "test": "static css > recipe with base",
+        "line": 44
+      },
+      "userConfig": {
+        "staticCss": {
+          "recipes": {
+            "tooltipStyle": []
+          }
+        }
+      },
+      "configPatch": {
+        "staticCss": {
+          "$value": {
+            "recipes": {
+              "tooltipStyle": []
+            }
+          }
+        }
+      },
+      "inputs": [],
+      "expected": {
+        "css": ""
+      }
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/static-css.test.ts::static css > recipe::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/static-css.test.ts",
+        "test": "static css > recipe",
+        "line": 5
+      },
+      "userConfig": {
+        "theme": {
+          "extend": {
+            "recipes": {
+              "textStyle": {
+                "staticCss": [
+                  {
+                    "size": [
+                      "h1"
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "configPatch": {
+        "theme": {
+          "recipes": {
+            "textStyle": {
+              "staticCss": {
+                "$value": [
+                  {
+                    "size": [
+                      "h1"
+                    ]
+                  }
+                ]
+              }
+            },
+            "$order": [
+              "tooltipStyle",
+              "cardStyle",
+              "buttonStyle",
+              "textStyle"
+            ]
+          }
+        }
+      },
+      "inputs": [],
+      "expected": {
+        "css": ""
+      }
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/static-css.test.ts::static css > slot recipes::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/static-css.test.ts",
+        "test": "static css > slot recipes",
+        "line": 68
+      },
+      "userConfig": {
+        "theme": {
+          "extend": {
+            "slotRecipes": {
+              "someRecipe": {
+                "staticCss": [
+                  {
+                    "size": [
+                      "sm"
+                    ]
+                  }
+                ],
+                "className": "button",
+                "slots": [
+                  "container",
+                  "icon"
+                ],
+                "base": {
+                  "container": {
+                    "fontFamily": "mono"
+                  },
+                  "icon": {
+                    "fontSize": "1.5rem"
+                  }
+                },
+                "variants": {
+                  "size": {
+                    "sm": {
+                      "container": {
+                        "fontSize": "5rem",
+                        "lineHeight": "1em"
+                      },
+                      "icon": {
+                        "fontSize": "2rem"
+                      }
+                    },
+                    "md": {
+                      "container": {
+                        "fontSize": "3rem",
+                        "lineHeight": "1.2em"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "configPatch": {
+        "theme": {
+          "slotRecipes": {
+            "someRecipe": {
+              "$value": {
+                "staticCss": [
+                  {
+                    "size": [
+                      "sm"
+                    ]
+                  }
+                ],
+                "className": "button",
+                "slots": [
+                  "container",
+                  "icon"
+                ],
+                "base": {
+                  "container": {
+                    "fontFamily": "mono"
+                  },
+                  "icon": {
+                    "fontSize": "1.5rem"
+                  }
+                },
+                "variants": {
+                  "size": {
+                    "sm": {
+                      "container": {
+                        "fontSize": "5rem",
+                        "lineHeight": "1em"
+                      },
+                      "icon": {
+                        "fontSize": "2rem"
+                      }
+                    },
+                    "md": {
+                      "container": {
+                        "fontSize": "3rem",
+                        "lineHeight": "1.2em"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "inputs": [],
+      "expected": {
+        "css": ""
+      }
+    }
+  ]
+}

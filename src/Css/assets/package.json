@@ -1,0 +1,19 @@
+{
+    "name": "@symfony/ux-css",
+    "description": "Typed atomic CSS for Twig, driven by design tokens and validated at compile time.",
+    "private": true,
+    "license": "MIT",
+    "keywords": [
+        "symfony-ux",
+        "css",
+        "atomic-css",
+        "design-tokens"
+    ],
+    "homepage": "https://ux.symfony.com/css",
+    "repository": "https://github.com/symfony/ux",
+    "type": "module",
+    "scripts": {
+        "test:browser": "playwright test",
+        "test:browser:ui": "playwright test --ui"
+    }
+}

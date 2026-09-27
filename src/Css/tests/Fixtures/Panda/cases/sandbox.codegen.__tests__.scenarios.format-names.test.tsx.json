@@ -1,0 +1,428 @@
+{
+  "source": "sandbox/codegen/__tests__/scenarios/format-names.test.tsx",
+  "cases": [
+    {
+      "id": "format-names::sandbox/codegen/__tests__/scenarios/format-names.test.tsx::styled factory - button recipe > all together::1",
+      "kind": "codegen-css",
+      "config": "codegen-format-names",
+      "source": {
+        "file": "sandbox/codegen/__tests__/scenarios/format-names.test.tsx",
+        "test": "styled factory - button recipe > all together",
+        "line": null
+      },
+      "inputs": [
+        {
+          "color": "green"
+        },
+        {
+          "mx": "-$2"
+        },
+        {
+          "color": "$red-200",
+          "fontSize": "$xl"
+        }
+      ],
+      "expected": {
+        "className": "c-$red-200 mx--$2 fs-$xl"
+      }
+    },
+    {
+      "id": "format-names::sandbox/codegen/__tests__/scenarios/format-names.test.tsx::styled factory - button recipe > base styles::1",
+      "kind": "codegen-css",
+      "config": "codegen-format-names",
+      "source": {
+        "file": "sandbox/codegen/__tests__/scenarios/format-names.test.tsx",
+        "test": "styled factory - button recipe > base styles",
+        "line": null
+      },
+      "inputs": [
+        {},
+        {},
+        null
+      ],
+      "expected": {
+        "className": ""
+      },
+      "undefinedValues": true
+    },
+    {
+      "id": "format-names::sandbox/codegen/__tests__/scenarios/format-names.test.tsx::styled factory - button recipe > css prop with variant::1",
+      "kind": "codegen-css",
+      "config": "codegen-format-names",
+      "source": {
+        "file": "sandbox/codegen/__tests__/scenarios/format-names.test.tsx",
+        "test": "styled factory - button recipe > css prop with variant",
+        "line": null
+      },
+      "inputs": [
+        {},
+        {},
+        {
+          "color": "$red-100",
+          "fontSize": "$md"
+        }
+      ],
+      "expected": {
+        "className": "c-$red-100 fs-$md"
+      }
+    },
+    {
+      "id": "format-names::sandbox/codegen/__tests__/scenarios/format-names.test.tsx::styled factory - button recipe > css prop::1",
+      "kind": "codegen-css",
+      "config": "codegen-format-names",
+      "source": {
+        "file": "sandbox/codegen/__tests__/scenarios/format-names.test.tsx",
+        "test": "styled factory - button recipe > css prop",
+        "line": null
+      },
+      "inputs": [
+        {},
+        {},
+        {
+          "color": "$red-100",
+          "fontSize": "$md"
+        }
+      ],
+      "expected": {
+        "className": "c-$red-100 fs-$md"
+      }
+    },
+    {
+      "id": "format-names::sandbox/codegen/__tests__/scenarios/format-names.test.tsx::styled factory - button recipe > custom className::1",
+      "kind": "codegen-css",
+      "config": "codegen-format-names",
+      "source": {
+        "file": "sandbox/codegen/__tests__/scenarios/format-names.test.tsx",
+        "test": "styled factory - button recipe > custom className",
+        "line": null
+      },
+      "inputs": [
+        {},
+        {},
+        null
+      ],
+      "expected": {
+        "className": ""
+      },
+      "undefinedValues": true
+    },
+    {
+      "id": "format-names::sandbox/codegen/__tests__/scenarios/format-names.test.tsx::styled factory - button recipe > html props::1",
+      "kind": "codegen-css",
+      "config": "codegen-format-names",
+      "source": {
+        "file": "sandbox/codegen/__tests__/scenarios/format-names.test.tsx",
+        "test": "styled factory - button recipe > html props",
+        "line": null
+      },
+      "inputs": [
+        {},
+        {
+          "height": "123"
+        },
+        null
+      ],
+      "expected": {
+        "className": "h-123"
+      },
+      "undefinedValues": true
+    },
+    {
+      "id": "format-names::sandbox/codegen/__tests__/scenarios/format-names.test.tsx::styled factory - button recipe > style prop with variant::1",
+      "kind": "codegen-css",
+      "config": "codegen-format-names",
+      "source": {
+        "file": "sandbox/codegen/__tests__/scenarios/format-names.test.tsx",
+        "test": "styled factory - button recipe > style prop with variant",
+        "line": null
+      },
+      "inputs": [
+        {},
+        {
+          "mx": "2"
+        },
+        null
+      ],
+      "expected": {
+        "className": "mx-2"
+      },
+      "undefinedValues": true
+    },
+    {
+      "id": "format-names::sandbox/codegen/__tests__/scenarios/format-names.test.tsx::styled factory - button recipe > style prop::1",
+      "kind": "codegen-css",
+      "config": "codegen-format-names",
+      "source": {
+        "file": "sandbox/codegen/__tests__/scenarios/format-names.test.tsx",
+        "test": "styled factory - button recipe > style prop",
+        "line": null
+      },
+      "inputs": [
+        {},
+        {
+          "mx": "2"
+        },
+        null
+      ],
+      "expected": {
+        "className": "mx-2"
+      },
+      "undefinedValues": true
+    },
+    {
+      "id": "format-names::sandbox/codegen/__tests__/scenarios/format-names.test.tsx::styled factory - button recipe > variant styles::1",
+      "kind": "codegen-css",
+      "config": "codegen-format-names",
+      "source": {
+        "file": "sandbox/codegen/__tests__/scenarios/format-names.test.tsx",
+        "test": "styled factory - button recipe > variant styles",
+        "line": null
+      },
+      "inputs": [
+        {},
+        {},
+        null
+      ],
+      "expected": {
+        "className": ""
+      },
+      "undefinedValues": true
+    },
+    {
+      "id": "format-names::sandbox/codegen/__tests__/scenarios/format-names.test.tsx::styled factory - cva > all together::1",
+      "kind": "codegen-css",
+      "config": "codegen-format-names",
+      "source": {
+        "file": "sandbox/codegen/__tests__/scenarios/format-names.test.tsx",
+        "test": "styled factory - cva > all together",
+        "line": null
+      },
+      "inputs": [
+        {
+          "color": "$red-500",
+          "background": "$blue-500",
+          "_hover": {
+            "color": "$red-600",
+            "background": "$blue-600"
+          },
+          "fontSize": "$lg",
+          "paddingInline": "123px",
+          "paddingBlock": "$md",
+          "zIndex": 1
+        },
+        {
+          "mx": "$2"
+        },
+        {
+          "color": "$red-200",
+          "fontSize": "$xl"
+        }
+      ],
+      "expected": {
+        "className": "c-$red-200 bg-$blue-500 hover:c-$red-600 hover:bg-$blue-600 fs-$xl px-123px py-$md z-1 mx-$2"
+      }
+    },
+    {
+      "id": "format-names::sandbox/codegen/__tests__/scenarios/format-names.test.tsx::styled factory - cva > base styles::1",
+      "kind": "codegen-css",
+      "config": "codegen-format-names",
+      "source": {
+        "file": "sandbox/codegen/__tests__/scenarios/format-names.test.tsx",
+        "test": "styled factory - cva > base styles",
+        "line": null
+      },
+      "inputs": [
+        {
+          "color": "$red-500",
+          "bg": "$blue-500",
+          "_hover": {
+            "color": "$red-600",
+            "bg": "$blue-600"
+          }
+        },
+        {},
+        null
+      ],
+      "expected": {
+        "className": "c-$red-500 bg-$blue-500 hover:c-$red-600 hover:bg-$blue-600"
+      },
+      "undefinedValues": true
+    },
+    {
+      "id": "format-names::sandbox/codegen/__tests__/scenarios/format-names.test.tsx::styled factory - cva > css prop with variant::1",
+      "kind": "codegen-css",
+      "config": "codegen-format-names",
+      "source": {
+        "file": "sandbox/codegen/__tests__/scenarios/format-names.test.tsx",
+        "test": "styled factory - cva > css prop with variant",
+        "line": null
+      },
+      "inputs": [
+        {
+          "color": "$red-500",
+          "background": "$blue-500",
+          "_hover": {
+            "color": "$red-600",
+            "background": "$blue-600"
+          },
+          "fontSize": "$sm",
+          "paddingInline": "$sm",
+          "paddingBlock": "$xs"
+        },
+        {},
+        {
+          "color": "$red-100",
+          "fontSize": "$md"
+        }
+      ],
+      "expected": {
+        "className": "c-$red-100 bg-$blue-500 hover:c-$red-600 hover:bg-$blue-600 fs-$md px-$sm py-$xs"
+      }
+    },
+    {
+      "id": "format-names::sandbox/codegen/__tests__/scenarios/format-names.test.tsx::styled factory - cva > css prop::1",
+      "kind": "codegen-css",
+      "config": "codegen-format-names",
+      "source": {
+        "file": "sandbox/codegen/__tests__/scenarios/format-names.test.tsx",
+        "test": "styled factory - cva > css prop",
+        "line": null
+      },
+      "inputs": [
+        {
+          "color": "$red-500",
+          "bg": "$blue-500",
+          "_hover": {
+            "color": "$red-600",
+            "bg": "$blue-600"
+          }
+        },
+        {},
+        {
+          "color": "$red-100",
+          "fontSize": "$md"
+        }
+      ],
+      "expected": {
+        "className": "c-$red-100 bg-$blue-500 hover:c-$red-600 hover:bg-$blue-600 fs-$md"
+      }
+    },
+    {
+      "id": "format-names::sandbox/codegen/__tests__/scenarios/format-names.test.tsx::styled factory - cva > custom className::1",
+      "kind": "codegen-css",
+      "config": "codegen-format-names",
+      "source": {
+        "file": "sandbox/codegen/__tests__/scenarios/format-names.test.tsx",
+        "test": "styled factory - cva > custom className",
+        "line": null
+      },
+      "inputs": [
+        {
+          "color": "$red-500",
+          "background": "$blue-500",
+          "_hover": {
+            "color": "$red-600",
+            "background": "$blue-600"
+          },
+          "fontSize": "$sm",
+          "paddingInline": "$sm",
+          "paddingBlock": "$xs"
+        },
+        {},
+        null
+      ],
+      "expected": {
+        "className": "c-$red-500 bg-$blue-500 hover:c-$red-600 hover:bg-$blue-600 fs-$sm px-$sm py-$xs"
+      },
+      "undefinedValues": true
+    },
+    {
+      "id": "format-names::sandbox/codegen/__tests__/scenarios/format-names.test.tsx::styled factory - cva > style prop with variant::1",
+      "kind": "codegen-css",
+      "config": "codegen-format-names",
+      "source": {
+        "file": "sandbox/codegen/__tests__/scenarios/format-names.test.tsx",
+        "test": "styled factory - cva > style prop with variant",
+        "line": null
+      },
+      "inputs": [
+        {
+          "color": "$red-500",
+          "background": "$blue-500",
+          "_hover": {
+            "color": "$red-600",
+            "background": "$blue-600"
+          },
+          "fontSize": "$sm",
+          "paddingInline": "$sm",
+          "paddingBlock": "$xs"
+        },
+        {
+          "mx": "2"
+        },
+        null
+      ],
+      "expected": {
+        "className": "c-$red-500 bg-$blue-500 hover:c-$red-600 hover:bg-$blue-600 fs-$sm px-$sm py-$xs mx-2"
+      },
+      "undefinedValues": true
+    },
+    {
+      "id": "format-names::sandbox/codegen/__tests__/scenarios/format-names.test.tsx::styled factory - cva > style prop::1",
+      "kind": "codegen-css",
+      "config": "codegen-format-names",
+      "source": {
+        "file": "sandbox/codegen/__tests__/scenarios/format-names.test.tsx",
+        "test": "styled factory - cva > style prop",
+        "line": null
+      },
+      "inputs": [
+        {
+          "color": "$red-500",
+          "bg": "$blue-500",
+          "_hover": {
+            "color": "$red-600",
+            "bg": "$blue-600"
+          }
+        },
+        {
+          "mx": "2"
+        },
+        null
+      ],
+      "expected": {
+        "className": "c-$red-500 bg-$blue-500 hover:c-$red-600 hover:bg-$blue-600 mx-2"
+      },
+      "undefinedValues": true
+    },
+    {
+      "id": "format-names::sandbox/codegen/__tests__/scenarios/format-names.test.tsx::styled factory - cva > variant styles::1",
+      "kind": "codegen-css",
+      "config": "codegen-format-names",
+      "source": {
+        "file": "sandbox/codegen/__tests__/scenarios/format-names.test.tsx",
+        "test": "styled factory - cva > variant styles",
+        "line": null
+      },
+      "inputs": [
+        {
+          "color": "$red-500",
+          "background": "$blue-500",
+          "_hover": {
+            "color": "$red-600",
+            "background": "$blue-600"
+          },
+          "fontSize": "$sm",
+          "paddingInline": "$sm",
+          "paddingBlock": "$xs"
+        },
+        {},
+        null
+      ],
+      "expected": {
+        "className": "c-$red-500 bg-$blue-500 hover:c-$red-600 hover:bg-$blue-600 fs-$sm px-$sm py-$xs"
+      },
+      "undefinedValues": true
+    }
+  ]
+}

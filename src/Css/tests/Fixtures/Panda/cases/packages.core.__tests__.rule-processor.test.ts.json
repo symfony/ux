@@ -1,0 +1,1604 @@
+{
+  "source": "packages/core/__tests__/rule-processor.test.ts",
+  "cases": [
+    {
+      "id": "fixture::packages/core/__tests__/rule-processor.test.ts::js to css > at-rules + mixed conditions sorting::1",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/rule-processor.test.ts",
+        "test": "js to css > at-rules + mixed conditions sorting",
+        "line": 9
+      },
+      "userConfig": {
+        "conditions": {
+          "mixedSm": [
+            "@media screen and (min-width: 40em)",
+            "&[data-attr=\"custom\"]"
+          ],
+          "mixedSupportSm": [
+            "@media screen and (min-width: 40em)",
+            "@support (display: flex)",
+            "&[data-attr=\"custom\"]"
+          ],
+          "mixedMd": [
+            "@media screen and (min-width: 48em)",
+            "&[data-attr=\"custom\"]"
+          ],
+          "mixedSupportMd": [
+            "@media screen and (min-width: 48em)",
+            "@support (display: flex)",
+            "&[data-attr=\"custom\"]"
+          ]
+        }
+      },
+      "inputs": [
+        {
+          "md": {
+            "color": "3px"
+          },
+          "_mixedSupportMd": {
+            "color": "yellow"
+          },
+          "sm": {
+            "width": "1px"
+          },
+          "_mixedMd": {
+            "color": "blue"
+          },
+          "xl": {
+            "width": "4px"
+          },
+          "_mixedSupportSm": {
+            "color": "green"
+          },
+          "lg": {
+            "color": "2px"
+          },
+          "_mixedSm": {
+            "color": "red"
+          }
+        }
+      ],
+      "configPatch": {
+        "conditions": {
+          "mixedSm": {
+            "$value": [
+              "@media screen and (min-width: 40em)",
+              "&[data-attr=\"custom\"]"
+            ]
+          },
+          "mixedSupportSm": {
+            "$value": [
+              "@media screen and (min-width: 40em)",
+              "@support (display: flex)",
+              "&[data-attr=\"custom\"]"
+            ]
+          },
+          "mixedMd": {
+            "$value": [
+              "@media screen and (min-width: 48em)",
+              "&[data-attr=\"custom\"]"
+            ]
+          },
+          "mixedSupportMd": {
+            "$value": [
+              "@media screen and (min-width: 48em)",
+              "@support (display: flex)",
+              "&[data-attr=\"custom\"]"
+            ]
+          }
+        }
+      },
+      "options": null,
+      "expected": {
+        "classNames": [
+          "mixedSm\\:c_red",
+          "mixedSupportSm\\:c_green",
+          "sm\\:w_1px",
+          "mixedMd\\:c_blue",
+          "mixedSupportMd\\:c_yellow",
+          "md\\:c_3px",
+          "lg\\:c_2px",
+          "xl\\:w_4px"
+        ],
+        "css": "@layer utilities {\n  @media screen and (min-width: 40em) {\n    .mixedSm\\:c_red[data-attr=\"custom\"] {\n      color: red;\n}\n}\n\n  @media screen and (min-width: 40em) {\n    @support (display: flex) {\n      .mixedSupportSm\\:c_green[data-attr=\"custom\"] {\n        color: green;\n}\n}\n}\n\n  @media screen and (min-width: 40rem) {\n    .sm\\:w_1px {\n      width: 1px;\n}\n}\n\n  @media screen and (min-width: 48em) {\n    .mixedMd\\:c_blue[data-attr=\"custom\"] {\n      color: blue;\n}\n}\n\n  @media screen and (min-width: 48em) {\n    @support (display: flex) {\n      .mixedSupportMd\\:c_yellow[data-attr=\"custom\"] {\n        color: yellow;\n}\n}\n}\n\n  @media screen and (min-width: 48rem) {\n    .md\\:c_3px {\n      color: 3px;\n}\n}\n\n  @media screen and (min-width: 64rem) {\n    .lg\\:c_2px {\n      color: 2px;\n}\n}\n\n  @media screen and (min-width: 80rem) {\n    .xl\\:w_4px {\n      width: 4px;\n}\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/core/__tests__/rule-processor.test.ts::js to css > at-rules conditions sorting::1",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/rule-processor.test.ts",
+        "test": "js to css > at-rules conditions sorting",
+        "line": 9
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          "md": {
+            "color": "3px"
+          },
+          "sm": {
+            "width": "1px"
+          },
+          "xl": {
+            "width": "4px"
+          },
+          "lg": {
+            "color": "2px"
+          }
+        }
+      ],
+      "options": null,
+      "expected": {
+        "classNames": [
+          "sm\\:w_1px",
+          "md\\:c_3px",
+          "lg\\:c_2px",
+          "xl\\:w_4px"
+        ],
+        "css": "@layer utilities {\n  @media screen and (min-width: 40rem) {\n    .sm\\:w_1px {\n      width: 1px;\n}\n}\n\n  @media screen and (min-width: 48rem) {\n    .md\\:c_3px {\n      color: 3px;\n}\n}\n\n  @media screen and (min-width: 64rem) {\n    .lg\\:c_2px {\n      color: 2px;\n}\n}\n\n  @media screen and (min-width: 80rem) {\n    .xl\\:w_4px {\n      width: 4px;\n}\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/core/__tests__/rule-processor.test.ts::js to css > at-rules pseudo conditions sorting::1",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/rule-processor.test.ts",
+        "test": "js to css > at-rules pseudo conditions sorting",
+        "line": 9
+      },
+      "userConfig": {
+        "conditions": {
+          "custom": "&[data-attr=\"custom\"]"
+        }
+      },
+      "inputs": [
+        {
+          "sm": {
+            "_focus": {
+              "width": "22px"
+            },
+            "_custom": {
+              "width": "33px"
+            },
+            "_active": {
+              "width": "44px"
+            },
+            "_hover": {
+              "width": "11px"
+            }
+          }
+        }
+      ],
+      "configPatch": {
+        "conditions": {
+          "custom": {
+            "$value": "&[data-attr=\"custom\"]"
+          }
+        }
+      },
+      "options": null,
+      "expected": {
+        "classNames": [
+          "sm\\:custom\\:w_33px",
+          "sm\\:focus\\:w_22px",
+          "sm\\:hover\\:w_11px",
+          "sm\\:active\\:w_44px"
+        ],
+        "css": "@layer utilities {\n  @media screen and (min-width: 40rem) {\n    .sm\\:custom\\:w_33px[data-attr=\"custom\"] {\n      width: 33px;\n}\n    .sm\\:focus\\:w_22px:is(:focus, [data-focus]) {\n      width: 22px;\n}\n    .sm\\:hover\\:w_11px:is(:hover, [data-hover]) {\n      width: 11px;\n}\n    .sm\\:active\\:w_44px:is(:active, [data-active]) {\n      width: 44px;\n}\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/core/__tests__/rule-processor.test.ts::js to css > color mix::1",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/rule-processor.test.ts",
+        "test": "js to css > color mix",
+        "line": 9
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          "bg": "red.300/40",
+          "color": "white"
+        }
+      ],
+      "options": null,
+      "expected": {
+        "classNames": [
+          "bg_red\\.300\\/40",
+          "c_white"
+        ],
+        "css": "@layer utilities {\n  .bg_red\\.300\\/40 {\n    --mix-background: color-mix(in srgb, var(--colors-red-300) 40%, transparent);\n    background: var(--mix-background, var(--colors-red-300));\n}\n\n  .c_white {\n    color: var(--colors-white);\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/core/__tests__/rule-processor.test.ts::js to css > ignores declarations with null::1",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/rule-processor.test.ts",
+        "test": "js to css > ignores declarations with null",
+        "line": 9
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          "color": null,
+          "background": false
+        }
+      ],
+      "options": null,
+      "expected": {
+        "classNames": [
+          "bg_false"
+        ],
+        "css": ""
+      }
+    },
+    {
+      "id": "fixture::packages/core/__tests__/rule-processor.test.ts::js to css > issue 3462 - mixed condition (array format) with child selector::1",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/rule-processor.test.ts",
+        "test": "js to css > issue 3462 - mixed condition (array format) with child selector",
+        "line": 9
+      },
+      "userConfig": {
+        "conditions": {
+          "hover": [
+            "&:hover"
+          ]
+        }
+      },
+      "inputs": [
+        {
+          "_hover": {
+            "& > :where(svg)": {
+              "color": "green"
+            }
+          }
+        }
+      ],
+      "configPatch": {
+        "conditions": {
+          "hover": {
+            "$value": [
+              "&:hover"
+            ]
+          }
+        }
+      },
+      "options": null,
+      "expected": {
+        "classNames": [
+          "hover\\:\\[\\&_\\>_\\:where\\(svg\\)\\]\\:c_green"
+        ],
+        "css": "@layer utilities {\n  .hover\\:\\[\\&_\\>_\\:where\\(svg\\)\\]\\:c_green:hover > :where(svg) {\n    color: green;\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/core/__tests__/rule-processor.test.ts::js to css > issue 3462 - mixed condition with at-rule should still sort correctly::1",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/rule-processor.test.ts",
+        "test": "js to css > issue 3462 - mixed condition with at-rule should still sort correctly",
+        "line": 9
+      },
+      "userConfig": {
+        "conditions": {
+          "hoverMedia": [
+            "@media (hover: hover)",
+            "&:hover"
+          ]
+        }
+      },
+      "inputs": [
+        {
+          "_hoverMedia": {
+            "& > :where(svg)": {
+              "color": "blue"
+            }
+          }
+        }
+      ],
+      "configPatch": {
+        "conditions": {
+          "hoverMedia": {
+            "$value": [
+              "@media (hover: hover)",
+              "&:hover"
+            ]
+          }
+        }
+      },
+      "options": null,
+      "expected": {
+        "classNames": [
+          "hoverMedia\\:\\[\\&_\\>_\\:where\\(svg\\)\\]\\:c_blue"
+        ],
+        "css": "@layer utilities {\n  @media (hover: hover) {\n    .hoverMedia\\:\\[\\&_\\>_\\:where\\(svg\\)\\]\\:c_blue:hover > :where(svg) {\n      color: blue;\n}\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/core/__tests__/rule-processor.test.ts::js to css > mixed conditions sorting::1",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/rule-processor.test.ts",
+        "test": "js to css > mixed conditions sorting",
+        "line": 9
+      },
+      "userConfig": {
+        "conditions": {
+          "custom": [
+            "&[data-attr=\"custom\"]"
+          ],
+          "supportHover": [
+            "@media (hover: hover) and (pointer: fine)",
+            "@supports (display: table-cell)",
+            "&:hover"
+          ],
+          "smHover": [
+            "@media screen and (min-width: 40em)",
+            "@supports (display: grid)",
+            "&:hover"
+          ],
+          "mdHover": [
+            "@media screen and (min-width: 48em)",
+            "@supports (display: flex)",
+            "&:hover"
+          ]
+        }
+      },
+      "inputs": [
+        {
+          "width": {
+            "_supportHover": "6px",
+            "base": "0px",
+            "_mdHover": "8px",
+            "sm": "4px",
+            "md": "4.5px",
+            "_smHover": "7px",
+            "_hover": {
+              "base": "2px",
+              "md": "5px",
+              "_focus": "3px"
+            },
+            "_dark": "1px"
+          },
+          "_suppportHover": {
+            "_custom": {
+              "color": "red"
+            }
+          },
+          "_hover": {
+            "_custom": {
+              "color": "blue"
+            }
+          }
+        }
+      ],
+      "configPatch": {
+        "conditions": {
+          "custom": {
+            "$value": [
+              "&[data-attr=\"custom\"]"
+            ]
+          },
+          "supportHover": {
+            "$value": [
+              "@media (hover: hover) and (pointer: fine)",
+              "@supports (display: table-cell)",
+              "&:hover"
+            ]
+          },
+          "smHover": {
+            "$value": [
+              "@media screen and (min-width: 40em)",
+              "@supports (display: grid)",
+              "&:hover"
+            ]
+          },
+          "mdHover": {
+            "$value": [
+              "@media screen and (min-width: 48em)",
+              "@supports (display: flex)",
+              "&:hover"
+            ]
+          }
+        }
+      },
+      "options": null,
+      "expected": {
+        "classNames": [
+          "w_0px",
+          "custom\\:c_red",
+          "dark\\:w_1px",
+          "hover\\:w_2px",
+          "hover\\:custom\\:c_blue",
+          "hover\\:focus\\:w_3px",
+          "smHover\\:w_7px",
+          "sm\\:w_4px",
+          "mdHover\\:w_8px",
+          "md\\:w_4\\.5px",
+          "hover\\:md\\:w_5px",
+          "supportHover\\:w_6px"
+        ],
+        "css": "@layer utilities {\n  .w_0px {\n    width: 0px;\n}\n\n  .custom\\:c_red[data-attr=\"custom\"] {\n    color: red;\n}\n\n  [data-theme=dark] .dark\\:w_1px,.dark .dark\\:w_1px,.dark\\:w_1px.dark,.dark\\:w_1px[data-theme=dark] {\n    width: 1px;\n}\n\n  .hover\\:w_2px:is(:hover, [data-hover]) {\n    width: 2px;\n}\n\n  .hover\\:custom\\:c_blue:is(:hover, [data-hover])[data-attr=\"custom\"] {\n    color: blue;\n}\n\n  .hover\\:focus\\:w_3px:is(:hover, [data-hover]):is(:focus, [data-focus]) {\n    width: 3px;\n}\n\n  @media screen and (min-width: 40em) {\n    @supports (display: grid) {\n      .smHover\\:w_7px:hover {\n        width: 7px;\n}\n}\n}\n\n  @media screen and (min-width: 40rem) {\n    .sm\\:w_4px {\n      width: 4px;\n}\n}\n\n  @media screen and (min-width: 48em) {\n    @supports (display: flex) {\n      .mdHover\\:w_8px:hover {\n        width: 8px;\n}\n}\n}\n\n  @media screen and (min-width: 48rem) {\n    .md\\:w_4\\.5px {\n      width: 4.5px;\n}\n    .hover\\:md\\:w_5px:is(:hover, [data-hover]) {\n      width: 5px;\n}\n}\n\n  @media (hover: hover) and (pointer: fine) {\n    @supports (display: table-cell) {\n      .supportHover\\:w_6px:hover {\n        width: 6px;\n}\n}\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/core/__tests__/rule-processor.test.ts::js to css > mixed vs at-rule sorting::1",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/rule-processor.test.ts",
+        "test": "js to css > mixed vs at-rule sorting",
+        "line": 9
+      },
+      "userConfig": {
+        "conditions": {
+          "mdHover": [
+            "@media screen and (min-width: 48em)",
+            "@supports (display: flex)",
+            "&:hover"
+          ]
+        }
+      },
+      "inputs": [
+        {
+          "width": {
+            "_mdHover": "6px",
+            "md": "4.5px",
+            "_hover": {
+              "md": "5px"
+            }
+          }
+        }
+      ],
+      "configPatch": {
+        "conditions": {
+          "mdHover": {
+            "$value": [
+              "@media screen and (min-width: 48em)",
+              "@supports (display: flex)",
+              "&:hover"
+            ]
+          }
+        }
+      },
+      "options": null,
+      "expected": {
+        "classNames": [
+          "mdHover\\:w_6px",
+          "md\\:w_4\\.5px",
+          "hover\\:md\\:w_5px"
+        ],
+        "css": "@layer utilities {\n  @media screen and (min-width: 48em) {\n    @supports (display: flex) {\n      .mdHover\\:w_6px:hover {\n        width: 6px;\n}\n}\n}\n\n  @media screen and (min-width: 48rem) {\n    .md\\:w_4\\.5px {\n      width: 4.5px;\n}\n    .hover\\:md\\:w_5px:is(:hover, [data-hover]) {\n      width: 5px;\n}\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/core/__tests__/rule-processor.test.ts::js to css > more specific should always be last (red then blue)::1",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/rule-processor.test.ts",
+        "test": "js to css > more specific should always be last (red then blue)",
+        "line": 9
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          "backgroundColor": "blue",
+          "background": "red",
+          "_hover": {
+            "background": "red",
+            "backgroundColor": "blue"
+          },
+          "_focus": {
+            "background": "red",
+            "backgroundColor": "blue"
+          },
+          "_dark": {
+            "backgroundColor": "blue",
+            "background": "red"
+          },
+          "md": {
+            "backgroundColor": "blue",
+            "background": "red",
+            "_light": {
+              "backgroundColor": "blue",
+              "background": "red",
+              "_hover": {
+                "backgroundColor": "blue",
+                "background": "red"
+              },
+              "_focus": {
+                "background": "red",
+                "backgroundColor": "blue"
+              },
+              "_active": {
+                "bgColor": "blue",
+                "bg": "red"
+              }
+            }
+          }
+        }
+      ],
+      "options": null,
+      "expected": {
+        "classNames": [
+          "bg_red",
+          "bg-c_blue",
+          "dark\\:bg_red",
+          "dark\\:bg-c_blue",
+          "focus\\:bg_red",
+          "focus\\:bg-c_blue",
+          "hover\\:bg_red",
+          "hover\\:bg-c_blue",
+          "md\\:bg_red",
+          "md\\:bg-c_blue",
+          "md\\:light\\:bg_red",
+          "md\\:light\\:bg-c_blue",
+          "md\\:light\\:focus\\:bg_red",
+          "md\\:light\\:focus\\:bg-c_blue",
+          "md\\:light\\:hover\\:bg_red",
+          "md\\:light\\:hover\\:bg-c_blue",
+          "md\\:light\\:active\\:bg_red",
+          "md\\:light\\:active\\:bg-c_blue"
+        ],
+        "css": "@layer utilities {\n  .bg_red {\n    background: red;\n}\n\n  .bg-c_blue {\n    background-color: blue;\n}\n\n  [data-theme=dark] .dark\\:bg_red,.dark .dark\\:bg_red,.dark\\:bg_red.dark,.dark\\:bg_red[data-theme=dark] {\n    background: red;\n}\n\n  [data-theme=dark] .dark\\:bg-c_blue,.dark .dark\\:bg-c_blue,.dark\\:bg-c_blue.dark,.dark\\:bg-c_blue[data-theme=dark] {\n    background-color: blue;\n}\n\n  .focus\\:bg_red:is(:focus, [data-focus]) {\n    background: red;\n}\n\n  .focus\\:bg-c_blue:is(:focus, [data-focus]) {\n    background-color: blue;\n}\n\n  .hover\\:bg_red:is(:hover, [data-hover]) {\n    background: red;\n}\n\n  .hover\\:bg-c_blue:is(:hover, [data-hover]) {\n    background-color: blue;\n}\n\n  @media screen and (min-width: 48rem) {\n    .md\\:bg_red {\n      background: red;\n}\n    .md\\:bg-c_blue {\n      background-color: blue;\n}\n    [data-theme=light] .md\\:light\\:bg_red,.light .md\\:light\\:bg_red,.md\\:light\\:bg_red.light,.md\\:light\\:bg_red[data-theme=light] {\n      background: red;\n}\n    [data-theme=light] .md\\:light\\:bg-c_blue,.light .md\\:light\\:bg-c_blue,.md\\:light\\:bg-c_blue.light,.md\\:light\\:bg-c_blue[data-theme=light] {\n      background-color: blue;\n}\n    [data-theme=light] .md\\:light\\:focus\\:bg_red:is(:focus, [data-focus]),.light .md\\:light\\:focus\\:bg_red:is(:focus, [data-focus]),.md\\:light\\:focus\\:bg_red.light:is(:focus, [data-focus]),.md\\:light\\:focus\\:bg_red[data-theme=light]:is(:focus, [data-focus]) {\n      background: red;\n}\n    [data-theme=light] .md\\:light\\:focus\\:bg-c_blue:is(:focus, [data-focus]),.light .md\\:light\\:focus\\:bg-c_blue:is(:focus, [data-focus]),.md\\:light\\:focus\\:bg-c_blue.light:is(:focus, [data-focus]),.md\\:light\\:focus\\:bg-c_blue[data-theme=light]:is(:focus, [data-focus]) {\n      background-color: blue;\n}\n    [data-theme=light] .md\\:light\\:hover\\:bg_red:is(:hover, [data-hover]),.light .md\\:light\\:hover\\:bg_red:is(:hover, [data-hover]),.md\\:light\\:hover\\:bg_red.light:is(:hover, [data-hover]),.md\\:light\\:hover\\:bg_red[data-theme=light]:is(:hover, [data-hover]) {\n      background: red;\n}\n    [data-theme=light] .md\\:light\\:hover\\:bg-c_blue:is(:hover, [data-hover]),.light .md\\:light\\:hover\\:bg-c_blue:is(:hover, [data-hover]),.md\\:light\\:hover\\:bg-c_blue.light:is(:hover, [data-hover]),.md\\:light\\:hover\\:bg-c_blue[data-theme=light]:is(:hover, [data-hover]) {\n      background-color: blue;\n}\n    [data-theme=light] .md\\:light\\:active\\:bg_red:is(:active, [data-active]),.light .md\\:light\\:active\\:bg_red:is(:active, [data-active]),.md\\:light\\:active\\:bg_red.light:is(:active, [data-active]),.md\\:light\\:active\\:bg_red[data-theme=light]:is(:active, [data-active]) {\n      background: red;\n}\n    [data-theme=light] .md\\:light\\:active\\:bg-c_blue:is(:active, [data-active]),.light .md\\:light\\:active\\:bg-c_blue:is(:active, [data-active]),.md\\:light\\:active\\:bg-c_blue.light:is(:active, [data-active]),.md\\:light\\:active\\:bg-c_blue[data-theme=light]:is(:active, [data-active]) {\n      background-color: blue;\n}\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/core/__tests__/rule-processor.test.ts::js to css > nested conditions sorting::1",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/rule-processor.test.ts",
+        "test": "js to css > nested conditions sorting",
+        "line": 9
+      },
+      "userConfig": {
+        "conditions": {
+          "custom": "&[data-attr=\"custom\"]"
+        }
+      },
+      "inputs": [
+        {
+          "md": {
+            "width": "3px"
+          },
+          "_hover": {
+            "md": {
+              "width": "5px"
+            },
+            "_focus": {
+              "width": "2px"
+            },
+            "_custom": {
+              "color": "blue"
+            }
+          }
+        }
+      ],
+      "configPatch": {
+        "conditions": {
+          "custom": {
+            "$value": "&[data-attr=\"custom\"]"
+          }
+        }
+      },
+      "options": null,
+      "expected": {
+        "classNames": [
+          "hover\\:custom\\:c_blue",
+          "hover\\:focus\\:w_2px",
+          "md\\:w_3px",
+          "hover\\:md\\:w_5px"
+        ],
+        "css": "@layer utilities {\n  .hover\\:custom\\:c_blue:is(:hover, [data-hover])[data-attr=\"custom\"] {\n    color: blue;\n}\n\n  .hover\\:focus\\:w_2px:is(:hover, [data-hover]):is(:focus, [data-focus]) {\n    width: 2px;\n}\n\n  @media screen and (min-width: 48rem) {\n    .md\\:w_3px {\n      width: 3px;\n}\n    .hover\\:md\\:w_5px:is(:hover, [data-hover]) {\n      width: 5px;\n}\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/core/__tests__/rule-processor.test.ts::js to css > nested mixed conditions sorting::1",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/rule-processor.test.ts",
+        "test": "js to css > nested mixed conditions sorting",
+        "line": 9
+      },
+      "userConfig": {
+        "conditions": {
+          "custom": "&[data-attr=\"custom\"]",
+          "mixed": [
+            "&[data-attr=\"custom\"]"
+          ],
+          "mixedMd": [
+            "@media screen and (min-width: 48em)",
+            "&[data-attr=\"custom\"]"
+          ]
+        }
+      },
+      "inputs": [
+        {
+          "_hover": {
+            "md": {
+              "width": "5px"
+            },
+            "_mixed": {
+              "color": "green"
+            },
+            "_mixedMd": {
+              "color": "6px"
+            },
+            "_custom": {
+              "color": "blue"
+            }
+          }
+        }
+      ],
+      "configPatch": {
+        "conditions": {
+          "custom": {
+            "$value": "&[data-attr=\"custom\"]"
+          },
+          "mixed": {
+            "$value": [
+              "&[data-attr=\"custom\"]"
+            ]
+          },
+          "mixedMd": {
+            "$value": [
+              "@media screen and (min-width: 48em)",
+              "&[data-attr=\"custom\"]"
+            ]
+          }
+        }
+      },
+      "options": null,
+      "expected": {
+        "classNames": [
+          "hover\\:mixed\\:c_green",
+          "hover\\:custom\\:c_blue",
+          "hover\\:mixedMd\\:c_6px",
+          "hover\\:md\\:w_5px"
+        ],
+        "css": "@layer utilities {\n  .hover\\:mixed\\:c_green:is(:hover, [data-hover])[data-attr=\"custom\"] {\n    color: green;\n}\n\n  .hover\\:custom\\:c_blue:is(:hover, [data-hover])[data-attr=\"custom\"] {\n    color: blue;\n}\n\n  @media screen and (min-width: 48em) {\n    .hover\\:mixedMd\\:c_6px:is(:hover, [data-hover])[data-attr=\"custom\"] {\n      color: 6px;\n}\n}\n\n  @media screen and (min-width: 48rem) {\n    .hover\\:md\\:w_5px:is(:hover, [data-hover]) {\n      width: 5px;\n}\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/core/__tests__/rule-processor.test.ts::js to css > parses declarations with !important::1",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/rule-processor.test.ts",
+        "test": "js to css > parses declarations with !important",
+        "line": 9
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          "borderColor": "red !important",
+          "color": "pink!",
+          "background": "white!IMPORTANT  ",
+          "fontFamily": "A"
+        }
+      ],
+      "options": null,
+      "expected": {
+        "classNames": [
+          "bg_white",
+          "bd-c_red",
+          "c_pink",
+          "ff_A"
+        ],
+        "css": "@layer utilities {\n  .bg_white\\! {\n    background: var(--colors-white) !important;\n}\n\n  .bd-c_red\\! {\n    border-color: red !important;\n}\n\n  .c_pink\\! {\n    color: pink !important;\n}\n\n  .ff_A {\n    font-family: A;\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/core/__tests__/rule-processor.test.ts::js to css > preserves casing for css variable::1",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/rule-processor.test.ts",
+        "test": "js to css > preserves casing for css variable",
+        "line": 9
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          "--testVariable0": "0",
+          "--test-Variable-1": "1",
+          "--test-variable-2": "2"
+        }
+      ],
+      "options": null,
+      "expected": {
+        "classNames": [
+          "\\--testVariable0_0",
+          "\\--test-Variable-1_1",
+          "\\--test-variable-2_2"
+        ],
+        "css": "@layer utilities {\n  .\\--testVariable0_0 {\n    --testVariable0: 0;\n}\n\n  .\\--test-Variable-1_1 {\n    --test-Variable-1: 1;\n}\n\n  .\\--test-variable-2_2 {\n    --test-variable-2: 2;\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/core/__tests__/rule-processor.test.ts::js to css > pseudo conditions sorting::1",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/rule-processor.test.ts",
+        "test": "js to css > pseudo conditions sorting",
+        "line": 9
+      },
+      "userConfig": {
+        "conditions": {
+          "custom": "&[data-attr=\"custom\"]"
+        }
+      },
+      "inputs": [
+        {
+          "_focus": {
+            "width": "2px"
+          },
+          "_custom": {
+            "width": "3px"
+          },
+          "_active": {
+            "width": "3px"
+          },
+          "_hover": {
+            "width": "1px"
+          }
+        }
+      ],
+      "configPatch": {
+        "conditions": {
+          "custom": {
+            "$value": "&[data-attr=\"custom\"]"
+          }
+        }
+      },
+      "options": null,
+      "expected": {
+        "classNames": [
+          "custom\\:w_3px",
+          "focus\\:w_2px",
+          "hover\\:w_1px",
+          "active\\:w_3px"
+        ],
+        "css": "@layer utilities {\n  .custom\\:w_3px[data-attr=\"custom\"] {\n    width: 3px;\n}\n\n  .focus\\:w_2px:is(:focus, [data-focus]) {\n    width: 2px;\n}\n\n  .hover\\:w_1px:is(:hover, [data-hover]) {\n    width: 1px;\n}\n\n  .active\\:w_3px:is(:active, [data-active]) {\n    width: 3px;\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/core/__tests__/rule-processor.test.ts::js to css > resolve property conflicts and order - border example::1",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/rule-processor.test.ts",
+        "test": "js to css > resolve property conflicts and order - border example",
+        "line": 9
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          "borderWidth": "1px",
+          "borderTopRadius": "0px",
+          "borderBottomWidth": "3px",
+          "overflow": "hidden",
+          "base": {
+            "borderWidth": "2px"
+          }
+        }
+      ],
+      "options": null,
+      "expected": {
+        "classNames": [
+          "bd-w_1px",
+          "ov_hidden",
+          "bd-w_2px",
+          "bdr-t_0px",
+          "bd-b-w_3px"
+        ],
+        "css": "@layer utilities {\n  .bd-w_1px {\n    border-width: 1px;\n}\n\n  .ov_hidden {\n    overflow: hidden;\n}\n\n  .bd-w_2px {\n    border-width: 2px;\n}\n\n  .bdr-t_0px {\n    border-top-left-radius: 0px;\n    border-top-right-radius: 0px;\n}\n\n  .bd-b-w_3px {\n    border-bottom-width: 3px;\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/core/__tests__/rule-processor.test.ts::js to css > resolve property conflicts and order - padding example::1",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/rule-processor.test.ts",
+        "test": "js to css > resolve property conflicts and order - padding example",
+        "line": 9
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          "padding": "1px",
+          "paddingTop": "3px",
+          "paddingBottom": "4px",
+          "base": {
+            "padding": "2px"
+          }
+        }
+      ],
+      "options": null,
+      "expected": {
+        "classNames": [
+          "p_1px",
+          "p_2px",
+          "pt_3px",
+          "pb_4px"
+        ],
+        "css": "@layer utilities {\n  .p_1px {\n    padding: 1px;\n}\n\n  .p_2px {\n    padding: 2px;\n}\n\n  .pt_3px {\n    padding-top: 3px;\n}\n\n  .pb_4px {\n    padding-bottom: 4px;\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/core/__tests__/rule-processor.test.ts::js to css > unitless::1",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/rule-processor.test.ts",
+        "test": "js to css > unitless",
+        "line": 9
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          "--foo": 42,
+          "width": 42,
+          "opacity": 1,
+          "zIndex": 0
+        }
+      ],
+      "options": null,
+      "expected": {
+        "classNames": [
+          "\\--foo_42",
+          "op_1",
+          "z_0",
+          "w_42"
+        ],
+        "css": "@layer utilities {\n  .\\--foo_42 {\n    --foo: 42;\n}\n\n  .op_1 {\n    opacity: 1;\n}\n\n  .z_0 {\n    z-index: 0;\n}\n\n  .w_42 {\n    width: 42px;\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/core/__tests__/rule-processor.test.ts::multi-block conditions (object syntax with @slot) > basic multi-block condition with two at-rule blocks::1",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/rule-processor.test.ts",
+        "test": "multi-block conditions (object syntax with @slot) > basic multi-block condition with two at-rule blocks",
+        "line": 9
+      },
+      "userConfig": {
+        "conditions": {
+          "hoverActive": {
+            "@media (hover: hover)": {
+              "&:is(:hover, [data-hover])": "@slot"
+            },
+            "@media (hover: none)": {
+              "&:is(:active, [data-active])": "@slot"
+            }
+          }
+        }
+      },
+      "inputs": [
+        {
+          "_hoverActive": {
+            "background": "red"
+          }
+        }
+      ],
+      "configPatch": {
+        "conditions": {
+          "hoverActive": {
+            "$value": {
+              "@media (hover: hover)": {
+                "&:is(:hover, [data-hover])": "@slot"
+              },
+              "@media (hover: none)": {
+                "&:is(:active, [data-active])": "@slot"
+              }
+            }
+          }
+        }
+      },
+      "options": null,
+      "expected": {
+        "classNames": [
+          "hoverActive\\:bg_red"
+        ],
+        "css": "@layer utilities {\n  @media (hover: hover) {\n    .hoverActive\\:bg_red:is(:hover, [data-hover]) {\n      background: red;\n}\n}\n\n  @media (hover: none) {\n    .hoverActive\\:bg_red:is(:active, [data-active]) {\n      background: red;\n}\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/core/__tests__/rule-processor.test.ts::multi-block conditions (object syntax with @slot) > multi-block condition with multiple properties::1",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/rule-processor.test.ts",
+        "test": "multi-block conditions (object syntax with @slot) > multi-block condition with multiple properties",
+        "line": 9
+      },
+      "userConfig": {
+        "conditions": {
+          "hoverActive": {
+            "@media (hover: hover)": {
+              "&:is(:hover, [data-hover])": "@slot"
+            },
+            "@media (hover: none)": {
+              "&:is(:active, [data-active])": "@slot"
+            }
+          }
+        }
+      },
+      "inputs": [
+        {
+          "_hoverActive": {
+            "background": "red",
+            "color": "white"
+          }
+        }
+      ],
+      "configPatch": {
+        "conditions": {
+          "hoverActive": {
+            "$value": {
+              "@media (hover: hover)": {
+                "&:is(:hover, [data-hover])": "@slot"
+              },
+              "@media (hover: none)": {
+                "&:is(:active, [data-active])": "@slot"
+              }
+            }
+          }
+        }
+      },
+      "options": null,
+      "expected": {
+        "classNames": [
+          "hoverActive\\:bg_red",
+          "hoverActive\\:c_white"
+        ],
+        "css": "@layer utilities {\n  @media (hover: hover) {\n    .hoverActive\\:bg_red:is(:hover, [data-hover]) {\n      background: red;\n}\n    .hoverActive\\:c_white:is(:hover, [data-hover]) {\n      color: var(--colors-white);\n}\n}\n\n  @media (hover: none) {\n    .hoverActive\\:bg_red:is(:active, [data-active]) {\n      background: red;\n}\n    .hoverActive\\:c_white:is(:active, [data-active]) {\n      color: var(--colors-white);\n}\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/core/__tests__/rule-processor.test.ts::multi-block conditions (object syntax with @slot) > multi-block emission preserves a deterministic at-rule order::1",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/rule-processor.test.ts",
+        "test": "multi-block conditions (object syntax with @slot) > multi-block emission preserves a deterministic at-rule order",
+        "line": 9
+      },
+      "userConfig": {
+        "conditions": {
+          "hoverActive": {
+            "@media (hover: hover)": {
+              "&:is(:hover, [data-hover])": "@slot"
+            },
+            "@media (hover: none)": {
+              "&:is(:active, [data-active])": "@slot"
+            }
+          }
+        }
+      },
+      "inputs": [
+        {
+          "_hoverActive": {
+            "background": "red"
+          }
+        }
+      ],
+      "configPatch": {
+        "conditions": {
+          "hoverActive": {
+            "$value": {
+              "@media (hover: hover)": {
+                "&:is(:hover, [data-hover])": "@slot"
+              },
+              "@media (hover: none)": {
+                "&:is(:active, [data-active])": "@slot"
+              }
+            }
+          }
+        }
+      },
+      "options": null,
+      "expected": {
+        "classNames": [
+          "hoverActive\\:bg_red"
+        ],
+        "css": "@layer utilities {\n  @media (hover: hover) {\n    .hoverActive\\:bg_red:is(:hover, [data-hover]) {\n      background: red;\n}\n}\n\n  @media (hover: none) {\n    .hoverActive\\:bg_red:is(:active, [data-active]) {\n      background: red;\n}\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/core/__tests__/rule-processor.test.ts::multi-block conditions (object syntax with @slot) > multi-block stacked with a parent-nesting condition combines correctly::1",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/rule-processor.test.ts",
+        "test": "multi-block conditions (object syntax with @slot) > multi-block stacked with a parent-nesting condition combines correctly",
+        "line": 9
+      },
+      "userConfig": {
+        "conditions": {
+          "dark": ".dark &",
+          "hoverActive": {
+            "@media (hover: hover)": {
+              "&:is(:hover, [data-hover])": "@slot"
+            },
+            "@media (hover: none)": {
+              "&:is(:active, [data-active])": "@slot"
+            }
+          }
+        }
+      },
+      "inputs": [
+        {
+          "_dark": {
+            "_hoverActive": {
+              "background": "red"
+            }
+          }
+        }
+      ],
+      "configPatch": {
+        "conditions": {
+          "dark": {
+            "$value": ".dark &"
+          },
+          "hoverActive": {
+            "$value": {
+              "@media (hover: hover)": {
+                "&:is(:hover, [data-hover])": "@slot"
+              },
+              "@media (hover: none)": {
+                "&:is(:active, [data-active])": "@slot"
+              }
+            }
+          }
+        }
+      },
+      "options": null,
+      "expected": {
+        "classNames": [
+          "dark\\:hoverActive\\:bg_red"
+        ],
+        "css": "@layer utilities {\n  @media (hover: hover) {\n    .dark .dark\\:hoverActive\\:bg_red:is(:hover, [data-hover]) {\n      background: red;\n}\n}\n\n  @media (hover: none) {\n    .dark .dark\\:hoverActive\\:bg_red:is(:active, [data-active]) {\n      background: red;\n}\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/core/__tests__/rule-processor.test.ts::multi-block conditions (object syntax with @slot) > single-@slot object is equivalent to mixed-array form::1",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/rule-processor.test.ts",
+        "test": "multi-block conditions (object syntax with @slot) > single-@slot object is equivalent to mixed-array form",
+        "line": 9
+      },
+      "userConfig": {
+        "conditions": {
+          "anyHover": {
+            "@media (hover: hover)": {
+              "&:hover": "@slot"
+            }
+          }
+        }
+      },
+      "inputs": [
+        {
+          "_anyHover": {
+            "color": "blue"
+          }
+        }
+      ],
+      "configPatch": {
+        "conditions": {
+          "anyHover": {
+            "$value": {
+              "@media (hover: hover)": {
+                "&:hover": "@slot"
+              }
+            }
+          }
+        }
+      },
+      "options": null,
+      "expected": {
+        "classNames": [
+          "anyHover\\:c_blue"
+        ],
+        "css": "@layer utilities {\n  @media (hover: hover) {\n    .anyHover\\:c_blue:hover {\n      color: blue;\n}\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/core/__tests__/rule-processor.test.ts::multi-block conditions (object syntax with @slot) > single-@slot object is equivalent to mixed-array form::2",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/rule-processor.test.ts",
+        "test": "multi-block conditions (object syntax with @slot) > single-@slot object is equivalent to mixed-array form",
+        "line": 9
+      },
+      "userConfig": {
+        "conditions": {
+          "anyHover": [
+            "@media (hover: hover)",
+            "&:hover"
+          ]
+        }
+      },
+      "inputs": [
+        {
+          "_anyHover": {
+            "color": "blue"
+          }
+        }
+      ],
+      "configPatch": {
+        "conditions": {
+          "anyHover": {
+            "$value": [
+              "@media (hover: hover)",
+              "&:hover"
+            ]
+          }
+        }
+      },
+      "options": null,
+      "expected": {
+        "classNames": [
+          "anyHover\\:c_blue"
+        ],
+        "css": "@layer utilities {\n  @media (hover: hover) {\n    .anyHover\\:c_blue:hover {\n      color: blue;\n}\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/core/__tests__/rule-processor.test.ts::multi-block conditions (object syntax with @slot) > single-block object condition (backward compat)::1",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/rule-processor.test.ts",
+        "test": "multi-block conditions (object syntax with @slot) > single-block object condition (backward compat)",
+        "line": 9
+      },
+      "userConfig": {
+        "conditions": {
+          "anyHover": {
+            "@media (hover: hover)": {
+              "&:hover": "@slot"
+            }
+          }
+        }
+      },
+      "inputs": [
+        {
+          "_anyHover": {
+            "color": "blue"
+          }
+        }
+      ],
+      "configPatch": {
+        "conditions": {
+          "anyHover": {
+            "$value": {
+              "@media (hover: hover)": {
+                "&:hover": "@slot"
+              }
+            }
+          }
+        }
+      },
+      "options": null,
+      "expected": {
+        "classNames": [
+          "anyHover\\:c_blue"
+        ],
+        "css": "@layer utilities {\n  @media (hover: hover) {\n    .anyHover\\:c_blue:hover {\n      color: blue;\n}\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/core/__tests__/rule-processor.test.ts::multi-block conditions (object syntax with @slot) > stacking two multi-block conditions produces cartesian product of blocks::1",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/rule-processor.test.ts",
+        "test": "multi-block conditions (object syntax with @slot) > stacking two multi-block conditions produces cartesian product of blocks",
+        "line": 9
+      },
+      "userConfig": {
+        "conditions": {
+          "hoverActive": {
+            "@media (hover: hover)": {
+              "&:is(:hover, [data-hover])": "@slot"
+            },
+            "@media (hover: none)": {
+              "&:is(:active, [data-active])": "@slot"
+            }
+          },
+          "lightDark": {
+            "@media (prefers-color-scheme: light)": {
+              "&[data-mode=\"light\"]": "@slot"
+            },
+            "@media (prefers-color-scheme: dark)": {
+              "&[data-mode=\"dark\"]": "@slot"
+            }
+          }
+        }
+      },
+      "inputs": [
+        {
+          "_hoverActive": {
+            "_lightDark": {
+              "background": "red"
+            }
+          }
+        }
+      ],
+      "configPatch": {
+        "conditions": {
+          "hoverActive": {
+            "$value": {
+              "@media (hover: hover)": {
+                "&:is(:hover, [data-hover])": "@slot"
+              },
+              "@media (hover: none)": {
+                "&:is(:active, [data-active])": "@slot"
+              }
+            }
+          },
+          "lightDark": {
+            "$value": {
+              "@media (prefers-color-scheme: light)": {
+                "&[data-mode=\"light\"]": "@slot"
+              },
+              "@media (prefers-color-scheme: dark)": {
+                "&[data-mode=\"dark\"]": "@slot"
+              }
+            }
+          }
+        }
+      },
+      "options": null,
+      "expected": {
+        "classNames": [
+          "hoverActive\\:lightDark\\:bg_red"
+        ],
+        "css": "@layer utilities {\n  @media (hover: hover) {\n    @media (prefers-color-scheme: dark) {\n      .hoverActive\\:lightDark\\:bg_red:is(:hover, [data-hover])[data-mode=\"dark\"] {\n        background: red;\n}\n}\n\n    @media (prefers-color-scheme: light) {\n      .hoverActive\\:lightDark\\:bg_red:is(:hover, [data-hover])[data-mode=\"light\"] {\n        background: red;\n}\n}\n}\n\n  @media (hover: none) {\n    @media (prefers-color-scheme: dark) {\n      .hoverActive\\:lightDark\\:bg_red:is(:active, [data-active])[data-mode=\"dark\"] {\n        background: red;\n}\n}\n\n    @media (prefers-color-scheme: light) {\n      .hoverActive\\:lightDark\\:bg_red:is(:active, [data-active])[data-mode=\"light\"] {\n        background: red;\n}\n}\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/core/__tests__/rule-processor.test.ts::rule processor > css - boolean utility::1",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/rule-processor.test.ts",
+        "test": "rule processor > css - boolean utility",
+        "line": 9
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          "truncate": false
+        }
+      ],
+      "options": null,
+      "expected": {
+        "classNames": [
+          "trunc_false"
+        ],
+        "css": ""
+      }
+    },
+    {
+      "id": "fixture::packages/core/__tests__/rule-processor.test.ts::rule processor > css - boolean utility::2",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/rule-processor.test.ts",
+        "test": "rule processor > css - boolean utility",
+        "line": 9
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          "truncate": true
+        }
+      ],
+      "options": null,
+      "expected": {
+        "classNames": [
+          "trunc_true"
+        ],
+        "css": "@layer utilities {\n  .trunc_true {\n    overflow: hidden;\n    text-overflow: ellipsis;\n    white-space: nowrap;\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/core/__tests__/rule-processor.test.ts::rule processor > css::1",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/rule-processor.test.ts",
+        "test": "rule processor > css",
+        "line": 9
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          "color": "red !important",
+          "border": "1px solid token(colors.red.100)",
+          "bg": "blue.300",
+          "textStyle": "headline.h1",
+          "w": [
+            1,
+            2,
+            null,
+            null,
+            3
+          ],
+          "fontSize": {
+            "base": "xs",
+            "sm": "sm",
+            "_hover": {
+              "base": "md",
+              "md": "lg",
+              "_focus": "xl"
+            },
+            "_dark": "2xl"
+          },
+          "sm": {
+            "color": "yellow",
+            "backgroundColor": {
+              "base": "red",
+              "_hover": "green"
+            }
+          },
+          "&[data-attr='test']": {
+            "color": "green",
+            "_expanded": {
+              "color": "purple",
+              ".target &": {
+                "color": {
+                  "base": "cyan",
+                  "_open": "orange",
+                  "xl": "pink"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "options": null,
+      "expected": {
+        "classNames": [
+          "bd_1px_solid_token\\(colors\\.red\\.100\\)",
+          "bg_blue\\.300",
+          "c_red",
+          "textStyle_headline\\.h1",
+          "fs_xs",
+          "w_1",
+          "dark\\:fs_2xl",
+          "\\[\\&\\[data-attr\\=\\'test\\'\\]\\]\\:c_green",
+          "hover\\:fs_md",
+          "\\[\\&\\[data-attr\\=\\'test\\'\\]\\]\\:expanded\\:c_purple",
+          "hover\\:focus\\:fs_xl",
+          "\\[\\&\\[data-attr\\=\\'test\\'\\]\\]\\:expanded\\:\\[\\.target_\\&\\]\\:c_cyan",
+          "\\[\\&\\[data-attr\\=\\'test\\'\\]\\]\\:expanded\\:\\[\\.target_\\&\\]\\:open\\:c_orange",
+          "sm\\:fs_sm",
+          "sm\\:c_yellow",
+          "sm\\:bg-c_red",
+          "sm\\:w_2",
+          "sm\\:hover\\:bg-c_green",
+          "hover\\:md\\:fs_lg",
+          "xl\\:w_3",
+          "\\[\\&\\[data-attr\\=\\'test\\'\\]\\]\\:expanded\\:\\[\\.target_\\&\\]\\:xl\\:c_pink"
+        ],
+        "css": "@layer utilities {\n  @layer compositions {\n    .textStyle_headline\\.h1 {\n      font-size: 2rem;\n      font-weight: var(--font-weights-bold);\n}\n}\n\n  .bd_1px_solid_token\\(colors\\.red\\.100\\) {\n    border: 1px solid var(--colors-red-100);\n}\n\n  .bg_blue\\.300 {\n    background: var(--colors-blue-300);\n}\n\n  .c_red\\! {\n    color: red !important;\n}\n\n  .fs_xs {\n    font-size: var(--font-sizes-xs);\n}\n\n  .w_1 {\n    width: var(--sizes-1);\n}\n\n  [data-theme=dark] .dark\\:fs_2xl,.dark .dark\\:fs_2xl,.dark\\:fs_2xl.dark,.dark\\:fs_2xl[data-theme=dark] {\n    font-size: var(--font-sizes-2xl);\n}\n\n  .\\[\\&\\[data-attr\\=\\'test\\'\\]\\]\\:c_green[data-attr='test'] {\n    color: green;\n}\n\n  .hover\\:fs_md:is(:hover, [data-hover]) {\n    font-size: var(--font-sizes-md);\n}\n\n  .\\[\\&\\[data-attr\\=\\'test\\'\\]\\]\\:expanded\\:c_purple[data-attr='test']:is([aria-expanded=true], [data-expanded], [data-state=\"expanded\"]) {\n    color: purple;\n}\n\n  .hover\\:focus\\:fs_xl:is(:hover, [data-hover]):is(:focus, [data-focus]) {\n    font-size: var(--font-sizes-xl);\n}\n\n  .target .\\[\\&\\[data-attr\\=\\'test\\'\\]\\]\\:expanded\\:\\[\\.target_\\&\\]\\:c_cyan[data-attr='test']:is([aria-expanded=true], [data-expanded], [data-state=\"expanded\"]) {\n    color: cyan;\n}\n\n  .target .\\[\\&\\[data-attr\\=\\'test\\'\\]\\]\\:expanded\\:\\[\\.target_\\&\\]\\:open\\:c_orange[data-attr='test']:is([aria-expanded=true], [data-expanded], [data-state=\"expanded\"]):is([open], [data-open], [data-state=\"open\"], :popover-open) {\n    color: orange;\n}\n\n  @media screen and (min-width: 40rem) {\n    .sm\\:fs_sm {\n      font-size: var(--font-sizes-sm);\n}\n    .sm\\:c_yellow {\n      color: yellow;\n}\n    .sm\\:bg-c_red {\n      background-color: red;\n}\n    .sm\\:w_2 {\n      width: var(--sizes-2);\n}\n    .sm\\:hover\\:bg-c_green:is(:hover, [data-hover]) {\n      background-color: green;\n}\n}\n\n  @media screen and (min-width: 48rem) {\n    .hover\\:md\\:fs_lg:is(:hover, [data-hover]) {\n      font-size: var(--font-sizes-lg);\n}\n}\n\n  @media screen and (min-width: 80rem) {\n    .xl\\:w_3 {\n      width: var(--sizes-3);\n}\n    .target .\\[\\&\\[data-attr\\=\\'test\\'\\]\\]\\:expanded\\:\\[\\.target_\\&\\]\\:xl\\:c_pink[data-attr='test']:is([aria-expanded=true], [data-expanded], [data-state=\"expanded\"]) {\n      color: pink;\n}\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/core/__tests__/rule-processor.test.ts::rule processor > mixed together::1",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/rule-processor.test.ts",
+        "test": "rule processor > mixed together",
+        "line": 930
+      },
+      "userConfig": {
+        "theme": {
+          "extend": {
+            "recipes": {
+              "button": {
+                "className": "btn",
+                "base": {
+                  "lineHeight": "1.2",
+                  "_focusVisible": {
+                    "boxShadow": "outline"
+                  },
+                  "_disabled": {
+                    "opacity": 0.4
+                  },
+                  "_hover": {
+                    "_disabled": {
+                      "bg": "initial"
+                    }
+                  },
+                  "display": "inline-flex",
+                  "outline": "none",
+                  "_focus": {
+                    "zIndex": 1
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "inputs": [
+        {
+          "color": "blue.300",
+          "_hover": {
+            "color": "red.400"
+          }
+        }
+      ],
+      "configPatch": {
+        "theme": {
+          "recipes": {
+            "button": {
+              "$value": {
+                "className": "btn",
+                "base": {
+                  "lineHeight": "1.2",
+                  "_focusVisible": {
+                    "boxShadow": "outline"
+                  },
+                  "_disabled": {
+                    "opacity": 0.4
+                  },
+                  "_hover": {
+                    "_disabled": {
+                      "bg": "initial"
+                    }
+                  },
+                  "display": "inline-flex",
+                  "outline": "none",
+                  "_focus": {
+                    "zIndex": 1
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "options": null,
+      "expected": {
+        "classNames": [
+          "c_blue\\.300",
+          "hover\\:c_red\\.400",
+          "btn",
+          "bd_2px_solid_token\\(colors\\.green\\.100\\)",
+          "fs_12px",
+          "fs_14px",
+          "fs_16px"
+        ],
+        "css": "@layer recipes {\n  @layer _base {\n    .btn {\n      outline: var(--borders-none);\n      line-height: 1.2;\n      display: inline-flex;\n}\n\n    .btn:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {\n      opacity: 0.4;\n}\n\n    .btn:is(:focus-visible, [data-focus-visible]) {\n      box-shadow: outline;\n}\n\n    .btn:is(:focus, [data-focus]) {\n      z-index: 1;\n}\n\n    .btn:is(:hover, [data-hover]):is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {\n      background: initial;\n}\n}\n}\n\n@layer utilities {\n  .bd_2px_solid_token\\(colors\\.green\\.100\\) {\n    border: 2px solid var(--colors-green-100);\n}\n\n  .c_blue\\.300 {\n    color: var(--colors-blue-300);\n}\n\n  .fs_12px {\n    font-size: 12px;\n}\n\n  .fs_14px {\n    font-size: 14px;\n}\n\n  .fs_16px {\n    font-size: 16px;\n}\n\n  .hover\\:c_red\\.400:is(:hover, [data-hover]) {\n    color: var(--colors-red-400);\n}\n}"
+      },
+      "unsupported": "non-css calls (recipe, cva)"
+    },
+    {
+      "id": "fixture::packages/core/__tests__/rule-processor.test.ts::rule processor > simple - hash: true + custom toHash::1",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/rule-processor.test.ts",
+        "test": "rule processor > simple - hash: true + custom toHash",
+        "line": 9
+      },
+      "unsupported": "config hooks"
+    },
+    {
+      "id": "fixture::packages/core/__tests__/rule-processor.test.ts::rule processor > simple - hash: true::1",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/rule-processor.test.ts",
+        "test": "rule processor > simple - hash: true",
+        "line": 9
+      },
+      "userConfig": {
+        "hash": true
+      },
+      "inputs": [
+        {
+          "margin": 2,
+          "mx": "token(spacing.2)",
+          "my": "-2",
+          "color": "blue.300"
+        }
+      ],
+      "configPatch": {
+        "hash": {
+          "$value": true
+        }
+      },
+      "options": null,
+      "expected": {
+        "classNames": [
+          "AxiDH",
+          "hHAKfe",
+          "pWVwj",
+          "hDAFEs"
+        ],
+        "css": "@layer utilities {\n  .AxiDH {\n    margin: var(--ebuyxV);\n}\n\n  .hHAKfe {\n    margin-inline: var(--ebuyxV);\n}\n\n  .pWVwj {\n    margin-block: calc(var(--ebuyxV) * -1);\n}\n\n  .hDAFEs {\n    color: var(--bMEoOM);\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/core/__tests__/rule-processor.test.ts::rule processor > simple with formatTokenName::1",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/rule-processor.test.ts",
+        "test": "rule processor > simple with formatTokenName",
+        "line": 9
+      },
+      "unsupported": "config hooks"
+    },
+    {
+      "id": "fixture::packages/core/__tests__/rule-processor.test.ts::rule processor > simple::1",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/rule-processor.test.ts",
+        "test": "rule processor > simple",
+        "line": 9
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          "margin": 2,
+          "mx": "token(spacing.2)",
+          "my": "-2",
+          "color": "blue.300"
+        }
+      ],
+      "options": null,
+      "expected": {
+        "classNames": [
+          "m_2",
+          "mx_token\\(spacing\\.2\\)",
+          "my_-2",
+          "c_blue\\.300"
+        ],
+        "css": "@layer utilities {\n  .m_2 {\n    margin: var(--spacing-2);\n}\n\n  .mx_token\\(spacing\\.2\\) {\n    margin-inline: var(--spacing-2);\n}\n\n  .my_-2 {\n    margin-block: calc(var(--spacing-2) * -1);\n}\n\n  .c_blue\\.300 {\n    color: var(--colors-blue-300);\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/core/__tests__/rule-processor.test.ts::rule processor > token() with formatTokenName::1",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/rule-processor.test.ts",
+        "test": "rule processor > token() with formatTokenName",
+        "line": 9
+      },
+      "unsupported": "config hooks"
+    }
+  ]
+}

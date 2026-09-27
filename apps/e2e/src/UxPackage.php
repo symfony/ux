@@ -17,6 +17,7 @@ enum UxPackage: string
     case CalendarLink = 'UX CalendarLink';
     case ChartJs = 'UX Chart';
     case Cropperjs = 'UX Cropperjs';
+    case Css = 'UX CSS';
     case Dropzone = 'UX Dropzone';
     case Icons = 'UX Icons';
     case LiveComponent = 'UX LiveComponent';
@@ -41,6 +42,7 @@ enum UxPackage: string
             self::CalendarLink => 'https://ux.symfony.com/calendar-link',
             self::ChartJs => 'https://ux.symfony.com/chartjs',
             self::Cropperjs => 'https://ux.symfony.com/cropperjs',
+            self::Css => 'https://ux.symfony.com/css',
             self::Dropzone => 'https://ux.symfony.com/dropzone',
             self::Icons => 'https://ux.symfony.com/icons',
             self::LiveComponent => 'https://ux.symfony.com/live-component',

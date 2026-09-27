@@ -6,6 +6,7 @@
         "ux-dropzone": "src/Dropzone",
         "ux-chartjs": "src/Chartjs",
         "ux-cropperjs": "src/Cropperjs",
+        "ux-css": "src/Css",
         "ux-icons": "src/Icons",
         "ux-image": { "prefixes": [{ "from": "src/Image", "to": "", "excludes": ["src/Bridge"] }] },
         "ux-cloudflare-image": "src/Image/src/Bridge/Cloudflare",

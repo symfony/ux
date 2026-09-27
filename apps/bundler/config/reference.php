@@ -704,6 +704,21 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     controller_paths?: list<scalar|Param|null>,
  *     controllers_json?: scalar|Param|null, // Default: "%kernel.project_dir%/assets/controllers.json"
  * }
+ * @psalm-type UxCssConfig = array{
+ *     tokens?: array<string, mixed>,
+ *     semantic_tokens?: array<string, mixed>,
+ *     conditions?: array<string, mixed>,
+ *     breakpoints?: array<string, scalar|Param|null>,
+ *     strict_tokens?: bool|Param, // Only accept tokens for properties bound to a token category; raw values must be written between brackets. // Default: true
+ *     strict_property_values?: bool|Param, // Only accept the keywords of a property whose grammar is made of keywords. // Default: true
+ *     static_css?: array{ // Values to write in the stylesheet even when no template uses them as is, for css() calls with dynamic values.
+ *         css?: list<array{ // Default: []
+ *             properties?: array<string, list<scalar|Param|null>>,
+ *             conditions?: list<scalar|Param|null>,
+ *             responsive?: bool|Param, // Also write each value for every breakpoint. // Default: false
+ *         }>,
+ *     },
+ * }
  * @psalm-type UxMapConfig = array{
  *     renderer?: scalar|Param|null, // Default: null
  *     google_maps?: array{
@@ -850,6 +865,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     framework?: FrameworkConfig,
  *     webpack_encore?: WebpackEncoreConfig,
  *     stimulus?: StimulusConfig,
+ *     ux_css?: UxCssConfig,
  *     ux_map?: UxMapConfig,
  *     twig?: TwigConfig,
  *     ux_icons?: UxIconsConfig,
@@ -870,6 +886,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         framework?: FrameworkConfig,
  *         webpack_encore?: WebpackEncoreConfig,
  *         stimulus?: StimulusConfig,
+ *         ux_css?: UxCssConfig,
  *         ux_map?: UxMapConfig,
  *         twig?: TwigConfig,
  *         ux_icons?: UxIconsConfig,
@@ -891,6 +908,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         framework?: FrameworkConfig,
  *         webpack_encore?: WebpackEncoreConfig,
  *         stimulus?: StimulusConfig,
+ *         ux_css?: UxCssConfig,
  *         ux_map?: UxMapConfig,
  *         twig?: TwigConfig,
  *         ux_icons?: UxIconsConfig,
@@ -912,6 +930,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         framework?: FrameworkConfig,
  *         webpack_encore?: WebpackEncoreConfig,
  *         stimulus?: StimulusConfig,
+ *         ux_css?: UxCssConfig,
  *         ux_map?: UxMapConfig,
  *         twig?: TwigConfig,
  *         ux_icons?: UxIconsConfig,

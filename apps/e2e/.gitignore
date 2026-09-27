@@ -6,6 +6,7 @@ composer.lock
 /.env.*.local
 /config/secrets/prod/prod.decrypt.private.php
 /config/reference.php
+/config/reference_css.php
 /public/bundles/
 /var/
 /vendor/

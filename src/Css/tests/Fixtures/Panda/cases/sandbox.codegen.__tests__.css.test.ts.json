@@ -1,0 +1,422 @@
+{
+  "source": "sandbox/codegen/__tests__/css.test.ts",
+  "cases": [
+    {
+      "id": "react::sandbox/codegen/__tests__/css.test.ts::css > arbitrary selector::1",
+      "kind": "codegen-css",
+      "config": "codegen-react",
+      "source": {
+        "file": "sandbox/codegen/__tests__/css.test.ts",
+        "test": "css > arbitrary selector",
+        "line": 54
+      },
+      "inputs": [
+        {
+          "&:data-panda": {
+            "display": "flex"
+          }
+        }
+      ],
+      "expected": {
+        "className": "[&:data-panda]:d_flex"
+      }
+    },
+    {
+      "id": "react::sandbox/codegen/__tests__/css.test.ts::css > arbitrary value::1",
+      "kind": "codegen-css",
+      "config": "codegen-react",
+      "source": {
+        "file": "sandbox/codegen/__tests__/css.test.ts",
+        "test": "css > arbitrary value",
+        "line": 48
+      },
+      "inputs": [
+        {
+          "color": "#fff"
+        }
+      ],
+      "expected": {
+        "className": "c_#fff"
+      }
+    },
+    {
+      "id": "react::sandbox/codegen/__tests__/css.test.ts::css > condition prop::1",
+      "kind": "codegen-css",
+      "config": "codegen-react",
+      "source": {
+        "file": "sandbox/codegen/__tests__/css.test.ts",
+        "test": "css > condition prop",
+        "line": 36
+      },
+      "inputs": [
+        {
+          "_hover": {
+            "bg": "yellow.200"
+          }
+        }
+      ],
+      "expected": {
+        "className": "hover:bg_yellow.200"
+      }
+    },
+    {
+      "id": "react::sandbox/codegen/__tests__/css.test.ts::css > merging styles with array item::1",
+      "kind": "codegen-css",
+      "config": "codegen-react",
+      "source": {
+        "file": "sandbox/codegen/__tests__/css.test.ts",
+        "test": "css > merging styles with array item",
+        "line": 118
+      },
+      "inputs": [
+        {
+          "fontSize": "sm",
+          "bgColor": "red.500"
+        },
+        [
+          {
+            "backgroundColor": "red.600"
+          },
+          {
+            "fontSize": "12px"
+          }
+        ]
+      ],
+      "expected": {
+        "className": "fs_12px bg-c_red.600"
+      }
+    },
+    {
+      "id": "react::sandbox/codegen/__tests__/css.test.ts::css > merging styles with nested conditions::1",
+      "kind": "codegen-css",
+      "config": "codegen-react",
+      "source": {
+        "file": "sandbox/codegen/__tests__/css.test.ts",
+        "test": "css > merging styles with nested conditions",
+        "line": 106
+      },
+      "inputs": [
+        {
+          "fontSize": "sm",
+          "_hover": {
+            "color": "green.100"
+          }
+        },
+        {
+          "_hover": {
+            "color": "green.200"
+          }
+        }
+      ],
+      "expected": {
+        "className": "fs_sm hover:c_green.200"
+      }
+    },
+    {
+      "id": "react::sandbox/codegen/__tests__/css.test.ts::css > merging styles with object condition prop::1",
+      "kind": "codegen-css",
+      "config": "codegen-react",
+      "source": {
+        "file": "sandbox/codegen/__tests__/css.test.ts",
+        "test": "css > merging styles with object condition prop",
+        "line": 112
+      },
+      "inputs": [
+        {
+          "fontSize": "md"
+        },
+        {
+          "fontSize": {
+            "base": "lg",
+            "sm": "xs"
+          }
+        }
+      ],
+      "expected": {
+        "className": "fs_lg sm:fs_xs"
+      }
+    },
+    {
+      "id": "react::sandbox/codegen/__tests__/css.test.ts::css > merging styles::1",
+      "kind": "codegen-css",
+      "config": "codegen-react",
+      "source": {
+        "file": "sandbox/codegen/__tests__/css.test.ts",
+        "test": "css > merging styles",
+        "line": 100
+      },
+      "inputs": [
+        {
+          "fontSize": "sm",
+          "bgColor": "red.500"
+        },
+        {
+          "backgroundColor": "red.600"
+        }
+      ],
+      "expected": {
+        "className": "fs_sm bg-c_red.600"
+      }
+    },
+    {
+      "id": "react::sandbox/codegen/__tests__/css.test.ts::css > native CSS prop and value::1",
+      "kind": "codegen-css",
+      "config": "codegen-react",
+      "source": {
+        "file": "sandbox/codegen/__tests__/css.test.ts",
+        "test": "css > native CSS prop and value",
+        "line": 6
+      },
+      "inputs": [
+        {
+          "display": "flex"
+        }
+      ],
+      "expected": {
+        "className": "d_flex"
+      }
+    },
+    {
+      "id": "react::sandbox/codegen/__tests__/css.test.ts::css > nested condition prop with array syntax::1",
+      "kind": "codegen-css",
+      "config": "codegen-react",
+      "source": {
+        "file": "sandbox/codegen/__tests__/css.test.ts",
+        "test": "css > nested condition prop with array syntax",
+        "line": 84
+      },
+      "inputs": [
+        {
+          "_hover": {
+            "_dark": {
+              "bg": [
+                "pink.100",
+                "pink.200"
+              ]
+            }
+          }
+        }
+      ],
+      "expected": {
+        "className": "hover:dark:bg_pink.100 hover:dark:sm:bg_pink.200"
+      }
+    },
+    {
+      "id": "react::sandbox/codegen/__tests__/css.test.ts::css > nested condition prop::1",
+      "kind": "codegen-css",
+      "config": "codegen-react",
+      "source": {
+        "file": "sandbox/codegen/__tests__/css.test.ts",
+        "test": "css > nested condition prop",
+        "line": 42
+      },
+      "inputs": [
+        {
+          "_hover": {
+            "_dark": {
+              "bg": "pink"
+            }
+          }
+        }
+      ],
+      "expected": {
+        "className": "hover:dark:bg_pink"
+      }
+    },
+    {
+      "id": "react::sandbox/codegen/__tests__/css.test.ts::css > object condition prop::1",
+      "kind": "codegen-css",
+      "config": "codegen-react",
+      "source": {
+        "file": "sandbox/codegen/__tests__/css.test.ts",
+        "test": "css > object condition prop",
+        "line": 30
+      },
+      "inputs": [
+        {
+          "bg": {
+            "_hover": "yellow.100"
+          }
+        }
+      ],
+      "expected": {
+        "className": "hover:bg_yellow.100"
+      }
+    },
+    {
+      "id": "react::sandbox/codegen/__tests__/css.test.ts::css > responsive array syntax prop::1",
+      "kind": "codegen-css",
+      "config": "codegen-react",
+      "source": {
+        "file": "sandbox/codegen/__tests__/css.test.ts",
+        "test": "css > responsive array syntax prop",
+        "line": 66
+      },
+      "inputs": [
+        {
+          "bg": [
+            "cyan.100",
+            "cyan.200",
+            null,
+            null,
+            "cyan.300"
+          ]
+        }
+      ],
+      "expected": {
+        "className": "bg_cyan.100 sm:bg_cyan.200 xl:bg_cyan.300"
+      },
+      "undefinedValues": true
+    },
+    {
+      "id": "react::sandbox/codegen/__tests__/css.test.ts::css > responsive condition::1",
+      "kind": "codegen-css",
+      "config": "codegen-react",
+      "source": {
+        "file": "sandbox/codegen/__tests__/css.test.ts",
+        "test": "css > responsive condition",
+        "line": 60
+      },
+      "inputs": [
+        {
+          "sm": {
+            "bg": "purple"
+          }
+        }
+      ],
+      "expected": {
+        "className": "sm:bg_purple"
+      }
+    },
+    {
+      "id": "react::sandbox/codegen/__tests__/css.test.ts::css > same prop::1",
+      "kind": "codegen-css",
+      "config": "codegen-react",
+      "source": {
+        "file": "sandbox/codegen/__tests__/css.test.ts",
+        "test": "css > same prop",
+        "line": 90
+      },
+      "inputs": [
+        {
+          "bgColor": "red.100",
+          "backgroundColor": "red.200"
+        }
+      ],
+      "expected": {
+        "className": "bg-c_red.200"
+      }
+    },
+    {
+      "id": "react::sandbox/codegen/__tests__/css.test.ts::css > same prop::2",
+      "kind": "codegen-css",
+      "config": "codegen-react",
+      "source": {
+        "file": "sandbox/codegen/__tests__/css.test.ts",
+        "test": "css > same prop",
+        "line": 94
+      },
+      "inputs": [
+        {
+          "backgroundColor": "red.300",
+          "bgColor": "red.400"
+        }
+      ],
+      "expected": {
+        "className": "bg-c_red.400"
+      }
+    },
+    {
+      "id": "react::sandbox/codegen/__tests__/css.test.ts::css > shorthand prop::1",
+      "kind": "codegen-css",
+      "config": "codegen-react",
+      "source": {
+        "file": "sandbox/codegen/__tests__/css.test.ts",
+        "test": "css > shorthand prop",
+        "line": 24
+      },
+      "inputs": [
+        {
+          "bg": "red"
+        }
+      ],
+      "expected": {
+        "className": "bg_red"
+      }
+    },
+    {
+      "id": "react::sandbox/codegen/__tests__/css.test.ts::css > token value::1",
+      "kind": "codegen-css",
+      "config": "codegen-react",
+      "source": {
+        "file": "sandbox/codegen/__tests__/css.test.ts",
+        "test": "css > token value",
+        "line": 12
+      },
+      "inputs": [
+        {
+          "color": "blue.300"
+        }
+      ],
+      "expected": {
+        "className": "c_blue.300"
+      }
+    },
+    {
+      "id": "react::sandbox/codegen/__tests__/css.test.ts::css > using inline token helper - in condition::1",
+      "kind": "codegen-css",
+      "config": "codegen-react",
+      "source": {
+        "file": "sandbox/codegen/__tests__/css.test.ts",
+        "test": "css > using inline token helper - in condition",
+        "line": 78
+      },
+      "inputs": [
+        {
+          "@media screen and (min-width: token(sizes.4xl))": {
+            "bg": "blue.500"
+          }
+        }
+      ],
+      "expected": {
+        "className": "[@media_screen_and_(min-width:_token(sizes.4xl))]:bg_blue.500"
+      }
+    },
+    {
+      "id": "react::sandbox/codegen/__tests__/css.test.ts::css > using inline token helper - in value::1",
+      "kind": "codegen-css",
+      "config": "codegen-react",
+      "source": {
+        "file": "sandbox/codegen/__tests__/css.test.ts",
+        "test": "css > using inline token helper - in value",
+        "line": 72
+      },
+      "inputs": [
+        {
+          "border": "1px solid token(colors.blue.400)"
+        }
+      ],
+      "expected": {
+        "className": "bd_1px_solid_token(colors.blue.400)"
+      }
+    },
+    {
+      "id": "react::sandbox/codegen/__tests__/css.test.ts::css > utility prop::1",
+      "kind": "codegen-css",
+      "config": "codegen-react",
+      "source": {
+        "file": "sandbox/codegen/__tests__/css.test.ts",
+        "test": "css > utility prop",
+        "line": 18
+      },
+      "inputs": [
+        {
+          "srOnly": true
+        }
+      ],
+      "expected": {
+        "className": "sr_true"
+      }
+    }
+  ]
+}

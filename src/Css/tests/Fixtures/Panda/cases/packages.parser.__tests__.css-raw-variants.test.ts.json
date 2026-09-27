@@ -1,0 +1,180 @@
+{
+  "source": "packages/parser/__tests__/css-raw-variants.test.ts",
+  "cases": [
+    {
+      "id": "fixture::packages/parser/__tests__/css-raw-variants.test.ts::css.raw spreading in variants > handles complex nested css.raw spreading in cva compound variants::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/css-raw-variants.test.ts",
+        "test": "css.raw spreading in variants > handles complex nested css.raw spreading in cva compound variants",
+        "line": 528
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          "border": "1px solid",
+          "borderRadius": "md",
+          "padding": "2"
+        },
+        {
+          "borderColor": "red.500",
+          "color": "red.700",
+          "_focus": {
+            "borderColor": "red.600",
+            "boxShadow": "0 0 0 3px rgba(255, 0, 0, 0.1)"
+          }
+        }
+      ],
+      "expected": {
+        "css": "@layer utilities {\n  .bd_1px_solid {\n    border: 1px solid;\n}\n\n  .p_2 {\n    padding: var(--spacing-2);\n}\n\n  .bdr_md {\n    border-radius: var(--radii-md);\n}\n\n  .bd-c_red\\.500 {\n    border-color: var(--colors-red-500);\n}\n\n  .ring_none {\n    outline: var(--borders-none);\n}\n\n  .bd-c_gray\\.300 {\n    border-color: var(--colors-gray-300);\n}\n\n  .c_red\\.700 {\n    color: var(--colors-red-700);\n}\n\n  .fs_sm {\n    font-size: var(--font-sizes-sm);\n}\n\n  .fs_md {\n    font-size: var(--font-sizes-md);\n}\n\n  .fs_lg {\n    font-size: var(--font-sizes-lg);\n}\n\n  .bg-c_gray\\.50 {\n    background-color: var(--colors-gray-50);\n}\n\n  .bg-c_red\\.50 {\n    background-color: var(--colors-red-50);\n}\n\n  .focus\\:bd-c_red\\.600:is(:focus, [data-focus]) {\n    border-color: var(--colors-red-600);\n}\n\n  .focus\\:bx-sh_0_0_0_3px_rgba\\(255\\,_0\\,_0\\,_0\\.1\\):is(:focus, [data-focus]) {\n    box-shadow: 0 0 0 3px rgba(255, 0, 0, 0.1);\n}\n}"
+      },
+      "unsupported": "extracted non-css items (cva)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/css-raw-variants.test.ts::css.raw spreading in variants > handles css.raw spreading in sva variant with conditional styles::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/css-raw-variants.test.ts",
+        "test": "css.raw spreading in variants > handles css.raw spreading in sva variant with conditional styles",
+        "line": 792
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          "transition": "all 0.3s ease",
+          "transform": "translateX(-100%)"
+        },
+        {
+          "opacity": 0,
+          "visibility": "hidden"
+        }
+      ],
+      "expected": {
+        "css": "@layer utilities {\n  .inset_0 {\n    inset: var(--spacing-0);\n}\n\n  .p_1rem {\n    padding: 1rem;\n}\n\n  .trs_all_0\\.3s_ease {\n    transition: all 0.3s ease;\n}\n\n  .trf_translateX\\(-100\\%\\) {\n    transform: translateX(-100%);\n}\n\n  .op_0 {\n    opacity: 0;\n}\n\n  .vis_hidden {\n    visibility: hidden;\n}\n\n  .pos_fixed {\n    position: fixed;\n}\n\n  .op_0\\.5 {\n    opacity: 0.5;\n}\n\n  .pos_relative {\n    position: relative;\n}\n\n  .trf_translateX\\(0\\) {\n    transform: translateX(0);\n}\n\n  .op_1 {\n    opacity: 1;\n}\n\n  .vis_visible {\n    visibility: visible;\n}\n}"
+      },
+      "unsupported": "extracted non-css items (sva)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/css-raw-variants.test.ts::css.raw spreading in variants > handles SVA slots array spreading (Issue #2671)::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/css-raw-variants.test.ts",
+        "test": "css.raw spreading in variants > handles SVA slots array spreading (Issue #2671)",
+        "line": 669
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          "margin": 0,
+          "padding": 0
+        }
+      ],
+      "expected": {
+        "css": "@layer utilities {\n  .m_0 {\n    margin: var(--spacing-0);\n}\n\n  .p_0 {\n    padding: var(--spacing-0);\n}\n\n  .p_8px_16px {\n    padding: 8px 16px;\n}\n\n  .bd_1px_solid_gray {\n    border: 1px solid gray;\n}\n\n  .inset_0 {\n    inset: var(--spacing-0);\n}\n\n  .cursor_pointer {\n    cursor: pointer;\n}\n\n  .bg-c_white {\n    background-color: var(--colors-white);\n}\n\n  .pos_fixed {\n    position: fixed;\n}\n\n  .bg-c_blackAlpha\\.600 {\n    background-color: blackAlpha.600;\n}\n\n  .w_300px {\n    width: 300px;\n}\n\n  .w_500px {\n    width: 500px;\n}\n}"
+      },
+      "unsupported": "extracted non-css items (sva)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/css-raw-variants.test.ts::css.raw spreading in variants > spreads css.raw in cva base styles::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/css-raw-variants.test.ts",
+        "test": "css.raw spreading in variants > spreads css.raw in cva base styles",
+        "line": 30
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          "display": "flex",
+          "alignItems": "center",
+          "gap": "2"
+        }
+      ],
+      "expected": {
+        "css": "@layer utilities {\n  .p_2 {\n    padding: var(--spacing-2);\n}\n\n  .gap_2 {\n    gap: var(--spacing-2);\n}\n\n  .bdr_md {\n    border-radius: var(--radii-md);\n}\n\n  .d_flex {\n    display: flex;\n}\n\n  .ai_center {\n    align-items: center;\n}\n\n  .fs_sm {\n    font-size: var(--font-sizes-sm);\n}\n\n  .fs_lg {\n    font-size: var(--font-sizes-lg);\n}\n}"
+      },
+      "unsupported": "extracted non-css items (cva)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/css-raw-variants.test.ts::css.raw spreading in variants > spreads css.raw in cva variant styles::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/css-raw-variants.test.ts",
+        "test": "css.raw spreading in variants > spreads css.raw in cva variant styles",
+        "line": 116
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          "opacity": 0.8,
+          "transform": "scale(0.98)"
+        },
+        {
+          "cursor": "pointer",
+          "transition": "all 0.2s"
+        }
+      ],
+      "expected": {
+        "css": "@layer utilities {\n  .p_4 {\n    padding: var(--spacing-4);\n}\n\n  .trs_all_0\\.2s {\n    transition: all 0.2s;\n}\n\n  .bdr_lg {\n    border-radius: var(--radii-lg);\n}\n\n  .op_0\\.8 {\n    opacity: 0.8;\n}\n\n  .trf_scale\\(0\\.98\\) {\n    transform: scale(0.98);\n}\n\n  .cursor_pointer {\n    cursor: pointer;\n}\n\n  .bg-c_blue\\.500 {\n    background-color: var(--colors-blue-500);\n}\n\n  .bg-c_gray\\.200 {\n    background-color: var(--colors-gray-200);\n}\n\n  .hover\\:op_0\\.8:is(:hover, [data-hover]) {\n    opacity: 0.8;\n}\n\n  .hover\\:trf_scale\\(0\\.98\\):is(:hover, [data-hover]) {\n    transform: scale(0.98);\n}\n\n  .hover\\:bx-sh_lg:is(:hover, [data-hover]) {\n    box-shadow: var(--shadows-lg);\n}\n}"
+      },
+      "unsupported": "extracted non-css items (cva)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/css-raw-variants.test.ts::css.raw spreading in variants > spreads css.raw in sva slot styles::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/css-raw-variants.test.ts",
+        "test": "css.raw spreading in variants > spreads css.raw in sva slot styles",
+        "line": 232
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          "margin": 0,
+          "padding": 0,
+          "boxSizing": "border-box"
+        },
+        {
+          "display": "flex",
+          "alignItems": "center"
+        }
+      ],
+      "expected": {
+        "css": "@layer utilities {\n  .m_0 {\n    margin: var(--spacing-0);\n}\n\n  .p_0 {\n    padding: var(--spacing-0);\n}\n\n  .inset_0 {\n    inset: var(--spacing-0);\n}\n\n  .p_4 {\n    padding: var(--spacing-4);\n}\n\n  .bdr_lg {\n    border-radius: var(--radii-lg);\n}\n\n  .bd-b_1px_solid {\n    border-bottom: 1px solid;\n}\n\n  .bd-c_gray\\.200 {\n    border-color: var(--colors-gray-200);\n}\n\n  .bx-s_border-box {\n    box-sizing: border-box;\n}\n\n  .d_flex {\n    display: flex;\n}\n\n  .ai_center {\n    align-items: center;\n}\n\n  .pos_fixed {\n    position: fixed;\n}\n\n  .bg-c_blackAlpha\\.600 {\n    background-color: blackAlpha.600;\n}\n\n  .bg-c_white {\n    background-color: var(--colors-white);\n}\n\n  .bx-sh_xl {\n    box-shadow: var(--shadows-xl);\n}\n\n  .max-w_md {\n    max-width: var(--sizes-md);\n}\n\n  .max-w_2xl {\n    max-width: var(--sizes-2xl);\n}\n}"
+      },
+      "unsupported": "extracted non-css items (sva)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/css-raw-variants.test.ts::css.raw spreading in variants > spreads css.raw in sva variant slots with conditions::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/css-raw-variants.test.ts",
+        "test": "css.raw spreading in variants > spreads css.raw in sva variant slots with conditions",
+        "line": 381
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          "outline": "2px solid",
+          "outlineColor": "blue.500",
+          "outlineOffset": "2px"
+        },
+        {
+          "opacity": 0.9,
+          "transform": "translateY(-1px)"
+        }
+      ],
+      "expected": {
+        "css": "@layer utilities {\n  .ring_2px_solid {\n    outline: 2px solid;\n}\n\n  .bdr_md {\n    border-radius: var(--radii-md);\n}\n\n  .ring-c_blue\\.500 {\n    outline-color: var(--colors-blue-500);\n}\n\n  .ring-o_2px {\n    outline-offset: 2px;\n}\n\n  .op_0\\.9 {\n    opacity: 0.9;\n}\n\n  .trf_translateY\\(-1px\\) {\n    transform: translateY(-1px);\n}\n\n  .cursor_pointer {\n    cursor: pointer;\n}\n\n  .bg-c_blue\\.500 {\n    background-color: var(--colors-blue-500);\n}\n\n  .c_white {\n    color: var(--colors-white);\n}\n\n  .bg-c_gray\\.100 {\n    background-color: var(--colors-gray-100);\n}\n\n  .fw_medium {\n    font-weight: var(--font-weights-medium);\n}\n\n  .w_4 {\n    width: var(--sizes-4);\n}\n\n  .h_4 {\n    height: var(--sizes-4);\n}\n\n  .focus\\:ring_2px_solid:is(:focus, [data-focus]) {\n    outline: 2px solid;\n}\n\n  .focus\\:ring-c_blue\\.500:is(:focus, [data-focus]) {\n    outline-color: var(--colors-blue-500);\n}\n\n  .focus\\:ring-o_2px:is(:focus, [data-focus]) {\n    outline-offset: 2px;\n}\n\n  .focus\\:ring-c_gray\\.500:is(:focus, [data-focus]) {\n    outline-color: var(--colors-gray-500);\n}\n\n  .hover\\:op_0\\.9:is(:hover, [data-hover]) {\n    opacity: 0.9;\n}\n\n  .hover\\:trf_translateY\\(-1px\\):is(:hover, [data-hover]) {\n    transform: translateY(-1px);\n}\n\n  .hover\\:bg-c_blue\\.600:is(:hover, [data-hover]) {\n    background-color: var(--colors-blue-600);\n}\n}"
+      },
+      "unsupported": "extracted non-css items (sva)"
+    }
+  ]
+}
