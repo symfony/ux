@@ -32,12 +32,12 @@ final class ProviderNamesPass implements CompilerPassInterface
         $names = [];
         foreach ($container->findTaggedServiceIds('ux_image.provider_factory') as $tags) {
             foreach ($tags as $attributes) {
-                // A factory tagged without a name would make the list incomplete and reject its valid keys.
-                if (!isset($attributes['name'])) {
+                // A factory tagged without a provider name would make the list incomplete and reject its valid keys.
+                if (!isset($attributes['provider'])) {
                     return;
                 }
 
-                $names[] = $attributes['name'];
+                $names[] = $attributes['provider'];
             }
         }
         sort($names);

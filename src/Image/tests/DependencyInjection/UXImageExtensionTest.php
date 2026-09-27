@@ -117,8 +117,8 @@ final class UXImageExtensionTest extends TestCase
 
         $container = $this->buildContainer([]);
 
-        self::assertSame([['name' => 'null']], $container->getDefinition('ux_image.provider_factory.null')->getTag('ux_image.provider_factory'));
-        self::assertSame([['name' => 'fake']], $container->getDefinition('ux_image.provider_factory.fake')->getTag('ux_image.provider_factory'));
+        self::assertSame([['provider' => 'null']], $container->getDefinition('ux_image.provider_factory.null')->getTag('ux_image.provider_factory'));
+        self::assertSame([['provider' => 'fake']], $container->getDefinition('ux_image.provider_factory.fake')->getTag('ux_image.provider_factory'));
     }
 
     public function testTheUrlGeneratorIsAutowirable()

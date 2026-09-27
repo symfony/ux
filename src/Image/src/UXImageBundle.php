@@ -87,7 +87,7 @@ final class UXImageBundle extends AbstractBundle
 
         $container->services()
             ->set('ux_image.provider_factory.null', NullProviderFactory::class)
-            ->tag('ux_image.provider_factory', ['name' => 'null']);
+            ->tag('ux_image.provider_factory', ['provider' => 'null']);
 
         $container->services()->get('ux_image.provider')->arg(0, $config['provider']);
         $container->services()->get('ux_image.renderer')->arg(2, $config['formats']);
@@ -98,7 +98,7 @@ final class UXImageBundle extends AbstractBundle
             if (ContainerBuilder::willBeAvailable('symfony/ux-'.$name.'-image', $bridge['factory'], ['symfony/ux-image'])) {
                 $container->services()
                     ->set('ux_image.provider_factory.'.$name, $bridge['factory'])
-                    ->tag('ux_image.provider_factory', ['name' => $name]);
+                    ->tag('ux_image.provider_factory', ['provider' => $name]);
             }
         }
     }
