@@ -26,6 +26,8 @@ use Symfony\UX\Breadcrumb\Attribute\Breadcrumb;
  * Intentionally interface-less: this one is internal to the package with a single caller (BreadcrumbExtension), no cross-layer inversion to satisfy and no test double.
  * The tests use the real service from the container.
  *
+ * @phpstan-import-type Placeholder from LabelPattern
+ *
  * @internal
  *
  * @author Romain Monteil <monteil.romain@gmail.com>
@@ -51,29 +53,17 @@ final class BreadcrumbResolver
 
         $items = [];
         foreach ($crumbs as $index => $crumb) {
-            $items[] = $this->resolveCrumb($crumb, $trail, $index === $last, $referenceType);
+            $items[] = new BreadcrumbItem(
+                label: $this->resolveLabel($crumb, $trail),
+                url: $this->resolveUrl($crumb, $trail, $index === $last, $referenceType),
+                extra: $crumb->extra,
+            );
         }
 
         return $items;
     }
 
-    private function resolveCrumb(
-        Breadcrumb $crumb,
-        BreadcrumbTrail $trail,
-        bool $isCurrent,
-        int $referenceType,
-    ): BreadcrumbItem {
-        return new BreadcrumbItem(
-            label: $this->label($crumb, $trail),
-            url: $this->resolveUrl($crumb, $trail, $isCurrent, $referenceType),
-            extra: $crumb->extra,
-        );
-    }
-
-    /**
-     * `translationDomain` is a tri-state: null translates against the default domain, a string against that domain, and false leaves the label untouched.
-     */
-    private function label(Breadcrumb $crumb, BreadcrumbTrail $trail): string
+    private function resolveLabel(Breadcrumb $crumb, BreadcrumbTrail $trail): string
     {
         if ($crumb->label instanceof Expression) {
             return $this->expressionLabel($crumb->label, $trail);
@@ -83,18 +73,26 @@ final class BreadcrumbResolver
             return $this->patternLabel($crumb->label, $placeholders, $trail);
         }
 
+        return $this->translatedLabel($crumb->label, $crumb, $trail);
+    }
+
+    /**
+     * `translationDomain` is a tri-state: null translates against the default domain, a string against that domain, and false leaves the label untouched.
+     */
+    private function translatedLabel(string $label, Breadcrumb $crumb, BreadcrumbTrail $trail): string
+    {
         if (false === $crumb->translationDomain || null === $this->translator) {
-            return $crumb->label;
+            return $label;
         }
 
         try {
-            $parameters = $this->evaluate($crumb->translationParameters, $trail->context);
+            $parameters = $this->evaluate($crumb->translationParameters, $trail);
         } catch (\Throwable) {
             $parameters = [];
         }
 
         return $this->translator->trans(
-            $crumb->label,
+            $label,
             $parameters,
             $crumb->translationDomain ?? $this->defaultTranslationDomain,
         );
@@ -118,7 +116,7 @@ final class BreadcrumbResolver
     /**
      * Each placeholder that cannot be read or turned into a string degrades to an empty string.
      *
-     * @param non-empty-list<array{placeholder: string, variable: string, argument: ?string, path: ?string}> $placeholders
+     * @param non-empty-list<Placeholder> $placeholders
      */
     private function patternLabel(string $label, array $placeholders, BreadcrumbTrail $trail): string
     {
@@ -131,7 +129,7 @@ final class BreadcrumbResolver
     }
 
     /**
-     * @param array{placeholder: string, variable: string, argument: ?string, path: ?string} $placeholder
+     * @param Placeholder $placeholder
      */
     private function placeholderValue(array $placeholder, BreadcrumbTrail $trail): mixed
     {
@@ -174,7 +172,8 @@ final class BreadcrumbResolver
             return null;
         }
 
-        $route = $this->route($crumb, $trail, $isCurrent && $absolute);
+        // The current page falls back to the matched route, so JSON-LD gets its absolute URL.
+        $route = $crumb->route ?? ($isCurrent && '' !== $trail->route ? $trail->route : null);
         if (null === $route) {
             return null;
         }
@@ -189,15 +188,6 @@ final class BreadcrumbResolver
         } catch (\Throwable) {
             return null;
         }
-    }
-
-    private function route(Breadcrumb $crumb, BreadcrumbTrail $trail, bool $fallBackToCurrentRoute): ?string
-    {
-        if (null !== $crumb->route) {
-            return $crumb->route;
-        }
-
-        return $fallBackToCurrentRoute && '' !== $trail->route ? $trail->route : null;
     }
 
     /**
@@ -217,21 +207,20 @@ final class BreadcrumbResolver
             }
         }
 
-        return [...$inherited, ...$this->evaluate($keyed, $trail->context)];
+        return [...$inherited, ...$this->evaluate($keyed, $trail)];
     }
 
     /**
      * Evaluates the Expression values and keeps the others as given.
      *
      * @param array<string, mixed> $values
-     * @param array<string, mixed> $context
      *
      * @return array<string, mixed>
      */
-    private function evaluate(array $values, array $context): array
+    private function evaluate(array $values, BreadcrumbTrail $trail): array
     {
         return array_map(
-            fn (mixed $value): mixed => $value instanceof Expression ? $this->expressionLanguage->evaluate($value, $context) : $value,
+            fn (mixed $value): mixed => $value instanceof Expression ? $this->expressionLanguage->evaluate($value, $trail->context) : $value,
             $values,
         );
     }

@@ -18,6 +18,8 @@ namespace Symfony\UX\Breadcrumb;
  * - `{name:product}` reads the property `name` of the controller argument `$product`;
  * - `{title:product.name}` reads the property path `name` of `$product`, the variable only names the placeholder.
  *
+ * @phpstan-type Placeholder array{placeholder: string, variable: string, argument: ?string, path: ?string}
+ *
  * @internal
  *
  * @author Romain Monteil <monteil.romain@gmail.com>
@@ -27,7 +29,7 @@ final class LabelPattern
     private const string REGEX = '/\{([\w\x80-\xFF]++)(?::([\w\x80-\xFF]++)((?:\.[\w\x80-\xFF]++)*+))?\}/';
 
     /**
-     * @return list<array{placeholder: string, variable: string, argument: ?string, path: ?string}>
+     * @return list<Placeholder>
      */
     public static function parse(string $label): array
     {
