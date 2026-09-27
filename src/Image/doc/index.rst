@@ -82,7 +82,7 @@ Prop            Type                              Default
 ``layout``      ``fixed|constrained|full-width``  ``constrained``
 ``width``       ``int|null``                      ``null``
 ``height``      ``int|null``                      ``null``
-``fit``         ``cover|contain|null``            ``null``
+``fit``         ``cover|contain|null``            ``cover`` or ``null``, see below
 ``format``      ``string|null``                   ``null``
 ``quality``     ``int|null`` (1 to 100)           ``null``
 ``priority``    ``bool``                          ``false``
@@ -98,11 +98,13 @@ image only gets ``loading="lazy"``.
 
 ``fit`` decides how the provider reshapes the source image into the requested
 ``width`` x ``height``. ``cover`` fills the box and crops the excess, and
-``contain`` fits the whole image inside it. It only has an effect when both
-``width`` and ``height`` are set, since without both there is no target box to
-fit into. And it only produces a visible difference when the source image's
-aspect ratio differs from the requested one: at equal ratios there is nothing
-to crop and nothing to letterbox, so both modes come out identical.
+``contain`` fits the whole image inside it. Both enlarge a source that is
+smaller than the box. ``fit`` defaults to ``cover`` when both ``width`` and
+``height`` are set, and it only has an effect then, since without both there
+is no target box to fit into. It only produces a visible difference when the
+source image's aspect ratio differs from the requested one: at equal ratios
+there is nothing to crop and nothing to letterbox, so both modes come out
+identical.
 
 The generated ``object-fit`` follows ``fit`` (``cover`` -> ``cover``,
 ``contain`` -> ``contain``), so the browser doesn't redo a crop the provider
