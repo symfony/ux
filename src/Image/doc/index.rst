@@ -478,6 +478,19 @@ Extra operations, forwarded as-is: ``position``, ``enlarge``, ``trim``,
 ``gamma``, ``grayscale``, ``progressive``, ``lossless``, ``metadata``. See
 `KeyCDN's own parameter reference`_ for what each one does.
 
+Protecting transformations
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Anyone can request a transformation URL, with any size or quality, and each
+distinct URL is one more image the provider generates and caches:
+
+* Cloudflare only transforms images from the zone that serves the
+  transformations by default. Keep it that way unless you need other origins,
+  see the source origins settings of `Cloudflare Image Resizing`_.
+* KeyCDN can require a signed token on the zone, with `Secure Token`_. The
+  KeyCDN provider does not generate tokens yet, so it cannot be used with a
+  zone that requires them.
+
 Writing your own provider
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -513,3 +526,4 @@ The package supports PHP 8.4 or later and Symfony 7.4 or 8.x.
 .. _`KeyCDN`: https://github.com/symfony/ux/blob/3.x/src/Image/src/Bridge/KeyCdn/README.md
 .. _`KeyCDN Image Processing`: https://www.keycdn.com/support/image-processing
 .. _`KeyCDN's own parameter reference`: https://www.keycdn.com/support/image-processing
+.. _`Secure Token`: https://www.keycdn.com/support/secure-token
