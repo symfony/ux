@@ -23,6 +23,11 @@ final class RenderOptions
     public readonly ?Fit $fit;
 
     /**
+     * @var list<int>|null ascending, deduplicated
+     */
+    public readonly ?array $breakpoints;
+
+    /**
      * @param list<int>|null                       $breakpoints
      * @param array<string, array<string, scalar>> $operations
      */
@@ -35,9 +40,25 @@ final class RenderOptions
         public readonly ?int $quality = null,
         public readonly bool $priority = false,
         public readonly ?string $objectFit = null,
-        public readonly ?array $breakpoints = null,
+        ?array $breakpoints = null,
         public readonly array $operations = [],
     ) {
+        foreach (['width' => $width, 'height' => $height] as $name => $value) {
+            if (null !== $value && $value < 1) {
+                throw new InvalidArgumentException(\sprintf('The "%s" option must be a positive integer, %d given.', $name, $value));
+            }
+        }
+        foreach ($breakpoints ?? [] as $breakpoint) {
+            if (!\is_int($breakpoint) || $breakpoint < 1) {
+                throw new InvalidArgumentException(\sprintf('The "breakpoints" option must only contain positive integers, %s given.', json_encode($breakpoint)));
+            }
+        }
+        if (null !== $breakpoints) {
+            $breakpoints = array_values(array_unique($breakpoints));
+            sort($breakpoints);
+        }
+        $this->breakpoints = $breakpoints;
+
         if (null === $width && \in_array($layout, [Layout::Fixed, Layout::Constrained], true)) {
             throw new InvalidArgumentException(\sprintf('The "%s" layout requires a width.', $layout->value));
         }
