@@ -12,6 +12,7 @@
 namespace Symfony\UX\Breadcrumb\EventListener;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\ControllerArgumentsEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -127,8 +128,8 @@ final class BreadcrumbListener implements EventSubscriberInterface
 
         $referenced = [];
         foreach ($crumbs as $crumb) {
-            foreach ([...$crumb->computedParameters, ...$crumb->translationParameters] as $expression) {
-                if (preg_match_all('/[a-zA-Z_]\w*/', $expression, $matches)) {
+            foreach ([...$crumb->parameters, ...$crumb->translationParameters] as $expression) {
+                if ($expression instanceof Expression && preg_match_all('/[a-zA-Z_]\w*/', (string) $expression, $matches)) {
                     foreach ($matches[0] as $name) {
                         $referenced[$name] = true;
                     }

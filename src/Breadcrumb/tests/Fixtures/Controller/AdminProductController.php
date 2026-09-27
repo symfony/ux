@@ -29,7 +29,7 @@ final class AdminProductController
         return new Response($product->name);
     }
 
-    #[Breadcrumb(label: 'product.view.breadcrumb', route: 'admin_product_view', inheritedParameters: ['slug'])]
+    #[Breadcrumb(label: 'product.view.breadcrumb', route: 'admin_product_view', parameters: ['slug'])]
     #[Breadcrumb(label: 'product.edit.breadcrumb')]
     public function edit(Product $product): Response
     {
