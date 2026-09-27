@@ -20,11 +20,18 @@ final class FakeProviderFactory extends AbstractProviderFactory implements Provi
 {
     public function create(Dsn $dsn): ProviderInterface
     {
+        $this->validateOptions($dsn);
+
         return new FakeProvider(autoFormat: (bool) $dsn->getOption('auto_format', true));
     }
 
     protected function getSupportedSchemes(): array
     {
         return ['fake'];
+    }
+
+    protected function getSupportedOptions(): array
+    {
+        return ['auto_format'];
     }
 }

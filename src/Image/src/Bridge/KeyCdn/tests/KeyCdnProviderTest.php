@@ -145,4 +145,12 @@ final class KeyCdnProviderTest extends TestCase
             $provider->generateUrl(new ImageTransformation('hero.jpg', width: 800)),
         );
     }
+
+    public function testTheFactoryRejectsAnUnknownOption()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Invalid option(s) "driver" passed to the "keycdn" image provider (supported: none).');
+
+        new KeyCdnProviderFactory()->create(new Dsn('keycdn://myzone.kxcdn.com?driver=imagick'));
+    }
 }

@@ -164,7 +164,9 @@ Scheme         Install                                          DSN example
 ============== ================================================ ===========================================
 
 See :ref:`Providers <image_providers>` for what each DSN option means and how
-transformation parameters map to that provider's own query string.
+transformation parameters map to that provider's own query string. A DSN
+option the provider does not support throws an ``InvalidArgumentException``
+naming the options it does support.
 
 The ``formats`` option
 ~~~~~~~~~~~~~~~~~~~~~~
