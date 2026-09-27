@@ -151,7 +151,18 @@ change per environment:
 .. code-block:: bash
 
     # .env
+    UX_IMAGE_DSN=null://null
+
+.. code-block:: bash
+
+    # .env.prod
     UX_IMAGE_DSN=cloudflare://cdn.example.com
+
+``null://null`` is the default when no provider is configured. It needs no
+bridge and transforms nothing: each image renders with its original URL, no
+``srcset`` and no ``sizes``, but keeps its dimensions and layout ``style``.
+That makes it the provider to develop and test templates with when no CDN is
+available.
 
 Each bridge is only registered when its Composer package is actually
 installed. Install the one matching the scheme used in the DSN:

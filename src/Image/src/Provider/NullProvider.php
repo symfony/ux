@@ -11,7 +11,6 @@
 
 namespace Symfony\UX\Image\Provider;
 
-use Symfony\UX\Image\Exception\LogicException;
 use Symfony\UX\Image\ImageTransformation;
 
 /**
@@ -26,7 +25,7 @@ final class NullProvider implements ProviderInterface
 
     public function generateUrl(ImageTransformation $transformation): string
     {
-        throw new LogicException('No image provider is configured. Install a bridge such as "symfony/ux-cloudflare-image" or "symfony/ux-keycdn-image".');
+        return $transformation->path;
     }
 
     public function getSupportedOperations(): array

@@ -12,7 +12,6 @@
 namespace Symfony\UX\Image\Tests\Integration;
 
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
-use Symfony\UX\Image\Exception\LogicException;
 use Symfony\UX\Image\ImageTransformation;
 use Symfony\UX\Image\Provider\ProviderInterface;
 use Symfony\UX\Image\Tests\Fixtures\TestKernel;
@@ -45,13 +44,7 @@ final class BundleInitializationTest extends KernelTestCase
 
         self::assertSame('null', $provider->getName());
 
-        try {
-            $provider->generateUrl(new ImageTransformation('hero.jpg'));
-            self::fail('Expected a LogicException.');
-        } catch (LogicException $e) {
-            self::assertStringContainsString('symfony/ux-keycdn-image', $e->getMessage());
-            self::assertStringContainsString('symfony/ux-cloudflare-image', $e->getMessage());
-        }
+        self::assertSame('hero.jpg', $provider->generateUrl(new ImageTransformation('hero.jpg')));
 
         self::assertFalse(self::getContainer()->has('ux_image.provider_factory.cloudflare'));
         self::assertFalse(self::getContainer()->has('ux_image.provider_factory.keycdn'));
@@ -89,9 +82,7 @@ final class BundleInitializationTest extends KernelTestCase
         $provider = self::getContainer()->get('ux_image.provider');
 
         self::assertSame('null', $provider->getName());
-
-        $this->expectException(LogicException::class);
-        $provider->generateUrl(new ImageTransformation('hero.jpg'));
+        self::assertSame('hero.jpg', $provider->generateUrl(new ImageTransformation('hero.jpg')));
     }
 
     public function testAnUnresolvedEnvPlaceholderDsnStillResolvesTheActiveProviderAtRuntime()

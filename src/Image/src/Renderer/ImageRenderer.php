@@ -14,6 +14,7 @@ namespace Symfony\UX\Image\Renderer;
 use Symfony\UX\Image\Exception\InvalidArgumentException;
 use Symfony\UX\Image\Exception\LogicException;
 use Symfony\UX\Image\ImageTransformation;
+use Symfony\UX\Image\Provider\NullProvider;
 use Symfony\UX\Image\Provider\ProviderInterface;
 use Twig\Extra\Html\HtmlAttr\InlineStyle;
 
@@ -34,6 +35,10 @@ final class ImageRenderer implements ImageRendererInterface
 
     public function render(string $src, string $alt, RenderOptions $options): RenderedImage
     {
+        if ($this->provider instanceof NullProvider) {
+            return new RenderedImage([], ['src' => $src, 'alt' => $alt] + $this->commonAttributes($options));
+        }
+
         $operations = $this->resolveOperations($options->operations);
         $breakpoints = $options->breakpoints ?? $this->layoutResolver->breakpoints($options->layout, $options->width);
         $ratio = $this->resolveRatio($options);
@@ -72,14 +77,24 @@ final class ImageRenderer implements ImageRendererInterface
             ),
             'alt' => $alt,
             'srcset' => $fallbackSrcset,
-            'loading' => $options->priority ? 'eager' : 'lazy',
         ];
+
+        if (null !== $sizes = $this->layoutResolver->sizes($options->layout, $options->width)) {
+            $attributes['sizes'] = $sizes;
+        }
+
+        return new RenderedImage($sources, $attributes + $this->commonAttributes($options));
+    }
+
+    /**
+     * @return array<string, string|InlineStyle>
+     */
+    private function commonAttributes(RenderOptions $options): array
+    {
+        $attributes = ['loading' => $options->priority ? 'eager' : 'lazy'];
 
         if ($options->priority) {
             $attributes['fetchpriority'] = 'high';
-        }
-        if (null !== $sizes = $this->layoutResolver->sizes($options->layout, $options->width)) {
-            $attributes['sizes'] = $sizes;
         }
         if (null !== $options->width) {
             $attributes['width'] = (string) $options->width;
@@ -89,17 +104,12 @@ final class ImageRenderer implements ImageRendererInterface
         }
         $attributes['style'] = new InlineStyle($this->layoutResolver->style($options->layout, $options->width, $options->height, $options->objectFit ?? $options->fit?->value ?? 'cover'));
 
-        return new RenderedImage($sources, $attributes);
+        return $attributes;
     }
 
     private function assertSupportedFormat(string $format): void
     {
         $supported = $this->provider->getSupportedFormats();
-
-        // Empty means an unconfigured NullProvider, not "supports nothing"; the real error surfaces from generateUrl() below.
-        if ([] === $supported) {
-            return;
-        }
 
         if (!\in_array($format, $supported, true)) {
             throw new InvalidArgumentException(\sprintf('The image format "%s" is not supported by the "%s" provider (supported: "%s").', $format, $this->provider->getName(), implode('", "', $supported)));

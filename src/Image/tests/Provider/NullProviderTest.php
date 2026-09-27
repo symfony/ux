@@ -12,19 +12,16 @@
 namespace Symfony\UX\Image\Tests\Provider;
 
 use PHPUnit\Framework\TestCase;
-use Symfony\UX\Image\Exception\LogicException;
+use Symfony\UX\Image\Fit;
 use Symfony\UX\Image\ImageTransformation;
 use Symfony\UX\Image\Provider\NullProvider;
 
 final class NullProviderTest extends TestCase
 {
-    public function testGenerateUrlThrowsAndNamesTheInstallableBridges()
+    public function testItReturnsTheOriginalPathWhateverTheTransformation()
     {
-        $provider = new NullProvider();
+        $transformation = new ImageTransformation('/uploads/hero.jpg', width: 800, height: 450, fit: Fit::Cover, format: 'webp', quality: 80);
 
-        $this->expectException(LogicException::class);
-        $this->expectExceptionMessage('No image provider is configured. Install a bridge such as "symfony/ux-cloudflare-image" or "symfony/ux-keycdn-image".');
-
-        $provider->generateUrl(new ImageTransformation('/foo.png'));
+        self::assertSame('/uploads/hero.jpg', new NullProvider()->generateUrl($transformation));
     }
 }

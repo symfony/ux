@@ -197,14 +197,19 @@ final class ImageRendererTest extends TestCase
         $this->renderer()->render('hero.jpg', '', new RenderOptions(width: 400, format: 'tiff'));
     }
 
-    public function testAPinnedFormatOnAnUnconfiguredProviderFailsWithTheInstallABridgeMessageNotAFormatMismatch()
+    public function testTheNullProviderRendersTheOriginalImageWithoutASrcset()
     {
         $renderer = new ImageRenderer(new NullProvider(), new LayoutResolver());
 
-        $this->expectException(LogicException::class);
-        $this->expectExceptionMessage('No image provider is configured. Install a bridge such as "symfony/ux-cloudflare-image" or "symfony/ux-keycdn-image".');
+        $rendered = $renderer->render('/uploads/hero.jpg', 'Hero', new RenderOptions(width: 800, height: 450, format: 'webp'));
 
-        $renderer->render('hero.jpg', '', new RenderOptions(width: 400, format: 'webp'));
+        self::assertSame([], $rendered->sources);
+        self::assertSame('/uploads/hero.jpg', $rendered->imgAttributes['src']);
+        self::assertArrayNotHasKey('srcset', $rendered->imgAttributes);
+        self::assertArrayNotHasKey('sizes', $rendered->imgAttributes);
+        self::assertSame('800', $rendered->imgAttributes['width']);
+        self::assertSame('450', $rendered->imgAttributes['height']);
+        self::assertStringContainsString('aspect-ratio: 800 / 450', $rendered->imgAttributes['style']->getValue());
     }
 
     public function testItPassesOnlyTheActiveProviderOperations()
