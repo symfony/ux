@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\Turbo\Bridge\Mercure;
 
+use Symfony\Component\Mercure\HubInterface;
 use Symfony\Component\Mercure\Twig\MercureExtension;
 use Symfony\UX\Turbo\Broadcaster\IdAccessor;
 use Symfony\UX\Turbo\StreamSourceRendererInterface;
@@ -27,21 +28,25 @@ use Twig\Extension\AbstractExtension;
  */
 final class MercureStreamSourceRenderer implements StreamSourceRendererInterface
 {
+    private readonly TopicResolver $topicResolver;
+
     public function __construct(
-        private readonly IdAccessor $idAccessor,
+        IdAccessor $idAccessor,
         private readonly Environment $twig,
         private readonly string $hubName,
+        private readonly ?HubInterface $hub = null,
     ) {
+        $this->topicResolver = new TopicResolver($idAccessor);
     }
 
     public function render(string|object|array $topics, array $options = []): string
     {
         $private = $options['private'] ?? false;
 
-        $topicStrings = array_map(
-            $this->resolveTopic(...),
-            \is_array($topics) ? $topics : [$topics],
-        );
+        $topics = \is_array($topics) ? array_values($topics) : [$topics];
+        $topicStrings = TopicResolver::speaksProtocolV1($this->hub)
+            ? $this->topicResolver->resolveForProtocolV1($topics)
+            : $this->topicResolver->resolveForProtocolV0($topics);
 
         $mercureOptions = ['hub' => $this->hubName];
         if ($private) {
@@ -55,6 +60,8 @@ final class MercureStreamSourceRenderer implements StreamSourceRendererInterface
             ? $this->twig->getExtension(MercureExtension::class) /* @phpstan-ignore argument.templateType */
             : $this->twig->getRuntime(MercureExtension::class);
 
+        // Matcher-typed topics and grants, for the protocol 1.0: symfony/mercure 0.8+
+        /* @phpstan-ignore-next-line argument.type */
         $url = $mercure->mercure($topicStrings, $mercureOptions);
 
         return \sprintf(
@@ -62,24 +69,5 @@ final class MercureStreamSourceRenderer implements StreamSourceRendererInterface
             htmlspecialchars($url, \ENT_QUOTES | \ENT_SUBSTITUTE, 'UTF-8'),
             $private ? ' private' : '',
         );
-    }
-
-    private function resolveTopic(object|string $topic): string
-    {
-        if (\is_object($topic)) {
-            $class = $topic::class;
-
-            if (!$id = $this->idAccessor->getEntityId($topic)) {
-                throw new \LogicException(\sprintf('Cannot listen to entity of class "%s" as the PropertyAccess component is not installed. Try running "composer require symfony/property-access".', $class));
-            }
-
-            return \sprintf(Broadcaster::TOPIC_PATTERN, rawurlencode($class), rawurlencode(implode('-', $id)));
-        }
-
-        if (!preg_match('/[^a-zA-Z0-9_\x7f-\xff\\\\]/', $topic) && class_exists($topic)) {
-            return \sprintf(Broadcaster::TOPIC_PATTERN, rawurlencode($topic), '{id}');
-        }
-
-        return $topic;
     }
 }

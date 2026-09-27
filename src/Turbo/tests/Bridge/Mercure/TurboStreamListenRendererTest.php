@@ -13,6 +13,7 @@ namespace Symfony\UX\Turbo\Tests\Bridge\Mercure;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\Mercure\ProtocolVersion;
 use Symfony\UX\StimulusBundle\Dto\StimulusAttributes;
 use Symfony\UX\Turbo\Tests\Fixtures\Book;
 
@@ -85,5 +86,20 @@ final class TurboStreamListenRendererTest extends KernelTestCase
                 ? 'data-controller="symfony--ux-turbo--mercure-turbo-stream" data-symfony--ux-turbo--mercure-turbo-stream-hub-value="http://127.0.0.1:3000/.well-known/mercure" data-symfony--ux-turbo--mercure-turbo-stream-topic-value="a_topic" data-symfony--ux-turbo--mercure-turbo-stream-with-credentials-value="true"'
                 : 'data-controller="symfony--ux-turbo--mercure-turbo-stream" data-symfony--ux-turbo--mercure-turbo-stream-hub-value="http&#x3A;&#x2F;&#x2F;127.0.0.1&#x3A;3000&#x2F;.well-known&#x2F;mercure" data-symfony--ux-turbo--mercure-turbo-stream-topic-value="a_topic" data-symfony--ux-turbo--mercure-turbo-stream-with-credentials-value="true"',
         ];
+    }
+
+    public function testRenderTurboStreamListenDoesNotSupportProtocolV1(): void
+    {
+        if (!enum_exists(ProtocolVersion::class)) {
+            $this->markTestSkipped('The Mercure protocol 1.0 needs symfony/mercure 0.8+.');
+        }
+
+        $twig = self::getContainer()->get('twig');
+        self::assertInstanceOf(\Twig\Environment::class, $twig);
+
+        $this->expectException(\Twig\Error\RuntimeError::class);
+        $this->expectExceptionMessage('The deprecated turbo_stream_listen() function does not support the Mercure protocol 1.0 spoken by the "v1" hub. Use turbo_stream_from() or the <twig:Turbo:Stream:From> Twig component instead.');
+
+        $twig->createTemplate("{{ turbo_stream_listen('a_topic', 'v1') }}")->render([]);
     }
 }

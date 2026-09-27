@@ -36,12 +36,14 @@ final class RegisterMercureHubsPass implements CompilerPassInterface
                 ->addArgument(new Reference('turbo.mercure.stimulus_helper'))
                 ->addArgument(new Reference('turbo.id_accessor'))
                 ->addArgument(new Reference('twig'))
+                ->addArgument($name)
                 ->addTag('turbo.renderer.stream_listen', ['transport' => $name]);
 
             $container->register("turbo.mercure.$name.stream_source_renderer", MercureStreamSourceRenderer::class)
                 ->addArgument(new Reference('turbo.id_accessor'))
                 ->addArgument(new Reference('twig'))
                 ->addArgument($name)
+                ->addArgument(new Reference($hubId))
                 ->addTag('turbo.stream_source_renderer', ['transport' => $name]);
 
             foreach ($tags as $tag) {

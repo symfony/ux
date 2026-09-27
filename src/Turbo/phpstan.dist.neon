@@ -10,6 +10,10 @@ parameters:
 	reportUnmatchedIgnoredErrors: false
 	inferPrivatePropertyTypeFromConstructor: true
 	ignoreErrors:
+		# The Mercure protocol 1.0 needs symfony/mercure 0.8+: checked with enum_exists() before use
+		-
+			message: "#^Class Symfony\\\\Component\\\\Mercure\\\\ProtocolVersion not found\\.$#"
+
 		-
 			message: "#^Method .*::test.*\\(\\) has no return type specified\\.$#"
 

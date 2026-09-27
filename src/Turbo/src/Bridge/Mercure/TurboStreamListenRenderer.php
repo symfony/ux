@@ -31,20 +31,28 @@ trigger_deprecation('symfony/ux-turbo', '3.1', 'The "%s" class is deprecated sin
  */
 final class TurboStreamListenRenderer implements TurboStreamListenRendererInterface
 {
+    private readonly TopicResolver $topicResolver;
+
     public function __construct(
         private HubInterface $hub,
         private StimulusHelper $stimulusHelper,
-        private IdAccessor $idAccessor,
+        IdAccessor $idAccessor,
         private Environment $twig,
+        private ?string $hubName = null,
     ) {
+        $this->topicResolver = new TopicResolver($idAccessor);
     }
 
     public function renderTurboStreamListen(Environment $env, $topic, array $eventSourceOptions = []): string
     {
-        $topics = $topic instanceof TopicSet
-            ? array_map($this->resolveTopic(...), $topic->getTopics())
-            : [$this->resolveTopic($topic)];
+        $topicList = $topic instanceof TopicSet ? array_values($topic->getTopics()) : [$topic];
 
+        // The Stimulus controller subscribes with the "topic" query parameter of the protocol 0.x.
+        if (TopicResolver::speaksProtocolV1($this->hub)) {
+            throw new \LogicException(\sprintf('The deprecated turbo_stream_listen() function does not support the Mercure protocol 1.0 spoken by the "%s" hub. Use turbo_stream_from() or the <twig:Turbo:Stream:From> Twig component instead.', $this->hubName ?? 'default'));
+        }
+
+        $topics = $this->topicResolver->resolveForProtocolV0($topicList);
         $controllerAttributes = ['hub' => $this->hub->getPublicUrl()];
         if (1 < \count($topics)) {
             $controllerAttributes['topics'] = $topics;
@@ -77,25 +85,5 @@ final class TurboStreamListenRenderer implements TurboStreamListenRendererInterf
         );
 
         return (string) $stimulusAttributes;
-    }
-
-    private function resolveTopic(object|string $topic): string
-    {
-        if (\is_object($topic)) {
-            $class = $topic::class;
-
-            if (!$id = $this->idAccessor->getEntityId($topic)) {
-                throw new \LogicException(\sprintf('Cannot listen to entity of class "%s" as the PropertyAccess component is not installed. Try running "composer require symfony/property-access".', $class));
-            }
-
-            return \sprintf(Broadcaster::TOPIC_PATTERN, rawurlencode($class), rawurlencode(implode('-', $id)));
-        }
-
-        if (!preg_match('/[^a-zA-Z0-9_\x7f-\xff\\\\]/', $topic) && class_exists($topic)) {
-            // Generate a URI template to subscribe to updates for all objects of this class
-            return \sprintf(Broadcaster::TOPIC_PATTERN, rawurlencode($topic), '{id}');
-        }
-
-        return $topic;
     }
 }
