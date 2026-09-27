@@ -42,6 +42,11 @@ final class TwigPreLexerTest extends TestCase
             'Expected closing tag "</twig:foo>" not found at line 1.',
         ];
 
+        yield 'mismatched_closing_tag_after_lines_of_text' => [
+            "<p>\n    text\n</p>\n<twig:foo>\n    text\n</twig:bar>",
+            "Expected closing tag '</twig:foo>' but found '</twig:bar>' at line 6.",
+        ];
+
         yield 'dynamic_component_empty_is' => [
             '<twig:component is="" />',
             'The "is" attribute of "<twig:component>" must not be empty',
