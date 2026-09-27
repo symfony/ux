@@ -21,6 +21,14 @@
                 <source>product.name.breadcrumb</source>
                 <target>Product {name}</target>
             </trans-unit>
+            <trans-unit id="5">
+                <source>product.edit.breadcrumb</source>
+                <target>Edit</target>
+            </trans-unit>
+            <trans-unit id="6">
+                <source>product.history.breadcrumb</source>
+                <target>History</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

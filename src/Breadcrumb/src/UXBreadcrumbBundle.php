@@ -88,6 +88,12 @@ final class UXBreadcrumbBundle extends AbstractBundle
         $builder->getDefinition('ux_breadcrumb.listener')
             ->setArgument('$requestAttribute', $config['request_attribute']);
 
+        // Routes change without a container rebuild in debug mode, so the route map must not outlive the process there.
+        if ($builder->hasParameter('kernel.debug') && $builder->getParameter('kernel.debug')) {
+            $builder->getDefinition('ux_breadcrumb.parent_crumb_collector')
+                ->setArgument('$cache', null);
+        }
+
         $builder->getDefinition('ux_breadcrumb.trail_provider')
             ->setArgument('$requestAttribute', $config['request_attribute']);
 

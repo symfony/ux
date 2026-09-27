@@ -138,6 +138,43 @@ final class BreadcrumbListenerTest extends KernelTestCase
         );
     }
 
+    public function testAParentChainIsCollectedBelowTheRootCrumbs(): void
+    {
+        self::assertSame(
+            ['dashboard.home.breadcrumb', 'product.index.breadcrumb', 'product.view.breadcrumb', 'product.edit.breadcrumb'],
+            $this->labels('/products/blue-sneakers/edit'),
+        );
+    }
+
+    public function testAMethodLevelParentReplacesTheClassCrumbs(): void
+    {
+        self::assertSame(
+            ['product.index.breadcrumb', 'product.view.breadcrumb', 'product.edit.breadcrumb', 'product.history.breadcrumb'],
+            $this->labels('/catalog/blue-sneakers/history'),
+        );
+    }
+
+    public function testARouteNameParentResolvesThroughTheCachedRouteMapOutsideDebugMode(): void
+    {
+        $kernel = self::bootKernel(['environment' => 'no_debug', 'debug' => false]);
+        $request = Request::create('/catalog/blue-sneakers/edit');
+        $kernel->handle($request);
+
+        $trail = $request->attributes->get(BreadcrumbTrail::ATTRIBUTE);
+        self::assertInstanceOf(BreadcrumbTrail::class, $trail);
+        self::assertSame(
+            ['product.index.breadcrumb', 'product.view.breadcrumb', 'product.edit.breadcrumb'],
+            array_map(static fn (Breadcrumb $crumb): string => $crumb->label, $trail->all()),
+        );
+    }
+
+    public function testAnArgumentNamedOnlyByAnAncestorIsKeptInTheContext(): void
+    {
+        $trail = $this->handle('/products/blue-sneakers/edit');
+
+        self::assertSame(['product'], array_keys($trail->context));
+    }
+
     public function testARootCrumbExpressionIsScannedIntoTheContext(): void
     {
         $trail = $this->handle('/products/blue-sneakers/plain', environment: 'expression_root_provider');

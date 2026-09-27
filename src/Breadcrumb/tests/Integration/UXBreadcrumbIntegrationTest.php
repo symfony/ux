@@ -124,6 +124,17 @@ final class UXBreadcrumbIntegrationTest extends KernelTestCase
         self::assertSame('Everything|Dashboard|Products', $labels);
     }
 
+    public function testAncestorsFromAParentChainResolveAgainstTheCurrentRequest(): void
+    {
+        $twig = $this->twigForRequest('/catalog/red-boots/history');
+
+        $html = $twig->createTemplate('{{ ux_breadcrumb() }}')->render();
+        self::assertStringContainsString('<a href="/catalog">Products</a>', $html);
+        self::assertStringContainsString('<a href="/catalog/red-boots">Product released on Jan 1, 2024</a>', $html);
+        self::assertStringContainsString('<a href="/catalog/red-boots/edit">Edit</a>', $html);
+        self::assertMatchesRegularExpression('/aria-current="page"[^>]*>\s*History/', $html);
+    }
+
     private function trail(): BreadcrumbTrail
     {
         $trailProvider = self::getContainer()->get('ux_breadcrumb.trail_provider');

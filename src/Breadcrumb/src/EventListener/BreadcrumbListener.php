@@ -17,6 +17,7 @@ use Symfony\Component\HttpKernel\Event\ControllerArgumentsEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\UX\Breadcrumb\Attribute\Breadcrumb;
 use Symfony\UX\Breadcrumb\BreadcrumbTrail;
+use Symfony\UX\Breadcrumb\ParentCrumbCollector;
 use Symfony\UX\Breadcrumb\RootCrumbProviderInterface;
 
 /**
@@ -36,6 +37,7 @@ final class BreadcrumbListener implements EventSubscriberInterface
     public function __construct(
         private readonly iterable $rootCrumbProviders = [],
         private readonly string $requestAttribute = BreadcrumbTrail::ATTRIBUTE,
+        private readonly ?ParentCrumbCollector $parentCrumbCollector = null,
     ) {
     }
 
@@ -70,6 +72,10 @@ final class BreadcrumbListener implements EventSubscriberInterface
 
         /** @var list<Breadcrumb> $crumbs */
         $crumbs = array_values($event->getAttributes(Breadcrumb::class));
+
+        if (null !== $this->parentCrumbCollector && array_any($crumbs, static fn (Breadcrumb $crumb): bool => null !== $crumb->parent)) {
+            $crumbs = $this->parentCrumbCollector->collect($event->getController(), $crumbs);
+        }
 
         $roots = $this->roots($route, $request);
 
