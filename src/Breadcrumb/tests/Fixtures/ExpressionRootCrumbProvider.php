@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\Breadcrumb\Tests\Fixtures;
 
+use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\UX\Breadcrumb\Attribute\Breadcrumb;
 use Symfony\UX\Breadcrumb\RootCrumbProviderInterface;
@@ -27,7 +28,7 @@ final class ExpressionRootCrumbProvider implements RootCrumbProviderInterface
             yield new Breadcrumb(
                 label: 'dashboard.home.breadcrumb',
                 route: RouteName::ProductIndex->value,
-                computedParameters: ['state' => 'product.state'],
+                parameters: ['state' => new Expression('product.state')],
             );
         }
     }

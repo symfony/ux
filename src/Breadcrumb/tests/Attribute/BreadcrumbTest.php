@@ -12,8 +12,11 @@
 namespace Symfony\UX\Breadcrumb\Tests\Attribute;
 
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\UX\Breadcrumb\Attribute\Breadcrumb;
+use Symfony\UX\Breadcrumb\Exception\InvalidArgumentException;
 use Symfony\UX\Breadcrumb\Tests\Fixtures\Controller\ProductViewController;
 use Symfony\UX\Breadcrumb\Tests\Fixtures\RouteName;
 
@@ -27,8 +30,6 @@ final class BreadcrumbTest extends TestCase
         self::assertSame('product.index.breadcrumb', $crumb->label);
         self::assertNull($crumb->route);
         self::assertSame([], $crumb->parameters);
-        self::assertSame([], $crumb->inheritedParameters);
-        self::assertSame([], $crumb->computedParameters);
         self::assertNull($crumb->translationDomain);
         self::assertSame([], $crumb->translationParameters);
         self::assertSame([], $crumb->extra);
@@ -40,24 +41,53 @@ final class BreadcrumbTest extends TestCase
         $crumb = new Breadcrumb(
             label: 'product.view.breadcrumb',
             route: RouteName::ProductView->value,
-            parameters: ['page' => 2],
-            inheritedParameters: ['slug'],
-            computedParameters: ['state' => 'product.state'],
+            parameters: ['slug', 'page' => 2],
             translationDomain: 'admin',
-            translationParameters: ['name' => 'product.name'],
+            translationParameters: ['name' => 'Blue sneakers'],
             extra: ['icon' => 'tabler:package'],
             parent: 'product_index',
         );
 
         self::assertSame('product.view.breadcrumb', $crumb->label);
         self::assertSame(RouteName::ProductView->value, $crumb->route);
-        self::assertSame(['page' => 2], $crumb->parameters);
-        self::assertSame(['slug'], $crumb->inheritedParameters);
-        self::assertSame(['state' => 'product.state'], $crumb->computedParameters);
+        self::assertSame(['slug', 'page' => 2], $crumb->parameters);
         self::assertSame('admin', $crumb->translationDomain);
-        self::assertSame(['name' => 'product.name'], $crumb->translationParameters);
+        self::assertSame(['name' => 'Blue sneakers'], $crumb->translationParameters);
         self::assertSame(['icon' => 'tabler:package'], $crumb->extra);
         self::assertSame('product_index', $crumb->parent);
+    }
+
+    public function testParametersAcceptAnExpression(): void
+    {
+        $expression = new Expression('product.state');
+
+        self::assertSame(['state' => $expression], new Breadcrumb('label', parameters: ['state' => $expression])->parameters);
+        self::assertSame(['name' => $expression], new Breadcrumb('label', translationParameters: ['name' => $expression])->translationParameters);
+    }
+
+    /**
+     * @return iterable<string, array{mixed}>
+     */
+    public static function provideInvalidInheritedParameters(): iterable
+    {
+        yield 'empty name' => [''];
+        yield 'integer' => [1];
+        yield 'expression' => [new Expression('product.slug')];
+    }
+
+    #[DataProvider('provideInvalidInheritedParameters')]
+    public function testAnUnkeyedParameterMustBeARouteParameterName(mixed $value): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        new Breadcrumb('label', parameters: [$value]);
+    }
+
+    public function testTranslationParametersMustBeKeyed(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        new Breadcrumb('label', translationParameters: ['name']);
     }
 
     public function testTranslationDomainAcceptsTheThreeStates(): void

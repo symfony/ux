@@ -86,7 +86,7 @@ final class ParentCrumbCollectorTest extends TestCase
         $trail = $this->collector()->collect(new ProductEditController(), []);
 
         self::assertSame('product_view', $trail[1]->route);
-        self::assertSame(['slug'], $trail[1]->inheritedParameters);
+        self::assertSame(['slug'], $trail[1]->parameters);
     }
 
     public function testACycleIsRejected(): void
