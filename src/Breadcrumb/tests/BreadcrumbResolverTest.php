@@ -418,6 +418,7 @@ final class BreadcrumbResolverTest extends KernelTestCase
         self::assertSame('product.index.breadcrumb', $items[0]->label);
     }
 
+    #[RequiresPhpExtension('intl')]
     public function testAFailedTranslationParameterLeavesThePlaceholderRatherThanThrowing(): void
     {
         self::bootKernel();
@@ -428,7 +429,21 @@ final class BreadcrumbResolverTest extends KernelTestCase
             translationParameters: ['released_at' => new Expression('product.releasedAt')],
         ));
 
-        self::assertNotSame('', $this->resolver()->resolve($trail)[0]->label);
+        self::assertSame('Product released on {released_at}', $this->resolver()->resolve($trail)[0]->label);
+    }
+
+    #[RequiresPhpExtension('intl')]
+    public function testAFailedTranslationParameterDoesNotDropTheOthers(): void
+    {
+        $trail = $this->trail(new Breadcrumb(
+            label: 'product.summary.breadcrumb',
+            translationParameters: [
+                'name' => new Expression('product.name'),
+                'released_at' => new Expression('category.releasedAt'),
+            ],
+        ));
+
+        self::assertSame('Blue sneakers, released on {released_at}', $this->resolver()->resolve($trail)[0]->label);
     }
 
     public function testAStringAndAnEnumBackedRouteNameResolveIdentically(): void
