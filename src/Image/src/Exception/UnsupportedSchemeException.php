@@ -24,7 +24,7 @@ final class UnsupportedSchemeException extends InvalidArgumentException
         $provider = $dsn->getScheme();
         $bridge = UXImageBundle::$bridges[$provider] ?? null;
         if ($bridge && !class_exists($bridge['factory'])) {
-            parent::__construct(\sprintf('Unable to generate images via "%s" as the bridge is not installed. Try running "composer require symfony/ux-%s-image".', $provider, $provider));
+            parent::__construct(\sprintf('Unable to generate images via "%s" as the bridge is not installed. Try running "composer require symfony/ux-%s-image".', $provider, $provider), 0, $previous);
 
             return;
         }

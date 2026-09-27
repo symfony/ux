@@ -49,4 +49,16 @@ final class UnsupportedSchemeExceptionTest extends TestCase
 
         self::assertSame('Unable to generate images via "keycdn" as the bridge is not installed. Try running "composer require symfony/ux-keycdn-image".', $exception->getMessage());
     }
+
+    public function testThePreviousExceptionIsKeptWhenTheBridgeIsNotInstalled()
+    {
+        UXImageBundle::$bridges = [
+            'keycdn' => ['factory' => 'Symfony\UX\Image\Bridge\KeyCdn\NotInstalledFactory'],
+        ];
+        $previous = new \RuntimeException();
+
+        $exception = new UnsupportedSchemeException(new Dsn('keycdn://myzone.kxcdn.com'), $previous);
+
+        self::assertSame($previous, $exception->getPrevious());
+    }
 }
