@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\Breadcrumb\Attribute;
 
+use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\UX\Breadcrumb\Exception\InvalidArgumentException;
 
 /**
@@ -26,6 +27,9 @@ use Symfony\UX\Breadcrumb\Exception\InvalidArgumentException;
 final class Breadcrumb
 {
     /**
+     * `$label` is a translation key, a literal label when `$translationDomain` is `false`, or an `Expression` evaluated against the controller's arguments.
+     * The value of an `Expression` is the label itself, not a translation key, unless it is a `TranslatableInterface`, which is translated.
+     *
      * `$parameters` holds the URL parameters. Each entry says where its value comes from:
      *
      * - a **bare name** (an integer key, such as `'slug'`) takes the value from the already-matched route (`_route_params`);
@@ -47,7 +51,7 @@ final class Breadcrumb
      * @param string|array{class-string, string}|null $parent
      */
     public function __construct(
-        public readonly string $label,
+        public readonly string|Expression $label,
         public readonly ?string $route = null,
         public readonly array $parameters = [],
         public readonly string|false|null $translationDomain = null,
@@ -55,6 +59,10 @@ final class Breadcrumb
         public readonly array $extra = [],
         public readonly string|array|null $parent = null,
     ) {
+        if ($label instanceof Expression && (\is_string($translationDomain) || [] !== $translationParameters)) {
+            throw new InvalidArgumentException('An Expression label is not a translation key: it takes no translation domain and no translation parameters. Make the expression return a TranslatableInterface to translate it.');
+        }
+
         foreach ($parameters as $key => $value) {
             if (\is_int($key) && (!\is_string($value) || '' === $value)) {
                 throw new InvalidArgumentException(\sprintf('A URL parameter without a key must be the non-empty name of a route parameter to inherit, "%s" given.', get_debug_type($value)));

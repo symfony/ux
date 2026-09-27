@@ -15,11 +15,14 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\RequiresPhpExtension;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\ExpressionLanguage\Expression;
+use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Translation\TranslatableMessage;
 use Symfony\Contracts\Translation\LocaleAwareInterface;
 use Symfony\UX\Breadcrumb\Attribute\Breadcrumb;
 use Symfony\UX\Breadcrumb\BreadcrumbResolver;
 use Symfony\UX\Breadcrumb\BreadcrumbTrail;
+use Symfony\UX\Breadcrumb\Tests\Fixtures\CountingTranslator;
 use Symfony\UX\Breadcrumb\Tests\Fixtures\Product;
 use Symfony\UX\Breadcrumb\Tests\Fixtures\RouteName;
 use Symfony\UX\Breadcrumb\Tests\Fixtures\TestKernel;
@@ -254,6 +257,50 @@ final class BreadcrumbResolverTest extends KernelTestCase
         ));
 
         self::assertSame('product.index.breadcrumb', $this->resolver()->resolve($trail)[0]->label);
+    }
+
+    public function testAnExpressionLabelIsTheLabelItselfAndIsNotTranslated(): void
+    {
+        $translator = new CountingTranslator();
+        $resolver = new BreadcrumbResolver(
+            self::getContainer()->get('router'),
+            new ExpressionLanguage(),
+            $translator,
+        );
+
+        $items = $resolver->resolve($this->trail(new Breadcrumb(label: new Expression('product.name'))));
+
+        self::assertSame('Blue sneakers', $items[0]->label);
+        self::assertSame(0, $translator->calls);
+    }
+
+    public function testAnExpressionLabelReturningATranslatableIsTranslated(): void
+    {
+        self::bootKernel();
+
+        $trail = new BreadcrumbTrail('product_view', [], [
+            'message' => new TranslatableMessage('product.name.breadcrumb', ['name' => 'Blue sneakers']),
+        ]);
+        $trail->append(new Breadcrumb(label: new Expression('message')));
+
+        self::assertSame('Product Blue sneakers', $this->resolver()->resolve($trail)[0]->label);
+    }
+
+    public function testAnExpressionLabelNamingAnAbsentArgumentDegradesToAnEmptyLabel(): void
+    {
+        self::bootKernel();
+
+        $trail = new BreadcrumbTrail('product_view', [], []);
+        $trail->append(new Breadcrumb(label: new Expression('product.name')));
+
+        self::assertSame('', $this->resolver()->resolve($trail)[0]->label);
+    }
+
+    public function testAnExpressionLabelThatIsNotAStringDegradesToAnEmptyLabel(): void
+    {
+        $trail = $this->trail(new Breadcrumb(label: new Expression('product')));
+
+        self::assertSame('', $this->resolver()->resolve($trail)[0]->label);
     }
 
     public function testAnUngenerableRouteDegradesToNoUrl(): void
