@@ -20,6 +20,7 @@ use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigura
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\Kernel;
 use Symfony\UX\Css\UXCssBundle;
+use Symfony\UX\DesignTokens\UXDesignTokensBundle;
 
 final class TestKernel extends Kernel implements CompilerPassInterface
 {
@@ -29,6 +30,8 @@ final class TestKernel extends Kernel implements CompilerPassInterface
 
     /**
      * @param array<string, mixed> $uxCssConfig
+     * @param array<string, mixed> $designTokens       a DTCG tree, written to a file listed in ux_design_tokens.paths
+     * @param array<string, mixed> $designTokensConfig
      */
     public function __construct(
         private readonly array $uxCssConfig = [],
@@ -36,6 +39,9 @@ final class TestKernel extends Kernel implements CompilerPassInterface
         bool $debug = true,
         private readonly ?string $projectDir = null,
         private ?string $buildDir = null,
+        private readonly array $designTokens = [],
+        private readonly array $designTokensConfig = [],
+        private readonly bool $designTokensBundle = true,
     ) {
         parent::__construct($environment, $debug);
     }
@@ -54,6 +60,9 @@ final class TestKernel extends Kernel implements CompilerPassInterface
     {
         yield new FrameworkBundle();
         yield new TwigBundle();
+        if ($this->designTokensBundle) {
+            yield new UXDesignTokensBundle();
+        }
         yield new UXCssBundle();
     }
 
@@ -74,8 +83,10 @@ final class TestKernel extends Kernel implements CompilerPassInterface
 
     protected function getContainerClass(): string
     {
+        $configs = [$this->uxCssConfig, $this->designTokens, $this->designTokensConfig, $this->designTokensBundle];
+
         // a config change rebuilds the container in the same cache directory, as a YAML change does in an application
-        return parent::getContainerClass().hash('xxh32', serialize($this->uxCssConfig));
+        return parent::getContainerClass().hash('xxh32', serialize($configs));
     }
 
     public function getLogDir(): string
@@ -95,6 +106,17 @@ final class TestKernel extends Kernel implements CompilerPassInterface
         $container->extension('twig', ['default_path' => $templates, 'strict_variables' => true]);
         $container->extension('ux_css', $this->uxCssConfig);
         $container->services()->set('logger', TestLogger::class)->public();
+
+        $designTokens = $this->designTokensConfig;
+        if ([] !== $this->designTokens) {
+            $file = $this->getBuildDir().'/design/tokens.json';
+            $flags = \JSON_THROW_ON_ERROR | \JSON_PRETTY_PRINT | \JSON_UNESCAPED_SLASHES;
+            new Filesystem()->dumpFile($file, json_encode($this->designTokens, $flags));
+            $designTokens['paths'] = [...($designTokens['paths'] ?? []), $file];
+        }
+        if ($this->designTokensBundle) {
+            $container->extension('ux_design_tokens', $designTokens);
+        }
     }
 
     public function process(ContainerBuilder $container): void

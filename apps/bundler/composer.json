@@ -18,6 +18,7 @@
         "symfony/ux-chartjs": "3.x-dev",
         "symfony/ux-cropperjs": "3.x-dev",
         "symfony/ux-css": "3.x-dev",
+        "symfony/ux-design-tokens": "3.x-dev",
         "symfony/ux-dropzone": "3.x-dev",
         "symfony/ux-google-map": "3.x-dev",
         "symfony/ux-icons": "3.x-dev",

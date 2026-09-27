@@ -259,6 +259,9 @@
     "symfony/ux-css": {
         "version": "3.x-dev"
     },
+    "symfony/ux-design-tokens": {
+        "version": "3.x-dev"
+    },
     "symfony/ux-dropzone": {
         "version": "v2.29.1"
     },

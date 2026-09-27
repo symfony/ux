@@ -24,9 +24,11 @@ Raw value without brackets                  ``Unknown sizes token "37ch".
                                             like "[37ch]".``
 Category with no token                      ``Unknown fontSizes token "lg": no
                                             fontSizes token is declared. Add
-                                            them under ux_css.tokens.fontSizes,
-                                            or write a raw value between
-                                            brackets, like "[lg]".``
+                                            fontSizes tokens to the design
+                                            tokens, under font.size, font-size,
+                                            fontSize or fontSizes, or write a
+                                            raw value between brackets, like
+                                            "[lg]".``
 Invalid keyword                             ``Invalid value "flexx" for
                                             "display". Did you mean "flex"?``
 ``base`` outside a conditional value        ``"base" can only be used inside a

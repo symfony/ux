@@ -27,12 +27,12 @@ bundle writes the matching rules to one CSS file:
 
 .. code-block:: css
 
-    .p_md { padding: var(--spacing-md); }
-    .c_fg { color: var(--colors-fg); }
-    .hover\:c_primary:is(:hover, [data-hover]) { color: var(--colors-primary); }
+    .p_md { padding: var(--dt-dimension-spacing-md); }
+    .c_fg { color: var(--dt-color-fg); }
+    .hover\:c_primary:is(:hover, [data-hover]) { color: var(--dt-color-primary); }
 
     @media screen and (min-width: 48rem) {
-        .md\:p_lg { padding: var(--spacing-lg); }
+        .md\:p_lg { padding: var(--dt-dimension-spacing-lg); }
     }
 
 It is an alternative to utility classes written as strings. The hash is
@@ -60,9 +60,9 @@ Where does the CSS go?              In ``var/ux_css/styles.css``, one file for
 Who writes the file?                In dev, the bundle, before the response of
                                     any request that follows a template change.
                                     For production, ``cache:warmup``.
-What does the file contain?         Every style written in a template, the
-                                    styles listed in ``static_css``, and every
-                                    token as a CSS variable.
+What does the file contain?         Every style written in a template and the
+                                    styles listed in ``static_css``. The token
+                                    variables come from UX Design Tokens.
 When are mistakes reported?         When Twig compiles the template: on the page
                                     in dev, in ``lint:twig`` and in
                                     ``cache:warmup``.

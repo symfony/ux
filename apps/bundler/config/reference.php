@@ -708,11 +708,21 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     driver?: "gd"|"imagick"|"vips"|Param, // The Intervention Image driver used for server-side cropping. // Default: "gd"
  *     driver_service?: scalar|Param|null, // Service id of a custom Intervention\Image\Interfaces\DriverInterface. When set, it takes precedence over "driver". // Default: null
  * }
+ * @psalm-type UxDesignTokensConfig = array{
+ *     paths?: list<scalar|Param|null>,
+ *     resolver?: array{ // A DTCG 2025.10 Resolver document and the contexts it selects by default.
+ *         path?: scalar|Param|null, // Path to a .resolver.json document. // Default: null
+ *         inputs?: list<mixed>,
+ *     },
+ *     color_scheme?: array{ // The Resolver modifier whose contexts the CSS output writes as the light and dark color schemes.
+ *         modifier?: scalar|Param|null, // Name of the modifier. // Default: "scheme"
+ *         light?: scalar|Param|null, // Context written to :root. // Default: "light"
+ *         dark?: scalar|Param|null, // Context whose differences are written for prefers-color-scheme: dark and [data-theme="dark"]. // Default: "dark"
+ *     },
+ *     css_prefix?: scalar|Param|null, // Application-owned prefix for generated CSS custom properties. // Default: "dt"
+ * }
  * @psalm-type UxCssConfig = array{
- *     tokens?: array<string, mixed>,
- *     semantic_tokens?: array<string, mixed>,
  *     conditions?: array<string, mixed>,
- *     breakpoints?: array<string, scalar|Param|null>,
  *     strict_tokens?: bool|Param, // Only accept tokens for properties bound to a token category; raw values must be written between brackets. // Default: true
  *     strict_property_values?: bool|Param, // Only accept the keywords of a property whose grammar is made of keywords. // Default: true
  *     static_css?: array{ // Values to write in the stylesheet even when no template uses them as is, for css() calls with dynamic values.
@@ -877,6 +887,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     webpack_encore?: WebpackEncoreConfig,
  *     stimulus?: StimulusConfig,
  *     cropperjs?: CropperjsConfig,
+ *     ux_design_tokens?: UxDesignTokensConfig,
  *     ux_css?: UxCssConfig,
  *     ux_map?: UxMapConfig,
  *     twig?: TwigConfig,
@@ -900,6 +911,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         webpack_encore?: WebpackEncoreConfig,
  *         stimulus?: StimulusConfig,
  *         cropperjs?: CropperjsConfig,
+ *         ux_design_tokens?: UxDesignTokensConfig,
  *         ux_css?: UxCssConfig,
  *         ux_map?: UxMapConfig,
  *         twig?: TwigConfig,
@@ -924,6 +936,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         webpack_encore?: WebpackEncoreConfig,
  *         stimulus?: StimulusConfig,
  *         cropperjs?: CropperjsConfig,
+ *         ux_design_tokens?: UxDesignTokensConfig,
  *         ux_css?: UxCssConfig,
  *         ux_map?: UxMapConfig,
  *         twig?: TwigConfig,
@@ -948,6 +961,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         webpack_encore?: WebpackEncoreConfig,
  *         stimulus?: StimulusConfig,
  *         cropperjs?: CropperjsConfig,
+ *         ux_design_tokens?: UxDesignTokensConfig,
  *         ux_css?: UxCssConfig,
  *         ux_map?: UxMapConfig,
  *         twig?: TwigConfig,

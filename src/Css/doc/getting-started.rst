@@ -9,27 +9,49 @@ Declare tokens
 --------------
 
 Tokens are the values your styles are allowed to use: colors, spacing, radii
-and so on. Declare them in the bundle configuration:
+and so on. UX CSS reads them from UX Design Tokens, which loads a token file
+written in the DTCG format:
+
+.. code-block:: json
+
+    {
+        "color": {
+            "$type": "color",
+            "blue": {
+                "500": { "$value": { "colorSpace": "srgb", "components": [0.23, 0.51, 0.96] } },
+                "600": { "$value": { "colorSpace": "srgb", "components": [0.15, 0.39, 0.92] } }
+            },
+            "gray": {
+                "50": { "$value": { "colorSpace": "srgb", "components": [0.98, 0.98, 0.98] } },
+                "900": { "$value": { "colorSpace": "srgb", "components": [0.07, 0.09, 0.15] } }
+            },
+            "primary": { "$value": "{color.blue.500}" },
+            "fg": { "$value": "{color.gray.900}" }
+        },
+        "dimension": {
+            "$type": "dimension",
+            "spacing": {
+                "sm": { "$value": { "value": 0.5, "unit": "rem" } },
+                "md": { "$value": { "value": 1, "unit": "rem" } },
+                "lg": { "$value": { "value": 2, "unit": "rem" } }
+            },
+            "radius": {
+                "md": { "$value": { "value": 0.375, "unit": "rem" } }
+            }
+        }
+    }
 
 .. code-block:: yaml
 
-    # config/packages/ux_css.yaml
-    ux_css:
-        tokens:
-            colors:
-                blue: { 500: '#3b82f6', 600: '#2563eb' }
-                gray: { 50: '#f9fafb', 900: '#111827' }
-            spacing: { sm: '0.5rem', md: '1rem', lg: '2rem' }
-            radii: { md: '0.375rem' }
-        semantic_tokens:
-            colors:
-                primary: '{colors.blue.500}'
-                fg: { base: '{colors.gray.900}', _dark: '{colors.gray.50}' }
+    # config/packages/ux_design_tokens.yaml
+    ux_design_tokens:
+        paths:
+            - '%kernel.project_dir%/design/tokens.json'
 
-``tokens`` holds raw values, in groups such as ``blue.500``.
-``semantic_tokens`` gives them names that describe their role: ``primary``
-points to ``blue.500``, and ``fg`` changes value in dark mode. See
-:doc:`tokens` for the details.
+``color.primary`` and ``color.fg`` are aliases: they name a role and point to
+a color of the palette. In ``css()``, a token is named after its path, without
+the prefix of its category: ``color.blue.500`` is ``blue.500``,
+``dimension.spacing.md`` is ``md``. See :doc:`tokens` for the details.
 
 Style a template
 ----------------
@@ -64,34 +86,19 @@ What the bundle writes
 
 In dev, the bundle updates ``var/ux_css/styles.css`` before responding to every
 request that follows a template change. After the first page load, the file
-contains every token as a CSS variable, then one rule per class:
+contains one rule per class:
 
 .. code-block:: css
 
-    @layer tokens, utilities;
-
-    @layer tokens {
-        :where(:root, :host) {
-            --colors-blue-500: #3b82f6;
-            --colors-gray-50: #f9fafb;
-            --spacing-md: 1rem;
-            /* ... */
-            --colors-primary: var(--colors-blue-500);
-            --colors-fg: var(--colors-gray-900);
-        }
-
-        .dark {
-            --colors-fg: var(--colors-gray-50);
-        }
-    }
-
     @layer utilities {
-        .p_md { padding: var(--spacing-md); }
-        .bdr_md { border-radius: var(--radii-md); }
-        .bg_gray\.50 { background: var(--colors-gray-50); }
-        .c_fg { color: var(--colors-fg); }
-        .c_primary { color: var(--colors-primary); }
+        .p_md { padding: var(--dt-dimension-spacing-md); }
+        .bdr_md { border-radius: var(--dt-dimension-radius-md); }
+        .bg_gray\.50 { background: var(--dt-color-gray-50); }
+        .c_fg { color: var(--dt-color-fg); }
+        .c_primary { color: var(--dt-color-primary); }
     }
+
+The rules read the CSS variables that the UX Design Tokens stylesheet declares.
 
 The bundle reads every template of the application, not only the ones you
 open. So a template rendered later, for example by a Live Component, finds
@@ -117,17 +124,18 @@ on hover, and its padding grows from ``sm`` to ``md`` on screens at least
 Switch to dark mode
 -------------------
 
-The ``fg`` token has a value for the ``_dark`` condition. By default, that
-condition applies inside an element that has the ``dark`` class:
+Dark values belong to the token files: a Resolver document of UX Design Tokens
+gives ``color.fg`` another value in a dark context. Its stylesheet then
+redefines ``--dt-color-fg`` when the operating system prefers a dark scheme,
+or when ``<html>`` has ``data-theme="dark"``:
 
 .. code-block:: html+twig
 
     {# templates/base.html.twig #}
-    <html lang="en" class="dark">
+    <html lang="en" data-theme="dark">
 
-Every ``color: 'fg'`` now uses ``gray.50``, with no change to the templates.
-:doc:`conditions` shows how to use another selector, or the operating system
-preference.
+Every ``color: 'fg'`` now uses the dark value, with no change to the
+templates. :doc:`tokens` shows how ``_dark`` follows the same selectors.
 
 Make a mistake
 --------------

@@ -292,6 +292,34 @@ final class TokensTest extends TestCase
         new Tokens(hash: true);
     }
 
+    public function testATokenWithAnExternalVariableIsReadThroughIt(): void
+    {
+        $tokens = self::externalTokens();
+
+        $variable = $tokens->getVar('colors.action.primary');
+
+        $this->assertSame('var(--dt-color-action-primary)', $variable);
+    }
+
+    public function testATokenWithAnExternalVariableDeclaresNothing(): void
+    {
+        $tokens = self::externalTokens();
+
+        $declared = array_merge(...array_values($tokens->getVars()));
+
+        $this->assertArrayNotHasKey('--dt-color-action-primary', $declared);
+        $this->assertArrayNotHasKey('--colors-action-primary', $declared);
+    }
+
+    public function testTheNegativeOfAnExternalSpacingUsesItsVariable(): void
+    {
+        $tokens = self::externalTokens();
+
+        $negative = $tokens->getVar('spacing.-md');
+
+        $this->assertSame('calc(var(--dt-dimension-spacing-md) * -1)', $negative);
+    }
+
     private static function createTokens(): Tokens
     {
         $tokens = [
@@ -347,5 +375,18 @@ final class TokensTest extends TestCase
         ];
 
         return new Tokens($tokens, $semanticTokens, ['sm' => '640px', 'md' => '768px'], 'pd');
+    }
+
+    private static function externalTokens(): Tokens
+    {
+        $external = static fn (string $variable): array => [
+            'value' => 'var('.$variable.')',
+            'extensions' => ['externalVar' => $variable],
+        ];
+
+        return new Tokens([
+            'colors' => ['action' => ['primary' => $external('--dt-color-action-primary')]],
+            'spacing' => ['md' => $external('--dt-dimension-spacing-md')],
+        ]);
     }
 }

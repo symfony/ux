@@ -308,7 +308,9 @@ final class Tokens
                 'prop' => '-'.$token->extensions['prop'],
                 'originalPath' => $token->path,
             ];
-            $negative->value = 'calc('.str_replace('calc', '', $this->cssVar($token->path)['ref'].' * -1').')';
+            $external = $token->extensions['externalVar'] ?? null;
+            $reference = \is_string($external) ? 'var('.$external.')' : $this->cssVar($token->path)['ref'];
+            $negative->value = 'calc('.str_replace('calc', '', $reference.' * -1').')';
             $last = array_key_last($negative->path);
             if (null !== $last) {
                 $negative->path[$last] = '-'.$negative->path[$last];
@@ -426,6 +428,14 @@ final class Tokens
 
     private function addCssVariable(Token $token): void
     {
+        $external = $token->extensions['externalVar'] ?? null;
+        if (\is_string($external)) {
+            $token->extensions['var'] = $external;
+            $token->extensions['varRef'] = 'var('.$external.')';
+
+            return;
+        }
+
         $path = ($token->extensions['isNegative'] ?? false) ? $token->extensions['originalPath'] : $token->path;
         $variable = $this->cssVar(array_values(array_filter($path, static fn (string $part): bool => '' !== $part)));
         $token->extensions['var'] = $variable['var'];
@@ -644,6 +654,7 @@ final class Tokens
         $condition = $token->extensions['condition'] ?? null;
         if (
             ($token->extensions['isNegative'] ?? false)
+            || isset($token->extensions['externalVar'])
             || (!isset($token->extensions['theme']) && ($token->extensions['isVirtual'] ?? false))
             || !JsValue::isTruthy($condition)
         ) {

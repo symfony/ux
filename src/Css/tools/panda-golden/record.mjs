@@ -145,7 +145,6 @@ const recordFixtureSuite = () => {
                 GOLDEN_TOKENS_OUT: join(outDir, 'tokens.json'),
                 GOLDEN_CSS_TYPES_OUT: join(outDir, 'css-types.json'),
                 GOLDEN_PRESET_OUT: join(outDir, 'panda-preset.json'),
-                GOLDEN_DEFAULT_TOKENS_OUT: join(outDir, 'panda-tokens.json'),
                 GOLDEN_SCENARIOS: CODEGEN_SCENARIOS.join(','),
             },
         }
@@ -345,7 +344,6 @@ const writeFixtures = () => {
     cpSync(join(outDir, 'tokens.json'), join(fixturesDir, 'tokens.json'));
     mkdirSync(join(toolDir, '../../resources'), { recursive: true });
     cpSync(join(outDir, 'panda-preset.json'), join(toolDir, '../../resources/panda-preset.json'));
-    cpSync(join(outDir, 'panda-tokens.json'), join(toolDir, '../../resources/panda-tokens.json'));
     cpSync(join(outDir, 'css-types.json'), join(toolDir, '../../resources/css-types.json'));
     writeFileSync(join(fixturesDir, 'PANDA_COMMIT'), PANDA_COMMIT + '\n');
 

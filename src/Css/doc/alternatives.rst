@@ -66,7 +66,7 @@ means compiling Bootstrap's Sass. Colors and other values are CSS variables
 with the ``--bs-`` prefix.
 
 With ``css()``, every property works with every condition and breakpoint, and
-the tokens are declared in YAML, without Sass.
+the tokens are declared in DTCG files, without Sass.
 
 What Bootstrap does better: its components, such as navbars, modals and
 dropdowns, their JavaScript, and their accessible defaults.
@@ -85,7 +85,7 @@ With ``css()``, the bundle writes the rules, once per style, for every
 template. The file is built from the templates, so a style that no template
 uses any more disappears from it. And since the tokens are CSS variables, both
 work together: ``css()`` for most elements, and hand-written CSS with
-``var(--colors-primary)`` for the rest.
+``var(--dt-color-primary)`` for the rest.
 
 What hand-written CSS does better: complex selectors, ``@keyframes``, and
 styles for HTML you do not write yourself, such as the output of a Markdown

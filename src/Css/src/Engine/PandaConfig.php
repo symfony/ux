@@ -26,7 +26,7 @@ final class PandaConfig
     private const PRESET = __DIR__.'/../../resources/panda-preset.json';
 
     /**
-     * @param array{conditions?: array<string, string|list<string>>, theme?: array<string, mixed>} $project
+     * @param array{conditions?: array<string, mixed>, theme?: array<string, mixed>} $project
      *
      * @return array<string, mixed>
      */
