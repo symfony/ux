@@ -182,6 +182,15 @@ same validation::
         return $this->imageUrlGenerator->generate('/uploads/hero.jpg', width: 1200, height: 630);
     }
 
+Replacing an original
+~~~~~~~~~~~~~~~~~~~~~
+
+A transformation URL only depends on the original's path and on the
+transformation parameters. When you replace an original under the same path,
+the provider and the browsers keep serving the variants they already cached.
+Give each version of an image its own path instead, for example with a hash or
+a version in the filename (``/uploads/hero.3f2a1c.jpg``).
+
 Configuration
 -------------
 
