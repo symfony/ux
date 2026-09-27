@@ -269,7 +269,9 @@ screen widths ported from `unpic`_.
 
 Narrow it when your images never reach those sizes, or when you want fewer
 candidates per ``srcset``; a component can still override it for one image
-through the ``breakpoints`` prop.
+through the ``breakpoints`` prop. Each candidate is one more variant the
+provider generates and caches, so a shorter ladder also means fewer
+transformations on your CDN.
 
 The ``quality`` option
 ~~~~~~~~~~~~~~~~~~~~~~
