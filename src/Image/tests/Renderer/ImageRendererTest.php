@@ -107,15 +107,22 @@ final class ImageRendererTest extends TestCase
         self::assertStringContainsString('object-fit: cover', $rendered->imgAttributes['style']->getValue());
     }
 
-    public function testPriorityFlipsTheLoadingHints()
+    public function testAnImageIsOnlyLazyLoadedByDefault()
     {
-        $lazy = $this->renderer()->render('hero.jpg', '', new RenderOptions(width: 800));
-        $eager = $this->renderer()->render('hero.jpg', '', new RenderOptions(width: 800, priority: true));
+        $rendered = $this->renderer()->render('hero.jpg', '', new RenderOptions(width: 800));
 
-        self::assertSame('lazy', $lazy->imgAttributes['loading']);
-        self::assertSame('auto', $lazy->imgAttributes['fetchpriority']);
-        self::assertSame('eager', $eager->imgAttributes['loading']);
-        self::assertSame('high', $eager->imgAttributes['fetchpriority']);
+        self::assertSame('lazy', $rendered->imgAttributes['loading']);
+        self::assertArrayNotHasKey('fetchpriority', $rendered->imgAttributes);
+        self::assertArrayNotHasKey('decoding', $rendered->imgAttributes);
+    }
+
+    public function testPriorityLoadsEagerlyWithAHighFetchPriority()
+    {
+        $rendered = $this->renderer()->render('hero.jpg', '', new RenderOptions(width: 800, priority: true));
+
+        self::assertSame('eager', $rendered->imgAttributes['loading']);
+        self::assertSame('high', $rendered->imgAttributes['fetchpriority']);
+        self::assertArrayNotHasKey('decoding', $rendered->imgAttributes);
     }
 
     public function testAProviderWithoutAutoFormatProducesOneSourcePerFormat()

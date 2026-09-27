@@ -76,7 +76,7 @@ Prop            Type                              Default
 ``layout`` and its ``breakpoints``, ``sizes`` and generated ``style`` are
 covered under :ref:`Layout and rendering <image_layout_and_rendering>`.
 ``priority`` sets ``loading="eager" fetchpriority="high"``; without it, an
-image gets ``loading="lazy" fetchpriority="auto"``.
+image only gets ``loading="lazy"``.
 
 ``fit`` decides how the provider reshapes the source image into the requested
 ``width`` x ``height``. ``cover`` fills the box and crops the excess, and

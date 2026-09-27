@@ -73,10 +73,11 @@ final class ImageRenderer implements ImageRendererInterface
             'alt' => $alt,
             'srcset' => $fallbackSrcset,
             'loading' => $options->priority ? 'eager' : 'lazy',
-            'fetchpriority' => $options->priority ? 'high' : 'auto',
-            'decoding' => 'async',
         ];
 
+        if ($options->priority) {
+            $attributes['fetchpriority'] = 'high';
+        }
         if (null !== $sizes = $this->layoutResolver->sizes($options->layout, $options->width)) {
             $attributes['sizes'] = $sizes;
         }
