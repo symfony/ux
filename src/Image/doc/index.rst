@@ -122,7 +122,10 @@ ignored. Keying by provider name is deliberate: the active DSN changes
 between environments, and a flat, un-keyed ``gravity`` option would silently
 vanish the moment the application switched from Cloudflare to another
 provider. Passing an operation the active provider does not support throws
-an ``InvalidArgumentException`` naming the provider's supported list.
+an ``InvalidArgumentException`` naming the provider's supported list. A key
+that names no installed provider throws as well, so a typo such as
+``cloudfare`` fails in development rather than being silently ignored in
+production.
 
 Getting a single URL
 ~~~~~~~~~~~~~~~~~~~~

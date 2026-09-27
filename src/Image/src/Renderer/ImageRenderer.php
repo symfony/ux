@@ -31,8 +31,9 @@ final class ImageRenderer implements ImageRendererInterface
         private readonly ProviderInterface $provider,
         private readonly LayoutResolver $layoutResolver,
         private readonly array $formats = ['avif', 'webp', 'jpeg'],
+        ?ImageUrlGenerator $urlGenerator = null,
     ) {
-        $this->urlGenerator = new ImageUrlGenerator($provider);
+        $this->urlGenerator = $urlGenerator ?? new ImageUrlGenerator($provider);
     }
 
     public function render(string $src, string $alt, RenderOptions $options): RenderedImage

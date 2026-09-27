@@ -120,6 +120,28 @@ final class ImageRuntimeTest extends KernelTestCase
         }
     }
 
+    public function testAnOperationsKeyNamingNoInstalledProviderIsRejected()
+    {
+        try {
+            $this->renderUrlFunction('og.jpg', ['operations' => ['cloudfare' => ['gravity' => 'auto']]]);
+            self::fail('Expected a RuntimeError to be thrown.');
+        } catch (RuntimeError $e) {
+            self::assertInstanceOf(InvalidArgumentException::class, $e->getPrevious());
+            self::assertSame('The "operations" option has a "cloudfare" key, which is not an installed image provider (installed: "fake", "null").', $e->getPrevious()->getMessage());
+        }
+    }
+
+    public function testTheRendererAlsoRejectsAnOperationsKeyNamingNoInstalledProvider()
+    {
+        try {
+            $this->renderFunction('/hero.jpg', 'Hero', ['width' => 400, 'operations' => ['cloudfare' => ['gravity' => 'auto']]]);
+            self::fail('Expected a RuntimeError to be thrown.');
+        } catch (RuntimeError $e) {
+            self::assertInstanceOf(InvalidArgumentException::class, $e->getPrevious());
+            self::assertStringStartsWith('The "operations" option has a "cloudfare" key', $e->getPrevious()->getMessage());
+        }
+    }
+
     private function renderUrlFunction(string $src, array $options = []): string
     {
         self::bootKernel();

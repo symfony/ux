@@ -67,7 +67,7 @@ final class TestKernel extends Kernel
         if ('bare' !== $this->environment) {
             $container->services()
                 ->set('test.ux_image.provider_factory.fake', FakeProviderFactory::class)
-                    ->tag('ux_image.provider_factory')
+                    ->tag('ux_image.provider_factory', ['name' => 'fake'])
             ;
         }
     }

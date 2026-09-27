@@ -17,6 +17,7 @@ use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigura
 use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
 use Symfony\UX\Image\Bridge\Cloudflare\CloudflareProviderFactory;
 use Symfony\UX\Image\Bridge\KeyCdn\KeyCdnProviderFactory;
+use Symfony\UX\Image\DependencyInjection\ProviderNamesPass;
 use Symfony\UX\Image\Provider\NullProviderFactory;
 use Symfony\UX\Image\Renderer\LayoutResolver;
 
@@ -40,6 +41,11 @@ final class UXImageBundle extends AbstractBundle
     public function getPath(): string
     {
         return \dirname(__DIR__);
+    }
+
+    public function build(ContainerBuilder $container): void
+    {
+        $container->addCompilerPass(new ProviderNamesPass());
     }
 
     public function configure(DefinitionConfigurator $definition): void
@@ -68,7 +74,7 @@ final class UXImageBundle extends AbstractBundle
 
         $container->services()
             ->set('ux_image.provider_factory.null', NullProviderFactory::class)
-            ->tag('ux_image.provider_factory');
+            ->tag('ux_image.provider_factory', ['name' => 'null']);
 
         $container->services()->get('ux_image.provider')->arg(0, $config['provider']);
         $container->services()->get('ux_image.renderer')->arg(2, $config['formats']);
@@ -78,7 +84,7 @@ final class UXImageBundle extends AbstractBundle
             if (ContainerBuilder::willBeAvailable('symfony/ux-'.$name.'-image', $bridge['factory'], ['symfony/ux-image'])) {
                 $container->services()
                     ->set('ux_image.provider_factory.'.$name, $bridge['factory'])
-                    ->tag('ux_image.provider_factory');
+                    ->tag('ux_image.provider_factory', ['name' => $name]);
             }
         }
     }

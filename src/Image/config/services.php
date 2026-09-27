@@ -47,6 +47,7 @@ return static function (ContainerConfigurator $container): void {
                 service('ux_image.provider'),
                 service('ux_image.layout_resolver'),
                 abstract_arg('formats'),
+                service('ux_image.url_generator'),
             ])
 
         ->set('ux_image.url_generator', ImageUrlGenerator::class)

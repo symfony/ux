@@ -25,8 +25,12 @@ use Symfony\UX\Image\Provider\ProviderInterface;
  */
 final class ImageUrlGenerator
 {
+    /**
+     * @param list<string>|null $providerNames the installed providers, to reject an "operations" key that names none of them; null skips the check
+     */
     public function __construct(
         private readonly ProviderInterface $provider,
+        private readonly ?array $providerNames = null,
     ) {
     }
 
@@ -38,6 +42,7 @@ final class ImageUrlGenerator
     public function generate(string $src, ?int $width = null, ?int $height = null, ?Fit $fit = null, ?string $format = null, ?int $quality = null, array $operations = []): string
     {
         $fit ??= null !== $width && null !== $height ? Fit::Cover : null;
+        $this->assertKnownProviders($operations);
 
         if ($this->provider instanceof NullProvider) {
             return $this->provider->generateUrl(new ImageTransformation($src, $width, $height, $fit, $format, $quality));
@@ -48,6 +53,22 @@ final class ImageUrlGenerator
         }
 
         return $this->provider->generateUrl(new ImageTransformation($src, $width, $height, $fit, $format, $quality, $this->resolveOperations($operations)));
+    }
+
+    /**
+     * @param array<string, mixed> $operations
+     */
+    private function assertKnownProviders(array $operations): void
+    {
+        if (null === $this->providerNames) {
+            return;
+        }
+
+        foreach (array_keys($operations) as $name) {
+            if (!\in_array($name, $this->providerNames, true)) {
+                throw new InvalidArgumentException(\sprintf('The "operations" option has a "%s" key, which is not an installed image provider (installed: "%s").', $name, implode('", "', $this->providerNames)));
+            }
+        }
     }
 
     private function assertSupportedFormat(string $format): void

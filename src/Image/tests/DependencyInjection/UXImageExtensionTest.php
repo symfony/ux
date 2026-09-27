@@ -110,6 +110,16 @@ final class UXImageExtensionTest extends TestCase
         self::assertTrue($container->getDefinition('ux_image.provider_factory.fake')->hasTag('ux_image.provider_factory'));
     }
 
+    public function testProviderFactoriesAreTaggedWithTheirName()
+    {
+        UXImageBundle::$bridges = ['fake' => ['factory' => FakeProviderFactory::class]];
+
+        $container = $this->buildContainer([]);
+
+        self::assertSame([['name' => 'null']], $container->getDefinition('ux_image.provider_factory.null')->getTag('ux_image.provider_factory'));
+        self::assertSame([['name' => 'fake']], $container->getDefinition('ux_image.provider_factory.fake')->getTag('ux_image.provider_factory'));
+    }
+
     public function testTheUrlGeneratorIsAutowirable()
     {
         $container = $this->buildContainer([]);

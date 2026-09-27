@@ -86,6 +86,38 @@ final class ImageUrlGeneratorTest extends TestCase
         self::assertSame('/og.jpg?w=1200&fm=&h=630&fit=cover', new ImageUrlGenerator(new FakeProvider())->generate('og.jpg', width: 1200, height: 630));
     }
 
+    public function testAnOperationsKeyThatIsNotAnInstalledProviderIsRejected()
+    {
+        $generator = new ImageUrlGenerator(new FakeProvider(), ['null', 'fake', 'cloudflare']);
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('The "operations" option has a "cloudfare" key, which is not an installed image provider (installed: "null", "fake", "cloudflare").');
+
+        $generator->generate('og.jpg', operations: ['cloudfare' => ['gravity' => 'auto']]);
+    }
+
+    public function testAnOperationsKeyIsCheckedEvenWithTheNullProvider()
+    {
+        $generator = new ImageUrlGenerator(new NullProvider(), ['null', 'cloudflare']);
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('The "operations" option has a "cloudfare" key');
+
+        $generator->generate('og.jpg', operations: ['cloudfare' => ['gravity' => 'auto']]);
+    }
+
+    public function testAnInactiveInstalledProviderKeyIsAccepted()
+    {
+        $generator = new ImageUrlGenerator(new FakeProvider(), ['null', 'fake', 'cloudflare']);
+
+        self::assertSame('/og.jpg?fm=', $generator->generate('og.jpg', operations: ['cloudflare' => ['gravity' => 'auto']]));
+    }
+
+    public function testWithoutAKnownProviderListAnyKeyIsAccepted()
+    {
+        self::assertSame('/og.jpg?fm=', new ImageUrlGenerator(new FakeProvider())->generate('og.jpg', operations: ['cloudfare' => []]));
+    }
+
     public function testTheNullProviderReturnsTheOriginalPath()
     {
         $url = new ImageUrlGenerator(new NullProvider())->generate('/uploads/og.jpg', width: 1200, format: 'webp');
