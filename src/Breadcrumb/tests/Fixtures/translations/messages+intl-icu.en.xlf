@@ -29,6 +29,10 @@
                 <source>product.history.breadcrumb</source>
                 <target>History</target>
             </trans-unit>
+            <trans-unit id="7">
+                <source>product.summary.breadcrumb</source>
+                <target>{name}, released on {released_at, date, medium}</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

@@ -85,15 +85,9 @@ final class BreadcrumbResolver
             return $label;
         }
 
-        try {
-            $parameters = $this->evaluate($crumb->translationParameters, $trail);
-        } catch (\Throwable) {
-            $parameters = [];
-        }
-
         return $this->translator->trans(
             $label,
-            $parameters,
+            $this->translationParameters($crumb, $trail),
             $crumb->translationDomain ?? $this->defaultTranslationDomain,
         );
     }
@@ -207,21 +201,33 @@ final class BreadcrumbResolver
             }
         }
 
-        return [...$inherited, ...$this->evaluate($keyed, $trail)];
+        return [...$inherited, ...array_map(fn (mixed $value): mixed => $this->evaluate($value, $trail), $keyed)];
     }
 
     /**
-     * Evaluates the Expression values and keeps the others as given.
-     *
-     * @param array<string, mixed> $values
+     * A parameter that cannot be evaluated is left out, so the translator keeps its placeholder instead of failing on a value of the wrong type.
+     * The other parameters are still passed.
      *
      * @return array<string, mixed>
      */
-    private function evaluate(array $values, BreadcrumbTrail $trail): array
+    private function translationParameters(Breadcrumb $crumb, BreadcrumbTrail $trail): array
     {
-        return array_map(
-            fn (mixed $value): mixed => $value instanceof Expression ? $this->expressionLanguage->evaluate($value, $trail->context) : $value,
-            $values,
-        );
+        $parameters = [];
+        foreach ($crumb->translationParameters as $key => $value) {
+            try {
+                $parameters[$key] = $this->evaluate($value, $trail);
+            } catch (\Throwable) {
+            }
+        }
+
+        return $parameters;
+    }
+
+    /**
+     * Evaluates an Expression and keeps any other value as given.
+     */
+    private function evaluate(mixed $value, BreadcrumbTrail $trail): mixed
+    {
+        return $value instanceof Expression ? $this->expressionLanguage->evaluate($value, $trail->context) : $value;
     }
 }
