@@ -17,6 +17,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
 use Symfony\UX\Image\Bridge\Cloudflare\CloudflareProviderFactory;
+use Symfony\UX\Image\Bridge\Glide\GlideProviderFactory;
 use Symfony\UX\Image\Bridge\KeyCdn\KeyCdnProviderFactory;
 use Symfony\UX\Image\DependencyInjection\ProviderNamesPass;
 use Symfony\UX\Image\Provider\NullProviderFactory;
@@ -37,6 +38,7 @@ final class UXImageBundle extends AbstractBundle
      */
     public static array $bridges = [
         'cloudflare' => ['factory' => CloudflareProviderFactory::class],
+        'glide' => ['factory' => GlideProviderFactory::class],
         'keycdn' => ['factory' => KeyCdnProviderFactory::class],
     ];
 
@@ -89,6 +91,10 @@ final class UXImageBundle extends AbstractBundle
             ->set('ux_image.provider_factory.null', NullProviderFactory::class)
             ->tag('ux_image.provider_factory', ['provider' => 'null']);
 
+        $container->parameters()
+            ->set('ux_image.provider_dsn', $config['provider'])
+            ->set('ux_image.formats', $config['formats']);
+
         $container->services()->get('ux_image.provider')->arg(0, $config['provider']);
         $container->services()->get('ux_image.renderer')->arg(2, $config['formats']);
         $container->services()->get('ux_image.layout_resolver')->arg(0, $config['resolutions']);
@@ -99,6 +105,11 @@ final class UXImageBundle extends AbstractBundle
                 $container->services()
                     ->set('ux_image.provider_factory.'.$name, $bridge['factory'])
                     ->tag('ux_image.provider_factory', ['provider' => $name]);
+
+                $services = \dirname(new \ReflectionClass($bridge['factory'])->getFileName(), 2).'/config/services.php';
+                if (is_file($services)) {
+                    $container->import($services);
+                }
             }
         }
     }

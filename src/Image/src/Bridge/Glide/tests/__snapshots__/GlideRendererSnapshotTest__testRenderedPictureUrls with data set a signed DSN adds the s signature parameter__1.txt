@@ -1,0 +1,42 @@
+src:
+/images/hero.jpg?w=800&h=450&fit=crop&fm=jpg&s=62ac12756788d2b01038d2f9ea5f1943
+
+srcset:
+/images/hero.jpg?w=640&h=360&fit=crop&fm=jpg&s=5cd5b23c2f687d7c72f7293ed4992184 640w
+/images/hero.jpg?w=750&h=422&fit=crop&fm=jpg&s=390610336f1a076bb0fa6db8dacad0b4 750w
+/images/hero.jpg?w=800&h=450&fit=crop&fm=jpg&s=62ac12756788d2b01038d2f9ea5f1943 800w
+/images/hero.jpg?w=828&h=466&fit=crop&fm=jpg&s=d5ac5554208593ad0f28e22f9caee06e 828w
+/images/hero.jpg?w=960&h=540&fit=crop&fm=jpg&s=ca82cac5dc5f7c82ab6b6f673912c855 960w
+/images/hero.jpg?w=1080&h=608&fit=crop&fm=jpg&s=ebeac19aa2d72cd1e0f63d0f9be9706d 1080w
+/images/hero.jpg?w=1280&h=720&fit=crop&fm=jpg&s=cf71199fb29e0014e179e6b2b50a041b 1280w
+/images/hero.jpg?w=1600&h=900&fit=crop&fm=jpg&s=fdf82b78e31a4ac097f79b62b76c8168 1600w
+
+source (image/avif):
+/images/hero.jpg?w=640&h=360&fit=crop&fm=avif&s=c2f4c88fad02751bdf97b9db694693f0 640w
+/images/hero.jpg?w=750&h=422&fit=crop&fm=avif&s=a8427ce0f09275192c4cc2713e6e71dd 750w
+/images/hero.jpg?w=800&h=450&fit=crop&fm=avif&s=e739a0d74681425f3383e42e0fd7e85f 800w
+/images/hero.jpg?w=828&h=466&fit=crop&fm=avif&s=8ee55d03a467c28bc40331065eca9fcc 828w
+/images/hero.jpg?w=960&h=540&fit=crop&fm=avif&s=6de60400667991f628689ce0e0939dac 960w
+/images/hero.jpg?w=1080&h=608&fit=crop&fm=avif&s=9b34cb7adeace64bf7161e367c85b961 1080w
+/images/hero.jpg?w=1280&h=720&fit=crop&fm=avif&s=25e40dd5d6e2266a0d1a62ae46db40d8 1280w
+/images/hero.jpg?w=1600&h=900&fit=crop&fm=avif&s=16983eb88ef42f6a966a7ce3da592c12 1600w
+
+source (image/webp):
+/images/hero.jpg?w=640&h=360&fit=crop&fm=webp&s=2effcee9e65a51c30772f0f9b605e661 640w
+/images/hero.jpg?w=750&h=422&fit=crop&fm=webp&s=cc5f8db8621097487ce7567c37ff118f 750w
+/images/hero.jpg?w=800&h=450&fit=crop&fm=webp&s=5ba369d0030918706e0e24d5b8483ce7 800w
+/images/hero.jpg?w=828&h=466&fit=crop&fm=webp&s=4b70c877e17c4b9688fe6cd3298fda09 828w
+/images/hero.jpg?w=960&h=540&fit=crop&fm=webp&s=bd4251e8c11aef16dd5fcff61aa7864b 960w
+/images/hero.jpg?w=1080&h=608&fit=crop&fm=webp&s=427fd49e9bee389985ddc9f8ef494993 1080w
+/images/hero.jpg?w=1280&h=720&fit=crop&fm=webp&s=42053d7bbf4333332002b62625fc8560 1280w
+/images/hero.jpg?w=1600&h=900&fit=crop&fm=webp&s=f07d8f530fdadd04f1ce38504b5d2e1f 1600w
+
+source (image/jpeg):
+/images/hero.jpg?w=640&h=360&fit=crop&fm=jpg&s=5cd5b23c2f687d7c72f7293ed4992184 640w
+/images/hero.jpg?w=750&h=422&fit=crop&fm=jpg&s=390610336f1a076bb0fa6db8dacad0b4 750w
+/images/hero.jpg?w=800&h=450&fit=crop&fm=jpg&s=62ac12756788d2b01038d2f9ea5f1943 800w
+/images/hero.jpg?w=828&h=466&fit=crop&fm=jpg&s=d5ac5554208593ad0f28e22f9caee06e 828w
+/images/hero.jpg?w=960&h=540&fit=crop&fm=jpg&s=ca82cac5dc5f7c82ab6b6f673912c855 960w
+/images/hero.jpg?w=1080&h=608&fit=crop&fm=jpg&s=ebeac19aa2d72cd1e0f63d0f9be9706d 1080w
+/images/hero.jpg?w=1280&h=720&fit=crop&fm=jpg&s=cf71199fb29e0014e179e6b2b50a041b 1280w
+/images/hero.jpg?w=1600&h=900&fit=crop&fm=jpg&s=fdf82b78e31a4ac097f79b62b76c8168 1600w

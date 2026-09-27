@@ -1,0 +1,70 @@
+src:
+/images/hero.jpg?w=800&h=450&fit=crop&fm=jpg
+
+srcset:
+/images/hero.jpg?w=640&h=360&fit=crop&fm=jpg 640w
+/images/hero.jpg?w=750&h=422&fit=crop&fm=jpg 750w
+/images/hero.jpg?w=828&h=466&fit=crop&fm=jpg 828w
+/images/hero.jpg?w=960&h=540&fit=crop&fm=jpg 960w
+/images/hero.jpg?w=1080&h=608&fit=crop&fm=jpg 1080w
+/images/hero.jpg?w=1280&h=720&fit=crop&fm=jpg 1280w
+/images/hero.jpg?w=1668&h=938&fit=crop&fm=jpg 1668w
+/images/hero.jpg?w=1920&h=1080&fit=crop&fm=jpg 1920w
+/images/hero.jpg?w=2048&h=1152&fit=crop&fm=jpg 2048w
+/images/hero.jpg?w=2560&h=1440&fit=crop&fm=jpg 2560w
+/images/hero.jpg?w=3200&h=1800&fit=crop&fm=jpg 3200w
+/images/hero.jpg?w=3840&h=2160&fit=crop&fm=jpg 3840w
+/images/hero.jpg?w=4480&h=2520&fit=crop&fm=jpg 4480w
+/images/hero.jpg?w=5120&h=2880&fit=crop&fm=jpg 5120w
+/images/hero.jpg?w=6016&h=3384&fit=crop&fm=jpg 6016w
+
+source (image/avif):
+/images/hero.jpg?w=640&h=360&fit=crop&fm=avif 640w
+/images/hero.jpg?w=750&h=422&fit=crop&fm=avif 750w
+/images/hero.jpg?w=828&h=466&fit=crop&fm=avif 828w
+/images/hero.jpg?w=960&h=540&fit=crop&fm=avif 960w
+/images/hero.jpg?w=1080&h=608&fit=crop&fm=avif 1080w
+/images/hero.jpg?w=1280&h=720&fit=crop&fm=avif 1280w
+/images/hero.jpg?w=1668&h=938&fit=crop&fm=avif 1668w
+/images/hero.jpg?w=1920&h=1080&fit=crop&fm=avif 1920w
+/images/hero.jpg?w=2048&h=1152&fit=crop&fm=avif 2048w
+/images/hero.jpg?w=2560&h=1440&fit=crop&fm=avif 2560w
+/images/hero.jpg?w=3200&h=1800&fit=crop&fm=avif 3200w
+/images/hero.jpg?w=3840&h=2160&fit=crop&fm=avif 3840w
+/images/hero.jpg?w=4480&h=2520&fit=crop&fm=avif 4480w
+/images/hero.jpg?w=5120&h=2880&fit=crop&fm=avif 5120w
+/images/hero.jpg?w=6016&h=3384&fit=crop&fm=avif 6016w
+
+source (image/webp):
+/images/hero.jpg?w=640&h=360&fit=crop&fm=webp 640w
+/images/hero.jpg?w=750&h=422&fit=crop&fm=webp 750w
+/images/hero.jpg?w=828&h=466&fit=crop&fm=webp 828w
+/images/hero.jpg?w=960&h=540&fit=crop&fm=webp 960w
+/images/hero.jpg?w=1080&h=608&fit=crop&fm=webp 1080w
+/images/hero.jpg?w=1280&h=720&fit=crop&fm=webp 1280w
+/images/hero.jpg?w=1668&h=938&fit=crop&fm=webp 1668w
+/images/hero.jpg?w=1920&h=1080&fit=crop&fm=webp 1920w
+/images/hero.jpg?w=2048&h=1152&fit=crop&fm=webp 2048w
+/images/hero.jpg?w=2560&h=1440&fit=crop&fm=webp 2560w
+/images/hero.jpg?w=3200&h=1800&fit=crop&fm=webp 3200w
+/images/hero.jpg?w=3840&h=2160&fit=crop&fm=webp 3840w
+/images/hero.jpg?w=4480&h=2520&fit=crop&fm=webp 4480w
+/images/hero.jpg?w=5120&h=2880&fit=crop&fm=webp 5120w
+/images/hero.jpg?w=6016&h=3384&fit=crop&fm=webp 6016w
+
+source (image/jpeg):
+/images/hero.jpg?w=640&h=360&fit=crop&fm=jpg 640w
+/images/hero.jpg?w=750&h=422&fit=crop&fm=jpg 750w
+/images/hero.jpg?w=828&h=466&fit=crop&fm=jpg 828w
+/images/hero.jpg?w=960&h=540&fit=crop&fm=jpg 960w
+/images/hero.jpg?w=1080&h=608&fit=crop&fm=jpg 1080w
+/images/hero.jpg?w=1280&h=720&fit=crop&fm=jpg 1280w
+/images/hero.jpg?w=1668&h=938&fit=crop&fm=jpg 1668w
+/images/hero.jpg?w=1920&h=1080&fit=crop&fm=jpg 1920w
+/images/hero.jpg?w=2048&h=1152&fit=crop&fm=jpg 2048w
+/images/hero.jpg?w=2560&h=1440&fit=crop&fm=jpg 2560w
+/images/hero.jpg?w=3200&h=1800&fit=crop&fm=jpg 3200w
+/images/hero.jpg?w=3840&h=2160&fit=crop&fm=jpg 3840w
+/images/hero.jpg?w=4480&h=2520&fit=crop&fm=jpg 4480w
+/images/hero.jpg?w=5120&h=2880&fit=crop&fm=jpg 5120w
+/images/hero.jpg?w=6016&h=3384&fit=crop&fm=jpg 6016w

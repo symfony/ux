@@ -12,6 +12,9 @@
 namespace Symfony\UX\Image\Tests\Integration;
 
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\Config\FileLocator;
+use Symfony\Component\Routing\Loader\PhpFileLoader;
+use Symfony\UX\Image\Bridge\Glide\Controller\GlideController;
 use Symfony\UX\Image\ImageTransformation;
 use Symfony\UX\Image\Provider\ProviderInterface;
 use Symfony\UX\Image\Tests\Fixtures\TestKernel;
@@ -19,6 +22,9 @@ use Symfony\UX\Image\Tests\Fixtures\TestKernel;
 /**
  * Boots a real, compiled and dumped container via {@see KernelTestCase}: a bare ContainerBuilder
  * hands "%env(...)%" placeholders an internal token, not the real value.
+ *
+ * GlideController is referenced here only by class name -- never autoloaded, since this package
+ * never Composer-requires a bridge. The Glide bridge's own DI wiring is tested in its own suite.
  */
 final class BundleInitializationTest extends KernelTestCase
 {
@@ -47,7 +53,9 @@ final class BundleInitializationTest extends KernelTestCase
         self::assertSame('hero.jpg', $provider->generateUrl(new ImageTransformation('hero.jpg')));
 
         self::assertFalse(self::getContainer()->has('ux_image.provider_factory.cloudflare'));
+        self::assertFalse(self::getContainer()->has('ux_image.provider_factory.glide'));
         self::assertFalse(self::getContainer()->has('ux_image.provider_factory.keycdn'));
+        self::assertFalse(self::getContainer()->has(GlideController::class));
     }
 
     public function testTheContainerCompilesWithABridgeAvailableAndItsProviderBecomesActive(): void
@@ -108,5 +116,19 @@ final class BundleInitializationTest extends KernelTestCase
         self::assertFalse($container->has('ux_image.twig_runtime'));
         self::assertFalse($container->has('.ux_image.twig_component.image'));
         self::assertSame('/uploads/og.jpg', $container->get('test.ux_image.url_generator')->generate('/uploads/og.jpg', 1200, 630));
+    }
+
+    public function testTheGlideRouteFileIsImportableWithoutTheGlideBridgeInstalled(): void
+    {
+        $loader = new PhpFileLoader(new FileLocator(\dirname(__DIR__, 2).'/config/routes'));
+        $routes = $loader->load('glide.php');
+
+        $route = $routes->get('ux_image_glide');
+
+        self::assertNotNull($route);
+        self::assertSame('/{path}', $route->getPath());
+        self::assertSame(GlideController::class, $route->getDefault('_controller'));
+        self::assertSame('.+', $route->getRequirement('path'));
+        self::assertSame(['GET', 'HEAD'], $route->getMethods());
     }
 }

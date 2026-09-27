@@ -3,7 +3,7 @@
 **EXPERIMENTAL** This component is currently experimental and is
 likely to change, or even change drastically.
 
-Symfony UX Image renders responsive images in Symfony applications by delegating transformations to a URL-based image provider, like Cloudflare or KeyCDN.
+Symfony UX Image renders responsive images in Symfony applications by delegating transformations to a URL-based image provider, like Glide, KeyCDN or Cloudflare.
 
 **This repository is a READ-ONLY sub-tree split**. See
 https://github.com/symfony/ux to create issues or submit pull requests.

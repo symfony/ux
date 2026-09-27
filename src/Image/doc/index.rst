@@ -6,12 +6,15 @@ to change, or even change drastically.
 
 Symfony UX Image renders responsive images in Symfony applications by
 delegating every transformation to a URL-based image provider, such as
-`Cloudflare`_ or `KeyCDN`_. It is part of `the Symfony UX initiative`_.
+`Cloudflare`_, `KeyCDN`_ or `Glide`_. It is part of
+`the Symfony UX initiative`_.
 
 The package never decodes, resizes or encodes an image itself. Every
 transformation is expressed as a URL, built by whichever provider is
 active; the package's own job is generating that URL, a ``srcset``, a
-``sizes`` attribute and a layout ``style``.
+``sizes`` attribute and a layout ``style``. The `Glide`_ bridge is the exception:
+it processes images inside your application, so it needs GD or Imagick, memory
+for each resize, and a cache directory.
 
 Installation
 ------------
@@ -137,7 +140,7 @@ through ``operations``, keyed by provider name:
 .. code-block:: html+twig
 
     <twig:ux:image src="/uploads/hero.jpg" alt="Hero" width="800"
-        :operations="{cloudflare: {sharpen: 1}, keycdn: {sharpen: 10}}" />
+        :operations="{cloudflare: {sharpen: 1}, keycdn: {sharpen: 10}, glide: {sharp: 10}}" />
 
 At render time, only ``operations[activeProviderName]`` is read; the rest is
 ignored. Keying by provider name is deliberate: the active DSN changes
@@ -238,6 +241,7 @@ installed. Install the one matching the scheme used in the DSN:
 ============== ================================================ ===========================================
 Scheme         Install                                          DSN example
 ============== ================================================ ===========================================
+``glide``      ``composer require symfony/ux-glide-image``      ``glide://default/images?source=…&cache=…``
 ``keycdn``     ``composer require symfony/ux-keycdn-image``     ``keycdn://myzone.kxcdn.com``
 ``cloudflare`` ``composer require symfony/ux-cloudflare-image`` ``cloudflare://cdn.example.com``
 ============== ================================================ ===========================================
@@ -257,8 +261,10 @@ intersected with the active provider's own supported formats (see
 * ``ux_picture()`` renders one ``<source>`` per surviving entry (see
   :ref:`Layout and rendering <image_layout_and_rendering>`);
 * ``ux_image()`` renders its single ``<img>`` in the last surviving entry,
-  unless the provider negotiates the format itself, like `Cloudflare`_ with
-  its own ``format=auto``; ``formats`` then has no effect on it.
+  unless the provider negotiates the format itself: `Cloudflare`_ picks it
+  with its own ``format=auto``, and ``formats`` has no effect there, while the
+  `Glide`_ controller picks among the surviving entries, with ``jpeg`` as the
+  last-resort fallback.
 
 An empty intersection throws an exception naming both lists, so asking a
 provider that cannot encode AVIF to serve only AVIF fails at first render
@@ -406,15 +412,15 @@ Parameter mapping
 Every ``ImageTransformation`` property maps to a provider-specific query
 parameter:
 
-=========================== ================== ==============
-``ImageTransformation``     `Cloudflare`_      `KeyCDN`_
-=========================== ================== ==============
-``width``                   ``width``          ``width``
-``height``                  ``height``         ``height``
-``format``                  ``format``         ``format``
-``quality``                 ``quality``        ``quality``
-``fit``: ``Fit::Cover``     ``fit=cover``      ``fit=cover``
-=========================== ================== ==============
+=========================== ============ ================== ==============
+``ImageTransformation``     `Glide`_     `Cloudflare`_      `KeyCDN`_
+=========================== ============ ================== ==============
+``width``                   ``w``        ``width``          ``width``
+``height``                  ``h``        ``height``         ``height``
+``format``                  ``fm``       ``format``         ``format``
+``quality``                 ``q``        ``quality``        ``quality``
+``fit``: ``Fit::Cover``     ``fit=crop`` ``fit=cover``      ``fit=cover``
+=========================== ============ ================== ==============
 
 ``Fit::Contain`` maps to ``fit=contain`` on every provider.
 
@@ -425,19 +431,98 @@ into the generated URL verbatim, once resolved for the active provider.
 Supported formats and negotiation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-============= ===================================== =========================
-Provider      Supported formats                     Negotiates automatically?
-============= ===================================== =========================
-`Cloudflare`_ ``avif``, ``webp``, ``jpeg``, ``png`` **Yes**
-`KeyCDN`_     ``webp``, ``jpeg``, ``png``           **No**
-============= ===================================== =========================
+============= ======================================================== =========================
+Provider      Supported formats                                        Negotiates automatically?
+============= ======================================================== =========================
+`Cloudflare`_ ``avif``, ``webp``, ``jpeg``, ``png``                    **Yes**
+`Glide`_      ``avif``, ``webp``, ``jpeg``, ``pjpg``, ``png``, ``gif`` **Yes**
+`KeyCDN`_     ``webp``, ``jpeg``, ``png``                              **No**
+============= ======================================================== =========================
 
-Cloudflare negotiates natively, through its own ``format=auto``. KeyCDN has
-no automatic format negotiation at all, and no AVIF support either: with it,
-``ux_image()`` serves the last configured format KeyCDN supports, and
-``ux_picture()`` is the way to offer WebP to the browsers that accept it (see
-:ref:`<img> or <picture> <image_img_or_picture>`).
+Cloudflare negotiates natively, through its own ``format=auto``. Glide has no
+such native value: negotiation is done by the controller this bridge ships,
+which resolves ``fm=auto`` from the request's ``Accept`` header itself (see
+below). Glide only offers the formats its driver can encode: with GD built
+without libavif, for example, AVIF is left out. KeyCDN has no automatic format
+negotiation at all, and no AVIF support either: with it, ``ux_image()`` serves
+the last configured format KeyCDN supports, and ``ux_picture()`` is the way to
+offer WebP to the browsers that accept it (see :ref:`<img> or <picture> <image_img_or_picture>`).
 
+Glide
+~~~~~
+
+`Glide`_ is the local, no-CDN provider: images are resized and encoded
+on-the-fly by your own application through a controller this bridge ships,
+from a source directory you control, with results cached to disk.
+
+.. code-block:: terminal
+
+    $ composer require symfony/ux-glide-image
+
+.. code-block:: bash
+
+    # .env
+    UX_IMAGE_DSN=glide://default/images?source=%kernel.project_dir%/public&cache=%kernel.project_dir%/var/glide-cache&sign_key=%env(UX_IMAGE_SIGN_KEY)%
+
+The signing key is a secret: generate a random one in the secrets vault. The
+``resolve:`` processor of the ``provider`` option expands the ``%env()%``
+reference nested in the DSN:
+
+.. code-block:: terminal
+
+    $ php bin/console secrets:set UX_IMAGE_SIGN_KEY --random
+
+The host (``default`` above) is always a placeholder, since Glide has no
+remote endpoint, only a local source and cache. What matters is the DSN's
+path and its query options:
+
+================== =======================================================================
+DSN part           Meaning
+================== =======================================================================
+path (``/images``) the URL prefix images are served under, e.g. ``/images/hero.jpg?w=800``
+``source``         absolute path to the public directory your images are served from, so that ``src`` is read the same way as by the other providers
+``cache``          absolute path to the directory Glide writes resized/encoded images to
+``sign_key``       required outside ``dev`` and ``test``; every request must then carry a valid ``s=`` signature
+``driver``         optional; ``gd`` by default, or ``imagick``
+``max_image_size`` optional; output pixel cap per image, ``25000000`` by default
+``max_age``        optional; how long, in seconds, browsers and proxies may cache a variant, ``31536000`` (a year) by default
+``visibility``     optional; ``public`` by default, or ``private`` for images shared caches must not keep
+================== =======================================================================
+
+The bridge ships a controller but not a route with a fixed prefix. **The
+prefix your application imports it under must match the DSN's path
+exactly**: the bundle has no way to enforce this at compile time, and a
+drift between the two means ``ux_image()`` generates URLs your own route
+cannot match:
+
+.. code-block:: yaml
+
+    # config/routes/ux_image_glide.yaml
+    ux_image_glide:
+        resource: '@UXImageBundle/config/routes/glide.php'
+        prefix: /images
+
+When ``sign_key`` is set, the controller validates the ``s=`` signature
+**server-side** before doing anything else: it is not merely generated and
+left unchecked. An unsigned request against a signed setup gets a plain 403,
+with no signature or key echoed back.
+
+The bridge requires a ``sign_key`` outside the ``dev`` and ``test``
+environments. Without one, the route would resize and cache whatever anyone
+asks it for, and every distinct parameter combination costs one encode and one
+new cache file. ``max_image_size`` caps how large a single output can get, since
+Glide scales an oversized request down to it rather than refusing it, but only a
+signature stops the request from being served at all.
+
+Extra operations, forwarded as-is: ``crop``, ``or``, ``bri``, ``con``,
+``gam``, ``sharp``, ``blur``, ``pixel``, ``filt``, ``bg``. See
+`Glide's own API reference`_ for what each one does. The controller
+drops any other query parameter, so a request cannot ask Glide for more than
+the provider generates.
+
+A cached variant is served as a file, with ``ETag`` and ``Last-Modified``
+headers: the web server can send it itself (``X-Sendfile`` or
+``X-Accel-Redirect``), and a browser revalidates it with a ``304``.
 Cloudflare
 ~~~~~~~~~~
 
@@ -530,6 +615,8 @@ The package supports PHP 8.4 or later and Symfony 7.4 or 8.x.
 
 .. _`the Symfony UX initiative`: https://ux.symfony.com/
 .. _`unpic`: https://github.com/ascorbic/unpic-img
+.. _`Glide`: https://github.com/symfony/ux/blob/3.x/src/Image/src/Bridge/Glide/README.md
+.. _`Glide's own API reference`: https://glide.thephpleague.com/4.0/api/quick-reference/
 .. _`Cloudflare`: https://github.com/symfony/ux/blob/3.x/src/Image/src/Bridge/Cloudflare/README.md
 .. _`Cloudflare Image Resizing`: https://developers.cloudflare.com/images/transform-images/
 .. _`Cloudflare's own options reference`: https://developers.cloudflare.com/images/transform-images/transform-via-url/#options
