@@ -98,4 +98,15 @@ final class BundleInitializationTest extends KernelTestCase
 
         self::assertSame('fake', $provider->getName());
     }
+
+    public function testTheBundleWorksWithoutTwig()
+    {
+        self::bootKernel(['environment' => 'no_twig']);
+
+        $container = self::getContainer();
+
+        self::assertFalse($container->has('ux_image.twig_runtime'));
+        self::assertFalse($container->has('.ux_image.twig_component.image'));
+        self::assertSame('/uploads/og.jpg', $container->get('test.ux_image.url_generator')->generate('/uploads/og.jpg', 1200, 630));
+    }
 }

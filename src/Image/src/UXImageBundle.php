@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\Image;
 
+use Symfony\Bundle\TwigBundle\TwigBundle;
 use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
@@ -20,6 +21,7 @@ use Symfony\UX\Image\Bridge\KeyCdn\KeyCdnProviderFactory;
 use Symfony\UX\Image\DependencyInjection\ProviderNamesPass;
 use Symfony\UX\Image\Provider\NullProviderFactory;
 use Symfony\UX\Image\Renderer\LayoutResolver;
+use Symfony\UX\TwigComponent\ComponentAttributes;
 
 /**
  * @author Hugo Alliaume <hugo@alliau.me>
@@ -74,7 +76,12 @@ final class UXImageBundle extends AbstractBundle
     public function loadExtension(array $config, ContainerConfigurator $container, ContainerBuilder $builder): void
     {
         $container->import('../config/services.php');
-        $container->import('../config/twig_component.php');
+
+        if (ContainerBuilder::willBeAvailable('symfony/twig-bundle', TwigBundle::class, ['symfony/ux-image'])
+            && ContainerBuilder::willBeAvailable('symfony/ux-twig-component', ComponentAttributes::class, ['symfony/ux-image'])) {
+            $container->import('../config/twig.php');
+            $container->import('../config/twig_component.php');
+        }
 
         $config['provider'] ??= 'null://null';
 

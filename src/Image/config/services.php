@@ -17,8 +17,6 @@ use Symfony\UX\Image\Provider\ProviderResolver;
 use Symfony\UX\Image\Renderer\ImageRenderer;
 use Symfony\UX\Image\Renderer\ImageRendererInterface;
 use Symfony\UX\Image\Renderer\LayoutResolver;
-use Symfony\UX\Image\Twig\ImageExtension;
-use Symfony\UX\Image\Twig\ImageRuntime;
 
 /*
  * @author Hugo Alliaume <hugo@alliau.me>
@@ -58,16 +56,5 @@ return static function (ContainerConfigurator $container): void {
         ->alias(ImageUrlGenerator::class, 'ux_image.url_generator')
 
         ->alias(ImageRendererInterface::class, 'ux_image.renderer')
-
-        ->set('ux_image.twig_extension', ImageExtension::class)
-            ->tag('twig.extension')
-
-        ->set('ux_image.twig_runtime', ImageRuntime::class)
-            ->args([
-                service('ux_image.renderer'),
-                service('ux_image.url_generator'),
-                service('twig'),
-            ])
-            ->tag('twig.runtime')
     ;
 };

@@ -16,6 +16,7 @@ use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Bundle\TwigBundle\TwigBundle;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\HttpKernel\Kernel;
+use Symfony\UX\Image\ImageUrlGenerator;
 use Symfony\UX\Image\UXImageBundle;
 use Symfony\UX\TwigComponent\TwigComponentBundle;
 
@@ -31,8 +32,10 @@ final class TestKernel extends Kernel
     public function registerBundles(): iterable
     {
         yield new FrameworkBundle();
-        yield new TwigBundle();
-        yield new TwigComponentBundle();
+        if ('no_twig' !== $this->environment) {
+            yield new TwigBundle();
+            yield new TwigComponentBundle();
+        }
         yield new UXImageBundle();
     }
 
@@ -46,25 +49,32 @@ final class TestKernel extends Kernel
             ...(self::VERSION_ID >= 60200 ? ['handle_all_throwables' => true] : []),
         ]);
 
-        $container->extension('twig', [
-            'default_path' => __DIR__.'/templates',
-            'strict_variables' => true,
-        ]);
+        if ('no_twig' !== $this->environment) {
+            $container->extension('twig', [
+                'default_path' => __DIR__.'/templates',
+                'strict_variables' => true,
+            ]);
 
-        $container->extension('twig_component', [
-            'defaults' => [],
-            'anonymous_template_directory' => 'components',
-        ]);
+            $container->extension('twig_component', [
+                'defaults' => [],
+                'anonymous_template_directory' => 'components',
+            ]);
+        }
 
         $container->extension('ux_image', match ($this->environment) {
             'no_auto_format' => ['provider' => 'fake://default?auto_format=0'],
             'bare' => [],
+            'no_twig' => [],
             'env_placeholder' => ['provider' => '%env(UX_IMAGE_DSN)%'],
             'default_placeholder' => ['provider' => '%env(resolve:default::UX_IMAGE_DSN)%'],
             default => ['provider' => 'fake://default'],
         });
 
-        if ('bare' !== $this->environment) {
+        if ('no_twig' === $this->environment) {
+            $container->services()->alias('test.ux_image.url_generator', ImageUrlGenerator::class)->public();
+        }
+
+        if (!\in_array($this->environment, ['bare', 'no_twig'], true)) {
             $container->services()
                 ->set('test.ux_image.provider_factory.fake', FakeProviderFactory::class)
                     ->tag('ux_image.provider_factory', ['name' => 'fake'])

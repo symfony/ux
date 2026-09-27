@@ -82,29 +82,28 @@ final class ImageRendererTest extends TestCase
         $rendered = $this->renderer()->render('hero.jpg', '', new RenderOptions(width: 800, height: 450));
 
         self::assertSame('(min-width: 800px) 800px, 100vw', $rendered->imgAttributes['sizes']);
-        self::assertStringContainsString('aspect-ratio: 800 / 450', $rendered->imgAttributes['style']->getValue());
+        self::assertSame('800 / 450', $rendered->imgAttributes['style']['aspect-ratio']);
     }
 
     public function testTheCssObjectFitMirrorsTheRequestedFitSoTheProviderCropIsNotRedoneByTheBrowser()
     {
         $rendered = $this->renderer()->render('hero.jpg', '', new RenderOptions(width: 400, height: 400, fit: Fit::Contain));
 
-        self::assertStringContainsString('object-fit: contain', $rendered->imgAttributes['style']->getValue());
+        self::assertSame('contain', $rendered->imgAttributes['style']['object-fit']);
     }
 
     public function testAnExplicitObjectFitStillWinsOverTheOneDerivedFromFit()
     {
         $rendered = $this->renderer()->render('hero.jpg', '', new RenderOptions(width: 400, height: 400, fit: Fit::Contain, objectFit: 'none'));
 
-        self::assertStringContainsString('object-fit: none', $rendered->imgAttributes['style']->getValue());
-        self::assertStringNotContainsString('object-fit: contain', $rendered->imgAttributes['style']->getValue());
+        self::assertSame('none', $rendered->imgAttributes['style']['object-fit']);
     }
 
     public function testWithoutAFitTheCssStillDefaultsToCover()
     {
         $rendered = $this->renderer()->render('hero.jpg', '', new RenderOptions(layout: Layout::FullWidth, height: 600));
 
-        self::assertStringContainsString('object-fit: cover', $rendered->imgAttributes['style']->getValue());
+        self::assertSame('cover', $rendered->imgAttributes['style']['object-fit']);
     }
 
     public function testAnImageIsOnlyLazyLoadedByDefault()
@@ -239,7 +238,7 @@ final class ImageRendererTest extends TestCase
         self::assertArrayNotHasKey('sizes', $rendered->imgAttributes);
         self::assertSame('800', $rendered->imgAttributes['width']);
         self::assertSame('450', $rendered->imgAttributes['height']);
-        self::assertStringContainsString('aspect-ratio: 800 / 450', $rendered->imgAttributes['style']->getValue());
+        self::assertSame('800 / 450', $rendered->imgAttributes['style']['aspect-ratio']);
     }
 
     public function testItPassesOnlyTheActiveProviderOperations()
@@ -309,7 +308,7 @@ final class ImageRendererTest extends TestCase
         self::assertStringContainsString('6016w', $rendered->imgAttributes['srcset']);
         self::assertSame('100vw', $rendered->imgAttributes['sizes']);
         self::assertArrayNotHasKey('width', $rendered->imgAttributes);
-        self::assertStringContainsString('height: 600px', $rendered->imgAttributes['style']->getValue());
+        self::assertSame('600px', $rendered->imgAttributes['style']['height']);
     }
 
     public function testFullWidthSrcDoesNotFallBackToTheTopOfTheResolutionLadder()

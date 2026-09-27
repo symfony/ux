@@ -26,7 +26,10 @@ final class ImageMarkup
 {
     public static function img(RenderedImage $rendered, ComponentAttributes $attributes): string
     {
-        return '<img'.$attributes->defaults($rendered->imgAttributes).' />';
+        $imgAttributes = $rendered->imgAttributes;
+        $imgAttributes['style'] = new InlineStyle($imgAttributes['style'] ?? []);
+
+        return '<img'.$attributes->defaults($imgAttributes).' />';
     }
 
     public static function picture(RenderedImage $rendered, ComponentAttributes $attributes): string

@@ -11,16 +11,14 @@
 
 namespace Symfony\UX\Image\Renderer;
 
-use Twig\Extra\Html\HtmlAttr\InlineStyle;
-
 /**
  * @author Hugo Alliaume <hugo@alliau.me>
  */
 final class RenderedImage
 {
     /**
-     * @param list<array{type: string, srcset: string}> $sources       empty means a plain <img>
-     * @param array<string, string|InlineStyle>         $imgAttributes
+     * @param list<array{type: string, srcset: string}>   $sources       the <source> elements of a <picture>
+     * @param array<string, string|array<string, string>> $imgAttributes the <img> attributes; "style" maps CSS properties to values
      */
     public function __construct(
         public readonly array $sources,

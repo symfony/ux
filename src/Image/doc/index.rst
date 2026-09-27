@@ -28,6 +28,16 @@ Then install one of the provider bridges, for example `Cloudflare`_:
 
     $ composer require symfony/ux-cloudflare-image
 
+The Twig functions and the ``<twig:ux:image>`` and ``<twig:ux:picture>``
+components need ``symfony/ux-twig-component``. Without it, the bundle still
+provides the ``ImageUrlGenerator`` service (see
+:ref:`Getting a single URL <image_single_url>`), which is enough for an API or
+a worker:
+
+.. code-block:: terminal
+
+    $ composer require symfony/ux-twig-component
+
 Rendering an image
 ------------------
 
@@ -131,6 +141,8 @@ an ``InvalidArgumentException`` naming the provider's supported list. A key
 that names no installed provider throws as well, so a typo such as
 ``cloudfare`` fails in development rather than being silently ignored in
 production.
+
+.. _image_single_url:
 
 Getting a single URL
 ~~~~~~~~~~~~~~~~~~~~

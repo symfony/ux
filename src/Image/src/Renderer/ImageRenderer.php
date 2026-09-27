@@ -15,7 +15,6 @@ use Symfony\UX\Image\Exception\LogicException;
 use Symfony\UX\Image\ImageUrlGenerator;
 use Symfony\UX\Image\Provider\NullProvider;
 use Symfony\UX\Image\Provider\ProviderInterface;
-use Twig\Extra\Html\HtmlAttr\InlineStyle;
 
 /**
  * @author Hugo Alliaume <hugo@alliau.me>
@@ -92,7 +91,7 @@ final class ImageRenderer implements ImageRendererInterface
     }
 
     /**
-     * @return array<string, string|InlineStyle>
+     * @return array<string, string|array<string, string>>
      */
     private function commonAttributes(RenderOptions $options): array
     {
@@ -107,7 +106,7 @@ final class ImageRenderer implements ImageRendererInterface
         if (null !== $options->height) {
             $attributes['height'] = (string) $options->height;
         }
-        $attributes['style'] = new InlineStyle($this->layoutResolver->style($options->layout, $options->width, $options->height, $options->objectFit ?? $options->fit?->value ?? 'cover'));
+        $attributes['style'] = $this->layoutResolver->style($options->layout, $options->width, $options->height, $options->objectFit ?? $options->fit?->value ?? 'cover');
 
         return $attributes;
     }
