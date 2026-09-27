@@ -182,7 +182,7 @@ final class BreadcrumbListenerTest extends KernelTestCase
         self::assertArrayHasKey('product', $trail->context, 'A root crumb naming an argument must pin it on the trail.');
     }
 
-    public function testAnArgumentNamedOnlyByAnExpressionLabelIsKeptInTheContext(): void
+    public function testAnArgumentNamedOnlyByALabelPlaceholderIsKeptInTheContext(): void
     {
         $trail = $this->handle('/products/blue-sneakers/name');
 

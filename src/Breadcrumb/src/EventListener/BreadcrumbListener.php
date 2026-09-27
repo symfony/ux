@@ -18,6 +18,7 @@ use Symfony\Component\HttpKernel\Event\ControllerArgumentsEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\UX\Breadcrumb\Attribute\Breadcrumb;
 use Symfony\UX\Breadcrumb\BreadcrumbTrail;
+use Symfony\UX\Breadcrumb\LabelPattern;
 use Symfony\UX\Breadcrumb\ParentCrumbCollector;
 use Symfony\UX\Breadcrumb\RootCrumbProviderInterface;
 
@@ -111,7 +112,7 @@ final class BreadcrumbListener implements EventSubscriberInterface
     }
 
     /**
-     * Keeps only the controller arguments a crumb expression (label or parameter) actually names, so the trail does not pin the whole argument list (notably the Request) into the request attributes until render time.
+     * Keeps only the controller arguments a crumb expression or label placeholder actually names, so the trail does not pin the whole argument list (notably the Request) into the request attributes until render time.
      *
      * A superset is harmless. Over-keeping a name never breaks evaluation, whereas dropping a referenced one would.
      *
@@ -128,6 +129,12 @@ final class BreadcrumbListener implements EventSubscriberInterface
 
         $referenced = [];
         foreach ($crumbs as $crumb) {
+            if (\is_string($crumb->label)) {
+                foreach (LabelPattern::arguments($crumb->label) as $name) {
+                    $referenced[$name] = true;
+                }
+            }
+
             foreach ([$crumb->label, ...$crumb->parameters, ...$crumb->translationParameters] as $expression) {
                 if ($expression instanceof Expression && preg_match_all('/[a-zA-Z_]\w*/', (string) $expression, $matches)) {
                     foreach ($matches[0] as $name) {
