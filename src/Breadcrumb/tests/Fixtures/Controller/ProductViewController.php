@@ -11,29 +11,30 @@
 
 namespace Symfony\UX\Breadcrumb\Tests\Fixtures\Controller;
 
+use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\UX\Breadcrumb\Attribute\Breadcrumb;
 use Symfony\UX\Breadcrumb\Tests\Fixtures\Product;
 use Symfony\UX\Breadcrumb\Tests\Fixtures\RouteName;
 
 /**
- * A three-level trail exercising every parameter bag at once: a query parameter
+ * A three-level trail exercising every kind of parameter at once: a query parameter
  * evaluated from a controller argument, an inherited route parameter, and ICU
  * translation parameters on the current page.
  */
 #[Breadcrumb(
     label: 'product.index.breadcrumb',
     route: RouteName::ProductIndex->value,
-    computedParameters: [
-        'state' => 'product.state',
+    parameters: [
+        'state' => new Expression('product.state'),
     ],
 )]
 #[Breadcrumb(
     label: 'product.view.breadcrumb',
     route: RouteName::ProductView->value,
-    inheritedParameters: ['slug'],
+    parameters: ['slug'],
     translationParameters: [
-        'released_at' => 'product.releasedAt',
+        'released_at' => new Expression('product.releasedAt'),
     ],
 )]
 final class ProductViewController

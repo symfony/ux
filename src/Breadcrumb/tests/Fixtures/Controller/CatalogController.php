@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\Breadcrumb\Tests\Fixtures\Controller;
 
+use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\UX\Breadcrumb\Attribute\Breadcrumb;
 use Symfony\UX\Breadcrumb\Tests\Fixtures\Product;
@@ -26,15 +27,15 @@ final class CatalogController
     #[Breadcrumb(
         label: 'product.view.breadcrumb',
         route: 'catalog_view',
-        inheritedParameters: ['slug'],
-        translationParameters: ['released_at' => 'product.releasedAt'],
+        parameters: ['slug'],
+        translationParameters: ['released_at' => new Expression('product.releasedAt')],
     )]
     public function view(Product $product): Response
     {
         return new Response($product->name);
     }
 
-    #[Breadcrumb(label: 'product.edit.breadcrumb', route: 'catalog_edit', inheritedParameters: ['slug'], parent: 'catalog_view')]
+    #[Breadcrumb(label: 'product.edit.breadcrumb', route: 'catalog_edit', parameters: ['slug'], parent: 'catalog_view')]
     public function edit(Product $product): Response
     {
         return new Response($product->name);

@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\Breadcrumb;
 
+use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -111,11 +112,7 @@ final class BreadcrumbResolver
             // Evaluation belongs inside the try: a failing expression must degrade, not throw.
             $parameters = $isCurrent && null === $crumb->route
                 ? $trail->routeParameters
-                : array_merge(
-                    $this->inheritedParameters($crumb, $trail),
-                    $crumb->parameters,
-                    $this->evaluate($crumb->computedParameters, $trail->context),
-                );
+                : $this->urlParameters($crumb, $trail);
 
             return $this->urlGenerator->generate($route, $parameters, $referenceType);
         } catch (\Throwable) {
@@ -133,30 +130,38 @@ final class BreadcrumbResolver
     }
 
     /**
-     * `Breadcrumb::$inheritedParameters` is a list of names to take from the matched route, not a map of values.
+     * A bare name is taken from the matched route and skipped when the route has none. The keyed entries come after, so they win over a bare name.
      *
      * @return array<string, mixed>
      */
-    private function inheritedParameters(Breadcrumb $crumb, BreadcrumbTrail $trail): array
+    private function urlParameters(Breadcrumb $crumb, BreadcrumbTrail $trail): array
     {
-        return array_filter(
-            $trail->routeParameters,
-            static fn (string $key): bool => \in_array($key, $crumb->inheritedParameters, true),
-            \ARRAY_FILTER_USE_KEY,
-        );
+        $inherited = [];
+        $keyed = [];
+        foreach ($crumb->parameters as $key => $value) {
+            if (!\is_int($key)) {
+                $keyed[$key] = $value;
+            } elseif (\is_string($value) && \array_key_exists($value, $trail->routeParameters)) {
+                $inherited[$value] = $trail->routeParameters[$value];
+            }
+        }
+
+        return [...$inherited, ...$this->evaluate($keyed, $trail->context)];
     }
 
     /**
-     * @param array<string, string> $expressions
-     * @param array<string, mixed>  $context
+     * Evaluates the Expression values and keeps the others as given.
+     *
+     * @param array<string, mixed> $values
+     * @param array<string, mixed> $context
      *
      * @return array<string, mixed>
      */
-    private function evaluate(array $expressions, array $context): array
+    private function evaluate(array $values, array $context): array
     {
         return array_map(
-            fn (string $expression): mixed => $this->expressionLanguage->evaluate($expression, $context),
-            $expressions,
+            fn (mixed $value): mixed => $value instanceof Expression ? $this->expressionLanguage->evaluate($value, $context) : $value,
+            $values,
         );
     }
 }
