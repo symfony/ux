@@ -478,6 +478,30 @@ Extra operations, forwarded as-is: ``position``, ``enlarge``, ``trim``,
 ``gamma``, ``grayscale``, ``progressive``, ``lossless``, ``metadata``. See
 `KeyCDN's own parameter reference`_ for what each one does.
 
+Writing your own provider
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+A provider implements ``Symfony\UX\Image\Provider\ProviderInterface`` and is
+built from the DSN by a factory implementing
+``Symfony\UX\Image\Provider\ProviderFactoryInterface``. Extending
+``Symfony\UX\Image\Provider\AbstractProviderFactory`` gives the factory the
+scheme matching and the DSN option checks.
+
+Register the factory with the ``ux_image.provider_factory`` tag, and a
+``provider`` attribute holding the provider's name, which is both its DSN
+scheme and its ``operations`` key:
+
+.. code-block:: yaml
+
+    # config/services.yaml
+    services:
+        App\Image\MyCdnProviderFactory:
+            tags:
+                - { name: 'ux_image.provider_factory', provider: 'mycdn' }
+
+Without the ``provider`` attribute, the factory still works, but
+``operations`` keys are no longer checked against the installed providers.
+
 The package supports PHP 8.4 or later and Symfony 7.4 or 8.x.
 
 .. _`the Symfony UX initiative`: https://ux.symfony.com/
