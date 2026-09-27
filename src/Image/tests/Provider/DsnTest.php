@@ -17,7 +17,7 @@ use Symfony\UX\Image\Provider\Dsn;
 
 final class DsnTest extends TestCase
 {
-    public function testItParsesAHostOnlyDsn()
+    public function testItParsesAHostOnlyDsn(): void
     {
         $dsn = new Dsn('cloudflare://cdn.example.com');
 
@@ -26,7 +26,7 @@ final class DsnTest extends TestCase
         self::assertNull($dsn->getPath());
     }
 
-    public function testItParsesADsnWithAPlaceholderHostAPathAndOptions()
+    public function testItParsesADsnWithAPlaceholderHostAPathAndOptions(): void
     {
         $dsn = new Dsn('glide://default/images?source=/app/public/uploads&sign_key=s3cret');
 
@@ -39,7 +39,7 @@ final class DsnTest extends TestCase
         self::assertSame('fallback', $dsn->getOption('cache', 'fallback'));
     }
 
-    public function testItRejectsADsnWithoutAScheme()
+    public function testItRejectsADsnWithoutAScheme(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('The image provider DSN must contain a scheme.');
@@ -47,12 +47,12 @@ final class DsnTest extends TestCase
         new Dsn('cdn.example.com');
     }
 
-    public function testItKeepsTheOriginalDsn()
+    public function testItKeepsTheOriginalDsn(): void
     {
         self::assertSame('keycdn://zone.kxcdn.com', new Dsn('keycdn://zone.kxcdn.com')->getOriginalDsn());
     }
 
-    public function testItParsesASchemeOnlyDsnWithoutAHost()
+    public function testItParsesASchemeOnlyDsnWithoutAHost(): void
     {
         $dsn = new Dsn('cloudflare:');
 
@@ -61,7 +61,7 @@ final class DsnTest extends TestCase
         self::assertNull($dsn->getPath());
     }
 
-    public function testItRejectsAnEmptyAuthorityDsn()
+    public function testItRejectsAnEmptyAuthorityDsn(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('The image provider DSN is invalid.');

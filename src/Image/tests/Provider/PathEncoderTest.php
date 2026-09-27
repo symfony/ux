@@ -18,7 +18,7 @@ use Symfony\UX\Image\Provider\PathEncoder;
 final class PathEncoderTest extends TestCase
 {
     #[DataProvider('providePaths')]
-    public function testEncode(string $input, string $expected)
+    public function testEncode(string $input, string $expected): void
     {
         $this->assertSame($expected, PathEncoder::encode($input));
     }

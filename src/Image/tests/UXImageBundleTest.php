@@ -16,7 +16,7 @@ use Symfony\UX\Image\UXImageBundle;
 
 final class UXImageBundleTest extends TestCase
 {
-    public function testBundleHasTheExpectedExtensionAlias()
+    public function testBundleHasTheExpectedExtensionAlias(): void
     {
         self::assertSame('ux_image', new UXImageBundle()->getContainerExtension()->getAlias());
     }

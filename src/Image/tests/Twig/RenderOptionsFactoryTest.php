@@ -19,7 +19,7 @@ use Symfony\UX\Image\Twig\RenderOptionsFactory;
 
 final class RenderOptionsFactoryTest extends TestCase
 {
-    public function testItConvertsTheLayoutAndFitStringsToEnums()
+    public function testItConvertsTheLayoutAndFitStringsToEnums(): void
     {
         $options = RenderOptionsFactory::create(layout: 'fixed', width: 400, fit: 'contain');
 
@@ -27,19 +27,19 @@ final class RenderOptionsFactoryTest extends TestCase
         self::assertSame(Fit::Contain, $options->fit);
     }
 
-    public function testFitStaysNullWhenNotProvided()
+    public function testFitStaysNullWhenNotProvided(): void
     {
         $options = RenderOptionsFactory::create(width: 400);
 
         self::assertNull($options->fit);
     }
 
-    public function testItCarriesAnExplicitFormat()
+    public function testItCarriesAnExplicitFormat(): void
     {
         self::assertSame('webp', RenderOptionsFactory::create(width: 400, format: 'webp')->format);
     }
 
-    public function testAnUnknownOptionKeyFailsClearly()
+    public function testAnUnknownOptionKeyFailsClearly(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Unknown image option "class": expected one of "layout", "width", "height", "fit", "format", "quality", "priority", "objectFit", "breakpoints", "operations".');
@@ -47,7 +47,7 @@ final class RenderOptionsFactoryTest extends TestCase
         RenderOptionsFactory::createFromArray(['width' => 400, 'class' => 'rounded']);
     }
 
-    public function testAnInvalidLayoutFailsClearly()
+    public function testAnInvalidLayoutFailsClearly(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Invalid "layout" value "not-a-layout": expected one of "fixed", "constrained", "full-width".');
@@ -55,7 +55,7 @@ final class RenderOptionsFactoryTest extends TestCase
         RenderOptionsFactory::create(layout: 'not-a-layout', width: 400);
     }
 
-    public function testAnInvalidFitFailsClearly()
+    public function testAnInvalidFitFailsClearly(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Invalid "fit" value "not-a-fit": expected one of "cover", "contain".');
@@ -63,7 +63,7 @@ final class RenderOptionsFactoryTest extends TestCase
         RenderOptionsFactory::create(width: 400, fit: 'not-a-fit');
     }
 
-    public function testScaleDownIsNotAFit()
+    public function testScaleDownIsNotAFit(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Invalid "fit" value "scale-down": expected one of "cover", "contain".');

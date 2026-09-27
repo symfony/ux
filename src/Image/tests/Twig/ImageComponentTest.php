@@ -24,7 +24,7 @@ final class ImageComponentTest extends KernelTestCase
         return TestKernel::class;
     }
 
-    public function testItRendersASingleImgForAnAutoFormatProvider()
+    public function testItRendersASingleImgForAnAutoFormatProvider(): void
     {
         $html = $this->renderComponent(['src' => '/hero.jpg', 'alt' => 'Hero', 'width' => 800, 'height' => 450]);
 
@@ -33,7 +33,7 @@ final class ImageComponentTest extends KernelTestCase
         self::assertStringContainsString('aspect-ratio: 800 / 450', $html);
     }
 
-    public function testItRendersAnImgEvenWhenTheProviderDoesNotNegotiateTheFormat()
+    public function testItRendersAnImgEvenWhenTheProviderDoesNotNegotiateTheFormat(): void
     {
         $html = $this->renderComponent(['src' => '/hero.jpg', 'alt' => '', 'width' => 800], autoFormat: false);
 
@@ -41,7 +41,7 @@ final class ImageComponentTest extends KernelTestCase
         self::assertStringNotContainsString('<picture>', $html);
     }
 
-    public function testThePictureComponentRendersAPictureEvenWhenTheProviderNegotiatesTheFormat()
+    public function testThePictureComponentRendersAPictureEvenWhenTheProviderNegotiatesTheFormat(): void
     {
         $html = $this->renderComponent(['src' => '/hero.jpg', 'alt' => '', 'width' => 800], component: 'ux:picture');
 
@@ -52,7 +52,7 @@ final class ImageComponentTest extends KernelTestCase
         self::assertStringEndsWith('</picture>', $html);
     }
 
-    public function testAnExplicitFormatPropRendersASingleImgInsteadOfAPicture()
+    public function testAnExplicitFormatPropRendersASingleImgInsteadOfAPicture(): void
     {
         $html = $this->renderComponent(['src' => '/hero.jpg', 'alt' => '', 'width' => 800, 'format' => 'webp'], autoFormat: false);
 
@@ -62,7 +62,7 @@ final class ImageComponentTest extends KernelTestCase
         self::assertStringContainsString('fm=webp', $html);
     }
 
-    public function testCallerAttributesAreRendered()
+    public function testCallerAttributesAreRendered(): void
     {
         $html = $this->renderComponent(['src' => '/hero.jpg', 'alt' => '', 'width' => 800, 'class' => 'rounded', 'data-test' => '1']);
 
@@ -70,7 +70,7 @@ final class ImageComponentTest extends KernelTestCase
         self::assertStringContainsString('data-test="1"', $html);
     }
 
-    public function testACallerStyleMergesIntoTheLayoutStyle()
+    public function testACallerStyleMergesIntoTheLayoutStyle(): void
     {
         $html = $this->renderComponent(['src' => '/hero.jpg', 'alt' => '', 'width' => 800, 'height' => 450, 'style' => ['border-radius' => '8px']]);
 
@@ -78,7 +78,7 @@ final class ImageComponentTest extends KernelTestCase
         self::assertStringContainsString('border-radius: 8px', $html);
     }
 
-    public function testACallerStringStyleMergesIntoTheLayoutStyle()
+    public function testACallerStringStyleMergesIntoTheLayoutStyle(): void
     {
         $html = $this->renderComponent(['src' => '/hero.jpg', 'alt' => '', 'width' => 800, 'height' => 450, 'style' => 'border-radius: 8px']);
 
@@ -86,7 +86,7 @@ final class ImageComponentTest extends KernelTestCase
         self::assertStringContainsString('border-radius: 8px', $html);
     }
 
-    public function testACallerSizesOverridesEverySourceAndTheImgInThePictureBranch()
+    public function testACallerSizesOverridesEverySourceAndTheImgInThePictureBranch(): void
     {
         $html = $this->renderComponent(['src' => '/hero.jpg', 'alt' => '', 'width' => 800, 'sizes' => '50vw'], component: 'ux:picture');
 
@@ -94,7 +94,7 @@ final class ImageComponentTest extends KernelTestCase
         self::assertStringNotContainsString('100vw', $html);
     }
 
-    public function testAnInvalidLayoutFailsClearly()
+    public function testAnInvalidLayoutFailsClearly(): void
     {
         try {
             $this->renderComponent(['src' => '/hero.jpg', 'alt' => '', 'width' => 800, 'layout' => 'not-a-layout']);

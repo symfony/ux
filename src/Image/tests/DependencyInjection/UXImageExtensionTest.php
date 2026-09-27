@@ -36,7 +36,7 @@ final class UXImageExtensionTest extends TestCase
         UXImageBundle::$bridges = $this->originalBridges;
     }
 
-    public function testItRegistersTheRendererWithTheConfiguredFormats()
+    public function testItRegistersTheRendererWithTheConfiguredFormats(): void
     {
         $container = $this->buildContainer(['provider' => 'fake://default', 'formats' => ['webp', 'jpeg']]);
 
@@ -44,12 +44,12 @@ final class UXImageExtensionTest extends TestCase
         self::assertSame(['webp', 'jpeg'], $container->getDefinition('ux_image.renderer')->getArgument(2));
     }
 
-    public function testTheDefaultFormatsAreAvifWebpJpeg()
+    public function testTheDefaultFormatsAreAvifWebpJpeg(): void
     {
         self::assertSame(['avif', 'webp', 'jpeg'], $this->buildContainer([])->getDefinition('ux_image.renderer')->getArgument(2));
     }
 
-    public function testItRegistersTheLayoutResolverWithTheConfiguredResolutions()
+    public function testItRegistersTheLayoutResolverWithTheConfiguredResolutions(): void
     {
         $container = $this->buildContainer(['provider' => 'fake://default', 'resolutions' => [1600, 800, 400]]);
 
@@ -57,12 +57,12 @@ final class UXImageExtensionTest extends TestCase
         self::assertSame([1600, 800, 400], $container->getDefinition('ux_image.layout_resolver')->getArgument(0));
     }
 
-    public function testTheDefaultResolutionsAreTheUnpicLadder()
+    public function testTheDefaultResolutionsAreTheUnpicLadder(): void
     {
         self::assertSame(LayoutResolver::DEFAULT_RESOLUTIONS, $this->buildContainer([])->getDefinition('ux_image.layout_resolver')->getArgument(0));
     }
 
-    public function testItFallsBackToTheNullProviderWhenNoDsnIsConfigured()
+    public function testItFallsBackToTheNullProviderWhenNoDsnIsConfigured(): void
     {
         $container = $this->buildContainer([]);
 
@@ -71,28 +71,28 @@ final class UXImageExtensionTest extends TestCase
         self::assertTrue($container->getDefinition('ux_image.provider_factory.null')->hasTag('ux_image.provider_factory'));
     }
 
-    public function testItRegistersTheNullProviderEvenWhenADsnIsConfigured()
+    public function testItRegistersTheNullProviderEvenWhenADsnIsConfigured(): void
     {
         $container = $this->buildContainer(['provider' => 'fake://default']);
 
         self::assertTrue($container->hasDefinition('ux_image.provider_factory.null'));
     }
 
-    public function testTheDefaultDsnReachesTheProviderService()
+    public function testTheDefaultDsnReachesTheProviderService(): void
     {
         $container = $this->buildContainer([]);
 
         self::assertSame('null://null', $container->getDefinition('ux_image.provider')->getArgument(0));
     }
 
-    public function testTheConfiguredDsnReachesTheProviderService()
+    public function testTheConfiguredDsnReachesTheProviderService(): void
     {
         $container = $this->buildContainer(['provider' => 'fake://default']);
 
         self::assertSame('fake://default', $container->getDefinition('ux_image.provider')->getArgument(0));
     }
 
-    public function testTheRendererInterfaceIsAliasedToTheRendererService()
+    public function testTheRendererInterfaceIsAliasedToTheRendererService(): void
     {
         $container = $this->buildContainer([]);
 
@@ -100,7 +100,7 @@ final class UXImageExtensionTest extends TestCase
         self::assertSame('ux_image.renderer', (string) $container->getAlias(ImageRendererInterface::class));
     }
 
-    public function testItRegistersATaggedProviderFactoryForEachAvailableBridge()
+    public function testItRegistersATaggedProviderFactoryForEachAvailableBridge(): void
     {
         UXImageBundle::$bridges = ['fake' => ['factory' => FakeProviderFactory::class]];
 
@@ -111,7 +111,7 @@ final class UXImageExtensionTest extends TestCase
         self::assertTrue($container->getDefinition('ux_image.provider_factory.fake')->hasTag('ux_image.provider_factory'));
     }
 
-    public function testProviderFactoriesAreTaggedWithTheirName()
+    public function testProviderFactoriesAreTaggedWithTheirName(): void
     {
         UXImageBundle::$bridges = ['fake' => ['factory' => FakeProviderFactory::class]];
 
@@ -121,7 +121,7 @@ final class UXImageExtensionTest extends TestCase
         self::assertSame([['provider' => 'fake']], $container->getDefinition('ux_image.provider_factory.fake')->getTag('ux_image.provider_factory'));
     }
 
-    public function testTheUrlGeneratorIsAutowirable()
+    public function testTheUrlGeneratorIsAutowirable(): void
     {
         $container = $this->buildContainer([]);
 
@@ -129,19 +129,19 @@ final class UXImageExtensionTest extends TestCase
         self::assertSame(ImageUrlGenerator::class, $container->getDefinition('ux_image.url_generator')->getClass());
     }
 
-    public function testTheConfiguredQualityReachesTheUrlGenerator()
+    public function testTheConfiguredQualityReachesTheUrlGenerator(): void
     {
         $container = $this->buildContainer(['quality' => 75]);
 
         self::assertSame(75, $container->getDefinition('ux_image.url_generator')->getArgument('$defaultQuality'));
     }
 
-    public function testTheQualityDefaultsToTheProviders()
+    public function testTheQualityDefaultsToTheProviders(): void
     {
         self::assertNull($this->buildContainer([])->getDefinition('ux_image.url_generator')->getArgument('$defaultQuality'));
     }
 
-    public function testAQualityOutOfRangeIsRejected()
+    public function testAQualityOutOfRangeIsRejected(): void
     {
         $this->expectException(InvalidConfigurationException::class);
         $this->expectExceptionMessage('The value 0 is too small for path "ux_image.quality".');

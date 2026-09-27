@@ -19,7 +19,7 @@ use Symfony\UX\Image\ImageTransformation;
 
 final class ImageTransformationTest extends TestCase
 {
-    public function testItKeepsTheGivenValues()
+    public function testItKeepsTheGivenValues(): void
     {
         $t = new ImageTransformation('hero.jpg', width: 800, height: 450, fit: Fit::Cover, format: 'webp', quality: 80);
 
@@ -32,7 +32,7 @@ final class ImageTransformationTest extends TestCase
         self::assertSame([], $t->operations);
     }
 
-    public function testItRejectsAnEmptyPath()
+    public function testItRejectsAnEmptyPath(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('The image path must not be empty.');
@@ -41,7 +41,7 @@ final class ImageTransformationTest extends TestCase
     }
 
     #[DataProvider('provideDotSegmentPaths')]
-    public function testItRejectsADotSegmentPath(string $path)
+    public function testItRejectsADotSegmentPath(string $path): void
     {
         $this->expectException(InvalidArgumentException::class);
 
@@ -55,7 +55,7 @@ final class ImageTransformationTest extends TestCase
         yield 'current segment at the start' => ['./a.jpg'];
     }
 
-    public function testItAcceptsAPathSegmentThatOnlyLooksLikeADotSegment()
+    public function testItAcceptsAPathSegmentThatOnlyLooksLikeADotSegment(): void
     {
         $t = new ImageTransformation('a..b/c.jpg');
 
@@ -63,7 +63,7 @@ final class ImageTransformationTest extends TestCase
     }
 
     #[DataProvider('provideInvalidDimensions')]
-    public function testItRejectsNonPositiveDimensions(?int $width, ?int $height)
+    public function testItRejectsNonPositiveDimensions(?int $width, ?int $height): void
     {
         $this->expectException(InvalidArgumentException::class);
 
@@ -77,7 +77,7 @@ final class ImageTransformationTest extends TestCase
         yield 'zero height' => [null, 0];
     }
 
-    public function testItRejectsAQualityOutsideOneToHundred()
+    public function testItRejectsAQualityOutsideOneToHundred(): void
     {
         $this->expectException(InvalidArgumentException::class);
 

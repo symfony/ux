@@ -26,7 +26,7 @@ use Symfony\UX\Image\Renderer\RenderOptions;
 final class CloudflareProviderTest extends TestCase
 {
     #[DataProvider('provideUrls')]
-    public function testItGeneratesTheExpectedUrl(ImageTransformation $transformation, string $expected)
+    public function testItGeneratesTheExpectedUrl(ImageTransformation $transformation, string $expected): void
     {
         self::assertSame($expected, new CloudflareProvider('cdn.example.com')->generateUrl($transformation));
     }
@@ -83,7 +83,7 @@ final class CloudflareProviderTest extends TestCase
         ];
     }
 
-    public function testWidthAndHeightBothGivenDefaultToACroppingFit()
+    public function testWidthAndHeightBothGivenDefaultToACroppingFit(): void
     {
         $options = new RenderOptions(width: 800, height: 450);
 
@@ -94,7 +94,7 @@ final class CloudflareProviderTest extends TestCase
         self::assertStringContainsString('fit=cover', $url);
     }
 
-    public function testHeightOnlyWithNoWidthLeavesFitAndWidthUnsetForTheProvidersOwnDefault()
+    public function testHeightOnlyWithNoWidthLeavesFitAndWidthUnsetForTheProvidersOwnDefault(): void
     {
         $options = new RenderOptions(layout: Layout::FullWidth, height: 450);
 
@@ -105,12 +105,12 @@ final class CloudflareProviderTest extends TestCase
         self::assertSame('https://cdn.example.com/cdn-cgi/image/height=450/hero.jpg', $url);
     }
 
-    public function testItAdvertisesAutoFormatSupport()
+    public function testItAdvertisesAutoFormatSupport(): void
     {
         self::assertTrue(new CloudflareProvider('cdn.example.com')->supportsAutoFormat());
     }
 
-    public function testItAdvertisesItsSupportedOperations()
+    public function testItAdvertisesItsSupportedOperations(): void
     {
         self::assertSame(
             ['gravity', 'dpr', 'rotate', 'trim', 'blur', 'brightness', 'contrast', 'gamma', 'saturation', 'sharpen', 'background', 'border', 'anim', 'metadata', 'onerror', 'compression'],
@@ -118,27 +118,27 @@ final class CloudflareProviderTest extends TestCase
         );
     }
 
-    public function testItAdvertisesItsSupportedFormats()
+    public function testItAdvertisesItsSupportedFormats(): void
     {
         self::assertSame(['avif', 'webp', 'jpeg', 'png'], new CloudflareProvider('cdn.example.com')->getSupportedFormats());
     }
 
-    public function testItAdvertisesItsName()
+    public function testItAdvertisesItsName(): void
     {
         self::assertSame('cloudflare', new CloudflareProvider('cdn.example.com')->getName());
     }
 
-    public function testTheFactoryRejectsAnotherScheme()
+    public function testTheFactoryRejectsAnotherScheme(): void
     {
         self::assertFalse(new CloudflareProviderFactory()->supports(new Dsn('keycdn://zone.kxcdn.com')));
     }
 
-    public function testTheFactoryAcceptsItsOwnScheme()
+    public function testTheFactoryAcceptsItsOwnScheme(): void
     {
         self::assertTrue(new CloudflareProviderFactory()->supports(new Dsn('cloudflare://cdn.example.com')));
     }
 
-    public function testTheFactoryRequiresAHost()
+    public function testTheFactoryRequiresAHost(): void
     {
         $this->expectException(IncompleteDsnException::class);
         $this->expectExceptionMessage('The Cloudflare image provider requires a host, e.g. "cloudflare://cdn.example.com".');
@@ -146,7 +146,7 @@ final class CloudflareProviderTest extends TestCase
         new CloudflareProviderFactory()->create(new Dsn('cloudflare:'));
     }
 
-    public function testAnEmptyAuthorityDsnFailsInDsnItselfNotInTheFactory()
+    public function testAnEmptyAuthorityDsnFailsInDsnItselfNotInTheFactory(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('The image provider DSN is invalid.');
@@ -154,7 +154,7 @@ final class CloudflareProviderTest extends TestCase
         new CloudflareProviderFactory()->create(new Dsn('cloudflare://'));
     }
 
-    public function testTheFactoryCreatesAConfiguredProvider()
+    public function testTheFactoryCreatesAConfiguredProvider(): void
     {
         $provider = new CloudflareProviderFactory()->create(new Dsn('cloudflare://cdn.example.com'));
 
@@ -165,7 +165,7 @@ final class CloudflareProviderTest extends TestCase
         );
     }
 
-    public function testTheFactoryRejectsAnUnknownOption()
+    public function testTheFactoryRejectsAnUnknownOption(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Invalid option(s) "driver" passed to the "cloudflare" image provider (supported: none).');

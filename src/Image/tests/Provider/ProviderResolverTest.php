@@ -19,14 +19,14 @@ use Symfony\UX\Image\Tests\Fixtures\FakeProviderFactory;
 
 final class ProviderResolverTest extends TestCase
 {
-    public function testItResolvesADsnToTheMatchingProvider()
+    public function testItResolvesADsnToTheMatchingProvider(): void
     {
         $resolver = new ProviderResolver([new FakeProviderFactory()]);
 
         self::assertInstanceOf(FakeProvider::class, $resolver->fromString('fake://default'));
     }
 
-    public function testItThrowsWhenNoFactorySupportsTheScheme()
+    public function testItThrowsWhenNoFactorySupportsTheScheme(): void
     {
         $resolver = new ProviderResolver([new FakeProviderFactory()]);
 

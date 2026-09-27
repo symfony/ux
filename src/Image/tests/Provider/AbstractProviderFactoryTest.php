@@ -19,7 +19,7 @@ use Symfony\UX\Image\Tests\Fixtures\FakeProviderFactory;
 
 final class AbstractProviderFactoryTest extends TestCase
 {
-    public function testAnOptionTheFactoryDoesNotSupportIsRejected()
+    public function testAnOptionTheFactoryDoesNotSupportIsRejected(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Invalid option(s) "driver" passed to the "fake" image provider (supported: "auto_format").');
@@ -27,7 +27,7 @@ final class AbstractProviderFactoryTest extends TestCase
         new FakeProviderFactory()->create(new Dsn('fake://default?driver=imagick'));
     }
 
-    public function testAFactoryWithoutOptionsRejectsAnyOption()
+    public function testAFactoryWithoutOptionsRejectsAnyOption(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Invalid option(s) "foo", "bar" passed to the "null" image provider (supported: none).');
@@ -35,7 +35,7 @@ final class AbstractProviderFactoryTest extends TestCase
         new NullProviderFactory()->create(new Dsn('null://null?foo=1&bar=2'));
     }
 
-    public function testAnOptionThatIsNotAStringIsRejected()
+    public function testAnOptionThatIsNotAStringIsRejected(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('The "auto_format" option of the "fake" image provider must be a string, "array" given.');
@@ -43,7 +43,7 @@ final class AbstractProviderFactoryTest extends TestCase
         new FakeProviderFactory()->create(new Dsn('fake://default?auto_format[]=1'));
     }
 
-    public function testASupportedStringOptionIsAccepted()
+    public function testASupportedStringOptionIsAccepted(): void
     {
         $provider = new FakeProviderFactory()->create(new Dsn('fake://default?auto_format=0'));
 

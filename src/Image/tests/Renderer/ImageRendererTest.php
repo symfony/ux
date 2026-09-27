@@ -24,7 +24,7 @@ use Symfony\UX\Image\Tests\Fixtures\FakeProvider;
 
 final class ImageRendererTest extends TestCase
 {
-    public function testAnAutoFormatProviderProducesNoSources()
+    public function testAnAutoFormatProviderProducesNoSources(): void
     {
         $rendered = $this->renderer()->render('hero.jpg', 'Hero', new RenderOptions(width: 400, height: 300));
 
@@ -32,14 +32,14 @@ final class ImageRendererTest extends TestCase
         self::assertSame('Hero', $rendered->imgAttributes['alt']);
     }
 
-    public function testItBuildsASrcsetFromTheDerivedBreakpoints()
+    public function testItBuildsASrcsetFromTheDerivedBreakpoints(): void
     {
         $rendered = $this->renderer()->render('hero.jpg', '', new RenderOptions(layout: Layout::Fixed, width: 400));
 
         self::assertSame('/hero.jpg?w=400&fm=auto 400w, /hero.jpg?w=800&fm=auto 800w', $rendered->imgAttributes['srcset']);
     }
 
-    public function testSrcsetEntriesCarryAPerBreakpointHeightWhenTheRatioIsKnown()
+    public function testSrcsetEntriesCarryAPerBreakpointHeightWhenTheRatioIsKnown(): void
     {
         $rendered = $this->renderer()->render('hero.jpg', '', new RenderOptions(layout: Layout::Fixed, width: 800, height: 450));
 
@@ -49,7 +49,7 @@ final class ImageRendererTest extends TestCase
         );
     }
 
-    public function testFitAndQualityReachTheSrcAndEverySrcsetCandidate()
+    public function testFitAndQualityReachTheSrcAndEverySrcsetCandidate(): void
     {
         $options = new RenderOptions(layout: Layout::Fixed, width: 400, height: 300, fit: Fit::Contain, quality: 70);
 
@@ -62,14 +62,14 @@ final class ImageRendererTest extends TestCase
         );
     }
 
-    public function testSrcsetEntriesCarryNoHeightWhenTheRatioIsUnknown()
+    public function testSrcsetEntriesCarryNoHeightWhenTheRatioIsUnknown(): void
     {
         $rendered = $this->renderer()->render('hero.jpg', '', new RenderOptions(layout: Layout::FullWidth, height: 600));
 
         self::assertStringNotContainsString('&h=', $rendered->imgAttributes['srcset']);
     }
 
-    public function testSrcAndSrcsetAgreeOnCarryingNoHeightWhenTheRatioIsUnknown()
+    public function testSrcAndSrcsetAgreeOnCarryingNoHeightWhenTheRatioIsUnknown(): void
     {
         $rendered = $this->renderer()->render('hero.jpg', '', new RenderOptions(layout: Layout::FullWidth, height: 600));
 
@@ -77,7 +77,7 @@ final class ImageRendererTest extends TestCase
         self::assertStringNotContainsString('&h=', $rendered->imgAttributes['srcset']);
     }
 
-    public function testItCarriesTheLayoutSizesAndStyle()
+    public function testItCarriesTheLayoutSizesAndStyle(): void
     {
         $rendered = $this->renderer()->render('hero.jpg', '', new RenderOptions(width: 800, height: 450));
 
@@ -85,28 +85,28 @@ final class ImageRendererTest extends TestCase
         self::assertSame('800 / 450', $rendered->imgAttributes['style']['aspect-ratio']);
     }
 
-    public function testTheCssObjectFitMirrorsTheRequestedFitSoTheProviderCropIsNotRedoneByTheBrowser()
+    public function testTheCssObjectFitMirrorsTheRequestedFitSoTheProviderCropIsNotRedoneByTheBrowser(): void
     {
         $rendered = $this->renderer()->render('hero.jpg', '', new RenderOptions(width: 400, height: 400, fit: Fit::Contain));
 
         self::assertSame('contain', $rendered->imgAttributes['style']['object-fit']);
     }
 
-    public function testAnExplicitObjectFitStillWinsOverTheOneDerivedFromFit()
+    public function testAnExplicitObjectFitStillWinsOverTheOneDerivedFromFit(): void
     {
         $rendered = $this->renderer()->render('hero.jpg', '', new RenderOptions(width: 400, height: 400, fit: Fit::Contain, objectFit: 'none'));
 
         self::assertSame('none', $rendered->imgAttributes['style']['object-fit']);
     }
 
-    public function testWithoutAFitTheCssStillDefaultsToCover()
+    public function testWithoutAFitTheCssStillDefaultsToCover(): void
     {
         $rendered = $this->renderer()->render('hero.jpg', '', new RenderOptions(layout: Layout::FullWidth, height: 600));
 
         self::assertSame('cover', $rendered->imgAttributes['style']['object-fit']);
     }
 
-    public function testAnImageIsOnlyLazyLoadedByDefault()
+    public function testAnImageIsOnlyLazyLoadedByDefault(): void
     {
         $rendered = $this->renderer()->render('hero.jpg', '', new RenderOptions(width: 800));
 
@@ -115,7 +115,7 @@ final class ImageRendererTest extends TestCase
         self::assertArrayNotHasKey('decoding', $rendered->imgAttributes);
     }
 
-    public function testPriorityLoadsEagerlyWithAHighFetchPriority()
+    public function testPriorityLoadsEagerlyWithAHighFetchPriority(): void
     {
         $rendered = $this->renderer()->render('hero.jpg', '', new RenderOptions(width: 800, priority: true));
 
@@ -124,7 +124,7 @@ final class ImageRendererTest extends TestCase
         self::assertArrayNotHasKey('decoding', $rendered->imgAttributes);
     }
 
-    public function testAnImgNeverHasSourcesAndFallsBackToTheLastFormatWhenTheProviderDoesNotNegotiate()
+    public function testAnImgNeverHasSourcesAndFallsBackToTheLastFormatWhenTheProviderDoesNotNegotiate(): void
     {
         $renderer = new ImageRenderer(new FakeProvider(autoFormat: false), new LayoutResolver(), ['avif', 'webp', 'jpeg']);
 
@@ -135,7 +135,7 @@ final class ImageRendererTest extends TestCase
         self::assertStringNotContainsString('fm=avif', $rendered->imgAttributes['srcset']);
     }
 
-    public function testAPictureHasOneSourcePerConfiguredFormat()
+    public function testAPictureHasOneSourcePerConfiguredFormat(): void
     {
         $renderer = new ImageRenderer(new FakeProvider(autoFormat: false), new LayoutResolver(), ['avif', 'webp', 'jpeg']);
 
@@ -150,7 +150,7 @@ final class ImageRendererTest extends TestCase
         self::assertStringContainsString('fm=jpeg', $rendered->imgAttributes['srcset']);
     }
 
-    public function testFormatsAreIntersectedWithWhatTheProviderSupports()
+    public function testFormatsAreIntersectedWithWhatTheProviderSupports(): void
     {
         $renderer = new ImageRenderer(new FakeProvider(autoFormat: false), new LayoutResolver(), ['avif', 'tiff', 'jpeg']);
 
@@ -159,7 +159,7 @@ final class ImageRendererTest extends TestCase
         self::assertCount(2, $rendered->sources);
     }
 
-    public function testTheSourceOrderComesFromTheConfiguredFormatsNotTheProvider()
+    public function testTheSourceOrderComesFromTheConfiguredFormatsNotTheProvider(): void
     {
         $renderer = new ImageRenderer(new FakeProvider(autoFormat: false), new LayoutResolver(), ['jpeg', 'avif']);
 
@@ -169,7 +169,7 @@ final class ImageRendererTest extends TestCase
         self::assertStringContainsString('fm=avif', $rendered->imgAttributes['src']);
     }
 
-    public function testItThrowsWhenTheConfiguredFormatsAndTheProviderShareNothing()
+    public function testItThrowsWhenTheConfiguredFormatsAndTheProviderShareNothing(): void
     {
         $renderer = new ImageRenderer(new FakeProvider(autoFormat: false), new LayoutResolver(), ['tiff', 'heic']);
 
@@ -179,7 +179,7 @@ final class ImageRendererTest extends TestCase
         $renderer->render('hero.jpg', '', new RenderOptions(layout: Layout::Fixed, width: 400));
     }
 
-    public function testAnExplicitFormatPinsTheOutputAndSuppressesTheAutoFormat()
+    public function testAnExplicitFormatPinsTheOutputAndSuppressesTheAutoFormat(): void
     {
         $rendered = $this->renderer()->render('hero.jpg', '', new RenderOptions(layout: Layout::Fixed, width: 400, format: 'webp'));
 
@@ -189,7 +189,7 @@ final class ImageRendererTest extends TestCase
         self::assertStringNotContainsString('fm=auto', $rendered->imgAttributes['srcset']);
     }
 
-    public function testAnExplicitFormatSuppressesThePictureSourcesToo()
+    public function testAnExplicitFormatSuppressesThePictureSourcesToo(): void
     {
         $renderer = new ImageRenderer(new FakeProvider(autoFormat: false), new LayoutResolver(), ['avif', 'webp', 'jpeg']);
 
@@ -199,7 +199,7 @@ final class ImageRendererTest extends TestCase
         self::assertStringContainsString('fm=jpeg', $rendered->imgAttributes['src']);
     }
 
-    public function testItRejectsAnExplicitFormatTheProviderCannotProduce()
+    public function testItRejectsAnExplicitFormatTheProviderCannotProduce(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('The image format "tiff" is not supported by the "fake" provider (supported: "avif", "webp", "jpeg").');
@@ -207,7 +207,7 @@ final class ImageRendererTest extends TestCase
         $this->renderer()->render('hero.jpg', '', new RenderOptions(width: 400, format: 'tiff'));
     }
 
-    public function testAPictureHasOneSourcePerFormatEvenWhenTheProviderNegotiatesTheFormat()
+    public function testAPictureHasOneSourcePerFormatEvenWhenTheProviderNegotiatesTheFormat(): void
     {
         $rendered = $this->renderer()->renderPicture('hero.jpg', '', new RenderOptions(layout: Layout::Fixed, width: 400));
 
@@ -216,7 +216,7 @@ final class ImageRendererTest extends TestCase
         self::assertStringNotContainsString('fm=auto', implode(' ', array_column($rendered->sources, 'srcset')));
     }
 
-    public function testANullProviderPictureHasNoSource()
+    public function testANullProviderPictureHasNoSource(): void
     {
         $renderer = new ImageRenderer(new NullProvider(), new LayoutResolver());
 
@@ -226,7 +226,7 @@ final class ImageRendererTest extends TestCase
         self::assertSame('/uploads/hero.jpg', $rendered->imgAttributes['src']);
     }
 
-    public function testTheNullProviderRendersTheOriginalImageWithoutASrcset()
+    public function testTheNullProviderRendersTheOriginalImageWithoutASrcset(): void
     {
         $renderer = new ImageRenderer(new NullProvider(), new LayoutResolver());
 
@@ -241,7 +241,7 @@ final class ImageRendererTest extends TestCase
         self::assertSame('800 / 450', $rendered->imgAttributes['style']['aspect-ratio']);
     }
 
-    public function testItPassesOnlyTheActiveProviderOperations()
+    public function testItPassesOnlyTheActiveProviderOperations(): void
     {
         $rendered = $this->renderer()->render('hero.jpg', '', new RenderOptions(
             layout: Layout::Fixed,
@@ -253,7 +253,7 @@ final class ImageRendererTest extends TestCase
         self::assertStringNotContainsString('gravity', $rendered->imgAttributes['src']);
     }
 
-    public function testItRejectsAnUnknownOperationForTheActiveProvider()
+    public function testItRejectsAnUnknownOperationForTheActiveProvider(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('The image operation "gravity" is not supported by the "fake" provider (supported: "sharpen").');
@@ -261,7 +261,7 @@ final class ImageRendererTest extends TestCase
         $this->renderer()->render('hero.jpg', '', new RenderOptions(width: 400, operations: ['fake' => ['gravity' => 'auto']]));
     }
 
-    public function testItRejectsAnOperationsBlockThatIsNotAMap()
+    public function testItRejectsAnOperationsBlockThatIsNotAMap(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('The "operations.fake" option must be a map of operation names to values, "string" given.');
@@ -269,7 +269,7 @@ final class ImageRendererTest extends TestCase
         $this->renderer()->render('hero.jpg', '', new RenderOptions(width: 400, operations: ['fake' => 'invalid']));
     }
 
-    public function testItRejectsAFixedLayoutWithoutAWidth()
+    public function testItRejectsAFixedLayoutWithoutAWidth(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('The "fixed" layout requires a width.');
@@ -277,7 +277,7 @@ final class ImageRendererTest extends TestCase
         new RenderOptions(layout: Layout::Fixed);
     }
 
-    public function testItRejectsAConstrainedLayoutWithoutAWidth()
+    public function testItRejectsAConstrainedLayoutWithoutAWidth(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('The "constrained" layout requires a width.');
@@ -285,7 +285,7 @@ final class ImageRendererTest extends TestCase
         new RenderOptions(layout: Layout::Constrained);
     }
 
-    public function testItRejectsAFullWidthLayoutWithoutAHeight()
+    public function testItRejectsAFullWidthLayoutWithoutAHeight(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('The "full-width" layout requires a height.');
@@ -293,14 +293,14 @@ final class ImageRendererTest extends TestCase
         new RenderOptions(layout: Layout::FullWidth);
     }
 
-    public function testFullWidthLayoutDoesNotRequireAWidth()
+    public function testFullWidthLayoutDoesNotRequireAWidth(): void
     {
         $options = new RenderOptions(layout: Layout::FullWidth, height: 600);
 
         self::assertNull($options->width);
     }
 
-    public function testFullWidthRendersWithoutAWidth()
+    public function testFullWidthRendersWithoutAWidth(): void
     {
         $rendered = $this->renderer()->render('hero.jpg', '', new RenderOptions(layout: Layout::FullWidth, height: 600));
 
@@ -311,7 +311,7 @@ final class ImageRendererTest extends TestCase
         self::assertSame('600px', $rendered->imgAttributes['style']['height']);
     }
 
-    public function testFullWidthSrcDoesNotFallBackToTheTopOfTheResolutionLadder()
+    public function testFullWidthSrcDoesNotFallBackToTheTopOfTheResolutionLadder(): void
     {
         $rendered = $this->renderer()->render('hero.jpg', '', new RenderOptions(layout: Layout::FullWidth, height: 600, format: 'webp'));
 
@@ -319,7 +319,7 @@ final class ImageRendererTest extends TestCase
         self::assertSame('/hero.jpg?fm=webp', $rendered->imgAttributes['src']);
     }
 
-    public function testFixedAndConstrainedSrcKeepTheirOwnWidthRegardlessOfTheFullWidthFallback()
+    public function testFixedAndConstrainedSrcKeepTheirOwnWidthRegardlessOfTheFullWidthFallback(): void
     {
         $fixed = $this->renderer()->render('hero.jpg', '', new RenderOptions(layout: Layout::Fixed, width: 400));
         $constrained = $this->renderer()->render('hero.jpg', '', new RenderOptions(layout: Layout::Constrained, width: 400));

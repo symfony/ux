@@ -18,12 +18,12 @@ use Symfony\UX\Image\Renderer\LayoutResolver;
 
 final class LayoutResolverTest extends TestCase
 {
-    public function testFixedGivesOneAndTwoTimesTheWidth()
+    public function testFixedGivesOneAndTwoTimesTheWidth(): void
     {
         self::assertSame([400, 800], new LayoutResolver()->breakpoints(Layout::Fixed, 400));
     }
 
-    public function testConstrainedAddsTheLadderEntriesBelowTwiceTheWidth()
+    public function testConstrainedAddsTheLadderEntriesBelowTwiceTheWidth(): void
     {
         self::assertSame(
             [640, 750, 800, 828, 960, 1080, 1280, 1600],
@@ -31,7 +31,7 @@ final class LayoutResolverTest extends TestCase
         );
     }
 
-    public function testFullWidthGivesTheWholeLadderAscending()
+    public function testFullWidthGivesTheWholeLadderAscending(): void
     {
         $breakpoints = new LayoutResolver()->breakpoints(Layout::FullWidth, null);
 
@@ -40,28 +40,28 @@ final class LayoutResolverTest extends TestCase
         self::assertCount(\count(LayoutResolver::DEFAULT_RESOLUTIONS), $breakpoints);
     }
 
-    public function testFullWidthUsesTheInjectedResolutionsInsteadOfTheDefaultLadder()
+    public function testFullWidthUsesTheInjectedResolutionsInsteadOfTheDefaultLadder(): void
     {
         self::assertSame([400, 800, 1600], new LayoutResolver([1600, 800, 400])->breakpoints(Layout::FullWidth, null));
     }
 
-    public function testConstrainedFiltersTheInjectedResolutions()
+    public function testConstrainedFiltersTheInjectedResolutions(): void
     {
         self::assertSame([400, 500, 800, 1000], new LayoutResolver([1600, 800, 500, 400])->breakpoints(Layout::Constrained, 500));
     }
 
-    public function testFixedIgnoresTheInjectedResolutions()
+    public function testFixedIgnoresTheInjectedResolutions(): void
     {
         self::assertSame([400, 800], new LayoutResolver([1600, 1200])->breakpoints(Layout::Fixed, 400));
     }
 
-    public function testConstrainedWithoutAWidthGivesNothing()
+    public function testConstrainedWithoutAWidthGivesNothing(): void
     {
         self::assertSame([], new LayoutResolver()->breakpoints(Layout::Constrained, null));
     }
 
     #[DataProvider('provideSizes')]
-    public function testSizes(Layout $layout, ?int $width, ?string $expected)
+    public function testSizes(Layout $layout, ?int $width, ?string $expected): void
     {
         self::assertSame($expected, new LayoutResolver()->sizes($layout, $width));
     }
@@ -74,7 +74,7 @@ final class LayoutResolverTest extends TestCase
         yield 'constrained without width' => [Layout::Constrained, null, null];
     }
 
-    public function testFixedStyle()
+    public function testFixedStyle(): void
     {
         self::assertSame(
             ['object-fit' => 'cover', 'width' => '120px', 'height' => '40px'],
@@ -82,7 +82,7 @@ final class LayoutResolverTest extends TestCase
         );
     }
 
-    public function testConstrainedStyle()
+    public function testConstrainedStyle(): void
     {
         self::assertSame(
             [
@@ -97,7 +97,7 @@ final class LayoutResolverTest extends TestCase
         );
     }
 
-    public function testFullWidthStyleWithADerivableRatioEmitsTheRatioAndAnAutoHeight()
+    public function testFullWidthStyleWithADerivableRatioEmitsTheRatioAndAnAutoHeight(): void
     {
         self::assertSame(
             ['object-fit' => 'cover', 'width' => '100%', 'aspect-ratio' => '800 / 450', 'height' => 'auto'],
@@ -105,7 +105,7 @@ final class LayoutResolverTest extends TestCase
         );
     }
 
-    public function testFullWidthStyleWithOnlyAHeightEmitsTheHeightAndNoRatio()
+    public function testFullWidthStyleWithOnlyAHeightEmitsTheHeightAndNoRatio(): void
     {
         self::assertSame(
             ['object-fit' => 'cover', 'width' => '100%', 'height' => '450px'],
@@ -113,13 +113,13 @@ final class LayoutResolverTest extends TestCase
         );
     }
 
-    public function testStyleOmitsAspectRatioWhenADimensionIsMissing()
+    public function testStyleOmitsAspectRatioWhenADimensionIsMissing(): void
     {
         self::assertArrayNotHasKey('aspect-ratio', new LayoutResolver()->style(Layout::Constrained, 800, null));
     }
 
     #[DataProvider('provideLayoutsWithARatio')]
-    public function testAnyStyleWithAnAspectRatioAlsoDeclaresAnAutoHeight(Layout $layout)
+    public function testAnyStyleWithAnAspectRatioAlsoDeclaresAnAutoHeight(Layout $layout): void
     {
         $style = new LayoutResolver()->style($layout, 800, 450);
 
@@ -133,7 +133,7 @@ final class LayoutResolverTest extends TestCase
         yield 'full width' => [Layout::FullWidth];
     }
 
-    public function testObjectFitIsOverridable()
+    public function testObjectFitIsOverridable(): void
     {
         self::assertSame('contain', new LayoutResolver()->style(Layout::Fixed, 120, 40, 'contain')['object-fit']);
     }

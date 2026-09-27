@@ -20,28 +20,28 @@ use Symfony\UX\Image\Renderer\RenderOptions;
 
 final class RenderOptionsTest extends TestCase
 {
-    public function testBothDimensionsDefaultFitToCover()
+    public function testBothDimensionsDefaultFitToCover(): void
     {
         $options = new RenderOptions(width: 800, height: 450);
 
         self::assertSame(Fit::Cover, $options->fit);
     }
 
-    public function testOnlyAWidthLeavesFitNull()
+    public function testOnlyAWidthLeavesFitNull(): void
     {
         $options = new RenderOptions(layout: Layout::Fixed, width: 800);
 
         self::assertNull($options->fit);
     }
 
-    public function testOnlyAHeightLeavesFitNull()
+    public function testOnlyAHeightLeavesFitNull(): void
     {
         $options = new RenderOptions(layout: Layout::FullWidth, height: 450);
 
         self::assertNull($options->fit);
     }
 
-    public function testAnExplicitFitIsNeverOverridden()
+    public function testAnExplicitFitIsNeverOverridden(): void
     {
         $options = new RenderOptions(width: 800, height: 450, fit: Fit::Contain);
 
@@ -49,7 +49,7 @@ final class RenderOptionsTest extends TestCase
     }
 
     #[DataProvider('provideInvalidDimensions')]
-    public function testANonPositiveDimensionIsRejectedUpfront(?int $width, ?int $height, string $message)
+    public function testANonPositiveDimensionIsRejectedUpfront(?int $width, ?int $height, string $message): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage($message);
@@ -65,7 +65,7 @@ final class RenderOptionsTest extends TestCase
     }
 
     #[DataProvider('provideInvalidBreakpoints')]
-    public function testANonPositiveBreakpointIsRejectedUpfront(array $breakpoints, string $message)
+    public function testANonPositiveBreakpointIsRejectedUpfront(array $breakpoints, string $message): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage($message);
@@ -80,7 +80,7 @@ final class RenderOptionsTest extends TestCase
         yield 'not an integer' => [['800'], 'The "breakpoints" option must only contain positive integers, "800" given.'];
     }
 
-    public function testBreakpointsAreDeduplicatedAndSorted()
+    public function testBreakpointsAreDeduplicatedAndSorted(): void
     {
         $options = new RenderOptions(width: 400, breakpoints: [800, 400, 800]);
 

@@ -26,7 +26,7 @@ use Symfony\UX\Image\Renderer\RenderOptions;
 final class KeyCdnProviderTest extends TestCase
 {
     #[DataProvider('provideUrls')]
-    public function testItGeneratesTheExpectedUrl(ImageTransformation $transformation, string $expected)
+    public function testItGeneratesTheExpectedUrl(ImageTransformation $transformation, string $expected): void
     {
         self::assertSame($expected, new KeyCdnProvider('zone.kxcdn.com')->generateUrl($transformation));
     }
@@ -59,7 +59,7 @@ final class KeyCdnProviderTest extends TestCase
         ];
     }
 
-    public function testWidthAndHeightBothGivenDefaultToACroppingFit()
+    public function testWidthAndHeightBothGivenDefaultToACroppingFit(): void
     {
         $options = new RenderOptions(width: 800, height: 450);
 
@@ -70,7 +70,7 @@ final class KeyCdnProviderTest extends TestCase
         self::assertStringContainsString('fit=cover', $url);
     }
 
-    public function testHeightOnlyWithNoWidthLeavesFitAndWidthUnsetForTheProvidersOwnDefault()
+    public function testHeightOnlyWithNoWidthLeavesFitAndWidthUnsetForTheProvidersOwnDefault(): void
     {
         $options = new RenderOptions(layout: Layout::FullWidth, height: 450);
 
@@ -81,17 +81,17 @@ final class KeyCdnProviderTest extends TestCase
         self::assertSame('https://zone.kxcdn.com/hero.jpg?height=450', $url);
     }
 
-    public function testItDoesNotSupportAutoFormat()
+    public function testItDoesNotSupportAutoFormat(): void
     {
         self::assertFalse(new KeyCdnProvider('zone.kxcdn.com')->supportsAutoFormat());
     }
 
-    public function testItDoesNotAdvertiseAvif()
+    public function testItDoesNotAdvertiseAvif(): void
     {
         self::assertNotContains('avif', new KeyCdnProvider('zone.kxcdn.com')->getSupportedFormats());
     }
 
-    public function testItAdvertisesItsSupportedOperations()
+    public function testItAdvertisesItsSupportedOperations(): void
     {
         self::assertSame(
             ['position', 'enlarge', 'trim', 'crop', 'bg', 'rotate', 'flip', 'flop', 'sharpen', 'blur', 'gamma', 'grayscale', 'progressive', 'lossless', 'metadata'],
@@ -99,27 +99,27 @@ final class KeyCdnProviderTest extends TestCase
         );
     }
 
-    public function testItAdvertisesItsSupportedFormats()
+    public function testItAdvertisesItsSupportedFormats(): void
     {
         self::assertSame(['webp', 'jpeg', 'png'], new KeyCdnProvider('zone.kxcdn.com')->getSupportedFormats());
     }
 
-    public function testItAdvertisesItsName()
+    public function testItAdvertisesItsName(): void
     {
         self::assertSame('keycdn', new KeyCdnProvider('zone.kxcdn.com')->getName());
     }
 
-    public function testTheFactoryRejectsAnotherScheme()
+    public function testTheFactoryRejectsAnotherScheme(): void
     {
         self::assertFalse(new KeyCdnProviderFactory()->supports(new Dsn('cloudflare://cdn.example.com')));
     }
 
-    public function testTheFactoryAcceptsItsOwnScheme()
+    public function testTheFactoryAcceptsItsOwnScheme(): void
     {
         self::assertTrue(new KeyCdnProviderFactory()->supports(new Dsn('keycdn://zone.kxcdn.com')));
     }
 
-    public function testTheFactoryRequiresAHost()
+    public function testTheFactoryRequiresAHost(): void
     {
         $this->expectException(IncompleteDsnException::class);
         $this->expectExceptionMessage('The KeyCDN image provider requires a host, e.g. "keycdn://myzone.kxcdn.com".');
@@ -127,7 +127,7 @@ final class KeyCdnProviderTest extends TestCase
         new KeyCdnProviderFactory()->create(new Dsn('keycdn:'));
     }
 
-    public function testAnEmptyAuthorityDsnFailsInDsnItselfNotInTheFactory()
+    public function testAnEmptyAuthorityDsnFailsInDsnItselfNotInTheFactory(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('The image provider DSN is invalid.');
@@ -135,7 +135,7 @@ final class KeyCdnProviderTest extends TestCase
         new KeyCdnProviderFactory()->create(new Dsn('keycdn://'));
     }
 
-    public function testTheFactoryCreatesAConfiguredProvider()
+    public function testTheFactoryCreatesAConfiguredProvider(): void
     {
         $provider = new KeyCdnProviderFactory()->create(new Dsn('keycdn://zone.kxcdn.com'));
 
@@ -146,7 +146,7 @@ final class KeyCdnProviderTest extends TestCase
         );
     }
 
-    public function testTheFactoryRejectsAnUnknownOption()
+    public function testTheFactoryRejectsAnUnknownOption(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Invalid option(s) "driver" passed to the "keycdn" image provider (supported: none).');

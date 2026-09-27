@@ -26,7 +26,7 @@ final class ImageRuntimeTest extends KernelTestCase
         return TestKernel::class;
     }
 
-    public function testTheExtensionAndRuntimeAreRegistered()
+    public function testTheExtensionAndRuntimeAreRegistered(): void
     {
         self::bootKernel();
 
@@ -37,7 +37,7 @@ final class ImageRuntimeTest extends KernelTestCase
         self::assertInstanceOf(ImageRuntime::class, $twig->getRuntime(ImageRuntime::class));
     }
 
-    public function testItDoesNotRegisterAGlobalHtmlAttrTypeFilter()
+    public function testItDoesNotRegisterAGlobalHtmlAttrTypeFilter(): void
     {
         // The layout style is built as an InlineStyle in PHP, so we don't need to publish twig/html-extra's filter into every app.
         self::bootKernel();
@@ -48,7 +48,7 @@ final class ImageRuntimeTest extends KernelTestCase
         self::assertArrayNotHasKey('html_attr_type', $twig->getFilters());
     }
 
-    public function testItRendersASingleImgForAnAutoFormatProvider()
+    public function testItRendersASingleImgForAnAutoFormatProvider(): void
     {
         $html = $this->renderFunction('/hero.jpg', 'Hero', ['width' => 800, 'height' => 450]);
 
@@ -57,7 +57,7 @@ final class ImageRuntimeTest extends KernelTestCase
         self::assertStringContainsString('aspect-ratio: 800 / 450', $html);
     }
 
-    public function testUxImageRendersAnImgEvenWhenTheProviderDoesNotNegotiateTheFormat()
+    public function testUxImageRendersAnImgEvenWhenTheProviderDoesNotNegotiateTheFormat(): void
     {
         $html = $this->renderFunction('/hero.jpg', '', ['width' => 800], autoFormat: false);
 
@@ -65,7 +65,7 @@ final class ImageRuntimeTest extends KernelTestCase
         self::assertStringNotContainsString('<picture>', $html);
     }
 
-    public function testUxPictureRendersAPictureEvenWhenTheProviderNegotiatesTheFormat()
+    public function testUxPictureRendersAPictureEvenWhenTheProviderNegotiatesTheFormat(): void
     {
         $html = $this->renderPictureFunction('/hero.jpg', 'Hero', ['width' => 800], ['class' => 'rounded']);
 
@@ -76,7 +76,7 @@ final class ImageRuntimeTest extends KernelTestCase
         self::assertStringEndsWith('</picture>', $html);
     }
 
-    public function testAnExplicitFormatOptionIsAccepted()
+    public function testAnExplicitFormatOptionIsAccepted(): void
     {
         $html = $this->renderFunction('/hero.jpg', '', ['width' => 800, 'format' => 'webp'], autoFormat: false);
 
@@ -84,7 +84,7 @@ final class ImageRuntimeTest extends KernelTestCase
         self::assertStringContainsString('fm=webp', $html);
     }
 
-    public function testAnUnknownOptionFailsClearlyInsteadOfARawPhpError()
+    public function testAnUnknownOptionFailsClearlyInsteadOfARawPhpError(): void
     {
         try {
             $this->renderFunction('/hero.jpg', '', ['width' => 800, 'class' => 'rounded']);
@@ -95,7 +95,7 @@ final class ImageRuntimeTest extends KernelTestCase
         }
     }
 
-    public function testAnInvalidLayoutFailsClearly()
+    public function testAnInvalidLayoutFailsClearly(): void
     {
         try {
             $this->renderFunction('/hero.jpg', '', ['layout' => 'not-a-layout']);
@@ -106,7 +106,7 @@ final class ImageRuntimeTest extends KernelTestCase
         }
     }
 
-    public function testCallerAttributesAreRendered()
+    public function testCallerAttributesAreRendered(): void
     {
         $html = $this->renderFunction('/hero.jpg', '', ['width' => 800], attributes: ['class' => 'rounded', 'data-test' => '1']);
 
@@ -114,7 +114,7 @@ final class ImageRuntimeTest extends KernelTestCase
         self::assertStringContainsString('data-test="1"', $html);
     }
 
-    public function testACallerAttributeWinsOverTheGeneratedDefault()
+    public function testACallerAttributeWinsOverTheGeneratedDefault(): void
     {
         $html = $this->renderFunction('/hero.jpg', '', ['width' => 800], attributes: ['loading' => 'eager']);
 
@@ -122,7 +122,7 @@ final class ImageRuntimeTest extends KernelTestCase
         self::assertStringNotContainsString('loading="lazy"', $html);
     }
 
-    public function testACallerStyleMergesIntoTheLayoutStyle()
+    public function testACallerStyleMergesIntoTheLayoutStyle(): void
     {
         $html = $this->renderFunction('/hero.jpg', '', ['width' => 800, 'height' => 450], attributes: ['style' => ['border-radius' => '8px']]);
 
@@ -130,7 +130,7 @@ final class ImageRuntimeTest extends KernelTestCase
         self::assertStringContainsString('border-radius: 8px', $html);
     }
 
-    public function testACallerStringStyleMergesIntoTheLayoutStyle()
+    public function testACallerStringStyleMergesIntoTheLayoutStyle(): void
     {
         $html = $this->renderFunction('/hero.jpg', '', ['width' => 800, 'height' => 450], attributes: ['style' => 'border-radius: 8px']);
 
@@ -138,7 +138,7 @@ final class ImageRuntimeTest extends KernelTestCase
         self::assertStringContainsString('border-radius: 8px', $html);
     }
 
-    public function testACallerSizesOverridesEverySourceAndTheImgInThePictureBranch()
+    public function testACallerSizesOverridesEverySourceAndTheImgInThePictureBranch(): void
     {
         $html = $this->renderPictureFunction('/hero.jpg', '', ['width' => 800], ['sizes' => '50vw']);
 
@@ -146,21 +146,21 @@ final class ImageRuntimeTest extends KernelTestCase
         self::assertStringNotContainsString('100vw', $html);
     }
 
-    public function testUxImageUrlRendersOneEscapedUrl()
+    public function testUxImageUrlRendersOneEscapedUrl(): void
     {
         $url = $this->renderUrlFunction('og.jpg', ['width' => 1200, 'height' => 630]);
 
         self::assertSame('/og.jpg?w=1200&amp;fm=&amp;h=630&amp;fit=cover', $url);
     }
 
-    public function testUxImageUrlTakesAFitByName()
+    public function testUxImageUrlTakesAFitByName(): void
     {
         $url = $this->renderUrlFunction('og.jpg', ['width' => 400, 'height' => 400, 'fit' => 'contain']);
 
         self::assertStringContainsString('fit=contain', $url);
     }
 
-    public function testUxImageUrlRejectsAnOptionItDoesNotKnow()
+    public function testUxImageUrlRejectsAnOptionItDoesNotKnow(): void
     {
         try {
             $this->renderUrlFunction('og.jpg', ['layout' => 'fixed']);
@@ -171,7 +171,7 @@ final class ImageRuntimeTest extends KernelTestCase
         }
     }
 
-    public function testAnOperationsKeyNamingNoInstalledProviderIsRejected()
+    public function testAnOperationsKeyNamingNoInstalledProviderIsRejected(): void
     {
         try {
             $this->renderUrlFunction('og.jpg', ['operations' => ['cloudfare' => ['gravity' => 'auto']]]);
@@ -182,7 +182,7 @@ final class ImageRuntimeTest extends KernelTestCase
         }
     }
 
-    public function testTheRendererAlsoRejectsAnOperationsKeyNamingNoInstalledProvider()
+    public function testTheRendererAlsoRejectsAnOperationsKeyNamingNoInstalledProvider(): void
     {
         try {
             $this->renderFunction('/hero.jpg', 'Hero', ['width' => 400, 'operations' => ['cloudfare' => ['gravity' => 'auto']]]);

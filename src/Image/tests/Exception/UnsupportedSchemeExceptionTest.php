@@ -30,7 +30,7 @@ final class UnsupportedSchemeExceptionTest extends TestCase
         UXImageBundle::$bridges = $this->originalBridges;
     }
 
-    public function testMessageWhenSchemeIsUnknown()
+    public function testMessageWhenSchemeIsUnknown(): void
     {
         UXImageBundle::$bridges = [];
 
@@ -39,7 +39,7 @@ final class UnsupportedSchemeExceptionTest extends TestCase
         self::assertSame('The image provider "cloudflare" is not supported.', $exception->getMessage());
     }
 
-    public function testMessageWhenBridgeIsKnownButFactoryClassIsMissing()
+    public function testMessageWhenBridgeIsKnownButFactoryClassIsMissing(): void
     {
         UXImageBundle::$bridges = [
             'keycdn' => ['factory' => 'Symfony\UX\Image\Bridge\KeyCdn\NotInstalledFactory'],
@@ -50,7 +50,7 @@ final class UnsupportedSchemeExceptionTest extends TestCase
         self::assertSame('Unable to generate images via "keycdn" as the bridge is not installed. Try running "composer require symfony/ux-keycdn-image".', $exception->getMessage());
     }
 
-    public function testThePreviousExceptionIsKeptWhenTheBridgeIsNotInstalled()
+    public function testThePreviousExceptionIsKeptWhenTheBridgeIsNotInstalled(): void
     {
         UXImageBundle::$bridges = [
             'keycdn' => ['factory' => 'Symfony\UX\Image\Bridge\KeyCdn\NotInstalledFactory'],

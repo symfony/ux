@@ -18,7 +18,7 @@ use Symfony\UX\Image\Provider\NullProvider;
 
 final class NullProviderTest extends TestCase
 {
-    public function testItReturnsTheOriginalPathWhateverTheTransformation()
+    public function testItReturnsTheOriginalPathWhateverTheTransformation(): void
     {
         $transformation = new ImageTransformation('/uploads/hero.jpg', width: 800, height: 450, fit: Fit::Cover, format: 'webp', quality: 80);
 

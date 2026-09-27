@@ -35,7 +35,7 @@ final class BundleInitializationTest extends KernelTestCase
         unset($_ENV['UX_IMAGE_DSN'], $_SERVER['UX_IMAGE_DSN']);
     }
 
-    public function testTheContainerCompilesWithNoBridgeInstalledAndTheNullProviderIsActive()
+    public function testTheContainerCompilesWithNoBridgeInstalledAndTheNullProviderIsActive(): void
     {
         self::bootKernel(['environment' => 'bare']);
 
@@ -50,7 +50,7 @@ final class BundleInitializationTest extends KernelTestCase
         self::assertFalse(self::getContainer()->has('ux_image.provider_factory.keycdn'));
     }
 
-    public function testTheContainerCompilesWithABridgeAvailableAndItsProviderBecomesActive()
+    public function testTheContainerCompilesWithABridgeAvailableAndItsProviderBecomesActive(): void
     {
         self::bootKernel(['environment' => 'test']);
 
@@ -60,7 +60,7 @@ final class BundleInitializationTest extends KernelTestCase
         self::assertSame('fake', $provider->getName());
     }
 
-    public function testAnEnvPlaceholderDsnResolvingToTheNullSchemeStillReachesTheNullProvider()
+    public function testAnEnvPlaceholderDsnResolvingToTheNullSchemeStillReachesTheNullProvider(): void
     {
         putenv('UX_IMAGE_DSN=null://null');
         $_ENV['UX_IMAGE_DSN'] = 'null://null';
@@ -74,7 +74,7 @@ final class BundleInitializationTest extends KernelTestCase
         self::assertSame('null', $provider->getName());
     }
 
-    public function testAnUnsetDefaultingEnvPlaceholderDsnFallsBackToTheNullProviderAtRuntime()
+    public function testAnUnsetDefaultingEnvPlaceholderDsnFallsBackToTheNullProviderAtRuntime(): void
     {
         self::bootKernel(['environment' => 'default_placeholder']);
 
@@ -85,7 +85,7 @@ final class BundleInitializationTest extends KernelTestCase
         self::assertSame('hero.jpg', $provider->generateUrl(new ImageTransformation('hero.jpg')));
     }
 
-    public function testAnUnresolvedEnvPlaceholderDsnStillResolvesTheActiveProviderAtRuntime()
+    public function testAnUnresolvedEnvPlaceholderDsnStillResolvesTheActiveProviderAtRuntime(): void
     {
         putenv('UX_IMAGE_DSN=fake://default');
         $_ENV['UX_IMAGE_DSN'] = 'fake://default';
@@ -99,7 +99,7 @@ final class BundleInitializationTest extends KernelTestCase
         self::assertSame('fake', $provider->getName());
     }
 
-    public function testTheBundleWorksWithoutTwig()
+    public function testTheBundleWorksWithoutTwig(): void
     {
         self::bootKernel(['environment' => 'no_twig']);
 
