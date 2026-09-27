@@ -12,22 +12,11 @@
 namespace Symfony\UX\Css\Tests\Benchmark;
 
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\UX\Css\Tests\Fixtures\Dtcg;
 use Symfony\UX\Css\Tests\Fixtures\TestKernel;
 
 final class BenchProject
 {
-    public const CONFIG = [
-        'tokens' => [
-            'colors' => [
-                'gray' => ['100' => '#f3f4f6', '900' => '#111827'],
-                'blue' => ['500' => '#3b82f6'],
-            ],
-            'spacing' => ['1' => '0.25rem', '2' => '0.5rem', '4' => '1rem', '8' => '2rem'],
-            'fontSizes' => ['sm' => '0.875rem', 'lg' => '1.125rem'],
-            'radii' => ['md' => '0.375rem'],
-        ],
-    ];
-
     private readonly string $dir;
     private readonly TestKernel $kernel;
 
@@ -44,7 +33,11 @@ final class BenchProject
             touch($path, time() - 60);
         }
 
-        $this->kernel = new TestKernel(self::CONFIG, 'test', $debug, $this->dir);
+        $this->kernel = new TestKernel(
+            debug: $debug,
+            projectDir: $this->dir,
+            designTokens: self::designTokens(),
+        );
         $this->kernel->boot();
     }
 
@@ -92,5 +85,25 @@ final class BenchProject
     private function templatePath(int $i): string
     {
         return \sprintf('%s/templates/section_%d.html.twig', $this->dir, $i);
+    }
+
+    private static function designTokens(): array
+    {
+        return [
+            'color' => [
+                'gray' => ['100' => Dtcg::color('#f3f4f6'), '900' => Dtcg::color('#111827')],
+                'blue' => ['500' => Dtcg::color('#3b82f6')],
+            ],
+            'dimension' => [
+                'spacing' => [
+                    '1' => Dtcg::dimension(0.25),
+                    '2' => Dtcg::dimension(0.5),
+                    '4' => Dtcg::dimension(1),
+                    '8' => Dtcg::dimension(2),
+                ],
+                'radius' => ['md' => Dtcg::dimension(0.375)],
+            ],
+            'font' => ['size' => ['sm' => Dtcg::dimension(0.875), 'lg' => Dtcg::dimension(1.125)]],
+        ];
     }
 }

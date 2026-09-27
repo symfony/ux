@@ -2,8 +2,9 @@ Conditions and breakpoints
 ==========================
 
 A condition applies styles in a given state: on hover, in dark mode, when an
-input is invalid... A breakpoint applies them from a given screen width. Both
-come from Panda CSS, with the same names and the same selectors.
+input is invalid, and so on. A breakpoint applies them from a given screen
+width. Both come from Panda CSS, with the same names and the same selectors,
+except ``_dark``: see `Dark mode`_.
 
 Writing a condition
 -------------------
@@ -56,7 +57,10 @@ Condition               Applies when
 ``_before``, ``_after`` ``&::before``, ``&::after``
 ``_first``, ``_last``   ``&:first-child``, ``&:last-child``
 ``_even``, ``_odd``     ``&:nth-child(even)``, ``&:nth-child(odd)``
-``_dark``, ``_light``   ``.dark &``, ``.light &``
+``_dark``               ``:root[data-theme="dark"] &``, or the operating
+                        system preference when ``data-theme`` is not
+                        ``light`` (see below)
+``_light``              ``.light &``
 ``_osDark``             ``@media (prefers-color-scheme: dark)``
 ``_motionReduce``       ``@media (prefers-reduced-motion: reduce)``
 ``_print``              ``@media print``
@@ -81,9 +85,21 @@ ancestor with the ``group`` class is hovered, focused, and so on. The
 Dark mode
 ---------
 
-By default, ``_dark`` applies inside an element that has the ``dark`` class,
-usually ``<html>``. To follow the operating system preference instead, use
-``_osDark``. To use another selector, redefine the condition:
+``_dark`` applies exactly when the dark variables of UX Design Tokens do: when
+``<html>`` has ``data-theme="dark"``, or when the operating system prefers a
+dark scheme and ``<html>`` does not have ``data-theme="light"``. It writes two
+rules to do this:
+
+.. code-block:: css
+
+    :root[data-theme="dark"] .dark\:bg_gray\.900 { ... }
+
+    @media (prefers-color-scheme: dark) {
+        :root:not([data-theme="light"]) .dark\:bg_gray\.900 { ... }
+    }
+
+To follow the operating system preference only, use ``_osDark``. To use
+another selector, redefine the condition:
 
 .. code-block:: yaml
 
@@ -92,8 +108,8 @@ usually ``<html>``. To follow the operating system preference instead, use
         conditions:
             dark: '[data-theme=dark] &'
 
-Semantic tokens follow the new selector too: their dark values are written
-under ``[data-theme=dark]``.
+The dark values of the tokens do not follow a redefined ``_dark``: UX Design
+Tokens keeps its own selectors.
 
 Your own conditions
 -------------------
@@ -157,15 +173,19 @@ Each breakpoint also comes with ranges: ``mdOnly`` applies from ``md`` up to
 An array is a short form for the breakpoints in order, starting at ``base``:
 ``p: ['sm', 'md', 'lg']`` means ``{ base: 'sm', sm: 'md', md: 'lg' }``.
 
-``breakpoints`` replaces the default list:
+Breakpoint tokens replace the default list: ``dimension`` tokens under
+``breakpoint``, ``breakpoints`` or ``screens`` in the design tokens (see
+:doc:`tokens`):
 
-.. code-block:: yaml
+.. code-block:: json
 
-    # config/packages/ux_css.yaml
-    ux_css:
-        breakpoints:
-            tablet: '48rem'
-            desktop: '80rem'
+    {
+        "breakpoint": {
+            "$type": "dimension",
+            "tablet": { "$value": { "value": 48, "unit": "rem" } },
+            "desktop": { "$value": { "value": 80, "unit": "rem" } }
+        }
+    }
 
 A breakpoint cannot have the name of a CSS property or shorthand, since both
 are written as keys of the same hash: ``p`` or ``color`` is refused when the

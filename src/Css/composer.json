@@ -37,6 +37,7 @@
         "symfony/config": "^7.4|^8.0",
         "symfony/dependency-injection": "^7.4|^8.0",
         "symfony/http-kernel": "^7.4|^8.0",
+        "symfony/ux-design-tokens": "^3.6",
         "twig/twig": "^3.24|^4.0"
     },
     "require-dev": {

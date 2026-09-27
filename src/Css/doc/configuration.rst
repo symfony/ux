@@ -1,30 +1,16 @@
 Configuration reference
 =======================
 
-Every option of the bundle, with its default value:
+This page lists every option of the bundle, with its default value. The tokens
+are not configured here: they come from UX Design Tokens, see :doc:`tokens`.
 
 .. code-block:: yaml
 
     # config/packages/ux_css.yaml
     ux_css:
-        # "panda" adds the default tokens of Panda CSS under your tokens
-        default_tokens: null
-
-        # Raw values, grouped by category: colors, spacing, sizes, radii,
-        # fontSizes, fontWeights, lineHeights, fonts, shadows, zIndex,
-        # durations, easings
-        tokens: {}
-
-        # References to other tokens, like "{colors.blue.500}". A value with a
-        # "base" key changes with the conditions it lists.
-        semantic_tokens: {}
-
         # Added to the default conditions, or replacing the one with the same
         # name: a selector with "&", or an at-rule
         conditions: {}
-
-        # Minimum widths, replacing the default breakpoints
-        breakpoints: {}
 
         # Only accept tokens for properties bound to a token category; other
         # values must be written between brackets
@@ -50,30 +36,6 @@ Every option of the bundle, with its default value:
 
 ``php bin/console config:dump-reference ux_css`` prints the same reference.
 
-default_tokens
---------------
-
-**type**: ``string`` **default**: ``null``
-
-When set to ``panda``, this adds the default tokens of Panda CSS under the
-project's tokens. See :doc:`tokens`.
-
-tokens
-------
-
-**type**: ``array`` **default**: ``[]``
-
-Raw token values, by category, then by name. Names can be nested in groups.
-See :doc:`tokens`.
-
-semantic_tokens
----------------
-
-**type**: ``array`` **default**: ``[]``
-
-Tokens that refer to other tokens with ``{category.path}``. A value with a
-``base`` key is a conditional value. See :doc:`tokens`.
-
 conditions
 ----------
 
@@ -81,15 +43,6 @@ conditions
 
 Conditions to add to the default ones of Panda CSS, or to replace them. The
 name is written without the leading underscore. See :doc:`conditions`.
-
-breakpoints
------------
-
-**type**: ``array`` **default**: ``[]``
-
-Breakpoint names and their minimum widths. When set, the list replaces the
-default breakpoints (``sm``, ``md``, ``lg``, ``xl``, ``2xl``). See
-:doc:`conditions`.
 
 strict_tokens
 -------------

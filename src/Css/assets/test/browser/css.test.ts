@@ -6,10 +6,10 @@ test.describe('Css', () => {
 
         const box = page.getByTestId('css-box');
         await expect(box).toHaveCSS('padding', '16px');
-        await expect(box).toHaveCSS('color', 'rgb(220, 38, 38)');
+        await expect(box).toHaveCSS('color', 'color(srgb 0.8627 0.149 0.149)');
 
         await box.hover();
-        await expect(box).toHaveCSS('color', 'rgb(37, 99, 235)');
+        await expect(box).toHaveCSS('color', 'color(srgb 0.1451 0.3882 0.9216)');
     });
 
     test('Breakpoints apply from their minimum width', async ({ page }) => {
@@ -24,6 +24,6 @@ test.describe('Css', () => {
     test('Dynamic css() calls get their styles from static_css', async ({ page }) => {
         await page.goto('/ux-css/basic?tone=primary');
 
-        await expect(page.getByTestId('css-dynamic')).toHaveCSS('color', 'rgb(37, 99, 235)');
+        await expect(page.getByTestId('css-dynamic')).toHaveCSS('color', 'color(srgb 0.1451 0.3882 0.9216)');
     });
 });

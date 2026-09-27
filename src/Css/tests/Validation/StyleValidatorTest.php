@@ -48,8 +48,8 @@ final class StyleValidatorTest extends TestCase
         yield 'backslash' => [['color' => '[red\\]'], 'The value of "color" cannot contain ";", "{", "}", "\\", quotes, "<" or a CSS comment, "[red\\]" given.'];
         yield 'brace in a selector key' => [['& {' => ['color' => 'fg']], 'The key "& {" cannot contain ";", "{", "}", "\\", quotes, "<" or a CSS comment.'];
         yield 'declaration in a variable key' => [['--x:1;color:red' => '1'], 'The key "--x:1;color:red" cannot contain ";", "{", "}", "\\", quotes, "<" or a CSS comment.'];
-        yield 'token of a category with no token' => [['fontSize' => 'lg'], 'Unknown fontSizes token "lg": no fontSizes token is declared. Add them under ux_css.tokens.fontSizes, or write a raw value between brackets, like "[lg]".'];
-        yield 'token of a category with no token, next to keywords' => [['fontWeight' => 'heavy'], 'Unknown fontWeights token "heavy": no fontWeights token is declared. Add them under ux_css.tokens.fontWeights, or write a raw value between brackets, like "[heavy]".'];
+        yield 'token of a category with no token' => [['fontSize' => 'lg'], 'Unknown fontSizes token "lg": no fontSizes token is declared. Add fontSizes tokens to the design tokens, under font.size, font-size, fontSize or fontSizes, or write a raw value between brackets, like "[lg]".'];
+        yield 'token of a category with no token, next to keywords' => [['fontWeight' => 'heavy'], 'Unknown fontWeights token "heavy": no fontWeights token is declared. Add fontWeights tokens to the design tokens, under font.weight, font-weight, fontWeight or fontWeights, or write a raw value between brackets, like "[heavy]".'];
         yield 'object' => [['color' => new \stdClass()], 'The value of "color" must be a string, a number or a boolean, "stdClass" given.'];
     }
 

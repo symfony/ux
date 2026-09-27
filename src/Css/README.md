@@ -2,7 +2,7 @@
 
 **EXPERIMENTAL** This bundle is currently experimental and is likely to change, possibly significantly, before its first stable release.
 
-Symfony UX CSS provides a `css()` Twig function in the spirit of [Panda CSS](https://panda-css.com/): it turns a hash of style properties into atomic class names, built from your design tokens and validated when templates compile.
+Symfony UX CSS provides a `css()` Twig function in the spirit of [Panda CSS](https://panda-css.com/). It turns a hash of style properties into atomic class names, using the design tokens of [Symfony UX Design Tokens](https://symfony.com/bundles/ux-design-tokens/current/index.html), and validates them when templates compile.
 
 ## Installation
 

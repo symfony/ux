@@ -111,7 +111,8 @@ file holds each rule once.
 The CSS layers
 --------------
 
-The generated file puts the tokens and the rules in two cascade layers:
+The generated file puts the variables of the breakpoints and the rules in two
+cascade layers:
 
 .. code-block:: css
 
@@ -129,7 +130,7 @@ Bootstrap, overrides a ``css()`` class on the same property. To give
     @layer base, tokens, utilities;
 
     @layer base {
-        a { color: var(--colors-fg); }
+        a { color: var(--dt-color-fg); }
     }
 
 Layers are ordered by the first place their name appears. A later layer wins

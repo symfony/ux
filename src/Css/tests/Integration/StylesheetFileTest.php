@@ -15,16 +15,12 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\UX\Css\Tests\Fixtures\Dtcg;
 use Symfony\UX\Css\Tests\Fixtures\TestKernel;
 use Twig\Error\SyntaxError;
 
 final class StylesheetFileTest extends TestCase
 {
-    private const CONFIG = [
-        'tokens' => ['colors' => ['red' => '#f00'], 'spacing' => ['md' => '1rem']],
-        'semantic_tokens' => ['colors' => ['primary' => '{colors.red}', 'fg' => '{colors.red}']],
-    ];
-
     private string $projectDir;
 
     protected function setUp(): void
@@ -49,8 +45,8 @@ final class StylesheetFileTest extends TestCase
         $css = $this->readStylesheet();
 
         $this->assertStringStartsWith('@layer tokens,utilities;', $css);
-        $this->assertStringContainsString('.p_md{padding:var(--spacing-md)}', $css);
-        $this->assertStringContainsString('.hover\:bg_fg:is(:hover, [data-hover]){background:var(--colors-fg)}', $css);
+        $this->assertStringContainsString('.p_md{padding:var(--dt-dimension-spacing-md)}', $css);
+        $this->assertStringContainsString('.hover\:bg_fg:is(:hover, [data-hover]){background:var(--dt-color-fg)}', $css);
     }
 
     public function testCacheWarmupFailsOnAnInvalidCssCall(): void
@@ -89,7 +85,7 @@ final class StylesheetFileTest extends TestCase
 
         $kernel->handle(Request::create('/'));
 
-        $this->assertStringContainsString(".p_md {\n    padding: var(--spacing-md);\n}", $this->readStylesheet());
+        $this->assertStringContainsString(".p_md {\n    padding: var(--dt-dimension-spacing-md);\n}", $this->readStylesheet());
     }
 
     public function testOnlyChangedTemplatesAreReadAgain(): void
@@ -127,8 +123,9 @@ final class StylesheetFileTest extends TestCase
         $buildDir = TestKernel::temporaryDirectory();
         $kernel = $this->bootKernel(buildDir: $buildDir);
         $this->service($kernel, 'twig')->render('home.html.twig');
-        $config = ['tokens' => self::CONFIG['tokens'], 'semantic_tokens' => ['colors' => ['fg' => '{colors.red}']]];
-        $changedKernel = $this->bootKernel(config: $config, buildDir: $buildDir);
+        $tokens = self::designTokens();
+        unset($tokens['color']['primary']);
+        $changedKernel = $this->bootKernel(buildDir: $buildDir, tokens: $tokens);
         $twig = $this->service($changedKernel, 'twig');
 
         $this->expectException(SyntaxError::class);
@@ -202,7 +199,7 @@ final class StylesheetFileTest extends TestCase
     public function testStaticCssRulesAreWrittenToo(): void
     {
         $rule = ['properties' => ['color' => ['*']], 'conditions' => ['hover']];
-        $config = self::CONFIG + ['static_css' => ['css' => [$rule]]];
+        $config = ['static_css' => ['css' => [$rule]]];
 
         $this->bootKernel(config: $config);
 
@@ -228,10 +225,18 @@ final class StylesheetFileTest extends TestCase
 
     private function bootKernel(
         bool $debug = true,
-        array $config = self::CONFIG,
+        array $config = [],
         ?string $buildDir = null,
+        ?array $tokens = null,
     ): KernelInterface {
-        $kernel = new TestKernel($config, 'test', $debug, $this->projectDir, $buildDir);
+        $kernel = new TestKernel(
+            $config,
+            'test',
+            $debug,
+            $this->projectDir,
+            $buildDir,
+            designTokens: $tokens ?? self::designTokens(),
+        );
         $kernel->boot();
 
         return $kernel;
@@ -257,5 +262,17 @@ final class StylesheetFileTest extends TestCase
     private function readStylesheet(): string
     {
         return file_get_contents($this->stylesheetPath());
+    }
+
+    private static function designTokens(): array
+    {
+        return [
+            'color' => [
+                'red' => Dtcg::color('#f00'),
+                'primary' => Dtcg::alias('color.red'),
+                'fg' => Dtcg::alias('color.red'),
+            ],
+            'dimension' => ['spacing' => ['md' => Dtcg::dimension(1)]],
+        ];
     }
 }

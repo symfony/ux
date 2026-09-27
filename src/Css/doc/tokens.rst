@@ -2,87 +2,101 @@ Design tokens
 =============
 
 Tokens are the named values your styles use: colors, spacing, font sizes and so
-on. You declare them once in the bundle configuration. ``css()`` only accepts
-their names. Each one becomes a CSS variable.
+on. UX CSS reads them from `UX Design Tokens`_, which loads token files written
+in the `DTCG`_ format. ``css()`` only accepts their names, and the generated
+rules use the CSS variables UX Design Tokens writes.
 
-Raw tokens
-----------
+Where tokens come from
+----------------------
 
-``tokens`` holds raw values, grouped by category:
+A token file is JSON. A node with ``$value`` is a token, and its path is its
+position in the tree:
+
+.. code-block:: json
+
+    {
+        "color": {
+            "$type": "color",
+            "palette": {
+                "blue-500": { "$value": { "colorSpace": "srgb", "components": [0.23, 0.51, 0.96] } }
+            },
+            "action": {
+                "primary": { "$value": "{color.palette.blue-500}" }
+            }
+        },
+        "dimension": {
+            "$type": "dimension",
+            "spacing": {
+                "md": { "$value": { "value": 1, "unit": "rem" } }
+            },
+            "radius": {
+                "control": { "$value": { "value": 0.375, "unit": "rem" } }
+            }
+        }
+    }
+
+UX Design Tokens loads the file:
 
 .. code-block:: yaml
 
-    # config/packages/ux_css.yaml
-    ux_css:
-        tokens:
-            colors:
-                blue: { 500: '#3b82f6', 600: '#2563eb' }
-                gray: { 50: '#f9fafb', 900: '#111827' }
-                white: '#ffffff'
-            spacing: { sm: '0.5rem', md: '1rem', lg: '2rem' }
-            sizes: { prose: '65ch' }
-            radii: { md: '0.375rem', full: '9999px' }
-            fontSizes: { sm: '0.875rem', lg: '1.125rem' }
-            fonts:
-                body: ['Inter', 'sans-serif']
+    # config/packages/ux_design_tokens.yaml
+    ux_design_tokens:
+        paths:
+            - '%kernel.project_dir%/design/tokens.json'
 
-The categories are fixed: ``colors``, ``spacing``, ``sizes``, ``radii``,
-``fontSizes``, ``fontWeights``, ``lineHeights``, ``fonts``, ``shadows``,
-``zIndex``, ``durations`` and ``easings``. Inside a category, tokens can be
-nested in groups: ``blue.500`` is the ``500`` token of the ``blue`` group. A
-``fonts``, ``shadows`` or ``easings`` token can be a list, which is joined with
-commas.
+UX CSS reads the tokens when the container is built. Editing a token file
+rebuilds the container in debug mode, including the files that a Resolver
+document or a ``$ref`` points to. The paths must be known at that moment, so a
+token file cannot come from an environment variable.
 
-In ``css()``, a token is its name as a string:
+Names in css()
+--------------
+
+The path of a token gives its category and its name. The first segments must
+match one of the category's prefixes, and the rest of the path is the name:
+
+=============== ========================================================= ======================
+Category        Prefixes                                                  Token types
+=============== ========================================================= ======================
+``colors``      ``color``, ``colors``                                     ``color``
+``spacing``     ``dimension.spacing``, ``dimension.space``, ``spacing``,  ``dimension``
+                ``space``
+``sizes``       ``dimension.size``, ``dimension.sizes``, ``size``,        ``dimension``
+                ``sizes``
+``radii``       ``dimension.radius``, ``dimension.radii``, ``radius``,    ``dimension``
+                ``radii``, ``rounded``
+``fontSizes``   ``font.size``, ``font-size``, ``fontSize``, ``fontSizes`` ``dimension``
+``fontWeights`` ``font.weight``, ``font-weight``, ``fontWeight``,         ``fontWeight``,
+                ``fontWeights``                                           ``number``
+``lineHeights`` ``font.line-height``, ``line.height``, ``line-height``,   ``number``,
+                ``lineHeight``, ``lineHeights``, ``leading``              ``dimension``
+``fonts``       ``font.family``, ``font-family``, ``fontFamily``,         ``fontFamily``
+                ``fontFamilies``, ``fonts``
+``shadows``     ``shadow``, ``shadows``, ``elevation``                    ``shadow``
+``zIndex``      ``z-index``, ``zIndex``                                   ``number``
+``durations``   ``duration``, ``durations``, ``motion.duration``          ``duration``
+``easings``     ``easing``, ``easings``, ``motion.easing``                ``cubicBezier``
+``breakpoints`` ``breakpoint``, ``breakpoints``, ``screens``              ``dimension``
+=============== ========================================================= ======================
+
+With the file above, ``color.action.primary`` is the ``action.primary`` color,
+``color.palette.blue-500`` is ``palette.blue-500``, ``dimension.spacing.md`` is
+the ``md`` spacing, and ``dimension.radius.control`` is the ``control``
+radius:
 
 .. code-block:: html+twig
 
-    <p class="{{ css({ color: 'blue.500', p: 'md', maxW: 'prose', fontFamily: 'body' }) }}">
+    <button class="{{ css({ color: 'action.primary', p: 'md', rounded: 'control' }) }}">
 
-Default tokens
---------------
+A few rules complete the table:
 
-``default_tokens: panda`` adds the default tokens of Panda CSS: a palette of
-colors from ``red.50`` to ``red.950`` and more, a spacing scale from ``0`` to
-``96``, and sizes, radii, font sizes, font weights, line heights, fonts,
-shadows, durations and easings. The Symfony Flex recipe enables it.
-
-.. code-block:: yaml
-
-    # config/packages/ux_css.yaml
-    ux_css:
-        default_tokens: panda
-        tokens:
-            colors:
-                brand: '#4f46e5'
-                red: { 500: '#e11d48' }
-
-Your tokens are added to the default ones. A token with the same path replaces
-the default one: here, ``red.500`` changes, and the other ``red`` shades stay.
-
-Semantic tokens
----------------
-
-``semantic_tokens`` gives names to other tokens, by reference:
-
-.. code-block:: yaml
-
-    # config/packages/ux_css.yaml
-    ux_css:
-        semantic_tokens:
-            colors:
-                primary: '{colors.blue.500}'
-                fg: { base: '{colors.gray.900}', _dark: '{colors.gray.50}' }
-                bg: { base: '{colors.white}', _dark: '{colors.gray.900}' }
-
-A reference is written ``{category.path}``. It can point to a raw token or to
-another semantic token.
-
-A value with a ``base`` key is a conditional value. ``base`` applies by
-default. Each other key is a condition, such as ``_dark``, that applies another
-value. Templates use the semantic name and never repeat the condition:
-``color: 'fg'`` follows dark mode by itself. :doc:`conditions` lists the
-available conditions.
+* when several prefixes match, the longest one wins;
+* a token named ``$root`` takes the name of its group;
+* a token is left out if the category does not accept its type, like a
+  ``number`` token under ``color``;
+* a token outside every prefix is left out: ``css()`` does not know it;
+* two paths that give the same name, like ``color.red`` and ``colors.red``, are
+  an error.
 
 Which properties take which tokens
 ----------------------------------
@@ -115,32 +129,30 @@ Category        Properties (and their shorthands)
 ``easings``     ``transitionTimingFunction``, ``animationTimingFunction``
 =============== ==============================================================
 
-Tokens as CSS variables
------------------------
+CSS variables
+-------------
 
-Every token becomes a CSS variable in the ``tokens`` layer of the generated
-file, whether a template uses it or not. The name is the category followed by
-the path, with dashes:
+The rules read the variables of UX Design Tokens:
 
 .. code-block:: css
 
-    @layer tokens {
-        :where(:root, :host) {
-            --colors-blue-500: #3b82f6;
-            --spacing-md: 1rem;
-            --fonts-body: Inter, sans-serif;
-            --colors-primary: var(--colors-blue-500);
-            --colors-fg: var(--colors-gray-900);
-        }
+    .c_action\.primary { color: var(--dt-color-action-primary); }
+    .p_md { padding: var(--dt-dimension-spacing-md); }
 
-        .dark {
-            --colors-fg: var(--colors-gray-50);
-        }
-    }
+UX CSS does not declare these variables: UX Design Tokens does. Add its
+stylesheet to the base template, next to the stylesheet of UX CSS:
 
-A semantic token refers to the variable of its target. A conditional value is
-written under the selector of its condition. The breakpoints are written as
-variables too (``--breakpoints-md``).
+.. code-block:: html+twig
+
+    {# templates/base.html.twig #}
+    {% block stylesheets %}
+        {{ ux_token_stylesheet() }}
+        <link rel="stylesheet" href="{{ asset('ux_css/styles.css') }}">
+    {% endblock %}
+
+``ux_token_css()`` inlines the same variables in a ``<style>`` element instead.
+The ``css_prefix`` option of UX Design Tokens renames the variables, and the
+rules follow it.
 
 Hand-written CSS can use the same variables, so it matches the tokens:
 
@@ -148,9 +160,54 @@ Hand-written CSS can use the same variables, so it matches the tokens:
 
     /* assets/styles/app.css */
     .prose a {
-        color: var(--colors-primary);
-        text-underline-offset: var(--spacing-sm);
+        color: var(--dt-color-action-primary);
     }
+
+Light, dark and themes
+----------------------
+
+Dark values come from UX Design Tokens: a Resolver document gives the tokens
+another value in a dark context, and its stylesheet redefines the variables
+for dark mode. ``color: 'action.primary'`` follows dark mode by itself, with
+no change to the templates.
+
+For styles that only apply in dark mode, ``_dark`` uses the selectors of UX
+Design Tokens, so it applies exactly when the dark variables do:
+
+.. code-block:: css
+
+    :root[data-theme="dark"] .dark\:bg_palette\.slate-900 { ... }
+
+    @media (prefers-color-scheme: dark) {
+        :root:not([data-theme="light"]) .dark\:bg_palette\.slate-900 { ... }
+    }
+
+A theme per user, brand or tenant uses a Resolver input: ``ux_token_css()`` and
+``ux_token_stylesheet()`` write other values for the same variables, and the
+classes of ``css()`` stay the same. UX CSS reads every context of the Resolver
+document, so a token defined in only one context is accepted everywhere.
+
+Breakpoints
+-----------
+
+``dimension`` tokens under ``breakpoint``, ``breakpoints`` or ``screens``
+replace the breakpoints of Panda CSS:
+
+.. code-block:: json
+
+    {
+        "breakpoint": {
+            "$type": "dimension",
+            "tablet": { "$value": { "value": 48, "unit": "rem" } }
+        }
+    }
+
+``css({ tablet: { p: 'lg' } })`` then writes its rule under
+``@media screen and (min-width: 48rem)``. Without breakpoint tokens, the
+breakpoints of Panda CSS apply: ``sm``, ``md``, ``lg``, ``xl`` and ``2xl``.
+
+A media query cannot change per request, so a breakpoint must have the same
+value in every context of the Resolver document.
 
 Values that are not tokens
 --------------------------
@@ -168,40 +225,51 @@ written to the CSS as is. With ``strict_tokens: false``, any string is accepted
 without brackets, as in Panda CSS by default.
 
 With ``strict_tokens``, a category that has no token at all refuses bare
-strings too. The error says which key to fill:
+strings too. The error lists the paths to fill:
 
 .. code-block:: text
 
-    Unknown fontSizes token "lg": no fontSizes token is declared. Add them under
-    ux_css.tokens.fontSizes, or write a raw value between brackets, like "[lg]".
+    Unknown fontSizes token "lg": no fontSizes token is declared. Add fontSizes
+    tokens to the design tokens, under font.size, font-size, fontSize or
+    fontSizes, or write a raw value between brackets, like "[lg]".
 
 Numbers and keywords such as ``bold`` are still accepted.
 
 A few more forms are accepted wherever a token is expected:
 
-* ``bg: 'primary/50'`` mixes the color with 50% transparency, using
+* ``bg: 'action.primary/50'`` mixes the color with 50% transparency, using
   ``color-mix()``;
 * ``mt: '-md'`` gives the negative value of a spacing token;
-* ``gap: 'var(--card-gap)'`` uses a CSS variable of your own.
+* ``gap: 'var(--card-gap)'`` uses your own CSS variable.
+
+Composite tokens (``typography``, ``border``, ``transition``, ``gradient`` and
+``strokeStyle``) are not available in ``css()``.
 
 Configuration errors
 --------------------
 
-The token configuration is checked when the container is built, so
-``cache:clear`` reports mistakes before any template is rendered:
+The tokens are checked when the container is built, so ``cache:clear``
+reports mistakes before any template is rendered:
 
 =========================================== =====================================
 Mistake                                     Message
 =========================================== =====================================
-Unknown category                            ``Unknown token category "color".
-                                            Did you mean "colors"?``
-Reference to a token that does not exist    ``The "colors.primary" token
-                                            references the unknown token
-                                            "colors.rde". Did you mean
-                                            "colors.red"?``
-Tokens that refer to each other             ``Circular token reference:
-                                            colors.a -> colors.b -> colors.a.``
-Unknown condition in a conditional value    ``The "colors.fg" token uses the
-                                            unknown condition "_drak". Did you
-                                            mean "_dark"?``
+Two paths for one name                      ``The "color.red" and "colors.red"
+                                            design tokens both give the "red"
+                                            colors token.``
+Breakpoint that changes with the context    ``The "breakpoint.md" design token
+                                            must have the same value in every
+                                            Resolver context, because a media
+                                            query cannot change per request.``
+Token file from an environment variable     ``UX CSS reads the design tokens
+                                            when the container compiles, so the
+                                            "%env(TOKENS_FILE)%" design token
+                                            path cannot come from an
+                                            environment variable.``
 =========================================== =====================================
+
+Errors in the token files themselves, such as an alias to a token that does not
+exist, come from UX Design Tokens, and include the path of the token.
+
+.. _`UX Design Tokens`: https://symfony.com/bundles/ux-design-tokens/current/index.html
+.. _`DTCG`: https://www.designtokens.org/tr/2025.10/

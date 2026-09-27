@@ -33,13 +33,16 @@ What differs on purpose
   key at the top of the hash, Panda's runtime and its build step give
   different class names. UX CSS names the classes of the values written in
   the template like the build step. That way, they always have their CSS.
-* The configuration is written in YAML or PHP, under ``ux_css``. A token is
-  written as its value. Panda's ``{ value: ... }`` form is accepted too.
+* Tokens come from DTCG files through UX Design Tokens, not from the
+  ``tokens`` and ``semanticTokens`` of a Panda config. The rules read the
+  variables of UX Design Tokens, like ``--dt-color-primary``, instead of
+  Panda's ``--colors-primary``, and the generated file declares no token
+  variables.
+* ``_dark`` uses the selectors of UX Design Tokens instead of Panda's
+  ``.dark &``: see :doc:`conditions`.
+* The rest of the configuration is written in YAML or PHP, under ``ux_css``.
 * ``css()`` takes a single hash. Panda's ``css(a, b)``, which merges several
   style objects, is not supported.
-* When the default value of a semantic color uses the ``/`` opacity syntax,
-  its values for other conditions, such as ``_dark``, are kept. Panda drops
-  them.
 * In ``static_css``, ``*`` also works on a shorthand, such as ``p``.
 
 Not supported yet
@@ -51,7 +54,6 @@ These features of Panda CSS have no equivalent yet:
 * text styles, layer styles and animation styles;
 * themes, and the ``hash`` option for class names;
 * global CSS, keyframes and custom utilities in the configuration;
-* token categories beyond the twelve listed in :doc:`tokens`;
-* importing tokens from a W3C design tokens file.
+* token categories beyond the twelve listed in :doc:`tokens`.
 
 .. _`Panda CSS`: https://panda-css.com/

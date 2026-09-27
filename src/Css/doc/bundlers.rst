@@ -4,6 +4,12 @@ Loading the stylesheet
 The bundle writes one plain CSS file, ``var/ux_css/styles.css``. Any tool that
 serves or bundles CSS can use it.
 
+The rules in that file use the CSS variables of UX Design Tokens, but the
+file does not declare them (see :doc:`tokens`). Whatever loads the file, the
+base template must also load those variables, with
+``{{ ux_token_stylesheet() }}`` or ``{{ ux_token_css() }}``. Without them,
+colors and spacing are missing, and no error is shown.
+
 AssetMapper
 -----------
 
@@ -14,6 +20,7 @@ The bundle registers ``var/ux_css/`` as an AssetMapper path under the
 
     {# templates/base.html.twig #}
     {% block stylesheets %}
+        {{ ux_token_stylesheet() }}
         <link rel="stylesheet" href="{{ asset('ux_css/styles.css') }}">
     {% endblock %}
 
@@ -38,6 +45,16 @@ Import the file from a JavaScript entry, next to your own styles:
 The rules end up in the CSS file of the entry, which
 ``encore_entry_link_tags()`` or ``reprise_entry_link_tags()`` already loads.
 This works with Webpack Encore and with Symfony Reprise on Vite or Rsbuild.
+The CSS variables of UX Design Tokens are not part of that file either.
+Keep loading them in the base template:
+
+.. code-block:: twig
+
+    {# templates/base.html.twig #}
+    {% block stylesheets %}
+        {{ ux_token_css() }}
+        {{ encore_entry_link_tags('app') }}
+    {% endblock %}
 
 With Webpack Encore, the file can also be an entry of its own:
 

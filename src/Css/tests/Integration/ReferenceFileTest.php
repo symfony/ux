@@ -13,18 +13,13 @@ namespace Symfony\UX\Css\Tests\Integration;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\UX\Css\DependencyInjection\PandaConfigConverter;
-use Symfony\UX\Css\Engine\Engine;
 use Symfony\UX\Css\Reference\ReferenceDumper;
+use Symfony\UX\Css\Tests\Fixtures\Dtcg;
 use Symfony\UX\Css\Tests\Fixtures\TestKernel;
 use Symfony\UX\Css\Validation\StyleValidator;
 
 final class ReferenceFileTest extends TestCase
 {
-    private const CONFIG = [
-        'tokens' => ['colors' => ['red' => '#f00'], 'spacing' => ['md' => '1rem']],
-    ];
-
     private string $projectDir;
 
     protected function setUp(): void
@@ -43,9 +38,9 @@ final class ReferenceFileTest extends TestCase
 
     public function testTheReferenceIsWrittenInDebug(): void
     {
-        $this->bootKernel();
+        $kernel = $this->bootKernel();
 
-        $this->assertStringEqualsFile($this->referencePath(), self::expectedReference(self::CONFIG));
+        $this->assertStringEqualsFile($this->referencePath(), self::expectedReference($kernel));
     }
 
     public function testNoReferenceIsWrittenOutsideOfDebug(): void
@@ -69,9 +64,10 @@ final class ReferenceFileTest extends TestCase
     public function testAChangedConfigRewritesTheFile(): void
     {
         $this->bootKernel();
-        $config = ['tokens' => ['colors' => ['red' => '#f00', 'teal' => '#0ff'], 'spacing' => ['md' => '1rem']]];
+        $tokens = self::designTokens();
+        $tokens['color']['teal'] = Dtcg::color('#0ff');
 
-        $this->bootKernel(config: $config);
+        $this->bootKernel(tokens: $tokens);
 
         $this->assertStringContainsString("'teal'", file_get_contents($this->referencePath()));
     }
@@ -94,10 +90,16 @@ final class ReferenceFileTest extends TestCase
         $this->assertFileDoesNotExist($this->referencePath());
     }
 
-    private function bootKernel(bool $debug = true, array $config = self::CONFIG): void
+    private function bootKernel(bool $debug = true, ?array $tokens = null): TestKernel
     {
-        $kernel = new TestKernel($config, 'test', $debug, $this->projectDir);
+        $kernel = new TestKernel(
+            debug: $debug,
+            projectDir: $this->projectDir,
+            designTokens: $tokens ?? self::designTokens(),
+        );
         $kernel->boot();
+
+        return $kernel;
     }
 
     private function referencePath(): string
@@ -105,12 +107,18 @@ final class ReferenceFileTest extends TestCase
         return $this->projectDir.'/config/reference_css.php';
     }
 
-    private static function expectedReference(array $config): string
+    private static function expectedReference(TestKernel $kernel): string
     {
-        $defaults = ['semantic_tokens' => [], 'conditions' => [], 'breakpoints' => []];
-        $project = PandaConfigConverter::convert($config + $defaults);
-        $validator = new StyleValidator(Engine::fromProjectConfig($project));
+        $engine = $kernel->getContainer()->get('ux_css.engine');
 
-        return new ReferenceDumper($validator)->dump();
+        return new ReferenceDumper(new StyleValidator($engine))->dump();
+    }
+
+    private static function designTokens(): array
+    {
+        return [
+            'color' => ['red' => Dtcg::color('#f00')],
+            'dimension' => ['spacing' => ['md' => Dtcg::dimension(1)]],
+        ];
     }
 }

@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\Css\Validation;
 
+use Symfony\UX\Css\DependencyInjection\DesignTokensConverter;
 use Symfony\UX\Css\DependencyInjection\PandaConfigConverter;
 use Symfony\UX\Css\Engine\Engine;
 use Symfony\UX\Css\Exception\InvalidStyleException;
@@ -294,9 +295,13 @@ final class StyleValidator
         $shown = \is_string($value) ? $value : json_encode($value);
         if ($rule['emptyCategory']) {
             $message = \sprintf('Unknown %1$s token "%2$s": no %1$s token is declared.', $rule['category'], $shown);
+            $prefixes = DesignTokensConverter::CATEGORIES[$rule['category']][0];
+            $lastPrefix = array_pop($prefixes);
             $hint = \sprintf(
-                ' Add them under ux_css.tokens.%s, or write a raw value between brackets, like "[%s]".',
+                ' Add %1$s tokens to the design tokens, under %2$s or %3$s, or write a raw value between brackets, like "[%4$s]".',
                 $rule['category'],
+                implode(', ', $prefixes),
+                $lastPrefix,
                 $shown,
             );
 

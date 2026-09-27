@@ -17,6 +17,7 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\UX\Css\Engine\CssEscaper;
+use Symfony\UX\Css\Tests\Fixtures\Dtcg;
 use Symfony\UX\Css\Tests\Fixtures\TestKernel;
 use Twig\Environment;
 use Twig\Error\RuntimeError;
@@ -27,11 +28,6 @@ use Twig\Source;
 
 final class CssFunctionTest extends KernelTestCase
 {
-    private const CONFIG = [
-        'tokens' => ['colors' => ['red' => '#f00', 'blue' => '#00f'], 'spacing' => ['md' => '1rem', 'lg' => '2rem']],
-        'semantic_tokens' => ['colors' => ['primary' => '{colors.red}', 'fg' => '{colors.blue}']],
-    ];
-
     public function testAConstantHashCompilesToItsClasses(): void
     {
         $template = '<div class="{{ css({ p: \'md\', color: \'primary\', _hover: { color: \'fg\' } }) }}"></div>';
@@ -323,9 +319,26 @@ final class CssFunctionTest extends KernelTestCase
         $this->assertSame([['color' => 'primary'], ['p' => 'lg']], $collected);
     }
 
+    public function testATokenWithADotAndAHyphenGivesAnEscapedClass(): void
+    {
+        $tokens = ['dimension' => ['spacing' => ['x-1' => ['5' => Dtcg::dimension(0.375)]]]];
+        self::bootKernel(['tokens' => $tokens]);
+        $generator = self::getContainer()->get('ux_css.css_generator');
+
+        $html = $this->render('<p class="{{ css({ p: \'x-1.5\' }) }}"></p>');
+        $css = $generator->generate([['p' => 'x-1.5']]);
+
+        $this->assertSame('<p class="p_x-1.5"></p>', $html);
+        $this->assertStringContainsString('.p_x-1\\.5 {', $css);
+        $this->assertStringContainsString('var(--dt-dimension-spacing-x-1-5)', $css);
+    }
+
     protected static function createKernel(array $options = []): KernelInterface
     {
-        return new TestKernel(self::CONFIG, 'test', $options['debug'] ?? true);
+        return new TestKernel(
+            debug: $options['debug'] ?? true,
+            designTokens: $options['tokens'] ?? self::designTokens(),
+        );
     }
 
     private function render(string $template, array $context = []): string
@@ -344,5 +357,20 @@ final class CssFunctionTest extends KernelTestCase
     private static function twig(): Environment
     {
         return self::getContainer()->get('twig');
+    }
+
+    private static function designTokens(): array
+    {
+        return [
+            'color' => [
+                'red' => Dtcg::color('#f00'),
+                'blue' => Dtcg::color('#00f'),
+                'primary' => Dtcg::alias('color.red'),
+                'fg' => Dtcg::alias('color.blue'),
+            ],
+            'dimension' => [
+                'spacing' => ['md' => Dtcg::dimension(1), 'lg' => Dtcg::dimension(2)],
+            ],
+        ];
     }
 }
