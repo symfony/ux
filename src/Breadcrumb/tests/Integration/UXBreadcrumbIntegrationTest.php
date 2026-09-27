@@ -55,6 +55,14 @@ final class UXBreadcrumbIntegrationTest extends KernelTestCase
         self::assertStringContainsString('aria-current="page"', $html);
     }
 
+    public function testAnExpressionLabelRendersTheValueOfAControllerArgument(): void
+    {
+        $twig = $this->twigForRequest('/products/blue-sneakers/name');
+
+        $html = $twig->createTemplate('{{ ux_breadcrumb() }}')->render();
+        self::assertStringContainsString('<span aria-current="page">Blue sneakers</span>', $html);
+    }
+
     public function testAbsoluteModeFeedsTheJsonLdShape(): void
     {
         $twig = $this->twigForRequest('/products/blue-sneakers');
