@@ -38,6 +38,7 @@ The attribute targets both classes and methods, so a controller with several act
 
     use App\Entity\Product;
     use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+    use Symfony\Component\ExpressionLanguage\Expression;
     use Symfony\Component\HttpFoundation\Response;
     use Symfony\Component\Routing\Attribute\Route;
     use Symfony\UX\Breadcrumb\Attribute\Breadcrumb;
@@ -53,14 +54,14 @@ The attribute targets both classes and methods, so a controller with several act
         }
 
         #[Route('/{slug}', name: 'view')]
-        #[Breadcrumb(label: 'product.view.breadcrumb', translationParameters: ['name' => 'product.name'])]
+        #[Breadcrumb(label: 'product.view.breadcrumb', translationParameters: ['name' => new Expression('product.name')])]
         public function view(Product $product): Response
         {
             return $this->render('product/view.html.twig');
         }
 
         #[Route('/{slug}/edit', name: 'edit')]
-        #[Breadcrumb(label: 'product.view.breadcrumb', route: 'product_view', inheritedParameters: ['slug'])]
+        #[Breadcrumb(label: 'product.view.breadcrumb', route: 'product_view', parameters: ['slug'])]
         #[Breadcrumb(label: 'product.edit.breadcrumb')]
         public function edit(Product $product): Response
         {
@@ -93,12 +94,13 @@ An invokable controller works the same way, with everything on the class since t
 
     use App\Entity\Product;
     use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+    use Symfony\Component\ExpressionLanguage\Expression;
     use Symfony\Component\HttpFoundation\Response;
     use Symfony\Component\Routing\Attribute\Route;
     use Symfony\UX\Breadcrumb\Attribute\Breadcrumb;
 
     #[Breadcrumb(label: 'product.index.breadcrumb', route: 'product_index')]
-    #[Breadcrumb(label: 'product.view.breadcrumb', translationParameters: ['name' => 'product.name'])]
+    #[Breadcrumb(label: 'product.view.breadcrumb', translationParameters: ['name' => new Expression('product.name')])]
     final class ProductViewController extends AbstractController
     {
         #[Route('/products/{slug}', name: 'product_view')]
@@ -141,7 +143,7 @@ It works the same way in a controller with several actions::
     final class ProductController extends AbstractController
     {
         #[Route('/{slug}', name: 'view')]
-        #[Breadcrumb(label: 'product.view.breadcrumb', route: 'product_view', inheritedParameters: ['slug'])]
+        #[Breadcrumb(label: 'product.view.breadcrumb', route: 'product_view', parameters: ['slug'])]
         public function view(Product $product): Response
         {
             // ...
@@ -163,7 +165,7 @@ Only the first crumb of a class or of a method can name a parent.
 The ancestors are resolved against the current request, like any other crumb of the trail.
 As an ancestor, a crumb is a link, so give it a ``route`` and the URL parameters it needs.
 Its expressions are evaluated against the arguments of the current action, so they only resolve when that action has arguments with the same names.
-The ``view`` crumb above declares ``route`` and ``inheritedParameters`` for that reason: on its own page, the current crumb is not a link anyway, so they cost nothing there.
+The ``view`` crumb above declares ``route`` and ``parameters`` for that reason: on its own page, the current crumb is not a link anyway, so they cost nothing there.
 
 A cycle, a parent that points at nothing, and a parent on any crumb but the first of its level throw a ``LogicException`` when the page is requested.
 Resolving a route name reads the route collection, which is expensive, so the map of routes to controllers is kept in the ``.ux_breadcrumb.cache`` pool.
@@ -175,39 +177,41 @@ The attribute
 
 * ``label`` (``string``): the translation key, or the literal label when ``translationDomain`` is ``false``
 * ``route`` (``?string``): name of the route to link to
-* ``parameters`` (``array<string, mixed>``): a **map of values**, used as given
-* ``inheritedParameters`` (``array<int, string>``): a **list of names** taken from the matched route
-* ``computedParameters`` (``array<string, string>``): a **map** of expressions, evaluated against the controller's arguments
+* ``parameters`` (``array<int|string, mixed>``): the URL parameters, inherited from the matched route, given, or computed, see below
 * ``translationDomain`` (``string|false|null``): ``null`` for the default domain, a domain name, or ``false`` to skip translation
-* ``translationParameters`` (``array<string, string>``): a **map** of expressions, fed to the translator
+* ``translationParameters`` (``array<string, mixed>``): the translator's parameters, given or computed
 * ``extra`` (``array<string, mixed>``): arbitrary data forwarded untouched to the resolved item, never read by the bundle
 * ``parent`` (``string|array{class-string, string}|null``): the controller class, action or route name whose trail goes above this crumb, see `Parent crumbs`_
 
-The three URL parameter bags differ in where the value comes from, not in where it goes:
+Each entry of ``parameters`` says where its value comes from:
 
-* ``parameters`` is a **map of values**, used as given. Nothing is evaluated, so this is the bag that carries a constant, and the one a crumb built in PHP uses.
-* ``inheritedParameters`` is a **list of names** taken from the already-matched route (``_route_params``). The values exist, so nothing is evaluated either.
-* ``computedParameters`` is a **map** whose values are ExpressionLanguage expressions evaluated against the controller's arguments.
+* a **bare name**, such as ``'slug'``, takes the value from the already-matched route (``_route_params``).
+* an ``Expression`` is evaluated against the controller's arguments.
+* **any other value** is used as given. Nothing is evaluated, so this is how a constant is passed, and how a crumb built in PHP passes the values it already holds.
 
-``translationParameters`` is a map of expressions too, but it feeds the translator rather than the URL.
+``translationParameters`` follows the same rules, minus the bare names, and feeds the translator rather than the URL.
 
 ::
+
+    use Symfony\Component\ExpressionLanguage\Expression;
 
     #[Breadcrumb(
         label: 'product.view.breadcrumb',
         route: ProductRouteName::View->value,
-        parameters: ['page' => 1],
-        inheritedParameters: ['slug'],
-        computedParameters: ['state' => 'product.state'],
-        translationParameters: ['name' => 'product.name'],
+        parameters: [
+            'slug',
+            'page' => 1,
+            'state' => new Expression('product.state'),
+        ],
+        translationParameters: ['name' => new Expression('product.name')],
     )]
 
 A route name is a string, as everywhere else in Symfony.
 If your application keeps its route names in a backed enum, pass the case's ``->value``, which is a valid constant expression in an attribute argument.
 
-None of the bags decides whether a parameter lands in the path or in the query string.
+The form of an entry does not decide whether a parameter lands in the path or in the query string.
 The URL generator places each name in the path when the route declares a placeholder for it, and in the query string otherwise, so in the example above ``slug`` fills the ``{slug}`` placeholder while ``page`` and ``state`` land in the query string.
-When several bags name the same parameter, the last of that list wins: a given value overrides an inherited name, and a computed one overrides both.
+A name given both bare and with a value takes the value.
 
 Only the controller arguments a crumb expression actually names are kept on the trail, so the whole argument list, and notably the ``Request``, is not pinned into the request attributes until render time.
 
@@ -274,9 +278,9 @@ that nothing renders.
 
 Both take any number of crumbs, so a variable depth is a loop and a spread, as above.
 
-A crumb built here already holds its values, so it passes ``parameters`` and a literal
-label with ``translationDomain: false``. The two expression bags are evaluated against the
-controller arguments the listener captured, which a crumb appended later has no say over.
+A crumb built here already holds its values, so it passes them as given in ``parameters``
+and a literal label with ``translationDomain: false``. Its ``Expression`` values are evaluated
+against the controller arguments the listener captured, which a crumb appended later has no say over.
 
 Adding a crumb stays cheap: nothing is resolved until a template asks for it, and a crumb
 appended after a first ``ux_breadcrumb_items()`` call is picked up rather than served from
@@ -440,7 +444,7 @@ literals, a fully-qualified class name needs four backslashes in PHP source::
     #[Breadcrumb(
         label: 'invitation.index.breadcrumb',
         route: 'invitation_index',
-        computedParameters: ['type' => 'enum("App\\\\Enum\\\\FilterType::Guest").value'],
+        parameters: ['type' => new Expression('enum("App\\\\Enum\\\\FilterType::Guest").value')],
     )]
 
 Caching and performance
@@ -457,7 +461,7 @@ Two caches do exist:
 Resolved crumbs are **not** cached across requests, on purpose.
 A label built with ``translationParameters`` embeds live entity state, so a correct cache key would have to evaluate the crumb expressions first, which is the very work the cache was meant to skip.
 Keying on the route and its parameters instead would serve a renamed product under its old name.
-URLs have the same problem: they depend on the evaluated ``computedParameters``, the reference type, and, in absolute mode, the request's host and scheme.
+URLs have the same problem: they depend on the evaluated ``parameters``, the reference type, and, in absolute mode, the request's host and scheme.
 
 There is no cache warmer either.
 ``ExpressionLanguage`` keys a parse tree on the expression *and* its variable names, and the bundle narrows those names per request from the controller arguments a crumb actually references, so the key cannot be computed ahead of time.

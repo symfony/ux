@@ -11,6 +11,8 @@
 
 namespace Symfony\UX\Breadcrumb\Attribute;
 
+use Symfony\UX\Breadcrumb\Exception\InvalidArgumentException;
+
 /**
  * Declares one crumb of the breadcrumb trail of a controller.
  *
@@ -24,26 +26,23 @@ namespace Symfony\UX\Breadcrumb\Attribute;
 final class Breadcrumb
 {
     /**
-     * The three URL parameter bags differ in where the value comes from, not in where it goes:
+     * `$parameters` holds the URL parameters. Each entry says where its value comes from:
      *
-     * - `$parameters` is a **map of values**, used as given. A crumb built in PHP already holds them, so it needs nothing else.
-     * - `$inheritedParameters` is a **list of names** taken from the already-matched route (`_route_params`). The values exist, so nothing is evaluated.
-     * - `$computedParameters` is a **map** whose values are ExpressionLanguage expressions evaluated against the controller's arguments.
+     * - a **bare name** (an integer key, such as `'slug'`) takes the value from the already-matched route (`_route_params`);
+     * - an **`Expression`** value is evaluated against the controller's arguments;
+     * - **any other value** is used as given. A crumb built in PHP already holds its values, so it needs nothing else.
      *
-     * None of them decides whether a parameter lands in the path or in the query string.
      * The URL generator places each name in the path when the route declares a placeholder for it, and in the query string otherwise.
-     * When several bags name the same parameter, the last of that list wins: a given value overrides an inherited name, and a computed one overrides both.
+     * A name given both bare and as a key takes the keyed value.
      *
-     * `$translationParameters` is a map of expressions too, but it feeds the translator rather than the URL.
+     * `$translationParameters` follows the same value rules, minus the bare names, but it feeds the translator rather than the URL.
      *
      * `$parent` names the controller whose trail goes above this crumb: an invokable controller class, an action (`[Controller::class, 'method']`) or a route name.
      * Only the first crumb of a class or of a method may name it. On a method, it replaces the class-level crumbs of that action.
      * The ancestors are resolved against the current request, so an ancestor that should be a link needs its own `$route` and URL parameters.
      *
-     * @param array<string, mixed>                    $parameters
-     * @param array<int, string>                      $inheritedParameters
-     * @param array<string, string>                   $computedParameters
-     * @param array<string, string>                   $translationParameters
+     * @param array<int|string, mixed>                $parameters
+     * @param array<string, mixed>                    $translationParameters
      * @param array<string, mixed>                    $extra                 forwarded as-is to the resolved BreadcrumbItem, never read here
      * @param string|array{class-string, string}|null $parent
      */
@@ -51,12 +50,21 @@ final class Breadcrumb
         public readonly string $label,
         public readonly ?string $route = null,
         public readonly array $parameters = [],
-        public readonly array $inheritedParameters = [],
-        public readonly array $computedParameters = [],
         public readonly string|false|null $translationDomain = null,
         public readonly array $translationParameters = [],
         public readonly array $extra = [],
         public readonly string|array|null $parent = null,
     ) {
+        foreach ($parameters as $key => $value) {
+            if (\is_int($key) && (!\is_string($value) || '' === $value)) {
+                throw new InvalidArgumentException(\sprintf('A URL parameter without a key must be the non-empty name of a route parameter to inherit, "%s" given.', get_debug_type($value)));
+            }
+        }
+
+        foreach ($translationParameters as $key => $value) {
+            if (\is_int($key)) {
+                throw new InvalidArgumentException(\sprintf('Translation parameters must be keyed by their placeholder name, integer key "%d" given.', $key));
+            }
+        }
     }
 }

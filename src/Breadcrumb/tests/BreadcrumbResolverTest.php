@@ -14,6 +14,7 @@ namespace Symfony\UX\Breadcrumb\Tests;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\RequiresPhpExtension;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\LocaleAwareInterface;
 use Symfony\UX\Breadcrumb\Attribute\Breadcrumb;
@@ -52,7 +53,7 @@ final class BreadcrumbResolverTest extends KernelTestCase
         $trail = $this->trail(
             new Breadcrumb(label: 'dashboard.home.breadcrumb', route: RouteName::DashboardHome->value),
             new Breadcrumb(label: 'product.index.breadcrumb', route: RouteName::ProductIndex->value),
-            new Breadcrumb(label: 'product.view.breadcrumb', route: RouteName::ProductView->value, inheritedParameters: ['slug']),
+            new Breadcrumb(label: 'product.view.breadcrumb', route: RouteName::ProductView->value, parameters: ['slug']),
         );
 
         $items = $this->resolver()->resolve($trail);
@@ -65,7 +66,7 @@ final class BreadcrumbResolverTest extends KernelTestCase
     public function testRouteParametersInheritOnlyTheNamedKeys(): void
     {
         $trail = $this->trail(
-            new Breadcrumb(label: 'product.view.breadcrumb', route: RouteName::ProductView->value, inheritedParameters: ['slug']),
+            new Breadcrumb(label: 'product.view.breadcrumb', route: RouteName::ProductView->value, parameters: ['slug']),
             new Breadcrumb(label: 'leaf', translationDomain: false),
         );
 
@@ -81,7 +82,7 @@ final class BreadcrumbResolverTest extends KernelTestCase
             new Breadcrumb(
                 label: 'product.index.breadcrumb',
                 route: RouteName::ProductIndex->value,
-                computedParameters: ['state' => 'product.state'],
+                parameters: ['state' => new Expression('product.state')],
             ),
             new Breadcrumb(label: 'leaf', translationDomain: false),
         );
@@ -94,7 +95,7 @@ final class BreadcrumbResolverTest extends KernelTestCase
     public function testAnInheritedParameterThatIsNotAPlaceholderLandsInTheQueryString(): void
     {
         $trail = $this->trail(
-            new Breadcrumb(label: 'product.index.breadcrumb', route: RouteName::ProductIndex->value, inheritedParameters: ['slug']),
+            new Breadcrumb(label: 'product.index.breadcrumb', route: RouteName::ProductIndex->value, parameters: ['slug']),
             new Breadcrumb(label: 'leaf', translationDomain: false),
         );
 
@@ -103,21 +104,48 @@ final class BreadcrumbResolverTest extends KernelTestCase
         self::assertSame('/products?slug=blue-sneakers', $items[0]->url);
     }
 
-    public function testAComputedParameterWinsOverAnInheritedOneOfTheSameName(): void
+    public function testOneMapMixesInheritedGivenAndComputedParameters(): void
     {
         $trail = $this->trail(
             new Breadcrumb(
                 label: 'product.view.breadcrumb',
                 route: RouteName::ProductView->value,
-                inheritedParameters: ['slug'],
-                computedParameters: ['slug' => 'product.state'],
+                parameters: ['slug', 'page' => 2, 'state' => new Expression('product.state')],
             ),
             new Breadcrumb(label: 'leaf', translationDomain: false),
         );
 
         $items = $this->resolver()->resolve($trail);
 
-        self::assertSame('/products/published', $items[0]->url);
+        self::assertSame('/products/blue-sneakers?page=2&state=published', $items[0]->url);
+    }
+
+    public function testAnInheritedNameTheRouteDoesNotHaveIsSkipped(): void
+    {
+        $trail = $this->trail(
+            new Breadcrumb(label: 'product.index.breadcrumb', route: RouteName::ProductIndex->value, parameters: ['missing']),
+            new Breadcrumb(label: 'leaf', translationDomain: false),
+        );
+
+        $items = $this->resolver()->resolve($trail);
+
+        self::assertSame('/products', $items[0]->url);
+    }
+
+    public function testAComputedParameterWinsOverAnInheritedOneOfTheSameName(): void
+    {
+        $trail = $this->trail(
+            new Breadcrumb(
+                label: 'product.view.breadcrumb',
+                route: RouteName::ProductView->value,
+                parameters: ['slug' => new Expression('product.state'), 'slug'],
+            ),
+            new Breadcrumb(label: 'leaf', translationDomain: false),
+        );
+
+        $items = $this->resolver()->resolve($trail);
+
+        self::assertSame('/products/published', $items[0]->url, 'A keyed entry wins over a bare name, whatever their order.');
     }
 
     public function testAGivenParameterFillsAPlaceholderWithoutBeingEvaluated(): void
@@ -150,8 +178,7 @@ final class BreadcrumbResolverTest extends KernelTestCase
             new Breadcrumb(
                 label: 'product.view.breadcrumb',
                 route: RouteName::ProductView->value,
-                parameters: ['slug' => 'red-boots'],
-                inheritedParameters: ['slug'],
+                parameters: ['slug', 'slug' => 'red-boots'],
             ),
             new Breadcrumb(label: 'leaf', translationDomain: false),
         );
@@ -161,30 +188,13 @@ final class BreadcrumbResolverTest extends KernelTestCase
         self::assertSame('/products/red-boots', $items[0]->url);
     }
 
-    public function testAComputedParameterWinsOverAGivenOneOfTheSameName(): void
-    {
-        $trail = $this->trail(
-            new Breadcrumb(
-                label: 'product.view.breadcrumb',
-                route: RouteName::ProductView->value,
-                parameters: ['slug' => 'red-boots'],
-                computedParameters: ['slug' => 'product.state'],
-            ),
-            new Breadcrumb(label: 'leaf', translationDomain: false),
-        );
-
-        $items = $this->resolver()->resolve($trail);
-
-        self::assertSame('/products/published', $items[0]->url);
-    }
-
     public function testATaggedExpressionFunctionProviderIsAvailableToCrumbExpressions(): void
     {
         $trail = $this->trail(
             new Breadcrumb(
                 label: 'product.index.breadcrumb',
                 route: RouteName::ProductIndex->value,
-                computedParameters: ['state' => 'filter_state(product.state)'],
+                parameters: ['state' => new Expression('filter_state(product.state)')],
             ),
             new Breadcrumb(label: 'leaf', translationDomain: false),
         );
@@ -200,7 +210,7 @@ final class BreadcrumbResolverTest extends KernelTestCase
             new Breadcrumb(
                 label: 'product.index.breadcrumb',
                 route: RouteName::ProductIndex->value,
-                computedParameters: ['type' => 'enum("Symfony\\\\UX\\\\Breadcrumb\\\\Tests\\\\Fixtures\\\\RouteName::ProductIndex").value'],
+                parameters: ['type' => new Expression('enum("Symfony\\\\UX\\\\Breadcrumb\\\\Tests\\\\Fixtures\\\\RouteName::ProductIndex").value')],
             ),
             new Breadcrumb(label: 'leaf', translationDomain: false),
         );
@@ -215,7 +225,7 @@ final class BreadcrumbResolverTest extends KernelTestCase
     {
         $trail = $this->trail(new Breadcrumb(
             label: 'product.view.breadcrumb',
-            translationParameters: ['released_at' => 'product.releasedAt'],
+            translationParameters: ['released_at' => new Expression('product.releasedAt')],
         ));
 
         $french = $this->resolveWithLocale($trail, 'fr');
@@ -224,6 +234,16 @@ final class BreadcrumbResolverTest extends KernelTestCase
         self::assertStringContainsString('2024', $french);
         self::assertMatchesRegularExpression('/janv/i', $french, 'ICU formats the date for the active locale.');
         self::assertNotSame($english, $french);
+    }
+
+    public function testAPlainTranslationParameterIsUsedAsGiven(): void
+    {
+        $trail = $this->trail(new Breadcrumb(
+            label: 'product.name.breadcrumb',
+            translationParameters: ['name' => 'product.name'],
+        ));
+
+        self::assertSame('Product product.name', $this->resolver()->resolve($trail)[0]->label, 'Only an Expression is evaluated.');
     }
 
     public function testTranslationDomainFalseReturnsTheRawKey(): void
@@ -289,7 +309,7 @@ final class BreadcrumbResolverTest extends KernelTestCase
             new Breadcrumb(
                 label: 'product.index.breadcrumb',
                 route: RouteName::ProductIndex->value,
-                computedParameters: ['state' => 'product.state'],
+                parameters: ['state' => new Expression('product.state')],
                 translationDomain: false,
             ),
             new Breadcrumb(label: 'leaf', translationDomain: false),
@@ -308,7 +328,7 @@ final class BreadcrumbResolverTest extends KernelTestCase
         $trail = new BreadcrumbTrail('product_view', [], []);
         $trail->append(new Breadcrumb(
             label: 'product.view.breadcrumb',
-            translationParameters: ['released_at' => 'product.releasedAt'],
+            translationParameters: ['released_at' => new Expression('product.releasedAt')],
         ));
 
         self::assertNotSame('', $this->resolver()->resolve($trail)[0]->label);

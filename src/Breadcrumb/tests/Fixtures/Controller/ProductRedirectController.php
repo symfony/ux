@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\Breadcrumb\Tests\Fixtures\Controller;
 
+use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -30,7 +31,7 @@ use Symfony\UX\Breadcrumb\Tests\Fixtures\RouteName;
 #[Breadcrumb(
     label: 'product.view.breadcrumb',
     translationParameters: [
-        'name' => 'product.name',
+        'name' => new Expression('product.name'),
     ],
 )]
 final class ProductRedirectController
