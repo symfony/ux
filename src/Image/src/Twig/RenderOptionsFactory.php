@@ -79,7 +79,7 @@ final class RenderOptionsFactory
         return Layout::tryFrom($layout) ?? throw new InvalidArgumentException(\sprintf('Invalid "layout" value "%s": expected one of "%s".', $layout, implode('", "', array_column(Layout::cases(), 'value'))));
     }
 
-    private static function fit(string $fit): Fit
+    public static function fit(string $fit): Fit
     {
         return Fit::tryFrom($fit) ?? throw new InvalidArgumentException(\sprintf('Invalid "fit" value "%s": expected one of "%s".', $fit, implode('", "', array_column(Fit::cases(), 'value'))));
     }

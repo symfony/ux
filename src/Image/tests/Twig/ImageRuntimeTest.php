@@ -95,6 +95,41 @@ final class ImageRuntimeTest extends KernelTestCase
         }
     }
 
+    public function testUxImageUrlRendersOneEscapedUrl()
+    {
+        $url = $this->renderUrlFunction('og.jpg', ['width' => 1200, 'height' => 630]);
+
+        self::assertSame('/og.jpg?w=1200&amp;fm=&amp;h=630&amp;fit=cover', $url);
+    }
+
+    public function testUxImageUrlTakesAFitByName()
+    {
+        $url = $this->renderUrlFunction('og.jpg', ['width' => 400, 'height' => 400, 'fit' => 'contain']);
+
+        self::assertStringContainsString('fit=contain', $url);
+    }
+
+    public function testUxImageUrlRejectsAnOptionItDoesNotKnow()
+    {
+        try {
+            $this->renderUrlFunction('og.jpg', ['layout' => 'fixed']);
+            self::fail('Expected a RuntimeError to be thrown.');
+        } catch (RuntimeError $e) {
+            self::assertInstanceOf(InvalidArgumentException::class, $e->getPrevious());
+            self::assertSame('Unknown image URL option "layout": expected one of "width", "height", "fit", "format", "quality", "operations".', $e->getPrevious()->getMessage());
+        }
+    }
+
+    private function renderUrlFunction(string $src, array $options = []): string
+    {
+        self::bootKernel();
+
+        /** @var Environment $twig */
+        $twig = self::getContainer()->get('twig');
+
+        return $twig->createTemplate('{{ ux_image_url(src, options) }}')->render(['src' => $src, 'options' => $options]);
+    }
+
     private function renderFunction(string $src, string $alt, array $options = [], bool $autoFormat = true): string
     {
         self::bootKernel(['environment' => $autoFormat ? 'test' : 'no_auto_format']);

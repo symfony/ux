@@ -25,6 +25,7 @@ final class ImageExtension extends AbstractExtension
     {
         return [
             new TwigFunction('ux_image', [ImageRuntime::class, 'renderImage'], ['is_safe' => ['html']]),
+            new TwigFunction('ux_image_url', [ImageRuntime::class, 'renderUrl']),
         ];
     }
 }

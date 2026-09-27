@@ -14,6 +14,7 @@ namespace Symfony\UX\Image\Tests\DependencyInjection;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
+use Symfony\UX\Image\ImageUrlGenerator;
 use Symfony\UX\Image\Provider\NullProviderFactory;
 use Symfony\UX\Image\Renderer\ImageRendererInterface;
 use Symfony\UX\Image\Renderer\LayoutResolver;
@@ -107,6 +108,14 @@ final class UXImageExtensionTest extends TestCase
         self::assertTrue($container->hasDefinition('ux_image.provider_factory.fake'));
         self::assertSame(FakeProviderFactory::class, $container->getDefinition('ux_image.provider_factory.fake')->getClass());
         self::assertTrue($container->getDefinition('ux_image.provider_factory.fake')->hasTag('ux_image.provider_factory'));
+    }
+
+    public function testTheUrlGeneratorIsAutowirable()
+    {
+        $container = $this->buildContainer([]);
+
+        self::assertSame('ux_image.url_generator', (string) $container->getAlias(ImageUrlGenerator::class));
+        self::assertSame(ImageUrlGenerator::class, $container->getDefinition('ux_image.url_generator')->getClass());
     }
 
     private function buildContainer(array $config): ContainerBuilder

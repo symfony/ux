@@ -11,9 +11,8 @@
 
 namespace Symfony\UX\Image\Renderer;
 
-use Symfony\UX\Image\Exception\InvalidArgumentException;
 use Symfony\UX\Image\Exception\LogicException;
-use Symfony\UX\Image\ImageTransformation;
+use Symfony\UX\Image\ImageUrlGenerator;
 use Symfony\UX\Image\Provider\NullProvider;
 use Symfony\UX\Image\Provider\ProviderInterface;
 use Twig\Extra\Html\HtmlAttr\InlineStyle;
@@ -23,6 +22,8 @@ use Twig\Extra\Html\HtmlAttr\InlineStyle;
  */
 final class ImageRenderer implements ImageRendererInterface
 {
+    private readonly ImageUrlGenerator $urlGenerator;
+
     /**
      * @param list<string> $formats
      */
@@ -31,6 +32,7 @@ final class ImageRenderer implements ImageRendererInterface
         private readonly LayoutResolver $layoutResolver,
         private readonly array $formats = ['avif', 'webp', 'jpeg'],
     ) {
+        $this->urlGenerator = new ImageUrlGenerator($provider);
     }
 
     public function render(string $src, string $alt, RenderOptions $options): RenderedImage
@@ -39,15 +41,10 @@ final class ImageRenderer implements ImageRendererInterface
             return new RenderedImage([], ['src' => $src, 'alt' => $alt] + $this->commonAttributes($options));
         }
 
-        $operations = $this->resolveOperations($options->operations);
         $breakpoints = $options->breakpoints ?? $this->layoutResolver->breakpoints($options->layout, $options->width);
         $ratio = $this->resolveRatio($options);
 
         $pinned = $options->format;
-        if (null !== $pinned) {
-            $this->assertSupportedFormat($pinned);
-        }
-
         $auto = null === $pinned && $this->provider->supportsAutoFormat();
         $formats = match (true) {
             null !== $pinned => [$pinned],
@@ -59,7 +56,7 @@ final class ImageRenderer implements ImageRendererInterface
         $fallbackSrcset = null;
         if (null === $pinned && !$auto) {
             foreach ($formats as $format) {
-                $fallbackSrcset = $this->buildSrcset($src, $breakpoints, $format, $options, $operations, $ratio);
+                $fallbackSrcset = $this->buildSrcset($src, $breakpoints, $format, $options, $ratio);
                 $sources[] = [
                     'type' => 'image/'.$format,
                     'srcset' => $fallbackSrcset,
@@ -68,13 +65,11 @@ final class ImageRenderer implements ImageRendererInterface
         }
 
         $fallbackFormat = $formats[\count($formats) - 1];
-        $fallbackSrcset ??= $this->buildSrcset($src, $breakpoints, $fallbackFormat, $options, $operations, $ratio);
+        $fallbackSrcset ??= $this->buildSrcset($src, $breakpoints, $fallbackFormat, $options, $ratio);
 
         $attributes = [
-            'src' => $this->provider->generateUrl(
-                // "src" must match the srcset candidates for bots/crawlers that ignore srcset: no width fallback, no height without a known ratio.
-                new ImageTransformation($src, $options->width, null !== $ratio ? $options->height : null, $options->fit, $fallbackFormat, $options->quality, $operations),
-            ),
+            // "src" must match the srcset candidates for bots/crawlers that ignore srcset: no width fallback, no height without a known ratio.
+            'src' => $this->urlGenerator->generate($src, $options->width, null !== $ratio ? $options->height : null, $options->fit, $fallbackFormat, $options->quality, $options->operations),
             'alt' => $alt,
             'srcset' => $fallbackSrcset,
         ];
@@ -107,15 +102,6 @@ final class ImageRenderer implements ImageRendererInterface
         return $attributes;
     }
 
-    private function assertSupportedFormat(string $format): void
-    {
-        $supported = $this->provider->getSupportedFormats();
-
-        if (!\in_array($format, $supported, true)) {
-            throw new InvalidArgumentException(\sprintf('The image format "%s" is not supported by the "%s" provider (supported: "%s").', $format, $this->provider->getName(), implode('", "', $supported)));
-        }
-    }
-
     /**
      * @return list<string>
      */
@@ -132,18 +118,15 @@ final class ImageRenderer implements ImageRendererInterface
     }
 
     /**
-     * @param list<int>             $breakpoints
-     * @param array<string, scalar> $operations
+     * @param list<int> $breakpoints
      */
-    private function buildSrcset(string $src, array $breakpoints, string $format, RenderOptions $options, array $operations, ?float $ratio): string
+    private function buildSrcset(string $src, array $breakpoints, string $format, RenderOptions $options, ?float $ratio): string
     {
         // Browsers always fetch from srcset over src, so a height-less candidate would make "fit" a no-op here.
         $entries = [];
         foreach ($breakpoints as $breakpoint) {
             $height = null !== $ratio ? max(1, (int) round($breakpoint * $ratio)) : null;
-            $url = $this->provider->generateUrl(
-                new ImageTransformation($src, $breakpoint, $height, $options->fit, $format, $options->quality, $operations),
-            );
+            $url = $this->urlGenerator->generate($src, $breakpoint, $height, $options->fit, $format, $options->quality, $options->operations);
             $entries[] = $url.' '.$breakpoint.'w';
         }
 
@@ -153,28 +136,5 @@ final class ImageRenderer implements ImageRendererInterface
     private function resolveRatio(RenderOptions $options): ?float
     {
         return null !== $options->width && null !== $options->height ? $options->height / $options->width : null;
-    }
-
-    /**
-     * @param array<string, array<string, scalar>> $operations
-     *
-     * @return array<string, scalar>
-     */
-    private function resolveOperations(array $operations): array
-    {
-        $resolved = $operations[$this->provider->getName()] ?? [];
-        if (!\is_array($resolved)) {
-            throw new InvalidArgumentException(\sprintf('The "operations.%s" option must be a map of operation names to values, "%s" given.', $this->provider->getName(), get_debug_type($resolved)));
-        }
-
-        $supported = $this->provider->getSupportedOperations();
-
-        foreach (array_keys($resolved) as $name) {
-            if (!\in_array($name, $supported, true)) {
-                throw new InvalidArgumentException(\sprintf('The image operation "%s" is not supported by the "%s" provider (supported: "%s").', $name, $this->provider->getName(), implode('", "', $supported)));
-            }
-        }
-
-        return $resolved;
     }
 }

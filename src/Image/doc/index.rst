@@ -124,6 +124,37 @@ vanish the moment the application switched from Cloudflare to another
 provider. Passing an operation the active provider does not support throws
 an ``InvalidArgumentException`` naming the provider's supported list.
 
+Getting a single URL
+~~~~~~~~~~~~~~~~~~~~
+
+Some places need one URL rather than a responsive image: an Open Graph image,
+an email, an API response or a CSS background. The ``ux_image_url()`` Twig
+function returns it:
+
+.. code-block:: html+twig
+
+    <meta property="og:image" content="{{ absolute_url(ux_image_url('/uploads/hero.jpg', {width: 1200, height: 630})) }}">
+
+It accepts ``width``, ``height``, ``fit``, ``format``, ``quality`` and
+``operations``, with the same meaning as the component's props. Like the
+component, it defaults ``fit`` to ``cover`` when both ``width`` and ``height``
+are set. An unknown option throws an ``InvalidArgumentException``.
+
+In PHP, autowire ``Symfony\UX\Image\ImageUrlGenerator``, which applies the
+same validation::
+
+    use Symfony\UX\Image\ImageUrlGenerator;
+
+    public function __construct(
+        private ImageUrlGenerator $imageUrlGenerator,
+    ) {
+    }
+
+    public function ogImage(): string
+    {
+        return $this->imageUrlGenerator->generate('/uploads/hero.jpg', width: 1200, height: 630);
+    }
+
 Configuration
 -------------
 

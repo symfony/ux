@@ -11,6 +11,7 @@
 
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
+use Symfony\UX\Image\ImageUrlGenerator;
 use Symfony\UX\Image\Provider\ProviderInterface;
 use Symfony\UX\Image\Provider\ProviderResolver;
 use Symfony\UX\Image\Renderer\ImageRenderer;
@@ -48,6 +49,13 @@ return static function (ContainerConfigurator $container): void {
                 abstract_arg('formats'),
             ])
 
+        ->set('ux_image.url_generator', ImageUrlGenerator::class)
+            ->args([
+                service('ux_image.provider'),
+            ])
+
+        ->alias(ImageUrlGenerator::class, 'ux_image.url_generator')
+
         ->alias(ImageRendererInterface::class, 'ux_image.renderer')
 
         ->set('ux_image.twig_extension', ImageExtension::class)
@@ -56,6 +64,7 @@ return static function (ContainerConfigurator $container): void {
         ->set('ux_image.twig_runtime', ImageRuntime::class)
             ->args([
                 service('ux_image.renderer'),
+                service('ux_image.url_generator'),
                 service('twig'),
             ])
             ->tag('twig.runtime')

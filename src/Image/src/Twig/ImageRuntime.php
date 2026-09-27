@@ -11,6 +11,8 @@
 
 namespace Symfony\UX\Image\Twig;
 
+use Symfony\UX\Image\Exception\InvalidArgumentException;
+use Symfony\UX\Image\ImageUrlGenerator;
 use Symfony\UX\Image\Renderer\ImageRendererInterface;
 use Symfony\UX\TwigComponent\ComponentAttributes;
 use Twig\Environment;
@@ -24,10 +26,35 @@ use Twig\Runtime\EscaperRuntime;
  */
 final class ImageRuntime implements RuntimeExtensionInterface
 {
+    private const URL_OPTIONS = ['width', 'height', 'fit', 'format', 'quality', 'operations'];
+
     public function __construct(
         private readonly ImageRendererInterface $renderer,
+        private readonly ImageUrlGenerator $urlGenerator,
         private readonly Environment $twig,
     ) {
+    }
+
+    /**
+     * @param array<string, mixed> $options
+     */
+    public function renderUrl(string $src, array $options = []): string
+    {
+        if ([] !== $unknown = array_diff(array_keys($options), self::URL_OPTIONS)) {
+            throw new InvalidArgumentException(\sprintf('Unknown image URL option "%s": expected one of "%s".', implode('", "', $unknown), implode('", "', self::URL_OPTIONS)));
+        }
+
+        $fit = $options['fit'] ?? null;
+
+        return $this->urlGenerator->generate(
+            $src,
+            $options['width'] ?? null,
+            $options['height'] ?? null,
+            null !== $fit ? RenderOptionsFactory::fit($fit) : null,
+            $options['format'] ?? null,
+            $options['quality'] ?? null,
+            $options['operations'] ?? [],
+        );
     }
 
     /**
