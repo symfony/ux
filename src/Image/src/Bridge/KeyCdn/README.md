@@ -31,7 +31,6 @@ The host is your KeyCDN zone.
 | `height`              | `height`         |                               |
 | `fit: Fit::Cover`     | `fit=cover`      |                               |
 | `fit: Fit::Contain`   | `fit=contain`    |                               |
-| `fit: Fit::ScaleDown` | `fit=inside`     |                               |
 | `format`              | `format`         |                               |
 | `quality`             | `quality`        |                               |
 | `operations`          | _(as given)_     | merged in verbatim, see below |

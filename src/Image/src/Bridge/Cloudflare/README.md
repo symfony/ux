@@ -34,7 +34,6 @@ The host is the domain proxied by your Cloudflare zone; it must be the domain th
 | `height`              | `height`          |                                                                      |
 | `fit: Fit::Cover`     | `fit=cover`       |                                                                      |
 | `fit: Fit::Contain`   | `fit=contain`     |                                                                      |
-| `fit: Fit::ScaleDown` | `fit=scale-down`  |                                                                      |
 | `format`              | `format`          | `format: 'auto'` lets Cloudflare pick AVIF/WebP based on the request |
 | `quality`             | `quality`         |                                                                      |
 | `operations`          | _(as given)_      | merged in verbatim, see below                                        |

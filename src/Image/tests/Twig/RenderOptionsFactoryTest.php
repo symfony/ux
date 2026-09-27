@@ -58,8 +58,16 @@ final class RenderOptionsFactoryTest extends TestCase
     public function testAnInvalidFitFailsClearly()
     {
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('Invalid "fit" value "not-a-fit": expected one of "cover", "contain", "scale-down".');
+        $this->expectExceptionMessage('Invalid "fit" value "not-a-fit": expected one of "cover", "contain".');
 
         RenderOptionsFactory::create(width: 400, fit: 'not-a-fit');
+    }
+
+    public function testScaleDownIsNotAFit()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Invalid "fit" value "scale-down": expected one of "cover", "contain".');
+
+        RenderOptionsFactory::create(width: 400, height: 400, fit: 'scale-down');
     }
 }

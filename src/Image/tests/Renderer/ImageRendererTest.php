@@ -92,13 +92,6 @@ final class ImageRendererTest extends TestCase
         self::assertStringContainsString('object-fit: contain', $rendered->imgAttributes['style']->getValue());
     }
 
-    public function testScaleDownAlsoReachesTheCss()
-    {
-        $rendered = $this->renderer()->render('hero.jpg', '', new RenderOptions(width: 400, height: 400, fit: Fit::ScaleDown));
-
-        self::assertStringContainsString('object-fit: scale-down', $rendered->imgAttributes['style']->getValue());
-    }
-
     public function testAnExplicitObjectFitStillWinsOverTheOneDerivedFromFit()
     {
         $rendered = $this->renderer()->render('hero.jpg', '', new RenderOptions(width: 400, height: 400, fit: Fit::Contain, objectFit: 'none'));

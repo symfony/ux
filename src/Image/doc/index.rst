@@ -64,7 +64,7 @@ Prop            Type                              Default
 ``layout``      ``fixed|constrained|full-width``  ``constrained``
 ``width``       ``int|null``                      ``null``
 ``height``      ``int|null``                      ``null``
-``fit``         ``cover|contain|scale-down|null`` ``null``
+``fit``         ``cover|contain|null``            ``null``
 ``format``      ``string|null``                   ``null``
 ``quality``     ``int|null`` (1 to 100)           ``null``
 ``priority``    ``bool``                          ``false``
@@ -79,19 +79,17 @@ covered under :ref:`Layout and rendering <image_layout_and_rendering>`.
 image gets ``loading="lazy" fetchpriority="auto"``.
 
 ``fit`` decides how the provider reshapes the source image into the requested
-``width`` x ``height``. ``cover`` fills the box and crops the excess,
-``contain`` fits the whole image inside it, and ``scale-down`` behaves like
-``contain`` but never enlarges the image. It only has an effect when both
+``width`` x ``height``. ``cover`` fills the box and crops the excess, and
+``contain`` fits the whole image inside it. It only has an effect when both
 ``width`` and ``height`` are set, since without both there is no target box to
 fit into. And it only produces a visible difference when the source image's
 aspect ratio differs from the requested one: at equal ratios there is nothing
-to crop and nothing to letterbox, so the three modes come out identical.
+to crop and nothing to letterbox, so both modes come out identical.
 
 The generated ``object-fit`` follows ``fit`` (``cover`` -> ``cover``,
-``contain`` -> ``contain``, ``scale-down`` -> ``scale-down``), so the browser
-doesn't redo a crop the provider was asked to avoid. Without that, a
-``contain`` image would be cropped back to fill its box by CSS, and ``fit``
-would never be observable.
+``contain`` -> ``contain``), so the browser doesn't redo a crop the provider
+was asked to avoid. Without that, a ``contain`` image would be cropped back to
+fill its box by CSS, and ``fit`` would never be observable.
 
 ``format`` pins the output format for this one image, in place of both the
 provider's own negotiation and the per-format ``<picture>`` fallbacks: a
@@ -312,7 +310,6 @@ parameter:
 ``format``                  ``format``         ``format``
 ``quality``                 ``quality``        ``quality``
 ``fit``: ``Fit::Cover``     ``fit=cover``      ``fit=cover``
-``fit``: ``Fit::ScaleDown`` ``fit=scale-down`` ``fit=inside``
 =========================== ================== ==============
 
 ``Fit::Contain`` maps to ``fit=contain`` on every provider.

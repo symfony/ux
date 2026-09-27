@@ -39,7 +39,6 @@ final class CloudflareProvider implements ProviderInterface
             'fit' => match ($transformation->fit) {
                 Fit::Cover => 'cover',
                 Fit::Contain => 'contain',
-                Fit::ScaleDown => 'scale-down',
                 null => null,
             },
             'format' => $transformation->format,

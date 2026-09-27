@@ -41,10 +41,6 @@ final class CloudflareProviderTest extends TestCase
             new ImageTransformation('a/hero.jpg', width: 800, height: 450, fit: Fit::Cover, format: 'auto', quality: 80),
             'https://cdn.example.com/cdn-cgi/image/width=800,height=450,fit=cover,format=auto,quality=80/a/hero.jpg',
         ];
-        yield 'scale down maps to scale-down' => [
-            new ImageTransformation('hero.jpg', width: 800, fit: Fit::ScaleDown),
-            'https://cdn.example.com/cdn-cgi/image/width=800,fit=scale-down/hero.jpg',
-        ];
         yield 'provider operation' => [
             new ImageTransformation('hero.jpg', width: 800, operations: ['gravity' => 'auto']),
             'https://cdn.example.com/cdn-cgi/image/width=800,gravity=auto/hero.jpg',

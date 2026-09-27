@@ -41,10 +41,6 @@ final class KeyCdnProviderTest extends TestCase
             new ImageTransformation('a/hero.jpg', width: 800, height: 450, fit: Fit::Cover, format: 'webp', quality: 80),
             'https://zone.kxcdn.com/a/hero.jpg?width=800&height=450&fit=cover&format=webp&quality=80',
         ];
-        yield 'scale down maps to inside' => [
-            new ImageTransformation('hero.jpg', width: 800, fit: Fit::ScaleDown),
-            'https://zone.kxcdn.com/hero.jpg?width=800&fit=inside',
-        ];
         yield 'provider operation' => [
             new ImageTransformation('hero.jpg', width: 800, operations: ['grayscale' => 1]),
             'https://zone.kxcdn.com/hero.jpg?width=800&grayscale=1',

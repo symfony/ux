@@ -39,7 +39,6 @@ final class KeyCdnProvider implements ProviderInterface
             'fit' => match ($transformation->fit) {
                 Fit::Cover => 'cover',
                 Fit::Contain => 'contain',
-                Fit::ScaleDown => 'inside',
                 null => null,
             },
             'format' => $transformation->format,

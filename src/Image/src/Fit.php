@@ -20,5 +20,4 @@ enum Fit: string
 {
     case Cover = 'cover';
     case Contain = 'contain';
-    case ScaleDown = 'scale-down';
 }
