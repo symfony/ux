@@ -77,6 +77,14 @@ final class CloudflareProviderTest extends TestCase
             new ImageTransformation('hero.jpg'),
             'https://cdn.example.com/hero.jpg',
         ];
+        yield 'a false boolean is the literal false' => [
+            new ImageTransformation('hero.gif', width: 800, operations: ['anim' => false]),
+            'https://cdn.example.com/cdn-cgi/image/width=800,anim=false/hero.gif',
+        ];
+        yield 'a true boolean is the literal true' => [
+            new ImageTransformation('hero.gif', width: 800, operations: ['anim' => true]),
+            'https://cdn.example.com/cdn-cgi/image/width=800,anim=true/hero.gif',
+        ];
     }
 
     public function testWidthAndHeightBothGivenDefaultToACroppingFit()

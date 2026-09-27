@@ -56,8 +56,8 @@ final class CloudflareProvider implements ProviderInterface
         }
 
         // PHP_QUERY_RFC3986 encodes each key/value: a raw "#", "/", "?" or space would otherwise end or escape this comma-joined segment.
-        // Values are cast to string first so a boolean false serializes as "" like (string) does, not as http_build_query's own "0".
-        $encodedOptions = http_build_query(array_map(static fn (mixed $v): string => (string) $v, $options), '', ',', \PHP_QUERY_RFC3986);
+        // Cloudflare expects the literal "true"/"false", which neither (string) nor http_build_query() produce for a boolean.
+        $encodedOptions = http_build_query(array_map(static fn (mixed $v): string => \is_bool($v) ? ($v ? 'true' : 'false') : (string) $v, $options), '', ',', \PHP_QUERY_RFC3986);
 
         return \sprintf('https://%s/cdn-cgi/image/%s/%s', $this->host, $encodedOptions, $path);
     }
