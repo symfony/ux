@@ -152,6 +152,10 @@ final class ImageRenderer implements ImageRendererInterface
     private function resolveOperations(array $operations): array
     {
         $resolved = $operations[$this->provider->getName()] ?? [];
+        if (!\is_array($resolved)) {
+            throw new InvalidArgumentException(\sprintf('The "operations.%s" option must be a map of operation names to values, "%s" given.', $this->provider->getName(), get_debug_type($resolved)));
+        }
+
         $supported = $this->provider->getSupportedOperations();
 
         foreach (array_keys($resolved) as $name) {

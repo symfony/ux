@@ -227,6 +227,14 @@ final class ImageRendererTest extends TestCase
         $this->renderer()->render('hero.jpg', '', new RenderOptions(width: 400, operations: ['fake' => ['gravity' => 'auto']]));
     }
 
+    public function testItRejectsAnOperationsBlockThatIsNotAMap()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('The "operations.fake" option must be a map of operation names to values, "string" given.');
+
+        $this->renderer()->render('hero.jpg', '', new RenderOptions(width: 400, operations: ['fake' => 'invalid']));
+    }
+
     public function testItRejectsAFixedLayoutWithoutAWidth()
     {
         $this->expectException(InvalidArgumentException::class);
