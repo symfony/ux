@@ -13,6 +13,7 @@ namespace Symfony\UX\Breadcrumb\Attribute;
 
 use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\UX\Breadcrumb\Exception\InvalidArgumentException;
+use Symfony\UX\Breadcrumb\LabelPattern;
 
 /**
  * Declares one crumb of the breadcrumb trail of a controller.
@@ -27,8 +28,10 @@ use Symfony\UX\Breadcrumb\Exception\InvalidArgumentException;
 final class Breadcrumb
 {
     /**
-     * `$label` is a translation key, a literal label when `$translationDomain` is `false`, or an `Expression` evaluated against the controller's arguments.
-     * The value of an `Expression` is the label itself, not a translation key, unless it is a `TranslatableInterface`, which is translated.
+     * `$label` is a translation key, a literal label when `$translationDomain` is `false`, a pattern, or an `Expression` evaluated against the controller's arguments.
+     * A pattern holds placeholders with the syntax of a #[Route] path: `{slug}` reads the controller argument `$slug`, or else the route parameter,
+     * and `{name:product}` reads the property `name` of the controller argument `$product`.
+     * Neither a pattern nor the value of an `Expression` is a translation key: they are the label itself, unless a value is a `TranslatableInterface`, which is translated.
      *
      * `$parameters` holds the URL parameters. Each entry says where its value comes from:
      *
@@ -59,8 +62,14 @@ final class Breadcrumb
         public readonly array $extra = [],
         public readonly string|array|null $parent = null,
     ) {
-        if ($label instanceof Expression && (\is_string($translationDomain) || [] !== $translationParameters)) {
-            throw new InvalidArgumentException('An Expression label is not a translation key: it takes no translation domain and no translation parameters. Make the expression return a TranslatableInterface to translate it.');
+        if (\is_string($translationDomain) || [] !== $translationParameters) {
+            if ($label instanceof Expression) {
+                throw new InvalidArgumentException('An Expression label is not a translation key: it takes no translation domain and no translation parameters. Make the expression return a TranslatableInterface to translate it.');
+            }
+
+            if ([] !== LabelPattern::parse($label)) {
+                throw new InvalidArgumentException(\sprintf('The label "%s" holds placeholders, so it is not a translation key: it takes no translation domain and no translation parameters. Use a translation key and "translationParameters" to translate it.', $label));
+            }
         }
 
         foreach ($parameters as $key => $value) {

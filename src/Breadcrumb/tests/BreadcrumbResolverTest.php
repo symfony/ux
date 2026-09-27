@@ -22,6 +22,7 @@ use Symfony\Contracts\Translation\LocaleAwareInterface;
 use Symfony\UX\Breadcrumb\Attribute\Breadcrumb;
 use Symfony\UX\Breadcrumb\BreadcrumbResolver;
 use Symfony\UX\Breadcrumb\BreadcrumbTrail;
+use Symfony\UX\Breadcrumb\Tests\Fixtures\Category;
 use Symfony\UX\Breadcrumb\Tests\Fixtures\CountingTranslator;
 use Symfony\UX\Breadcrumb\Tests\Fixtures\Product;
 use Symfony\UX\Breadcrumb\Tests\Fixtures\RouteName;
@@ -301,6 +302,55 @@ final class BreadcrumbResolverTest extends KernelTestCase
         $trail = $this->trail(new Breadcrumb(label: new Expression('product')));
 
         self::assertSame('', $this->resolver()->resolve($trail)[0]->label);
+    }
+
+    public function testAPatternLabelReadsAPropertyAndIsNotTranslated(): void
+    {
+        $translator = new CountingTranslator();
+        $resolver = new BreadcrumbResolver(
+            self::getContainer()->get('router'),
+            new ExpressionLanguage(),
+            $translator,
+        );
+
+        $items = $resolver->resolve($this->trail(new Breadcrumb(label: '{name:product}')));
+
+        self::assertSame('Blue sneakers', $items[0]->label);
+        self::assertSame(0, $translator->calls);
+    }
+
+    public function testAPatternLabelFollowsAPropertyPathUnderAnAlias(): void
+    {
+        $trail = $this->trail(new Breadcrumb(label: 'Edit {title:product.name} ({state:product})'));
+
+        self::assertSame('Edit Blue sneakers (published)', $this->resolver()->resolve($trail)[0]->label);
+    }
+
+    public function testAPatternLabelReadsAGetter(): void
+    {
+        self::bootKernel();
+
+        $trail = new BreadcrumbTrail('category_view', [], ['category' => new Category()]);
+        $trail->append(new Breadcrumb(label: '{name:category}'));
+
+        self::assertSame('Shoes', $this->resolver()->resolve($trail)[0]->label);
+    }
+
+    public function testABarePlaceholderPrefersTheArgumentOverTheRouteParameter(): void
+    {
+        self::bootKernel();
+
+        $trail = new BreadcrumbTrail('product_view', ['slug' => 'from-route', 'page' => '2'], ['slug' => 'from-argument']);
+        $trail->append(new Breadcrumb(label: '{slug} page {page}'));
+
+        self::assertSame('from-argument page 2', $this->resolver()->resolve($trail)[0]->label);
+    }
+
+    public function testAPlaceholderThatCannotBeReadDegradesToAnEmptyString(): void
+    {
+        $trail = $this->trail(new Breadcrumb(label: '[{name:category}][{missing:product}][{product}][{unknown}]'));
+
+        self::assertSame('[][][][]', $this->resolver()->resolve($trail)[0]->label);
     }
 
     public function testAnUngenerableRouteDegradesToNoUrl(): void
