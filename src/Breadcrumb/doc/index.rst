@@ -43,7 +43,7 @@ The attribute targets both classes and methods, so a controller with several act
     use Symfony\UX\Breadcrumb\Attribute\Breadcrumb;
 
     #[Route('/products', name: 'product_')]
-    #[Breadcrumb(label: 'product.index.breadcrumb', route: 'product_index')]
+    #[Breadcrumb(label: 'Products', route: 'product_index')]
     final class ProductController extends AbstractController
     {
         #[Route('', name: 'index')]
@@ -61,7 +61,7 @@ The attribute targets both classes and methods, so a controller with several act
 
         #[Route('/{slug}/edit', name: 'edit')]
         #[Breadcrumb(label: '{name:product}', route: 'product_view', parameters: ['slug'])]
-        #[Breadcrumb(label: 'product.edit.breadcrumb')]
+        #[Breadcrumb(label: 'Edit')]
         public function edit(Product $product): Response
         {
             return $this->render('product/edit.html.twig');
@@ -93,13 +93,12 @@ An invokable controller works the same way, with everything on the class since t
 
     use App\Entity\Product;
     use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-    use Symfony\Component\ExpressionLanguage\Expression;
     use Symfony\Component\HttpFoundation\Response;
     use Symfony\Component\Routing\Attribute\Route;
     use Symfony\UX\Breadcrumb\Attribute\Breadcrumb;
 
-    #[Breadcrumb(label: 'product.index.breadcrumb', route: 'product_index')]
-    #[Breadcrumb(label: 'product.view.breadcrumb', translationParameters: ['name' => new Expression('product.name')])]
+    #[Breadcrumb(label: 'Products', route: 'product_index')]
+    #[Breadcrumb(label: '{name:product}')]
     final class ProductViewController extends AbstractController
     {
         #[Route('/products/{slug}', name: 'product_view')]
@@ -117,7 +116,7 @@ Name a ``parent`` instead: the crumbs of that controller go above the crumb that
 Each controller then declares only its own crumb, and the depth of the trail comes from the chain::
 
     // src/Controller/ProductEditController.php
-    #[Breadcrumb(label: 'product.edit.breadcrumb', parent: ProductViewController::class)]
+    #[Breadcrumb(label: 'Edit', parent: ProductViewController::class)]
     final class ProductEditController extends AbstractController
     {
         #[Route('/products/{slug}/edit', name: 'product_edit')]
@@ -138,18 +137,18 @@ A parent is one of:
 It works the same way in a controller with several actions::
 
     #[Route('/products', name: 'product_')]
-    #[Breadcrumb(label: 'product.index.breadcrumb', route: 'product_index')]
+    #[Breadcrumb(label: 'Products', route: 'product_index')]
     final class ProductController extends AbstractController
     {
         #[Route('/{slug}', name: 'view')]
-        #[Breadcrumb(label: 'product.view.breadcrumb', route: 'product_view', parameters: ['slug'])]
+        #[Breadcrumb(label: '{name:product}', route: 'product_view', parameters: ['slug'])]
         public function view(Product $product): Response
         {
             // ...
         }
 
         #[Route('/{slug}/edit', name: 'edit')]
-        #[Breadcrumb(label: 'product.edit.breadcrumb', parent: [self::class, 'view'])]
+        #[Breadcrumb(label: 'Edit', parent: [self::class, 'view'])]
         public function edit(Product $product): Response
         {
             // ...
@@ -174,7 +173,7 @@ A route whose controller is a service id rather than a class cannot be followed;
 The attribute
 -------------
 
-* ``label`` (``string|Expression``): the translation key, the literal label when ``translationDomain`` is ``false``, or a label computed from the controller arguments, with placeholders such as ``'{name:product}'`` or an ``Expression``, see `Computed labels`_
+* ``label`` (``string|Expression``): the label, such as ``'Products'``, a label computed from the controller arguments, with placeholders such as ``'{name:product}'`` or an ``Expression``, see `Computed labels`_, or a translation key, see `Translated labels`_
 * ``route`` (``?string``): name of the route to link to
 * ``parameters`` (``array<int|string, mixed>``): the URL parameters, inherited from the matched route, given, or computed, see below
 * ``translationDomain`` (``string|false|null``): ``null`` for the default domain, a domain name, or ``false`` to skip translation
@@ -238,7 +237,7 @@ A placeholder can sit anywhere in the label, such as ``'Edit {name:product}'``.
 
 A label with placeholders is a pattern, like a route path: it is the label itself, not a translation key, so it needs no ``translationDomain: false``.
 It therefore takes no ``translationDomain`` and no ``translationParameters``: passing either throws an ``InvalidArgumentException``.
-A label that must be translated keeps its translation key and passes the values through ``translationParameters``.
+A label that must be translated keeps its translation key and passes the values through ``translationParameters``, see `Translated labels`_.
 
 A placeholder that cannot be read, or whose value is neither a scalar nor a ``Stringable``, is replaced by an empty string rather than taking the page down.
 This happens to an ancestor whose placeholder names an argument the current action does not have.
@@ -251,6 +250,25 @@ It is evaluated against the controller's arguments, like the other expressions o
 Its value is the label itself too, unless it is a ``TranslatableInterface``, such as a ``TranslatableMessage`` or a translatable enum, which is translated.
 The same rules apply: no ``translationDomain``, no ``translationParameters``, and an empty label when it cannot be evaluated.
 A placeholder whose value is a ``TranslatableInterface`` is translated the same way.
+
+Translated labels
+~~~~~~~~~~~~~~~~~
+
+A label without placeholders goes through the translator, in the default domain unless ``translationDomain`` names another.
+The translator returns a label it has no translation for unchanged, so ``'Products'`` renders as is.
+A translated application gives a translation key instead, and passes the values of the message through ``translationParameters``::
+
+    #[Breadcrumb(
+        label: 'product.view.breadcrumb',
+        translationParameters: ['name' => new Expression('product.name')],
+    )]
+
+.. code-block:: yaml
+
+    # translations/messages+intl-icu.en.yaml
+    product.view.breadcrumb: 'Product {name}'
+
+``translationDomain: false`` skips the translator altogether, for a label that must never be taken for a translation key, such as one built from user data.
 
 Building the trail at runtime
 -----------------------------
@@ -269,7 +287,7 @@ listener already built, and add to it::
     use Symfony\UX\Breadcrumb\Attribute\Breadcrumb;
     use Symfony\UX\Breadcrumb\BreadcrumbTrailProvider;
 
-    #[Breadcrumb(label: 'category.index.breadcrumb', route: 'category_index')]
+    #[Breadcrumb(label: 'Categories', route: 'category_index')]
     final class CategoryController extends AbstractController
     {
         #[Route('/categories/{slug}', name: 'category_view')]
@@ -371,7 +389,7 @@ Carrying your own data on a crumb
 It is handed straight to the resolved item, so a template can do whatever it likes with it, such as an icon name or a CSS class::
 
     #[Breadcrumb(
-        label: 'product.index.breadcrumb',
+        label: 'Products',
         route: 'product_index',
         extra: ['icon' => 'tabler:package'],
     )]
@@ -432,13 +450,13 @@ Yielding nothing opts a route hierarchy out::
         public function __invoke(string $route, Request $request): iterable
         {
             if (str_starts_with($route, 'app_admin_')) {
-                yield new Breadcrumb(label: 'admin.home.breadcrumb', route: 'app_admin_home');
+                yield new Breadcrumb(label: 'Admin', route: 'app_admin_home');
             }
 
             // The public site has no breadcrumb bar on its home page,
             // so that page gets no trail at all.
             if (str_starts_with($route, 'app_website_') && 'app_website_home' !== $route) {
-                yield new Breadcrumb(label: 'website.home.breadcrumb', route: 'app_website_home');
+                yield new Breadcrumb(label: 'Home', route: 'app_website_home');
             }
         }
     }
@@ -475,7 +493,7 @@ The built-in ``enum()`` function is available. Because the lexer unescapes strin
 literals, a fully-qualified class name needs four backslashes in PHP source::
 
     #[Breadcrumb(
-        label: 'invitation.index.breadcrumb',
+        label: 'Invitations',
         route: 'invitation_index',
         parameters: ['type' => new Expression('enum("App\\\\Enum\\\\FilterType::Guest").value')],
     )]
