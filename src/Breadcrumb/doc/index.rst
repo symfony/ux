@@ -108,7 +108,67 @@ An invokable controller works the same way, with everything on the class since t
         }
     }
 
-Sibling invokable controllers each repeat the ancestry they share, so a controller with several actions is the better fit whenever a group of pages shares a head.
+Parent crumbs
+~~~~~~~~~~~~~
+
+Sibling invokable controllers would each repeat the ancestry they share.
+Name a ``parent`` instead: the crumbs of that controller go above the crumb that names it, and so on up the chain.
+Each controller then declares only its own crumb, and the depth of the trail comes from the chain::
+
+    // src/Controller/ProductEditController.php
+    #[Breadcrumb(label: 'product.edit.breadcrumb', parent: ProductViewController::class)]
+    final class ProductEditController extends AbstractController
+    {
+        #[Route('/products/{slug}/edit', name: 'product_edit')]
+        public function __invoke(Product $product): Response
+        {
+            return $this->render('product/edit.html.twig');
+        }
+    }
+
+With the ``ProductViewController`` above, this page gets Products, then the product, then Edit.
+
+A parent is one of:
+
+* an invokable controller class, such as ``ProductViewController::class``
+* an action, written as an array such as ``[ProductController::class, 'view']``, or ``[self::class, 'view']`` for an action of the same controller
+* a route name, such as ``'product_view'``, resolved to the controller of that route
+
+It works the same way in a controller with several actions::
+
+    #[Route('/products', name: 'product_')]
+    #[Breadcrumb(label: 'product.index.breadcrumb', route: 'product_index')]
+    final class ProductController extends AbstractController
+    {
+        #[Route('/{slug}', name: 'view')]
+        #[Breadcrumb(label: 'product.view.breadcrumb', route: 'product_view', inheritedParameters: ['slug'])]
+        public function view(Product $product): Response
+        {
+            // ...
+        }
+
+        #[Route('/{slug}/edit', name: 'edit')]
+        #[Breadcrumb(label: 'product.edit.breadcrumb', parent: [self::class, 'view'])]
+        public function edit(Product $product): Response
+        {
+            // ...
+        }
+    }
+
+When an action's crumb names a parent, the class-level crumbs are left out for that action.
+The parent's own trail already starts with them, so ``edit`` gets Products once, then the product, then Edit.
+A parent on a class-level crumb applies to every action of the controller.
+Only the first crumb of a class or of a method can name a parent.
+
+The ancestors are resolved against the current request, like any other crumb of the trail.
+As an ancestor, a crumb is a link, so give it a ``route`` and the URL parameters it needs.
+Its expressions are evaluated against the arguments of the current action, so they only resolve when that action has arguments with the same names.
+The ``view`` crumb above declares ``route`` and ``inheritedParameters`` for that reason: on its own page, the current crumb is not a link anyway, so they cost nothing there.
+
+A cycle, a parent that points at nothing, and a parent on any crumb but the first of its level throw a ``LogicException`` when the page is requested.
+Resolving a route name reads the route collection, which is expensive, so the map of routes to controllers is kept in the ``.ux_breadcrumb.cache`` pool.
+In debug mode it is only kept for the current process, so a changed route is picked up at once.
+A route whose controller is a service id rather than a class cannot be followed; name the controller class instead.
 
 The attribute
 -------------
@@ -121,6 +181,7 @@ The attribute
 * ``translationDomain`` (``string|false|null``): ``null`` for the default domain, a domain name, or ``false`` to skip translation
 * ``translationParameters`` (``array<string, string>``): a **map** of expressions, fed to the translator
 * ``extra`` (``array<string, mixed>``): arbitrary data forwarded untouched to the resolved item, never read by the bundle
+* ``parent`` (``string|array{class-string, string}|null``): the controller class, action or route name whose trail goes above this crumb, see `Parent crumbs`_
 
 The three URL parameter bags differ in where the value comes from, not in where it goes:
 

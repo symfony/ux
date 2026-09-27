@@ -14,6 +14,7 @@ namespace Symfony\UX\Breadcrumb\Tests\Attribute;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\UX\Breadcrumb\Attribute\Breadcrumb;
+use Symfony\UX\Breadcrumb\Tests\Fixtures\Controller\ProductViewController;
 use Symfony\UX\Breadcrumb\Tests\Fixtures\RouteName;
 
 #[CoversClass(Breadcrumb::class)]
@@ -31,6 +32,7 @@ final class BreadcrumbTest extends TestCase
         self::assertNull($crumb->translationDomain);
         self::assertSame([], $crumb->translationParameters);
         self::assertSame([], $crumb->extra);
+        self::assertNull($crumb->parent);
     }
 
     public function testNamedArgumentsLandOnTheMatchingProperties(): void
@@ -44,6 +46,7 @@ final class BreadcrumbTest extends TestCase
             translationDomain: 'admin',
             translationParameters: ['name' => 'product.name'],
             extra: ['icon' => 'tabler:package'],
+            parent: 'product_index',
         );
 
         self::assertSame('product.view.breadcrumb', $crumb->label);
@@ -54,6 +57,7 @@ final class BreadcrumbTest extends TestCase
         self::assertSame('admin', $crumb->translationDomain);
         self::assertSame(['name' => 'product.name'], $crumb->translationParameters);
         self::assertSame(['icon' => 'tabler:package'], $crumb->extra);
+        self::assertSame('product_index', $crumb->parent);
     }
 
     public function testTranslationDomainAcceptsTheThreeStates(): void
@@ -67,6 +71,13 @@ final class BreadcrumbTest extends TestCase
     {
         self::assertSame('product_index', new Breadcrumb('label', route: 'product_index')->route);
         self::assertSame('product_index', new Breadcrumb('label', route: RouteName::ProductIndex->value)->route);
+    }
+
+    public function testParentIsAClassARouteNameOrAnAction(): void
+    {
+        self::assertSame(ProductViewController::class, new Breadcrumb('label', parent: ProductViewController::class)->parent);
+        self::assertSame('product_index', new Breadcrumb('label', parent: 'product_index')->parent);
+        self::assertSame([ProductViewController::class, 'view'], new Breadcrumb('label', parent: [ProductViewController::class, 'view'])->parent);
     }
 
     public function testTheAttributeIsRepeatableOnClassesAndMethods(): void

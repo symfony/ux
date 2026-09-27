@@ -21,8 +21,10 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 use Symfony\UX\Breadcrumb\Tests\Fixtures\Controller\AdminProductController;
+use Symfony\UX\Breadcrumb\Tests\Fixtures\Controller\CatalogController;
 use Symfony\UX\Breadcrumb\Tests\Fixtures\Controller\DashboardHomeController;
 use Symfony\UX\Breadcrumb\Tests\Fixtures\Controller\PlainController;
+use Symfony\UX\Breadcrumb\Tests\Fixtures\Controller\ProductEditController;
 use Symfony\UX\Breadcrumb\Tests\Fixtures\Controller\ProductIndexController;
 use Symfony\UX\Breadcrumb\Tests\Fixtures\Controller\ProductPlainController;
 use Symfony\UX\Breadcrumb\Tests\Fixtures\Controller\ProductRedirectController;
@@ -62,10 +64,15 @@ final class TestKernel extends Kernel
         $routes->add('dashboard_home', '/dashboard')->controller(DashboardHomeController::class);
         $routes->add('product_index', '/products')->controller(ProductIndexController::class);
         $routes->add('product_view', '/products/{slug}')->controller(ProductViewController::class);
+        $routes->add('product_edit', '/products/{slug}/edit')->controller(ProductEditController::class);
         $routes->add('product_redirect', '/products/{slug}/redirect')->controller(ProductRedirectController::class);
         $routes->add('admin_product_index', '/admin/products')->controller([AdminProductController::class, 'index']);
         $routes->add('admin_product_view', '/admin/products/{slug}')->controller([AdminProductController::class, 'view']);
         $routes->add('admin_product_edit', '/admin/products/{slug}/edit')->controller([AdminProductController::class, 'edit']);
+        $routes->add('catalog_index', '/catalog')->controller([CatalogController::class, 'index']);
+        $routes->add('catalog_view', '/catalog/{slug}')->controller([CatalogController::class, 'view']);
+        $routes->add('catalog_edit', '/catalog/{slug}/edit')->controller([CatalogController::class, 'edit']);
+        $routes->add('catalog_history', '/catalog/{slug}/history')->controller([CatalogController::class, 'history']);
         $routes->add('product_plain', '/products/{slug}/plain')->controller(ProductPlainController::class);
         $routes->add('plain', '/plain')->controller(PlainController::class);
     }
@@ -97,8 +104,10 @@ final class TestKernel extends Kernel
 
             foreach ([
                 AdminProductController::class,
+                CatalogController::class,
                 DashboardHomeController::class,
                 PlainController::class,
+                ProductEditController::class,
                 ProductIndexController::class,
                 ProductPlainController::class,
                 ProductRedirectController::class,
