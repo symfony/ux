@@ -16,6 +16,7 @@ namespace Symfony\UX\Breadcrumb\Attribute;
  *
  * Repeatable: declare the crumbs in trail order, top to bottom.
  * Class-level crumbs come before method-level ones, so a classic controller can declare the shared head of the trail on the class and the leaf on each action.
+ * A crumb that names a `$parent` gets that controller's trail above its own, so each controller declares only its own crumb.
  *
  * @author Romain Monteil <monteil.romain@gmail.com>
  */
@@ -35,11 +36,16 @@ final class Breadcrumb
      *
      * `$translationParameters` is a map of expressions too, but it feeds the translator rather than the URL.
      *
-     * @param array<string, mixed>  $parameters
-     * @param array<int, string>    $inheritedParameters
-     * @param array<string, string> $computedParameters
-     * @param array<string, string> $translationParameters
-     * @param array<string, mixed>  $extra                 forwarded as-is to the resolved BreadcrumbItem, never read here
+     * `$parent` names the controller whose trail goes above this crumb: an invokable controller class, an action (`[Controller::class, 'method']`) or a route name.
+     * Only the first crumb of a class or of a method may name it. On a method, it replaces the class-level crumbs of that action.
+     * The ancestors are resolved against the current request, so an ancestor that should be a link needs its own `$route` and URL parameters.
+     *
+     * @param array<string, mixed>                    $parameters
+     * @param array<int, string>                      $inheritedParameters
+     * @param array<string, string>                   $computedParameters
+     * @param array<string, string>                   $translationParameters
+     * @param array<string, mixed>                    $extra                 forwarded as-is to the resolved BreadcrumbItem, never read here
+     * @param string|array{class-string, string}|null $parent
      */
     public function __construct(
         public readonly string $label,
@@ -50,6 +56,7 @@ final class Breadcrumb
         public readonly string|false|null $translationDomain = null,
         public readonly array $translationParameters = [],
         public readonly array $extra = [],
+        public readonly string|array|null $parent = null,
     ) {
     }
 }

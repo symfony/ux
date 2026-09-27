@@ -15,6 +15,7 @@ use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 use Symfony\UX\Breadcrumb\BreadcrumbResolver;
 use Symfony\UX\Breadcrumb\BreadcrumbTrailProvider;
 use Symfony\UX\Breadcrumb\EventListener\BreadcrumbListener;
+use Symfony\UX\Breadcrumb\ParentCrumbCollector;
 
 return static function (ContainerConfigurator $container): void {
     $services = $container->services()
@@ -25,7 +26,13 @@ return static function (ContainerConfigurator $container): void {
     $services->set('ux_breadcrumb.listener', BreadcrumbListener::class)
         ->arg('$rootCrumbProviders', tagged_iterator('ux_breadcrumb.root_crumb_provider'))
         ->arg('$requestAttribute', abstract_arg('request attribute name'))
+        ->arg('$parentCrumbCollector', service('ux_breadcrumb.parent_crumb_collector'))
         ->tag('kernel.event_subscriber')
+    ;
+
+    $services->set('ux_breadcrumb.parent_crumb_collector', ParentCrumbCollector::class)
+        ->arg('$router', service('router'))
+        ->arg('$cache', service('.ux_breadcrumb.cache'))
     ;
 
     // Crumb expressions are static strings parsed once, and compile() is not pooled,
