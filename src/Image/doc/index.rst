@@ -47,6 +47,11 @@ The ``<twig:ux:image>`` component renders a single image:
 
     <twig:ux:image src="/uploads/hero.jpg" alt="Hero" width="800" height="450" />
 
+``src`` is the public URL path of the original image, as your application
+serves it. Every provider reads it the same way: Cloudflare and KeyCDN fetch it
+from your origin, and ``null://`` renders it as is. Switching providers
+therefore never changes your templates.
+
 The equivalent ``ux_image()`` Twig function is available for programmatic use,
 for example when the source path is only known inside a Twig macro:
 
