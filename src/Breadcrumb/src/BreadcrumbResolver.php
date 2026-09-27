@@ -13,6 +13,8 @@ namespace Symfony\UX\Breadcrumb;
 
 use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
+use Symfony\Component\PropertyAccess\PropertyAccessor;
+use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatableInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -35,6 +37,7 @@ final class BreadcrumbResolver
         private readonly ExpressionLanguage $expressionLanguage,
         private readonly ?TranslatorInterface $translator = null,
         private readonly ?string $defaultTranslationDomain = null,
+        private readonly PropertyAccessorInterface $propertyAccessor = new PropertyAccessor(),
     ) {
     }
 
@@ -76,6 +79,10 @@ final class BreadcrumbResolver
             return $this->expressionLabel($crumb->label, $trail);
         }
 
+        if ([] !== $placeholders = LabelPattern::parse($crumb->label)) {
+            return $this->patternLabel($crumb->label, $placeholders, $trail);
+        }
+
         if (false === $crumb->translationDomain || null === $this->translator) {
             return $crumb->label;
         }
@@ -105,6 +112,46 @@ final class BreadcrumbResolver
             return '';
         }
 
+        return $this->stringify($value);
+    }
+
+    /**
+     * Each placeholder that cannot be read or turned into a string degrades to an empty string.
+     *
+     * @param non-empty-list<array{placeholder: string, variable: string, argument: ?string, path: ?string}> $placeholders
+     */
+    private function patternLabel(string $label, array $placeholders, BreadcrumbTrail $trail): string
+    {
+        $replacements = [];
+        foreach ($placeholders as $placeholder) {
+            $replacements[$placeholder['placeholder']] = $this->stringify($this->placeholderValue($placeholder, $trail));
+        }
+
+        return strtr($label, $replacements);
+    }
+
+    /**
+     * @param array{placeholder: string, variable: string, argument: ?string, path: ?string} $placeholder
+     */
+    private function placeholderValue(array $placeholder, BreadcrumbTrail $trail): mixed
+    {
+        if (null === $argument = $placeholder['argument']) {
+            return $trail->context[$placeholder['variable']] ?? $trail->routeParameters[$placeholder['variable']] ?? null;
+        }
+
+        if (!\is_object($subject = $trail->context[$argument] ?? null) && !\is_array($subject)) {
+            return null;
+        }
+
+        try {
+            return $this->propertyAccessor->getValue($subject, $placeholder['path'] ?? $placeholder['variable']);
+        } catch (\Throwable) {
+            return null;
+        }
+    }
+
+    private function stringify(mixed $value): string
+    {
         if ($value instanceof TranslatableInterface && null !== $this->translator) {
             return $value->trans($this->translator);
         }

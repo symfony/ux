@@ -11,15 +11,14 @@
 
 namespace Symfony\UX\Breadcrumb\Tests\Fixtures\Controller;
 
-use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\UX\Breadcrumb\Attribute\Breadcrumb;
 use Symfony\UX\Breadcrumb\Tests\Fixtures\Product;
 
 /**
- * Its only expression is the label, so `product` is pinned on the trail by the label alone.
+ * Its only reference to `product` is a label placeholder, so the label alone pins it on the trail.
  */
-#[Breadcrumb(label: new Expression('product.name'))]
+#[Breadcrumb(label: '{name:product}')]
 final class ProductNameController
 {
     public function __invoke(Product $product): Response

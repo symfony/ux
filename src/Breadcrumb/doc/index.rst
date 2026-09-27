@@ -38,7 +38,6 @@ The attribute targets both classes and methods, so a controller with several act
 
     use App\Entity\Product;
     use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-    use Symfony\Component\ExpressionLanguage\Expression;
     use Symfony\Component\HttpFoundation\Response;
     use Symfony\Component\Routing\Attribute\Route;
     use Symfony\UX\Breadcrumb\Attribute\Breadcrumb;
@@ -54,14 +53,14 @@ The attribute targets both classes and methods, so a controller with several act
         }
 
         #[Route('/{slug}', name: 'view')]
-        #[Breadcrumb(label: new Expression('product.name'))]
+        #[Breadcrumb(label: '{name:product}')]
         public function view(Product $product): Response
         {
             return $this->render('product/view.html.twig');
         }
 
         #[Route('/{slug}/edit', name: 'edit')]
-        #[Breadcrumb(label: new Expression('product.name'), route: 'product_view', parameters: ['slug'])]
+        #[Breadcrumb(label: '{name:product}', route: 'product_view', parameters: ['slug'])]
         #[Breadcrumb(label: 'product.edit.breadcrumb')]
         public function edit(Product $product): Response
         {
@@ -175,7 +174,7 @@ A route whose controller is a service id rather than a class cannot be followed;
 The attribute
 -------------
 
-* ``label`` (``string|Expression``): the translation key, the literal label when ``translationDomain`` is ``false``, or an ``Expression`` computing the label, see `Computed labels`_
+* ``label`` (``string|Expression``): the translation key, the literal label when ``translationDomain`` is ``false``, or a label computed from the controller arguments, with placeholders such as ``'{name:product}'`` or an ``Expression``, see `Computed labels`_
 * ``route`` (``?string``): name of the route to link to
 * ``parameters`` (``array<int|string, mixed>``): the URL parameters, inherited from the matched route, given, or computed, see below
 * ``translationDomain`` (``string|false|null``): ``null`` for the default domain, a domain name, or ``false`` to skip translation
@@ -222,17 +221,36 @@ A translation parameter that cannot be evaluated leaves its placeholder in the l
 Computed labels
 ~~~~~~~~~~~~~~~
 
-A crumb that shows an entity's own name, such as a product page, gives an ``Expression`` as its ``label``.
+A crumb that shows an entity's own name, such as a product page, writes placeholders in its ``label``, with the syntax of a ``#[Route]`` path::
+
+    #[Breadcrumb(label: '{name:product}')]
+
+=========================  ===========================================================================
+Placeholder                Value
+=========================  ===========================================================================
+``{slug}``                 the controller argument ``$slug``, or else the route parameter ``slug``
+``{name:product}``         the property ``name`` of the controller argument ``$product``
+``{title:product.name}``   the property path ``name`` of ``$product``; ``title`` only names the placeholder
+=========================  ===========================================================================
+
+Properties are read with the PropertyAccess component, so ``{name:product}`` calls ``getName()`` on a Doctrine entity whose ``$name`` is private.
+A placeholder can sit anywhere in the label, such as ``'Edit {name:product}'``.
+
+A label with placeholders is a pattern, like a route path: it is the label itself, not a translation key, so it needs no ``translationDomain: false``.
+It therefore takes no ``translationDomain`` and no ``translationParameters``: passing either throws an ``InvalidArgumentException``.
+A label that must be translated keeps its translation key and passes the values through ``translationParameters``.
+
+A placeholder that cannot be read, or whose value is neither a scalar nor a ``Stringable``, is replaced by an empty string rather than taking the page down.
+This happens to an ancestor whose placeholder names an argument the current action does not have.
+
+For anything a placeholder cannot say, such as a concatenation or a translated enum, give an ``Expression`` as the ``label``.
 It is evaluated against the controller's arguments, like the other expressions of the crumb::
 
-    #[Breadcrumb(label: new Expression('product.name'))]
+    #[Breadcrumb(label: new Expression('product.brand.name ~ " " ~ product.name'))]
 
-The value is the label itself, not a translation key, so it needs no ``translationDomain: false``.
-A value that should be translated is returned as a ``TranslatableInterface``, such as a ``TranslatableMessage`` or a translatable enum, and the translator is handed to it.
-An ``Expression`` label therefore takes no ``translationDomain`` and no ``translationParameters``: passing either throws an ``InvalidArgumentException``.
-
-An ``Expression`` label that cannot be evaluated, or whose value is neither a scalar, a ``Stringable`` nor a ``TranslatableInterface``, resolves to an empty label rather than taking the page down.
-This happens to an ancestor whose expression names an argument the current action does not have.
+Its value is the label itself too, unless it is a ``TranslatableInterface``, such as a ``TranslatableMessage`` or a translatable enum, which is translated.
+The same rules apply: no ``translationDomain``, no ``translationParameters``, and an empty label when it cannot be evaluated.
+A placeholder whose value is a ``TranslatableInterface`` is translated the same way.
 
 Building the trail at runtime
 -----------------------------

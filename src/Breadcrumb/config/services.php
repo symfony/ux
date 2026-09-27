@@ -58,6 +58,7 @@ return static function (ContainerConfigurator $container): void {
         ->arg('$expressionLanguage', abstract_arg('expression language service'))
         ->arg('$translator', service('translator')->nullOnInvalid())
         ->arg('$defaultTranslationDomain', abstract_arg('default translation domain'))
+        ->arg('$propertyAccessor', service('property_accessor'))
     ;
 
     $services->set('ux_breadcrumb.trail_provider', BreadcrumbTrailProvider::class)
