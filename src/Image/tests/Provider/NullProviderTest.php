@@ -23,9 +23,7 @@ final class NullProviderTest extends TestCase
         $provider = new NullProvider();
 
         $this->expectException(LogicException::class);
-        $this->expectExceptionMessage('symfony/ux-glide-image');
-        $this->expectExceptionMessageMatches('/symfony\/ux-keycdn-image/');
-        $this->expectExceptionMessageMatches('/symfony\/ux-cloudflare-image/');
+        $this->expectExceptionMessage('No image provider is configured. Install a bridge such as "symfony/ux-cloudflare-image" or "symfony/ux-keycdn-image".');
 
         $provider->generateUrl(new ImageTransformation('/foo.png'));
     }

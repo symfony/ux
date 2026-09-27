@@ -26,7 +26,7 @@ final class NullProvider implements ProviderInterface
 
     public function generateUrl(ImageTransformation $transformation): string
     {
-        throw new LogicException('No image provider is configured. Install a bridge such as "symfony/ux-glide-image", "symfony/ux-keycdn-image" or "symfony/ux-cloudflare-image".');
+        throw new LogicException('No image provider is configured. Install a bridge such as "symfony/ux-cloudflare-image" or "symfony/ux-keycdn-image".');
     }
 
     public function getSupportedOperations(): array

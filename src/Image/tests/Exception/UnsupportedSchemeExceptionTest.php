@@ -42,11 +42,11 @@ final class UnsupportedSchemeExceptionTest extends TestCase
     public function testMessageWhenBridgeIsKnownButFactoryClassIsMissing()
     {
         UXImageBundle::$bridges = [
-            'glide' => ['factory' => 'Symfony\UX\Image\Bridge\Glide\NotInstalledFactory'],
+            'keycdn' => ['factory' => 'Symfony\UX\Image\Bridge\KeyCdn\NotInstalledFactory'],
         ];
 
-        $exception = new UnsupportedSchemeException(new Dsn('glide://default/images'));
+        $exception = new UnsupportedSchemeException(new Dsn('keycdn://myzone.kxcdn.com'));
 
-        self::assertSame('Unable to generate images via "glide" as the bridge is not installed. Try running "composer require symfony/ux-glide-image".', $exception->getMessage());
+        self::assertSame('Unable to generate images via "keycdn" as the bridge is not installed. Try running "composer require symfony/ux-keycdn-image".', $exception->getMessage());
     }
 }

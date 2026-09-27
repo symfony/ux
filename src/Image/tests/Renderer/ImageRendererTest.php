@@ -189,7 +189,7 @@ final class ImageRendererTest extends TestCase
         $renderer = new ImageRenderer(new NullProvider(), new LayoutResolver());
 
         $this->expectException(LogicException::class);
-        $this->expectExceptionMessage('No image provider is configured. Install a bridge such as "symfony/ux-glide-image", "symfony/ux-keycdn-image" or "symfony/ux-cloudflare-image".');
+        $this->expectExceptionMessage('No image provider is configured. Install a bridge such as "symfony/ux-cloudflare-image" or "symfony/ux-keycdn-image".');
 
         $renderer->render('hero.jpg', '', new RenderOptions(width: 400, format: 'webp'));
     }

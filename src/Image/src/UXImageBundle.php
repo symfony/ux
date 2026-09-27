@@ -11,18 +11,11 @@
 
 namespace Symfony\UX\Image;
 
-use League\Glide\Server;
-use League\Glide\Signatures\SignatureInterface;
 use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
-use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
 use Symfony\UX\Image\Bridge\Cloudflare\CloudflareProviderFactory;
-use Symfony\UX\Image\Bridge\Glide\Controller\GlideController;
-use Symfony\UX\Image\Bridge\Glide\GlideProviderFactory;
-use Symfony\UX\Image\Bridge\Glide\ServerFactory as GlideServerFactory;
-use Symfony\UX\Image\Bridge\Glide\SignatureFactory as GlideSignatureFactory;
 use Symfony\UX\Image\Bridge\KeyCdn\KeyCdnProviderFactory;
 use Symfony\UX\Image\Provider\NullProviderFactory;
 use Symfony\UX\Image\Renderer\LayoutResolver;
@@ -41,7 +34,6 @@ final class UXImageBundle extends AbstractBundle
      */
     public static array $bridges = [
         'cloudflare' => ['factory' => CloudflareProviderFactory::class],
-        'glide' => ['factory' => GlideProviderFactory::class],
         'keycdn' => ['factory' => KeyCdnProviderFactory::class],
     ];
 
@@ -77,27 +69,6 @@ final class UXImageBundle extends AbstractBundle
         $container->services()
             ->set('ux_image.provider_factory.null', NullProviderFactory::class)
             ->tag('ux_image.provider_factory');
-
-        // Not a "glide://" prefix check: the documented DSN is an unresolved %env() placeholder at compile time.
-        if (ContainerBuilder::willBeAvailable('symfony/ux-glide-image', GlideController::class, ['symfony/ux-image'])) {
-            $container->services()
-                ->set('ux_image.glide.server', Server::class)
-                    ->factory([GlideServerFactory::class, 'createFromDsn'])
-                    ->args([$config['provider']])
-
-                ->set('ux_image.glide.signature', SignatureInterface::class)
-                    ->factory([GlideSignatureFactory::class, 'createFromDsn'])
-                    ->args([$config['provider']])
-
-                ->set(GlideController::class)
-                    ->args([
-                        '$server' => new Reference('ux_image.glide.server'),
-                        '$signature' => new Reference('ux_image.glide.signature'),
-                        '$supportedFormats' => $config['formats'],
-                    ])
-                    ->tag('controller.service_arguments')
-            ;
-        }
 
         $container->services()->get('ux_image.provider')->arg(0, $config['provider']);
         $container->services()->get('ux_image.renderer')->arg(2, $config['formats']);
