@@ -12,11 +12,11 @@
 namespace Symfony\UX\Image\Twig\Components;
 
 use Symfony\UX\Image\Renderer\ImageRendererInterface;
-use Symfony\UX\Image\Renderer\RenderedImage;
+use Symfony\UX\Image\Twig\ImageMarkup;
 use Symfony\UX\Image\Twig\RenderOptionsFactory;
-use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
 use Symfony\UX\TwigComponent\Attribute\PostMount;
-use Twig\Extra\Html\HtmlAttr\InlineStyle;
+use Symfony\UX\TwigComponent\ComponentAttributes;
+use Twig\Markup;
 
 /**
  * Backs the <twig:ux:image> component.
@@ -70,21 +70,10 @@ final class Image
     #[PostMount]
     public function normalizeStyleAttribute(array $attributes): array
     {
-        $style = $attributes['style'] ?? null;
-
-        if (is_iterable($style)) {
-            // ComponentAttributes renders scalars and AttributeValueInterface values, never a raw array.
-            $attributes['style'] = new InlineStyle($style);
-        } elseif (null !== $style) {
-            // InlineStyle refuses a plain string; wrap it as a one-element list, which getValue() treats as a pre-formed CSS chunk.
-            $attributes['style'] = new InlineStyle([$style]);
-        }
-
-        return $attributes;
+        return ImageMarkup::normalizeAttributes($attributes);
     }
 
-    #[ExposeInTemplate]
-    public function getRendered(): RenderedImage
+    public function html(ComponentAttributes $attributes): Markup
     {
         $options = RenderOptionsFactory::create(
             layout: $this->layout,
@@ -99,6 +88,6 @@ final class Image
             operations: $this->operations,
         );
 
-        return $this->renderer->render($this->src, $this->alt, $options);
+        return new Markup(ImageMarkup::render($this->renderer->render($this->src, $this->alt, $options), $attributes), 'UTF-8');
     }
 }
