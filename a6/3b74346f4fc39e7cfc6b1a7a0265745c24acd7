@@ -1,0 +1,43 @@
+---------------------------------------------------------------------------
+
+by github-actions[bot] at 2026-09-12T19:45:58Z
+
+<h1>📊 Packages dist files size difference</h1>
+
+Thanks for the PR! Here is the difference in size of the packages dist files between the base branch and the PR.
+Please review the changes and make sure they are expected.
+
+<table>
+    <thead><tr><th>File</th><th>Before (Size / Gzip)</th><th>After (Size / Gzip)</th></tr></thead>
+    <tbody><tr><td colspan="3"><a href="https://github.com/smnandre/ux/tree/ux-inspector/src/Inspector/assets/dist"><b>Inspector</b></a></td></tr><tr>
+                <td><a href="https://github.com/smnandre/ux/blob/ux-inspector/src/Inspector/assets/dist/inspector.d.ts"><code>inspector.d.ts</code></a></td>
+            <td><em>Added</em></td><td>
+                    <code>741 B</code>
+                    / <code>376 B</code>
+                </td></tr><tr>
+                <td><a href="https://github.com/smnandre/ux/blob/ux-inspector/src/Inspector/assets/dist/inspector.js"><code>inspector.js</code></a></td>
+            <td><em>Added</em></td><td>
+                    <code>209.78 kB</code>
+                    / <code>48.64 kB</code>
+                </td></tr></tbody>
+</table>
+
+<!-- Sticky Pull Request Comment -->
+
+---------------------------------------------------------------------------
+
+by smnandre at 2026-09-12T20:29:15Z
+
+I opened a separated PR for the AssetMapper 8.2 problem
+
+---------------------------------------------------------------------------
+
+by smnandre at 2026-09-16T18:45:31Z
+
+Thank you @squrious !! What a review!
+
+---------------------------------------------------------------------------
+
+by smnandre at 2026-09-16T21:44:42Z
+
+Thank you @Kocal ! (and sorry for the mess )
