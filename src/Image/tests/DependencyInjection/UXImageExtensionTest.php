@@ -13,6 +13,7 @@ namespace Symfony\UX\Image\Tests\DependencyInjection;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 use Symfony\UX\Image\Provider\NullProviderFactory;
 use Symfony\UX\Image\Renderer\ImageRendererInterface;
 use Symfony\UX\Image\Renderer\LayoutResolver;
@@ -110,7 +111,10 @@ final class UXImageExtensionTest extends TestCase
 
     private function buildContainer(array $config): ContainerBuilder
     {
-        $container = new ContainerBuilder();
+        $container = new ContainerBuilder(new ParameterBag([
+            'kernel.environment' => 'test',
+            'kernel.build_dir' => __DIR__,
+        ]));
 
         $bundle = new UXImageBundle();
         $bundle->getContainerExtension()->load([$config], $container);
