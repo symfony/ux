@@ -44,7 +44,20 @@ final class ImageRendererTest extends TestCase
         $rendered = $this->renderer()->render('hero.jpg', '', new RenderOptions(layout: Layout::Fixed, width: 800, height: 450));
 
         self::assertSame(
-            '/hero.jpg?w=800&fm=auto&h=450 800w, /hero.jpg?w=1600&fm=auto&h=900 1600w',
+            '/hero.jpg?w=800&fm=auto&h=450&fit=cover 800w, /hero.jpg?w=1600&fm=auto&h=900&fit=cover 1600w',
+            $rendered->imgAttributes['srcset'],
+        );
+    }
+
+    public function testFitAndQualityReachTheSrcAndEverySrcsetCandidate()
+    {
+        $options = new RenderOptions(layout: Layout::Fixed, width: 400, height: 300, fit: Fit::Contain, quality: 70);
+
+        $rendered = $this->renderer()->render('hero.jpg', '', $options);
+
+        self::assertSame('/hero.jpg?w=400&fm=auto&h=300&fit=contain&q=70', $rendered->imgAttributes['src']);
+        self::assertSame(
+            '/hero.jpg?w=400&fm=auto&h=300&fit=contain&q=70 400w, /hero.jpg?w=800&fm=auto&h=600&fit=contain&q=70 800w',
             $rendered->imgAttributes['srcset'],
         );
     }

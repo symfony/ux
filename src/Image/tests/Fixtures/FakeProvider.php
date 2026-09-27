@@ -38,6 +38,12 @@ final class FakeProvider implements ProviderInterface
         if (null !== $transformation->height) {
             $params[] = 'h='.$transformation->height;
         }
+        if (null !== $transformation->fit) {
+            $params[] = 'fit='.$transformation->fit->value;
+        }
+        if (null !== $transformation->quality) {
+            $params[] = 'q='.$transformation->quality;
+        }
 
         foreach ($transformation->operations as $key => $value) {
             $params[] = \sprintf('%s=%s', $key, $value);
