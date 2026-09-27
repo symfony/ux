@@ -24,6 +24,8 @@ use Symfony\UX\Image\Renderer\RenderOptions;
 /**
  * A test case to ease snapshot-testing a provider's rendered URL matrix.
  *
+ * It needs phpunit/phpunit and spatie/phpunit-snapshot-assertions, which this package does not install.
+ *
  * @author Hugo Alliaume <hugo@alliau.me>
  */
 abstract class RendererSnapshotTestCase extends TestCase
