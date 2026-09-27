@@ -95,6 +95,46 @@ final class ImageRuntimeTest extends KernelTestCase
         }
     }
 
+    public function testCallerAttributesAreRendered()
+    {
+        $html = $this->renderFunction('/hero.jpg', '', ['width' => 800], attributes: ['class' => 'rounded', 'data-test' => '1']);
+
+        self::assertStringContainsString('class="rounded"', $html);
+        self::assertStringContainsString('data-test="1"', $html);
+    }
+
+    public function testACallerAttributeWinsOverTheGeneratedDefault()
+    {
+        $html = $this->renderFunction('/hero.jpg', '', ['width' => 800], attributes: ['loading' => 'eager']);
+
+        self::assertStringContainsString('loading="eager"', $html);
+        self::assertStringNotContainsString('loading="lazy"', $html);
+    }
+
+    public function testACallerStyleMergesIntoTheLayoutStyle()
+    {
+        $html = $this->renderFunction('/hero.jpg', '', ['width' => 800, 'height' => 450], attributes: ['style' => ['border-radius' => '8px']]);
+
+        self::assertStringContainsString('aspect-ratio: 800 / 450', $html);
+        self::assertStringContainsString('border-radius: 8px', $html);
+    }
+
+    public function testACallerStringStyleMergesIntoTheLayoutStyle()
+    {
+        $html = $this->renderFunction('/hero.jpg', '', ['width' => 800, 'height' => 450], attributes: ['style' => 'border-radius: 8px']);
+
+        self::assertStringContainsString('aspect-ratio: 800 / 450', $html);
+        self::assertStringContainsString('border-radius: 8px', $html);
+    }
+
+    public function testACallerSizesOverridesEverySourceAndTheImgInThePictureBranch()
+    {
+        $html = $this->renderFunction('/hero.jpg', '', ['width' => 800], autoFormat: false, attributes: ['sizes' => '50vw']);
+
+        self::assertSame(4, substr_count($html, 'sizes="50vw"'));
+        self::assertStringNotContainsString('100vw', $html);
+    }
+
     public function testUxImageUrlRendersOneEscapedUrl()
     {
         $url = $this->renderUrlFunction('og.jpg', ['width' => 1200, 'height' => 630]);
@@ -152,17 +192,18 @@ final class ImageRuntimeTest extends KernelTestCase
         return $twig->createTemplate('{{ ux_image_url(src, options) }}')->render(['src' => $src, 'options' => $options]);
     }
 
-    private function renderFunction(string $src, string $alt, array $options = [], bool $autoFormat = true): string
+    private function renderFunction(string $src, string $alt, array $options = [], bool $autoFormat = true, array $attributes = []): string
     {
         self::bootKernel(['environment' => $autoFormat ? 'test' : 'no_auto_format']);
 
         /** @var Environment $twig */
         $twig = self::getContainer()->get('twig');
 
-        return trim($twig->createTemplate('{{ ux_image(src, alt, options) }}')->render([
+        return trim($twig->createTemplate('{{ ux_image(src, alt, options, attributes) }}')->render([
             'src' => $src,
             'alt' => $alt,
             'options' => $options,
+            'attributes' => $attributes,
         ]));
     }
 }

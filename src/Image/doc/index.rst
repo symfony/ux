@@ -49,9 +49,12 @@ the function takes them as its third, associative-array argument, keyed by
 prop name in camelCase (``objectFit``, not ``object-fit``). An unknown key
 there throws an ``InvalidArgumentException``.
 
-HTML attributes are the component's alone. ``class``, ``data-*``, ``style``
-and ``sizes`` reach the rendered ``<img>`` when they are passed to
-``<twig:ux:image>``; ``ux_image()`` has no argument for them.
+Both accept HTML attributes too: the component takes them next to its props,
+the function as its fourth argument:
+
+.. code-block:: twig
+
+    {{ ux_image('/uploads/hero.jpg', 'Hero', {width: 800}, {class: 'rounded', loading: 'eager'}) }}
 
 Props
 ~~~~~
@@ -98,9 +101,11 @@ cannot produce throws an ``InvalidArgumentException`` naming its supported
 list.
 
 Any attribute not listed above (``class``, ``data-*``, a caller-supplied
-``style`` or ``sizes``, …) is passed through to the rendered ``<img>``. A
-caller-supplied ``style`` merges with the generated layout style instead of
-replacing it; a caller-supplied ``sizes`` replaces the generated value.
+``style`` or ``sizes``, …), like any attribute passed to ``ux_image()``, is
+passed through to the rendered ``<img>`` and wins over a generated one such as
+``loading``. A caller-supplied ``style`` merges with the generated layout style
+instead of replacing it; a caller-supplied ``sizes`` replaces the generated
+value.
 
 .. _image_provider_operations:
 
