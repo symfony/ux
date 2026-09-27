@@ -318,6 +318,17 @@ own presentational hint, which would otherwise make CSS ignore
 ``fixed`` and ``constrained`` require ``width``; ``full-width`` requires
 ``height``. Passing neither throws an ``InvalidArgumentException``.
 
+The generated ``sizes`` assumes the image spans the whole viewport when the
+viewport is narrower than its ``width``. That is right for a full-width
+container, not for a grid or a sidebar, where the browser would download a
+candidate several times too wide. Pass your own ``sizes`` there:
+
+.. code-block:: html+twig
+
+    {# three columns from 1024px, two from 640px, one below #}
+    <twig:ux:image src="/uploads/hero.jpg" alt="Hero" width="400" height="300"
+        sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw" />
+
 ``object-fit`` overrides the value derived from ``fit``. It defaults to the
 ``fit`` value itself, or to ``cover`` when no ``fit`` applies.
 
