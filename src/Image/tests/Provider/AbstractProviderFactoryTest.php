@@ -12,6 +12,7 @@
 namespace Symfony\UX\Image\Tests\Provider;
 
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\OptionsResolver\Exception\UndefinedOptionsException;
 use Symfony\UX\Image\Exception\InvalidArgumentException;
 use Symfony\UX\Image\Provider\Dsn;
 use Symfony\UX\Image\Provider\NullProviderFactory;
@@ -22,7 +23,7 @@ final class AbstractProviderFactoryTest extends TestCase
     public function testAnOptionTheFactoryDoesNotSupportIsRejected(): void
     {
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('Invalid option(s) "driver" passed to the "fake" image provider (supported: "auto_format").');
+        $this->expectExceptionMessage('Invalid "fake" image provider DSN: The option "driver" does not exist. Defined options are: "auto_format".');
 
         new FakeProviderFactory()->create(new Dsn('fake://default?driver=imagick'));
     }
@@ -30,7 +31,7 @@ final class AbstractProviderFactoryTest extends TestCase
     public function testAFactoryWithoutOptionsRejectsAnyOption(): void
     {
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('Invalid option(s) "foo", "bar" passed to the "null" image provider (supported: none).');
+        $this->expectExceptionMessage('Invalid "null" image provider DSN: the provider takes no option, "foo", "bar" given.');
 
         new NullProviderFactory()->create(new Dsn('null://null?foo=1&bar=2'));
     }
@@ -38,9 +39,19 @@ final class AbstractProviderFactoryTest extends TestCase
     public function testAnOptionThatIsNotAStringIsRejected(): void
     {
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('The "auto_format" option of the "fake" image provider must be a string, "array" given.');
+        $this->expectExceptionMessage('Invalid "fake" image provider DSN: the "auto_format" option must be a string, "array" given.');
 
         new FakeProviderFactory()->create(new Dsn('fake://default?auto_format[]=1'));
+    }
+
+    public function testTheOptionsResolverErrorIsKeptAsThePreviousException(): void
+    {
+        try {
+            new FakeProviderFactory()->create(new Dsn('fake://default?driver=imagick'));
+            self::fail('Expected an InvalidArgumentException.');
+        } catch (InvalidArgumentException $e) {
+            self::assertInstanceOf(UndefinedOptionsException::class, $e->getPrevious());
+        }
     }
 
     public function testASupportedStringOptionIsAccepted(): void

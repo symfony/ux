@@ -11,6 +11,8 @@
 
 namespace Symfony\UX\Image\Provider;
 
+use Symfony\Component\OptionsResolver\Exception\ExceptionInterface as OptionsResolverException;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\UX\Image\Exception\InvalidArgumentException;
 
 /**
@@ -29,29 +31,38 @@ abstract class AbstractProviderFactory
     abstract protected function getSupportedSchemes(): array;
 
     /**
-     * @return list<string> the DSN query options this factory reads
+     * Declares the DSN query options this factory reads.
      */
-    protected function getSupportedOptions(): array
+    protected function configureOptions(OptionsResolver $resolver): void
     {
-        return [];
     }
 
     /**
-     * @throws InvalidArgumentException when the DSN carries an unsupported option, or an option that is not a string
+     * @return array<string, mixed>
+     *
+     * @throws InvalidArgumentException when the DSN options do not match what {@see configureOptions()} declares
      */
-    protected function validateOptions(Dsn $dsn): void
+    protected function resolveOptions(Dsn $dsn): array
     {
-        $supported = $this->getSupportedOptions();
+        $resolver = new OptionsResolver();
+        $this->configureOptions($resolver);
         $options = $dsn->getOptions();
 
-        if ($unsupported = array_diff(array_keys($options), $supported)) {
-            throw new InvalidArgumentException(\sprintf('Invalid option(s) "%s" passed to the "%s" image provider (supported: %s).', implode('", "', $unsupported), $dsn->getScheme(), [] === $supported ? 'none' : '"'.implode('", "', $supported).'"'));
+        // OptionsResolver would report "Defined options are: """ for a provider that takes none.
+        if ([] === $resolver->getDefinedOptions() && [] !== $options) {
+            throw new InvalidArgumentException(\sprintf('Invalid "%s" image provider DSN: the provider takes no option, "%s" given.', $dsn->getScheme(), implode('", "', array_keys($options))));
         }
 
         foreach ($options as $name => $value) {
-            if (!\is_string($value)) {
-                throw new InvalidArgumentException(\sprintf('The "%s" option of the "%s" image provider must be a string, "%s" given.', $name, $dsn->getScheme(), get_debug_type($value)));
+            if ($resolver->isDefined($name) && !\is_string($value)) {
+                throw new InvalidArgumentException(\sprintf('Invalid "%s" image provider DSN: the "%s" option must be a string, "%s" given.', $dsn->getScheme(), $name, get_debug_type($value)));
             }
+        }
+
+        try {
+            return $resolver->resolve($options);
+        } catch (OptionsResolverException $e) {
+            throw new InvalidArgumentException(\sprintf('Invalid "%s" image provider DSN: %s', $dsn->getScheme(), $e->getMessage()), 0, $e);
         }
     }
 }

@@ -24,7 +24,7 @@ final class CloudflareProviderFactory extends AbstractProviderFactory implements
 {
     public function create(Dsn $dsn): ProviderInterface
     {
-        $this->validateOptions($dsn);
+        $this->resolveOptions($dsn);
 
         if (null === $host = $dsn->getHost()) {
             throw new IncompleteDsnException('The Cloudflare image provider requires a host, e.g. "cloudflare://cdn.example.com".');

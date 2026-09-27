@@ -507,7 +507,9 @@ A provider implements ``Symfony\UX\Image\Provider\ProviderInterface`` and is
 built from the DSN by a factory implementing
 ``Symfony\UX\Image\Provider\ProviderFactoryInterface``. Extending
 ``Symfony\UX\Image\Provider\AbstractProviderFactory`` gives the factory the
-scheme matching and the DSN option checks.
+scheme matching. The factory declares the DSN options it reads in
+``configureOptions()``, with the `OptionsResolver component`_, and gets them
+back, checked, from ``resolveOptions()``.
 
 Register the factory with the ``ux_image.provider_factory`` tag, and a
 ``provider`` attribute holding the provider's name, which is both its DSN
@@ -536,3 +538,4 @@ The package supports PHP 8.4 or later and Symfony 7.4 or 8.x.
 .. _`KeyCDN Image Processing`: https://www.keycdn.com/support/image-processing
 .. _`KeyCDN's own parameter reference`: https://www.keycdn.com/support/image-processing
 .. _`Secure Token`: https://www.keycdn.com/support/secure-token
+.. _`OptionsResolver component`: https://symfony.com/doc/current/components/options_resolver.html

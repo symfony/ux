@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\Image\Tests\Fixtures;
 
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\UX\Image\Provider\AbstractProviderFactory;
 use Symfony\UX\Image\Provider\Dsn;
 use Symfony\UX\Image\Provider\ProviderFactoryInterface;
@@ -20,9 +21,9 @@ final class FakeProviderFactory extends AbstractProviderFactory implements Provi
 {
     public function create(Dsn $dsn): ProviderInterface
     {
-        $this->validateOptions($dsn);
+        $options = $this->resolveOptions($dsn);
 
-        return new FakeProvider(autoFormat: (bool) $dsn->getOption('auto_format', true));
+        return new FakeProvider(autoFormat: (bool) $options['auto_format']);
     }
 
     protected function getSupportedSchemes(): array
@@ -30,8 +31,8 @@ final class FakeProviderFactory extends AbstractProviderFactory implements Provi
         return ['fake'];
     }
 
-    protected function getSupportedOptions(): array
+    protected function configureOptions(OptionsResolver $resolver): void
     {
-        return ['auto_format'];
+        $resolver->setDefault('auto_format', '1');
     }
 }

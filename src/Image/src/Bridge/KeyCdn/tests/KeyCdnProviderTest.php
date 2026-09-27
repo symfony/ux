@@ -149,7 +149,7 @@ final class KeyCdnProviderTest extends TestCase
     public function testTheFactoryRejectsAnUnknownOption(): void
     {
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('Invalid option(s) "driver" passed to the "keycdn" image provider (supported: none).');
+        $this->expectExceptionMessage('Invalid "keycdn" image provider DSN: the provider takes no option, "driver" given.');
 
         new KeyCdnProviderFactory()->create(new Dsn('keycdn://myzone.kxcdn.com?driver=imagick'));
     }

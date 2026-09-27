@@ -18,7 +18,7 @@ final class NullProviderFactory extends AbstractProviderFactory implements Provi
 {
     public function create(Dsn $dsn): ProviderInterface
     {
-        $this->validateOptions($dsn);
+        $this->resolveOptions($dsn);
 
         return new NullProvider();
     }

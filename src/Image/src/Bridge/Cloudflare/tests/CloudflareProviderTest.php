@@ -168,7 +168,7 @@ final class CloudflareProviderTest extends TestCase
     public function testTheFactoryRejectsAnUnknownOption(): void
     {
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('Invalid option(s) "driver" passed to the "cloudflare" image provider (supported: none).');
+        $this->expectExceptionMessage('Invalid "cloudflare" image provider DSN: the provider takes no option, "driver" given.');
 
         new CloudflareProviderFactory()->create(new Dsn('cloudflare://cdn.example.com?driver=imagick'));
     }

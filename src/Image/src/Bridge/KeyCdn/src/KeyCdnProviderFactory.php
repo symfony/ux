@@ -24,7 +24,7 @@ final class KeyCdnProviderFactory extends AbstractProviderFactory implements Pro
 {
     public function create(Dsn $dsn): ProviderInterface
     {
-        $this->validateOptions($dsn);
+        $this->resolveOptions($dsn);
 
         if (null === $host = $dsn->getHost()) {
             throw new IncompleteDsnException('The KeyCDN image provider requires a host, e.g. "keycdn://myzone.kxcdn.com".');
