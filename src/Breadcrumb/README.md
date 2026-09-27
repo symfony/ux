@@ -19,7 +19,7 @@ final class ProductController extends AbstractController
 
     #[Route('/{slug}', name: 'view')]
     #[Breadcrumb(
-        label: new Expression('product.name'),
+        label: '{name:product}',
         route: 'product_view',
         parameters: ['slug'],
         parent: [self::class, 'index'],
