@@ -175,6 +175,7 @@ Configuration is done in your ``config/packages/ux_image.yaml`` file:
         provider: '%env(resolve:UX_IMAGE_DSN)%'
         formats: ['avif', 'webp', 'jpeg']
         resolutions: [6016, 5120, 4480, 3840, 3200, 2560, 2048, 1920, 1668, 1280, 1080, 960, 828, 750, 640]
+        quality: null
 
 The ``resolve:`` processor is required: a DSN may reference container
 parameters such as ``%kernel.project_dir%``, and parameter resolution does not
@@ -250,6 +251,13 @@ screen widths ported from `unpic`_.
 Narrow it when your images never reach those sizes, or when you want fewer
 candidates per ``srcset``; a component can still override it for one image
 through the ``breakpoints`` prop.
+
+The ``quality`` option
+~~~~~~~~~~~~~~~~~~~~~~
+
+``quality`` is the output quality, from 1 to 100, of every generated image
+that does not set its own through the ``quality`` prop or option. It defaults
+to ``null``, which leaves the quality to the provider.
 
 .. _image_layout_and_rendering:
 

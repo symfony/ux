@@ -26,11 +26,13 @@ use Symfony\UX\Image\Provider\ProviderInterface;
 final class ImageUrlGenerator
 {
     /**
-     * @param list<string>|null $providerNames the installed providers, to reject an "operations" key that names none of them; null skips the check
+     * @param list<string>|null $providerNames  the installed providers, to reject an "operations" key that names none of them; null skips the check
+     * @param int|null          $defaultQuality the quality of every URL that sets none itself; null leaves it to the provider
      */
     public function __construct(
         private readonly ProviderInterface $provider,
         private readonly ?array $providerNames = null,
+        private readonly ?int $defaultQuality = null,
     ) {
     }
 
@@ -42,6 +44,7 @@ final class ImageUrlGenerator
     public function generate(string $src, ?int $width = null, ?int $height = null, ?Fit $fit = null, ?string $format = null, ?int $quality = null, array $operations = []): string
     {
         $fit ??= null !== $width && null !== $height ? Fit::Cover : null;
+        $quality ??= $this->defaultQuality;
         $this->assertKnownProviders($operations);
 
         if ($this->provider instanceof NullProvider) {

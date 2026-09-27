@@ -61,6 +61,12 @@ final class UXImageBundle extends AbstractBundle
                     ->integerPrototype()->end()
                     ->defaultValue(LayoutResolver::DEFAULT_RESOLUTIONS)
                 ->end()
+                ->integerNode('quality')
+                    ->info('The quality of every generated image that sets none itself; null leaves it to the provider.')
+                    ->min(1)
+                    ->max(100)
+                    ->defaultNull()
+                ->end()
             ->end()
         ;
     }
@@ -79,6 +85,7 @@ final class UXImageBundle extends AbstractBundle
         $container->services()->get('ux_image.provider')->arg(0, $config['provider']);
         $container->services()->get('ux_image.renderer')->arg(2, $config['formats']);
         $container->services()->get('ux_image.layout_resolver')->arg(0, $config['resolutions']);
+        $container->services()->get('ux_image.url_generator')->arg('$defaultQuality', $config['quality']);
 
         foreach (self::$bridges as $name => $bridge) {
             if (ContainerBuilder::willBeAvailable('symfony/ux-'.$name.'-image', $bridge['factory'], ['symfony/ux-image'])) {

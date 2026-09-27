@@ -12,6 +12,7 @@
 namespace Symfony\UX\Image\Tests\DependencyInjection;
 
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 use Symfony\UX\Image\ImageUrlGenerator;
@@ -126,6 +127,26 @@ final class UXImageExtensionTest extends TestCase
 
         self::assertSame('ux_image.url_generator', (string) $container->getAlias(ImageUrlGenerator::class));
         self::assertSame(ImageUrlGenerator::class, $container->getDefinition('ux_image.url_generator')->getClass());
+    }
+
+    public function testTheConfiguredQualityReachesTheUrlGenerator()
+    {
+        $container = $this->buildContainer(['quality' => 75]);
+
+        self::assertSame(75, $container->getDefinition('ux_image.url_generator')->getArgument('$defaultQuality'));
+    }
+
+    public function testTheQualityDefaultsToTheProviders()
+    {
+        self::assertNull($this->buildContainer([])->getDefinition('ux_image.url_generator')->getArgument('$defaultQuality'));
+    }
+
+    public function testAQualityOutOfRangeIsRejected()
+    {
+        $this->expectException(InvalidConfigurationException::class);
+        $this->expectExceptionMessage('The value 0 is too small for path "ux_image.quality".');
+
+        $this->buildContainer(['quality' => 0]);
     }
 
     private function buildContainer(array $config): ContainerBuilder

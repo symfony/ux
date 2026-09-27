@@ -118,6 +118,20 @@ final class ImageUrlGeneratorTest extends TestCase
         self::assertSame('/og.jpg?fm=', new ImageUrlGenerator(new FakeProvider())->generate('og.jpg', operations: ['cloudfare' => []]));
     }
 
+    public function testTheDefaultQualityAppliesWhenNoneIsGiven()
+    {
+        $generator = new ImageUrlGenerator(new FakeProvider(), null, 75);
+
+        self::assertSame('/og.jpg?w=800&fm=&q=75', $generator->generate('og.jpg', width: 800));
+    }
+
+    public function testAnExplicitQualityWinsOverTheDefault()
+    {
+        $generator = new ImageUrlGenerator(new FakeProvider(), null, 75);
+
+        self::assertSame('/og.jpg?w=800&fm=&q=90', $generator->generate('og.jpg', width: 800, quality: 90));
+    }
+
     public function testTheNullProviderReturnsTheOriginalPath()
     {
         $url = new ImageUrlGenerator(new NullProvider())->generate('/uploads/og.jpg', width: 1200, format: 'webp');
