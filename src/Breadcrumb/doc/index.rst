@@ -30,8 +30,8 @@ Installation
 Usage
 -----
 
-Declare the crumbs in trail order, top to bottom.
-The attribute targets both classes and methods, so a controller with several actions puts the shared head of the trail on the class and lets each action add its own leaves::
+Put a crumb on each action, and name the action whose trail goes above it as its ``parent``.
+The crumbs of the parent go above the crumb that names it, and so on up the chain, so each action declares only its own level::
 
     // src/Controller/ProductController.php
     namespace App\Controller;
@@ -43,25 +43,29 @@ The attribute targets both classes and methods, so a controller with several act
     use Symfony\UX\Breadcrumb\Attribute\Breadcrumb;
 
     #[Route('/products', name: 'product_')]
-    #[Breadcrumb(label: 'Products', route: 'product_index')]
     final class ProductController extends AbstractController
     {
         #[Route('', name: 'index')]
+        #[Breadcrumb(label: 'Products', route: 'product_index')]
         public function index(): Response
         {
             return $this->render('product/index.html.twig');
         }
 
         #[Route('/{slug}', name: 'view')]
-        #[Breadcrumb(label: '{name:product}')]
+        #[Breadcrumb(
+            label: '{name:product}',
+            route: 'product_view',
+            parameters: ['slug'],
+            parent: [self::class, 'index'],
+        )]
         public function view(Product $product): Response
         {
             return $this->render('product/view.html.twig');
         }
 
         #[Route('/{slug}/edit', name: 'edit')]
-        #[Breadcrumb(label: '{name:product}', route: 'product_view', parameters: ['slug'])]
-        #[Breadcrumb(label: 'Edit')]
+        #[Breadcrumb(label: 'Edit', parent: [self::class, 'view'])]
         public function edit(Product $product): Response
         {
             return $this->render('product/edit.html.twig');
@@ -70,10 +74,10 @@ The attribute targets both classes and methods, so a controller with several act
 
 .. code-block:: twig
 
-    {# templates/product/view.html.twig #}
+    {# templates/base.html.twig #}
     {{ ux_breadcrumb() }}
 
-Class-level crumbs always come before the action's own, so the three actions above produce:
+The depth of the trail comes from the chain, so the three actions above produce:
 
 ===========  ===========================================================
 Action       Trail
@@ -83,22 +87,23 @@ Action       Trail
 ``edit``     Products, then the product, then Edit
 ===========  ===========================================================
 
-``index`` declares no crumb of its own, so it gets the class trail alone, which is usually what a section index page wants.
-``edit`` declares two, because an action may add more than one level below the shared head.
+The last crumb is the current page, which is never a link.
+Every other crumb is an ancestor, and an ancestor is a link, so ``index`` and ``view`` declare a ``route``, and ``view`` the URL parameters it needs.
+On their own page, the ``route`` and ``parameters`` cost nothing.
 
-An invokable controller works the same way, with everything on the class since there is only one action::
+Parent crumbs
+~~~~~~~~~~~~~
+
+A parent is one of:
+
+* an action, written as an array such as ``[ProductController::class, 'view']``, or ``[self::class, 'view']`` for an action of the same controller
+* an invokable controller class, such as ``ProductViewController::class``
+* a route name, such as ``'product_view'``, resolved to the controller of that route
+
+Invokable controllers chain the same way::
 
     // src/Controller/ProductViewController.php
-    namespace App\Controller;
-
-    use App\Entity\Product;
-    use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-    use Symfony\Component\HttpFoundation\Response;
-    use Symfony\Component\Routing\Attribute\Route;
-    use Symfony\UX\Breadcrumb\Attribute\Breadcrumb;
-
-    #[Breadcrumb(label: 'Products', route: 'product_index')]
-    #[Breadcrumb(label: '{name:product}')]
+    #[Breadcrumb(label: '{name:product}', route: 'product_view', parameters: ['slug'], parent: 'product_index')]
     final class ProductViewController extends AbstractController
     {
         #[Route('/products/{slug}', name: 'product_view')]
@@ -107,13 +112,6 @@ An invokable controller works the same way, with everything on the class since t
             return $this->render('product/view.html.twig');
         }
     }
-
-Parent crumbs
-~~~~~~~~~~~~~
-
-Sibling invokable controllers would each repeat the ancestry they share.
-Name a ``parent`` instead: the crumbs of that controller go above the crumb that names it, and so on up the chain.
-Each controller then declares only its own crumb, and the depth of the trail comes from the chain::
 
     // src/Controller/ProductEditController.php
     #[Breadcrumb(label: 'Edit', parent: ProductViewController::class)]
@@ -126,49 +124,55 @@ Each controller then declares only its own crumb, and the depth of the trail com
         }
     }
 
-With the ``ProductViewController`` above, this page gets Products, then the product, then Edit.
+The ancestors are resolved against the current request, like any other crumb of the trail.
+Their placeholders and expressions read the arguments of the current action, so they only resolve when that action has arguments with the same names.
+In both examples, the edit action receives a ``$product`` too, so the product's crumb shows its name on the edit page as well.
 
-A parent is one of:
+A cycle, a parent that points at nothing, and a parent on any crumb but the first of its level throw a ``LogicException`` when the page is requested.
+Resolving a route name reads the route collection, which is expensive, so the map of routes to controllers is kept in the ``.ux_breadcrumb.cache`` pool.
+In debug mode it is only kept for the current process, so a changed route is picked up at once.
+A route whose controller is a service id rather than a class cannot be followed; name the controller class instead.
 
-* an invokable controller class, such as ``ProductViewController::class``
-* an action, written as an array such as ``[ProductController::class, 'view']``, or ``[self::class, 'view']`` for an action of the same controller
-* a route name, such as ``'product_view'``, resolved to the controller of that route
+Several crumbs on one controller
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-It works the same way in a controller with several actions::
+The attribute is repeatable, and targets both classes and methods.
+Declare the crumbs in trail order, top to bottom: class-level crumbs always come before the action's own, so a controller can put the shared head of the trail on the class and let each action add its own leaves::
 
     #[Route('/products', name: 'product_')]
     #[Breadcrumb(label: 'Products', route: 'product_index')]
     final class ProductController extends AbstractController
     {
+        #[Route('', name: 'index')]
+        public function index(): Response
+        {
+            // ...
+        }
+
         #[Route('/{slug}', name: 'view')]
-        #[Breadcrumb(label: '{name:product}', route: 'product_view', parameters: ['slug'])]
+        #[Breadcrumb(label: '{name:product}')]
         public function view(Product $product): Response
         {
             // ...
         }
 
         #[Route('/{slug}/edit', name: 'edit')]
-        #[Breadcrumb(label: 'Edit', parent: [self::class, 'view'])]
+        #[Breadcrumb(label: '{name:product}', route: 'product_view', parameters: ['slug'])]
+        #[Breadcrumb(label: 'Edit')]
         public function edit(Product $product): Response
         {
             // ...
         }
     }
 
-When an action's crumb names a parent, the class-level crumbs are left out for that action.
-The parent's own trail already starts with them, so ``edit`` gets Products once, then the product, then Edit.
+This produces the same trails as the example of `Usage`_.
+``index`` declares no crumb of its own, so it gets the class trail alone, and ``edit`` declares two, because an action may add more than one level below the shared head.
+An invokable controller puts all of its crumbs on the class.
+
+The two styles mix.
+When an action's crumb names a parent, the class-level crumbs are left out for that action, since the parent's own trail already starts with them.
 A parent on a class-level crumb applies to every action of the controller.
 Only the first crumb of a class or of a method can name a parent.
-
-The ancestors are resolved against the current request, like any other crumb of the trail.
-As an ancestor, a crumb is a link, so give it a ``route`` and the URL parameters it needs.
-Its expressions are evaluated against the arguments of the current action, so they only resolve when that action has arguments with the same names.
-The ``view`` crumb above declares ``route`` and ``parameters`` for that reason: on its own page, the current crumb is not a link anyway, so they cost nothing there.
-
-A cycle, a parent that points at nothing, and a parent on any crumb but the first of its level throw a ``LogicException`` when the page is requested.
-Resolving a route name reads the route collection, which is expensive, so the map of routes to controllers is kept in the ``.ux_breadcrumb.cache`` pool.
-In debug mode it is only kept for the current process, so a changed route is picked up at once.
-A route whose controller is a service id rather than a class cannot be followed; name the controller class instead.
 
 The attribute
 -------------
