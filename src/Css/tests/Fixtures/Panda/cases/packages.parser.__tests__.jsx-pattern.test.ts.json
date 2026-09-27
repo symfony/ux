@@ -1,0 +1,55 @@
+{
+  "source": "packages/parser/__tests__/jsx-pattern.test.ts",
+  "cases": [
+    {
+      "id": "fixture::packages/parser/__tests__/jsx-pattern.test.ts::jsx pattern > custom jsx::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/jsx-pattern.test.ts",
+        "test": "jsx pattern > custom jsx",
+        "line": 47
+      },
+      "userConfig": {
+        "patterns": {
+          "extend": {
+            "grid": {
+              "jsx": [
+                "Form.Group",
+                "Grid"
+              ]
+            },
+            "stack": {
+              "jsx": [
+                "Form.Action",
+                "Stack"
+              ]
+            }
+          }
+        }
+      },
+      "configPatch": {},
+      "inputs": [],
+      "expected": {
+        "css": "@layer utilities {\n  .gap_4 {\n    gap: var(--spacing-4);\n}\n\n  .gap_2 {\n    gap: var(--spacing-2);\n}\n\n  .d_grid {\n    display: grid;\n}\n\n  .d_flex {\n    display: flex;\n}\n\n  .flex-d_column {\n    flex-direction: column;\n}\n}"
+      },
+      "unsupported": "extracted non-css items (jsx, jsx-pattern)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/jsx-pattern.test.ts::jsx pattern > should extract::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/jsx-pattern.test.ts",
+        "test": "jsx pattern > should extract",
+        "line": 18
+      },
+      "userConfig": null,
+      "inputs": [],
+      "expected": {
+        "css": "@layer utilities {\n  .gap_8px {\n    gap: 8px;\n}\n\n  .d_flex {\n    display: flex;\n}\n\n  .flex-d_column {\n    flex-direction: column;\n}\n\n  .ai_center {\n    align-items: center;\n}\n\n  .mt_40px {\n    margin-top: 40px;\n}\n\n  .mb_42px {\n    margin-bottom: 42px;\n}\n}"
+      },
+      "unsupported": "extracted non-css items (jsx-pattern)"
+    }
+  ]
+}

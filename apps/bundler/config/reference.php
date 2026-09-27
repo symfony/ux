@@ -708,6 +708,21 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     driver?: "gd"|"imagick"|"vips"|Param, // The Intervention Image driver used for server-side cropping. // Default: "gd"
  *     driver_service?: scalar|Param|null, // Service id of a custom Intervention\Image\Interfaces\DriverInterface. When set, it takes precedence over "driver". // Default: null
  * }
+ * @psalm-type UxCssConfig = array{
+ *     tokens?: array<string, mixed>,
+ *     semantic_tokens?: array<string, mixed>,
+ *     conditions?: array<string, mixed>,
+ *     breakpoints?: array<string, scalar|Param|null>,
+ *     strict_tokens?: bool|Param, // Only accept tokens for properties bound to a token category; raw values must be written between brackets. // Default: true
+ *     strict_property_values?: bool|Param, // Only accept the keywords of a property whose grammar is made of keywords. // Default: true
+ *     static_css?: array{ // Values to write in the stylesheet even when no template uses them as is, for css() calls with dynamic values.
+ *         css?: list<array{ // Default: []
+ *             properties?: array<string, list<scalar|Param|null>>,
+ *             conditions?: list<scalar|Param|null>,
+ *             responsive?: bool|Param, // Also write each value for every breakpoint. // Default: false
+ *         }>,
+ *     },
+ * }
  * @psalm-type UxMapConfig = array{
  *     renderer?: scalar|Param|null, // Default: null
  *     google_maps?: array{
@@ -862,6 +877,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     webpack_encore?: WebpackEncoreConfig,
  *     stimulus?: StimulusConfig,
  *     cropperjs?: CropperjsConfig,
+ *     ux_css?: UxCssConfig,
  *     ux_map?: UxMapConfig,
  *     twig?: TwigConfig,
  *     ux_icons?: UxIconsConfig,
@@ -884,6 +900,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         webpack_encore?: WebpackEncoreConfig,
  *         stimulus?: StimulusConfig,
  *         cropperjs?: CropperjsConfig,
+ *         ux_css?: UxCssConfig,
  *         ux_map?: UxMapConfig,
  *         twig?: TwigConfig,
  *         ux_icons?: UxIconsConfig,
@@ -907,6 +924,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         webpack_encore?: WebpackEncoreConfig,
  *         stimulus?: StimulusConfig,
  *         cropperjs?: CropperjsConfig,
+ *         ux_css?: UxCssConfig,
  *         ux_map?: UxMapConfig,
  *         twig?: TwigConfig,
  *         ux_icons?: UxIconsConfig,
@@ -930,6 +948,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         webpack_encore?: WebpackEncoreConfig,
  *         stimulus?: StimulusConfig,
  *         cropperjs?: CropperjsConfig,
+ *         ux_css?: UxCssConfig,
  *         ux_map?: UxMapConfig,
  *         twig?: TwigConfig,
  *         ux_icons?: UxIconsConfig,

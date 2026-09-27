@@ -1,0 +1,729 @@
+{
+  "source": "packages/parser/__tests__/jsx.test.ts",
+  "cases": [
+    {
+      "id": "fixture::packages/parser/__tests__/jsx.test.ts::jsx > should extract *Css aliases in minimal mode::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/jsx.test.ts",
+        "test": "jsx > should extract *Css aliases in minimal mode",
+        "line": 711
+      },
+      "userConfig": {
+        "jsxStyleProps": "minimal"
+      },
+      "configPatch": {
+        "jsxStyleProps": {
+          "$value": "minimal"
+        }
+      },
+      "inputs": [],
+      "expected": {
+        "css": "@layer utilities {\n  .p_4 {\n    padding: var(--spacing-4);\n}\n\n  .c_red\\.200 {\n    color: var(--colors-red-200);\n}\n}"
+      },
+      "unsupported": "extracted non-css items (jsx-factory)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/jsx.test.ts::jsx > should extract *Css prop aliases with array value::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/jsx.test.ts",
+        "test": "jsx > should extract *Css prop aliases with array value",
+        "line": 648
+      },
+      "userConfig": null,
+      "inputs": [],
+      "expected": {
+        "css": "@layer utilities {\n  .c_blue\\.300 {\n    color: var(--colors-blue-300);\n}\n\n  .bg-c_green\\.300 {\n    background-color: var(--colors-green-300);\n}\n}"
+      },
+      "unsupported": "extracted non-css items (jsx-factory)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/jsx.test.ts::jsx > should extract *Css prop aliases::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/jsx.test.ts",
+        "test": "jsx > should extract *Css prop aliases",
+        "line": 614
+      },
+      "userConfig": null,
+      "inputs": [],
+      "expected": {
+        "css": "@layer utilities {\n  .c_red\\.200 {\n    color: var(--colors-red-200);\n}\n\n  .d_flex {\n    display: flex;\n}\n\n  .mb_4 {\n    margin-bottom: var(--spacing-4);\n}\n}"
+      },
+      "unsupported": "extracted non-css items (jsx-factory)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/jsx.test.ts::jsx > should extract array css prop::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/jsx.test.ts",
+        "test": "jsx > should extract array css prop",
+        "line": 547
+      },
+      "userConfig": null,
+      "inputs": [],
+      "expected": {
+        "css": "@layer utilities {\n  .c_blue\\.300 {\n    color: var(--colors-blue-300);\n}\n\n  .bg-c_green\\.300 {\n    background-color: var(--colors-green-300);\n}\n\n  .c_yellow\\.300 {\n    color: var(--colors-yellow-300);\n}\n}"
+      },
+      "unsupported": "extracted non-css items (jsx-factory)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/jsx.test.ts::jsx > should extract babel compiled preact runtime output::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/jsx.test.ts",
+        "test": "jsx > should extract babel compiled preact runtime output",
+        "line": 6
+      },
+      "userConfig": {
+        "jsxFramework": "preact"
+      },
+      "configPatch": {},
+      "inputs": [],
+      "expected": {
+        "css": "@layer utilities {\n  .c_black {\n    color: var(--colors-black);\n}\n\n  .bg-c_RebeccaPurple {\n    background-color: RebeccaPurple;\n}\n\n  .c_white {\n    color: var(--colors-white);\n}\n\n  .bg-c_SteelBlue {\n    background-color: SteelBlue;\n}\n}"
+      },
+      "unsupported": "extracted non-css items (jsx)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/jsx.test.ts::jsx > should extract babel compiled react runtime output::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/jsx.test.ts",
+        "test": "jsx > should extract babel compiled react runtime output",
+        "line": 6
+      },
+      "userConfig": {
+        "jsxFramework": "react"
+      },
+      "configPatch": {},
+      "inputs": [],
+      "expected": {
+        "css": "@layer utilities {\n  .c_black {\n    color: var(--colors-black);\n}\n\n  .bg-c_RebeccaPurple {\n    background-color: RebeccaPurple;\n}\n\n  .c_white {\n    color: var(--colors-white);\n}\n\n  .bg-c_SteelBlue {\n    background-color: SteelBlue;\n}\n}"
+      },
+      "unsupported": "extracted non-css items (jsx)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/jsx.test.ts::jsx > should extract babel compiled solid runtime output::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/jsx.test.ts",
+        "test": "jsx > should extract babel compiled solid runtime output",
+        "line": 6
+      },
+      "userConfig": {
+        "jsxFramework": "solid"
+      },
+      "configPatch": {},
+      "inputs": [],
+      "expected": {
+        "css": "@layer utilities {\n  .c_black {\n    color: var(--colors-black);\n}\n\n  .bg-c_RebeccaPurple {\n    background-color: RebeccaPurple;\n}\n\n  .c_white {\n    color: var(--colors-white);\n}\n\n  .bg-c_SteelBlue {\n    background-color: SteelBlue;\n}\n}"
+      },
+      "unsupported": "extracted non-css items (jsx)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/jsx.test.ts::jsx > should extract babel compiled vue runtime output::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/jsx.test.ts",
+        "test": "jsx > should extract babel compiled vue runtime output",
+        "line": 6
+      },
+      "userConfig": {
+        "jsxFramework": "vue"
+      },
+      "configPatch": {},
+      "inputs": [],
+      "expected": {
+        "css": "@layer utilities {\n  .c_black {\n    color: var(--colors-black);\n}\n\n  .bg-c_RebeccaPurple {\n    background-color: RebeccaPurple;\n}\n\n  .c_white {\n    color: var(--colors-white);\n}\n\n  .bg-c_SteelBlue {\n    background-color: SteelBlue;\n}\n}"
+      },
+      "unsupported": "extracted non-css items (jsx)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/jsx.test.ts::jsx > should extract bundled preact local helper runtime output::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/jsx.test.ts",
+        "test": "jsx > should extract bundled preact local helper runtime output",
+        "line": 6
+      },
+      "userConfig": {
+        "jsxFramework": "preact"
+      },
+      "configPatch": {},
+      "inputs": [],
+      "expected": {
+        "css": "@layer utilities {\n  .c_black {\n    color: var(--colors-black);\n}\n\n  .bg-c_RebeccaPurple {\n    background-color: RebeccaPurple;\n}\n\n  .c_white {\n    color: var(--colors-white);\n}\n\n  .bg-c_SteelBlue {\n    background-color: SteelBlue;\n}\n}"
+      },
+      "unsupported": "extracted non-css items (jsx)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/jsx.test.ts::jsx > should extract bundled react runtime namespace css props::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/jsx.test.ts",
+        "test": "jsx > should extract bundled react runtime namespace css props",
+        "line": 904
+      },
+      "userConfig": {
+        "jsxFramework": "react"
+      },
+      "configPatch": {},
+      "inputs": [],
+      "expected": {
+        "css": "@layer utilities {\n  .c_black {\n    color: var(--colors-black);\n}\n\n  .bg-c_RebeccaPurple {\n    background-color: RebeccaPurple;\n}\n\n  .c_white {\n    color: var(--colors-white);\n}\n\n  .bg-c_SteelBlue {\n    background-color: SteelBlue;\n}\n}"
+      },
+      "unsupported": "extracted non-css items (jsx-pattern)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/jsx.test.ts::jsx > should extract compiled preact jsx helper calls::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/jsx.test.ts",
+        "test": "jsx > should extract compiled preact jsx helper calls",
+        "line": 1385
+      },
+      "userConfig": {
+        "jsxFramework": "preact"
+      },
+      "configPatch": {},
+      "inputs": [],
+      "expected": {
+        "css": "@layer utilities {\n  .bg_red\\.200 {\n    background: var(--colors-red-200);\n}\n}"
+      },
+      "unsupported": "extracted non-css items (jsx-factory)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/jsx.test.ts::jsx > should extract compiled preact jsxDEV helper calls::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/jsx.test.ts",
+        "test": "jsx > should extract compiled preact jsxDEV helper calls",
+        "line": 1606
+      },
+      "userConfig": {
+        "jsxFramework": "preact"
+      },
+      "configPatch": {},
+      "inputs": [],
+      "expected": {
+        "css": "@layer utilities {\n  .bg_red\\.200 {\n    background: var(--colors-red-200);\n}\n}"
+      },
+      "unsupported": "extracted non-css items (jsx-factory)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/jsx.test.ts::jsx > should extract compiled qwik _jsxC helper calls::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/jsx.test.ts",
+        "test": "jsx > should extract compiled qwik _jsxC helper calls",
+        "line": 2180
+      },
+      "userConfig": {
+        "jsxFramework": "qwik"
+      },
+      "configPatch": {},
+      "inputs": [],
+      "expected": {
+        "css": "@layer utilities {\n  .bg_red\\.200 {\n    background: var(--colors-red-200);\n}\n}"
+      },
+      "unsupported": "extracted non-css items (jsx-factory)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/jsx.test.ts::jsx > should extract compiled react automatic runtime css props::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/jsx.test.ts",
+        "test": "jsx > should extract compiled react automatic runtime css props",
+        "line": 793
+      },
+      "userConfig": {
+        "jsxFramework": "react"
+      },
+      "configPatch": {},
+      "inputs": [
+        {},
+        {
+          "color": "white",
+          "backgroundColor": "AntiqueWhite"
+        },
+        {
+          "color": "white",
+          "backgroundColor": "SteelBlue"
+        }
+      ],
+      "expected": {
+        "css": "@layer utilities {\n  .c_white {\n    color: var(--colors-white);\n}\n\n  .bg-c_AntiqueWhite {\n    background-color: AntiqueWhite;\n}\n\n  .bg-c_SteelBlue {\n    background-color: SteelBlue;\n}\n\n  .c_black {\n    color: var(--colors-black);\n}\n\n  .bg-c_RebeccaPurple {\n    background-color: RebeccaPurple;\n}\n}"
+      },
+      "unsupported": "extracted non-css items (jsx-pattern)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/jsx.test.ts::jsx > should extract compiled react classic runtime css props::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/jsx.test.ts",
+        "test": "jsx > should extract compiled react classic runtime css props",
+        "line": 1287
+      },
+      "userConfig": {
+        "jsxFramework": "react"
+      },
+      "configPatch": {},
+      "inputs": [],
+      "expected": {
+        "css": "@layer utilities {\n  .c_black {\n    color: var(--colors-black);\n}\n\n  .bg-c_RebeccaPurple {\n    background-color: RebeccaPurple;\n}\n}"
+      },
+      "unsupported": "extracted non-css items (jsx-factory, jsx-pattern)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/jsx.test.ts::jsx > should extract compiled react jsxDEV runtime css props::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/jsx.test.ts",
+        "test": "jsx > should extract compiled react jsxDEV runtime css props",
+        "line": 1340
+      },
+      "userConfig": {
+        "jsxFramework": "react"
+      },
+      "configPatch": {},
+      "inputs": [],
+      "expected": {
+        "css": "@layer utilities {\n  .c_black {\n    color: var(--colors-black);\n}\n\n  .bg-c_RebeccaPurple {\n    background-color: RebeccaPurple;\n}\n}"
+      },
+      "unsupported": "extracted non-css items (jsx-factory, jsx-pattern)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/jsx.test.ts::jsx > should extract compiled solid createComponent helper calls::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/jsx.test.ts",
+        "test": "jsx > should extract compiled solid createComponent helper calls",
+        "line": 2141
+      },
+      "userConfig": {
+        "jsxFramework": "solid"
+      },
+      "configPatch": {},
+      "inputs": [],
+      "expected": {
+        "css": "@layer utilities {\n  .bg_red\\.200 {\n    background: var(--colors-red-200);\n}\n}"
+      },
+      "unsupported": "extracted non-css items (jsx-factory)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/jsx.test.ts::jsx > should extract compiled vue createVNode helper calls::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/jsx.test.ts",
+        "test": "jsx > should extract compiled vue createVNode helper calls",
+        "line": 1645
+      },
+      "userConfig": {
+        "jsxFramework": "vue"
+      },
+      "configPatch": {},
+      "inputs": [],
+      "expected": {
+        "css": "@layer utilities {\n  .bg_red\\.200 {\n    background: var(--colors-red-200);\n}\n}"
+      },
+      "unsupported": "extracted non-css items (jsx-factory)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/jsx.test.ts::jsx > should extract compiled vue h helper calls::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/jsx.test.ts",
+        "test": "jsx > should extract compiled vue h helper calls",
+        "line": 1684
+      },
+      "userConfig": {
+        "jsxFramework": "vue"
+      },
+      "configPatch": {},
+      "inputs": [],
+      "expected": {
+        "css": "@layer utilities {\n  .bg_red\\.200 {\n    background: var(--colors-red-200);\n}\n}"
+      },
+      "unsupported": "extracted non-css items (jsx-factory)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/jsx.test.ts::jsx > should extract esm namespace alias react runtime output::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/jsx.test.ts",
+        "test": "jsx > should extract esm namespace alias react runtime output",
+        "line": 6
+      },
+      "userConfig": {
+        "jsxFramework": "react"
+      },
+      "configPatch": {},
+      "inputs": [],
+      "expected": {
+        "css": "@layer utilities {\n  .c_black {\n    color: var(--colors-black);\n}\n\n  .bg-c_RebeccaPurple {\n    background-color: RebeccaPurple;\n}\n\n  .c_white {\n    color: var(--colors-white);\n}\n\n  .bg-c_SteelBlue {\n    background-color: SteelBlue;\n}\n}"
+      },
+      "unsupported": "extracted non-css items (jsx)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/jsx.test.ts::jsx > should extract esm namespace react runtime output::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/jsx.test.ts",
+        "test": "jsx > should extract esm namespace react runtime output",
+        "line": 6
+      },
+      "userConfig": {
+        "jsxFramework": "react"
+      },
+      "configPatch": {},
+      "inputs": [],
+      "expected": {
+        "css": "@layer utilities {\n  .c_black {\n    color: var(--colors-black);\n}\n\n  .bg-c_RebeccaPurple {\n    background-color: RebeccaPurple;\n}\n\n  .c_white {\n    color: var(--colors-white);\n}\n\n  .bg-c_SteelBlue {\n    background-color: SteelBlue;\n}\n}"
+      },
+      "unsupported": "extracted non-css items (jsx)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/jsx.test.ts::jsx > should extract mergeProps-wrapped compiled props::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/jsx.test.ts",
+        "test": "jsx > should extract mergeProps-wrapped compiled props",
+        "line": 2224
+      },
+      "userConfig": {
+        "jsxFramework": "vue"
+      },
+      "configPatch": {},
+      "inputs": [],
+      "expected": {
+        "css": "@layer utilities {\n  .bg_red\\.200 {\n    background: var(--colors-red-200);\n}\n\n  .c_black {\n    color: var(--colors-black);\n}\n}"
+      },
+      "unsupported": "extracted non-css items (jsx-factory)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/jsx.test.ts::jsx > should extract parcel bundled preact runtime output::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/jsx.test.ts",
+        "test": "jsx > should extract parcel bundled preact runtime output",
+        "line": 6
+      },
+      "userConfig": {
+        "jsxFramework": "preact"
+      },
+      "configPatch": {},
+      "inputs": [],
+      "expected": {
+        "css": "@layer utilities {\n  .c_black {\n    color: var(--colors-black);\n}\n\n  .bg-c_RebeccaPurple {\n    background-color: RebeccaPurple;\n}\n\n  .c_white {\n    color: var(--colors-white);\n}\n\n  .bg-c_SteelBlue {\n    background-color: SteelBlue;\n}\n}"
+      },
+      "unsupported": "extracted non-css items (jsx)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/jsx.test.ts::jsx > should extract parcel bundled react runtime output::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/jsx.test.ts",
+        "test": "jsx > should extract parcel bundled react runtime output",
+        "line": 6
+      },
+      "userConfig": {
+        "jsxFramework": "react"
+      },
+      "configPatch": {},
+      "inputs": [],
+      "expected": {
+        "css": "@layer utilities {\n  .c_black {\n    color: var(--colors-black);\n}\n\n  .bg-c_RebeccaPurple {\n    background-color: RebeccaPurple;\n}\n\n  .c_white {\n    color: var(--colors-white);\n}\n\n  .bg-c_SteelBlue {\n    background-color: SteelBlue;\n}\n}"
+      },
+      "unsupported": "extracted non-css items (jsx)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/jsx.test.ts::jsx > should extract parcel bundled vue runtime output::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/jsx.test.ts",
+        "test": "jsx > should extract parcel bundled vue runtime output",
+        "line": 6
+      },
+      "userConfig": {
+        "jsxFramework": "vue"
+      },
+      "configPatch": {},
+      "inputs": [],
+      "expected": {
+        "css": "@layer utilities {\n  .c_black {\n    color: var(--colors-black);\n}\n\n  .bg-c_RebeccaPurple {\n    background-color: RebeccaPurple;\n}\n\n  .c_white {\n    color: var(--colors-white);\n}\n\n  .bg-c_SteelBlue {\n    background-color: SteelBlue;\n}\n}"
+      },
+      "unsupported": "extracted non-css items (jsx)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/jsx.test.ts::jsx > should extract rolldown bundled react runtime output::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/jsx.test.ts",
+        "test": "jsx > should extract rolldown bundled react runtime output",
+        "line": 6
+      },
+      "userConfig": {
+        "jsxFramework": "react"
+      },
+      "configPatch": {},
+      "inputs": [],
+      "expected": {
+        "css": "@layer utilities {\n  .c_black {\n    color: var(--colors-black);\n}\n\n  .bg-c_RebeccaPurple {\n    background-color: RebeccaPurple;\n}\n\n  .c_white {\n    color: var(--colors-white);\n}\n\n  .bg-c_SteelBlue {\n    background-color: SteelBlue;\n}\n}"
+      },
+      "unsupported": "extracted non-css items (jsx)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/jsx.test.ts::jsx > should extract rolldown bundled solid runtime output::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/jsx.test.ts",
+        "test": "jsx > should extract rolldown bundled solid runtime output",
+        "line": 6
+      },
+      "userConfig": {
+        "jsxFramework": "solid"
+      },
+      "configPatch": {},
+      "inputs": [],
+      "expected": {
+        "css": "@layer utilities {\n  .c_black {\n    color: var(--colors-black);\n}\n\n  .bg-c_RebeccaPurple {\n    background-color: RebeccaPurple;\n}\n\n  .c_white {\n    color: var(--colors-white);\n}\n\n  .bg-c_SteelBlue {\n    background-color: SteelBlue;\n}\n}"
+      },
+      "unsupported": "extracted non-css items (jsx)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/jsx.test.ts::jsx > should extract rolldown bundled vue runtime output::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/jsx.test.ts",
+        "test": "jsx > should extract rolldown bundled vue runtime output",
+        "line": 6
+      },
+      "userConfig": {
+        "jsxFramework": "vue"
+      },
+      "configPatch": {},
+      "inputs": [],
+      "expected": {
+        "css": "@layer utilities {\n  .c_black {\n    color: var(--colors-black);\n}\n\n  .bg-c_RebeccaPurple {\n    background-color: RebeccaPurple;\n}\n\n  .c_white {\n    color: var(--colors-white);\n}\n\n  .bg-c_SteelBlue {\n    background-color: SteelBlue;\n}\n}"
+      },
+      "unsupported": "extracted non-css items (jsx)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/jsx.test.ts::jsx > should extract rollup bundled react runtime output::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/jsx.test.ts",
+        "test": "jsx > should extract rollup bundled react runtime output",
+        "line": 6
+      },
+      "userConfig": {
+        "jsxFramework": "react"
+      },
+      "configPatch": {},
+      "inputs": [],
+      "expected": {
+        "css": "@layer utilities {\n  .c_black {\n    color: var(--colors-black);\n}\n\n  .bg-c_RebeccaPurple {\n    background-color: RebeccaPurple;\n}\n\n  .c_white {\n    color: var(--colors-white);\n}\n\n  .bg-c_SteelBlue {\n    background-color: SteelBlue;\n}\n}"
+      },
+      "unsupported": "extracted non-css items (jsx)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/jsx.test.ts::jsx > should extract rspack bundled react runtime output::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/jsx.test.ts",
+        "test": "jsx > should extract rspack bundled react runtime output",
+        "line": 6
+      },
+      "userConfig": {
+        "jsxFramework": "react"
+      },
+      "configPatch": {},
+      "inputs": [],
+      "expected": {
+        "css": "@layer utilities {\n  .c_black {\n    color: var(--colors-black);\n}\n\n  .bg-c_RebeccaPurple {\n    background-color: RebeccaPurple;\n}\n\n  .c_white {\n    color: var(--colors-white);\n}\n\n  .bg-c_SteelBlue {\n    background-color: SteelBlue;\n}\n}"
+      },
+      "unsupported": "extracted non-css items (jsx)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/jsx.test.ts::jsx > should extract vite bundled react runtime output::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/jsx.test.ts",
+        "test": "jsx > should extract vite bundled react runtime output",
+        "line": 6
+      },
+      "userConfig": {
+        "jsxFramework": "react"
+      },
+      "configPatch": {},
+      "inputs": [],
+      "expected": {
+        "css": "@layer utilities {\n  .c_black {\n    color: var(--colors-black);\n}\n\n  .bg-c_RebeccaPurple {\n    background-color: RebeccaPurple;\n}\n\n  .c_white {\n    color: var(--colors-white);\n}\n\n  .bg-c_SteelBlue {\n    background-color: SteelBlue;\n}\n}"
+      },
+      "unsupported": "extracted non-css items (jsx)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/jsx.test.ts::jsx > should extract vite bundled solid runtime output::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/jsx.test.ts",
+        "test": "jsx > should extract vite bundled solid runtime output",
+        "line": 6
+      },
+      "userConfig": {
+        "jsxFramework": "solid"
+      },
+      "configPatch": {},
+      "inputs": [],
+      "expected": {
+        "css": "@layer utilities {\n  .c_black {\n    color: var(--colors-black);\n}\n\n  .bg-c_RebeccaPurple {\n    background-color: RebeccaPurple;\n}\n\n  .c_white {\n    color: var(--colors-white);\n}\n\n  .bg-c_SteelBlue {\n    background-color: SteelBlue;\n}\n}"
+      },
+      "unsupported": "extracted non-css items (jsx)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/jsx.test.ts::jsx > should extract vite bundled vue runtime output::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/jsx.test.ts",
+        "test": "jsx > should extract vite bundled vue runtime output",
+        "line": 6
+      },
+      "userConfig": {
+        "jsxFramework": "vue"
+      },
+      "configPatch": {},
+      "inputs": [],
+      "expected": {
+        "css": "@layer utilities {\n  .c_black {\n    color: var(--colors-black);\n}\n\n  .bg-c_RebeccaPurple {\n    background-color: RebeccaPurple;\n}\n\n  .c_white {\n    color: var(--colors-white);\n}\n\n  .bg-c_SteelBlue {\n    background-color: SteelBlue;\n}\n}"
+      },
+      "unsupported": "extracted non-css items (jsx)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/jsx.test.ts::jsx > should extract webpack bundled preact runtime output::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/jsx.test.ts",
+        "test": "jsx > should extract webpack bundled preact runtime output",
+        "line": 6
+      },
+      "userConfig": {
+        "jsxFramework": "preact"
+      },
+      "configPatch": {},
+      "inputs": [],
+      "expected": {
+        "css": "@layer utilities {\n  .c_black {\n    color: var(--colors-black);\n}\n\n  .bg-c_RebeccaPurple {\n    background-color: RebeccaPurple;\n}\n\n  .c_white {\n    color: var(--colors-white);\n}\n\n  .bg-c_SteelBlue {\n    background-color: SteelBlue;\n}\n}"
+      },
+      "unsupported": "extracted non-css items (jsx)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/jsx.test.ts::jsx > should extract webpack bundled react runtime output::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/jsx.test.ts",
+        "test": "jsx > should extract webpack bundled react runtime output",
+        "line": 6
+      },
+      "userConfig": {
+        "jsxFramework": "react"
+      },
+      "configPatch": {},
+      "inputs": [],
+      "expected": {
+        "css": "@layer utilities {\n  .c_black {\n    color: var(--colors-black);\n}\n\n  .bg-c_RebeccaPurple {\n    background-color: RebeccaPurple;\n}\n\n  .c_white {\n    color: var(--colors-white);\n}\n\n  .bg-c_SteelBlue {\n    background-color: SteelBlue;\n}\n}"
+      },
+      "unsupported": "extracted non-css items (jsx)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/jsx.test.ts::jsx > should extract webpack bundled solid runtime output::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/jsx.test.ts",
+        "test": "jsx > should extract webpack bundled solid runtime output",
+        "line": 6
+      },
+      "userConfig": {
+        "jsxFramework": "solid"
+      },
+      "configPatch": {},
+      "inputs": [],
+      "expected": {
+        "css": "@layer utilities {\n  .c_black {\n    color: var(--colors-black);\n}\n\n  .bg-c_RebeccaPurple {\n    background-color: RebeccaPurple;\n}\n\n  .c_white {\n    color: var(--colors-white);\n}\n\n  .bg-c_SteelBlue {\n    background-color: SteelBlue;\n}\n}"
+      },
+      "unsupported": "extracted non-css items (jsx)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/jsx.test.ts::jsx > should extract webpack bundled vue runtime output::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/jsx.test.ts",
+        "test": "jsx > should extract webpack bundled vue runtime output",
+        "line": 6
+      },
+      "userConfig": {
+        "jsxFramework": "vue"
+      },
+      "configPatch": {},
+      "inputs": [],
+      "expected": {
+        "css": "@layer utilities {\n  .c_black {\n    color: var(--colors-black);\n}\n\n  .bg-c_RebeccaPurple {\n    background-color: RebeccaPurple;\n}\n\n  .c_white {\n    color: var(--colors-white);\n}\n\n  .bg-c_SteelBlue {\n    background-color: SteelBlue;\n}\n}"
+      },
+      "unsupported": "extracted non-css items (jsx)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/jsx.test.ts::jsx > should handle css and *Css props together::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/jsx.test.ts",
+        "test": "jsx > should handle css and *Css props together",
+        "line": 679
+      },
+      "userConfig": null,
+      "inputs": [],
+      "expected": {
+        "css": "@layer utilities {\n  .p_4 {\n    padding: var(--spacing-4);\n}\n\n  .c_red\\.200 {\n    color: var(--colors-red-200);\n}\n}"
+      },
+      "unsupported": "extracted non-css items (jsx-factory)"
+    }
+  ]
+}

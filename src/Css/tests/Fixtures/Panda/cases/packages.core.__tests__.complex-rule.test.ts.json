@@ -1,0 +1,36 @@
+{
+  "source": "packages/core/__tests__/complex-rule.test.ts",
+  "cases": [
+    {
+      "id": "fixture::packages/core/__tests__/complex-rule.test.ts::complex-rule > should process complex rule::1",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/complex-rule.test.ts",
+        "test": "complex-rule > should process complex rule",
+        "line": 6
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          "color": {
+            "_dark": {
+              "base": "green500",
+              "sm": {
+                "md": "red200"
+              }
+            }
+          }
+        }
+      ],
+      "options": null,
+      "expected": {
+        "classNames": [
+          "dark\\:c_green500",
+          "dark\\:sm\\:md\\:c_red200"
+        ],
+        "css": "@layer utilities {\n  [data-theme=dark] .dark\\:c_green500,.dark .dark\\:c_green500,.dark\\:c_green500.dark,.dark\\:c_green500[data-theme=dark] {\n    color: green500;\n}\n\n  @media screen and (min-width: 40rem) {\n    @media screen and (min-width: 48rem) {\n      [data-theme=dark] .dark\\:sm\\:md\\:c_red200,.dark .dark\\:sm\\:md\\:c_red200,.dark\\:sm\\:md\\:c_red200.dark,.dark\\:sm\\:md\\:c_red200[data-theme=dark] {\n        color: red200;\n}\n}\n}\n}"
+      }
+    }
+  ]
+}

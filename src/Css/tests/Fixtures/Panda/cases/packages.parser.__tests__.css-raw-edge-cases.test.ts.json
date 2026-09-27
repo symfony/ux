@@ -1,0 +1,724 @@
+{
+  "source": "packages/parser/__tests__/css-raw-edge-cases.test.ts",
+  "cases": [
+    {
+      "id": "fixture::packages/parser/__tests__/css-raw-edge-cases.test.ts::css.raw conditional spreading edge cases > handles logical AND spreading with css.raw::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/css-raw-edge-cases.test.ts",
+        "test": "css.raw conditional spreading edge cases > handles logical AND spreading with css.raw",
+        "line": 1011
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          "borderColor": "red.500",
+          "color": "red.700",
+          "backgroundColor": "red.50"
+        },
+        {
+          "outline": "2px solid",
+          "outlineColor": "blue.500",
+          "outlineOffset": "2px"
+        },
+        {
+          "border": "1px solid",
+          "borderColor": "gray.300",
+          "padding": "0.5rem",
+          "borderRadius": "0.25rem",
+          "outline": "2px solid",
+          "outlineColor": "blue.500",
+          "outlineOffset": "2px",
+          "_focus": {
+            "borderColor": "blue.500"
+          }
+        },
+        {
+          "borderColor": "red.500",
+          "color": "red.700",
+          "backgroundColor": "red.50"
+        },
+        {
+          "_focus": {
+            "borderColor": "red.500",
+            "color": "red.700",
+            "backgroundColor": "red.50"
+          }
+        }
+      ],
+      "expected": {
+        "css": "@layer utilities {\n  .bd_1px_solid {\n    border: 1px solid;\n}\n\n  .p_0\\.5rem {\n    padding: 0.5rem;\n}\n\n  .bd-c_red\\.500 {\n    border-color: var(--colors-red-500);\n}\n\n  .ring_2px_solid {\n    outline: 2px solid;\n}\n\n  .bd-c_gray\\.300 {\n    border-color: var(--colors-gray-300);\n}\n\n  .bdr_0\\.25rem {\n    border-radius: 0.25rem;\n}\n\n  .c_red\\.700 {\n    color: var(--colors-red-700);\n}\n\n  .bg-c_red\\.50 {\n    background-color: var(--colors-red-50);\n}\n\n  .ring-c_blue\\.500 {\n    outline-color: var(--colors-blue-500);\n}\n\n  .ring-o_2px {\n    outline-offset: 2px;\n}\n\n  .focus\\:bd-c_blue\\.500:is(:focus, [data-focus]) {\n    border-color: var(--colors-blue-500);\n}\n\n  .focus\\:bd-c_red\\.500:is(:focus, [data-focus]) {\n    border-color: var(--colors-red-500);\n}\n\n  .focus\\:c_red\\.700:is(:focus, [data-focus]) {\n    color: var(--colors-red-700);\n}\n\n  .focus\\:bg-c_red\\.50:is(:focus, [data-focus]) {\n    background-color: var(--colors-red-50);\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/css-raw-edge-cases.test.ts::css.raw conditional spreading edge cases > handles ternary operator with css.raw::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/css-raw-edge-cases.test.ts",
+        "test": "css.raw conditional spreading edge cases > handles ternary operator with css.raw",
+        "line": 933
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          "backgroundColor": "blue.500",
+          "color": "white"
+        },
+        {
+          "backgroundColor": "gray.200",
+          "color": "gray.800"
+        },
+        {
+          "padding": "0.5rem 1rem",
+          "borderRadius": "0.25rem",
+          "backgroundColor": "blue.500",
+          "color": "white",
+          "_hover": {
+            "backgroundColor": "blue.500",
+            "color": "white",
+            "opacity": 0.9
+          }
+        }
+      ],
+      "expected": {
+        "css": "@layer utilities {\n  .p_0\\.5rem_1rem {\n    padding: 0.5rem 1rem;\n}\n\n  .bdr_0\\.25rem {\n    border-radius: 0.25rem;\n}\n\n  .bg-c_blue\\.500 {\n    background-color: var(--colors-blue-500);\n}\n\n  .c_white {\n    color: var(--colors-white);\n}\n\n  .bg-c_gray\\.200 {\n    background-color: var(--colors-gray-200);\n}\n\n  .c_gray\\.800 {\n    color: var(--colors-gray-800);\n}\n\n  .hover\\:bg-c_blue\\.500:is(:hover, [data-hover]) {\n    background-color: var(--colors-blue-500);\n}\n\n  .hover\\:c_white:is(:hover, [data-hover]) {\n    color: var(--colors-white);\n}\n\n  .hover\\:op_0\\.9:is(:hover, [data-hover]) {\n    opacity: 0.9;\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/css-raw-edge-cases.test.ts::css.raw cross-file and runtime edge cases > handles css.raw mixed with native CSS properties::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/css-raw-edge-cases.test.ts",
+        "test": "css.raw cross-file and runtime edge cases > handles css.raw mixed with native CSS properties",
+        "line": 1291
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          "transition": "all 0.3s ease",
+          "transformOrigin": "center"
+        },
+        {
+          "display": "block",
+          "position": "relative",
+          "transition": "all 0.3s ease",
+          "transformOrigin": "center",
+          "transform": "scale(1)",
+          "opacity": 1,
+          "_hover": {
+            "transition": "all 0.3s ease",
+            "transformOrigin": "center",
+            "transform": "scale(1.05)",
+            "boxShadow": "0 4px 8px rgba(0, 0, 0, 0.1)"
+          },
+          "sm": {
+            "display": "flex",
+            "transition": "all 0.3s ease",
+            "transformOrigin": "center",
+            "transform": "scale(0.95)"
+          }
+        }
+      ],
+      "expected": {
+        "css": "@layer utilities {\n  .trs_all_0\\.3s_ease {\n    transition: all 0.3s ease;\n}\n\n  .trf-o_center {\n    transform-origin: center;\n}\n\n  .d_block {\n    display: block;\n}\n\n  .pos_relative {\n    position: relative;\n}\n\n  .trf_scale\\(1\\) {\n    transform: scale(1);\n}\n\n  .op_1 {\n    opacity: 1;\n}\n\n  .hover\\:trs_all_0\\.3s_ease:is(:hover, [data-hover]) {\n    transition: all 0.3s ease;\n}\n\n  .hover\\:trf-o_center:is(:hover, [data-hover]) {\n    transform-origin: center;\n}\n\n  .hover\\:trf_scale\\(1\\.05\\):is(:hover, [data-hover]) {\n    transform: scale(1.05);\n}\n\n  .hover\\:bx-sh_0_4px_8px_rgba\\(0\\,_0\\,_0\\,_0\\.1\\):is(:hover, [data-hover]) {\n    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);\n}\n\n  @media screen and (min-width: 40rem) {\n    .sm\\:trs_all_0\\.3s_ease {\n      transition: all 0.3s ease;\n}\n    .sm\\:d_flex {\n      display: flex;\n}\n    .sm\\:trf-o_center {\n      transform-origin: center;\n}\n    .sm\\:trf_scale\\(0\\.95\\) {\n      transform: scale(0.95);\n}\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/css-raw-edge-cases.test.ts::css.raw cross-file and runtime edge cases > handles error scenarios and graceful degradation::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/css-raw-edge-cases.test.ts",
+        "test": "css.raw cross-file and runtime edge cases > handles error scenarios and graceful degradation",
+        "line": 1373
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          "color": "blue.500",
+          "fontSize": "16px"
+        },
+        {
+          "padding": "1rem",
+          "margin": "0.5rem",
+          "_hover": {
+            "color": "blue.500",
+            "fontSize": "16px",
+            "opacity": 0.8
+          },
+          "color": "blue.500",
+          "fontSize": "16px"
+        }
+      ],
+      "expected": {
+        "css": "@layer utilities {\n  .p_1rem {\n    padding: 1rem;\n}\n\n  .m_0\\.5rem {\n    margin: 0.5rem;\n}\n\n  .c_blue\\.500 {\n    color: var(--colors-blue-500);\n}\n\n  .fs_16px {\n    font-size: 16px;\n}\n\n  .hover\\:c_blue\\.500:is(:hover, [data-hover]) {\n    color: var(--colors-blue-500);\n}\n\n  .hover\\:fs_16px:is(:hover, [data-hover]) {\n    font-size: 16px;\n}\n\n  .hover\\:op_0\\.8:is(:hover, [data-hover]) {\n    opacity: 0.8;\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/css-raw-edge-cases.test.ts::css.raw cross-file and runtime edge cases > handles exported/imported css.raw simulation::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/css-raw-edge-cases.test.ts",
+        "test": "css.raw cross-file and runtime edge cases > handles exported/imported css.raw simulation",
+        "line": 1189
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          "fontFamily": "Inter, sans-serif",
+          "lineHeight": 1.5
+        },
+        {
+          "cursor": "pointer",
+          "border": "none",
+          "outline": "none"
+        },
+        {
+          "fontFamily": "Inter, sans-serif",
+          "lineHeight": 1.5,
+          "fontSize": "16px",
+          "color": "gray.900"
+        },
+        {
+          "fontFamily": "Inter, sans-serif",
+          "lineHeight": 1.5,
+          "fontSize": "16px",
+          "cursor": "pointer",
+          "border": "none",
+          "outline": "none",
+          "padding": "12px 24px",
+          "borderRadius": "8px",
+          "backgroundColor": "blue.500",
+          "color": "white",
+          "_hover": {
+            "cursor": "pointer",
+            "border": "none",
+            "outline": "none",
+            "backgroundColor": "blue.600"
+          }
+        }
+      ],
+      "expected": {
+        "css": "@layer utilities {\n  .bd_none {\n    border: var(--borders-none);\n}\n\n  .p_12px_24px {\n    padding: 12px 24px;\n}\n\n  .ring_none {\n    outline: var(--borders-none);\n}\n\n  .bdr_8px {\n    border-radius: 8px;\n}\n\n  .ff_Inter\\,_sans-serif {\n    font-family: Inter, sans-serif;\n}\n\n  .lh_1\\.5 {\n    line-height: 1.5;\n}\n\n  .cursor_pointer {\n    cursor: pointer;\n}\n\n  .fs_16px {\n    font-size: 16px;\n}\n\n  .c_gray\\.900 {\n    color: var(--colors-gray-900);\n}\n\n  .bg-c_blue\\.500 {\n    background-color: var(--colors-blue-500);\n}\n\n  .c_white {\n    color: var(--colors-white);\n}\n\n  .hover\\:bd_none:is(:hover, [data-hover]) {\n    border: var(--borders-none);\n}\n\n  .hover\\:ring_none:is(:hover, [data-hover]) {\n    outline: var(--borders-none);\n}\n\n  .hover\\:cursor_pointer:is(:hover, [data-hover]) {\n    cursor: pointer;\n}\n\n  .hover\\:bg-c_blue\\.600:is(:hover, [data-hover]) {\n    background-color: var(--colors-blue-600);\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/css-raw-edge-cases.test.ts::css.raw cross-file and runtime edge cases > handles function returns with css.raw (limited static analysis)::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/css-raw-edge-cases.test.ts",
+        "test": "css.raw cross-file and runtime edge cases > handles function returns with css.raw (limited static analysis)",
+        "line": 1102
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          "padding": "1rem",
+          "border": "1px solid gray"
+        },
+        {
+          "backgroundColor": "gray.800",
+          "color": "white"
+        },
+        {
+          "backgroundColor": "white",
+          "color": "gray.800"
+        },
+        {
+          "padding": "1rem",
+          "border": "1px solid gray",
+          "borderRadius": "0.5rem"
+        }
+      ],
+      "expected": {
+        "css": "@layer utilities {\n  .p_1rem {\n    padding: 1rem;\n}\n\n  .bd_1px_solid_gray {\n    border: 1px solid gray;\n}\n\n  .bdr_0\\.5rem {\n    border-radius: 0.5rem;\n}\n\n  .bg-c_gray\\.800 {\n    background-color: var(--colors-gray-800);\n}\n\n  .c_white {\n    color: var(--colors-white);\n}\n\n  .bg-c_white {\n    background-color: var(--colors-white);\n}\n\n  .c_gray\\.800 {\n    color: var(--colors-gray-800);\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/css-raw-edge-cases.test.ts::css.raw edge cases with spreading > handles computed property names with spread::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/css-raw-edge-cases.test.ts",
+        "test": "css.raw edge cases with spreading > handles computed property names with spread",
+        "line": 25
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          "color": "red",
+          "fontSize": "14px"
+        },
+        {
+          "color": "red",
+          "fontSize": "14px",
+          "_hover": {
+            "color": "red",
+            "fontSize": "14px",
+            "opacity": 0.8
+          }
+        }
+      ],
+      "expected": {
+        "css": "@layer utilities {\n  .c_red {\n    color: red;\n}\n\n  .fs_14px {\n    font-size: 14px;\n}\n\n  .hover\\:c_red:is(:hover, [data-hover]) {\n    color: red;\n}\n\n  .hover\\:fs_14px:is(:hover, [data-hover]) {\n    font-size: 14px;\n}\n\n  .hover\\:op_0\\.8:is(:hover, [data-hover]) {\n    opacity: 0.8;\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/css-raw-edge-cases.test.ts::css.raw edge cases with spreading > handles conditional spreading::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/css-raw-edge-cases.test.ts",
+        "test": "css.raw edge cases with spreading > handles conditional spreading",
+        "line": 131
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          "color": "blue",
+          "padding": "8px"
+        },
+        {
+          "color": "blue",
+          "padding": "8px",
+          "_hover": {
+            "color": "blue",
+            "padding": "8px",
+            "opacity": 0.9
+          }
+        }
+      ],
+      "expected": {
+        "css": "@layer utilities {\n  .p_8px {\n    padding: 8px;\n}\n\n  .c_blue {\n    color: blue;\n}\n\n  .hover\\:p_8px:is(:hover, [data-hover]) {\n    padding: 8px;\n}\n\n  .hover\\:c_blue:is(:hover, [data-hover]) {\n    color: blue;\n}\n\n  .hover\\:op_0\\.9:is(:hover, [data-hover]) {\n    opacity: 0.9;\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/css-raw-edge-cases.test.ts::css.raw edge cases with spreading > handles css.raw in child selectors (Issue #1370)::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/css-raw-edge-cases.test.ts",
+        "test": "css.raw edge cases with spreading > handles css.raw in child selectors (Issue #1370)",
+        "line": 734
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          "marginTop": "1rem",
+          "lineHeight": 1.6,
+          "color": "gray.800"
+        },
+        {
+          "fontWeight": "bold",
+          "color": "gray.900",
+          "marginBottom": "0.5rem"
+        },
+        {
+          "fontFamily": "system-ui",
+          "& p": {
+            "marginTop": "1rem",
+            "lineHeight": 1.6,
+            "color": "gray.800",
+            "fontSize": "1rem"
+          },
+          "& h2": {
+            "fontWeight": "bold",
+            "color": "gray.900",
+            "marginBottom": "0.5rem",
+            "fontSize": "1.5rem"
+          },
+          "& blockquote": {
+            "marginTop": "1rem",
+            "lineHeight": 1.6,
+            "color": "gray.800",
+            "fontStyle": "italic",
+            "borderLeft": "4px solid",
+            "paddingLeft": "1rem"
+          }
+        }
+      ],
+      "expected": {
+        "css": "@layer utilities {\n  .lh_1\\.6 {\n    line-height: 1.6;\n}\n\n  .c_gray\\.800 {\n    color: var(--colors-gray-800);\n}\n\n  .fw_bold {\n    font-weight: var(--font-weights-bold);\n}\n\n  .c_gray\\.900 {\n    color: var(--colors-gray-900);\n}\n\n  .ff_system-ui {\n    font-family: system-ui;\n}\n\n  .mt_1rem {\n    margin-top: 1rem;\n}\n\n  .mb_0\\.5rem {\n    margin-bottom: 0.5rem;\n}\n\n  .\\[\\&_blockquote\\]\\:bd-l_4px_solid blockquote {\n    border-left: 4px solid;\n}\n\n  .\\[\\&_p\\]\\:lh_1\\.6 p {\n    line-height: 1.6;\n}\n\n  .\\[\\&_p\\]\\:c_gray\\.800 p {\n    color: var(--colors-gray-800);\n}\n\n  .\\[\\&_p\\]\\:fs_1rem p {\n    font-size: 1rem;\n}\n\n  .\\[\\&_h2\\]\\:fw_bold h2 {\n    font-weight: var(--font-weights-bold);\n}\n\n  .\\[\\&_h2\\]\\:c_gray\\.900 h2 {\n    color: var(--colors-gray-900);\n}\n\n  .\\[\\&_h2\\]\\:fs_1\\.5rem h2 {\n    font-size: 1.5rem;\n}\n\n  .\\[\\&_blockquote\\]\\:lh_1\\.6 blockquote {\n    line-height: 1.6;\n}\n\n  .\\[\\&_blockquote\\]\\:c_gray\\.800 blockquote {\n    color: var(--colors-gray-800);\n}\n\n  .\\[\\&_blockquote\\]\\:font-style_italic blockquote {\n    font-style: italic;\n}\n\n  .\\[\\&_p\\]\\:mt_1rem p {\n    margin-top: 1rem;\n}\n\n  .\\[\\&_h2\\]\\:mb_0\\.5rem h2 {\n    margin-bottom: 0.5rem;\n}\n\n  .\\[\\&_blockquote\\]\\:mt_1rem blockquote {\n    margin-top: 1rem;\n}\n\n  .\\[\\&_blockquote\\]\\:pl_1rem blockquote {\n    padding-left: 1rem;\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/css-raw-edge-cases.test.ts::css.raw edge cases with spreading > handles css.raw spread inside another css.raw::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/css-raw-edge-cases.test.ts",
+        "test": "css.raw edge cases with spreading > handles css.raw spread inside another css.raw",
+        "line": 414
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          "margin": 0,
+          "padding": 0,
+          "boxSizing": "border-box"
+        },
+        {
+          "margin": 0,
+          "padding": 0,
+          "boxSizing": "border-box",
+          "fontFamily": "inherit",
+          "fontSize": "inherit"
+        },
+        {
+          "margin": 0,
+          "padding": 0,
+          "boxSizing": "border-box",
+          "fontFamily": "inherit",
+          "fontSize": "inherit",
+          "cursor": "pointer",
+          "border": "none",
+          "borderRadius": "4px"
+        },
+        {
+          "margin": 0,
+          "padding": 0,
+          "boxSizing": "border-box",
+          "fontFamily": "inherit",
+          "fontSize": "inherit",
+          "cursor": "pointer",
+          "border": "none",
+          "borderRadius": "4px",
+          "backgroundColor": "blue.500",
+          "color": "white",
+          "_hover": {
+            "margin": 0,
+            "padding": 0,
+            "boxSizing": "border-box",
+            "fontFamily": "inherit",
+            "fontSize": "inherit",
+            "cursor": "pointer",
+            "border": "none",
+            "borderRadius": "4px",
+            "backgroundColor": "blue.600"
+          }
+        }
+      ],
+      "expected": {
+        "css": "@layer utilities {\n  .m_0 {\n    margin: var(--spacing-0);\n}\n\n  .p_0 {\n    padding: var(--spacing-0);\n}\n\n  .bd_none {\n    border: var(--borders-none);\n}\n\n  .bdr_4px {\n    border-radius: 4px;\n}\n\n  .bx-s_border-box {\n    box-sizing: border-box;\n}\n\n  .ff_inherit {\n    font-family: inherit;\n}\n\n  .fs_inherit {\n    font-size: inherit;\n}\n\n  .cursor_pointer {\n    cursor: pointer;\n}\n\n  .bg-c_blue\\.500 {\n    background-color: var(--colors-blue-500);\n}\n\n  .c_white {\n    color: var(--colors-white);\n}\n\n  .hover\\:m_0:is(:hover, [data-hover]) {\n    margin: var(--spacing-0);\n}\n\n  .hover\\:p_0:is(:hover, [data-hover]) {\n    padding: var(--spacing-0);\n}\n\n  .hover\\:bd_none:is(:hover, [data-hover]) {\n    border: var(--borders-none);\n}\n\n  .hover\\:bdr_4px:is(:hover, [data-hover]) {\n    border-radius: 4px;\n}\n\n  .hover\\:bx-s_border-box:is(:hover, [data-hover]) {\n    box-sizing: border-box;\n}\n\n  .hover\\:ff_inherit:is(:hover, [data-hover]) {\n    font-family: inherit;\n}\n\n  .hover\\:fs_inherit:is(:hover, [data-hover]) {\n    font-size: inherit;\n}\n\n  .hover\\:cursor_pointer:is(:hover, [data-hover]) {\n    cursor: pointer;\n}\n\n  .hover\\:bg-c_blue\\.600:is(:hover, [data-hover]) {\n    background-color: var(--colors-blue-600);\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/css-raw-edge-cases.test.ts::css.raw edge cases with spreading > handles deeply chained css.raw spreads::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/css-raw-edge-cases.test.ts",
+        "test": "css.raw edge cases with spreading > handles deeply chained css.raw spreads",
+        "line": 532
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          "fontFamily": "system-ui",
+          "lineHeight": 1.5
+        },
+        {
+          "fontFamily": "system-ui",
+          "lineHeight": 1.5,
+          "fontSize": "16px",
+          "color": "gray.900"
+        },
+        {
+          "fontFamily": "system-ui",
+          "lineHeight": 1.5,
+          "fontSize": "16px",
+          "color": "gray.900",
+          "padding": "12px",
+          "border": "1px solid"
+        },
+        {
+          "fontFamily": "system-ui",
+          "lineHeight": 1.5,
+          "fontSize": "16px",
+          "color": "gray.900",
+          "padding": "12px",
+          "border": "1px solid",
+          "borderRadius": "8px",
+          "boxShadow": "sm"
+        },
+        {
+          "fontFamily": "system-ui",
+          "lineHeight": 1.5,
+          "fontSize": "16px",
+          "color": "gray.900",
+          "padding": "12px",
+          "border": "1px solid",
+          "borderRadius": "8px",
+          "boxShadow": "sm",
+          "backgroundColor": "white",
+          "_hover": {
+            "fontFamily": "system-ui",
+            "lineHeight": 1.5,
+            "fontSize": "16px",
+            "color": "gray.900",
+            "backgroundColor": "gray.50"
+          },
+          "_focus": {
+            "fontFamily": "system-ui",
+            "lineHeight": 1.5,
+            "fontSize": "16px",
+            "color": "gray.900",
+            "padding": "12px",
+            "border": "1px solid",
+            "borderRadius": "8px",
+            "boxShadow": "sm",
+            "borderColor": "blue.500"
+          }
+        }
+      ],
+      "expected": {
+        "css": "@layer utilities {\n  .p_12px {\n    padding: 12px;\n}\n\n  .bd_1px_solid {\n    border: 1px solid;\n}\n\n  .bdr_8px {\n    border-radius: 8px;\n}\n\n  .ff_system-ui {\n    font-family: system-ui;\n}\n\n  .lh_1\\.5 {\n    line-height: 1.5;\n}\n\n  .fs_16px {\n    font-size: 16px;\n}\n\n  .c_gray\\.900 {\n    color: var(--colors-gray-900);\n}\n\n  .bx-sh_sm {\n    box-shadow: var(--shadows-sm);\n}\n\n  .bg-c_white {\n    background-color: var(--colors-white);\n}\n\n  .focus\\:p_12px:is(:focus, [data-focus]) {\n    padding: 12px;\n}\n\n  .focus\\:bd_1px_solid:is(:focus, [data-focus]) {\n    border: 1px solid;\n}\n\n  .focus\\:bdr_8px:is(:focus, [data-focus]) {\n    border-radius: 8px;\n}\n\n  .focus\\:bd-c_blue\\.500:is(:focus, [data-focus]) {\n    border-color: var(--colors-blue-500);\n}\n\n  .focus\\:ff_system-ui:is(:focus, [data-focus]) {\n    font-family: system-ui;\n}\n\n  .focus\\:lh_1\\.5:is(:focus, [data-focus]) {\n    line-height: 1.5;\n}\n\n  .focus\\:fs_16px:is(:focus, [data-focus]) {\n    font-size: 16px;\n}\n\n  .focus\\:c_gray\\.900:is(:focus, [data-focus]) {\n    color: var(--colors-gray-900);\n}\n\n  .focus\\:bx-sh_sm:is(:focus, [data-focus]) {\n    box-shadow: var(--shadows-sm);\n}\n\n  .hover\\:ff_system-ui:is(:hover, [data-hover]) {\n    font-family: system-ui;\n}\n\n  .hover\\:lh_1\\.5:is(:hover, [data-hover]) {\n    line-height: 1.5;\n}\n\n  .hover\\:fs_16px:is(:hover, [data-hover]) {\n    font-size: 16px;\n}\n\n  .hover\\:c_gray\\.900:is(:hover, [data-hover]) {\n    color: var(--colors-gray-900);\n}\n\n  .hover\\:bg-c_gray\\.50:is(:hover, [data-hover]) {\n    background-color: var(--colors-gray-50);\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/css-raw-edge-cases.test.ts::css.raw edge cases with spreading > handles deeply nested conditions::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/css-raw-edge-cases.test.ts",
+        "test": "css.raw edge cases with spreading > handles deeply nested conditions",
+        "line": 78
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          "padding": "10px"
+        },
+        {
+          "padding": "10px",
+          "_hover": {
+            "padding": "10px",
+            "&:focus": {
+              "padding": "10px",
+              "outline": "2px solid blue"
+            }
+          }
+        }
+      ],
+      "expected": {
+        "css": "@layer utilities {\n\n  .p_10px,.hover\\:p_10px:is(:hover, [data-hover]),.hover\\:\\[\\&\\:focus\\]\\:p_10px:is(:hover, [data-hover]):focus {\n    padding: 10px;\n}\n\n  .hover\\:\\[\\&\\:focus\\]\\:ring_2px_solid_blue:is(:hover, [data-hover]):focus {\n    outline: 2px solid blue;\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/css-raw-edge-cases.test.ts::css.raw edge cases with spreading > handles function return with spread::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/css-raw-edge-cases.test.ts",
+        "test": "css.raw edge cases with spreading > handles function return with spread",
+        "line": 242
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          "display": "flex",
+          "gap": "10px"
+        },
+        {
+          "_hover": {
+            "display": "flex",
+            "gap": "10px",
+            "background": "gray.100"
+          }
+        }
+      ],
+      "expected": {
+        "css": "@layer utilities {\n  .gap_10px {\n    gap: 10px;\n}\n\n  .d_flex {\n    display: flex;\n}\n\n  .hover\\:bg_gray\\.100:is(:hover, [data-hover]) {\n    background: var(--colors-gray-100);\n}\n\n  .hover\\:gap_10px:is(:hover, [data-hover]) {\n    gap: 10px;\n}\n\n  .hover\\:d_flex:is(:hover, [data-hover]) {\n    display: flex;\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/css-raw-edge-cases.test.ts::css.raw edge cases with spreading > handles nested selectors with css.raw references::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/css-raw-edge-cases.test.ts",
+        "test": "css.raw edge cases with spreading > handles nested selectors with css.raw references",
+        "line": 834
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          "textDecoration": "none",
+          "color": "blue.600",
+          "transition": "color 0.2s"
+        },
+        {
+          "padding": "0.5rem 1rem",
+          "borderRadius": "0.25rem",
+          "border": "none",
+          "cursor": "pointer"
+        },
+        {
+          "& .nav": {
+            "display": "flex",
+            "gap": "1rem",
+            "& a": {
+              "textDecoration": "none",
+              "color": "blue.600",
+              "transition": "color 0.2s",
+              "_hover": {
+                "textDecoration": "none",
+                "transition": "color 0.2s",
+                "color": "blue.800"
+              }
+            },
+            "& button": {
+              "padding": "0.5rem 1rem",
+              "borderRadius": "0.25rem",
+              "border": "none",
+              "cursor": "pointer",
+              "backgroundColor": "blue.500",
+              "color": "white",
+              "_hover": {
+                "padding": "0.5rem 1rem",
+                "borderRadius": "0.25rem",
+                "border": "none",
+                "cursor": "pointer",
+                "backgroundColor": "blue.600"
+              }
+            }
+          }
+        }
+      ],
+      "expected": {
+        "css": "@layer utilities {\n  .p_0\\.5rem_1rem {\n    padding: 0.5rem 1rem;\n}\n\n  .bd_none {\n    border: var(--borders-none);\n}\n\n  .td_none {\n    text-decoration: none;\n}\n\n  .trs_color_0\\.2s {\n    transition: color 0.2s;\n}\n\n  .bdr_0\\.25rem {\n    border-radius: 0.25rem;\n}\n\n  .c_blue\\.600 {\n    color: var(--colors-blue-600);\n}\n\n  .cursor_pointer {\n    cursor: pointer;\n}\n\n  .\\[\\&_\\.nav\\]\\:gap_1rem .nav {\n    gap: 1rem;\n}\n\n  .\\[\\&_\\.nav\\]\\:d_flex .nav {\n    display: flex;\n}\n\n  .\\[\\&_\\.nav\\]\\:\\[\\&_button\\]\\:p_0\\.5rem_1rem .nav button {\n    padding: 0.5rem 1rem;\n}\n\n  .\\[\\&_\\.nav\\]\\:\\[\\&_button\\]\\:bd_none .nav button {\n    border: var(--borders-none);\n}\n\n  .\\[\\&_\\.nav\\]\\:\\[\\&_a\\]\\:td_none .nav a {\n    text-decoration: none;\n}\n\n  .\\[\\&_\\.nav\\]\\:\\[\\&_a\\]\\:trs_color_0\\.2s .nav a {\n    transition: color 0.2s;\n}\n\n  .\\[\\&_\\.nav\\]\\:\\[\\&_button\\]\\:bdr_0\\.25rem .nav button {\n    border-radius: 0.25rem;\n}\n\n  .\\[\\&_\\.nav\\]\\:\\[\\&_a\\]\\:c_blue\\.600 .nav a {\n    color: var(--colors-blue-600);\n}\n\n  .\\[\\&_\\.nav\\]\\:\\[\\&_button\\]\\:cursor_pointer .nav button {\n    cursor: pointer;\n}\n\n  .\\[\\&_\\.nav\\]\\:\\[\\&_button\\]\\:bg-c_blue\\.500 .nav button {\n    background-color: var(--colors-blue-500);\n}\n\n  .\\[\\&_\\.nav\\]\\:\\[\\&_button\\]\\:c_white .nav button {\n    color: var(--colors-white);\n}\n\n  .\\[\\&_\\.nav\\]\\:\\[\\&_button\\]\\:hover\\:p_0\\.5rem_1rem .nav button:is(:hover, [data-hover]) {\n    padding: 0.5rem 1rem;\n}\n\n  .\\[\\&_\\.nav\\]\\:\\[\\&_button\\]\\:hover\\:bd_none .nav button:is(:hover, [data-hover]) {\n    border: var(--borders-none);\n}\n\n  .\\[\\&_\\.nav\\]\\:\\[\\&_a\\]\\:hover\\:td_none .nav a:is(:hover, [data-hover]) {\n    text-decoration: none;\n}\n\n  .\\[\\&_\\.nav\\]\\:\\[\\&_a\\]\\:hover\\:trs_color_0\\.2s .nav a:is(:hover, [data-hover]) {\n    transition: color 0.2s;\n}\n\n  .\\[\\&_\\.nav\\]\\:\\[\\&_button\\]\\:hover\\:bdr_0\\.25rem .nav button:is(:hover, [data-hover]) {\n    border-radius: 0.25rem;\n}\n\n  .\\[\\&_\\.nav\\]\\:\\[\\&_a\\]\\:hover\\:c_blue\\.800 .nav a:is(:hover, [data-hover]) {\n    color: var(--colors-blue-800);\n}\n\n  .\\[\\&_\\.nav\\]\\:\\[\\&_button\\]\\:hover\\:cursor_pointer .nav button:is(:hover, [data-hover]) {\n    cursor: pointer;\n}\n\n  .\\[\\&_\\.nav\\]\\:\\[\\&_button\\]\\:hover\\:bg-c_blue\\.600 .nav button:is(:hover, [data-hover]) {\n    background-color: var(--colors-blue-600);\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/css-raw-edge-cases.test.ts::css.raw edge cases with spreading > handles spreading undefined or null gracefully::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/css-raw-edge-cases.test.ts",
+        "test": "css.raw edge cases with spreading > handles spreading undefined or null gracefully",
+        "line": 347
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          "color": "orange",
+          "fontSize": "18px"
+        },
+        {
+          "color": "orange",
+          "fontSize": "18px",
+          "_hover": {
+            "color": "orange",
+            "fontSize": "18px",
+            "opacity": 0.7
+          }
+        }
+      ],
+      "expected": {
+        "css": "@layer utilities {\n  .c_orange {\n    color: orange;\n}\n\n  .fs_18px {\n    font-size: 18px;\n}\n\n  .hover\\:c_orange:is(:hover, [data-hover]) {\n    color: orange;\n}\n\n  .hover\\:fs_18px:is(:hover, [data-hover]) {\n    font-size: 18px;\n}\n\n  .hover\\:op_0\\.7:is(:hover, [data-hover]) {\n    opacity: 0.7;\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/css-raw-edge-cases.test.ts::css.raw edge cases with spreading > handles spreading with array syntax::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/css-raw-edge-cases.test.ts",
+        "test": "css.raw edge cases with spreading > handles spreading with array syntax",
+        "line": 184
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          "color": "green",
+          "fontSize": "16px"
+        },
+        {
+          "color": "green",
+          "fontSize": "16px",
+          "_hover": [
+            {
+              "color": "green",
+              "fontSize": "16px",
+              "opacity": 0.8
+            }
+          ]
+        }
+      ],
+      "expected": {
+        "css": "@layer utilities {\n  .c_green {\n    color: green;\n}\n\n  .fs_16px {\n    font-size: 16px;\n}\n\n  .hover\\:c_green:is(:hover, [data-hover]) {\n    color: green;\n}\n\n  .hover\\:fs_16px:is(:hover, [data-hover]) {\n    font-size: 16px;\n}\n\n  .hover\\:op_0\\.8:is(:hover, [data-hover]) {\n    opacity: 0.8;\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/css-raw-edge-cases.test.ts::css.raw edge cases with spreading > handles spreading with multiple css.raw calls in same object::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/css-raw-edge-cases.test.ts",
+        "test": "css.raw edge cases with spreading > handles spreading with multiple css.raw calls in same object",
+        "line": 652
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          "color": "red",
+          "padding": "10px"
+        },
+        {
+          "margin": "5px",
+          "border": "1px solid black"
+        },
+        {
+          "color": "red",
+          "padding": "10px",
+          "margin": "5px",
+          "border": "1px solid black",
+          "_hover": {
+            "color": "red",
+            "padding": "10px",
+            "margin": "5px",
+            "border": "1px solid black",
+            "opacity": 0.8
+          }
+        }
+      ],
+      "expected": {
+        "css": "@layer utilities {\n  .p_10px {\n    padding: 10px;\n}\n\n  .m_5px {\n    margin: 5px;\n}\n\n  .bd_1px_solid_black {\n    border: 1px solid black;\n}\n\n  .c_red {\n    color: red;\n}\n\n  .hover\\:p_10px:is(:hover, [data-hover]) {\n    padding: 10px;\n}\n\n  .hover\\:m_5px:is(:hover, [data-hover]) {\n    margin: 5px;\n}\n\n  .hover\\:bd_1px_solid_black:is(:hover, [data-hover]) {\n    border: 1px solid black;\n}\n\n  .hover\\:c_red:is(:hover, [data-hover]) {\n    color: red;\n}\n\n  .hover\\:op_0\\.8:is(:hover, [data-hover]) {\n    opacity: 0.8;\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/css-raw-edge-cases.test.ts::css.raw edge cases with spreading > handles spreading with renamed imports::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/css-raw-edge-cases.test.ts",
+        "test": "css.raw edge cases with spreading > handles spreading with renamed imports",
+        "line": 291
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          "color": "purple",
+          "fontWeight": "bold"
+        },
+        {
+          "color": "purple",
+          "fontWeight": "bold",
+          "_active": {
+            "color": "purple",
+            "fontWeight": "bold",
+            "transform": "scale(0.98)"
+          }
+        }
+      ],
+      "expected": {
+        "css": "@layer utilities {\n  .c_purple {\n    color: purple;\n}\n\n  .fw_bold {\n    font-weight: var(--font-weights-bold);\n}\n\n  .active\\:c_purple:is(:active, [data-active]) {\n    color: purple;\n}\n\n  .active\\:fw_bold:is(:active, [data-active]) {\n    font-weight: var(--font-weights-bold);\n}\n\n  .active\\:trf_scale\\(0\\.98\\):is(:active, [data-active]) {\n    transform: scale(0.98);\n}\n}"
+      }
+    }
+  ]
+}

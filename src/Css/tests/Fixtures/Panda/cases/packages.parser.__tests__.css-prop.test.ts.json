@@ -1,0 +1,23 @@
+{
+  "source": "packages/parser/__tests__/css-prop.test.ts",
+  "cases": [
+    {
+      "id": "fixture::packages/parser/__tests__/css-prop.test.ts::ast parser / css prop > should parse::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/css-prop.test.ts",
+        "test": "ast parser / css prop > should parse",
+        "line": 16
+      },
+      "userConfig": null,
+      "inputs": [
+        {}
+      ],
+      "expected": {
+        "css": "@layer utilities {\n  .bg_red\\.200 {\n    background: var(--colors-red-200);\n}\n}"
+      },
+      "unsupported": "extracted non-css items (jsx)"
+    }
+  ]
+}

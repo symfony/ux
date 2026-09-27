@@ -1,0 +1,1209 @@
+{
+  "source": "packages/core/__tests__/color-mix.test.ts",
+  "cases": [
+    {
+      "id": "fixture::packages/core/__tests__/color-mix.test.ts::color-mix > config token color::1",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/color-mix.test.ts",
+        "test": "color-mix > config token color",
+        "line": 38
+      },
+      "userConfig": {
+        "utilities": {
+          "background": {
+            "shorthand": "bg",
+            "className": "bg",
+            "values": "colors",
+            "transform": {
+              "__function": "anonymous"
+            }
+          },
+          "gradientFrom": {
+            "className": "from",
+            "values": "colors",
+            "transform": {
+              "__function": "anonymous"
+            }
+          },
+          "WebkitTextFillColor": {
+            "className": "wktf-c",
+            "values": "colors",
+            "transform": {
+              "__function": "anonymous"
+            }
+          }
+        },
+        "theme": {
+          "extend": {
+            "tokens": {
+              "opacity": {
+                "half": {
+                  "value": 0.5
+                }
+              }
+            }
+          }
+        }
+      },
+      "inputs": [
+        {
+          "bg": "red.300/30"
+        }
+      ],
+      "configPatch": {
+        "theme": {
+          "tokens": {
+            "opacity": {
+              "$value": {
+                "half": {
+                  "value": 0.5
+                }
+              }
+            }
+          }
+        },
+        "utilities": {
+          "background": {
+            "group": null
+          },
+          "gradientFrom": {
+            "group": null,
+            "className": {
+              "$value": "from"
+            }
+          },
+          "WebkitTextFillColor": {
+            "group": null
+          }
+        }
+      },
+      "options": null,
+      "expected": {
+        "classNames": [
+          "bg_red\\.300\\/30"
+        ],
+        "css": "@layer utilities {\n  .bg_red\\.300\\/30 {\n    --mix-background: color-mix(in srgb, var(--colors-red-300) 30%, transparent);\n    background: var(--mix-background, var(--colors-red-300));\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/core/__tests__/color-mix.test.ts::color-mix > decimal opacity::1",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/color-mix.test.ts",
+        "test": "color-mix > decimal opacity",
+        "line": 38
+      },
+      "userConfig": {
+        "utilities": {
+          "background": {
+            "shorthand": "bg",
+            "className": "bg",
+            "values": "colors",
+            "transform": {
+              "__function": "anonymous"
+            }
+          },
+          "gradientFrom": {
+            "className": "from",
+            "values": "colors",
+            "transform": {
+              "__function": "anonymous"
+            }
+          },
+          "WebkitTextFillColor": {
+            "className": "wktf-c",
+            "values": "colors",
+            "transform": {
+              "__function": "anonymous"
+            }
+          }
+        },
+        "theme": {
+          "extend": {
+            "tokens": {
+              "opacity": {
+                "half": {
+                  "value": 0.5
+                }
+              }
+            }
+          }
+        }
+      },
+      "inputs": [
+        {
+          "bg": "red/0.33"
+        }
+      ],
+      "configPatch": {
+        "theme": {
+          "tokens": {
+            "opacity": {
+              "$value": {
+                "half": {
+                  "value": 0.5
+                }
+              }
+            }
+          }
+        },
+        "utilities": {
+          "background": {
+            "group": null
+          },
+          "gradientFrom": {
+            "group": null,
+            "className": {
+              "$value": "from"
+            }
+          },
+          "WebkitTextFillColor": {
+            "group": null
+          }
+        }
+      },
+      "options": null,
+      "expected": {
+        "classNames": [
+          "bg_red\\/0\\.33"
+        ],
+        "css": "@layer utilities {\n  .bg_red\\/0\\.33 {\n    --mix-background: color-mix(in srgb, red 0.33%, transparent);\n    background: var(--mix-background, red);\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/core/__tests__/color-mix.test.ts::color-mix > in token fn::1",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/color-mix.test.ts",
+        "test": "color-mix > in token fn",
+        "line": 38
+      },
+      "userConfig": {
+        "utilities": {
+          "background": {
+            "shorthand": "bg",
+            "className": "bg",
+            "values": "colors",
+            "transform": {
+              "__function": "anonymous"
+            }
+          },
+          "gradientFrom": {
+            "className": "from",
+            "values": "colors",
+            "transform": {
+              "__function": "anonymous"
+            }
+          },
+          "WebkitTextFillColor": {
+            "className": "wktf-c",
+            "values": "colors",
+            "transform": {
+              "__function": "anonymous"
+            }
+          }
+        },
+        "theme": {
+          "extend": {
+            "tokens": {
+              "opacity": {
+                "half": {
+                  "value": 0.5
+                }
+              }
+            }
+          }
+        }
+      },
+      "inputs": [
+        {
+          "bg": "token(colors.pink.400/30)"
+        }
+      ],
+      "configPatch": {
+        "theme": {
+          "tokens": {
+            "opacity": {
+              "$value": {
+                "half": {
+                  "value": 0.5
+                }
+              }
+            }
+          }
+        },
+        "utilities": {
+          "background": {
+            "group": null
+          },
+          "gradientFrom": {
+            "group": null,
+            "className": {
+              "$value": "from"
+            }
+          },
+          "WebkitTextFillColor": {
+            "group": null
+          }
+        }
+      },
+      "options": null,
+      "expected": {
+        "classNames": [
+          "bg_token\\(colors\\.pink\\.400\\/30\\)"
+        ],
+        "css": "@layer utilities {\n  .bg_token\\(colors\\.pink\\.400\\/30\\) {\n    background: color-mix(in srgb, var(--colors-pink-400) 30%, transparent);\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/core/__tests__/color-mix.test.ts::color-mix > in token reference with curly brackets::1",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/color-mix.test.ts",
+        "test": "color-mix > in token reference with curly brackets",
+        "line": 38
+      },
+      "userConfig": {
+        "utilities": {
+          "background": {
+            "shorthand": "bg",
+            "className": "bg",
+            "values": "colors",
+            "transform": {
+              "__function": "anonymous"
+            }
+          },
+          "gradientFrom": {
+            "className": "from",
+            "values": "colors",
+            "transform": {
+              "__function": "anonymous"
+            }
+          },
+          "WebkitTextFillColor": {
+            "className": "wktf-c",
+            "values": "colors",
+            "transform": {
+              "__function": "anonymous"
+            }
+          }
+        },
+        "theme": {
+          "extend": {
+            "tokens": {
+              "opacity": {
+                "half": {
+                  "value": 0.5
+                }
+              }
+            }
+          }
+        }
+      },
+      "inputs": [
+        {
+          "color": "{colors.pink.400/30}"
+        }
+      ],
+      "configPatch": {
+        "theme": {
+          "tokens": {
+            "opacity": {
+              "$value": {
+                "half": {
+                  "value": 0.5
+                }
+              }
+            }
+          }
+        },
+        "utilities": {
+          "background": {
+            "group": null
+          },
+          "gradientFrom": {
+            "group": null,
+            "className": {
+              "$value": "from"
+            }
+          },
+          "WebkitTextFillColor": {
+            "group": null
+          }
+        }
+      },
+      "options": null,
+      "expected": {
+        "classNames": [
+          "c_\\{colors\\.pink\\.400\\/30\\}"
+        ],
+        "css": "@layer utilities {\n  .c_\\{colors\\.pink\\.400\\/30\\} {\n    color: color-mix(in srgb, var(--colors-pink-400) 30%, transparent);\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/core/__tests__/color-mix.test.ts::color-mix > inside var::1",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/color-mix.test.ts",
+        "test": "color-mix > inside var",
+        "line": 38
+      },
+      "userConfig": {
+        "utilities": {
+          "background": {
+            "shorthand": "bg",
+            "className": "bg",
+            "values": "colors",
+            "transform": {
+              "__function": "anonymous"
+            }
+          },
+          "gradientFrom": {
+            "className": "from",
+            "values": "colors",
+            "transform": {
+              "__function": "anonymous"
+            }
+          },
+          "WebkitTextFillColor": {
+            "className": "wktf-c",
+            "values": "colors",
+            "transform": {
+              "__function": "anonymous"
+            }
+          }
+        },
+        "theme": {
+          "extend": {
+            "tokens": {
+              "opacity": {
+                "half": {
+                  "value": 0.5
+                }
+              }
+            }
+          }
+        }
+      },
+      "inputs": [
+        {
+          "gradientFrom": "red/33"
+        }
+      ],
+      "configPatch": {
+        "theme": {
+          "tokens": {
+            "opacity": {
+              "$value": {
+                "half": {
+                  "value": 0.5
+                }
+              }
+            }
+          }
+        },
+        "utilities": {
+          "background": {
+            "group": null
+          },
+          "gradientFrom": {
+            "group": null,
+            "className": {
+              "$value": "from"
+            }
+          },
+          "WebkitTextFillColor": {
+            "group": null
+          }
+        }
+      },
+      "options": null,
+      "expected": {
+        "classNames": [
+          "from_red\\/33"
+        ],
+        "css": "@layer utilities {\n  .from_red\\/33 {\n    --mix---gradient-from: color-mix(in srgb, red 33%, transparent);\n    --gradient-from: var(--mix---gradient-from, red);\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/core/__tests__/color-mix.test.ts::color-mix > invalid number format::1",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/color-mix.test.ts",
+        "test": "color-mix > invalid number format",
+        "line": 38
+      },
+      "userConfig": {
+        "utilities": {
+          "background": {
+            "shorthand": "bg",
+            "className": "bg",
+            "values": "colors",
+            "transform": {
+              "__function": "anonymous"
+            }
+          },
+          "gradientFrom": {
+            "className": "from",
+            "values": "colors",
+            "transform": {
+              "__function": "anonymous"
+            }
+          },
+          "WebkitTextFillColor": {
+            "className": "wktf-c",
+            "values": "colors",
+            "transform": {
+              "__function": "anonymous"
+            }
+          }
+        },
+        "theme": {
+          "extend": {
+            "tokens": {
+              "opacity": {
+                "half": {
+                  "value": 0.5
+                }
+              }
+            }
+          }
+        }
+      },
+      "inputs": [
+        {
+          "bg": "red/0..,4"
+        }
+      ],
+      "configPatch": {
+        "theme": {
+          "tokens": {
+            "opacity": {
+              "$value": {
+                "half": {
+                  "value": 0.5
+                }
+              }
+            }
+          }
+        },
+        "utilities": {
+          "background": {
+            "group": null
+          },
+          "gradientFrom": {
+            "group": null,
+            "className": {
+              "$value": "from"
+            }
+          },
+          "WebkitTextFillColor": {
+            "group": null
+          }
+        }
+      },
+      "options": null,
+      "expected": {
+        "classNames": [
+          "bg_red\\/0\\.\\.\\,4"
+        ],
+        "css": "@layer utilities {\n  .bg_red\\/0\\.\\.\\,4 {\n    background: red/0..,4;\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/core/__tests__/color-mix.test.ts::color-mix > native CSS color::1",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/color-mix.test.ts",
+        "test": "color-mix > native CSS color",
+        "line": 38
+      },
+      "userConfig": {
+        "utilities": {
+          "background": {
+            "shorthand": "bg",
+            "className": "bg",
+            "values": "colors",
+            "transform": {
+              "__function": "anonymous"
+            }
+          },
+          "gradientFrom": {
+            "className": "from",
+            "values": "colors",
+            "transform": {
+              "__function": "anonymous"
+            }
+          },
+          "WebkitTextFillColor": {
+            "className": "wktf-c",
+            "values": "colors",
+            "transform": {
+              "__function": "anonymous"
+            }
+          }
+        },
+        "theme": {
+          "extend": {
+            "tokens": {
+              "opacity": {
+                "half": {
+                  "value": 0.5
+                }
+              }
+            }
+          }
+        }
+      },
+      "inputs": [
+        {
+          "bg": "red/30"
+        }
+      ],
+      "configPatch": {
+        "theme": {
+          "tokens": {
+            "opacity": {
+              "$value": {
+                "half": {
+                  "value": 0.5
+                }
+              }
+            }
+          }
+        },
+        "utilities": {
+          "background": {
+            "group": null
+          },
+          "gradientFrom": {
+            "group": null,
+            "className": {
+              "$value": "from"
+            }
+          },
+          "WebkitTextFillColor": {
+            "group": null
+          }
+        }
+      },
+      "options": null,
+      "expected": {
+        "classNames": [
+          "bg_red\\/30"
+        ],
+        "css": "@layer utilities {\n  .bg_red\\/30 {\n    --mix-background: color-mix(in srgb, red 30%, transparent);\n    background: var(--mix-background, red);\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/core/__tests__/color-mix.test.ts::color-mix > native CSS color::2",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/color-mix.test.ts",
+        "test": "color-mix > native CSS color",
+        "line": 38
+      },
+      "userConfig": {
+        "utilities": {
+          "background": {
+            "shorthand": "bg",
+            "className": "bg",
+            "values": "colors",
+            "transform": {
+              "__function": "anonymous"
+            }
+          },
+          "gradientFrom": {
+            "className": "from",
+            "values": "colors",
+            "transform": {
+              "__function": "anonymous"
+            }
+          },
+          "WebkitTextFillColor": {
+            "className": "wktf-c",
+            "values": "colors",
+            "transform": {
+              "__function": "anonymous"
+            }
+          }
+        },
+        "theme": {
+          "extend": {
+            "tokens": {
+              "opacity": {
+                "half": {
+                  "value": 0.5
+                }
+              }
+            }
+          }
+        }
+      },
+      "inputs": [
+        {
+          "bg": "red/30"
+        }
+      ],
+      "configPatch": {
+        "theme": {
+          "tokens": {
+            "opacity": {
+              "$value": {
+                "half": {
+                  "value": 0.5
+                }
+              }
+            }
+          }
+        },
+        "utilities": {
+          "background": {
+            "group": null
+          },
+          "gradientFrom": {
+            "group": null,
+            "className": {
+              "$value": "from"
+            }
+          },
+          "WebkitTextFillColor": {
+            "group": null
+          }
+        }
+      },
+      "options": null,
+      "expected": {
+        "classNames": [
+          "bg_red\\/30"
+        ],
+        "css": "@layer utilities {\n  .bg_red\\/30 {\n    --mix-background: color-mix(in srgb, red 30%, transparent);\n    background: var(--mix-background, red);\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/core/__tests__/color-mix.test.ts::color-mix > opacity token::1",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/color-mix.test.ts",
+        "test": "color-mix > opacity token",
+        "line": 38
+      },
+      "userConfig": {
+        "utilities": {
+          "background": {
+            "shorthand": "bg",
+            "className": "bg",
+            "values": "colors",
+            "transform": {
+              "__function": "anonymous"
+            }
+          },
+          "gradientFrom": {
+            "className": "from",
+            "values": "colors",
+            "transform": {
+              "__function": "anonymous"
+            }
+          },
+          "WebkitTextFillColor": {
+            "className": "wktf-c",
+            "values": "colors",
+            "transform": {
+              "__function": "anonymous"
+            }
+          }
+        },
+        "theme": {
+          "extend": {
+            "tokens": {
+              "opacity": {
+                "half": {
+                  "value": 0.5
+                }
+              }
+            }
+          }
+        }
+      },
+      "inputs": [
+        {
+          "bg": "red/half"
+        }
+      ],
+      "configPatch": {
+        "theme": {
+          "tokens": {
+            "opacity": {
+              "$value": {
+                "half": {
+                  "value": 0.5
+                }
+              }
+            }
+          }
+        },
+        "utilities": {
+          "background": {
+            "group": null
+          },
+          "gradientFrom": {
+            "group": null,
+            "className": {
+              "$value": "from"
+            }
+          },
+          "WebkitTextFillColor": {
+            "group": null
+          }
+        }
+      },
+      "options": null,
+      "expected": {
+        "classNames": [
+          "bg_red\\/half"
+        ],
+        "css": "@layer utilities {\n  .bg_red\\/half {\n    --mix-background: color-mix(in srgb, red 50%, transparent);\n    background: var(--mix-background, red);\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/core/__tests__/color-mix.test.ts::color-mix > percent opacity::1",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/color-mix.test.ts",
+        "test": "color-mix > percent opacity",
+        "line": 38
+      },
+      "userConfig": {
+        "utilities": {
+          "background": {
+            "shorthand": "bg",
+            "className": "bg",
+            "values": "colors",
+            "transform": {
+              "__function": "anonymous"
+            }
+          },
+          "gradientFrom": {
+            "className": "from",
+            "values": "colors",
+            "transform": {
+              "__function": "anonymous"
+            }
+          },
+          "WebkitTextFillColor": {
+            "className": "wktf-c",
+            "values": "colors",
+            "transform": {
+              "__function": "anonymous"
+            }
+          }
+        },
+        "theme": {
+          "extend": {
+            "tokens": {
+              "opacity": {
+                "half": {
+                  "value": 0.5
+                }
+              }
+            }
+          }
+        }
+      },
+      "inputs": [
+        {
+          "bg": "red/33"
+        }
+      ],
+      "configPatch": {
+        "theme": {
+          "tokens": {
+            "opacity": {
+              "$value": {
+                "half": {
+                  "value": 0.5
+                }
+              }
+            }
+          }
+        },
+        "utilities": {
+          "background": {
+            "group": null
+          },
+          "gradientFrom": {
+            "group": null,
+            "className": {
+              "$value": "from"
+            }
+          },
+          "WebkitTextFillColor": {
+            "group": null
+          }
+        }
+      },
+      "options": null,
+      "expected": {
+        "classNames": [
+          "bg_red\\/33"
+        ],
+        "css": "@layer utilities {\n  .bg_red\\/33 {\n    --mix-background: color-mix(in srgb, red 33%, transparent);\n    background: var(--mix-background, red);\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/core/__tests__/color-mix.test.ts::color-mix > WebkitTextFillColor with color token::1",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/color-mix.test.ts",
+        "test": "color-mix > WebkitTextFillColor with color token",
+        "line": 38
+      },
+      "userConfig": {
+        "utilities": {
+          "background": {
+            "shorthand": "bg",
+            "className": "bg",
+            "values": "colors",
+            "transform": {
+              "__function": "anonymous"
+            }
+          },
+          "gradientFrom": {
+            "className": "from",
+            "values": "colors",
+            "transform": {
+              "__function": "anonymous"
+            }
+          },
+          "WebkitTextFillColor": {
+            "className": "wktf-c",
+            "values": "colors",
+            "transform": {
+              "__function": "anonymous"
+            }
+          }
+        },
+        "theme": {
+          "extend": {
+            "tokens": {
+              "opacity": {
+                "half": {
+                  "value": 0.5
+                }
+              }
+            }
+          }
+        }
+      },
+      "inputs": [
+        {
+          "WebkitTextFillColor": "red.300"
+        }
+      ],
+      "configPatch": {
+        "theme": {
+          "tokens": {
+            "opacity": {
+              "$value": {
+                "half": {
+                  "value": 0.5
+                }
+              }
+            }
+          }
+        },
+        "utilities": {
+          "background": {
+            "group": null
+          },
+          "gradientFrom": {
+            "group": null,
+            "className": {
+              "$value": "from"
+            }
+          },
+          "WebkitTextFillColor": {
+            "group": null
+          }
+        }
+      },
+      "options": null,
+      "expected": {
+        "classNames": [
+          "wktf-c_red\\.300"
+        ],
+        "css": "@layer utilities {\n  .wktf-c_red\\.300 {\n    -webkit-text-fill-color: var(--colors-red-300);\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/core/__tests__/color-mix.test.ts::color-mix > wrong format::1",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/color-mix.test.ts",
+        "test": "color-mix > wrong format",
+        "line": 38
+      },
+      "userConfig": {
+        "utilities": {
+          "background": {
+            "shorthand": "bg",
+            "className": "bg",
+            "values": "colors",
+            "transform": {
+              "__function": "anonymous"
+            }
+          },
+          "gradientFrom": {
+            "className": "from",
+            "values": "colors",
+            "transform": {
+              "__function": "anonymous"
+            }
+          },
+          "WebkitTextFillColor": {
+            "className": "wktf-c",
+            "values": "colors",
+            "transform": {
+              "__function": "anonymous"
+            }
+          }
+        },
+        "theme": {
+          "extend": {
+            "tokens": {
+              "opacity": {
+                "half": {
+                  "value": 0.5
+                }
+              }
+            }
+          }
+        }
+      },
+      "inputs": [
+        {
+          "bg": "xx1x//30"
+        }
+      ],
+      "configPatch": {
+        "theme": {
+          "tokens": {
+            "opacity": {
+              "$value": {
+                "half": {
+                  "value": 0.5
+                }
+              }
+            }
+          }
+        },
+        "utilities": {
+          "background": {
+            "group": null
+          },
+          "gradientFrom": {
+            "group": null,
+            "className": {
+              "$value": "from"
+            }
+          },
+          "WebkitTextFillColor": {
+            "group": null
+          }
+        }
+      },
+      "options": null,
+      "expected": {
+        "classNames": [
+          "bg_xx1x\\/\\/30"
+        ],
+        "css": "@layer utilities {\n  .bg_xx1x\\/\\/30 {\n    background: xx1x//30;\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/core/__tests__/color-mix.test.ts::color-mix > wrong number format::1",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/color-mix.test.ts",
+        "test": "color-mix > wrong number format",
+        "line": 38
+      },
+      "userConfig": {
+        "utilities": {
+          "background": {
+            "shorthand": "bg",
+            "className": "bg",
+            "values": "colors",
+            "transform": {
+              "__function": "anonymous"
+            }
+          },
+          "gradientFrom": {
+            "className": "from",
+            "values": "colors",
+            "transform": {
+              "__function": "anonymous"
+            }
+          },
+          "WebkitTextFillColor": {
+            "className": "wktf-c",
+            "values": "colors",
+            "transform": {
+              "__function": "anonymous"
+            }
+          }
+        },
+        "theme": {
+          "extend": {
+            "tokens": {
+              "opacity": {
+                "half": {
+                  "value": 0.5
+                }
+              }
+            }
+          }
+        }
+      },
+      "inputs": [
+        {
+          "bg": "red/0,4"
+        }
+      ],
+      "configPatch": {
+        "theme": {
+          "tokens": {
+            "opacity": {
+              "$value": {
+                "half": {
+                  "value": 0.5
+                }
+              }
+            }
+          }
+        },
+        "utilities": {
+          "background": {
+            "group": null
+          },
+          "gradientFrom": {
+            "group": null,
+            "className": {
+              "$value": "from"
+            }
+          },
+          "WebkitTextFillColor": {
+            "group": null
+          }
+        }
+      },
+      "options": null,
+      "expected": {
+        "classNames": [
+          "bg_red\\/0\\,4"
+        ],
+        "css": "@layer utilities {\n  .bg_red\\/0\\,4 {\n    background: red/0,4;\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/core/__tests__/color-mix.test.ts::color-mix > wrong opacity::1",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/color-mix.test.ts",
+        "test": "color-mix > wrong opacity",
+        "line": 38
+      },
+      "userConfig": {
+        "utilities": {
+          "background": {
+            "shorthand": "bg",
+            "className": "bg",
+            "values": "colors",
+            "transform": {
+              "__function": "anonymous"
+            }
+          },
+          "gradientFrom": {
+            "className": "from",
+            "values": "colors",
+            "transform": {
+              "__function": "anonymous"
+            }
+          },
+          "WebkitTextFillColor": {
+            "className": "wktf-c",
+            "values": "colors",
+            "transform": {
+              "__function": "anonymous"
+            }
+          }
+        },
+        "theme": {
+          "extend": {
+            "tokens": {
+              "opacity": {
+                "half": {
+                  "value": 0.5
+                }
+              }
+            }
+          }
+        }
+      },
+      "inputs": [
+        {
+          "bg": "red/abc"
+        }
+      ],
+      "configPatch": {
+        "theme": {
+          "tokens": {
+            "opacity": {
+              "$value": {
+                "half": {
+                  "value": 0.5
+                }
+              }
+            }
+          }
+        },
+        "utilities": {
+          "background": {
+            "group": null
+          },
+          "gradientFrom": {
+            "group": null,
+            "className": {
+              "$value": "from"
+            }
+          },
+          "WebkitTextFillColor": {
+            "group": null
+          }
+        }
+      },
+      "options": null,
+      "expected": {
+        "classNames": [
+          "bg_red\\/abc"
+        ],
+        "css": "@layer utilities {\n  .bg_red\\/abc {\n    background: red/abc;\n}\n}"
+      }
+    }
+  ]
+}

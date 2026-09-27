@@ -1,0 +1,141 @@
+{
+  "source": "sandbox/codegen/__tests__/recipe.test.ts",
+  "cases": [
+    {
+      "id": "react::sandbox/codegen/__tests__/recipe.test.ts::recipe > base styles::1",
+      "kind": "codegen-css",
+      "config": "codegen-react",
+      "source": {
+        "file": "sandbox/codegen/__tests__/recipe.test.ts",
+        "test": "recipe > base styles",
+        "line": 7
+      },
+      "inputs": [
+        {}
+      ],
+      "expected": {
+        "className": ""
+      }
+    },
+    {
+      "id": "react::sandbox/codegen/__tests__/recipe.test.ts::recipe > compoundVariants::1",
+      "kind": "codegen-css",
+      "config": "codegen-react",
+      "source": {
+        "file": "sandbox/codegen/__tests__/recipe.test.ts",
+        "test": "recipe > compoundVariants",
+        "line": 44
+      },
+      "inputs": [
+        {
+          "color": "blue"
+        }
+      ],
+      "expected": {
+        "className": "c_blue"
+      }
+    },
+    {
+      "id": "react::sandbox/codegen/__tests__/recipe.test.ts::recipe > compoundVariants::2",
+      "kind": "codegen-css",
+      "config": "codegen-react",
+      "source": {
+        "file": "sandbox/codegen/__tests__/recipe.test.ts",
+        "test": "recipe > compoundVariants",
+        "line": 48
+      },
+      "inputs": [
+        {
+          "color": "green"
+        }
+      ],
+      "expected": {
+        "className": "c_green"
+      }
+    },
+    {
+      "id": "react::sandbox/codegen/__tests__/recipe.test.ts::recipe > compoundVariants::3",
+      "kind": "codegen-css",
+      "config": "codegen-react",
+      "source": {
+        "file": "sandbox/codegen/__tests__/recipe.test.ts",
+        "test": "recipe > compoundVariants",
+        "line": 51
+      },
+      "inputs": [
+        {
+          "color": "red"
+        }
+      ],
+      "expected": {
+        "className": "c_red"
+      }
+    },
+    {
+      "id": "react::sandbox/codegen/__tests__/recipe.test.ts::recipe > compoundVariants::4",
+      "kind": "codegen-css",
+      "config": "codegen-react",
+      "source": {
+        "file": "sandbox/codegen/__tests__/recipe.test.ts",
+        "test": "recipe > compoundVariants",
+        "line": 54
+      },
+      "inputs": [
+        {
+          "color": "red"
+        }
+      ],
+      "expected": {
+        "className": "c_red"
+      }
+    },
+    {
+      "id": "react::sandbox/codegen/__tests__/recipe.test.ts::recipe > outline variant styles::1",
+      "kind": "codegen-css",
+      "config": "codegen-react",
+      "source": {
+        "file": "sandbox/codegen/__tests__/recipe.test.ts",
+        "test": "recipe > outline variant styles",
+        "line": 33
+      },
+      "inputs": [
+        {}
+      ],
+      "expected": {
+        "className": ""
+      }
+    },
+    {
+      "id": "react::sandbox/codegen/__tests__/recipe.test.ts::recipe > solid variant styles::1",
+      "kind": "codegen-css",
+      "config": "codegen-react",
+      "source": {
+        "file": "sandbox/codegen/__tests__/recipe.test.ts",
+        "test": "recipe > solid variant styles",
+        "line": 27
+      },
+      "inputs": [
+        {}
+      ],
+      "expected": {
+        "className": ""
+      }
+    },
+    {
+      "id": "react::sandbox/codegen/__tests__/recipe.test.ts::recipe > using conditions::1",
+      "kind": "codegen-css",
+      "config": "codegen-react",
+      "source": {
+        "file": "sandbox/codegen/__tests__/recipe.test.ts",
+        "test": "recipe > using conditions",
+        "line": 39
+      },
+      "inputs": [
+        {}
+      ],
+      "expected": {
+        "className": ""
+      }
+    }
+  ]
+}

@@ -1,0 +1,308 @@
+{
+  "source": "packages/core/__tests__/custom-utility.test.ts",
+  "cases": [
+    {
+      "id": "fixture::packages/core/__tests__/custom-utility.test.ts::custom utility > multiple shorthand + no className::1",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/custom-utility.test.ts",
+        "test": "custom utility > multiple shorthand + no className",
+        "line": 60
+      },
+      "userConfig": {
+        "utilities": {
+          "extend": {
+            "coloredBorder": {
+              "shorthand": [
+                "cbd",
+                "cbxxp"
+              ],
+              "values": [
+                "red",
+                "green",
+                "blue"
+              ],
+              "transform": {
+                "__function": "transform"
+              }
+            }
+          }
+        }
+      },
+      "inputs": [
+        {
+          "coloredBorder": "red"
+        }
+      ],
+      "configPatch": {
+        "utilities": {
+          "coloredBorder": {
+            "$value": {
+              "shorthand": [
+                "cbd",
+                "cbxxp"
+              ],
+              "values": [
+                "red",
+                "green",
+                "blue"
+              ],
+              "transform": {
+                "__function": "transform",
+                "custom": true
+              }
+            }
+          }
+        }
+      },
+      "options": null,
+      "expected": {
+        "classNames": [
+          "cbd_red"
+        ],
+        "css": "@layer utilities {\n  .cbd_red {\n    border: 1px solid red;\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/core/__tests__/custom-utility.test.ts::custom utility > multiple shorthand + no className::2",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/custom-utility.test.ts",
+        "test": "custom utility > multiple shorthand + no className",
+        "line": 60
+      },
+      "userConfig": {
+        "utilities": {
+          "extend": {
+            "coloredBorder": {
+              "shorthand": [
+                "cbd",
+                "cbxxp"
+              ],
+              "values": [
+                "red",
+                "green",
+                "blue"
+              ],
+              "transform": {
+                "__function": "transform"
+              }
+            }
+          }
+        }
+      },
+      "inputs": [
+        {
+          "cbd": "red"
+        }
+      ],
+      "configPatch": {
+        "utilities": {
+          "coloredBorder": {
+            "$value": {
+              "shorthand": [
+                "cbd",
+                "cbxxp"
+              ],
+              "values": [
+                "red",
+                "green",
+                "blue"
+              ],
+              "transform": {
+                "__function": "transform",
+                "custom": true
+              }
+            }
+          }
+        }
+      },
+      "options": null,
+      "expected": {
+        "classNames": [
+          "cbd_red"
+        ],
+        "css": "@layer utilities {\n  .cbd_red {\n    border: 1px solid red;\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/core/__tests__/custom-utility.test.ts::custom utility > multiple shorthand + no className::3",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/custom-utility.test.ts",
+        "test": "custom utility > multiple shorthand + no className",
+        "line": 60
+      },
+      "userConfig": {
+        "utilities": {
+          "extend": {
+            "coloredBorder": {
+              "shorthand": [
+                "cbd",
+                "cbxxp"
+              ],
+              "values": [
+                "red",
+                "green",
+                "blue"
+              ],
+              "transform": {
+                "__function": "transform"
+              }
+            }
+          }
+        }
+      },
+      "inputs": [
+        {
+          "cbxxp": "red"
+        }
+      ],
+      "configPatch": {
+        "utilities": {
+          "coloredBorder": {
+            "$value": {
+              "shorthand": [
+                "cbd",
+                "cbxxp"
+              ],
+              "values": [
+                "red",
+                "green",
+                "blue"
+              ],
+              "transform": {
+                "__function": "transform",
+                "custom": true
+              }
+            }
+          }
+        }
+      },
+      "options": null,
+      "expected": {
+        "classNames": [
+          "cbd_red"
+        ],
+        "css": "@layer utilities {\n  .cbd_red {\n    border: 1px solid red;\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/core/__tests__/custom-utility.test.ts::custom utility > shorthand + no className::1",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/custom-utility.test.ts",
+        "test": "custom utility > shorthand + no className",
+        "line": 23
+      },
+      "userConfig": {
+        "utilities": {
+          "extend": {
+            "coloredBorder": {
+              "shorthand": "cb",
+              "values": [
+                "red",
+                "green",
+                "blue"
+              ],
+              "transform": {
+                "__function": "transform"
+              }
+            }
+          }
+        }
+      },
+      "inputs": [
+        {
+          "coloredBorder": "red"
+        }
+      ],
+      "configPatch": {
+        "utilities": {
+          "coloredBorder": {
+            "$value": {
+              "shorthand": "cb",
+              "values": [
+                "red",
+                "green",
+                "blue"
+              ],
+              "transform": {
+                "__function": "transform",
+                "custom": true
+              }
+            }
+          }
+        }
+      },
+      "options": null,
+      "expected": {
+        "classNames": [
+          "cb_red"
+        ],
+        "css": "@layer utilities {\n  .cb_red {\n    border: 1px solid red;\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/core/__tests__/custom-utility.test.ts::custom utility > shorthand + no className::2",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/custom-utility.test.ts",
+        "test": "custom utility > shorthand + no className",
+        "line": 23
+      },
+      "userConfig": {
+        "utilities": {
+          "extend": {
+            "coloredBorder": {
+              "shorthand": "cb",
+              "values": [
+                "red",
+                "green",
+                "blue"
+              ],
+              "transform": {
+                "__function": "transform"
+              }
+            }
+          }
+        }
+      },
+      "inputs": [
+        {
+          "cb": "red"
+        }
+      ],
+      "configPatch": {
+        "utilities": {
+          "coloredBorder": {
+            "$value": {
+              "shorthand": "cb",
+              "values": [
+                "red",
+                "green",
+                "blue"
+              ],
+              "transform": {
+                "__function": "transform",
+                "custom": true
+              }
+            }
+          }
+        }
+      },
+      "options": null,
+      "expected": {
+        "classNames": [
+          "cb_red"
+        ],
+        "css": "@layer utilities {\n  .cb_red {\n    border: 1px solid red;\n}\n}"
+      }
+    }
+  ]
+}
