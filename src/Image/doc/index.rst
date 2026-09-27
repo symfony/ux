@@ -95,8 +95,8 @@ was asked to avoid. Without that, a ``contain`` image would be cropped back to
 fill its box by CSS, and ``fit`` would never be observable.
 
 ``format`` pins the output format for this one image, in place of both the
-provider's own negotiation and the per-format ``<picture>`` fallbacks: a
-single ``<img>`` is rendered in that format. A format the active provider
+provider's own negotiation and the per-format ``<picture>`` fallbacks: the
+``<img>`` is rendered in that format, and a ``<picture>`` gets no ``<source>``. A format the active provider
 cannot produce throws an ``InvalidArgumentException`` naming its supported
 list.
 
@@ -221,23 +221,22 @@ naming the options it does support.
 The ``formats`` option
 ~~~~~~~~~~~~~~~~~~~~~~
 
-``formats`` is the candidate output format list, in preference order. What it
-governs depends on the active provider:
+``formats`` is the candidate output format list, in preference order. It is
+intersected with the active provider's own supported formats (see
+:ref:`Providers <image_providers>`), then:
 
-* for a provider that does not negotiate the format itself, it is intersected
-  with that provider's own supported formats (see
-  :ref:`Providers <image_providers>`) and each surviving entry becomes one
-  ``<source>`` of the rendered ``<picture>`` (see
-  :ref:`Layout and rendering <image_layout_and_rendering>`). An empty
-  intersection throws an exception naming both lists, so asking a provider
-  that cannot encode AVIF to serve only AVIF fails at first render rather
-  than serving the wrong format silently;
-* for `Cloudflare`_, it has no effect: the choice is made inside Cloudflare,
-  by its own ``format=auto``.
+* ``ux_picture()`` renders one ``<source>`` per surviving entry (see
+  :ref:`Layout and rendering <image_layout_and_rendering>`);
+* ``ux_image()`` renders its single ``<img>`` in the last surviving entry,
+  unless the provider negotiates the format itself, like `Cloudflare`_ with
+  its own ``format=auto``; ``formats`` then has no effect on it.
 
-The default is ``['avif', 'webp', 'jpeg']``. For a provider that does not negotiate the
-format itself, narrowing it is how an application keeps a format off the wire;
-on `Cloudflare`_, ``formats`` is ignored, so this does not apply there.
+An empty intersection throws an exception naming both lists, so asking a
+provider that cannot encode AVIF to serve only AVIF fails at first render
+rather than serving the wrong format silently.
+
+The default is ``['avif', 'webp', 'jpeg']``. Narrowing it is how an
+application keeps a format off the wire.
 
 The ``resolutions`` option
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -309,35 +308,39 @@ to a descending ladder of common screen widths ported from `unpic`_:
 ``constrained`` keeps only the entries below twice the requested ``width``;
 ``full-width`` keeps the whole ladder.
 
+.. _image_img_or_picture:
+
 ``<img>`` or ``<picture>``
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The choice is the active provider's, unless the caller pins a ``format``: it
-follows ``supportsAutoFormat()`` (see :ref:`Providers <image_providers>`).
+The element is the caller's choice, never the provider's, so switching
+``UX_IMAGE_DSN`` never changes the markup:
 
-* When the provider can pick the output format from the request itself (for
-  example through a native ``format=auto``, or a controller that negotiates
-  it), a single ``<img>`` is rendered with one ``srcset`` across the
-  breakpoints.
-* When it cannot, a ``<picture>`` is rendered with one ``<source
-  type="image/…" srcset="…">`` per entry of the ``formats`` option
-  intersected with the provider's supported formats, in that order, followed
-  by the ``<img>`` as the last-resort fallback.
+* ``ux_image()`` and ``<twig:ux:image>`` always render a single ``<img>``. When
+  the provider picks the output format from the request itself, like
+  Cloudflare's ``format=auto``, that ``<img>`` still gets a modern format.
+  When it cannot, like KeyCDN, the ``<img>`` uses the last entry of the
+  ``formats`` option.
+* ``ux_picture()`` and ``<twig:ux:picture>`` always render a ``<picture>``,
+  with one ``<source type="image/…" srcset="…">`` per entry of the ``formats``
+  option intersected with the provider's supported formats, in that order,
+  followed by the ``<img>`` as the last-resort fallback. Every source names its
+  format in its URLs, which suits a provider without automatic negotiation,
+  and caches that ignore ``Vary: Accept``.
 
-KeyCDN has no automatic format negotiation and cannot encode to AVIF, so
-``ux_image()`` always renders a ``<picture>`` for it, never a single
+.. code-block:: html+twig
+
+    <twig:ux:picture src="/uploads/hero.jpg" alt="Hero" width="800" height="450" />
+
+    {{ ux_picture('/uploads/hero.jpg', 'Hero', {width: 800, height: 450}) }}
+
+Both take the same props, options and attributes as ``<twig:ux:image>`` and
+``ux_image()``.
+
+A ``format`` prop short-circuits the choice: it names one format, so there is
+nothing left to fall back to. ``ux_image()`` renders its ``<img>`` in that
+format, and ``ux_picture()`` renders a ``<picture>`` that only holds that
 ``<img>``.
-
-This means the exact same template renders different markup depending on
-which provider is active: switching ``UX_IMAGE_DSN`` between a
-``<picture>``-based provider and an ``<img>``-based one changes the output
-without any template change. This is deliberate — an application configured
-for KeyCDN that emitted a single ``<img>`` would serve one hard-coded format
-to every browser, negotiation or not.
-
-A ``format`` prop short-circuits all of this: it names one format, so there is
-nothing left to fall back to and a single ``<img>`` is rendered whatever the
-provider supports.
 
 The ``<picture>`` emitted here only ever carries per-format fallbacks. It
 never carries a different crop per media query (art direction); that is out
@@ -381,10 +384,10 @@ Provider      Supported formats                     Negotiates automatically?
 ============= ===================================== =========================
 
 Cloudflare negotiates natively, through its own ``format=auto``. KeyCDN has
-no automatic format negotiation at all, and no AVIF support either, which is
-why ``ux_image()`` always renders a ``<picture>`` with one ``<source>`` per
-configured format for it, never a single ``<img>`` (see ``<img>`` or
-``<picture>`` above).
+no automatic format negotiation at all, and no AVIF support either: with it,
+``ux_image()`` serves the last configured format KeyCDN supports, and
+``ux_picture()`` is the way to offer WebP to the browsers that accept it (see
+:ref:`<img> or <picture> <image_img_or_picture>`).
 
 Cloudflare
 ~~~~~~~~~~

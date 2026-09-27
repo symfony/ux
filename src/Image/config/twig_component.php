@@ -12,6 +12,7 @@
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
 use Symfony\UX\Image\Twig\Components\Image;
+use Symfony\UX\Image\Twig\Components\Picture;
 
 return static function (ContainerConfigurator $container): void {
     $container->services()
@@ -20,5 +21,11 @@ return static function (ContainerConfigurator $container): void {
                 service('ux_image.renderer'),
             ])
             ->tag('twig.component', ['key' => 'ux:image', 'template' => '@UXImage/components/Image.html.twig'])
+
+        ->set('.ux_image.twig_component.picture', Picture::class)
+            ->args([
+                service('ux_image.renderer'),
+            ])
+            ->tag('twig.component', ['key' => 'ux:picture', 'template' => '@UXImage/components/Picture.html.twig'])
     ;
 };

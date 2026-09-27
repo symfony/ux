@@ -50,7 +50,7 @@ See the [full options reference](https://developers.cloudflare.com/images/transf
 
 `avif`, `webp`, `jpeg`, `png`.
 
-Cloudflare also supports `format=auto`, so this provider negotiates the best format for the requesting browser itself; `ux_image()` renders a single `<img>` rather than a `<picture>` with per-format `<source>` elements.
+Cloudflare also supports `format=auto`, so this provider negotiates the best format for the requesting browser itself: the single `<img>` of `ux_image()` still gets a modern format. `ux_picture()` names each format explicitly instead.
 
 ## Resources
 

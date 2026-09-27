@@ -43,6 +43,14 @@ abstract class RendererSnapshotTestCase extends TestCase
         $this->assertMatchesSnapshot($this->format($rendered), new TextDriver());
     }
 
+    #[DataProvider('provideOptions')]
+    public function testRenderedPictureUrls(ProviderInterface $provider, RenderOptions $options)
+    {
+        $rendered = new ImageRenderer($provider, new LayoutResolver())->renderPicture('/hero.jpg', 'Hero', $options);
+
+        $this->assertMatchesSnapshot($this->format($rendered), new TextDriver());
+    }
+
     private function format(RenderedImage $rendered): string
     {
         $lines = ['src:', $rendered->imgAttributes['src'], '', 'srcset:'];

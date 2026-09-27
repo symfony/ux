@@ -38,6 +38,16 @@ final class ImageRenderer implements ImageRendererInterface
 
     public function render(string $src, string $alt, RenderOptions $options): RenderedImage
     {
+        return $this->renderElement($src, $alt, $options, false);
+    }
+
+    public function renderPicture(string $src, string $alt, RenderOptions $options): RenderedImage
+    {
+        return $this->renderElement($src, $alt, $options, true);
+    }
+
+    private function renderElement(string $src, string $alt, RenderOptions $options, bool $picture): RenderedImage
+    {
         if ($this->provider instanceof NullProvider) {
             return new RenderedImage([], ['src' => $src, 'alt' => $alt] + $this->commonAttributes($options));
         }
@@ -46,16 +56,15 @@ final class ImageRenderer implements ImageRendererInterface
         $ratio = $this->resolveRatio($options);
 
         $pinned = $options->format;
-        $auto = null === $pinned && $this->provider->supportsAutoFormat();
         $formats = match (true) {
             null !== $pinned => [$pinned],
-            $auto => ['auto'],
+            !$picture && $this->provider->supportsAutoFormat() => ['auto'],
             default => $this->resolveFormats(),
         };
 
         $sources = [];
         $fallbackSrcset = null;
-        if (null === $pinned && !$auto) {
+        if ($picture && null === $pinned) {
             foreach ($formats as $format) {
                 $fallbackSrcset = $this->buildSrcset($src, $breakpoints, $format, $options, $ratio);
                 $sources[] = [

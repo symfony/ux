@@ -16,5 +16,13 @@ namespace Symfony\UX\Image\Renderer;
  */
 interface ImageRendererInterface
 {
+    /**
+     * Renders a single <img>, in the format the provider negotiates, or in the last configured format.
+     */
     public function render(string $src, string $alt, RenderOptions $options): RenderedImage;
+
+    /**
+     * Renders a <picture> with one <source> per configured format, whatever the provider.
+     */
+    public function renderPicture(string $src, string $alt, RenderOptions $options): RenderedImage;
 }

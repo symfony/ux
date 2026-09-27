@@ -65,6 +65,17 @@ final class ImageRuntime implements RuntimeExtensionInterface
     {
         $rendered = $this->renderer->render($src, $alt, RenderOptionsFactory::createFromArray($options));
 
-        return ImageMarkup::render($rendered, new ComponentAttributes(ImageMarkup::normalizeAttributes($attributes), $this->twig->getRuntime(EscaperRuntime::class)));
+        return ImageMarkup::img($rendered, new ComponentAttributes(ImageMarkup::normalizeAttributes($attributes), $this->twig->getRuntime(EscaperRuntime::class)));
+    }
+
+    /**
+     * @param array<string, mixed> $options
+     * @param array<string, mixed> $attributes
+     */
+    public function renderPicture(string $src, string $alt, array $options = [], array $attributes = []): string
+    {
+        $rendered = $this->renderer->renderPicture($src, $alt, RenderOptionsFactory::createFromArray($options));
+
+        return ImageMarkup::picture($rendered, new ComponentAttributes(ImageMarkup::normalizeAttributes($attributes), $this->twig->getRuntime(EscaperRuntime::class)));
     }
 }

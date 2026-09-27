@@ -125,11 +125,22 @@ final class ImageRendererTest extends TestCase
         self::assertArrayNotHasKey('decoding', $rendered->imgAttributes);
     }
 
-    public function testAProviderWithoutAutoFormatProducesOneSourcePerFormat()
+    public function testAnImgNeverHasSourcesAndFallsBackToTheLastFormatWhenTheProviderDoesNotNegotiate()
     {
         $renderer = new ImageRenderer(new FakeProvider(autoFormat: false), new LayoutResolver(), ['avif', 'webp', 'jpeg']);
 
         $rendered = $renderer->render('hero.jpg', '', new RenderOptions(layout: Layout::Fixed, width: 400));
+
+        self::assertSame([], $rendered->sources);
+        self::assertStringContainsString('fm=jpeg', $rendered->imgAttributes['src']);
+        self::assertStringNotContainsString('fm=avif', $rendered->imgAttributes['srcset']);
+    }
+
+    public function testAPictureHasOneSourcePerConfiguredFormat()
+    {
+        $renderer = new ImageRenderer(new FakeProvider(autoFormat: false), new LayoutResolver(), ['avif', 'webp', 'jpeg']);
+
+        $rendered = $renderer->renderPicture('hero.jpg', '', new RenderOptions(layout: Layout::Fixed, width: 400));
 
         self::assertCount(3, $rendered->sources);
         self::assertSame('image/avif', $rendered->sources[0]['type']);
@@ -144,7 +155,7 @@ final class ImageRendererTest extends TestCase
     {
         $renderer = new ImageRenderer(new FakeProvider(autoFormat: false), new LayoutResolver(), ['avif', 'tiff', 'jpeg']);
 
-        $rendered = $renderer->render('hero.jpg', '', new RenderOptions(layout: Layout::Fixed, width: 400));
+        $rendered = $renderer->renderPicture('hero.jpg', '', new RenderOptions(layout: Layout::Fixed, width: 400));
 
         self::assertCount(2, $rendered->sources);
     }
@@ -153,7 +164,7 @@ final class ImageRendererTest extends TestCase
     {
         $renderer = new ImageRenderer(new FakeProvider(autoFormat: false), new LayoutResolver(), ['jpeg', 'avif']);
 
-        $rendered = $renderer->render('hero.jpg', '', new RenderOptions(layout: Layout::Fixed, width: 400));
+        $rendered = $renderer->renderPicture('hero.jpg', '', new RenderOptions(layout: Layout::Fixed, width: 400));
 
         self::assertSame(['image/jpeg', 'image/avif'], array_column($rendered->sources, 'type'));
         self::assertStringContainsString('fm=avif', $rendered->imgAttributes['src']);
@@ -183,7 +194,7 @@ final class ImageRendererTest extends TestCase
     {
         $renderer = new ImageRenderer(new FakeProvider(autoFormat: false), new LayoutResolver(), ['avif', 'webp', 'jpeg']);
 
-        $rendered = $renderer->render('hero.jpg', '', new RenderOptions(layout: Layout::Fixed, width: 400, format: 'jpeg'));
+        $rendered = $renderer->renderPicture('hero.jpg', '', new RenderOptions(layout: Layout::Fixed, width: 400, format: 'jpeg'));
 
         self::assertSame([], $rendered->sources);
         self::assertStringContainsString('fm=jpeg', $rendered->imgAttributes['src']);
@@ -195,6 +206,25 @@ final class ImageRendererTest extends TestCase
         $this->expectExceptionMessage('The image format "tiff" is not supported by the "fake" provider (supported: "avif", "webp", "jpeg").');
 
         $this->renderer()->render('hero.jpg', '', new RenderOptions(width: 400, format: 'tiff'));
+    }
+
+    public function testAPictureHasOneSourcePerFormatEvenWhenTheProviderNegotiatesTheFormat()
+    {
+        $rendered = $this->renderer()->renderPicture('hero.jpg', '', new RenderOptions(layout: Layout::Fixed, width: 400));
+
+        self::assertSame(['image/avif', 'image/webp', 'image/jpeg'], array_column($rendered->sources, 'type'));
+        self::assertStringContainsString('fm=jpeg', $rendered->imgAttributes['src']);
+        self::assertStringNotContainsString('fm=auto', implode(' ', array_column($rendered->sources, 'srcset')));
+    }
+
+    public function testANullProviderPictureHasNoSource()
+    {
+        $renderer = new ImageRenderer(new NullProvider(), new LayoutResolver());
+
+        $rendered = $renderer->renderPicture('/uploads/hero.jpg', 'Hero', new RenderOptions(width: 800));
+
+        self::assertSame([], $rendered->sources);
+        self::assertSame('/uploads/hero.jpg', $rendered->imgAttributes['src']);
     }
 
     public function testTheNullProviderRendersTheOriginalImageWithoutASrcset()

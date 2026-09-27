@@ -17,13 +17,13 @@ use Symfony\UX\TwigComponent\ComponentAttributes;
 use Twig\Markup;
 
 /**
- * Backs the <twig:ux:image> component.
+ * Backs the <twig:ux:picture> component.
  *
  * @author Hugo Alliaume <hugo@alliau.me>
  *
  * @internal
  */
-final class Image
+final class Picture
 {
     use ImageProps;
 
@@ -34,8 +34,8 @@ final class Image
 
     public function html(ComponentAttributes $attributes): Markup
     {
-        $rendered = $this->renderer->render($this->src, $this->alt, $this->renderOptions());
+        $rendered = $this->renderer->renderPicture($this->src, $this->alt, $this->renderOptions());
 
-        return new Markup(ImageMarkup::img($rendered, $attributes), 'UTF-8');
+        return new Markup(ImageMarkup::picture($rendered, $attributes), 'UTF-8');
     }
 }

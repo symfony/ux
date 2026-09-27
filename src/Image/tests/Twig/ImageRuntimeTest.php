@@ -57,12 +57,23 @@ final class ImageRuntimeTest extends KernelTestCase
         self::assertStringContainsString('aspect-ratio: 800 / 450', $html);
     }
 
-    public function testItRendersAPictureForAProviderWithoutAutoFormat()
+    public function testUxImageRendersAnImgEvenWhenTheProviderDoesNotNegotiateTheFormat()
     {
         $html = $this->renderFunction('/hero.jpg', '', ['width' => 800], autoFormat: false);
 
-        self::assertStringStartsWith('<picture>', $html);
-        self::assertStringContainsString('<source type="image/avif"', $html);
+        self::assertStringStartsWith('<img ', $html);
+        self::assertStringNotContainsString('<picture>', $html);
+    }
+
+    public function testUxPictureRendersAPictureEvenWhenTheProviderNegotiatesTheFormat()
+    {
+        $html = $this->renderPictureFunction('/hero.jpg', 'Hero', ['width' => 800], ['class' => 'rounded']);
+
+        self::assertStringStartsWith('<picture><source type="image/avif"', $html);
+        self::assertStringContainsString('<source type="image/webp"', $html);
+        self::assertStringContainsString('alt="Hero"', $html);
+        self::assertStringContainsString('class="rounded"', $html);
+        self::assertStringEndsWith('</picture>', $html);
     }
 
     public function testAnExplicitFormatOptionIsAccepted()
@@ -129,7 +140,7 @@ final class ImageRuntimeTest extends KernelTestCase
 
     public function testACallerSizesOverridesEverySourceAndTheImgInThePictureBranch()
     {
-        $html = $this->renderFunction('/hero.jpg', '', ['width' => 800], autoFormat: false, attributes: ['sizes' => '50vw']);
+        $html = $this->renderPictureFunction('/hero.jpg', '', ['width' => 800], ['sizes' => '50vw']);
 
         self::assertSame(4, substr_count($html, 'sizes="50vw"'));
         self::assertStringNotContainsString('100vw', $html);
@@ -180,6 +191,21 @@ final class ImageRuntimeTest extends KernelTestCase
             self::assertInstanceOf(InvalidArgumentException::class, $e->getPrevious());
             self::assertStringStartsWith('The "operations" option has a "cloudfare" key', $e->getPrevious()->getMessage());
         }
+    }
+
+    private function renderPictureFunction(string $src, string $alt, array $options = [], array $attributes = []): string
+    {
+        self::bootKernel();
+
+        /** @var Environment $twig */
+        $twig = self::getContainer()->get('twig');
+
+        return trim($twig->createTemplate('{{ ux_picture(src, alt, options, attributes) }}')->render([
+            'src' => $src,
+            'alt' => $alt,
+            'options' => $options,
+            'attributes' => $attributes,
+        ]));
     }
 
     private function renderUrlFunction(string $src, array $options = []): string

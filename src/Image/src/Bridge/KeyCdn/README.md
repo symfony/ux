@@ -47,7 +47,7 @@ See the [full parameter reference](https://www.keycdn.com/support/image-processi
 
 `webp`, `jpeg`, `png`.
 
-Unlike Cloudflare, KeyCDN has no `format=auto` equivalent: there is no automatic format negotiation, and AVIF is not among the formats it can encode to. Because of this, `ux_image()` renders a `<picture>` element with one `<source type>` per configured format instead of a single `<img>`.
+Unlike Cloudflare, KeyCDN has no `format=auto` equivalent: there is no automatic format negotiation, and AVIF is not among the formats it can encode to. `ux_image()` renders its `<img>` in the last configured format KeyCDN supports; use `ux_picture()` to render one `<source type>` per configured format.
 
 ## Resources
 

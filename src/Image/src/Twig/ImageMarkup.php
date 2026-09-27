@@ -16,7 +16,7 @@ use Symfony\UX\TwigComponent\ComponentAttributes;
 use Twig\Extra\Html\HtmlAttr\InlineStyle;
 
 /**
- * Builds the HTML of a rendered image, shared by ux_image() and <twig:ux:image>.
+ * Builds the HTML of a rendered image, shared by the Twig functions and components.
  *
  * @author Hugo Alliaume <hugo@alliau.me>
  *
@@ -24,14 +24,13 @@ use Twig\Extra\Html\HtmlAttr\InlineStyle;
  */
 final class ImageMarkup
 {
-    public static function render(RenderedImage $rendered, ComponentAttributes $attributes): string
+    public static function img(RenderedImage $rendered, ComponentAttributes $attributes): string
     {
-        $img = '<img'.$attributes->defaults($rendered->imgAttributes).' />';
+        return '<img'.$attributes->defaults($rendered->imgAttributes).' />';
+    }
 
-        if ([] === $rendered->sources) {
-            return $img;
-        }
-
+    public static function picture(RenderedImage $rendered, ComponentAttributes $attributes): string
+    {
         $sizes = $attributes->all()['sizes'] ?? $rendered->imgAttributes['sizes'] ?? null;
 
         $html = '<picture>';
@@ -43,7 +42,7 @@ final class ImageMarkup
             $html .= ' />';
         }
 
-        return $html.$img.'</picture>';
+        return $html.self::img($rendered, $attributes).'</picture>';
     }
 
     /**

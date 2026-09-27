@@ -33,15 +33,23 @@ final class ImageComponentTest extends KernelTestCase
         self::assertStringContainsString('aspect-ratio: 800 / 450', $html);
     }
 
-    public function testItRendersAPictureForAProviderWithoutAutoFormat()
+    public function testItRendersAnImgEvenWhenTheProviderDoesNotNegotiateTheFormat()
     {
         $html = $this->renderComponent(['src' => '/hero.jpg', 'alt' => '', 'width' => 800], autoFormat: false);
+
+        self::assertStringStartsWith('<img ', $html);
+        self::assertStringNotContainsString('<picture>', $html);
+    }
+
+    public function testThePictureComponentRendersAPictureEvenWhenTheProviderNegotiatesTheFormat()
+    {
+        $html = $this->renderComponent(['src' => '/hero.jpg', 'alt' => '', 'width' => 800], component: 'ux:picture');
 
         self::assertStringStartsWith('<picture>', $html);
         self::assertStringContainsString('<source type="image/avif"', $html);
         self::assertStringContainsString('<source type="image/webp"', $html);
         self::assertStringContainsString('<source type="image/jpeg"', $html);
-        self::assertStringContainsString('</picture>', $html);
+        self::assertStringEndsWith('</picture>', $html);
     }
 
     public function testAnExplicitFormatPropRendersASingleImgInsteadOfAPicture()
@@ -80,7 +88,7 @@ final class ImageComponentTest extends KernelTestCase
 
     public function testACallerSizesOverridesEverySourceAndTheImgInThePictureBranch()
     {
-        $html = $this->renderComponent(['src' => '/hero.jpg', 'alt' => '', 'width' => 800, 'sizes' => '50vw'], autoFormat: false);
+        $html = $this->renderComponent(['src' => '/hero.jpg', 'alt' => '', 'width' => 800, 'sizes' => '50vw'], component: 'ux:picture');
 
         self::assertSame(4, substr_count($html, 'sizes="50vw"'));
         self::assertStringNotContainsString('100vw', $html);
@@ -97,13 +105,13 @@ final class ImageComponentTest extends KernelTestCase
         }
     }
 
-    private function renderComponent(array $props, bool $autoFormat = true): string
+    private function renderComponent(array $props, bool $autoFormat = true, string $component = 'ux:image'): string
     {
         self::bootKernel(['environment' => $autoFormat ? 'test' : 'no_auto_format']);
 
         /** @var Environment $twig */
         $twig = self::getContainer()->get('twig');
 
-        return trim($twig->createTemplate('{{ component("ux:image", props) }}')->render(['props' => $props]));
+        return trim($twig->createTemplate('{{ component(name, props) }}')->render(['name' => $component, 'props' => $props]));
     }
 }
