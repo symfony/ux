@@ -32,6 +32,11 @@ final class LocalRegistry implements RegistryInterface
         return 1 === preg_match('/^[a-zA-Z0-9_-]+$/', $kitName);
     }
 
+    public static function getKitsDir(): string
+    {
+        return Path::canonicalize(self::$kitsDir);
+    }
+
     public static function exists(string $kitName): bool
     {
         return self::supports($kitName) && is_dir(Path::join(self::$kitsDir, $kitName));

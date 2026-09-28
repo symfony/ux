@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" class="{{ theme == 'dark' ? 'dark' }}" data-bs-theme="{{ theme }}">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>{{ title }}</title>
+        <link rel="icon" href="data:,">
+        <style>
+            body {
+                {% if is_block %}
+                    display: block; margin: 0; width: 100%;
+                {% else %}
+                    display: flex; align-items: center; justify-content: center; margin: 0; width: 100%; padding: 48px; min-height: 200px;
+                {% endif %}
+            }
+        </style>
+        {{ importmap(entrypoint) }}
+    </head>
+    <body>{{ html|raw }}</body>
+</html>

@@ -1,0 +1,11 @@
+{
+    "$schema": "../../../../../schema-kit-recipe-v1.json",
+    "type": "component",
+    "name": "Widget",
+    "copy-files": {
+        "assets/": "assets/"
+    },
+    "dependencies": {
+        "importmap": ["widget-lib/dist/widget.css", "widget-lib"]
+    }
+}

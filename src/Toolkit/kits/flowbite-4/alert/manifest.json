@@ -4,6 +4,7 @@
     "name": "Alert",
     "version-added": "2.35",
     "copy-files": {
+        "assets/": "assets/",
         "templates/": "templates/"
     },
     "dependencies": {

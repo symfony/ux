@@ -1,0 +1,10 @@
+http:
+    port: 9889
+    no_tls: true
+
+workers:
+    tailwind:
+        cmd:
+            - sh
+            - -c
+            - 'trap "kill 0" EXIT; for input in var/ux_toolkit/preview/ux-toolkit-*.css; do symfony console tailwind:build --watch "$input" & done; wait'

@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 3.6.0
+
+- [Shadcn] Declare the `shadcn` and `tw-animate-css` packages as dependencies of the kit, so `ux:install` suggests installing them
+- [Flowbite v4] Declare the `flowbite/dist/flowbite.min.css` stylesheet as a dependency of the kit, so `ux:install` suggests installing it
+- [Flowbite v4] Install the Stimulus controller of the `alert` recipe, which its `Alert` component needs to be dismissed
+
 ## 3.5.0
 
 - Add support for blocks: ready-to-use page sections built from a kit's components, installed and previewed as a unit

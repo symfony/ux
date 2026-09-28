@@ -12,6 +12,8 @@
 namespace Symfony\UX\Toolkit\Tests;
 
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\Config\Definition\Processor;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\UX\Toolkit\Component\ComponentDocParser;
 use Symfony\UX\Toolkit\UXToolkitBundle;
 use Twig\Environment;
@@ -42,5 +44,17 @@ class UXToolkitBundleTest extends KernelTestCase
         $twig = self::getContainer()->get('twig');
 
         $this->assertTrue($twig->getLoader()->exists('@UXToolkit/markdown/alert.html.twig'));
+    }
+
+    public function testTheLastConfiguredPreviewKitsReplaceThePreviousOnes(): void
+    {
+        $configuration = new UXToolkitBundle()->getContainerExtension()->getConfiguration([], new ContainerBuilder());
+
+        $config = new Processor()->processConfiguration($configuration, [
+            ['preview' => ['kits' => ['shadcn']]],
+            ['preview' => ['kits' => ['shadcn', 'common']]],
+        ]);
+
+        $this->assertSame(['shadcn', 'common'], $config['preview']['kits']);
     }
 }

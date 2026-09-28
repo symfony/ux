@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="color-scheme" content="light dark">
+        <title>UX Toolkit previews</title>
+        <link rel="icon" href="data:,">
+        <style>
+            :root {
+                --background: #ffffff;
+                --foreground: #1f2328;
+                --muted: #656d76;
+                --border: #d0d7de;
+                --link: #0969da;
+                --chip: #f6f8fa;
+            }
+
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --background: #0d1117;
+                    --foreground: #e6edf3;
+                    --muted: #8d96a0;
+                    --border: #30363d;
+                    --link: #4493f8;
+                    --chip: #161b22;
+                }
+            }
+
+            body {
+                max-width: 1024px;
+                margin: 0 auto;
+                padding: 32px 16px;
+                background: var(--background);
+                color: var(--foreground);
+                font: 14px/1.5 system-ui, -apple-system, 'Segoe UI', sans-serif;
+            }
+
+            a {
+                color: var(--link);
+                text-decoration: none;
+            }
+
+            a:hover {
+                text-decoration: underline;
+            }
+
+            table {
+                width: 100%;
+                border-collapse: collapse;
+            }
+
+            td {
+                padding: 8px;
+                border-bottom: 1px solid var(--border);
+                vertical-align: top;
+            }
+
+            .example {
+                display: inline-flex;
+                gap: 6px;
+                margin: 0 4px 4px 0;
+                padding: 1px 10px;
+                border: 1px solid var(--border);
+                border-radius: 999px;
+                background: var(--chip);
+                white-space: nowrap;
+            }
+        </style>
+    </head>
+    <body>
+        <h1 style="margin: 0 0 4px; font-size: 24px;">UX Toolkit previews</h1>
+        <p style="margin: 0; color: var(--muted);">
+            Every <code>{"preview": true}</code> example of the previewed kits, rendered in isolation. Also available as <a href="{{ path('app_examples') }}">JSON</a>.
+        </p>
+
+        {% for kit_id, kit in kits %}
+            <h2 style="display: flex; align-items: center; gap: 8px; margin: 40px 0 8px; font-size: 18px;">
+                <span style="width: 12px; height: 12px; border: 1px solid var(--border); border-radius: 50%; background: {{ kit.manifest.color ?? 'transparent' }};"></span>
+                {{ kit.manifest.name }}
+                <code style="color: var(--muted); font-size: 13px; font-weight: normal;">{{ kit_id }}</code>
+            </h2>
+            <table>
+                {% for recipe in kit.recipes %}
+                    <tr>
+                        <td style="width: 220px;"><code>{{ recipe.name }}</code></td>
+                        <td>
+                            {% for index in recipe.examples|keys %}
+                                <span class="example">
+                                    #{{ index }}
+                                    <a href="{{ path('app_preview', {kit: kit_id, recipe: recipe.name, index: index}) }}">light</a>
+                                    <a href="{{ path('app_preview', {kit: kit_id, recipe: recipe.name, index: index, theme: 'dark'}) }}">dark</a>
+                                </span>
+                            {% else %}
+                                <span style="color: var(--muted);">No example</span>
+                            {% endfor %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        {% endfor %}
+    </body>
+</html>

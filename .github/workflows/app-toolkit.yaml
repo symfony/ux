@@ -1,0 +1,76 @@
+name: App Toolkit
+
+on:
+    push:
+        branches-ignore:
+            - 'dependabot/**'
+        paths:
+            - '.github/workflows/app-toolkit.yaml'
+            - 'apps/toolkit/**'
+            - 'src/Icons/**'
+            - 'src/Toolkit/**'
+            - 'src/TwigComponent/**'
+    pull_request:
+        paths:
+            - '.github/workflows/app-toolkit.yaml'
+            - 'apps/toolkit/**'
+            - 'src/Icons/**'
+            - 'src/Toolkit/**'
+            - 'src/TwigComponent/**'
+
+concurrency:
+    group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+    cancel-in-progress: true
+
+defaults:
+    run:
+        shell: bash
+
+permissions: {}
+
+jobs:
+    smoke:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+              with:
+                  persist-credentials: false
+
+            - uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # 2.37.2
+              with:
+                  php-version: '8.4'
+                  extensions: intl
+                  tools: symfony-cli
+
+            - name: Install root PHP dependencies
+              uses: ramsey/composer-install@65e4f84970763564f46a70b8a54b90d033b3bdda # 4.0.0
+              with:
+                  working-directory: ${{ github.workspace }}
+
+            - name: Build root PHP packages
+              run: php .github/build-packages.php
+
+            - name: Install app dependencies
+              uses: ramsey/composer-install@65e4f84970763564f46a70b8a54b90d033b3bdda # 4.0.0
+              with:
+                  working-directory: apps/toolkit
+                  dependency-versions: highest
+
+            - name: Start Symfony server
+              working-directory: apps/toolkit
+              run: symfony server:start --daemon --port=9889 --no-tls
+
+            - name: Every example renders in both themes
+              run: |
+                  test "$(curl -sf http://127.0.0.1:9889/examples.json | jq length)" -gt 0
+                  curl -sf http://127.0.0.1:9889/examples.json \
+                    | jq -r '.[].url' \
+                    | awk '{ print $0 "?theme=light"; print $0 "?theme=dark" }' \
+                    | xargs -P 8 -I{} curl --fail-with-body -sS -o /dev/null "http://127.0.0.1:9889{}"
+
+            - name: The shadcn stylesheet carries the kit theme
+              run: |
+                  page=$(curl -sf http://127.0.0.1:9889/shadcn/button/0)
+                  css=$(grep -oE '/assets/[^"]*ux-toolkit-shadcn[^"]*\.css' <<< "$page" | sed -n 1p)
+                  stylesheet=$(curl -sf "http://127.0.0.1:9889${css}")
+                  grep -q -- '--primary' <<< "$stylesheet"

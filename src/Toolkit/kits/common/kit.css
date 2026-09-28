@@ -1,0 +1,10 @@
+@custom-variant dark (&:is(.dark *));
+
+/* The kit ships no styles, so give its previews a canvas that reads in both themes */
+body {
+    background-color: white;
+}
+
+.dark body {
+    background-color: #0a0a0a;
+}

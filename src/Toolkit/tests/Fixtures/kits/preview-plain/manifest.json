@@ -1,0 +1,10 @@
+{
+    "$schema": "../../../../schema-kit-v1.json",
+    "name": "Preview Plain",
+    "description": "Kit exercising the preview assets generation without stylesheet, script nor controller.",
+    "license": "MIT",
+    "homepage": "https://example.com/preview-plain",
+    "dependencies": {
+        "importmap": ["bootstrap/dist/css/bootstrap.min.css"]
+    }
+}
