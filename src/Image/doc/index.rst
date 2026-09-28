@@ -622,6 +622,26 @@ origin, through query string parameters appended to your zone's URL.
 
 The host is your KeyCDN zone.
 
+A zone can require every image processing request to be signed, with the
+`Secure Token`_ setting. Give the zone's Secure Token Key as the
+``secure_token`` DSN option, and every generated URL then carries the
+matching ``token`` parameter:
+
+.. code-block:: bash
+
+    # .env.prod
+    UX_IMAGE_DSN=keycdn://myzone.kxcdn.com?secure_token=%env(KEYCDN_SECURE_TOKEN)%
+    KEYCDN_SECURE_TOKEN=<override me>
+
+    # .env.prod.local
+    KEYCDN_SECURE_TOKEN=the-secure-token-key
+
+.. warning::
+
+    The Secure Token Key signs every URL, so anyone holding it can have your
+    zone transform any image. Keep it out of the files you commit, and store
+    it the way you store your other secrets.
+
 Extra operations, forwarded as-is: ``position``, ``enlarge``, ``trim``,
 ``crop``, ``bg``, ``rotate``, ``flip``, ``flop``, ``sharpen``, ``blur``,
 ``gamma``, ``grayscale``, ``progressive``, ``lossless``, ``metadata``. See
@@ -636,9 +656,9 @@ distinct URL is one more image the provider generates and caches:
 * Cloudflare only transforms images from the zone that serves the
   transformations by default. Keep it that way unless you need other origins,
   see the source origins settings of `Cloudflare Image Resizing`_.
-* KeyCDN can require a signed token on the zone, with `Secure Token`_. The
-  KeyCDN provider does not generate tokens yet, so it cannot be used with a
-  zone that requires them.
+* KeyCDN can require a signed token on the zone, with `Secure Token`_. Turn
+  it on, and give the key to the provider with the ``secure_token`` DSN
+  option: the zone then serves only the URLs your application generated.
 
 Writing your own provider
 ~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -677,5 +697,5 @@ The package supports PHP 8.4 or later and Symfony 7.4 or 8.x.
 .. _`KeyCDN`: https://github.com/symfony/ux/blob/3.x/src/Image/src/Bridge/KeyCdn/README.md
 .. _`KeyCDN Image Processing`: https://www.keycdn.com/support/image-processing
 .. _`KeyCDN's own parameter reference`: https://www.keycdn.com/support/image-processing
-.. _`Secure Token`: https://www.keycdn.com/support/secure-token
+.. _`Secure Token`: https://www.keycdn.com/support/secure-token#secure-token-for-image-processing
 .. _`OptionsResolver component`: https://symfony.com/doc/current/components/options_resolver.html

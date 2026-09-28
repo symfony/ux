@@ -23,6 +23,9 @@ final class KeyCdnProvider implements ProviderInterface
 {
     public function __construct(
         private readonly string $host,
+
+        #[\SensitiveParameter]
+        private readonly ?string $secureToken = null,
     ) {
     }
 
@@ -47,9 +50,15 @@ final class KeyCdnProvider implements ProviderInterface
 
         $options += $transformation->operations;
 
-        $path = PathEncoder::encode($transformation->path);
+        $path = '/'.PathEncoder::encode($transformation->path);
+        $query = http_build_query($options);
 
-        return \sprintf('https://%s/%s?%s', $this->host, $path, http_build_query($options));
+        if (null !== $this->secureToken) {
+            $token = $this->sign($path, $query);
+            $query = ('' === $query ? '' : $query.'&').'token='.$token;
+        }
+
+        return \sprintf('https://%s%s%s', $this->host, $path, '' === $query ? '' : '?'.$query);
     }
 
     public function getSupportedOperations(): array
@@ -65,5 +74,18 @@ final class KeyCdnProvider implements ProviderInterface
     public function supportsAutoFormat(): bool
     {
         return false;
+    }
+
+    /**
+     * Signs an image processing request, as a zone with the "Secure Token" setting requires.
+     *
+     * The hash covers the path and the query string exactly as they appear in the URL, and the
+     * token is appended after them.
+     *
+     * @see https://www.keycdn.com/support/secure-token#secure-token-for-image-processing
+     */
+    private function sign(string $path, string $query): string
+    {
+        return rtrim(strtr(base64_encode(md5($path.$query.$this->secureToken, true)), '+/', '-_'), '=');
     }
 }

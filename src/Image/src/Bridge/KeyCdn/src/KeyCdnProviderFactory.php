@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\Image\Bridge\KeyCdn;
 
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\UX\Image\Exception\IncompleteDsnException;
 use Symfony\UX\Image\Provider\AbstractProviderFactory;
 use Symfony\UX\Image\Provider\Dsn;
@@ -24,17 +25,26 @@ final class KeyCdnProviderFactory extends AbstractProviderFactory implements Pro
 {
     public function create(Dsn $dsn): ProviderInterface
     {
-        $this->resolveOptions($dsn);
+        $options = $this->resolveOptions($dsn);
 
         if (null === $host = $dsn->getHost()) {
             throw new IncompleteDsnException('The KeyCDN image provider requires a host, e.g. "keycdn://myzone.kxcdn.com".');
         }
 
-        return new KeyCdnProvider($host);
+        return new KeyCdnProvider($host, $options['secure_token'] ?? null);
     }
 
     protected function getSupportedSchemes(): array
     {
         return ['keycdn'];
+    }
+
+    protected function configureOptions(OptionsResolver $resolver): void
+    {
+        $resolver
+            ->setDefined('secure_token')
+            ->setAllowedTypes('secure_token', 'string')
+            ->setAllowedValues('secure_token', static fn (string $value): bool => '' !== $value)
+        ;
     }
 }

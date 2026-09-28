@@ -21,6 +21,19 @@ UX_IMAGE_DSN=keycdn://myzone.kxcdn.com
 
 The host is your KeyCDN zone.
 
+## Signed URLs
+
+A zone can require every image processing request to be signed, with [Secure Token](https://www.keycdn.com/support/secure-token#secure-token-for-image-processing). Give the zone's Secure Token Key as the `secure_token` DSN option:
+
+```dotenv
+UX_IMAGE_DSN=keycdn://myzone.kxcdn.com?secure_token=the-secure-token-key
+```
+
+Every generated URL then carries the matching `token` parameter, hashed over the path and the query string.
+
+> [!WARNING]
+> The Secure Token Key signs every URL, so anyone holding it can have your zone transform any image. Keep it out of the files you commit, and store it the way you store your other secrets.
+
 ## Parameter mapping
 
 `ImageTransformation` properties are mapped to KeyCDN's [image processing query parameters](https://www.keycdn.com/support/image-processing):

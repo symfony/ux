@@ -81,6 +81,46 @@ final class KeyCdnProviderTest extends TestCase
         self::assertSame('https://zone.kxcdn.com/hero.jpg?height=450', $url);
     }
 
+    public function testItSignsTheUrlWhenTheZoneRequiresASecureToken(): void
+    {
+        self::assertSame(
+            'https://zone.kxcdn.com/hero.jpg?width=800&token=PKgN7_Dp-WBe8kV7k3aHYQ',
+            new KeyCdnProvider('zone.kxcdn.com', 'mysecret')->generateUrl(new ImageTransformation('hero.jpg', width: 800)),
+        );
+    }
+
+    public function testTheSignatureMatchesTheOneKeyCdnDocuments(): void
+    {
+        self::assertSame(
+            'https://zone.kxcdn.com/path/to/example.jpg?flip=1&width=400&token=4oQx9QP64L6C7VOQc70hOw',
+            new KeyCdnProvider('zone.kxcdn.com', 'mysecret')->generateUrl(new ImageTransformation('path/to/example.jpg', operations: ['flip' => 1, 'width' => 400])),
+        );
+    }
+
+    public function testTheSignatureCoversThePathAsItAppearsInTheUrl(): void
+    {
+        self::assertSame(
+            'https://zone.kxcdn.com/hero%20image.jpg?width=800&token=43qEIcKIqR5CQM88jzAhyw',
+            new KeyCdnProvider('zone.kxcdn.com', 'mysecret')->generateUrl(new ImageTransformation('hero image.jpg', width: 800)),
+        );
+    }
+
+    public function testASignedUrlWithoutAnyTransformationCarriesTheTokenAlone(): void
+    {
+        self::assertSame(
+            'https://zone.kxcdn.com/hero.jpg?token=Yy1YSrnx5e_zq1YU83KDbw',
+            new KeyCdnProvider('zone.kxcdn.com', 'mysecret')->generateUrl(new ImageTransformation('hero.jpg')),
+        );
+    }
+
+    public function testAnUnsignedUrlWithoutAnyTransformationHasNoQueryString(): void
+    {
+        self::assertSame(
+            'https://zone.kxcdn.com/hero.jpg',
+            new KeyCdnProvider('zone.kxcdn.com')->generateUrl(new ImageTransformation('hero.jpg')),
+        );
+    }
+
     public function testItDoesNotSupportAutoFormat(): void
     {
         self::assertFalse(new KeyCdnProvider('zone.kxcdn.com')->supportsAutoFormat());
@@ -146,10 +186,28 @@ final class KeyCdnProviderTest extends TestCase
         );
     }
 
+    public function testTheFactoryReadsTheSecureTokenFromTheDsn(): void
+    {
+        $provider = new KeyCdnProviderFactory()->create(new Dsn('keycdn://zone.kxcdn.com?secure_token=mysecret'));
+
+        self::assertSame(
+            'https://zone.kxcdn.com/hero.jpg?width=800&token=PKgN7_Dp-WBe8kV7k3aHYQ',
+            $provider->generateUrl(new ImageTransformation('hero.jpg', width: 800)),
+        );
+    }
+
+    public function testTheFactoryRejectsAnEmptySecureToken(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('The option "secure_token" with value "" is invalid.');
+
+        new KeyCdnProviderFactory()->create(new Dsn('keycdn://zone.kxcdn.com?secure_token='));
+    }
+
     public function testTheFactoryRejectsAnUnknownOption(): void
     {
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('Invalid "keycdn" image provider DSN: the provider takes no option, "driver" given.');
+        $this->expectExceptionMessage('The option "driver" does not exist. Defined options are: "secure_token".');
 
         new KeyCdnProviderFactory()->create(new Dsn('keycdn://myzone.kxcdn.com?driver=imagick'));
     }
