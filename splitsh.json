@@ -7,6 +7,9 @@
         "ux-chartjs": "src/Chartjs",
         "ux-cropperjs": "src/Cropperjs",
         "ux-icons": "src/Icons",
+        "ux-image": { "prefixes": [{ "from": "src/Image", "to": "", "excludes": ["src/Bridge"] }] },
+        "ux-cloudflare-image": "src/Image/src/Bridge/Cloudflare",
+        "ux-keycdn-image": "src/Image/src/Bridge/KeyCdn",
         "ux-inspector": "src/Inspector",
         "ux-live-component": "src/LiveComponent",
         "ux-map": {
