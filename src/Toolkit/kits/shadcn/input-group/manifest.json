@@ -4,6 +4,7 @@
     "name": "Input Group",
     "version-added": "3.0",
     "copy-files": {
+        "assets/": "assets/",
         "templates/": "templates/"
     },
     "dependencies": {
