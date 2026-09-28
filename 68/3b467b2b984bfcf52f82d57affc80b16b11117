@@ -1,0 +1,39 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2026-09-05T19:30:06Z
+
+(the CI fails because it needs Twig 3.29)
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-09-27T13:24:10Z
+
+Thanks for the thorough review, and for being upfront about your own PR, that's appreciated.
+
+**Glide**: moving it to its own PR, opened right after this one. This PR keeps the core, Cloudflare and KeyCDN, with `null://` becoming a pass-through (as discussed inline). Local processing isn't dropped: the Glide PR is where we decide between a fixed/configurable Glide and a LiipImagineBundle bridge, and where all the inline Glide findings land.
+
+**Format not in the URL path**: for Cloudflare, `format=auto` negotiation happens at Cloudflare's edge, which is their documented approach. The `Vary: Accept` concern is real for Glide's `fm=auto` though, so it moves to the Glide PR too. The new `ux_picture()` puts an explicit format in every URL for setups that can't rely on `Vary`.
+
+**Rendering cost**: measured it, 50 `ux_image()` calls take about 1.5 ms total, roughly 10 µs per image to build its URLs. The template overhead goes away (discussed inline).
+
+**Configuration**: adding a `quality` bundle option. `fit` already defaults to `cover` when both width and height are set; otherwise it stays a per-image decision.
+
+**Docs**: all the topics you listed will be covered: replacing an original (versioned filenames), testing without a CDN (`null://` pass-through), protecting transformations (new section), and getting a URL from PHP (`ImageUrlGenerator` and `ux_image_url()`).
+
+**On the PR offer**: thanks, but I'd rather do it myself. Most of the fixes touch the same classes, so one pass is easier to manage, and I'll split it into one commit per fix so each change stays easy to review.
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-09-27T16:01:14Z
+
+@smnandre all of your review comments have been addressed in specific commits, and Glide [has been moved-out in a dedicated branch](https://github.com/Kocal/symfony-ux/tree/ux-image) that I will open here later.
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-09-28T06:19:36Z
+
+Thanks for the last review comments @smnandre and @kbond, I just pushed the date fix on LICENSE files, added a warning about default `loading="lazy"` behavior, and examples for what HTML render `<twig:ux:image>` and `<twig:ux:picture>`.
+
+I'm merging, and I will open two next PRs for:
+- Glide
+- Presets
