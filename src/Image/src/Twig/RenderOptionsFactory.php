@@ -59,6 +59,7 @@ final class RenderOptionsFactory
         ?string $objectFit = null,
         ?array $breakpoints = null,
         array $operations = [],
+        ?string $preset = null,
     ): RenderOptions {
         return new RenderOptions(
             layout: self::layout($layout),
@@ -71,6 +72,7 @@ final class RenderOptionsFactory
             objectFit: $objectFit,
             breakpoints: $breakpoints,
             operations: $operations,
+            preset: $preset,
         );
     }
 

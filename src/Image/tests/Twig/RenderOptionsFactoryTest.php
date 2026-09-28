@@ -42,7 +42,7 @@ final class RenderOptionsFactoryTest extends TestCase
     public function testAnUnknownOptionKeyFailsClearly(): void
     {
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('Unknown image option "class": expected one of "layout", "width", "height", "fit", "format", "quality", "priority", "objectFit", "breakpoints", "operations".');
+        $this->expectExceptionMessage('Unknown image option "class": expected one of "layout", "width", "height", "fit", "format", "quality", "priority", "objectFit", "breakpoints", "operations", "preset".');
 
         RenderOptionsFactory::createFromArray(['width' => 400, 'class' => 'rounded']);
     }
@@ -69,5 +69,21 @@ final class RenderOptionsFactoryTest extends TestCase
         $this->expectExceptionMessage('Invalid "fit" value "scale-down": expected one of "cover", "contain".');
 
         RenderOptionsFactory::create(width: 400, height: 400, fit: 'scale-down');
+    }
+
+    public function testThePresetIsHandedToTheRenderOptions(): void
+    {
+        $options = RenderOptionsFactory::create(width: 300, fit: 'contain', preset: 'thumbnail');
+
+        self::assertSame('thumbnail', $options->preset);
+        self::assertSame(300, $options->width);
+        self::assertSame(Fit::Contain, $options->fit);
+    }
+
+    public function testTheOptionsArrayAcceptsAPreset(): void
+    {
+        $options = RenderOptionsFactory::createFromArray(['preset' => 'thumbnail']);
+
+        self::assertSame('thumbnail', $options->preset);
     }
 }

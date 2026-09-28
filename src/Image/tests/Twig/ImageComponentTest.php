@@ -105,6 +105,24 @@ final class ImageComponentTest extends KernelTestCase
         }
     }
 
+    public function testThePresetPropAppliesThePreset(): void
+    {
+        $html = $this->renderComponent(['src' => '/hero.jpg', 'alt' => 'Hero', 'preset' => 'thumbnail']);
+
+        self::assertStringContainsString('width="200"', $html);
+        self::assertStringContainsString('q=70&amp;sharpen=2', $html);
+    }
+
+    public function testThePictureComponentAppliesThePreset(): void
+    {
+        $props = ['src' => '/hero.jpg', 'alt' => 'Hero', 'preset' => 'thumbnail'];
+
+        $html = $this->renderComponent($props, component: 'ux:picture');
+
+        self::assertStringStartsWith('<picture>', $html);
+        self::assertStringContainsString('q=70&amp;sharpen=2', $html);
+    }
+
     private function renderComponent(array $props, bool $autoFormat = true, string $component = 'ux:image'): string
     {
         self::bootKernel(['environment' => $autoFormat ? 'test' : 'no_auto_format']);

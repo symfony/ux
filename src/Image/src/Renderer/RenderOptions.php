@@ -30,6 +30,7 @@ final class RenderOptions
     /**
      * @param list<int>|null                       $breakpoints
      * @param array<string, array<string, scalar>> $operations
+     * @param string|null                          $preset      the name of a "ux_image.presets" entry, applied by the renderer
      */
     public function __construct(
         public readonly Layout $layout = Layout::Constrained,
@@ -42,6 +43,7 @@ final class RenderOptions
         public readonly ?string $objectFit = null,
         ?array $breakpoints = null,
         public readonly array $operations = [],
+        public readonly ?string $preset = null,
     ) {
         foreach (['width' => $width, 'height' => $height] as $name => $value) {
             if (null !== $value && $value < 1) {
@@ -58,6 +60,13 @@ final class RenderOptions
             sort($breakpoints);
         }
         $this->breakpoints = $breakpoints;
+
+        if (null !== $preset) {
+            // The renderer builds new options once the preset is applied, and those run the checks below.
+            $this->fit = $fit;
+
+            return;
+        }
 
         if (null === $width && \in_array($layout, [Layout::Fixed, Layout::Constrained], true)) {
             throw new InvalidArgumentException(\sprintf('The "%s" layout requires a width.', $layout->value));

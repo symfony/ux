@@ -12,6 +12,7 @@
 namespace Symfony\UX\Image\Renderer;
 
 use Symfony\UX\Image\Exception\LogicException;
+use Symfony\UX\Image\ImagePresets;
 use Symfony\UX\Image\ImageUrlGenerator;
 use Symfony\UX\Image\Provider\NullProvider;
 use Symfony\UX\Image\Provider\ProviderInterface;
@@ -22,6 +23,7 @@ use Symfony\UX\Image\Provider\ProviderInterface;
 final class ImageRenderer implements ImageRendererInterface
 {
     private readonly ImageUrlGenerator $urlGenerator;
+    private readonly ImagePresets $presets;
 
     /**
      * @param list<string> $formats
@@ -31,8 +33,10 @@ final class ImageRenderer implements ImageRendererInterface
         private readonly LayoutResolver $layoutResolver,
         private readonly array $formats = ['avif', 'webp', 'jpeg'],
         ?ImageUrlGenerator $urlGenerator = null,
+        ?ImagePresets $presets = null,
     ) {
         $this->urlGenerator = $urlGenerator ?? new ImageUrlGenerator($provider);
+        $this->presets = $presets ?? new ImagePresets([]);
     }
 
     public function render(string $src, string $alt, RenderOptions $options): RenderedImage
@@ -47,6 +51,8 @@ final class ImageRenderer implements ImageRendererInterface
 
     private function renderElement(string $src, string $alt, RenderOptions $options, bool $picture): RenderedImage
     {
+        $options = $this->applyPreset($options);
+
         if ($this->provider instanceof NullProvider) {
             return new RenderedImage([], ['src' => $src, 'alt' => $alt] + $this->commonAttributes($options));
         }
@@ -145,5 +151,34 @@ final class ImageRenderer implements ImageRendererInterface
     private function resolveRatio(RenderOptions $options): ?float
     {
         return null !== $options->width && null !== $options->height ? $options->height / $options->width : null;
+    }
+
+    private function applyPreset(RenderOptions $options): RenderOptions
+    {
+        if (null === $options->preset) {
+            return $options;
+        }
+
+        $transformation = $this->presets->merge($options->preset, [
+            'width' => $options->width,
+            'height' => $options->height,
+            'fit' => $options->fit,
+            'format' => $options->format,
+            'quality' => $options->quality,
+            'operations' => $options->operations,
+        ]);
+
+        return new RenderOptions(
+            $options->layout,
+            $transformation['width'],
+            $transformation['height'],
+            $transformation['fit'],
+            $transformation['format'],
+            $transformation['quality'],
+            $options->priority,
+            $options->objectFit,
+            $options->breakpoints,
+            $transformation['operations'],
+        );
     }
 }

@@ -25,6 +25,8 @@ use Symfony\UX\Image\Provider\ProviderInterface;
  */
 final class ImageUrlGenerator
 {
+    private readonly ImagePresets $presets;
+
     /**
      * @param list<string>|null $providerNames  the installed providers, to reject an "operations" key that names none of them; null skips the check
      * @param int|null          $defaultQuality the quality of every URL that sets none itself; null leaves it to the provider
@@ -33,7 +35,9 @@ final class ImageUrlGenerator
         private readonly ProviderInterface $provider,
         private readonly ?array $providerNames = null,
         private readonly ?int $defaultQuality = null,
+        ?ImagePresets $presets = null,
     ) {
+        $this->presets = $presets ?? new ImagePresets([]);
     }
 
     /**
@@ -41,11 +45,32 @@ final class ImageUrlGenerator
      *
      * @throws InvalidArgumentException when a value is invalid, or not supported by the active provider
      */
-    public function generate(string $src, ?int $width = null, ?int $height = null, ?Fit $fit = null, ?string $format = null, ?int $quality = null, array $operations = []): string
-    {
+    public function generate(
+        string $src,
+        ?int $width = null,
+        ?int $height = null,
+        ?Fit $fit = null,
+        ?string $format = null,
+        ?int $quality = null,
+        array $operations = [],
+        ?string $preset = null,
+    ): string {
+        if (null !== $preset) {
+            ['width' => $width, 'height' => $height, 'fit' => $fit, 'format' => $format, 'quality' => $quality, 'operations' => $operations] = $this->presets->merge($preset, [
+                'width' => $width,
+                'height' => $height,
+                'fit' => $fit,
+                'format' => $format,
+                'quality' => $quality,
+                'operations' => $operations,
+            ]);
+        }
+
         $fit ??= null !== $width && null !== $height ? Fit::Cover : null;
         $quality ??= $this->defaultQuality;
-        $this->assertKnownProviders($operations);
+        if (null !== $this->providerNames) {
+            self::assertKnownProviders($operations, $this->providerNames);
+        }
 
         if ($this->provider instanceof NullProvider) {
             return $this->provider->generateUrl(new ImageTransformation($src, $width, $height, $fit, $format, $quality));
@@ -59,17 +84,18 @@ final class ImageUrlGenerator
     }
 
     /**
+     * @internal
+     *
      * @param array<string, mixed> $operations
+     * @param list<string>         $providerNames
+     *
+     * @throws InvalidArgumentException when a key names no installed provider
      */
-    private function assertKnownProviders(array $operations): void
+    public static function assertKnownProviders(array $operations, array $providerNames, string $option = 'operations'): void
     {
-        if (null === $this->providerNames) {
-            return;
-        }
-
         foreach (array_keys($operations) as $name) {
-            if (!\in_array($name, $this->providerNames, true)) {
-                throw new InvalidArgumentException(\sprintf('The "operations" option has a "%s" key, which is not an installed image provider (installed: "%s").', $name, implode('", "', $this->providerNames)));
+            if (!\in_array($name, $providerNames, true)) {
+                throw new InvalidArgumentException(\sprintf('The "%s" option has a "%s" key, which is not an installed image provider (installed: "%s").', $option, $name, implode('", "', $providerNames)));
             }
         }
     }

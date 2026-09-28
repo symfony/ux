@@ -167,7 +167,7 @@ final class ImageRuntimeTest extends KernelTestCase
             self::fail('Expected a RuntimeError to be thrown.');
         } catch (RuntimeError $e) {
             self::assertInstanceOf(InvalidArgumentException::class, $e->getPrevious());
-            self::assertSame('Unknown image URL option "layout": expected one of "width", "height", "fit", "format", "quality", "operations".', $e->getPrevious()->getMessage());
+            self::assertSame('Unknown image URL option "layout": expected one of "width", "height", "fit", "format", "quality", "operations", "preset".', $e->getPrevious()->getMessage());
         }
     }
 
@@ -191,6 +191,48 @@ final class ImageRuntimeTest extends KernelTestCase
             self::assertInstanceOf(InvalidArgumentException::class, $e->getPrevious());
             self::assertStringStartsWith('The "operations" option has a "cloudfare" key', $e->getPrevious()->getMessage());
         }
+    }
+
+    public function testUxImageUrlAppliesAPreset(): void
+    {
+        $url = $this->renderUrlFunction('og.jpg', ['preset' => 'thumbnail', 'width' => 300]);
+
+        self::assertSame('/og.jpg?w=300&amp;fm=&amp;h=200&amp;fit=cover&amp;q=70&amp;sharpen=2', $url);
+    }
+
+    public function testUxImageUrlRejectsAnUnknownPreset(): void
+    {
+        try {
+            $this->renderUrlFunction('og.jpg', ['preset' => 'thumbnial']);
+            self::fail('Expected a RuntimeError to be thrown.');
+        } catch (RuntimeError $e) {
+            self::assertInstanceOf(InvalidArgumentException::class, $e->getPrevious());
+            self::assertSame('The image preset "thumbnial" does not exist (defined: "thumbnail", "banner").', $e->getPrevious()->getMessage());
+        }
+    }
+
+    public function testUxImageAppliesAPreset(): void
+    {
+        $html = $this->renderFunction('/hero.jpg', 'Hero', ['preset' => 'thumbnail']);
+
+        self::assertStringContainsString('width="200"', $html);
+        self::assertStringContainsString('height="200"', $html);
+        self::assertStringContainsString('q=70&amp;sharpen=2', $html);
+    }
+
+    public function testUxPictureAppliesAPreset(): void
+    {
+        $html = $this->renderPictureFunction('/hero.jpg', 'Hero', ['preset' => 'thumbnail']);
+
+        self::assertStringStartsWith('<picture>', $html);
+        self::assertStringContainsString('q=70&amp;sharpen=2', $html);
+    }
+
+    public function testAPresetProvidesTheHeightAFullWidthLayoutNeeds(): void
+    {
+        $html = $this->renderFunction('/hero.jpg', 'Hero', ['layout' => 'full-width', 'preset' => 'banner']);
+
+        self::assertStringContainsString('height="450"', $html);
     }
 
     private function renderPictureFunction(string $src, string $alt, array $options = [], array $attributes = []): string

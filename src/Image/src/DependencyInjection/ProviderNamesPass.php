@@ -13,6 +13,7 @@ namespace Symfony\UX\Image\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\UX\Image\ImageUrlGenerator;
 
 /**
  * Hands the names of the installed providers to the URL generator, so it can reject an "operations" key that names none of them.
@@ -43,5 +44,9 @@ final class ProviderNamesPass implements CompilerPassInterface
         sort($names);
 
         $container->getDefinition('ux_image.url_generator')->setArgument(1, $names);
+
+        foreach ($container->getDefinition('.ux_image.presets')->getArgument(0) as $preset => $options) {
+            ImageUrlGenerator::assertKnownProviders($options['operations'], $names, \sprintf('ux_image.presets.%s.operations', $preset));
+        }
     }
 }
