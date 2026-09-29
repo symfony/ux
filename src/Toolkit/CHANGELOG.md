@@ -7,6 +7,7 @@
 - [Flowbite v4] Install the Stimulus controller of the `alert` recipe, which its `Alert` component needs to be dismissed
 - [Flowbite v4] Fix `modal` rendering `aria-labelledby` on a roleless wrapper instead of the `<dialog>`, leaving it without an accessible name
 - [Flowbite v4] Fix the inactive triggers of `tabs` being unreadable in dark mode
+- [Shadcn] Fix the arrow keys of `accordion` getting stuck before a disabled item
 
 ## 3.5.0
 
