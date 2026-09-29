@@ -9,6 +9,7 @@
 - [Flowbite v4] Fix the inactive triggers of `tabs` being unreadable in dark mode
 - [Shadcn] Fix the arrow keys of `accordion` getting stuck before a disabled item
 - [Shadcn] Fix `alert-dialog` opening on page load
+- [Shadcn] Fix a closed `drawer` staying reachable with the keyboard and exposed to screen readers
 
 ## 3.5.0
 
