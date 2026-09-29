@@ -12,6 +12,7 @@
 - [Shadcn] Fix a closed `drawer` staying reachable with the keyboard and exposed to screen readers
 - [Shadcn] Fix the `combobox` list not lining up with its trigger
 - [Shadcn] Fix the checked radio item of `dropdown-menu` showing a ring instead of a dot
+- [Shadcn] Fix `dropdown-menu` submenus wrapping their labels
 
 ## 3.5.0
 
