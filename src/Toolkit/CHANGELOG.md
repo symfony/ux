@@ -10,6 +10,7 @@
 - [Shadcn] Fix the arrow keys of `accordion` getting stuck before a disabled item
 - [Shadcn] Fix `alert-dialog` opening on page load
 - [Shadcn] Fix a closed `drawer` staying reachable with the keyboard and exposed to screen readers
+- [Shadcn] Fix the `combobox` list not lining up with its trigger
 
 ## 3.5.0
 

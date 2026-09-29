@@ -269,14 +269,15 @@ export default class extends Controller {
     }
 
     #positionPopover() {
-        const triggerRect = this.triggerTarget.getBoundingClientRect();
         const popover = this.popoverTarget;
-        const popoverHeight = popover.offsetHeight;
-
+        // Out of the flow first: while it is in the flow, the open popover can resize the trigger.
         popover.style.position = 'fixed';
+
+        const triggerRect = this.triggerTarget.getBoundingClientRect();
         popover.style.width = `${triggerRect.width}px`;
         popover.style.left = `${triggerRect.left}px`;
         popover.style.zIndex = '50';
+        const popoverHeight = popover.offsetHeight;
 
         const spaceBelow = window.innerHeight - triggerRect.bottom;
         if (spaceBelow < popoverHeight && triggerRect.top > spaceBelow) {
