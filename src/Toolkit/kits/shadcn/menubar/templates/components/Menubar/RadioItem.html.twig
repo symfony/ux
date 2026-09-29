@@ -15,7 +15,7 @@
 >
     <input type="radio" class="peer sr-only" {% if _menubar_radioGroupName %}name="{{ _menubar_radioGroupName }}"{% endif %} value="{{ value }}" {% if checked %}checked{% endif %}>
     <span class="absolute start-2 flex size-4 items-center justify-center opacity-0 peer-checked:opacity-100">
-        <twig:ux:icon name="lucide:circle" class="size-2 fill-current" aria-hidden="true" />
+        <twig:ux:icon name="lucide:circle" class="size-2 *:fill-current" aria-hidden="true" />
     </span>
     {##- The label text. -#}
     {%- block content %}{% endblock -%}
