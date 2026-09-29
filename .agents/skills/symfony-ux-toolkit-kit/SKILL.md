@@ -521,7 +521,7 @@ The script only rewrites a screenshot when it no longer matches, using the toler
 
 ### Interaction specs
 
-A recipe is interactive in three cases. It ships a Stimulus controller. It depends on a recipe that ships one (`shadcn/sheet` depends on `dialog`). Or it uses Bootstrap's JS (`data-bs-toggle`, `data-bs-dismiss`, `data-bs-ride`, `data-bs-slide`). Every interactive recipe needs a spec in `kits/<kit>/<recipe>/tests/<recipe>.spec.ts`. `src/Toolkit/assets/test/browser/interactions.spec.ts` enforces this rule. Its `WITHOUT_SPEC` list holds the recipes allowed to have no spec yet (tracked in #3942). A new interactive recipe ships with its spec.
+A recipe is interactive in three cases. It ships a Stimulus controller. It depends on a recipe that ships one (`shadcn/sheet` depends on `dialog`). Or it uses Bootstrap's JS (`data-bs-toggle`, `data-bs-dismiss`, `data-bs-ride`, `data-bs-slide`). Every interactive recipe needs a spec in `kits/<kit>/<recipe>/tests/<recipe>.spec.ts`. `src/Toolkit/assets/test/browser/interactions.spec.ts` enforces this rule. A new interactive recipe ships with its spec.
 
 A spec follows the flow idle -> screenshot -> action -> screenshot. The generic spec already takes the idle screenshot. The recipe spec performs the action. It asserts the result. Then it screenshots the new state with `testState()`:
 
