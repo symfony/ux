@@ -8,6 +8,7 @@ export default class extends Controller {
         this.handleTargets.forEach((handle) => {
             handle.addEventListener('pointerdown', (event) => this._onPointerDown(event, handle));
             handle.addEventListener('keydown', (event) => this._onKeyDown(event, handle));
+            this._syncValue(handle);
         });
     }
 
@@ -36,6 +37,7 @@ export default class extends Controller {
             let newNext = total - newPrev;
             prev.style.flex = `${newPrev} 1 0%`;
             next.style.flex = `${newNext} 1 0%`;
+            this._syncValue(handle);
         };
         const onUp = () => {
             window.removeEventListener('pointermove', onMove);
@@ -73,6 +75,18 @@ export default class extends Controller {
         let newNext = total - newPrev;
         prev.style.flex = `${newPrev} 1 0%`;
         next.style.flex = `${newNext} 1 0%`;
+        this._syncValue(handle);
+    }
+
+    _syncValue(handle) {
+        const siblings = this._neighborPanels(handle);
+        if (!siblings) return;
+        const isVertical = this.orientationValue === 'vertical';
+        const prevRect = siblings.prev.getBoundingClientRect();
+        const nextRect = siblings.next.getBoundingClientRect();
+        const prevSize = isVertical ? prevRect.height : prevRect.width;
+        const nextSize = isVertical ? nextRect.height : nextRect.width;
+        handle.setAttribute('aria-valuenow', String(Math.round((prevSize / (prevSize + nextSize)) * 100)));
     }
 
     _neighborPanels(handle) {
