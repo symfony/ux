@@ -15,6 +15,7 @@ export default defineConfig({
     fullyParallel: true,
     forbidOnly: isCI,
     retries: isCI ? 1 : 0,
+    workers: isCI ? '75%' : undefined,
     updateSnapshots: isCI ? 'none' : 'missing',
 
     reporter: [['list'], ['html', { open: isCI ? 'never' : 'on-failure', outputFolder: 'playwright-report' }]],
@@ -35,7 +36,8 @@ export default defineConfig({
 
     webServer: [
         {
-            command: 'symfony server:start --no-workers',
+            // The server logs every request: keep them in a file, uploaded by the CI when a test fails.
+            command: 'mkdir -p var/log && symfony server:start --no-workers > var/log/server.log 2>&1',
             cwd: '../../../apps/toolkit',
             url: 'http://127.0.0.1:9889/',
             reuseExistingServer: true,

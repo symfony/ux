@@ -34,7 +34,12 @@ permissions: {}
 
 jobs:
     browser:
+        name: browser (${{ matrix.shard }}/${{ strategy.job-total }})
         runs-on: ubuntu-latest
+        strategy:
+            fail-fast: false
+            matrix:
+                shard: [1, 2, 3, 4]
         steps:
             - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
               with:
@@ -66,12 +71,15 @@ jobs:
 
             - name: Run browser tests
               id: browser-tests
-              run: pnpm exec playwright test -c src/Toolkit/assets
+              run: pnpm exec playwright test -c src/Toolkit/assets --shard="$SHARD/$SHARD_TOTAL"
+              env:
+                  SHARD: ${{ matrix.shard }}
+                  SHARD_TOTAL: ${{ strategy.job-total }}
 
             - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
               if: ${{ always() && steps.browser-tests.conclusion == 'failure' }}
               with:
-                  name: Playwright report and output
+                  name: Playwright report and output (shard ${{ matrix.shard }})
                   path: |
                       src/Toolkit/assets/playwright-report/
                       src/Toolkit/assets/playwright-output/
@@ -81,6 +89,6 @@ jobs:
             - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
               if: ${{ always() && steps.browser-tests.conclusion == 'failure' }}
               with:
-                  name: Symfony logs
+                  name: Symfony logs (shard ${{ matrix.shard }})
                   path: apps/toolkit/var/log/
                   retention-days: 7
