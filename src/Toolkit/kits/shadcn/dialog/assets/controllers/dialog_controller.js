@@ -18,17 +18,7 @@ export default class extends Controller {
         this._focusInitialElement();
 
         if (this.hasTriggerTarget) {
-            if (this.dialogTarget.getAnimations().length > 0) {
-                this.dialogTarget.addEventListener(
-                    'transitionend',
-                    () => {
-                        this.triggerTarget.setAttribute('aria-expanded', 'true');
-                    },
-                    { once: true }
-                );
-            } else {
-                this.triggerTarget.setAttribute('aria-expanded', 'true');
-            }
+            this.triggerTarget.setAttribute('aria-expanded', 'true');
         }
     }
 
@@ -55,13 +45,7 @@ export default class extends Controller {
         this.dialogTarget.close();
 
         if (this.hasTriggerTarget) {
-            if (this.dialogTarget.getAnimations().length > 0) {
-                this.dialogTarget.addEventListener('transitionend', () => {
-                    this.triggerTarget.setAttribute('aria-expanded', 'false');
-                });
-            } else {
-                this.triggerTarget.setAttribute('aria-expanded', 'false');
-            }
+            this.triggerTarget.setAttribute('aria-expanded', 'false');
         }
     }
 }

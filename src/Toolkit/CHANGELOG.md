@@ -16,6 +16,7 @@
 - [Shadcn] Fix `date-picker` focusing "Previous month" instead of a day when it opens
 - [Shadcn] Fix the checked radio item of `menubar` showing a ring instead of a dot
 - [Shadcn] Fix `menubar` submenus wrapping long labels
+- [Shadcn] Fix the `aria-expanded` of the `dialog` trigger getting out of sync on close and on a second opening
 
 ## 3.5.0
 
