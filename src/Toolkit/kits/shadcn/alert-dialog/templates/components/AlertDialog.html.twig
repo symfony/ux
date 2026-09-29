@@ -12,7 +12,7 @@
 {%- do provide('alertDialog.titleId', _alertDialog_titleId) -%}
 {%- do provide('alertDialog.descriptionId', _alertDialog_descriptionId) -%}
 <div
-    data-alert-dialog-open-value="{{ open }}"
+    data-alert-dialog-open-value="{{ open ? 'true' : 'false' }}"
     {{ attributes.defaults({
         'data-controller': 'alert-dialog',
     }) }}
