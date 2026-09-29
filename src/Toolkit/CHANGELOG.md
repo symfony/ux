@@ -21,6 +21,7 @@
 - [Shadcn] Fix the `resizable` handle missing its `aria-orientation` and `aria-valuenow`
 - [Shadcn] Fix a closed `sheet` staying reachable with the keyboard and exposed to screen readers
 - [Shadcn] Fix a disabled `slider` still reacting to the keyboard
+- [Shadcn] Fix `slider` losing the focus after a click on its track
 
 ## 3.5.0
 
