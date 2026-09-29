@@ -98,9 +98,17 @@ export default class extends Controller {
             return;
         }
 
-        // Wait two frames: `visibility` is transitioned, so the content computes as
-        // `visibility: hidden` (not focusable) on the first frame after opening and is
-        // only `visible` from the next one.
-        requestAnimationFrame(() => requestAnimationFrame(() => focusable.focus()));
+        // `visibility` is transitioned, so the content stays `visibility: hidden` (not
+        // focusable) for at least one frame after opening, and longer on a busy browser.
+        const focusWhenVisible = () => {
+            if (!this.openValue) {
+                return;
+            }
+            focusable.focus();
+            if (document.activeElement !== focusable) {
+                requestAnimationFrame(focusWhenVisible);
+            }
+        };
+        requestAnimationFrame(focusWhenVisible);
     }
 }

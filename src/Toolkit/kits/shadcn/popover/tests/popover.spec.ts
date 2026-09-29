@@ -15,6 +15,16 @@ describeRecipe('shadcn/popover', () => {
         },
     });
 
+    test('focuses the content even when it becomes visible late', async ({ page, gotoExample }) => {
+        await gotoExample('shadcn/popover/default');
+        // Stands in for a busy browser, where the visibility transition lags behind the frames.
+        await page.addStyleTag({ content: '[data-popover-target="content"] { transition-delay: 100ms; }' });
+
+        await page.getByRole('button', { name: 'Open Popover' }).click();
+
+        await expect(page.getByLabel('Width', { exact: true })).toBeFocused();
+    });
+
     test('closes on Escape and gives focus back to the trigger', async ({ page, gotoExample }) => {
         await gotoExample('shadcn/popover/default');
         const trigger = page.getByRole('button', { name: 'Open Popover' });
