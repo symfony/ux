@@ -37,6 +37,7 @@ $rules = [
     ['/CONTRIBUTING.md', 'file'],
     ['/doc', 'dir'],
     ['/docker-compose.yml', 'file'],
+    ['/kits/*/*/tests', 'glob'],
     ['/phpstan.dist.neon', 'file'],
     ['/phpunit.dist.xml', 'file'],
     ['/phpunit.xml.dist', 'file'],
@@ -52,6 +53,7 @@ $generate = static function (string $packageDir) use ($rules): string {
             'always' => true,
             'file' => is_file($target),
             'dir' => is_dir($target),
+            'glob' => [] !== (glob($target, \GLOB_ONLYDIR) ?: []),
         };
 
         if ($exists) {

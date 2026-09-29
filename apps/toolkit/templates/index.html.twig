@@ -71,7 +71,7 @@
     <body>
         <h1 style="margin: 0 0 4px; font-size: 24px;">UX Toolkit previews</h1>
         <p style="margin: 0; color: var(--muted);">
-            Every <code>{"preview": true}</code> example of the previewed kits, rendered in isolation. Also available as <a href="{{ path('app_examples') }}">JSON</a>.
+            Every <code>{"preview": true}</code> example of the previewed kits, rendered in isolation.
         </p>
 
         {% for kit_id, kit in kits %}
@@ -85,11 +85,11 @@
                     <tr>
                         <td style="width: 220px;"><code>{{ recipe.name }}</code></td>
                         <td>
-                            {% for index in recipe.examples|keys %}
+                            {% for example in recipe.examples %}
                                 <span class="example">
-                                    #{{ index }}
-                                    <a href="{{ path('app_preview', {kit: kit_id, recipe: recipe.name, index: index}) }}">light</a>
-                                    <a href="{{ path('app_preview', {kit: kit_id, recipe: recipe.name, index: index, theme: 'dark'}) }}">dark</a>
+                                    {{ example.id }}
+                                    <a href="{{ path('app_preview', {kit: kit_id, recipe: recipe.name, example: example.id}) }}">light</a>
+                                    <a href="{{ path('app_preview', {kit: kit_id, recipe: recipe.name, example: example.id, theme: 'dark'}) }}">dark</a>
                                 </span>
                             {% else %}
                                 <span style="color: var(--muted);">No example</span>

@@ -20,7 +20,7 @@ Author + review recipes for UX Toolkit. Recipes = unit shipped to end-users (Twi
 3. **Visual + behavioral parity** with upstream reference (Shadcn UI / Flowbite). Verify manually; attach screenshot/video to PR body for animated/interactive components.
 4. **Reuse all upstream examples.** No subset. Read both component source **and** every upstream example, then inline each as a live-preview block in the recipe `README.md` (see [Examples](#examples-conventions)).
 5. **No companion PR on `symfony/ux.symfony.com`.** It renders the docs page from the recipe `README.md`, registers kit Stimulus controllers from a build-time loader, and compiles kit Tailwind classes through `@source`. Only a new external asset dependency not already vendored there needs one.
-6. **Regenerate snapshots** after every recipe change + commit. CI + reviewers reject stale snapshots.
+6. **Regenerate snapshots and screenshots** after every recipe change + commit them: `bin/update_toolkit_tests.sh <kit>/<recipe>` from the repository root (Docker required). CI + reviewers reject stale ones.
 7. **Use GitHub PR template** (Bug fix / Feature / License: MIT / Issues: `Part of #3233` for shadcn recipes, the shadcn tracking issue). Fabbot fails otherwise.
 8. **Prefer Stimulus controller** over native browser features (e.g. `<details>`) when parity needs animations, ARIA sync, coordinated state. Native fine only when matches upstream UX exactly.
 
@@ -503,26 +503,52 @@ You can render an icon inside the badge.
 
 ## Tests & Snapshots
 
-`ComponentsRenderingTest` renders every preview block from each recipe `README.md` and snapshots it, keyed by **example index** (`... Kit shadcn, component badge, example 5__1.html`) — position in the README, not a file name.
+Two kinds of baselines guard each recipe:
+
+- `ComponentsRenderingTest` renders every preview block of the recipe `README.md`. It snapshots the HTML in `src/Toolkit/tests/Functional/__snapshots__/`, keyed by **example index** (`... Kit shadcn, component badge, example 5__1.html`). The key is the position in the README, not a name.
+- Playwright screenshots every preview example in light and dark mode, and saves them in `kits/<kit>/<recipe>/tests/screenshots/<example>-<theme>.png`. The file name comes from the slug of the heading above the example (`default` under the title). Renaming a heading renames its screenshots.
+
+Regenerate both with one command from the repository root (Docker required):
 
 ```bash
-cd src/Toolkit
-
-# When examples were removed/reordered, blow away the recipe's snapshots first
-rm -fr "tests/Functional/__snapshots__/"*"component <recipe>"*
-
-# Regenerate (simple-phpunit is gone — use phpunit; -d passes the flag through to the snapshot lib)
-php vendor/bin/phpunit -d --update-snapshots
-
-# Re-run normally to confirm green
-php vendor/bin/phpunit
-
-git add tests/Functional/__snapshots__
+bin/update_toolkit_tests.sh <kit>/<recipe>   # or <kit>, or nothing for every kit
+git add src/Toolkit/tests/Functional/__snapshots__ src/Toolkit/kits/<kit>/<recipe>/tests
 ```
 
-**Orphan snapshots:** removing or reordering examples shifts the trailing indexes, so the highest-numbered `... example N__1.html` files stop regenerating + silently persist. After regenerating, inspect `git status` for leftover files + `git rm` them.
+The script only rewrites a screenshot when it no longer matches, using the tolerance of Playwright's comparison, so rendering noise doesn't produce a diff. It also deletes the snapshots and screenshots that no test uses anymore, like the ones of a removed, reordered or renamed example. Check `git status` for deleted files + commit the deletions too.
 
-**After rebase on `3.x`:** snapshot formatter may have evolved upstream. Re-run `--update-snapshots` once more after final rebase to avoid "diff in snapshots" CI failures.
+**After rebase on `3.x`:** the snapshot formatter may have evolved upstream. Run the script once more after the final rebase to avoid "diff in snapshots" CI failures.
+
+### Interaction specs
+
+A recipe is interactive in three cases. It ships a Stimulus controller. It depends on a recipe that ships one (`shadcn/sheet` depends on `dialog`). Or it uses Bootstrap's JS (`data-bs-toggle`, `data-bs-dismiss`, `data-bs-ride`, `data-bs-slide`). Every interactive recipe needs a spec in `kits/<kit>/<recipe>/tests/<recipe>.spec.ts`. `src/Toolkit/assets/test/browser/interactions.spec.ts` enforces this rule. Its `WITHOUT_SPEC` list holds the recipes still to cover (tracked in #3942). Adding a spec means removing the recipe from that list. A new interactive recipe ships with its spec.
+
+A spec follows the flow idle -> screenshot -> action -> screenshot. The generic spec already takes the idle screenshot. The recipe spec performs the action. It asserts the result. Then it screenshots the new state with `testState()`:
+
+```ts
+import { describeRecipe, expect, test, testState } from '../../../../assets/test/browser/fixtures';
+
+describeRecipe('shadcn/popover', () => {
+    testState('opens on click', {
+        example: 'default',
+        state: 'open',
+        act: async (page) => {
+            const trigger = page.getByRole('button', { name: 'Open Popover' });
+
+            await trigger.click();
+
+            await expect(page.getByRole('dialog')).toBeVisible();
+            await expect(trigger).toHaveAttribute('aria-expanded', 'true');
+        },
+    });
+
+    test('closes on Escape and gives focus back to the trigger', async ({ page, gotoExample }) => {
+        // ...
+    });
+});
+```
+
+`testState()` runs once per theme. It saves `<example>-<state>-<theme>.png` in the recipe's `tests/screenshots/`. Behavior that shows no new visual state (closing, focus, keyboard) goes in a plain `test()`. `gotoExample()` only fixes the date with `timers: 'fake'`. Playwright's fake clock also fakes `requestAnimationFrame`. So keep the default `timers: 'real'` when a controller waits on animation frames. Always take a screenshot through `testState()`, never with a direct `toHaveScreenshot()` call, because `bin/update_toolkit_tests.sh` deletes any screenshot that no test declares.
 
 ---
 
@@ -532,7 +558,7 @@ git add tests/Functional/__snapshots__
 2. Scaffold recipe directory + `manifest.json`
 3. Root component, sub-components (with `<recipe>_<role>_attrs`), Stimulus controller if needed
 4. Write `README.md`: description + hero preview, `## Installation` (`::: installation`), `## Usage` static block, `## Examples` with one `### <Variant>` live-preview per upstream example (+ `### RTL` last), `## API Reference` (`::: api-reference`)
-5. Snapshots — regenerate, inspect HTML diff, commit
+5. Snapshots + screenshots: run `bin/update_toolkit_tests.sh <kit>/<recipe>`, inspect the HTML diff + the images, commit
 6. Lint/format, CHANGELOG entry, open PR
 
 ---
@@ -546,7 +572,8 @@ git add tests/Functional/__snapshots__
 - [ ] All upstream examples present as inline `{"preview":true}` blocks in `README.md`, `### <Variant>` headings Title Case
 - [ ] `README.md` has the hero preview + `## Usage` static block + `::: installation` / `::: api-reference` directives
 - [ ] Visual + behavioral parity verified manually (screenshot/video attached)
-- [ ] Snapshots regenerated + committed (no stale entries)
+- [ ] Snapshots + screenshots regenerated + committed (no stale entries)
+- [ ] Interactive recipe: spec in `tests/<recipe>.spec.ts`, recipe removed from `WITHOUT_SPEC`
 - [ ] `php-cs-fixer`, `twig-cs-fixer`, `pnpm run fmt`, `pnpm run lint` clean
 - [ ] `bin/ux-toolkit-kit-lint --fail-on-warning kits/<kit>` clean
 - [ ] Docs: `## <type> <Description.>` above each prop in `{% props %}` + `{##- <Description.> -#}` on the line above each rendered block (trim mirrors the block); descriptions Capitalized + ending with a period; prop types are spaceless PHPStan types; **no `Defaults to`** (defaults live in `{%- props -%}`); every rendered block documented
@@ -554,7 +581,7 @@ git add tests/Functional/__snapshots__
 - [ ] Trigger/Close sub-components use `<recipe>_<role>_attrs` (no wrapping `<button>`)
 - [ ] `data-action` Stimulus actions piped through `|html_attr_type('sst')` when concatenable
 - [ ] Inter-recipe deps declared in `manifest.json` `dependencies.recipe`
-- [ ] No orphan snapshot files after rework/rename (`git status` clean after `--update-snapshots`)
+- [ ] No orphan snapshot files after rework/rename (deletions made by `bin/update_toolkit_tests.sh` committed)
 - [ ] Every shipped file ends with trailing newline (`.html.twig`, `.json`, `.js`, `.css`, `.md`)
 
 ---
@@ -579,7 +606,7 @@ git add tests/Functional/__snapshots__
 | Block doc comment that shifts rendered whitespace (wrong trim) | Mirror the block's trim: `{##- ... -#}` for `{%-`/`{{-`, `{## ... -#}` for `{%`/`{{` |
 | Self-closing item reading `_parent_var` (outer-scope) | Use `provide()` in parent + `inject()` in child |
 | Recipe depends on another recipe but `dependencies.recipe` empty | Declare it (e.g. `toggle-group` → `toggle`) |
-| Snapshots not regenerated / partially stale | Regenerate via `phpunit -d --update-snapshots` (not `simple-phpunit` — removed) |
+| Snapshots not regenerated / partially stale | Regenerate via `bin/update_toolkit_tests.sh <kit>/<recipe>` |
 | Multiple recipes in one PR | Split into one PR per recipe |
 | PR targets `2.x` | Retarget to `3.x`, move CHANGELOG entry |
 | Companion PR opened on `symfony/ux.symfony.com` | Close it: docs, controllers and Tailwind classes are picked up from the recipe automatically |
@@ -589,7 +616,7 @@ git add tests/Functional/__snapshots__
 | `hidden` class for collapse/expand | `grid-template-rows: 0fr` + `overflow:hidden` + CSS transition |
 | `group-hover` + `group-focus-within` for hover-triggered components | Stimulus controller with `openDelay`/`closeDelay` values |
 | `in-data-[state=open]:visible` on nested open-state | Named Tailwind groups (`group/<recipe>-menu`, `group/<recipe>-sub`) |
-| Orphan snapshots after recipe rework/rename | `git rm` stale files after `--update-snapshots` |
+| Orphan snapshots after recipe rework/rename | Commit the deletions made by `bin/update_toolkit_tests.sh` |
 
 ---
 

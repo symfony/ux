@@ -1,3 +1,4 @@
 * text=auto eol=lf
 
 src/Toolkit/tests/Functional/__snapshots__/** linguist-generated=true
+src/Toolkit/kits/*/*/tests/screenshots/*.png binary -delta linguist-generated=true

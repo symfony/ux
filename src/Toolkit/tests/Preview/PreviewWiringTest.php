@@ -47,9 +47,9 @@ final class PreviewWiringTest extends TestCase
 
         $outputDir = $this->projectDir.'/var/ux_toolkit/preview';
         foreach (['bootstrap', 'common', 'flowbite-4', 'shadcn'] as $kitId) {
-            $this->assertFileExists($outputDir.'/ux-toolkit-'.$kitId.'.js');
+            $this->assertFileExists($outputDir.'/ux-toolkit-'.$kitId.'.js', \sprintf('The script of the kit "%s" is not generated at boot.', $kitId));
         }
-        $this->assertFileDoesNotExist($outputDir.'/ux-toolkit-bootstrap.css');
+        $this->assertFileDoesNotExist($outputDir.'/ux-toolkit-bootstrap.css', 'A stylesheet is generated for "bootstrap", which ships no "kit.css".');
         $this->assertStringContainsString('/assets/vendor/shadcn/dist/tailwind.css', file_get_contents($outputDir.'/ux-toolkit-shadcn.css'));
         $this->assertStringContainsString('/assets/vendor/flowbite/dist/flowbite.min.css', file_get_contents($outputDir.'/ux-toolkit-flowbite-4.css'));
     }
@@ -94,27 +94,40 @@ final class PreviewWiringTest extends TestCase
     {
         $container = $this->bootKernel(preview: false)->getContainer();
 
-        $this->assertDirectoryDoesNotExist($this->projectDir.'/var/ux_toolkit');
+        $this->assertDirectoryDoesNotExist($this->projectDir.'/var/ux_toolkit', 'Preview files are generated while the preview is disabled.');
         $this->assertFalse($container->get('test.importmap.config_reader')->getEntries()->has('ux-toolkit-shadcn'));
         $this->assertCount(1, $container->get('test.tailwind.builder')->getInputCssPaths());
-        $this->assertNull($container->get('test.asset_mapper')->getAsset('@symfony/ux-toolkit/kits/shadcn/accordion/assets/controllers/accordion_controller.js'));
+        $this->assertNull($container->get('test.asset_mapper')->getAsset('@symfony/ux-toolkit/kits/shadcn/accordion/assets/controllers/accordion_controller.js'), 'Kits are mapped while the preview is disabled.');
     }
 
     public function testOnlyPublishesTheScriptsOfTheKits(): void
     {
         $assetMapper = $this->bootKernel(preview: ['kits' => ['shadcn', self::getFixtureKitPath('preview')]])->getContainer()->get('test.asset_mapper');
 
-        $this->assertNull($assetMapper->getAsset('@symfony/ux-toolkit/kits/shadcn/manifest.json'));
-        $this->assertNull($assetMapper->getAsset('@symfony/ux-toolkit/kits/shadcn/INSTALL.md'));
-        $this->assertNull($assetMapper->getAsset('@symfony/ux-toolkit/kits/shadcn/button/README.md'));
-        $this->assertNull($assetMapper->getAsset('@symfony/ux-toolkit/kits/shadcn/button/templates/components/Button.html.twig'));
-        $this->assertNull($assetMapper->getAsset('@symfony/ux-toolkit/kits/preview/widget/manifest.json'));
-        $this->assertNull($assetMapper->getAsset('@symfony/ux-toolkit/kits/preview/widget/config/widget.yaml'));
-        $this->assertNull($assetMapper->getAsset('@symfony/ux-toolkit/kits/preview/widget/NOTES.txt'));
-        $this->assertNull($assetMapper->getAsset('@symfony/ux-toolkit/kits/preview/LICENSE'));
-        $this->assertNull($assetMapper->getAsset('@symfony/ux-toolkit/kits/shadcn/kit.css'));
-        $this->assertNotNull($assetMapper->getAsset('@symfony/ux-toolkit/kits/preview/kit.js'));
-        $this->assertNotNull($assetMapper->getAsset('@symfony/ux-toolkit/kits/preview/widget/assets/controllers/widget_controller.js'));
+        $notMapped = [
+            'shadcn/manifest.json',
+            'shadcn/INSTALL.md',
+            'shadcn/button/README.md',
+            'shadcn/button/templates/components/Button.html.twig',
+            'preview/widget/manifest.json',
+            'preview/widget/config/widget.yaml',
+            'preview/widget/NOTES.txt',
+            'preview/widget/tests/widget.spec.ts',
+            'preview/widget/tests/screenshots/default-light.png',
+            'preview/LICENSE',
+            'shadcn/kit.css',
+        ];
+        $mapped = [
+            'preview/kit.js',
+            'preview/widget/assets/controllers/widget_controller.js',
+        ];
+
+        foreach ($notMapped as $path) {
+            $this->assertNull($assetMapper->getAsset('@symfony/ux-toolkit/kits/'.$path), \sprintf('Only the ".js" files of a kit are mapped, but "%s" is.', $path));
+        }
+        foreach ($mapped as $path) {
+            $this->assertNotNull($assetMapper->getAsset('@symfony/ux-toolkit/kits/'.$path), \sprintf('The ".js" files of a kit are mapped, but "%s" is not.', $path));
+        }
     }
 
     public function testPreviewsOnlyTheListedKits(): void
@@ -126,8 +139,8 @@ final class PreviewWiringTest extends TestCase
         $inputs = array_map(Path::canonicalize(...), $container->get('test.tailwind.builder')->getInputCssPaths());
         $this->assertSame([$this->projectDir.'/assets/styles/app.css', $outputDir.'/ux-toolkit-shadcn.css'], $inputs);
         $this->assertFalse($container->get('test.importmap.config_reader')->getEntries()->has('ux-toolkit-flowbite-4'));
-        $this->assertFileDoesNotExist($outputDir.'/ux-toolkit-flowbite-4.js');
-        $this->assertNull($container->get('test.asset_mapper')->getAsset('@symfony/ux-toolkit/kits/flowbite-4/kit.js'));
+        $this->assertFileDoesNotExist($outputDir.'/ux-toolkit-flowbite-4.js', 'A script is generated for "flowbite-4", which is not in the previewed kits.');
+        $this->assertNull($container->get('test.asset_mapper')->getAsset('@symfony/ux-toolkit/kits/flowbite-4/kit.js'), '"flowbite-4" is mapped, but it is not in the previewed kits.');
     }
 
     public function testPreviewsExternalKits(): void
@@ -160,8 +173,8 @@ final class PreviewWiringTest extends TestCase
 
         $this->bootKernel(preview: ['kits' => ['shadcn']]);
 
-        $this->assertFileExists($this->projectDir.'/var/ux_toolkit/preview/ux-toolkit-shadcn.js');
-        $this->assertFileDoesNotExist($this->projectDir.'/var/ux_toolkit/preview/ux-toolkit-common.js');
+        $this->assertFileExists($this->projectDir.'/var/ux_toolkit/preview/ux-toolkit-shadcn.js', 'The script of "shadcn", still previewed, is removed.');
+        $this->assertFileDoesNotExist($this->projectDir.'/var/ux_toolkit/preview/ux-toolkit-common.js', 'The script of "common", no longer previewed, is kept.');
     }
 
     public function testResolvesParametersInTheConfiguration(): void
