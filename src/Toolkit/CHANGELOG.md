@@ -13,6 +13,7 @@
 - [Shadcn] Fix the `combobox` list not lining up with its trigger
 - [Shadcn] Fix the checked radio item of `dropdown-menu` showing a ring instead of a dot
 - [Shadcn] Fix `dropdown-menu` submenus wrapping their labels
+- [Shadcn] Fix `date-picker` focusing "Previous month" instead of a day when it opens
 
 ## 3.5.0
 
