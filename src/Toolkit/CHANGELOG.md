@@ -5,6 +5,7 @@
 - [Shadcn] Declare the `shadcn` and `tw-animate-css` packages as dependencies of the kit, so `ux:install` suggests installing them
 - [Flowbite v4] Declare the `flowbite/dist/flowbite.min.css` stylesheet as a dependency of the kit, so `ux:install` suggests installing it
 - [Flowbite v4] Install the Stimulus controller of the `alert` recipe, which its `Alert` component needs to be dismissed
+- [Flowbite v4] Fix `modal` rendering `aria-labelledby` on a roleless wrapper instead of the `<dialog>`, leaving it without an accessible name
 
 ## 3.5.0
 

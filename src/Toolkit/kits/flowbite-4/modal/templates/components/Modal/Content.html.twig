@@ -7,6 +7,7 @@
 
 <dialog
     id="{{ _modal_id }}"
+    aria-labelledby="{{ _modal_title_id }}"
     tabindex="-1"
     aria-hidden="true"
     class="{{ ('relative bg-neutral-primary-soft text-body border border-default rounded-base shadow-sm p-4 md:p-6 m-auto z-50 backdrop:transition-discrete backdrop:duration-150 open:backdrop:bg-dark-backdrop/70 ' ~ attributes.render('class'))|tailwind_merge }}"

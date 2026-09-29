@@ -9,7 +9,6 @@
 {%- set _modal_title_id = _modal_id ~ '-title' -%}
 <div
     data-flowbite-modal-open-value="{{ open ? 'true' : 'false' }}"
-    aria-labelledby="{{ _modal_title_id }}"
     {{ attributes.defaults({
         'data-controller': 'flowbite-modal',
     }) }}
