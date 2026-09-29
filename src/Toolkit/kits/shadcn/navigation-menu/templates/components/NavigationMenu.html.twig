@@ -14,7 +14,7 @@
     {{ attributes.defaults({
         class: 'relative flex max-w-max flex-1 items-center justify-center'|tailwind_classes,
         'data-controller': 'navigation-menu',
-        'data-action': 'mouseleave->navigation-menu#scheduleClose focusin->navigation-menu#onFocusIn focusout->navigation-menu#onFocusOut',
+        'data-action': 'mouseleave->navigation-menu#scheduleClose focusin->navigation-menu#onFocusIn focusout->navigation-menu#onFocusOut keydown->navigation-menu#onKeyDown',
     }) }}
 >
     {##- A `NavigationMenu:List` containing `NavigationMenu:Item` children. -#}
