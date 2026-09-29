@@ -2,6 +2,7 @@
     ## 'horizontal'|'vertical' Layout direction.
     orientation = 'horizontal'
 -%}
+{%- do provide('resizable.orientation', orientation) -%}
 <div
     data-slot="resizable-panel-group"
     data-resizable-orientation-value="{{ orientation }}"

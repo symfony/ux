@@ -2,9 +2,13 @@
     ## bool Show a visible grip handle.
     withHandle = false
 -%}
+{%- set _resizable_orientation = inject('resizable.orientation', 'horizontal') -%}
 <div
     tabindex="0"
     role="separator"
+    aria-orientation="{{ _resizable_orientation == 'vertical' ? 'horizontal' : 'vertical' }}"
+    aria-valuemin="0"
+    aria-valuemax="100"
     data-slot="resizable-handle"
     data-resizable-target="handle"
     {{ attributes.defaults({
