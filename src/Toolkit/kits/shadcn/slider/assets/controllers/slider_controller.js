@@ -49,6 +49,7 @@ export default class extends Controller {
 
     _onTrackDown(event) {
         if (this._isDisabled()) return;
+        event.preventDefault();
         const ratio = this._pointerRatio(event);
         const value = this._ratioToValue(ratio);
         const index = this._nearestThumbIndex(value);
