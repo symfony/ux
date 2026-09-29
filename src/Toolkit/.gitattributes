@@ -1,6 +1,9 @@
 /.git* export-ignore
 /.symfony.bundle.yaml export-ignore
+/assets/test export-ignore
+/assets/playwright.config.ts export-ignore
 /CONTRIBUTING.md export-ignore
 /doc export-ignore
+/kits/*/*/tests export-ignore
 /phpunit.dist.xml export-ignore
 /tests export-ignore

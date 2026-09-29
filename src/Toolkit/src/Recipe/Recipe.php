@@ -13,6 +13,7 @@ namespace Symfony\UX\Toolkit\Recipe;
 
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Finder\Finder;
+use Symfony\Component\String\Slugger\AsciiSlugger;
 use Symfony\UX\Toolkit\File;
 use Symfony\UX\Toolkit\Markdown\CodeOptions;
 
@@ -72,8 +73,10 @@ final class Recipe
      * The recipe's runnable examples: fenced code blocks whose info string carries `{"preview": true, ...}`.
      * Static blocks (no `preview`) — e.g. the Usage signature — are excluded. Regex over the raw README so
      * Toolkit core needs no Markdown parser; example code must therefore not contain a nested ``` fence.
+     * Each example carries an `id`, unique within the recipe: the slug of the closest heading above it, or
+     * `default` under the title or without heading.
      *
-     * @return list<array{language: string, code: string, options: CodeOptions}>
+     * @return list<array{id: string, language: string, code: string, options: CodeOptions}>
      */
     public function getExamples(): array
     {
@@ -81,20 +84,31 @@ final class Recipe
             return [];
         }
 
-        if (!preg_match_all('/^```(?<language>\S+)\h+(?<json>\{.*?\})\h*$\R(?<code>.*?)\R```\h*$/ms', $this->doc, $matches, \PREG_SET_ORDER)) {
+        if (!preg_match_all('/^```(?<language>\S+)\h+(?<json>\{.*?\})\h*$\R(?<code>.*?)\R```\h*$/ms', $this->doc, $matches, \PREG_SET_ORDER | \PREG_OFFSET_CAPTURE)) {
             return [];
         }
 
+        $slugger = new AsciiSlugger();
+        $usedIds = [];
         $examples = [];
         foreach ($matches as $match) {
-            $options = CodeOptions::fromInfoJson($match['json']);
+            $options = CodeOptions::fromInfoJson($match['json'][0]);
             if (null === $options) {
                 continue;
             }
 
+            $docBefore = substr($this->doc, 0, $match[0][1]);
+            $baseId = $this->getExampleBaseId($docBefore, $slugger);
+            $id = $baseId;
+            for ($i = 2; isset($usedIds[$id]); ++$i) {
+                $id = $baseId.'-'.$i;
+            }
+            $usedIds[$id] = true;
+
             $examples[] = [
-                'language' => $match['language'],
-                'code' => $match['code'],
+                'id' => $id,
+                'language' => $match['language'][0],
+                'code' => $match['code'][0],
                 'options' => $options,
             ];
         }
@@ -124,5 +138,22 @@ final class Recipe
         }
 
         return $this->files = $files;
+    }
+
+    private function getExampleBaseId(string $docBefore, AsciiSlugger $slugger): string
+    {
+        $prose = preg_replace('/^```.*?^```\h*$/ms', '', $docBefore);
+        if (!preg_match_all('/^(#{1,6})\h+(.+)$/m', $prose, $headings, \PREG_SET_ORDER)) {
+            return 'default';
+        }
+
+        [, $level, $title] = end($headings);
+        if ('#' === $level) {
+            return 'default';
+        }
+
+        $slug = $slugger->slug($title)->lower()->toString();
+
+        return '' === $slug ? 'default' : $slug;
     }
 }

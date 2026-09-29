@@ -60,22 +60,16 @@ You can then preview your changes by navigating to the relevant sections in the 
 
 ### Running tests & snapshots
 
-Tests use snapshots to ensure that the kits and their recipes work as expected and to prevent regressions.
+Tests use snapshots and screenshots to check that kits and recipes work as expected. This also helps prevent regressions.
 
-Snapshots are created from all Twig code examples provided in each recipe's `examples/` folder.
-The Twig code examples are rendered in an isolated environment.
+Every `{"preview": true}` example of a recipe `README.md` is rendered in an isolated environment. It is compared with a stored HTML snapshot. It is also screenshotted in a browser, in light and dark mode. Each screenshot is compared with a stored screenshot.
 
-The rendered output is then compared to stored snapshots to ensure that the kit's recipes work as expected.
-
-To update the snapshots, run the following command from the `src/Toolkit/` directory:
+To update snapshots and screenshots after a change, run this command from the repository root. Docker must be running:
 
 ```shell
-# Remove existing snapshots (may be useful if some Twig code examples were removed)
-rm -fr tests/Functional/__snapshots__
+# One recipe, one kit (bin/update_toolkit_tests.sh shadcn), or every kit (no argument)
+bin/update_toolkit_tests.sh shadcn/popover
 
-# Run tests and update snapshots
-php vendor/bin/simple-phpunit -d --update-snapshots
-
-# Add the updated snapshots to git
-git add tests/Functional/__snapshots__
+# Add the updated files to git
+git add src/Toolkit/tests/Functional/__snapshots__ src/Toolkit/kits
 ```

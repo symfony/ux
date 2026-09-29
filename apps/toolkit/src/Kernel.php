@@ -14,14 +14,14 @@ namespace App;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Bundle\TwigBundle\TwigBundle;
+use Symfony\Component\Console\Attribute\AsCommand;
+use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\UX\Icons\UXIconsBundle;
 use Symfony\UX\Toolkit\Kit\KitContextRunner;
 use Symfony\UX\Toolkit\Preview\PreviewAssetsGenerator;
@@ -100,27 +100,28 @@ final class Kernel extends BaseKernel
         return new Response($twig->render('index.html.twig', ['kits' => $kitRegistry->getKits()]));
     }
 
-    #[Route('/examples.json', name: 'app_examples')]
-    public function examples(UrlGeneratorInterface $urlGenerator, PreviewKitRegistry $kitRegistry): JsonResponse
+    #[AsCommand('app:examples', description: 'Lists the examples of the previewed kits as JSON')]
+    public function examples(OutputInterface $output, PreviewKitRegistry $kitRegistry): int
     {
         $examples = [];
         foreach ($kitRegistry->getKits() as $kitName => $kit) {
             foreach ($kit->getRecipes() as $recipe) {
-                foreach (array_keys($recipe->getExamples()) as $index) {
-                    $url = $urlGenerator->generate('app_preview', ['kit' => $kitName, 'recipe' => $recipe->name, 'index' => $index]);
-                    $examples[] = ['kit' => $kitName, 'recipe' => $recipe->name, 'index' => $index, 'url' => $url];
+                foreach ($recipe->getExamples() as $example) {
+                    $examples[] = ['kit' => $kitName, 'recipe' => $recipe->name, 'id' => $example['id']];
                 }
             }
         }
 
-        return new JsonResponse($examples);
+        $output->writeln(json_encode($examples, \JSON_THROW_ON_ERROR | \JSON_UNESCAPED_SLASHES));
+
+        return 0;
     }
 
-    #[Route('/{kit}/{recipe}/{index}', name: 'app_preview', requirements: ['index' => '\d+'])]
+    #[Route('/{kit}/{recipe}/{example}', name: 'app_preview')]
     public function preview(
         string $kit,
         string $recipe,
-        int $index,
+        string $example,
         Environment $twig,
         PreviewKitRegistry $kitRegistry,
         KitContextRunner $kitContextRunner,
@@ -133,13 +134,16 @@ final class Kernel extends BaseKernel
 
         $kitObject = $kitRegistry->getKit($kit) ?? throw new NotFoundHttpException();
         $recipeObject = $kitObject->getRecipe($recipe) ?? throw new NotFoundHttpException();
-        $example = $recipeObject->getExamples()[$index] ?? throw new NotFoundHttpException();
+        $codeById = array_column($recipeObject->getExamples(), 'code', 'id');
+        $code = $codeById[$example] ?? throw new NotFoundHttpException();
 
-        $template = $twig->createTemplate($example['code']);
+        $template = $twig->createTemplate($code);
+        // Twig's random() draws from mt_rand(): a fixed seed keeps screenshots stable.
+        mt_srand(0);
         $html = $kitContextRunner->runForKit($kitObject, static fn () => $template->render(), $recipeObject);
 
         return new Response($twig->render('preview.html.twig', [
-            'title' => \sprintf('%s / %s #%d', $kit, $recipe, $index),
+            'title' => \sprintf('%s / %s / %s', $kit, $recipe, $example),
             'entrypoint' => PreviewAssetsGenerator::entrypointName($kit),
             'theme' => $theme,
             'is_block' => RecipeType::Block === $recipeObject->manifest->type,

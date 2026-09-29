@@ -125,6 +125,7 @@ final class RecipeTest extends TestCase
         $examples = $recipe->getExamples();
 
         $this->assertCount(1, $examples);
+        $this->assertSame('default', $examples[0]['id']);
         $this->assertSame('twig', $examples[0]['language']);
         $this->assertSame('<twig:Avatar><twig:Avatar:Image src="x.png" /></twig:Avatar>', $examples[0]['code']);
         $this->assertFalse($examples[0]['options']->collapseClass);
@@ -138,5 +139,120 @@ final class RecipeTest extends TestCase
             copyFiles: [],
         ));
         $this->assertSame([], $recipe->getExamples());
+    }
+
+    public function testGetExamplesNamesEachExampleAfterTheHeadingAboveIt(): void
+    {
+        $doc = <<<'MD'
+            # Alert Dialog
+
+            A description.
+
+            ```twig {"preview":true}
+            <twig:AlertDialog />
+            ```
+
+            ## Examples
+
+            ### Small with Media
+
+            ```twig {"preview":true}
+            <twig:AlertDialog size="sm" />
+            ```
+
+            #### Delay duration
+
+            ```twig {"preview":true}
+            <twig:AlertDialog delay="500" />
+            ```
+            MD;
+
+        $examples = $this->createRecipeWithDoc($doc)->getExamples();
+
+        $this->assertSame(['default', 'small-with-media', 'delay-duration'], array_column($examples, 'id'));
+    }
+
+    public function testGetExamplesNamesAnExampleWithoutHeadingDefault(): void
+    {
+        $doc = <<<'MD'
+            ```twig {"preview":true}
+            <twig:Badge />
+            ```
+            MD;
+
+        $examples = $this->createRecipeWithDoc($doc)->getExamples();
+
+        $this->assertSame(['default'], array_column($examples, 'id'));
+    }
+
+    public function testGetExamplesKeepsIdsUniqueWithinARecipe(): void
+    {
+        $doc = <<<'MD'
+            ### Sizes
+
+            ```twig {"preview":true}
+            <twig:Badge size="sm" />
+            ```
+
+            ```twig {"preview":true}
+            <twig:Badge size="lg" />
+            ```
+
+            ### Sizes 2
+
+            ```twig {"preview":true}
+            <twig:Badge size="xl" />
+            ```
+            MD;
+
+        $examples = $this->createRecipeWithDoc($doc)->getExamples();
+
+        $this->assertSame(['sizes', 'sizes-2', 'sizes-2-2'], array_column($examples, 'id'));
+    }
+
+    public function testGetExamplesIgnoresHeadingLikeLinesInsideCodeBlocks(): void
+    {
+        $doc = <<<'MD'
+            ### Install
+
+            ```bash
+            # Run this first
+            composer require foo
+            ```
+
+            ```twig {"preview":true}
+            <twig:Badge />
+            ```
+            MD;
+
+        $examples = $this->createRecipeWithDoc($doc)->getExamples();
+
+        $this->assertSame(['install'], array_column($examples, 'id'));
+    }
+
+    public function testGetExamplesFallsBackToDefaultWhenAHeadingHasNoSluggableCharacter(): void
+    {
+        $doc = <<<'MD'
+            ### !!!
+
+            ```twig {"preview":true}
+            <twig:Badge />
+            ```
+            MD;
+
+        $examples = $this->createRecipeWithDoc($doc)->getExamples();
+
+        $this->assertSame(['default'], array_column($examples, 'id'));
+    }
+
+    private function createRecipeWithDoc(string $doc): Recipe
+    {
+        $manifest = new RecipeManifest(
+            type: RecipeType::Component,
+            name: 'x',
+            copyFiles: [],
+        );
+
+        return new Recipe('x', __DIR__, $manifest, doc: $doc);
     }
 }
