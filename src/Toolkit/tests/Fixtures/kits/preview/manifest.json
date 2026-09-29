@@ -1,0 +1,10 @@
+{
+    "$schema": "../../../../schema-kit-v1.json",
+    "name": "Preview",
+    "description": "Kit exercising the preview assets generation.",
+    "license": "MIT",
+    "homepage": "https://example.com/preview",
+    "dependencies": {
+        "importmap": ["tw-animate-css/dist/tw-animate.css", "flowbite"]
+    }
+}

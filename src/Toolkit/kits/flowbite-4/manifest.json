@@ -8,6 +8,6 @@
     "icon": "icon.svg",
     "dependencies": {
         "npm": ["flowbite"],
-        "importmap": ["flowbite"]
+        "importmap": ["flowbite", "flowbite/dist/flowbite.min.css"]
     }
 }

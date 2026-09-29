@@ -5,5 +5,9 @@
     "license": "MIT",
     "homepage": "https://ux.symfony.com/toolkit/kits/shadcn",
     "color": "hsl(0,0%,0%)",
-    "icon": "icon.svg"
+    "icon": "icon.svg",
+    "dependencies": {
+        "npm": ["shadcn", "tw-animate-css"],
+        "importmap": ["tw-animate-css/dist/tw-animate.css", "shadcn/dist/tailwind.css"]
+    }
 }
