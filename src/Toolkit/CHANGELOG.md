@@ -22,6 +22,7 @@
 - [Shadcn] Fix a closed `sheet` staying reachable with the keyboard and exposed to screen readers
 - [Shadcn] Fix a disabled `slider` still reacting to the keyboard
 - [Shadcn] Fix `slider` losing the focus after a click on its track
+- [Shadcn] Fix the close button and the action of a `sonner` toast ignoring mouse clicks
 
 ## 3.5.0
 
