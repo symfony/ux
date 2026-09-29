@@ -14,6 +14,7 @@
 - [Shadcn] Fix the checked radio item of `dropdown-menu` showing a ring instead of a dot
 - [Shadcn] Fix `dropdown-menu` submenus wrapping their labels
 - [Shadcn] Fix `date-picker` focusing "Previous month" instead of a day when it opens
+- [Shadcn] Fix the checked radio item of `menubar` showing a ring instead of a dot
 
 ## 3.5.0
 
