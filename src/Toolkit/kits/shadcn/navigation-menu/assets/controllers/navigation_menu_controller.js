@@ -1,5 +1,7 @@
 import { Controller } from '@hotwired/stimulus';
 
+const FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
 export default class extends Controller {
     static targets = ['item', 'trigger', 'content', 'viewport', 'viewportPositioner'];
     static values = {
@@ -82,6 +84,34 @@ export default class extends Controller {
     onFocusOut(event) {
         if (!this.element.contains(event.relatedTarget)) {
             this.#setOpen(false);
+        }
+    }
+
+    // The panels live in the viewport, after every trigger, so Tab has to be routed between them.
+    onKeyDown(event) {
+        if (event.key !== 'Tab' || this.activeIndex === null) {
+            return;
+        }
+
+        const item = this.itemTargets[this.activeIndex];
+        const trigger = this.triggerByItem.get(item);
+        const focusables = Array.from(this.contentByItem.get(item)?.querySelectorAll(FOCUSABLE) ?? []);
+        if (!trigger || focusables.length === 0) {
+            return;
+        }
+
+        let target = null;
+        if (!event.shiftKey && event.target === trigger) {
+            target = focusables[0];
+        } else if (event.shiftKey && event.target === focusables[0]) {
+            target = trigger;
+        } else if (!event.shiftKey && event.target === focusables[focusables.length - 1]) {
+            target = this.itemTargets[this.activeIndex + 1]?.querySelector(FOCUSABLE) ?? null;
+        }
+
+        if (target) {
+            event.preventDefault();
+            target.focus();
         }
     }
 
