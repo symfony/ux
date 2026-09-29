@@ -192,6 +192,6 @@ export default class extends Controller {
     }
 
     _isDisabled() {
-        return this.element.getAttribute('aria-disabled') === 'true' || this.element.matches('[data-disabled]');
+        return this.thumbTargets.some((thumb) => thumb.getAttribute('aria-disabled') === 'true');
     }
 }
