@@ -521,7 +521,7 @@ The script only rewrites a screenshot when it no longer matches, using the toler
 
 ### Interaction specs
 
-A recipe is interactive in three cases. It ships a Stimulus controller. It depends on a recipe that ships one (`shadcn/sheet` depends on `dialog`). Or it uses Bootstrap's JS (`data-bs-toggle`, `data-bs-dismiss`, `data-bs-ride`, `data-bs-slide`). Every interactive recipe needs a spec in `kits/<kit>/<recipe>/tests/<recipe>.spec.ts`. `src/Toolkit/assets/test/browser/interactions.spec.ts` enforces this rule. Its `WITHOUT_SPEC` list holds the recipes still to cover (tracked in #3942). Adding a spec means removing the recipe from that list. A new interactive recipe ships with its spec.
+A recipe is interactive in three cases. It ships a Stimulus controller. It depends on a recipe that ships one (`shadcn/sheet` depends on `dialog`). Or it uses Bootstrap's JS (`data-bs-toggle`, `data-bs-dismiss`, `data-bs-ride`, `data-bs-slide`). Every interactive recipe needs a spec in `kits/<kit>/<recipe>/tests/<recipe>.spec.ts`. `src/Toolkit/assets/test/browser/interactions.spec.ts` enforces this rule. Its `WITHOUT_SPEC` list holds the recipes allowed to have no spec yet (tracked in #3942). A new interactive recipe ships with its spec.
 
 A spec follows the flow idle -> screenshot -> action -> screenshot. The generic spec already takes the idle screenshot. The recipe spec performs the action. It asserts the result. Then it screenshots the new state with `testState()`:
 
@@ -573,7 +573,7 @@ describeRecipe('shadcn/popover', () => {
 - [ ] `README.md` has the hero preview + `## Usage` static block + `::: installation` / `::: api-reference` directives
 - [ ] Visual + behavioral parity verified manually (screenshot/video attached)
 - [ ] Snapshots + screenshots regenerated + committed (no stale entries)
-- [ ] Interactive recipe: spec in `tests/<recipe>.spec.ts`, recipe removed from `WITHOUT_SPEC`
+- [ ] Interactive recipe: spec in `tests/<recipe>.spec.ts`
 - [ ] `php-cs-fixer`, `twig-cs-fixer`, `pnpm run fmt`, `pnpm run lint` clean
 - [ ] `bin/ux-toolkit-kit-lint --fail-on-warning kits/<kit>` clean
 - [ ] Docs: `## <type> <Description.>` above each prop in `{% props %}` + `{##- <Description.> -#}` on the line above each rendered block (trim mirrors the block); descriptions Capitalized + ending with a period; prop types are spaceless PHPStan types; **no `Defaults to`** (defaults live in `{%- props -%}`); every rendered block documented
