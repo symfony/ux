@@ -23,6 +23,7 @@
 - [Shadcn] Fix a disabled `slider` still reacting to the keyboard
 - [Shadcn] Fix `slider` losing the focus after a click on its track
 - [Shadcn] Fix the close button and the action of a `sonner` toast ignoring mouse clicks
+- [Shadcn] Fix the bookmark icon of the `toggle` examples not filling when pressed
 
 ## 3.5.0
 
