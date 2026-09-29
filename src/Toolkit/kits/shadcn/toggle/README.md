@@ -4,7 +4,7 @@ A two-state button that can be either on or off.
 
 ```twig {"preview":true}
 <twig:Toggle variant="outline" size="sm" aria-label="Toggle bookmark">
-    <twig:ux:icon name="lucide:bookmark" class="group-data-[state=on]/toggle:fill-current" />
+    <twig:ux:icon name="lucide:bookmark" class="group-data-[state=on]/toggle:*:fill-current" />
     Bookmark
 </twig:Toggle>
 ```
@@ -88,13 +88,13 @@ To enable RTL support, set the `dir="rtl"` attribute on the root element.
 <div class="flex flex-col gap-8">
     {# Arabic #}
     <twig:Toggle variant="outline" size="sm" aria-label="Toggle bookmark" dir="rtl">
-        <twig:ux:icon name="lucide:bookmark" class="group-aria-pressed/toggle:fill-foreground" />
+        <twig:ux:icon name="lucide:bookmark" class="group-aria-pressed/toggle:*:fill-foreground" />
         إشارة مرجعية
     </twig:Toggle>
 
     {# Hebrew #}
     <twig:Toggle variant="outline" size="sm" aria-label="Toggle bookmark" dir="rtl">
-        <twig:ux:icon name="lucide:bookmark" class="group-aria-pressed/toggle:fill-foreground" />
+        <twig:ux:icon name="lucide:bookmark" class="group-aria-pressed/toggle:*:fill-foreground" />
         סימנייה
     </twig:Toggle>
 </div>
