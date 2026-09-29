@@ -20,6 +20,7 @@
 - [Shadcn] Fix Tab skipping the panels of `navigation-menu`
 - [Shadcn] Fix the `resizable` handle missing its `aria-orientation` and `aria-valuenow`
 - [Shadcn] Fix a closed `sheet` staying reachable with the keyboard and exposed to screen readers
+- [Shadcn] Fix a disabled `slider` still reacting to the keyboard
 
 ## 3.5.0
 
