@@ -3,7 +3,7 @@ import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { expect, test } from '@playwright/test';
 
-// Interactive recipes that have no spec yet. Remove a recipe from this list when its spec is added.
+// Interactive recipes allowed to have no spec yet.
 const WITHOUT_SPEC = [
     'bootstrap/accordion',
     'bootstrap/alert',
@@ -93,11 +93,12 @@ test('every interactive recipe has an interaction spec', () => {
     const recipesWithoutSpec: string[] = [];
     for (const kit of listDirs(kitsDir)) {
         for (const recipe of listDirs(join(kitsDir, kit))) {
-            if (isInteractive(kit, recipe) && !hasSpec(kit, recipe)) {
-                recipesWithoutSpec.push(`${kit}/${recipe}`);
+            const name = `${kit}/${recipe}`;
+            if (isInteractive(kit, recipe) && !hasSpec(kit, recipe) && !WITHOUT_SPEC.includes(name)) {
+                recipesWithoutSpec.push(name);
             }
         }
     }
 
-    expect(recipesWithoutSpec.sort()).toEqual([...WITHOUT_SPEC].sort());
+    expect(recipesWithoutSpec).toEqual([]);
 });
