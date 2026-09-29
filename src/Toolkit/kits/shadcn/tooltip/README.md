@@ -75,8 +75,8 @@ Show a tooltip on a disabled button by wrapping it with a span.
 ```twig {"preview":true}
 <twig:Tooltip id="tooltip-disabled-button">
     <twig:Tooltip:Trigger>
-        <span class="inline-block w-fit">
-            <twig:Button {{ ...tooltip_trigger_attrs }} variant="outline" disabled class="pointer-events-auto">Disabled</twig:Button>
+        <span class="inline-block w-fit" {{ html_attr(tooltip_trigger_attrs) }}>
+            <twig:Button variant="outline" disabled>Disabled</twig:Button>
         </span>
     </twig:Tooltip:Trigger>
     <twig:Tooltip:Content>
