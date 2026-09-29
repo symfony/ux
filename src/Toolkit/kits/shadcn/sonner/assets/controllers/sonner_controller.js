@@ -384,6 +384,11 @@ export default class extends Controller {
     }
 
     #startSwipe(pointerDownEvent, li) {
+        // Capturing the pointer would send the click to the toast instead of this control.
+        if (pointerDownEvent.target.closest('button, a')) {
+            return;
+        }
+
         // Abort any in-flight swipe for this toast before starting a new one, so a
         // re-entrant pointerdown (or a missed pointerup) can't leak the old listeners.
         this.#swipeAborts.get(li)?.abort();
