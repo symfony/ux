@@ -91,7 +91,9 @@ final class TwigComponentExtension extends Extension implements ConfigurationInt
             ->addTag('kernel.reset', ['method' => 'reset'])
         ;
 
-        $container->register('ux.twig_component.component_stack', ComponentStack::class);
+        $container->register('ux.twig_component.component_stack', ComponentStack::class)
+            ->addTag('kernel.reset', ['method' => 'reset'])
+        ;
 
         $container->register('ux.twig_component.component_properties', ComponentProperties::class)
             ->setArguments([

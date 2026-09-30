@@ -47,4 +47,16 @@ final class ComponentStackTest extends TestCase
         $this->assertNull($stack->getCurrentComponent());
         $this->assertNull($stack->getParentComponent());
     }
+
+    public function testResetRemovesAllComponents(): void
+    {
+        $stack = new ComponentStack();
+        $stack->push(new MountedComponent('component1', new \stdClass(), new ComponentAttributes([], new EscaperRuntime())));
+        $stack->push(new MountedComponent('component2', new \stdClass(), new ComponentAttributes([], new EscaperRuntime())));
+
+        $stack->reset();
+
+        $this->assertNull($stack->getCurrentComponent());
+        $this->assertNull($stack->pop());
+    }
 }

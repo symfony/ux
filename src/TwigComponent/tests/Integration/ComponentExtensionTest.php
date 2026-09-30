@@ -876,6 +876,40 @@ final class ComponentExtensionTest extends KernelTestCase
         $this->assertStringContainsString('data-foo="a b c"', $output);
     }
 
+    public function testComponentIsRemovedFromTheStackWhenItsPreRenderFails(): void
+    {
+        try {
+            $this->renderComponent('failing_exposed_variable');
+            $this->fail('The render should have failed.');
+        } catch (\Throwable $e) {
+            $this->assertStringContainsString('Cannot expose the value.', $e->getMessage());
+        }
+
+        $this->assertNull(self::getContainer()->get('ux.twig_component.component_stack')->getCurrentComponent());
+    }
+
+    public function testEmbeddedComponentIsRemovedFromTheStackWhenItsPreRenderFails(): void
+    {
+        try {
+            self::getContainer()->get(Environment::class)->render('embedded_failing_component.html.twig');
+            $this->fail('The render should have failed.');
+        } catch (\Throwable $e) {
+            $this->assertStringContainsString('Cannot expose the value.', $e->getMessage());
+        }
+
+        $this->assertNull(self::getContainer()->get('ux.twig_component.component_stack')->getCurrentComponent());
+    }
+
+    public function testComponentStackIsResetBetweenRequests(): void
+    {
+        $stack = self::getContainer()->get('ux.twig_component.component_stack');
+        $stack->push(self::getContainer()->get('ux.twig_component.component_factory')->create('component_a', ['propA' => 'a', 'propB' => 'b']));
+
+        self::getContainer()->get('services_resetter')->reset();
+
+        $this->assertNull($stack->getCurrentComponent());
+    }
+
     private function renderComponent(string $name, array $data = []): string
     {
         return self::getContainer()->get(Environment::class)->render('render_component.html.twig', [
