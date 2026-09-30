@@ -1,0 +1,11 @@
+{%- set _combobox_groupLabelId = inject('combobox.groupLabelId', null) -%}
+<div
+    id="{{ _combobox_groupLabelId }}"
+    data-slot="combobox-label"
+    {{ attributes.defaults({
+        class: 'px-2 py-1.5 text-xs text-muted-foreground'|tailwind_classes,
+    }) }}
+>
+    {##- The group heading. -#}
+    {%- block content %}{% endblock -%}
+</div>

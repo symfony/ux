@@ -1,0 +1,28 @@
+{%- props
+    ## string The value the chip stands for.
+    value,
+    ## boolean Whether the chip renders a button removing it from the selection.
+    showRemove = true
+-%}
+<span
+    data-slot="combobox-chip"
+    data-combobox-target="chip"
+    data-value="{{ value }}"
+    {{ attributes.defaults({
+        class: 'flex h-[calc(--spacing(5.25))] w-fit items-center justify-center gap-1 whitespace-nowrap rounded-sm bg-muted px-1.5 text-xs font-medium text-foreground has-data-[slot=combobox-chip-remove]:pe-0'|tailwind_classes,
+    }) }}
+>
+    <span data-slot="combobox-chip-label">
+        {##- The chip label. -#}
+        {%- block content %}{% endblock -%}
+    </span>
+    {%- if showRemove -%}
+        <button
+            type="button"
+            data-slot="combobox-chip-remove"
+            aria-label="Remove"
+            data-action="click->combobox#removeChip"
+            class="-ms-1 inline-flex size-4 shrink-0 items-center justify-center rounded-sm opacity-50 transition-opacity hover:opacity-100"
+        ><twig:ux:icon name="lucide:x" class="size-3" /></button>
+    {%- endif -%}
+</span>

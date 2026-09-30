@@ -1,0 +1,9 @@
+<div
+    data-slot="combobox-empty"
+    {{ attributes.defaults({
+        class: 'hidden w-full justify-center py-2 text-center text-sm text-muted-foreground group-data-empty/combobox-content:flex'|tailwind_classes,
+    }) }}
+>
+    {##- The message shown when the filter matches no item. -#}
+    {%- block content %}{% endblock -%}
+</div>

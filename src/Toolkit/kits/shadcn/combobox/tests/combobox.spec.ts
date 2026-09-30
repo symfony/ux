@@ -5,201 +5,158 @@ describeRecipe('shadcn/combobox', () => {
         example: 'default',
         state: 'open',
         act: async (page) => {
-            const trigger = page.getByRole('combobox');
+            const input = page.getByRole('combobox');
 
-            await trigger.click();
+            await input.click();
 
             await expect(page.getByRole('listbox')).toBeVisible();
-            await expect(trigger).toHaveAttribute('aria-expanded', 'true');
-            await expect(page.getByRole('searchbox')).toBeFocused();
+            await expect(input).toHaveAttribute('aria-expanded', 'true');
             await expect(page.getByRole('option')).toHaveCount(5);
         },
     });
 
-    testState('filters the options as you type', {
+    testState('filters the items as you type', {
         example: 'default',
         state: 'filtered',
         act: async (page) => {
-            await page.getByRole('combobox').click();
-            const search = page.getByRole('searchbox');
-            await expect(search).toBeFocused();
+            const input = page.getByRole('combobox');
+            await input.click();
 
-            await search.fill('component');
-            await page.mouse.move(0, 0);
+            await input.fill('xt');
 
-            await expect(page.getByRole('option')).toHaveText(['UX Twig Component', 'UX Live Component']);
-            await expect(search).toHaveAttribute('aria-activedescendant', 'package_option_1');
+            await expect(page.getByRole('option')).toHaveText(['Next.js', 'Nuxt.js']);
+            await expect(input).not.toHaveAttribute('aria-activedescendant');
         },
     });
 
     testState('shows the empty message when nothing matches', {
-        example: 'empty-state',
+        example: 'default',
         state: 'empty',
         act: async (page) => {
-            await page.getByRole('combobox').click();
-            const search = page.getByRole('searchbox');
-            await expect(search).toBeFocused();
+            const input = page.getByRole('combobox');
+            await input.click();
 
-            await search.fill('angular');
+            await input.fill('angular');
 
-            await expect(page.getByText('No frameworks found. Try a different search.')).toBeVisible();
+            await expect(page.getByText('No items found.')).toBeVisible();
             await expect(page.getByRole('option')).toHaveCount(0);
-            await expect(search).not.toHaveAttribute('aria-activedescendant');
         },
     });
 
-    test('hides the empty message again when the filter matches', async ({ page, gotoExample }) => {
-        await gotoExample('shadcn/combobox/empty-state');
-        await page.getByRole('combobox').click();
-        const search = page.getByRole('searchbox');
-        await search.fill('angular');
-        await expect(page.getByText('No frameworks found. Try a different search.')).toBeVisible();
+    test('does not open on focus', async ({ page, gotoExample }) => {
+        await gotoExample('shadcn/combobox/default');
+        const input = page.getByRole('combobox');
 
-        await search.fill('svelte');
+        await input.focus();
 
-        await expect(page.getByText('No frameworks found. Try a different search.')).toBeHidden();
-        await expect(page.getByRole('option')).toHaveText(['SvelteKit']);
+        await expect(input).toBeFocused();
+        await expect(input).toHaveAttribute('aria-expanded', 'false');
+        await expect(page.getByRole('listbox')).toBeHidden();
     });
 
-    test('hides a group when none of its options match', async ({ page, gotoExample }) => {
-        await gotoExample('shadcn/combobox/with-groups');
-        await page.getByRole('combobox').click();
-        await expect(page.getByRole('group')).toHaveCount(3);
+    test('selects an item with the mouse', async ({ page, gotoExample }) => {
+        await gotoExample('shadcn/combobox/default');
+        const input = page.getByRole('combobox');
+        await input.click();
 
-        await page.getByRole('searchbox').fill('svelte');
-
-        await expect(page.getByRole('group')).toHaveCount(1);
-        await expect(page.getByRole('group', { name: 'Frontend Frameworks' })).toBeVisible();
-        await expect(page.getByRole('option')).toHaveText(['UX Svelte']);
-    });
-
-    test('selects an option with the mouse', async ({ page, gotoExample }) => {
-        await gotoExample('shadcn/combobox/with-form');
-        const trigger = page.getByRole('combobox');
-        const hiddenInput = page.locator('input[type="hidden"][name="package"]');
-        await expect(hiddenInput).toHaveValue('');
-        await trigger.click();
-
-        await page.getByRole('option', { name: 'UX Turbo' }).click();
+        await page.getByRole('option', { name: 'Remix' }).click();
 
         await expect(page.getByRole('listbox')).toBeHidden();
-        await expect(trigger).toHaveText('UX Turbo');
-        await expect(trigger).toHaveAttribute('aria-expanded', 'false');
-        await expect(trigger).toBeFocused();
-        await expect(hiddenInput).toHaveValue('turbo');
-
-        await trigger.click();
-
-        await expect(page.getByRole('option', { name: 'UX Turbo' })).toHaveAttribute('aria-selected', 'true');
-        await expect(page.getByRole('option', { name: 'UX Icons' })).toHaveAttribute('aria-selected', 'false');
+        await expect(input).toHaveValue('Remix');
+        await expect(input).toHaveAttribute('aria-expanded', 'false');
+        await expect(input).toBeFocused();
     });
 
-    testState('marks the selected option', {
-        example: 'with-default-value',
-        state: 'open',
-        act: async (page) => {
-            const trigger = page.getByRole('combobox');
-            await expect(trigger).toHaveText('UX Live Component');
+    test('moves through the items with the keyboard and selects with Enter', async ({ page, gotoExample }) => {
+        await gotoExample('shadcn/combobox/default');
+        const input = page.getByRole('combobox');
+        const itemId = (index: number) => `combobox-framework-demo-list-item-${index}`;
+        await input.focus();
 
-            await trigger.click();
-            await page.mouse.move(0, 0);
-
-            await expect(page.getByRole('listbox')).toBeVisible();
-            await expect(page.getByRole('option', { selected: true })).toHaveText('UX Live Component');
-        },
-    });
-
-    test('moves through the options with the keyboard and selects with Enter', async ({ page, gotoExample }) => {
-        await gotoExample('shadcn/combobox/with-form');
-        const trigger = page.getByRole('combobox');
-        const search = page.getByRole('searchbox');
-        await trigger.focus();
-
-        await trigger.press('ArrowDown');
+        await input.press('ArrowDown');
 
         await expect(page.getByRole('listbox')).toBeVisible();
-        await expect(search).toBeFocused();
-        await expect(search).toHaveAttribute('aria-activedescendant', 'package-form_option_0');
+        await expect(input).toHaveAttribute('aria-activedescendant', itemId(0));
 
-        await search.press('ArrowDown');
-        await search.press('ArrowDown');
-        await expect(search).toHaveAttribute('aria-activedescendant', 'package-form_option_2');
+        await input.press('ArrowDown');
+        await input.press('ArrowDown');
+        await expect(input).toHaveAttribute('aria-activedescendant', itemId(2));
 
-        await search.press('ArrowUp');
-        await expect(search).toHaveAttribute('aria-activedescendant', 'package-form_option_1');
+        await input.press('ArrowUp');
+        await expect(input).toHaveAttribute('aria-activedescendant', itemId(1));
 
-        await search.press('End');
-        await expect(search).toHaveAttribute('aria-activedescendant', 'package-form_option_4');
+        await input.press('End');
+        await expect(input).toHaveAttribute('aria-activedescendant', itemId(4));
 
-        await search.press('ArrowDown');
-        await expect(search).toHaveAttribute('aria-activedescendant', 'package-form_option_4');
+        await input.press('ArrowDown');
+        await expect(input).toHaveAttribute('aria-activedescendant', itemId(4));
 
-        await search.press('Home');
-        await expect(search).toHaveAttribute('aria-activedescendant', 'package-form_option_0');
+        await input.press('Home');
+        await expect(input).toHaveAttribute('aria-activedescendant', itemId(0));
 
-        await search.press('ArrowDown');
-        await search.press('Enter');
+        await input.press('ArrowDown');
+        await input.press('Enter');
 
         await expect(page.getByRole('listbox')).toBeHidden();
-        await expect(trigger).toHaveText('UX Twig Component');
-        await expect(trigger).toBeFocused();
-        await expect(page.locator('input[type="hidden"][name="package"]')).toHaveValue('twig-component');
+        await expect(input).toHaveValue('SvelteKit');
+        await expect(input).toBeFocused();
+        await expect(input).not.toHaveAttribute('aria-activedescendant');
     });
 
-    test('opens on the last option with ArrowUp', async ({ page, gotoExample }) => {
+    test('opens on the last item with ArrowUp', async ({ page, gotoExample }) => {
         await gotoExample('shadcn/combobox/default');
-        const trigger = page.getByRole('combobox');
-        await trigger.focus();
+        const input = page.getByRole('combobox');
+        await input.focus();
 
-        await trigger.press('ArrowUp');
+        await input.press('ArrowUp');
 
         await expect(page.getByRole('listbox')).toBeVisible();
-        await expect(page.getByRole('searchbox')).toHaveAttribute('aria-activedescendant', 'package_option_4');
+        await expect(input).toHaveAttribute('aria-activedescendant', 'combobox-framework-demo-list-item-4');
     });
 
-    test('opens with Enter without highlighting an option', async ({ page, gotoExample }) => {
-        await gotoExample('shadcn/combobox/default');
-        const trigger = page.getByRole('combobox');
-        await trigger.focus();
+    test('highlights the first match while filtering with autoHighlight', async ({ page, gotoExample }) => {
+        await gotoExample('shadcn/combobox/auto-highlight');
+        const input = page.getByRole('combobox');
+        await input.click();
 
-        await trigger.press('Enter');
+        await input.fill('r');
 
-        await expect(page.getByRole('listbox')).toBeVisible();
-        await expect(page.getByRole('searchbox')).toBeFocused();
-        await expect(page.getByRole('searchbox')).not.toHaveAttribute('aria-activedescendant');
+        await expect(page.getByRole('option')).toHaveText(['Remix', 'Astro']);
+        await expect(input).toHaveAttribute('aria-activedescendant', 'combobox-framework-auto-highlight-list-item-3');
+
+        await input.press('Enter');
+
+        await expect(input).toHaveValue('Remix');
     });
 
-    test('selects the first match of the filter with Enter', async ({ page, gotoExample }) => {
+    test('clears the typed text on Escape', async ({ page, gotoExample }) => {
         await gotoExample('shadcn/combobox/default');
-        const trigger = page.getByRole('combobox');
-        await trigger.click();
-        const search = page.getByRole('searchbox');
-        await expect(search).toBeFocused();
+        const input = page.getByRole('combobox');
+        await input.click();
+        await input.fill('zzz');
 
-        await search.fill('icons');
-        await search.press('Enter');
+        await input.press('Escape');
 
         await expect(page.getByRole('listbox')).toBeHidden();
-        await expect(trigger).toHaveText('UX Icons');
+        await expect(input).toHaveValue('');
+        await expect(input).toBeFocused();
     });
 
-    test('closes on Escape and gives focus back to the trigger', async ({ page, gotoExample }) => {
-        await gotoExample('shadcn/combobox/default');
-        const trigger = page.getByRole('combobox');
-        await trigger.click();
-        await expect(page.getByRole('searchbox')).toBeFocused();
+    test('restores the selection when it closes without a new choice', async ({ page, gotoExample }) => {
+        await gotoExample('shadcn/combobox/clear-button');
+        const input = page.getByRole('combobox');
+        await input.click();
+        await input.fill('zzz');
 
-        await page.keyboard.press('Escape');
+        await page.mouse.click(700, 500);
 
         await expect(page.getByRole('listbox')).toBeHidden();
-        await expect(trigger).toHaveAttribute('aria-expanded', 'false');
-        await expect(trigger).toBeFocused();
-        await expect(trigger).toHaveText('Select package...');
+        await expect(input).toHaveValue('Next.js');
     });
 
-    test('closes on a click on its trigger', async ({ page, gotoExample }) => {
+    test('closes on a click on the trigger', async ({ page, gotoExample }) => {
         await gotoExample('shadcn/combobox/default');
-        const trigger = page.getByRole('combobox');
+        const trigger = page.getByRole('button', { name: 'Toggle the list' });
         await trigger.click();
         await expect(page.getByRole('listbox')).toBeVisible();
 
@@ -214,59 +171,164 @@ describeRecipe('shadcn/combobox', () => {
         await page.getByRole('combobox').click();
         await expect(page.getByRole('listbox')).toBeVisible();
 
-        await page.mouse.click(600, 400);
+        await page.mouse.click(700, 500);
 
         await expect(page.getByRole('listbox')).toBeHidden();
     });
 
     test('resets the filter when it opens again', async ({ page, gotoExample }) => {
         await gotoExample('shadcn/combobox/default');
-        const trigger = page.getByRole('combobox');
-        await trigger.click();
-        await page.getByRole('searchbox').fill('turbo');
+        const input = page.getByRole('combobox');
+        await input.click();
+        await input.fill('remix');
         await expect(page.getByRole('option')).toHaveCount(1);
-        await page.keyboard.press('Escape');
+        await input.press('Escape');
 
-        await trigger.click();
+        await input.click();
 
-        await expect(page.getByRole('searchbox')).toHaveValue('');
         await expect(page.getByRole('option')).toHaveCount(5);
     });
 
+    test('hides a group when none of its items match', async ({ page, gotoExample }) => {
+        await gotoExample('shadcn/combobox/groups');
+        const input = page.getByRole('combobox');
+        await input.click();
+        await expect(page.getByRole('group', { name: /Americas|Europe|Asia/ })).toHaveCount(3);
+
+        await input.fill('paris');
+
+        await expect(page.getByRole('group', { name: /Americas|Europe|Asia/ })).toHaveCount(1);
+        await expect(page.getByRole('group', { name: 'Europe' })).toBeVisible();
+        await expect(page.getByRole('option')).toHaveText(['(GMT+1) Paris']);
+    });
+
+    testState('marks the selected item', {
+        example: 'clear-button',
+        state: 'open',
+        act: async (page) => {
+            await page.getByRole('combobox').click();
+
+            await expect(page.getByRole('listbox')).toBeVisible();
+            await expect(page.getByRole('option', { selected: true })).toHaveText('Next.js');
+        },
+    });
+
     test('clears the selection with the clear button', async ({ page, gotoExample }) => {
-        await gotoExample('shadcn/combobox/clearable');
-        const trigger = page.getByRole('combobox');
-        const clear = page.getByLabel('Clear selection');
-        await expect(trigger).toHaveText('UX Live Component');
+        await gotoExample('shadcn/combobox/clear-button');
+        const input = page.getByRole('combobox');
+        const clear = page.getByRole('button', { name: 'Clear selection' });
+        const trigger = page.getByRole('button', { name: 'Toggle the list' });
+        const hiddenInput = page.locator('input[type="hidden"][name="framework"]');
+        await expect(input).toHaveValue('Next.js');
+        await expect(hiddenInput).toHaveValue('Next.js');
         await expect(clear).toBeVisible();
+        await expect(trigger).toBeHidden();
 
         await clear.click();
 
-        await expect(trigger).toHaveText('Select package...');
+        await expect(input).toHaveValue('');
+        await expect(hiddenInput).toHaveValue('');
         await expect(clear).toBeHidden();
-        await expect(page.getByRole('listbox')).toBeHidden();
+        await expect(trigger).toBeVisible();
+        await expect(input).toBeFocused();
     });
 
     test('does not open when disabled', async ({ page, gotoExample }) => {
         await gotoExample('shadcn/combobox/disabled');
-        const trigger = page.getByRole('combobox');
+        const input = page.getByRole('combobox');
 
-        await trigger.click({ force: true });
+        await input.click({ force: true });
 
-        await expect(trigger).toBeDisabled();
-        await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+        await expect(input).toBeDisabled();
+        await expect(input).toHaveAttribute('aria-expanded', 'false');
         await expect(page.getByRole('listbox')).toBeHidden();
     });
 
-    test('lines the list up with its trigger', async ({ page, gotoExample }) => {
+    test('lines the list up with its input', async ({ page, gotoExample }) => {
         await gotoExample('shadcn/combobox/default');
-        const trigger = page.getByRole('combobox');
+        const content = page.locator('[data-slot="combobox-content"]');
+        const groupBox = await page.locator('[data-slot="input-group"]').boundingBox();
+
+        await page.getByRole('combobox').click();
+
+        // The content grows from 95% while it opens.
+        await expect.poll(async () => (await content.boundingBox())?.width).toBeCloseTo(groupBox?.width ?? 0, 0);
+        expect((await content.boundingBox())?.x).toBeCloseTo(groupBox?.x ?? 0, 0);
+    });
+
+    testState('adds the selected items as chips', {
+        example: 'multiple',
+        state: 'selected',
+        act: async (page) => {
+            await page.getByRole('combobox').click();
+
+            await page.getByRole('option', { name: 'Remix' }).click();
+            await page.mouse.move(0, 0);
+
+            await expect(page.getByRole('listbox')).toBeVisible();
+            await expect(page.locator('[data-slot="combobox-chips"] [data-slot="combobox-chip"]')).toHaveText([
+                'Next.js',
+                'Remix',
+            ]);
+            await expect(page.getByRole('option', { selected: true })).toHaveText(['Next.js', 'Remix']);
+            await expect(page.locator('input[type="hidden"][name="frameworks[]"]')).toHaveCount(2);
+        },
+    });
+
+    test('removes a chip with its button and with Backspace', async ({ page, gotoExample }) => {
+        await gotoExample('shadcn/combobox/multiple');
+        const input = page.getByRole('combobox');
+        const chips = page.locator('[data-slot="combobox-chips"] [data-slot="combobox-chip"]');
+        await input.click();
+        await page.getByRole('option', { name: 'Astro' }).click();
+        await expect(chips).toHaveText(['Next.js', 'Astro']);
+
+        await page.getByRole('button', { name: 'Remove' }).first().click();
+
+        await expect(chips).toHaveText(['Astro']);
+        await expect(input).toBeFocused();
+
+        await input.press('Backspace');
+
+        await expect(chips).toHaveCount(0);
+        await expect(page.locator('input[type="hidden"][name="frameworks[]"]')).toHaveCount(0);
+    });
+
+    testState('opens from a button', {
+        example: 'popup',
+        state: 'open',
+        act: async (page) => {
+            const trigger = page.getByRole('button', { name: 'Select country' });
+
+            await trigger.click();
+
+            await expect(page.getByRole('listbox')).toBeVisible();
+            await expect(trigger).toHaveAttribute('aria-expanded', 'true');
+            await expect(page.getByRole('combobox')).toBeFocused();
+        },
+    });
+
+    test('gives the focus back to the button of a popup', async ({ page, gotoExample }) => {
+        await gotoExample('shadcn/combobox/popup');
+        const search = page.getByRole('combobox');
+        await page.getByRole('button', { name: 'Select country' }).click();
+        await expect(search).toBeFocused();
+
+        await search.fill('fr');
+        await search.press('ArrowDown');
+        await search.press('Enter');
+
+        const trigger = page.getByRole('button', { name: 'France' });
+        await expect(page.getByRole('listbox')).toBeHidden();
+        await expect(trigger).toBeFocused();
 
         await trigger.click();
+        await expect(search).toBeFocused();
+        await expect(search).toHaveValue('');
 
-        const triggerBox = await trigger.boundingBox();
-        const listBox = await page.getByRole('listbox').boundingBox();
-        expect(Math.abs((listBox?.x ?? 0) - (triggerBox?.x ?? 0))).toBeLessThanOrEqual(2);
-        expect(Math.abs((listBox?.width ?? 0) - (triggerBox?.width ?? 0))).toBeLessThanOrEqual(2);
+        await search.press('Escape');
+
+        await expect(page.getByRole('listbox')).toBeHidden();
+        await expect(trigger).toBeFocused();
     });
 });

@@ -1,0 +1,15 @@
+{%- set _combobox_listId = inject('combobox.listId', null) -%}
+{%- set _combobox_multiple = inject('combobox.multiple', false) -%}
+<div
+    id="{{ _combobox_listId }}"
+    role="listbox"
+    data-slot="combobox-list"
+    data-combobox-target="list"
+    aria-multiselectable="{{ _combobox_multiple ? 'true' : 'false' }}"
+    {{ attributes.defaults({
+        class: 'no-scrollbar scroll-py-1 overflow-y-auto overscroll-contain p-1 data-empty:p-0'|tailwind_classes,
+    }) }}
+>
+    {##- The selectable items, e.g. `Combobox:Item` or `Combobox:Group`. -#}
+    {%- block content %}{% endblock -%}
+</div>
