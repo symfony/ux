@@ -72,6 +72,23 @@ final class InstallerTest extends KernelTestCase
         $this->assertSame(1, $askedCount);
     }
 
+    public function testShouldOverwriteFileNewerThanRecipeWhenConfirmed(): void
+    {
+        $installer = new Installer(self::getContainer()->get('filesystem'), static fn () => true);
+        $kit = $this->createKit('shadcn');
+        $recipe = $kit->getRecipe('button');
+        $recipeFile = $recipe->absolutePath.'/templates/components/Button.html.twig';
+        $installedFile = $this->tmpDir.'/templates/components/Button.html.twig';
+
+        $installer->installRecipe($kit, $recipe, $this->tmpDir, false);
+        $this->filesystem->dumpFile($installedFile, 'Local changes');
+        touch($installedFile, filemtime($recipeFile) + 3600);
+
+        $installer->installRecipe($kit, $recipe, $this->tmpDir, false);
+
+        $this->assertFileEquals($recipeFile, $installedFile);
+    }
+
     public function testCanInstallComponentIfForced(): void
     {
         $installer = new Installer(self::getContainer()->get('filesystem'), static fn () => throw new \BadFunctionCallException('The installer should not ask for confirmation since the file does not exist.'));
