@@ -68,4 +68,9 @@ class ComponentStack implements \IteratorAggregate
     {
         return new \ArrayIterator(array_reverse($this->components));
     }
+
+    public function reset(): void
+    {
+        $this->components = [];
+    }
 }
