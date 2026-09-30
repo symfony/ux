@@ -1,0 +1,11 @@
+---------------------------------------------------------------------------
+
+by ker0x at 2026-09-23T13:25:00Z
+
+Found while working on #3906 (`combobox`), where `combobox_trigger_attrs` and `combobox_clear_attrs` hit the same problem. The two are independent — whichever merges second needs a snapshot refresh.
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-09-30T09:00:10Z
+
+(I'm on it!)
