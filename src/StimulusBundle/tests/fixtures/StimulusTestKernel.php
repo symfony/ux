@@ -32,6 +32,16 @@ class StimulusTestKernel extends Kernel
         return new Response($twig->render('homepage.html.twig'));
     }
 
+    public function front(Environment $twig): Response
+    {
+        return new Response($twig->render('front.html.twig'));
+    }
+
+    public function admin(Environment $twig): Response
+    {
+        return new Response($twig->render('admin.html.twig'));
+    }
+
     public function registerBundles(): iterable
     {
         return [
@@ -48,6 +58,8 @@ class StimulusTestKernel extends Kernel
 
     protected function configureContainer(ContainerConfigurator $container): void
     {
+        $isApplicationsEnvironment = 'applications' === $this->environment;
+
         $container->extension('framework', [
             'secret' => 'foo000',
             'http_method_override' => false,
@@ -59,7 +71,7 @@ class StimulusTestKernel extends Kernel
                     __DIR__.'/vendor/fake-vendor/ux-package2/Resources/assets/dist' => 'fake-vendor/ux-package2',
                 ],
                 // @legacy
-                'importmap_path' => '%kernel.project_dir%/importmap.php',
+                'importmap_path' => $isApplicationsEnvironment ? '%kernel.project_dir%/importmap_applications.php' : '%kernel.project_dir%/importmap.php',
             ],
             'test' => true,
             ...(self::VERSION_ID >= 60200 ? [
@@ -77,6 +89,21 @@ class StimulusTestKernel extends Kernel
                 __DIR__.'/assets/controllers',
                 __DIR__.'/assets/more-controllers',
             ],
+            ...($isApplicationsEnvironment ? [
+                'applications' => [
+                    'front' => [
+                        'loader' => '%kernel.project_dir%/assets/front/stimulus_loader.js',
+                        'controller_paths' => [__DIR__.'/assets/front/controllers'],
+                        'include_global_paths' => true,
+                    ],
+                    'admin' => [
+                        'loader' => '%kernel.project_dir%/assets/admin/stimulus_loader.js',
+                        'controller_paths' => [__DIR__.'/assets/admin/controllers'],
+                        'include_global_paths' => false,
+                        'controllers_json' => '%kernel.project_dir%/assets/admin/controllers.json',
+                    ],
+                ],
+            ] : []),
         ]);
     }
 
@@ -88,5 +115,7 @@ class StimulusTestKernel extends Kernel
     protected function configureRoutes(RoutingConfigurator $routes): void
     {
         $routes->add('homepage', '/')->controller('kernel::homepage');
+        $routes->add('front', '/front')->controller('kernel::front');
+        $routes->add('admin', '/admin')->controller('kernel::admin');
     }
 }

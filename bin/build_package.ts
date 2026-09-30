@@ -46,7 +46,7 @@ async function main() {
         ...globSync('src/*controller.ts'),
         ...(isTurbo ? ['src/mercure_stream_source_element.ts'] : []),
         ...(isInspector ? ['src/inspector.ts'] : []),
-        ...(isStimulusBundle ? ['src/loader.ts', 'src/controllers.ts'] : []),
+        ...(isStimulusBundle ? ['src/loader.ts', 'src/controllers.ts', 'src/core.ts'] : []),
         ...(isReactOrVue ? ['src/loader.ts', 'src/components.ts'] : []),
         ...(inputCssFile ? [inputCssFile] : []),
     ];
