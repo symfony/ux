@@ -49,6 +49,20 @@ class TwigPreLexer
         $inTwigEmbed = false;
 
         while ($this->position < $this->length) {
+            // copy text up to the next character that can start a tag or a component,
+            // unless a component still has to open its default block before its content
+            $char = $this->input[$this->position];
+            if ('{' !== $char && '<' !== $char
+                && (empty($this->currentComponents) || $this->currentComponents[\count($this->currentComponents) - 1]['hasDefaultBlock'])
+            ) {
+                $text = substr($this->input, $this->position, strcspn($this->input, '{<', $this->position));
+                $this->line += substr_count($text, "\n");
+                $this->position += \strlen($text);
+                $output .= $text;
+
+                continue;
+            }
+
             // ignore content inside verbatim block #947
             if ('{' === $this->input[$this->position] && preg_match(self::VERBATIM_REGEX, $this->input, $matches, 0, $this->position)) {
                 if (!empty($this->currentComponents)
