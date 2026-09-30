@@ -3,7 +3,7 @@
     type = 'button',
     ## 'default'|'secondary'|'destructive'|'outline'|'ghost'|'link' The visual style variant.
     variant = 'ghost',
-    ## 'default'|'sm'|'lg'|'icon'|'icon-sm'|'icon-lg' The button size.
+    ## 'xs'|'sm'|'icon-xs'|'icon-sm' The button size.
     size = 'xs'
 -%}
 {%- set style = html_cva(
@@ -20,7 +20,6 @@
 <twig:Button
     type="{{ type }}"
     variant="{{ variant }}"
-    size="{{ size }}"
     {{ ...attributes.defaults({class: style.apply({size: size})|tailwind_classes}) }}
 >
     {##- The button label and/or icon. -#}

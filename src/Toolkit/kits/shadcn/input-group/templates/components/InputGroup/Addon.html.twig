@@ -19,6 +19,7 @@
     role="group"
     {{ attributes.defaults({
         class: style.apply({align: align})|tailwind_classes,
+        'data-action': 'click->input-group#focusInput'|html_attr_type('sst'),
     }) }}
 >
     {##- The addon content, typically an icon or text. -#}
