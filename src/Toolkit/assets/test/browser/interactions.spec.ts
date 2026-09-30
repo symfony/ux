@@ -3,55 +3,6 @@ import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { expect, test } from '@playwright/test';
 
-// Interactive recipes allowed to have no spec yet.
-const WITHOUT_SPEC = [
-    'bootstrap/accordion',
-    'bootstrap/alert',
-    'bootstrap/button-group',
-    'bootstrap/button',
-    'bootstrap/carousel',
-    'bootstrap/collapse',
-    'bootstrap/dropdown',
-    'bootstrap/list-group',
-    'bootstrap/modal',
-    'bootstrap/navbar',
-    'bootstrap/navs-tabs',
-    'bootstrap/offcanvas',
-    'bootstrap/popover',
-    'bootstrap/toast',
-    'bootstrap/tooltip',
-    'common/clipboard',
-    'common/closeable',
-    'common/tooltip',
-    'flowbite-4/alert',
-    'flowbite-4/modal',
-    'flowbite-4/tabs',
-    'shadcn/accordion',
-    'shadcn/alert-dialog',
-    'shadcn/calendar',
-    'shadcn/carousel',
-    'shadcn/collapsible',
-    'shadcn/combobox',
-    'shadcn/date-picker',
-    'shadcn/dialog',
-    'shadcn/drawer',
-    'shadcn/dropdown-menu',
-    'shadcn/hover-card',
-    'shadcn/input-otp',
-    'shadcn/menubar',
-    'shadcn/navigation-menu',
-    'shadcn/questionnaire',
-    'shadcn/resizable',
-    'shadcn/sheet',
-    'shadcn/sidebar',
-    'shadcn/slider',
-    'shadcn/sonner',
-    'shadcn/tabs',
-    'shadcn/toggle-group',
-    'shadcn/toggle',
-    'shadcn/tooltip',
-];
-
 const kitsDir = fileURLToPath(new URL('../../../kits', import.meta.url));
 
 const listDirs = (dir: string): string[] =>
@@ -94,7 +45,7 @@ test('every interactive recipe has an interaction spec', () => {
     for (const kit of listDirs(kitsDir)) {
         for (const recipe of listDirs(join(kitsDir, kit))) {
             const name = `${kit}/${recipe}`;
-            if (isInteractive(kit, recipe) && !hasSpec(kit, recipe) && !WITHOUT_SPEC.includes(name)) {
+            if (isInteractive(kit, recipe) && !hasSpec(kit, recipe)) {
                 recipesWithoutSpec.push(name);
             }
         }
