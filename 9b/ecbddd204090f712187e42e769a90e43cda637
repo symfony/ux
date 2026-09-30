@@ -1,0 +1,11 @@
+---------------------------------------------------------------------------
+
+by kbond at 2026-09-28T12:04:53Z
+
+~Hmm, so we can only configure them in our app config? We can't use the presets set at the, say, Cloudinary level (assuming a Cloudinary provider exists)?~ After further thought, this isn't something we should support as we lose the responsive feature.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2026-09-29T07:08:15Z
+
+Well... I'm happy because in the end, i'm very confident all the features I suggested in [my PR](https://github.com/symfony/ux/pull/3768) (called them "profiles" but _preset_ is even better) will be sooner than later incorporated in UX Image .. and because it's way better to move incrementally like we do right now! you were once again 100% right on this :clap: 🤝 ❤️
