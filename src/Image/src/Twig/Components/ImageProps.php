@@ -55,6 +55,8 @@ trait ImageProps
      */
     public array $operations = [];
 
+    public ?string $preset = null;
+
     /**
      * @param array<string, mixed> $attributes
      *
@@ -79,6 +81,7 @@ trait ImageProps
             objectFit: $this->objectFit,
             breakpoints: $this->breakpoints,
             operations: $this->operations,
+            preset: $this->preset,
         );
     }
 }

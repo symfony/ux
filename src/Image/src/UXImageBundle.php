@@ -13,6 +13,7 @@ namespace Symfony\UX\Image;
 
 use Symfony\Bundle\TwigBundle\TwigBundle;
 use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;
+use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
@@ -52,6 +53,8 @@ final class UXImageBundle extends AbstractBundle
 
     public function configure(DefinitionConfigurator $definition): void
     {
+        $fits = array_column(Fit::cases(), 'value');
+
         $definition->rootNode()
             ->children()
                 ->scalarNode('provider')->defaultNull()->end()
@@ -68,6 +71,39 @@ final class UXImageBundle extends AbstractBundle
                     ->min(1)
                     ->max(100)
                     ->defaultNull()
+                ->end()
+                ->arrayNode('presets')
+                    ->info('Named sets of transformations, applied through the "preset" prop or option.')
+                    ->useAttributeAsKey('name', false)
+                    ->normalizeKeys(false)
+                    ->beforeNormalization()
+                        ->ifArray()
+                        ->then(self::rejectKeyAttributes(...))
+                    ->end()
+                    ->arrayPrototype()
+                        ->children()
+                            ->integerNode('width')->min(1)->end()
+                            ->integerNode('height')->min(1)->end()
+                            ->scalarNode('fit')
+                                ->validate()
+                                    // An env placeholder is validated as "", so "" passes here and ImagePresets rejects a literal one.
+                                    ->ifNotInArray([...$fits, ''])
+                                    ->thenInvalid('The value %s is not allowed, expected one of "'.implode('", "', $fits).'".')
+                                ->end()
+                            ->end()
+                            ->stringNode('format')->cannotBeEmpty()->end()
+                            ->integerNode('quality')->min(1)->max(100)->end()
+                            ->arrayNode('operations')
+                                ->useAttributeAsKey('provider')
+                                ->normalizeKeys(false)
+                                ->arrayPrototype()
+                                    ->useAttributeAsKey('name')
+                                    ->normalizeKeys(false)
+                                    ->scalarPrototype()->cannotBeEmpty()->end()
+                                ->end()
+                            ->end()
+                        ->end()
+                    ->end()
                 ->end()
             ->end()
         ;
@@ -93,6 +129,7 @@ final class UXImageBundle extends AbstractBundle
         $container->services()->get('ux_image.renderer')->arg(2, $config['formats']);
         $container->services()->get('ux_image.layout_resolver')->arg(0, $config['resolutions']);
         $container->services()->get('ux_image.url_generator')->arg('$defaultQuality', $config['quality']);
+        $container->services()->get('.ux_image.presets')->arg(0, $config['presets']);
 
         foreach (self::$bridges as $name => $bridge) {
             if (ContainerBuilder::willBeAvailable('symfony/ux-'.$name.'-image', $bridge['factory'], ['symfony/ux-image'])) {
@@ -101,5 +138,37 @@ final class UXImageBundle extends AbstractBundle
                     ->tag('ux_image.provider_factory', ['provider' => $name]);
             }
         }
+    }
+
+    /**
+     * Config keys a map by these attributes when it finds them, so a "name" option or a "provider" operation would silently rename its preset or provider.
+     *
+     * @param array<mixed> $presets
+     *
+     * @return array<mixed>
+     */
+    private static function rejectKeyAttributes(array $presets): array
+    {
+        foreach ($presets as $name => $preset) {
+            if (\is_array($preset) && \array_key_exists('name', $preset)) {
+                throw self::invalidConfiguration(\sprintf('ux_image.presets.%s', $name), 'Unrecognized option "name" under "%s".');
+            }
+
+            foreach (\is_array($preset['operations'] ?? null) ? $preset['operations'] : [] as $provider => $operations) {
+                if (\is_array($operations) && \array_key_exists('provider', $operations)) {
+                    throw self::invalidConfiguration(\sprintf('ux_image.presets.%s.operations.%s', $name, $provider), 'The operation name "provider" under "%s" is reserved.');
+                }
+            }
+        }
+
+        return $presets;
+    }
+
+    private static function invalidConfiguration(string $path, string $message): InvalidConfigurationException
+    {
+        $exception = new InvalidConfigurationException(\sprintf($message, $path));
+        $exception->setPath($path);
+
+        return $exception;
     }
 }

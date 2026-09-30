@@ -67,10 +67,28 @@ final class TestKernel extends Kernel
             'no_twig' => [],
             'env_placeholder' => ['provider' => '%env(UX_IMAGE_DSN)%'],
             'default_placeholder' => ['provider' => '%env(resolve:default::UX_IMAGE_DSN)%'],
-            default => ['provider' => 'fake://default'],
+            'preset_typo' => [
+                'presets' => ['hero' => ['operations' => ['cloudfare' => ['gravity' => 'auto']]]],
+            ],
+            'preset_env_fit' => [
+                'provider' => 'fake://default',
+                'presets' => ['thumbnail' => ['width' => 200, 'fit' => '%env(UX_IMAGE_FIT)%']],
+            ],
+            default => [
+                'provider' => 'fake://default',
+                'presets' => [
+                    'thumbnail' => [
+                        'width' => 200,
+                        'height' => 200,
+                        'quality' => 70,
+                        'operations' => ['fake' => ['sharpen' => 2]],
+                    ],
+                    'banner' => ['height' => 450],
+                ],
+            ],
         });
 
-        if ('no_twig' === $this->environment) {
+        if (\in_array($this->environment, ['no_twig', 'preset_env_fit'], true)) {
             $container->services()->alias('test.ux_image.url_generator', ImageUrlGenerator::class)->public();
         }
 

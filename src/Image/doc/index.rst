@@ -118,12 +118,16 @@ Prop            Type                              Default
 ``object-fit``  ``string|null``                   the ``fit`` value
 ``breakpoints`` ``int[]|null``                    the ``resolutions`` option
 ``operations``  ``array<string, array>``          ``{}``
+``preset``      ``string|null``                   ``null``
 =============== ================================= ================================
 
 ``layout`` and its ``breakpoints``, ``sizes`` and generated ``style`` are
 covered under :ref:`Layout and rendering <image_layout_and_rendering>`.
 ``priority`` sets ``loading="eager" fetchpriority="high"``; without it, an
 image only gets ``loading="lazy"``.
+
+``preset`` applies a named set of transformations from the configuration (see
+:ref:`The presets option <image_presets>`).
 
 .. caution::
 
@@ -203,10 +207,10 @@ function returns it:
 
     <meta property="og:image" content="{{ absolute_url(ux_image_url('/uploads/hero.jpg', {width: 1200, height: 630})) }}">
 
-It accepts ``width``, ``height``, ``fit``, ``format``, ``quality`` and
-``operations``, with the same meaning as the component's props. Like the
-component, it defaults ``fit`` to ``cover`` when both ``width`` and ``height``
-are set. An unknown option throws an ``InvalidArgumentException``.
+It accepts ``width``, ``height``, ``fit``, ``format``, ``quality``,
+``operations`` and ``preset``, with the same meaning as the component's props.
+Like the component, it defaults ``fit`` to ``cover`` when both ``width`` and
+``height`` are set. An unknown option throws an ``InvalidArgumentException``.
 
 In PHP, autowire ``Symfony\UX\Image\ImageUrlGenerator``, which applies the
 same validation::
@@ -245,6 +249,7 @@ Configuration is done in your ``config/packages/ux_image.yaml`` file:
         formats: ['avif', 'webp', 'jpeg']
         resolutions: [6016, 5120, 4480, 3840, 3200, 2560, 2048, 1920, 1668, 1280, 1080, 960, 828, 750, 640]
         quality: null
+        presets: {}
 
 The ``resolve:`` processor is required: a DSN may reference container
 parameters such as ``%kernel.project_dir%``, and parameter resolution does not
@@ -327,8 +332,66 @@ The ``quality`` option
 ~~~~~~~~~~~~~~~~~~~~~~
 
 ``quality`` is the output quality, from 1 to 100, of every generated image
-that does not set its own through the ``quality`` prop or option. It defaults
-to ``null``, which leaves the quality to the provider.
+that does not set its own through the ``quality`` prop or option, or through
+a :ref:`preset <image_presets>`. It defaults to ``null``, which leaves the
+quality to the provider.
+
+.. _image_presets:
+
+The ``presets`` option
+~~~~~~~~~~~~~~~~~~~~~~
+
+``presets`` gives a name to a set of transformations, which templates then
+apply through the ``preset`` prop or option:
+
+.. code-block:: yaml
+
+    # config/packages/ux_image.yaml
+    ux_image:
+        presets:
+            thumbnail:
+                width: 200
+                height: 200
+                quality: 70
+            og:
+                width: 1200
+                height: 630
+                format: jpeg
+            vintage:
+                operations:
+                    cloudflare: { saturation: 0.3, contrast: 1.2 }
+
+.. code-block:: html+twig
+
+    <twig:ux:image src="/uploads/hero.jpg" alt="Hero" preset="thumbnail" />
+
+    {{ ux_image('/uploads/hero.jpg', 'Hero', {preset: 'vintage', width: 800}) }}
+
+    <meta property="og:image" content="{{ absolute_url(ux_image_url('/uploads/hero.jpg', {preset: 'og'})) }}">
+
+In PHP, pass the preset name to ``ImageUrlGenerator::generate()``, or to the
+``RenderOptions`` given to ``ImageRendererInterface``::
+
+    $url = $this->imageUrlGenerator->generate('/uploads/hero.jpg', preset: 'og');
+
+    $image = $this->imageRenderer->render('/uploads/hero.jpg', 'Hero', new RenderOptions(preset: 'thumbnail'));
+
+A preset holds only ``width``, ``height``, ``fit``, ``format``, ``quality`` and
+``operations``. ``layout``, ``breakpoints``, ``object-fit`` and ``priority``
+describe where the image sits on the page, so they stay in the template.
+
+A value set in the template, or passed to ``ImageUrlGenerator::generate()``,
+wins over the preset's value. Each value is replaced on its own. For example,
+setting only ``width`` on a 200x200 preset keeps its ``height`` of 200, so the
+aspect ratio changes. ``operations`` are merged per provider and per operation,
+so a template can add an operation or change one. The global ``quality`` option
+only applies when neither the template nor the preset sets one. A template
+cannot remove a value from a preset. Define another preset instead.
+
+An unknown preset name throws an ``InvalidArgumentException`` listing the
+defined presets. A preset whose ``operations`` name a provider that is not
+installed fails when the container is compiled, so a typo is caught even in an
+environment whose active provider is ``null://``.
 
 .. _image_layout_and_rendering:
 

@@ -27,6 +27,15 @@ final class RenderOptionsTest extends TestCase
         self::assertSame(Fit::Cover, $options->fit);
     }
 
+    public function testAPresetDefersTheLayoutDimensionChecksAndTheFitDefault(): void
+    {
+        $withoutDimensions = new RenderOptions(preset: 'thumbnail');
+        $withBothDimensions = new RenderOptions(width: 800, height: 450, preset: 'boxed');
+
+        self::assertSame('thumbnail', $withoutDimensions->preset);
+        self::assertNull($withBothDimensions->fit);
+    }
+
     public function testOnlyAWidthLeavesFitNull(): void
     {
         $options = new RenderOptions(layout: Layout::Fixed, width: 800);

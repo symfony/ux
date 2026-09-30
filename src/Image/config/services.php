@@ -11,6 +11,7 @@
 
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
+use Symfony\UX\Image\ImagePresets;
 use Symfony\UX\Image\ImageUrlGenerator;
 use Symfony\UX\Image\Provider\ProviderInterface;
 use Symfony\UX\Image\Provider\ProviderResolver;
@@ -46,11 +47,18 @@ return static function (ContainerConfigurator $container): void {
                 service('ux_image.layout_resolver'),
                 abstract_arg('formats'),
                 service('ux_image.url_generator'),
+                service('.ux_image.presets'),
             ])
 
         ->set('ux_image.url_generator', ImageUrlGenerator::class)
             ->args([
                 service('ux_image.provider'),
+            ])
+            ->arg('$presets', service('.ux_image.presets'))
+
+        ->set('.ux_image.presets', ImagePresets::class)
+            ->args([
+                abstract_arg('presets'),
             ])
 
         ->alias(ImageUrlGenerator::class, 'ux_image.url_generator')

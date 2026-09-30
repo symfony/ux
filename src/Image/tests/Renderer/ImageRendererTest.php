@@ -15,6 +15,7 @@ use PHPUnit\Framework\TestCase;
 use Symfony\UX\Image\Exception\InvalidArgumentException;
 use Symfony\UX\Image\Exception\LogicException;
 use Symfony\UX\Image\Fit;
+use Symfony\UX\Image\ImagePresets;
 use Symfony\UX\Image\Layout;
 use Symfony\UX\Image\Provider\NullProvider;
 use Symfony\UX\Image\Renderer\ImageRenderer;
@@ -328,8 +329,59 @@ final class ImageRendererTest extends TestCase
         self::assertStringContainsString('w=400', $constrained->imgAttributes['src']);
     }
 
+    public function testAPresetFillsTheRenderOptions(): void
+    {
+        $rendered = $this->presetRenderer()->render('hero.jpg', 'Hero', new RenderOptions(preset: 'thumbnail'));
+
+        self::assertSame('200', $rendered->imgAttributes['width']);
+        self::assertSame('200', $rendered->imgAttributes['height']);
+        self::assertSame('/hero.jpg?w=200&fm=auto&h=200&fit=cover&q=70&sharpen=2', $rendered->imgAttributes['src']);
+    }
+
+    public function testAnExplicitOptionWinsOverThePreset(): void
+    {
+        $rendered = $this->presetRenderer()->render('hero.jpg', 'Hero', new RenderOptions(width: 300, operations: ['fake' => ['sharpen' => 5]], preset: 'thumbnail'));
+
+        self::assertSame('/hero.jpg?w=300&fm=auto&h=200&fit=cover&q=70&sharpen=5', $rendered->imgAttributes['src']);
+    }
+
+    public function testThePresetFitWinsOverTheCoverDefaultOfBothDimensions(): void
+    {
+        $rendered = $this->presetRenderer()->render('hero.jpg', 'Hero', new RenderOptions(width: 400, height: 400, preset: 'boxed'));
+
+        self::assertStringContainsString('fit=contain', $rendered->imgAttributes['src']);
+    }
+
+    public function testAPresetIsAppliedWithTheNullProvider(): void
+    {
+        $renderer = new ImageRenderer(new NullProvider(), new LayoutResolver(), presets: new ImagePresets(['thumbnail' => ['width' => 200]]));
+
+        $rendered = $renderer->render('/uploads/hero.jpg', 'Hero', new RenderOptions(preset: 'thumbnail'));
+
+        self::assertSame('/uploads/hero.jpg', $rendered->imgAttributes['src']);
+        self::assertSame('200', $rendered->imgAttributes['width']);
+    }
+
+    public function testAnUnknownPresetIsRejected(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('The image preset "thumbnial" does not exist (defined: "thumbnail", "boxed").');
+
+        $this->presetRenderer()->render('hero.jpg', 'Hero', new RenderOptions(preset: 'thumbnial'));
+    }
+
     private function renderer(): ImageRenderer
     {
         return new ImageRenderer(new FakeProvider(), new LayoutResolver(), ['avif', 'webp', 'jpeg']);
+    }
+
+    private function presetRenderer(): ImageRenderer
+    {
+        $presets = new ImagePresets([
+            'thumbnail' => ['width' => 200, 'height' => 200, 'quality' => 70, 'operations' => ['fake' => ['sharpen' => 2]]],
+            'boxed' => ['fit' => 'contain'],
+        ]);
+
+        return new ImageRenderer(new FakeProvider(), new LayoutResolver(), ['avif', 'webp', 'jpeg'], presets: $presets);
     }
 }

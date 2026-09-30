@@ -12,6 +12,7 @@
 namespace Symfony\UX\Image\Tests\Integration;
 
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\UX\Image\Exception\InvalidArgumentException;
 use Symfony\UX\Image\ImageTransformation;
 use Symfony\UX\Image\Provider\ProviderInterface;
 use Symfony\UX\Image\Tests\Fixtures\TestKernel;
@@ -97,6 +98,29 @@ final class BundleInitializationTest extends KernelTestCase
         $provider = self::getContainer()->get('ux_image.provider');
 
         self::assertSame('fake', $provider->getName());
+    }
+
+    public function testAPresetOperationsKeyNamingNoInstalledProviderFailsAtCompileTime(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('The "ux_image.presets.hero.operations" option has a "cloudfare" key, which is not an installed image provider (installed: "fake", "null").');
+
+        self::bootKernel(['environment' => 'preset_typo']);
+    }
+
+    public function testAPresetFitCanComeFromAnEnvVar(): void
+    {
+        $_SERVER['UX_IMAGE_FIT'] = 'contain';
+
+        try {
+            self::bootKernel(['environment' => 'preset_env_fit']);
+
+            $url = self::getContainer()->get('test.ux_image.url_generator')->generate('/hero.jpg', preset: 'thumbnail');
+        } finally {
+            unset($_SERVER['UX_IMAGE_FIT']);
+        }
+
+        self::assertStringContainsString('fit=contain', $url);
     }
 
     public function testTheBundleWorksWithoutTwig(): void
