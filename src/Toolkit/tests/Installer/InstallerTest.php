@@ -14,6 +14,7 @@ namespace Symfony\UX\Toolkit\Tests\Installer;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
+use Symfony\UX\Toolkit\File;
 use Symfony\UX\Toolkit\Installer\Installer;
 use Symfony\UX\Toolkit\Kit\Kit;
 
@@ -51,9 +52,9 @@ final class InstallerTest extends KernelTestCase
 
     public function testShouldAskIfFileAlreadyExists(): void
     {
-        $askedCount = 0;
-        $installer = new Installer(self::getContainer()->get('filesystem'), static function () use (&$askedCount) {
-            ++$askedCount;
+        $askedFiles = [];
+        $installer = new Installer(self::getContainer()->get('filesystem'), static function (string $question, string $existingFile, string $newFile) use (&$askedFiles) {
+            $askedFiles[] = [$existingFile, $newFile];
 
             return true;
         });
@@ -64,12 +65,29 @@ final class InstallerTest extends KernelTestCase
 
         $installer->installRecipe($kit, $recipe, $this->tmpDir, false);
 
-        $this->assertSame(0, $askedCount);
+        $this->assertSame([], $askedFiles);
         $this->assertFileExists($this->tmpDir.'/templates/components/Button.html.twig');
         $this->assertSame(file_get_contents($this->tmpDir.'/templates/components/Button.html.twig'), file_get_contents(\sprintf('%s/templates/components/Button.html.twig', $recipe->absolutePath)));
 
+        $this->filesystem->dumpFile($this->tmpDir.'/templates/components/Button.html.twig', 'Local changes');
         $installer->installRecipe($kit, $recipe, $this->tmpDir, false);
-        $this->assertSame(1, $askedCount);
+
+        $expectedExistingFile = Path::join($this->tmpDir, 'templates/components/Button.html.twig');
+        $expectedNewFile = Path::join($recipe->absolutePath, 'templates/components/Button.html.twig');
+        $this->assertSame([[$expectedExistingFile, $expectedNewFile]], $askedFiles);
+    }
+
+    public function testShouldNotAskIfFileIsIdentical(): void
+    {
+        $installer = new Installer(self::getContainer()->get('filesystem'), static fn () => throw new \BadFunctionCallException('The installer should not ask for confirmation since the file is identical.'));
+        $kit = $this->createKit('shadcn');
+        $recipe = $kit->getRecipe('button');
+
+        $installer->installRecipe($kit, $recipe, $this->tmpDir, false);
+        $installationReport = $installer->installRecipe($kit, $recipe, $this->tmpDir, false);
+
+        $installedFiles = array_map(static fn (File $file) => $file->destinationRelativePathName, $installationReport->newFiles);
+        $this->assertSame(['templates/components/Button.html.twig'], $installedFiles);
     }
 
     public function testShouldOverwriteFileNewerThanRecipeWhenConfirmed(): void

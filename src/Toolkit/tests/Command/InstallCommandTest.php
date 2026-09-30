@@ -196,14 +196,105 @@ class InstallCommandTest extends KernelTestCase
         mkdir($destination);
 
         $this->bootKernel();
-        $this->consoleCommand('ux:install badge --destination='.$destination)
+        $this->consoleCommand(\sprintf('ux:install badge --destination="%s"', str_replace('\\', '\\\\', $destination)))
             ->execute()
             ->assertSuccessful();
+        $this->filesystem->dumpFile($destination.'/templates/components/Badge.html.twig', "Local changes\n");
 
-        $this->consoleCommand('ux:install badge --destination='.$destination)
+        $this->consoleCommand(\sprintf('ux:install badge --destination="%s"', str_replace('\\', '\\\\', $destination)))
             ->execute()
             ->assertFaulty()
             ->assertOutputContains('[WARNING] The recipe has not been installed.')
+            ->assertOutputNotContains('Local changes')
+        ;
+    }
+
+    public function testShouldShowDiffBeforeAskingToOverwriteFile(): void
+    {
+        $installedFile = $this->tmpDir.'/templates/components/Button.html.twig';
+        $command = \sprintf('ux:install button --kit=shadcn --destination="%s"', str_replace('\\', '\\\\', $this->tmpDir));
+        $this->consoleCommand($command)->execute()->assertSuccessful();
+        $localContent = str_replace("variant = 'default',", "variant = '<info>outline</info>',", $this->filesystem->readFile($installedFile));
+        $this->filesystem->dumpFile($installedFile, $localContent);
+
+        $result = $this->consoleCommand($command)->addInput('no')->execute();
+
+        $result
+            ->assertSuccessful()
+            ->assertOutputContains(\PHP_EOL."-    variant = '<info>outline</info>',".\PHP_EOL)
+            ->assertOutputContains(\PHP_EOL."+    variant = 'default',".\PHP_EOL)
+            ->assertOutputNotContains('diff --git')
+            ->assertOutputContains('already exists. Do you want to overwrite it?')
+        ;
+        $this->assertStringEqualsFile($installedFile, $localContent);
+    }
+
+    public function testShouldShowColoredDiffWhenOutputIsDecorated(): void
+    {
+        $installedFile = $this->tmpDir.'/templates/components/Button.html.twig';
+        $command = \sprintf('ux:install button --kit=shadcn --destination="%s"', str_replace('\\', '\\\\', $this->tmpDir));
+        $this->consoleCommand($command)->execute()->assertSuccessful();
+        $localContent = str_replace("variant = 'default',", "variant = 'outline',", $this->filesystem->readFile($installedFile));
+        $this->filesystem->dumpFile($installedFile, $localContent);
+
+        $result = $this->consoleCommand($command.' --ansi')->addInput('no')->execute();
+
+        $this->assertStringContainsString("\e[31;7moutline\e[39;27m", $result->output());
+    }
+
+    public function testShouldNotColorDiffWhenOutputIsNotDecorated(): void
+    {
+        $installedFile = $this->tmpDir.'/templates/components/Button.html.twig';
+        $command = \sprintf('ux:install button --kit=shadcn --destination="%s"', str_replace('\\', '\\\\', $this->tmpDir));
+        $this->consoleCommand($command)->execute()->assertSuccessful();
+        $localContent = str_replace("variant = 'default',", "variant = 'outline',", $this->filesystem->readFile($installedFile));
+        $this->filesystem->dumpFile($installedFile, $localContent);
+
+        $_ENV['GIT_CONFIG_COUNT'] = '1';
+        $_ENV['GIT_CONFIG_KEY_0'] = 'color.ui';
+        $_ENV['GIT_CONFIG_VALUE_0'] = 'always';
+        try {
+            $result = $this->consoleCommand($command)->addInput('no')->execute();
+        } finally {
+            unset($_ENV['GIT_CONFIG_COUNT'], $_ENV['GIT_CONFIG_KEY_0'], $_ENV['GIT_CONFIG_VALUE_0']);
+        }
+
+        $result->assertOutputContains(\PHP_EOL."-    variant = 'outline',".\PHP_EOL);
+        $this->assertStringNotContainsString("\e[", $result->output());
+    }
+
+    public function testShouldAskWithoutDiffWhenGitIsNotAvailable(): void
+    {
+        $command = \sprintf('ux:install button --kit=shadcn --destination="%s"', str_replace('\\', '\\\\', $this->tmpDir));
+        $this->consoleCommand($command)->execute()->assertSuccessful();
+        $this->filesystem->dumpFile($this->tmpDir.'/templates/components/Button.html.twig', "Local changes\n");
+
+        $path = getenv('PATH');
+        putenv('PATH='.$this->tmpDir);
+        try {
+            $result = $this->consoleCommand($command)->addInput('no')->execute();
+        } finally {
+            putenv('PATH='.$path);
+        }
+
+        $result
+            ->assertSuccessful()
+            ->assertOutputContains('already exists. Do you want to overwrite it?')
+            ->assertOutputNotContains('Local changes')
+        ;
+    }
+
+    public function testShouldNotAskToOverwriteIdenticalFile(): void
+    {
+        $command = \sprintf('ux:install button --kit=shadcn --destination="%s"', str_replace('\\', '\\\\', $this->tmpDir));
+        $this->consoleCommand($command)->execute()->assertSuccessful();
+
+        $result = $this->consoleCommand($command)->addInput('no')->execute();
+
+        $result
+            ->assertSuccessful()
+            ->assertOutputNotContains('already exists')
+            ->assertOutputContains('[OK] The recipe has been installed.')
         ;
     }
 
