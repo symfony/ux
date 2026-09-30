@@ -83,6 +83,7 @@ final class TestKernel extends Kernel
         $container->services()
             ->set('logger', NullLogger::class)
             ->set(InMemoryIconFinder::class)->args([['lucide:mail']])->autoconfigure()
+            ->alias('test.ux_icons.cache', '.ux_icons.cache')->public()
         ;
     }
 }
