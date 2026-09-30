@@ -18,6 +18,7 @@ use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigura
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
+use Symfony\UX\Toolkit\DependencyInjection\AnonymousTemplateDirectoryPass;
 use Symfony\UX\Toolkit\DependencyInjection\PreviewPass;
 use Symfony\UX\Toolkit\Installer\ComponentDirectory;
 use Symfony\UX\Toolkit\Registry\LocalRegistry;
@@ -53,10 +54,18 @@ class UXToolkitBundle extends AbstractBundle
                     ->end()
                 ->end()
                 ->scalarNode('component_dir')
-                    ->info('The directory, relative to the installation destination, where the Twig components of a recipe are installed.')
-                    ->defaultValue(ComponentDirectory::DEFAULT_PATH)
+                    ->info('The directory, relative to the installation destination, where the Twig components of a recipe are installed. Defaults to the directory Twig looks into for anonymous components ("templates/components" unless "twig_component.anonymous_template_directory" says otherwise).')
+                    ->defaultNull()
                     ->example('templates/components/ui')
-                    ->cannotBeEmpty()
+                    ->validate()
+                        ->always(static function (?string $path): ?string {
+                            if (null !== $path) {
+                                ComponentDirectory::validatePath($path);
+                            }
+
+                            return $path;
+                        })
+                    ->end()
                 ->end()
             ->end();
     }
@@ -91,7 +100,7 @@ class UXToolkitBundle extends AbstractBundle
 
     public function loadExtension(array $config, ContainerConfigurator $container, ContainerBuilder $builder): void
     {
-        $builder->setParameter('ux_toolkit.component_dir', $config['component_dir']);
+        $builder->setParameter('.ux_toolkit.component_dir', $config['component_dir']);
 
         $container->import('../config/services.php');
 
@@ -105,6 +114,7 @@ class UXToolkitBundle extends AbstractBundle
         parent::build($container);
 
         $container->addCompilerPass(new PreviewPass());
+        $container->addCompilerPass(new AnonymousTemplateDirectoryPass());
     }
 
     /**
