@@ -77,7 +77,7 @@ final class Installer
             }
         }
 
-        $this->filesystem->copy($sourceAbsolutePathName, $destinationAbsolutePathName, $force);
+        $this->filesystem->copy($sourceAbsolutePathName, $destinationAbsolutePathName, true);
 
         return true;
     }
