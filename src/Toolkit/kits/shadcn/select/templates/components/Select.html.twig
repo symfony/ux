@@ -1,8 +1,45 @@
-<select
+{%- props
+    ## string Unique identifier set on the trigger, so a `<label for>` can point at it, and used to generate the internal Select IDs.
+    id,
+    ## string|null Name of the form field carrying the selected value.
+    name = null,
+    ## string The value selected on initial render.
+    value = '',
+    ## boolean Whether the select is disabled.
+    disabled = false,
+    ## boolean Whether a value must be selected before the form can be submitted.
+    required = false,
+    ## boolean Whether the select is open on initial render.
+    open = false
+-%}
+{%- do provide('select.id', id) -%}
+{%- do provide('select.value', value) -%}
+{%- do provide('select.open', open) -%}
+{%- do provide('select.disabled', disabled) -%}
+{%- do provide('select.triggerId', id) -%}
+{%- do provide('select.contentId', 'select-' ~ id ~ '-content') -%}
+<div
+    data-slot="select"
+    data-state="{{ open ? 'open' : 'closed' }}"
+    data-disabled="{{ disabled ? 'true' : 'false' }}"
+    data-select-open-value="{{ open ? 'true' : 'false' }}"
+    data-select-value-value="{{ value }}"
     {{ attributes.defaults({
-        class: 'flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background data-[placeholder]:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1'|tailwind_classes,
+        class: 'group/select relative inline-block'|tailwind_classes,
+        'data-controller': 'select',
     }) }}
 >
-    {##- The select options (`<option>` elements). -#}
+    {%- if name is not null -%}
+        <select
+            name="{{ name }}"
+            tabindex="-1"
+            aria-hidden="true"
+            data-select-target="hiddenSelect"
+            class="sr-only"
+            {% if required %}required{% endif %}
+            {% if disabled %}disabled{% endif %}
+        ><option value="{{ value }}"></option></select>
+    {%- endif -%}
+    {##- A `Select:Trigger` and a `Select:Content`. -#}
     {%- block content %}{% endblock -%}
-</select>
+</div>
