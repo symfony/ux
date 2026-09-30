@@ -3,7 +3,7 @@
     as = 'button'
 -%}
 <{{ as }}
-    data-slot="attachment-trigger"
+    data-slot="{{ attributes.render('data-slot')|default('attachment-trigger') }}"
     {{ attributes.defaults({
         class: 'absolute inset-0 z-10 outline-none'|tailwind_classes,
         type: as == 'button' ? 'button' : false,

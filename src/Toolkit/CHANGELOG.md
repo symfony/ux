@@ -27,6 +27,7 @@
 - [Shadcn] Rewrite `combobox` to match the upstream Shadcn UI component, as `Combobox:*` sub-components with multiple selection
 - [Shadcn] Focus the input of `input-group` when one of its addons is clicked, through a new `input-group` Stimulus controller
 - [Shadcn] Fix `InputGroup:Button` stacking the `Button` size classes on top of its own
+- [Shadcn] Fix a `data-slot` passed to `Button`, `Input`, `Label`, and other components being ignored, leaving `input-group` without its focus ring
 
 ## 3.5.0
 
