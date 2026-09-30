@@ -21,6 +21,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 use Symfony\UX\Toolkit\File;
+use Symfony\UX\Toolkit\Installer\ComponentDirectory;
 use Symfony\UX\Toolkit\Installer\Installer;
 use Symfony\UX\Toolkit\Kit\Kit;
 use Symfony\UX\Toolkit\Recipe\Recipe;
@@ -44,6 +45,8 @@ class InstallCommand extends Command
     public function __construct(
         private readonly RegistryFactory $registryFactory,
         private readonly Filesystem $filesystem,
+        private readonly ?string $componentDir = null,
+        private readonly string $anonymousTemplateDirectory = ComponentDirectory::DEFAULT_ANONYMOUS_TEMPLATE_DIRECTORY,
     ) {
         parent::__construct();
     }
@@ -60,6 +63,7 @@ class InstallCommand extends Command
                 'The destination directory',
                 getcwd(),
             )
+            ->addOption('component-dir', null, InputOption::VALUE_REQUIRED, 'The directory where the Twig components are installed, relative to the destination directory')
             ->addOption('force', 'f', InputOption::VALUE_NONE, 'Force the recipe installation, even if the files already exists')
             ->setHelp(
                 <<<EOF
@@ -74,6 +78,11 @@ class InstallCommand extends Command
                     <info>php %command.full_name% button --kit=shadcn</info>
                     <info>php %command.full_name% button --kit=https://github.com/user/my-kit</info>
                     <info>php %command.full_name% button --kit=https://github.com/user/my-kit:branch</info>
+
+                    Twig components are installed where Twig looks for anonymous components (<info>templates/components</info> by default),
+                    unless the <info>ux_toolkit.component_dir</info> configuration option says otherwise. Use the <info>--component-dir</info> option to override it for a single run:
+
+                    <info>php %command.full_name% button --component-dir=templates/components/ui</info>
                     EOF
             );
     }
@@ -86,6 +95,14 @@ class InstallCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
+
+        try {
+            $componentDirectory = new ComponentDirectory($input->getOption('component-dir') ?? $this->componentDir, $this->anonymousTemplateDirectory);
+        } catch (\InvalidArgumentException $e) {
+            $io->error($e->getMessage());
+
+            return Command::FAILURE;
+        }
 
         $kitName = $input->getOption('kit');
         $recipeName = $input->getArgument('recipe');
@@ -186,7 +203,7 @@ class InstallCommand extends Command
         $io->writeln(\sprintf('Installing recipe "<info>%s</>" from the <info>%s</> kit...', $recipe->name, $kit->manifest->name));
 
         $installer = new Installer($this->filesystem, fn (string $question) => $this->io->confirm($question, $input->isInteractive()));
-        $installationReport = $installer->installRecipe($kit, $recipe, $destinationPath = $input->getOption('destination'), $input->getOption('force'));
+        $installationReport = $installer->installRecipe($kit, $recipe, $destinationPath = $input->getOption('destination'), $input->getOption('force'), $componentDirectory);
 
         if ([] === $installationReport->newFiles) {
             $this->io->warning('The recipe has not been installed.');
@@ -198,6 +215,8 @@ class InstallCommand extends Command
 
         $this->io->section('Installed files');
         $this->io->listing(array_map(static fn (File $file) => Path::join($destinationPath, $file->destinationRelativePathName), $installationReport->newFiles));
+
+        $this->warnAboutUnregisteredComponentDirectory($componentDirectory);
 
         if ([] !== $installationReport->suggestedPhpPackages || [] !== $installationReport->suggestedNpmPackages || [] !== $installationReport->suggestedImportmapPackages) {
             $this->io->section('Next steps');
@@ -233,6 +252,30 @@ class InstallCommand extends Command
         }
 
         return Command::SUCCESS;
+    }
+
+    /**
+     * A directory nested under "templates/components" needs no setup: the components keep being
+     * found, only their name gains a prefix. Anywhere else, Twig has to be told about it, so we
+     * print the configuration the user still has to write, and what that configuration costs.
+     */
+    private function warnAboutUnregisteredComponentDirectory(ComponentDirectory $componentDirectory): void
+    {
+        if ($componentDirectory->isAnonymousTemplateDirectory() || '' !== $componentDirectory->getComponentNamePrefix()) {
+            return;
+        }
+
+        $message = \sprintf('The components have been installed in "%s", but Twig looks for anonymous components in "%s".', $componentDirectory->path, $componentDirectory->getAnonymousTemplatePath());
+
+        if (str_starts_with($componentDirectory->path, 'templates/')) {
+            $message .= \sprintf(
+                "\nRegister it in config/packages/twig_component.yaml:\n\ntwig_component:\n    anonymous_template_directory: '%s'\n\nTwig looks for anonymous components in a single directory.\nThis setting replaces the current one (\"%s\").\nThe anonymous components stored there will no longer be found.",
+                substr($componentDirectory->path, \strlen('templates/')),
+                $componentDirectory->anonymousTemplateDirectory,
+            );
+        }
+
+        $this->io->warning($message);
     }
 
     /**
