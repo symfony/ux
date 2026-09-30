@@ -45,7 +45,8 @@ class InstallCommand extends Command
     public function __construct(
         private readonly RegistryFactory $registryFactory,
         private readonly Filesystem $filesystem,
-        private readonly string $componentDir = ComponentDirectory::DEFAULT_PATH,
+        private readonly ?string $componentDir = null,
+        private readonly string $anonymousTemplateDirectory = ComponentDirectory::DEFAULT_ANONYMOUS_TEMPLATE_DIRECTORY,
     ) {
         parent::__construct();
     }
@@ -78,8 +79,8 @@ class InstallCommand extends Command
                     <info>php %command.full_name% button --kit=https://github.com/user/my-kit</info>
                     <info>php %command.full_name% button --kit=https://github.com/user/my-kit:branch</info>
 
-                    Twig components are installed in <info>templates/components</info>, unless the <info>ux_toolkit.component_dir</info>
-                    configuration option says otherwise. Use the <info>--component-dir</info> option to override it for a single run:
+                    Twig components are installed where Twig looks for anonymous components (<info>templates/components</info> by default),
+                    unless the <info>ux_toolkit.component_dir</info> configuration option says otherwise. Use the <info>--component-dir</info> option to override it for a single run:
 
                     <info>php %command.full_name% button --component-dir=templates/components/ui</info>
                     EOF
@@ -96,7 +97,7 @@ class InstallCommand extends Command
         $io = new SymfonyStyle($input, $output);
 
         try {
-            $componentDirectory = new ComponentDirectory($input->getOption('component-dir') ?? $this->componentDir);
+            $componentDirectory = new ComponentDirectory($input->getOption('component-dir') ?? $this->componentDir, $this->anonymousTemplateDirectory);
         } catch (\InvalidArgumentException $e) {
             $io->error($e->getMessage());
 
@@ -256,20 +257,21 @@ class InstallCommand extends Command
     /**
      * A directory nested under "templates/components" needs no setup: the components keep being
      * found, only their name gains a prefix. Anywhere else, Twig has to be told about it, so we
-     * print the configuration the user still has to write.
+     * print the configuration the user still has to write, and what that configuration costs.
      */
     private function warnAboutUnregisteredComponentDirectory(ComponentDirectory $componentDirectory): void
     {
-        if ($componentDirectory->isDefault() || '' !== $componentDirectory->getComponentNamePrefix()) {
+        if ($componentDirectory->isAnonymousTemplateDirectory() || '' !== $componentDirectory->getComponentNamePrefix()) {
             return;
         }
 
-        $message = \sprintf('The components have been installed in "%s", which Twig does not look into by default.', $componentDirectory->path);
+        $message = \sprintf('The components have been installed in "%s", but Twig looks for anonymous components in "%s".', $componentDirectory->path, $componentDirectory->getAnonymousTemplatePath());
 
         if (str_starts_with($componentDirectory->path, 'templates/')) {
             $message .= \sprintf(
-                "\nRegister it in config/packages/twig_component.yaml:\n\ntwig_component:\n    anonymous_template_directory: '%s'",
+                "\nRegister it in config/packages/twig_component.yaml:\n\ntwig_component:\n    anonymous_template_directory: '%s'\n\nTwig looks for anonymous components in a single directory.\nThis setting replaces the current one (\"%s\").\nThe anonymous components stored there will no longer be found.",
                 substr($componentDirectory->path, \strlen('templates/')),
+                $componentDirectory->anonymousTemplateDirectory,
             );
         }
 
