@@ -12,6 +12,7 @@
 namespace Symfony\UX\Toolkit\Tests;
 
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
@@ -37,9 +38,9 @@ class UXToolkitBundleTest extends KernelTestCase
         $this->assertInstanceOf(ComponentDocParser::class, $container->get('ux_toolkit.component.component_doc_parser'));
     }
 
-    public function testComponentDirDefaultsToTheKitConvention(): void
+    public function testComponentDirDefaultsToTheAnonymousTemplateDirectory(): void
     {
-        $this->assertSame('templates/components', $this->loadExtension([]));
+        $this->assertNull($this->loadExtension([]));
     }
 
     public function testComponentDirCanBeConfigured(): void
@@ -47,10 +48,26 @@ class UXToolkitBundleTest extends KernelTestCase
         $this->assertSame('templates/components/ui', $this->loadExtension([['component_dir' => 'templates/components/ui']]));
     }
 
+    public function testComponentDirMustNotEscapeTheDestination(): void
+    {
+        $this->expectException(InvalidConfigurationException::class);
+        $this->expectExceptionMessage('must not escape its target directory');
+
+        $this->loadExtension([['component_dir' => '../PWNED']]);
+    }
+
+    public function testComponentDirMustBeRelative(): void
+    {
+        $this->expectException(InvalidConfigurationException::class);
+        $this->expectExceptionMessage('must be relative to the destination directory');
+
+        $this->loadExtension([['component_dir' => '/templates/ui']]);
+    }
+
     /**
      * @param list<array<string,mixed>> $configs
      */
-    private function loadExtension(array $configs): string
+    private function loadExtension(array $configs): ?string
     {
         $extension = new UXToolkitBundle()->getContainerExtension();
 
@@ -61,7 +78,7 @@ class UXToolkitBundleTest extends KernelTestCase
             'kernel.build_dir' => sys_get_temp_dir(),
         ])));
 
-        return $container->getParameter('ux_toolkit.component_dir');
+        return $container->getParameter('.ux_toolkit.component_dir');
     }
 
     public function testToolkitTemplateNamespaceResolves(): void

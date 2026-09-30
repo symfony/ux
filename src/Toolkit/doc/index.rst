@@ -77,9 +77,10 @@ differently:
 Choosing Where Components Are Installed
 ---------------------------------------
 
-Twig components are installed in ``templates/components/``, next to the
-components you write yourself. The ``component_dir`` option puts them somewhere
-else:
+Twig components are installed where Twig looks for anonymous components,
+next to the components you write yourself. That is ``templates/components/``,
+unless you changed ``twig_component.anonymous_template_directory``. The
+``component_dir`` option puts them somewhere else:
 
 .. code-block:: yaml
 
@@ -100,6 +101,9 @@ inside the files it copies so the recipes keep working:
     {# and in your own templates #}
     <twig:ui:Dialog>…</twig:ui:Dialog>
 
+Because the directory names become part of the component names, they may only
+contain letters, digits, ``_``, ``-``, ``.`` and ``@``.
+
 A directory **outside** ``templates/components/`` leaves the component names
 untouched, but Twig has to be told about it:
 
@@ -115,6 +119,14 @@ untouched, but Twig has to be told about it:
 
 The command prints that snippet after installing, so you do not have to
 remember it.
+
+.. caution::
+
+    Twig looks for anonymous components in a single directory, and
+    ``anonymous_template_directory`` replaces it instead of adding one. With
+    the configuration above, the anonymous components you keep in
+    ``templates/components/`` are no longer found. Keep the directory under
+    ``templates/components/`` if you have components there.
 
 Both the base directory and the component directory can be overridden for a
 single run:
