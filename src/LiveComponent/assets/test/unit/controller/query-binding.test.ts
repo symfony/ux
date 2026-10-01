@@ -11,9 +11,30 @@ import { getByText, waitFor } from '@testing-library/dom';
 import { afterEach, describe, expect, it } from 'vitest';
 import { createTest, expectCurrentSearch, initComponent, setCurrentSearch, shutdownTests } from '../../tools';
 
+const startDelayedRequestWithLiveUrl = async (test: Awaited<ReturnType<typeof createTest>>, liveUrl: string) => {
+    test.expectsAjaxCall().expectUpdatedData({ prop: 'foo' }).willReturnLiveUrl(liveUrl).delayResponse(20);
+
+    const requestStarted = new Promise<void>((resolve) => {
+        test.component.on('loading.state:started', () => resolve());
+    });
+    const response = test.component.set('prop', 'foo', true);
+    await requestStarted;
+
+    return { response };
+};
+
+const stubNavigation = (key: string) => {
+    const navigation = { currentEntry: { key } };
+    Object.defineProperty(window, 'navigation', { value: navigation, configurable: true });
+
+    return navigation;
+};
+
 describe('LiveController query string binding', () => {
     afterEach(() => {
         shutdownTests();
+        delete (window as any).navigation;
+        history.replaceState(history.state, '', '/');
         setCurrentSearch('');
     });
 
@@ -204,5 +225,54 @@ describe('LiveController query string binding', () => {
         await test.component.set('prop1', '', true);
 
         expectCurrentSearch().toEqual('?alias1=');
+    });
+
+    it('does not update the URL when the component left the page while the request was pending', async () => {
+        const test = await createTest(
+            { prop: '' },
+            (data: any) => `
+            <div ${initComponent(data, { queryMapping: { prop: { name: 'prop' } } })}></div>
+        `
+        );
+
+        const { response } = await startDelayedRequestWithLiveUrl(test, '?prop=foo');
+        test.element.remove();
+        await response;
+
+        expectCurrentSearch().toEqual('');
+    });
+
+    it('does not update the URL when the history entry changed while the request was pending', async () => {
+        const navigation = stubNavigation('first-entry');
+        const test = await createTest(
+            { prop: '' },
+            (data: any) => `
+            <div ${initComponent(data, { queryMapping: { prop: { name: 'prop' } } })}>Prop: ${data.prop}</div>
+        `
+        );
+
+        const { response } = await startDelayedRequestWithLiveUrl(test, '?prop=foo');
+        navigation.currentEntry = { key: 'second-entry' };
+        await response;
+
+        expectCurrentSearch().toEqual('');
+        expect(test.element).toHaveTextContent('Prop: foo');
+    });
+
+    it('updates the URL when another component changed it on the same history entry while the request was pending', async () => {
+        stubNavigation('first-entry');
+        const test = await createTest(
+            { prop: '' },
+            (data: any) => `
+            <div ${initComponent(data, { queryMapping: { prop: { name: 'prop' } } })}></div>
+        `
+        );
+
+        const { response } = await startDelayedRequestWithLiveUrl(test, '/products?prop=foo');
+        history.replaceState(history.state, '', '/other-path');
+        await response;
+
+        expect(window.location.pathname).toEqual('/products');
+        expectCurrentSearch().toEqual('?prop=foo');
     });
 });
