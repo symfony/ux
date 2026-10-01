@@ -25,6 +25,7 @@
 - [Shadcn] Fix a disabled `slider` still reacting to the keyboard
 - [Shadcn] Fix `slider` losing the focus after a click on its track
 - [Shadcn] Fix the close button and the action of a `sonner` toast ignoring mouse clicks
+- [Shadcn] Fix `sonner` replacing a toast still on screen with the next one, once its element was moved in the DOM
 - [Shadcn] Fix the bookmark icon of the `toggle` examples not filling when pressed
 - [Shadcn] Fix the tooltip of the disabled button example of `tooltip` never opening
 - [Shadcn] Rewrite `combobox` to match the upstream Shadcn UI component, as `Combobox:*` sub-components with multiple selection
