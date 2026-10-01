@@ -52,7 +52,10 @@ your application and lists the dependencies the recipe needs.
 The files land where they are meant to be used: Twig templates under
 ``templates/``, Stimulus controllers under ``assets/``, and if a file already
 exists, it is not replaced without asking you first, so a recipe you have
-already customized cannot be overwritten by accident.
+already customized cannot be overwritten by accident. When Git is installed, a
+diff between your file and the recipe file is shown before the question, so you
+can see exactly what would change. When the file is identical to the recipe, it
+is left as is and no question is asked.
 
 A recipe can depend on other recipes and on packages, and the two are handled
 differently:

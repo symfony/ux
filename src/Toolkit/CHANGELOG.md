@@ -29,6 +29,7 @@
 - [Shadcn] Fix `InputGroup:Button` stacking the `Button` size classes on top of its own
 - [Shadcn] Fix a `data-slot` passed to `Button`, `Input`, `Label`, and other components being ignored, leaving `input-group` without its focus ring
 - [Shadcn] Rewrite `select` to match the upstream Shadcn Select, as `Select:*` sub-components; use `native-select` for a native `<select>`
+- Show a diff before `ux:install` asks to overwrite an existing file, and skip the question when the file already matches the recipe
 
 ## 3.5.0
 

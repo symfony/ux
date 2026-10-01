@@ -16,12 +16,15 @@ use Symfony\Component\Filesystem\Path;
 use Symfony\UX\Toolkit\Kit\Kit;
 use Symfony\UX\Toolkit\Recipe\Recipe;
 
+/**
+ * @internal
+ */
 final class Installer
 {
     private PoolResolver $poolResolver;
 
     /**
-     * @param \Closure(string):bool $askConfirmation
+     * @param \Closure(string $question, string $existingFile, string $newFile):bool $askConfirmation
      */
     public function __construct(
         private readonly Filesystem $filesystem,
@@ -72,7 +75,12 @@ final class Installer
     private function copyFile(Kit $kit, string $sourceAbsolutePathName, string $destinationAbsolutePathName, bool $force): bool
     {
         if ($this->filesystem->exists($destinationAbsolutePathName) && !$force) {
-            if (!($this->askConfirmation)(\sprintf('File "%s" already exists. Do you want to overwrite it?', $destinationAbsolutePathName))) {
+            if ($this->filesystem->readFile($destinationAbsolutePathName) === $this->filesystem->readFile($sourceAbsolutePathName)) {
+                return true;
+            }
+
+            $question = \sprintf('File "%s" already exists. Do you want to overwrite it?', $destinationAbsolutePathName);
+            if (!($this->askConfirmation)($question, $destinationAbsolutePathName, $sourceAbsolutePathName)) {
                 return false;
             }
         }

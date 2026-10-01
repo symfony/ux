@@ -20,7 +20,10 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
+use Symfony\Component\Process\ExecutableFinder;
+use Symfony\Component\Process\Process;
 use Symfony\UX\Toolkit\File;
+use Symfony\UX\Toolkit\Installer\DiffHighlighter;
 use Symfony\UX\Toolkit\Installer\Installer;
 use Symfony\UX\Toolkit\Kit\Kit;
 use Symfony\UX\Toolkit\Recipe\Recipe;
@@ -185,7 +188,13 @@ class InstallCommand extends Command
 
         $io->writeln(\sprintf('Installing recipe "<info>%s</>" from the <info>%s</> kit...', $recipe->name, $kit->manifest->name));
 
-        $installer = new Installer($this->filesystem, fn (string $question) => $this->io->confirm($question, $input->isInteractive()));
+        $installer = new Installer($this->filesystem, function (string $question, string $existingFile, string $newFile) use ($input): bool {
+            if ($input->isInteractive()) {
+                $this->displayDiff($existingFile, $newFile);
+            }
+
+            return $this->io->confirm($question, $input->isInteractive());
+        });
         $installationReport = $installer->installRecipe($kit, $recipe, $destinationPath = $input->getOption('destination'), $input->getOption('force'));
 
         if ([] === $installationReport->newFiles) {
@@ -267,5 +276,22 @@ class InstallCommand extends Command
         usort($alternativeRecipes, static fn (Recipe $recipeA, Recipe $recipeB) => strcmp($recipeA->name, $recipeB->name));
 
         return $alternativeRecipes;
+    }
+
+    private function displayDiff(string $existingFile, string $newFile): void
+    {
+        if (null === $git = new ExecutableFinder()->find('git')) {
+            return;
+        }
+
+        $process = new Process([$git, 'diff', '--no-index', '--no-ext-diff', '--color=never', '--', $existingFile, $newFile]);
+        $process->run();
+
+        // "git diff --no-index" exits with 1 when the files differ, and above 1 on error
+        if (1 !== $process->getExitCode()) {
+            return;
+        }
+
+        $this->io->writeln(new DiffHighlighter()->highlight($process->getOutput()));
     }
 }
