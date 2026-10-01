@@ -25,6 +25,43 @@ describeRecipe('flowbite-4/modal', () => {
         },
     });
 
+    testState('stays modal after being moved in the DOM', {
+        example: 'opened-by-default',
+        state: 'open-after-move',
+        act: async (page) => {
+            await page.locator('[data-controller="flowbite-modal"]').evaluate(async (element) => {
+                const parent = element.parentNode!;
+                const next = element.nextSibling;
+                element.remove();
+                await new Promise((resolve) => setTimeout(resolve, 50));
+                parent.insertBefore(element, next);
+            });
+            const dialog = page.getByRole('dialog', { name: 'Edit profile' });
+
+            await expect(dialog).toBeVisible();
+            expect(await dialog.evaluate((element) => element.matches(':modal'))).toBe(true);
+        },
+    });
+
+    testState('stays closed after being moved in the DOM once closed', {
+        example: 'opened-by-default',
+        state: 'closed-after-move',
+        act: async (page) => {
+            await page.keyboard.press('Escape');
+            await expect(page.getByRole('dialog')).toBeHidden();
+
+            await page.locator('[data-controller="flowbite-modal"]').evaluate(async (element) => {
+                const parent = element.parentNode!;
+                const next = element.nextSibling;
+                element.remove();
+                await new Promise((resolve) => setTimeout(resolve, 50));
+                parent.insertBefore(element, next);
+            });
+
+            await expect(page.getByRole('dialog')).toBeHidden();
+        },
+    });
+
     test('stays closed and out of reach until opened', async ({ page, gotoExample }) => {
         await gotoExample('flowbite-4/modal/default');
 
