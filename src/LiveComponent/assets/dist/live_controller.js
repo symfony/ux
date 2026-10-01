@@ -6,9 +6,10 @@ var BackendRequest_default = class {
 	isResolved = false;
 	constructor(promise, actions, updateModels) {
 		this.promise = promise;
-		this.promise.then((response) => {
+		this.promise.then(() => {
 			this.isResolved = true;
-			return response;
+		}, () => {
+			this.isResolved = true;
 		});
 		this.actions = actions;
 		this.updatedModels = updateModels;
@@ -1540,6 +1541,7 @@ var Component = class {
 	requestDebounceTimeout = null;
 	nextRequestPromise;
 	nextRequestPromiseResolve;
+	nextRequestPromiseReject;
 	externalMutationTracker;
 	constructor(element, name, props, listeners, id, backend, elementDriver) {
 		this.element = element;
@@ -1667,6 +1669,7 @@ var Component = class {
 	}
 	performRequest() {
 		const thisPromiseResolve = this.nextRequestPromiseResolve;
+		const thisPromiseReject = this.nextRequestPromiseReject;
 		this.resetPromise();
 		this.unsyncedInputsTracker.resetUnsyncedFields();
 		const filesToSend = {};
@@ -1687,7 +1690,7 @@ var Component = class {
 		this.pendingActions = remainingActions;
 		this.valueStore.flushDirtyPropsToPending();
 		this.isRequestPending = remainingActions.length > 0;
-		this.backendRequest.promise.then(async (response) => {
+		const onResponse = async (response) => {
 			const backendResponse = new BackendResponse_default(response);
 			const headers = backendResponse.response.headers;
 			for (const input of Object.values(this.pendingFiles)) input.value = "";
@@ -1719,6 +1722,16 @@ var Component = class {
 				this.performRequest();
 			}
 			return response;
+		};
+		this.backendRequest.promise.then(onResponse, (error) => {
+			this.valueStore.pushPendingPropsBackToDirty();
+			this.hooks.triggerHook("loading.state:finished", this.element);
+			this.backendRequest = null;
+			thisPromiseReject(error);
+			if (this.isRequestPending) {
+				this.isRequestPending = false;
+				this.performRequest();
+			}
 		});
 	}
 	processRerender(html, backendResponse) {
@@ -1838,8 +1851,9 @@ var Component = class {
 		modal.focus();
 	}
 	resetPromise() {
-		this.nextRequestPromise = new Promise((resolve) => {
+		this.nextRequestPromise = new Promise((resolve, reject) => {
 			this.nextRequestPromiseResolve = resolve;
+			this.nextRequestPromiseReject = reject;
 		});
 	}
 	_updateFromParentProps(props) {

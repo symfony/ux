@@ -74,6 +74,7 @@ export default class Component {
     private requestDebounceTimeout: number | null = null;
     private nextRequestPromise: Promise<BackendResponse>;
     private nextRequestPromiseResolve: (response: BackendResponse) => any;
+    private nextRequestPromiseReject: (reason: any) => any;
 
     private externalMutationTracker: ExternalMutationTracker;
 
@@ -321,6 +322,7 @@ export default class Component {
     private performRequest(): void {
         // grab the resolve() function for the current promise
         const thisPromiseResolve = this.nextRequestPromiseResolve;
+        const thisPromiseReject = this.nextRequestPromiseReject;
         // then create a fresh Promise, so any future .then() apply to it
         this.resetPromise();
 
@@ -363,7 +365,7 @@ export default class Component {
         this.valueStore.flushDirtyPropsToPending();
         this.isRequestPending = remainingActions.length > 0;
 
-        this.backendRequest.promise.then(async (response) => {
+        const onResponse = async (response: Response) => {
             const backendResponse = new BackendResponse(response);
             const headers = backendResponse.response.headers;
 
@@ -431,6 +433,20 @@ export default class Component {
             }
 
             return response;
+        };
+
+        this.backendRequest.promise.then(onResponse, (error) => {
+            // the request never reached the server or no response came back (network error, aborted request...)
+            this.valueStore.pushPendingPropsBackToDirty();
+            this.hooks.triggerHook('loading.state:finished', this.element);
+
+            this.backendRequest = null;
+            thisPromiseReject(error);
+
+            if (this.isRequestPending) {
+                this.isRequestPending = false;
+                this.performRequest();
+            }
         });
     }
 
@@ -629,8 +645,9 @@ export default class Component {
     }
 
     private resetPromise(): void {
-        this.nextRequestPromise = new Promise((resolve) => {
+        this.nextRequestPromise = new Promise((resolve, reject) => {
             this.nextRequestPromiseResolve = resolve;
+            this.nextRequestPromiseReject = reject;
         });
     }
 
