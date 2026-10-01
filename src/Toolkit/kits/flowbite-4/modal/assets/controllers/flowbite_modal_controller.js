@@ -7,9 +7,19 @@ export default class extends Controller {
         open: Boolean,
     };
 
+    #wasOpen = null;
+
     connect() {
-        if (this.openValue) {
+        if (this.#wasOpen ?? this.openValue) {
             this.open();
+        }
+    }
+
+    disconnect() {
+        // A <dialog> taken out of the DOM comes back open but no longer modal, so reopen it on reconnect.
+        this.#wasOpen = this.modalTarget.open;
+        if (this.#wasOpen) {
+            this.modalTarget.close();
         }
     }
 
