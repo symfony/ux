@@ -72,7 +72,14 @@ final class ComponentRenderer implements ComponentRendererInterface, ResetInterf
     {
         $this->componentStack->push($mounted);
 
-        $event = $this->preRender($mounted);
+        try {
+            $event = $this->preRender($mounted);
+        } catch (\Throwable $e) {
+            // the pop in the finally block below is never reached when the pre-render fails
+            $this->componentStack->pop();
+
+            throw $e;
+        }
 
         $variables = $event->getVariables();
         // see ComponentNode. When rendering an individual embedded component,
@@ -106,7 +113,14 @@ final class ComponentRenderer implements ComponentRendererInterface, ResetInterf
 
         $this->componentStack->push($mounted);
 
-        return $this->preRender($mounted, $context);
+        try {
+            return $this->preRender($mounted, $context);
+        } catch (\Throwable $e) {
+            // finishEmbeddedComponentRender() is never reached when the pre-render fails
+            $this->componentStack->pop();
+
+            throw $e;
+        }
     }
 
     public function finishEmbeddedComponentRender(): void
