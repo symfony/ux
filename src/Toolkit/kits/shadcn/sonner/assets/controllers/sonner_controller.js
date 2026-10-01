@@ -47,10 +47,12 @@ export default class extends Controller {
     static targets = ['list'];
 
     #swipeAborts = new WeakMap(); // li → AbortController
+    #activatedToasts = new WeakSet();
 
     connect() {
-        this.toastSeq = 0;
-        this.timers = new Map(); // li → { id, remaining, start }
+        // On a reconnect, the toasts still shown keep their ids and their paused timers.
+        this.toastSeq ??= 0;
+        this.timers ??= new Map(); // li → { id, remaining, start }
         this.isHovered = false;
 
         this.onSonnerEvent = (e) => this.#createToast(e.detail || {});
@@ -60,9 +62,13 @@ export default class extends Controller {
 
         // Server-rendered toasts sit outside the <ol> in the DOM; move them in before hydrating
         for (const li of this.element.querySelectorAll('[data-slot="toast"]')) {
+            if (this.#activatedToasts.has(li)) {
+                continue;
+            }
             this.listTarget.appendChild(li);
             this.#hydrateToast(li);
         }
+        this.#resumeAll();
 
         this.onMouseOver = (e) => {
             if (!this.isHovered && e.target.closest('[data-slot="toast"]')) {
@@ -90,10 +96,7 @@ export default class extends Controller {
         window.removeEventListener('sonner', this.onSonnerEvent);
         this.listTarget.removeEventListener('mouseover', this.onMouseOver);
         this.listTarget.removeEventListener('mouseout', this.onMouseOut);
-        for (const timer of this.timers.values()) {
-            clearTimeout(timer.id);
-        }
-        this.timers.clear();
+        this.#pauseAll();
     }
 
     // Called via data-action="click->sonner#fire" with data-sonner-*-param attributes.
@@ -233,6 +236,7 @@ export default class extends Controller {
     }
 
     #activateToast(li, type, ms, layoutOnOpen = false) {
+        this.#activatedToasts.add(li);
         this.#anchor(li);
         li.addEventListener('pointerdown', (e) => this.#startSwipe(e, li));
         requestAnimationFrame(() => {

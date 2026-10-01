@@ -54,6 +54,38 @@ describeRecipe('shadcn/sonner', () => {
         },
     });
 
+    testState('keeps the toasts already shown after being moved in the DOM', {
+        example: 'default',
+        state: 'expanded-after-move',
+        act: async (page) => {
+            await page.clock.install();
+            await page.clock.pauseAt(Date.now() + 60_000);
+            await page.getByRole('button', { name: 'Default' }).click();
+            await page.mouse.move(0, 0);
+            await page.clock.runFor(100);
+            await page.locator('[data-controller="sonner"]').evaluate(async (element) => {
+                const parent = element.parentNode!;
+                const next = element.nextSibling;
+                element.remove();
+                // The clock is paused: a microtask lets Stimulus disconnect the controller, where a timer would never fire.
+                await Promise.resolve();
+                parent.insertBefore(element, next);
+            });
+            await page.getByRole('button', { name: 'Success' }).click();
+            await page.mouse.move(0, 0);
+            await page.clock.runFor(100);
+
+            await expect(page.getByRole('status')).toHaveCount(2);
+
+            await page.getByRole('status').filter({ hasText: 'Profile updated successfully' }).hover();
+
+            await expect(page.getByRole('status').filter({ hasText: 'Event has been created' })).toHaveCSS(
+                'opacity',
+                '1'
+            );
+        },
+    });
+
     test('announces an error as an alert and other types as a status', async ({ page, gotoExample }) => {
         await gotoExample('shadcn/sonner/types', { timers: 'fake' });
 
@@ -91,6 +123,24 @@ describeRecipe('shadcn/sonner', () => {
         await expect(toast).toBeVisible();
 
         await page.clock.runFor(2000);
+
+        await expect(toast).toBeHidden();
+    });
+
+    test('still disappears after its duration once moved in the DOM', async ({ page, gotoExample }) => {
+        await gotoExample('shadcn/sonner/with-description', { timers: 'fake' });
+        await page.getByRole('button', { name: 'Show Sonner' }).click();
+        const toast = page.getByRole('status');
+        await expect(toast).toBeVisible();
+        await page.locator('[data-controller="sonner"]').evaluate(async (element) => {
+            const parent = element.parentNode!;
+            const next = element.nextSibling;
+            element.remove();
+            await new Promise((resolve) => setTimeout(resolve, 50));
+            parent.insertBefore(element, next);
+        });
+
+        await page.clock.runFor(5000);
 
         await expect(toast).toBeHidden();
     });
