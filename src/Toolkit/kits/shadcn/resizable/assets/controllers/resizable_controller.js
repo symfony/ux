@@ -5,11 +5,19 @@ export default class extends Controller {
     static values = { orientation: { type: String, default: 'horizontal' } };
 
     connect() {
+        this._abortController = new AbortController();
+        const { signal } = this._abortController;
+
         this.handleTargets.forEach((handle) => {
-            handle.addEventListener('pointerdown', (event) => this._onPointerDown(event, handle));
-            handle.addEventListener('keydown', (event) => this._onKeyDown(event, handle));
+            handle.addEventListener('pointerdown', (event) => this._onPointerDown(event, handle), { signal });
+            handle.addEventListener('keydown', (event) => this._onKeyDown(event, handle), { signal });
             this._syncValue(handle);
         });
+    }
+
+    disconnect() {
+        this._abortController?.abort();
+        this._abortController = null;
     }
 
     _onPointerDown(event, handle) {
