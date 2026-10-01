@@ -1010,7 +1010,7 @@ function executeMorphdom(rootFromElement, rootToElement, modifiedFieldElements, 
 			return clonedOldElement;
 		};
 		rootToElement.querySelectorAll("[data-live-preserve]").forEach((newElement) => {
-			const id = newElement.id;
+			const id = newElement.getAttribute("id");
 			if (!id) throw new Error("The data-live-preserve attribute requires an id attribute to be set on the element");
 			const oldElement = rootFromElement.querySelector(`#${id}`);
 			if (!(oldElement instanceof HTMLElement)) throw new Error(`The element with id "${id}" was not found in the original HTML`);
@@ -1022,9 +1022,10 @@ function executeMorphdom(rootFromElement, rootToElement, modifiedFieldElements, 
 			beforeNodeMorphed: (fromEl, toEl) => {
 				if (!(fromEl instanceof Element) || !(toEl instanceof Element)) return true;
 				if (fromEl === rootFromElement) return true;
-				if (fromEl.id && originalElementsToPreserve.has(fromEl.id)) {
-					if (fromEl.id === toEl.id) return false;
-					const clonedFromEl = markElementAsNeedingPostMorphSwap(fromEl.id, true);
+				const fromId = fromEl.getAttribute("id");
+				if (fromId && originalElementsToPreserve.has(fromId)) {
+					if (fromId === toEl.getAttribute("id")) return false;
+					const clonedFromEl = markElementAsNeedingPostMorphSwap(fromId, true);
 					if (!clonedFromEl) throw new Error("missing clone");
 					Idiomorph.morph(clonedFromEl, toEl);
 					return false;
@@ -1057,7 +1058,7 @@ function executeMorphdom(rootFromElement, rootToElement, modifiedFieldElements, 
 						if (normalizedFromEl.isEqualNode(normalizedToEl)) return false;
 					}
 				}
-				if (fromEl.hasAttribute("data-skip-morph") || fromEl.id && fromEl.id !== toEl.id) {
+				if (fromEl.hasAttribute("data-skip-morph") || fromId && fromId !== toEl.getAttribute("id")) {
 					fromEl.innerHTML = toEl.innerHTML;
 					return true;
 				}
@@ -1066,8 +1067,9 @@ function executeMorphdom(rootFromElement, rootToElement, modifiedFieldElements, 
 			},
 			beforeNodeRemoved(node) {
 				if (!(node instanceof HTMLElement)) return true;
-				if (node.id && originalElementsToPreserve.has(node.id)) {
-					markElementAsNeedingPostMorphSwap(node.id, false);
+				const id = node.getAttribute("id");
+				if (id && originalElementsToPreserve.has(id)) {
+					markElementAsNeedingPostMorphSwap(id, false);
 					return true;
 				}
 				if (externalMutationTracker.wasElementAdded(node)) return false;
@@ -2455,7 +2457,7 @@ var LiveControllerDefault = class LiveControllerDefault extends Controller {
 		return emits;
 	}
 	createComponent() {
-		const id = this.element.id || null;
+		const id = this.element.getAttribute("id") || null;
 		this.component = new Component(this.element, this.nameValue, this.propsValue, this.listenersValue, id, LiveControllerDefault.backendFactory(this), new StimulusElementDriver(this));
 		this.proxiedComponent = proxifyComponent(this.component);
 		Object.defineProperty(this.element, "__component", {

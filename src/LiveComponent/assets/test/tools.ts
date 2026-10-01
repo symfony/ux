@@ -530,3 +530,8 @@ export class noopElementDriver implements ElementDriver {
         throw new Error('Method not implemented.');
     }
 }
+
+// Browsers return a form control named "id" from form.id instead of the id attribute. jsdom does not, so fixtures reproduce it.
+export function shadowIdWithNamedControl(form: HTMLFormElement): void {
+    Object.defineProperty(form, 'id', { configurable: true, get: () => form.elements.namedItem('id') });
+}

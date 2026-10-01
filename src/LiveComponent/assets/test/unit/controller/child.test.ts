@@ -12,6 +12,7 @@ import { getByTestId, waitFor } from '@testing-library/dom';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it } from 'vitest';
 import { findChildren, findComponents } from '../../../src/ComponentRegistry';
+import { htmlToElement } from '../../../src/dom_utils';
 import {
     createTest,
     createTestForExistingComponent,
@@ -19,6 +20,7 @@ import {
     getComponent,
     getStimulusApplication,
     initComponent,
+    shadowIdWithNamedControl,
     shutdownTests,
 } from '../../tools';
 
@@ -41,6 +43,24 @@ describe('Component parent -> child initialization and rendering tests', () => {
         test.expectsAjaxCall().expectChildFingerprints({
             'the-child-id1': { fingerprint: 'child-fingerprint1', tag: 'div' },
             'the-child-id2': { fingerprint: 'child-fingerprint2', tag: 'div' },
+        });
+
+        test.component.render();
+        await waitFor(() => expect(test.element).toHaveAttribute('aria-busy', 'true'));
+    });
+
+    it('uses the id attribute of a child form that has a control named id', async () => {
+        const test = await createTest({}, (data: any) => `<div ${initComponent(data)}></div>`);
+        const childForm = htmlToElement(
+            `<form ${initComponent({}, { id: 'the-child-id', fingerprint: 'child-fingerprint' })}><input name="id"></form>`
+        ) as HTMLFormElement;
+        shadowIdWithNamedControl(childForm);
+        test.element.append(childForm);
+
+        await waitFor(() => expect(getComponent(childForm).id).toBe('the-child-id'));
+
+        test.expectsAjaxCall().expectChildFingerprints({
+            'the-child-id': { fingerprint: 'child-fingerprint', tag: 'form' },
         });
 
         test.component.render();
