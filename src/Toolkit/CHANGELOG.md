@@ -19,6 +19,7 @@
 - [Shadcn] Fix the checked radio item of `menubar` showing a ring instead of a dot
 - [Shadcn] Fix `menubar` submenus wrapping long labels
 - [Shadcn] Fix the `aria-expanded` of the `dialog` trigger getting out of sync on close and on a second opening
+- [Shadcn] Fix an open `dialog`, `drawer` or `sheet` no longer being modal once its element was moved in the DOM
 - [Shadcn] Fix Tab skipping the panels of `navigation-menu`
 - [Shadcn] Fix the `resizable` handle missing its `aria-orientation` and `aria-valuenow`
 - [Shadcn] Fix the arrow keys of `resizable` moving its handle twice as far once its element was moved in the DOM
