@@ -49,6 +49,27 @@ describeRecipe('shadcn/resizable', () => {
         },
     });
 
+    testState('moves a handle by one step per key press after being moved in the DOM', {
+        example: 'handle',
+        state: 'resized-after-move',
+        act: async (page) => {
+            await page.locator('[data-controller="resizable"]').evaluate(async (element) => {
+                const parent = element.parentNode!;
+                const next = element.nextSibling;
+                element.remove();
+                await new Promise((resolve) => setTimeout(resolve, 50));
+                parent.insertBefore(element, next);
+            });
+            const sidebar = panel(page, 'Sidebar');
+            const before = await size(sidebar);
+            await page.getByRole('separator').focus();
+
+            await page.keyboard.press('ArrowRight');
+
+            await expect.poll(() => size(sidebar)).toBeCloseTo(before + 8, 0);
+        },
+    });
+
     test('gives the dragged space to one panel and takes it from the other', async ({ page, gotoExample }) => {
         await gotoExample('shadcn/resizable/default');
         const one = panel(page, 'One');
