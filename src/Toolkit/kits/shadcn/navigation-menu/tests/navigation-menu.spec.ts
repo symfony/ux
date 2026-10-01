@@ -41,6 +41,26 @@ describeRecipe('shadcn/navigation-menu', () => {
         },
     });
 
+    testState('still opens after being moved in the DOM', {
+        example: 'default',
+        state: 'open-after-move',
+        act: async (page) => {
+            await page.locator('[data-controller="navigation-menu"]').evaluate(async (element) => {
+                const parent = element.parentNode!;
+                const next = element.nextSibling;
+                element.remove();
+                await new Promise((resolve) => setTimeout(resolve, 50));
+                parent.insertBefore(element, next);
+            });
+            const trigger = page.getByRole('button', { name: 'Getting started' });
+
+            await trigger.hover();
+
+            await expect(page.getByRole('link', { name: /Introduction/ })).toBeVisible();
+            await expect(trigger).toHaveAttribute('aria-expanded', 'true');
+        },
+    });
+
     test('waits for the open delay before opening on hover', async ({ page, gotoExample }) => {
         await gotoExample('shadcn/navigation-menu/default', { timers: 'fake' });
         const trigger = page.getByRole('button', { name: 'Getting started' });

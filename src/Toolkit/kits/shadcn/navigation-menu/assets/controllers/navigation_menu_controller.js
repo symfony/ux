@@ -34,6 +34,8 @@ export default class extends Controller {
 
     disconnect() {
         this.#clearTimeouts();
+        // connect() finds the item of each content among its ancestors, so put the contents back.
+        this.contentByItem.forEach((content, item) => item.appendChild(content));
     }
 
     open(event) {
