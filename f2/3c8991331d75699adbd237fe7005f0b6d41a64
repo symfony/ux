@@ -1,0 +1,27 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2026-09-30T14:14:17Z
+
+> Cool! Next is adding conflicts like Flex does! 😉
+
+I need more information on this one, do you mean automatically resolving diffs?
+
+---------------------------------------------------------------------------
+
+by kbond at 2026-09-30T14:20:29Z
+
+When you update a flex recipe, instead of just completely overriding the file, it's somehow generates a git merge conflict.
+
+https://github.com/symfony/flex/pull/845
+
+I was mostly joking, I don't think it's actually possible with the toolkit the way it's set up.
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-10-01T05:26:53Z
+
+Aaah, I see. Well, no I don't think this would be possible with the actual system, and for the moment I feel like its working fine this way, so... Maybe not now! :D
+
+> https://github.com/symfony/flex/pull/845
+
+And he did that without AI, what a guy...
