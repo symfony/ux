@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+    <file source-language="en" target-language="ru" datatype="plaintext" original="UXPaginationBundle">
+        <header>
+            <tool tool-id="symfony" tool-name="Symfony"/>
+        </header>
+        <body>
+            <trans-unit id="1">
+                <source>Showing %start%-%end% of %total%</source>
+                <target>Показаны %start%-%end% из %total%</target>
+            </trans-unit>
+            <trans-unit id="2">
+                <source>Showing %start%-%end%</source>
+                <target>Показаны %start%-%end%</target>
+            </trans-unit>
+            <trans-unit id="3">
+                <source>No items</source>
+                <target>Нет элементов</target>
+            </trans-unit>
+            <trans-unit id="4">
+                <source>Showing %count% item|Showing %count% items</source>
+                <target>Показан %count% элемент|Показаны %count% элемента|Показано %count% элементов</target>
+            </trans-unit>
+            <trans-unit id="5">
+                <source>Showing %count% item (last page)|Showing %count% items (last page)</source>
+                <target>Показан %count% элемент (последняя страница)|Показаны %count% элемента (последняя страница)|Показано %count% элементов (последняя страница)</target>
+            </trans-unit>
+            <trans-unit id="6">
+                <source>Previous</source>
+                <target>Предыдущая</target>
+            </trans-unit>
+            <trans-unit id="7">
+                <source>Next</source>
+                <target>Следующая</target>
+            </trans-unit>
+            <trans-unit id="8">
+                <source>Previous page</source>
+                <target>Предыдущая страница</target>
+            </trans-unit>
+            <trans-unit id="9">
+                <source>Next page</source>
+                <target>Следующая страница</target>
+            </trans-unit>
+            <trans-unit id="10">
+                <source>Go to page %page%</source>
+                <target>Перейти на страницу %page%</target>
+            </trans-unit>
+            <trans-unit id="11">
+                <source>Pagination</source>
+                <target>Навигация по страницам</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>
