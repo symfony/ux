@@ -113,6 +113,83 @@ describe('BackendResponse', () => {
         });
     });
 
+    describe('with data', () => {
+        const makeDataResponse = (html: string, data: Uint8Array, type: string) => {
+            const htmlBytes = encoder.encode(html);
+            const body = new Uint8Array(htmlBytes.length + data.length);
+            body.set(htmlBytes, 0);
+            body.set(data, htmlBytes.length);
+
+            return makeResponse({ 'X-Live-Html-Length': String(htmlBytes.length), 'X-Live-Data-Type': type }, body);
+        };
+
+        it('returns only the HTML part as the body', async () => {
+            const response = makeDataResponse('<div>résumé</div>', encoder.encode('{"foo":"bar"}'), 'application/json');
+
+            expect(await response.getBody()).toBe('<div>résumé</div>');
+        });
+
+        it('returns the remaining bytes as a Response carrying the content type', async () => {
+            const response = makeDataResponse('<div>résumé</div>', encoder.encode('{"foo":"bär"}'), 'application/json');
+            await response.getBody();
+
+            const data = response.getData();
+            expect(data).toBeInstanceOf(globalThis.Response);
+            expect(data?.headers.get('Content-Type')).toBe('application/json');
+            expect(await data?.json()).toEqual({ foo: 'bär' });
+        });
+
+        it('can be read as text', async () => {
+            const response = makeDataResponse('<div></div>', encoder.encode('<result>foo</result>'), 'application/xml');
+            await response.getBody();
+
+            expect(await response.getData()?.text()).toBe('<result>foo</result>');
+        });
+
+        it('preserves bytes that are not valid UTF-8', async () => {
+            const response = makeDataResponse(
+                '<div></div>',
+                new Uint8Array([0x00, 0x01, 0x02, 0xff, 0xfe]),
+                'application/octet-stream'
+            );
+            await response.getBody();
+
+            const bytes = new Uint8Array(await response.getData()!.arrayBuffer());
+            expect(Array.from(bytes)).toEqual([0x00, 0x01, 0x02, 0xff, 0xfe]);
+            expect((await response.getData()!.blob()).type).toBe('application/octet-stream');
+        });
+
+        it('returns a fresh Response on each call, so the data can be read more than once', async () => {
+            const response = makeDataResponse('<div></div>', encoder.encode('{"foo":"bar"}'), 'application/json');
+            await response.getBody();
+
+            expect(await response.getData()?.json()).toEqual({ foo: 'bar' });
+            expect(await response.getData()?.json()).toEqual({ foo: 'bar' });
+        });
+
+        it('is not a download', async () => {
+            const response = makeDataResponse('<div></div>', encoder.encode('{"foo":"bar"}'), 'application/json');
+            await response.getBody();
+
+            expect(response.getDownload()).toBeNull();
+        });
+
+        it('is null without data', async () => {
+            const response = makeResponse({}, '<div>hello</div>');
+            await response.getBody();
+
+            expect(response.getData()).toBeNull();
+        });
+
+        it('is null with a download', async () => {
+            const response = makeDownloadResponse('<div>hello</div>', encoder.encode('a,b,c'));
+            await response.getBody();
+
+            expect(response.getData()).toBeNull();
+            expect(response.getDownload()).not.toBeNull();
+        });
+    });
+
     describe('download filename', () => {
         it('percent-decodes the filename', async () => {
             const response = makeDownloadResponse('<div></div>', encoder.encode('x'), {
