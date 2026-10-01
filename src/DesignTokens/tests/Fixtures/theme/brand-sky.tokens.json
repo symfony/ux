@@ -1,0 +1,27 @@
+{
+    "color": {
+        "palette": {
+            "$type": "color",
+            "brand": {
+                "$value": {
+                    "colorSpace": "srgb",
+                    "components": [
+                        0.3255,
+                        0.5176,
+                        0.9294
+                    ]
+                }
+            },
+            "brand-strong": {
+                "$value": {
+                    "colorSpace": "srgb",
+                    "components": [
+                        0.2275,
+                        0.3882,
+                        0.7686
+                    ]
+                }
+            }
+        }
+    }
+}

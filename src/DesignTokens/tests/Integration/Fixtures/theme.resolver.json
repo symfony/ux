@@ -1,0 +1,31 @@
+{
+    "version": "2025.10",
+    "modifiers": {
+        "theme": {
+            "contexts": {
+                "light": [
+                    {
+                        "theme": {
+                            "$type": "fontFamily",
+                            "$value": "light"
+                        }
+                    }
+                ],
+                "dark": [
+                    {
+                        "theme": {
+                            "$type": "fontFamily",
+                            "$value": "dark"
+                        }
+                    }
+                ]
+            },
+            "default": "light"
+        }
+    },
+    "resolutionOrder": [
+        {
+            "$ref": "#/modifiers/theme"
+        }
+    ]
+}

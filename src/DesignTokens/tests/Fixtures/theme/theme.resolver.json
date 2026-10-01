@@ -1,0 +1,56 @@
+{
+    "$schema": "https://www.designtokens.org/schemas/2025.10/resolver.json",
+    "version": "2025.10",
+    "sets": {
+        "foundation": {
+            "sources": [
+                {
+                    "$ref": "foundation.tokens.json"
+                }
+            ]
+        }
+    },
+    "modifiers": {
+        "brand": {
+            "contexts": {
+                "symfony": [
+                    {
+                        "$ref": "brand-symfony.tokens.json"
+                    }
+                ],
+                "sky": [
+                    {
+                        "$ref": "brand-sky.tokens.json"
+                    }
+                ]
+            },
+            "default": "symfony"
+        },
+        "scheme": {
+            "contexts": {
+                "light": [
+                    {
+                        "$ref": "scheme-light.tokens.json"
+                    }
+                ],
+                "dark": [
+                    {
+                        "$ref": "scheme-dark.tokens.json"
+                    }
+                ]
+            },
+            "default": "light"
+        }
+    },
+    "resolutionOrder": [
+        {
+            "$ref": "#/sets/foundation"
+        },
+        {
+            "$ref": "#/modifiers/brand"
+        },
+        {
+            "$ref": "#/modifiers/scheme"
+        }
+    ]
+}
