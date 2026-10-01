@@ -35,6 +35,13 @@ final class ComponentWithEmit
     }
 
     #[LiveAction]
+    public function actionThatEmitsWithNonScalarData(): void
+    {
+        $this->emit('event1', ['foo' => 'bar', 'params' => ['%count%' => 3, '%name%' => 'foo']]);
+        $this->events = $this->liveResponder->getEventsToEmit();
+    }
+
+    #[LiveAction]
     public function actionThatDispatchesABrowserEvent(): void
     {
         $this->dispatchBrowserEvent(
@@ -42,6 +49,19 @@ final class ComponentWithEmit
             [
                 'fooKey' => 'barVal',
                 'barKey' => 'fooVal',
+            ],
+        );
+        $this->dispatchEvents = $this->liveResponder->getBrowserEventsToDispatch();
+    }
+
+    #[LiveAction]
+    public function actionThatDispatchesABrowserEventWithNonScalarData(): void
+    {
+        $this->dispatchBrowserEvent(
+            'browser-event',
+            [
+                'fooKey' => 'barVal',
+                'paramsKey' => ['%count%' => 3, '%name%' => 'foo'],
             ],
         );
         $this->dispatchEvents = $this->liveResponder->getBrowserEventsToDispatch();
