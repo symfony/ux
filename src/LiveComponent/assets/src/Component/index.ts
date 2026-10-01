@@ -391,6 +391,11 @@ export default class Component {
                 this.backendRequest = null;
                 thisPromiseResolve(backendResponse);
 
+                if (this.isRequestPending) {
+                    this.isRequestPending = false;
+                    this.performRequest();
+                }
+
                 return response;
             }
 
