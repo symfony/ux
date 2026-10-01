@@ -121,6 +121,21 @@ To enable RTL support, set the `dir="rtl"` attribute on the root element.
 </div>
 ```
 
+### Long Content
+
+A longer text wraps over several lines, the tooltip shrinks to its longest line and stays inside the viewport.
+
+```twig {"preview":true}
+<twig:Tooltip id="tooltip-long-content">
+    <twig:Tooltip:Trigger>
+        <twig:Button {{ ...tooltip_trigger_attrs }} variant="outline">Hover</twig:Button>
+    </twig:Tooltip:Trigger>
+    <twig:Tooltip:Content>
+        <p>Your changes are saved automatically every few seconds, so you can close this page at any time without losing your work.</p>
+    </twig:Tooltip:Content>
+</twig:Tooltip>
+```
+
 ## Accessibility
 
 - `Tooltip:Content` renders `role="tooltip"`, and `tooltip_trigger_attrs` points the trigger at it with `aria-describedby`, so the tooltip text is announced when the trigger takes focus.

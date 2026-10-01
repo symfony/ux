@@ -41,10 +41,11 @@ export default class extends Controller {
         }
     }
 
-    wrapperTargetConnected() {
+    wrapperTargetConnected(element) {
         // This case appear when live component rerender.
         // Because original wrapper is moved on body, the Smart rerender algorithm recreate a new wrapper.
-        if (this.wrapperElement) {
+        // The same wrapper comes back when the controller reconnects, as disconnect() moves it back.
+        if (this.wrapperElement && element !== this.wrapperElement) {
             this.wrapperElement.remove();
             this.connect();
         }
@@ -63,6 +64,7 @@ export default class extends Controller {
             this.wrapperElement.setAttribute('open', '');
             this.contentElement.setAttribute('open', '');
             this.arrowElement.setAttribute('open', '');
+            this.#fitWidthToText();
             this.#positionElements();
             // The tooltip is portaled to <body> and positioned absolutely, so it cannot follow
             // the trigger on scroll. Dismiss it instead (capture scrolls from any scroller).
@@ -84,6 +86,35 @@ export default class extends Controller {
         this.arrowElement.removeAttribute('open');
     }
 
+    // A shrink-to-fit box that wraps its text keeps its max width, leaving a gap after the longest line.
+    // Size the content to that line instead.
+    #fitWidthToText() {
+        const content = this.contentElement;
+        content.style.width = '';
+        const range = document.createRange();
+        let left = Infinity;
+        let right = -Infinity;
+        for (const node of content.childNodes) {
+            if (node === this.arrowElement) {
+                continue;
+            }
+            range.selectNodeContents(node);
+            for (const rect of range.getClientRects()) {
+                left = Math.min(left, rect.left);
+                right = Math.max(right, rect.right);
+            }
+        }
+        if (right <= left) {
+            return;
+        }
+        // The rects are shrunk by the opening animation (scale-95), scale them back to the layout size.
+        const scale = content.getBoundingClientRect().width / content.offsetWidth;
+        const style = getComputedStyle(content);
+        const padding = parseFloat(style.paddingLeft) + parseFloat(style.paddingRight);
+        // The extra pixel keeps a sub-pixel rounding from wrapping the last word.
+        content.style.width = `${Math.ceil((right - left) / scale + padding) + 1}px`;
+    }
+
     #removeDismissListeners() {
         window.removeEventListener('scroll', this.dismiss, true);
         window.removeEventListener('resize', this.dismiss);
@@ -102,7 +133,8 @@ export default class extends Controller {
 
     #positionElements() {
         const triggerRect = this.triggerTarget.getBoundingClientRect();
-        const contentRect = this.contentElement.getBoundingClientRect();
+        // Unlike getBoundingClientRect(), offsetWidth/offsetHeight ignore the opening animation (scale-95).
+        const contentRect = { width: this.contentElement.offsetWidth, height: this.contentElement.offsetHeight };
         const arrowRect = this.arrowElement.getBoundingClientRect();
 
         let wrapperLeft = 0;
@@ -130,6 +162,15 @@ export default class extends Controller {
                 wrapperTop = triggerRect.bottom + arrowRect.height / 2 + this.sideOffset;
                 arrowLeft = contentRect.width / 2 - arrowRect.width / 2;
                 break;
+        }
+
+        // Keep a top or bottom tooltip inside the viewport, and move the arrow so it still points at the trigger.
+        if (arrowLeft !== null) {
+            const margin = 16;
+            const maxLeft = document.documentElement.clientWidth - contentRect.width - margin;
+            const clampedLeft = Math.max(margin, Math.min(wrapperLeft, maxLeft));
+            arrowLeft += wrapperLeft - clampedLeft;
+            wrapperLeft = clampedLeft;
         }
 
         this.wrapperElement.style.transform = `translate3d(${wrapperLeft}px, ${wrapperTop}px, 0)`;
