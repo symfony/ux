@@ -1,0 +1,101 @@
+{
+  "source": "sandbox/codegen/__tests__/slot-recipe.test.ts",
+  "cases": [
+    {
+      "id": "react::sandbox/codegen/__tests__/slot-recipe.test.ts::sva > base styles::1",
+      "kind": "codegen-css",
+      "config": "codegen-react",
+      "source": {
+        "file": "sandbox/codegen/__tests__/slot-recipe.test.ts",
+        "test": "sva > base styles",
+        "line": 6
+      },
+      "inputs": [
+        {}
+      ],
+      "expected": {
+        "className": ""
+      }
+    },
+    {
+      "id": "react::sandbox/codegen/__tests__/slot-recipe.test.ts::sva > base styles::2",
+      "kind": "codegen-css",
+      "config": "codegen-react",
+      "source": {
+        "file": "sandbox/codegen/__tests__/slot-recipe.test.ts",
+        "test": "sva > base styles",
+        "line": 6
+      },
+      "inputs": [
+        {}
+      ],
+      "expected": {
+        "className": ""
+      }
+    },
+    {
+      "id": "react::sandbox/codegen/__tests__/slot-recipe.test.ts::sva > outline variant styles::1",
+      "kind": "codegen-css",
+      "config": "codegen-react",
+      "source": {
+        "file": "sandbox/codegen/__tests__/slot-recipe.test.ts",
+        "test": "sva > outline variant styles",
+        "line": 30
+      },
+      "inputs": [
+        {}
+      ],
+      "expected": {
+        "className": ""
+      }
+    },
+    {
+      "id": "react::sandbox/codegen/__tests__/slot-recipe.test.ts::sva > outline variant styles::2",
+      "kind": "codegen-css",
+      "config": "codegen-react",
+      "source": {
+        "file": "sandbox/codegen/__tests__/slot-recipe.test.ts",
+        "test": "sva > outline variant styles",
+        "line": 30
+      },
+      "inputs": [
+        {}
+      ],
+      "expected": {
+        "className": ""
+      }
+    },
+    {
+      "id": "react::sandbox/codegen/__tests__/slot-recipe.test.ts::sva > solid variant styles::1",
+      "kind": "codegen-css",
+      "config": "codegen-react",
+      "source": {
+        "file": "sandbox/codegen/__tests__/slot-recipe.test.ts",
+        "test": "sva > solid variant styles",
+        "line": 17
+      },
+      "inputs": [
+        {}
+      ],
+      "expected": {
+        "className": ""
+      }
+    },
+    {
+      "id": "react::sandbox/codegen/__tests__/slot-recipe.test.ts::sva > solid variant styles::2",
+      "kind": "codegen-css",
+      "config": "codegen-react",
+      "source": {
+        "file": "sandbox/codegen/__tests__/slot-recipe.test.ts",
+        "test": "sva > solid variant styles",
+        "line": 17
+      },
+      "inputs": [
+        {}
+      ],
+      "expected": {
+        "className": ""
+      }
+    }
+  ]
+}

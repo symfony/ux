@@ -1,0 +1,959 @@
+{
+  "source": "packages/parser/__tests__/preset-patterns.test.ts",
+  "cases": [
+    {
+      "id": "fixture::packages/parser/__tests__/preset-patterns.test.ts::preset patterns > aspectRatio::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/preset-patterns.test.ts",
+        "test": "preset patterns > aspectRatio",
+        "line": 1411
+      },
+      "userConfig": null,
+      "inputs": [],
+      "expected": {
+        "css": "@layer utilities {\n  .pos_relative {\n    position: relative;\n}\n\n  .\\[\\&\\>\\*\\]\\:inset_0>* {\n    inset: var(--spacing-0);\n}\n\n  .\\[\\&\\>\\*\\]\\:ov_hidden>* {\n    overflow: hidden;\n}\n\n  .before\\:content_\\\"\\\"::before {\n    content: \"\";\n}\n\n  .before\\:d_block::before {\n    display: block;\n}\n\n  .\\[\\&\\>\\*\\]\\:d_flex>* {\n    display: flex;\n}\n\n  .\\[\\&\\>\\*\\]\\:jc_center>* {\n    justify-content: center;\n}\n\n  .\\[\\&\\>\\*\\]\\:ai_center>* {\n    align-items: center;\n}\n\n  .\\[\\&\\>\\*\\]\\:pos_absolute>* {\n    position: absolute;\n}\n\n  .\\[\\&\\>img\\,_\\&\\>video\\]\\:obj-f_cover>img,.\\[\\&\\>img\\,_\\&\\>video\\]\\:obj-f_cover>video {\n    object-fit: cover;\n}\n\n  .before\\:h_0::before {\n    height: var(--sizes-0);\n}\n\n  .before\\:pb_75\\%::before {\n    padding-bottom: 75%;\n}\n\n  .\\[\\&\\>\\*\\]\\:w_100\\%>* {\n    width: 100%;\n}\n\n  .\\[\\&\\>\\*\\]\\:h_100\\%>* {\n    height: 100%;\n}\n}"
+      },
+      "unsupported": "extracted non-css items (pattern)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/preset-patterns.test.ts::preset patterns > box::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/preset-patterns.test.ts",
+        "test": "preset patterns > box",
+        "line": 18
+      },
+      "userConfig": null,
+      "inputs": [],
+      "expected": {
+        "css": "@layer utilities {\n  .c_blue\\.100 {\n    color: var(--colors-blue-100);\n}\n}"
+      },
+      "unsupported": "extracted non-css items (pattern)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/preset-patterns.test.ts::preset patterns > center::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/preset-patterns.test.ts",
+        "test": "preset patterns > center",
+        "line": 1321
+      },
+      "userConfig": null,
+      "inputs": [],
+      "expected": {
+        "css": "@layer utilities {\n  .d_flex {\n    display: flex;\n}\n\n  .ai_center {\n    align-items: center;\n}\n\n  .jc_center {\n    justify-content: center;\n}\n}"
+      },
+      "unsupported": "extracted non-css items (pattern)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/preset-patterns.test.ts::preset patterns > circle::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/preset-patterns.test.ts",
+        "test": "preset patterns > circle",
+        "line": 719
+      },
+      "userConfig": null,
+      "inputs": [],
+      "expected": {
+        "css": "@layer utilities {\n  .flex_0_0_auto {\n    flex: 0 0 auto;\n}\n\n  .bdr_9999px {\n    border-radius: 9999px;\n}\n\n  .d_flex {\n    display: flex;\n}\n\n  .ai_center {\n    align-items: center;\n}\n\n  .jc_center {\n    justify-content: center;\n}\n}"
+      },
+      "unsupported": "extracted non-css items (pattern)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/preset-patterns.test.ts::preset patterns > container::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/preset-patterns.test.ts",
+        "test": "preset patterns > container",
+        "line": 1199
+      },
+      "userConfig": null,
+      "inputs": [],
+      "expected": {
+        "css": "@layer utilities {\n  .mx_auto {\n    margin-inline: auto;\n}\n\n  .px_4 {\n    padding-inline: var(--spacing-4);\n}\n\n  .pos_relative {\n    position: relative;\n}\n\n  .max-w_8xl {\n    max-width: var(--sizes-8xl);\n}\n\n  @media screen and (min-width: 48rem) {\n    .md\\:px_6 {\n      padding-inline: var(--spacing-6);\n}\n}\n\n  @media screen and (min-width: 64rem) {\n    .lg\\:px_8 {\n      padding-inline: var(--spacing-8);\n}\n}\n}"
+      },
+      "unsupported": "extracted non-css items (pattern)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/preset-patterns.test.ts::preset patterns > cq::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/preset-patterns.test.ts",
+        "test": "preset patterns > cq",
+        "line": 1594
+      },
+      "userConfig": {
+        "theme": {
+          "extend": {
+            "containerNames": [
+              "",
+              "sidebar",
+              "content"
+            ]
+          }
+        }
+      },
+      "configPatch": {
+        "theme": {
+          "containerNames": {
+            "$value": [
+              "",
+              "sidebar",
+              "content"
+            ]
+          }
+        }
+      },
+      "inputs": [
+        {
+          "fontSize": {
+            "base": "lg",
+            "@sidebar/sm": "md"
+          }
+        }
+      ],
+      "expected": {
+        "css": "@layer utilities {\n  .cq-t_inline-size {\n    container-type: inline-size;\n}\n\n  .cq-n_sidebar {\n    container-name: sidebar;\n}\n\n  .fs_lg {\n    font-size: var(--font-sizes-lg);\n}\n\n  @container sidebar (min-width: 24rem) {\n    .\\@sidebar\\/sm\\:fs_md {\n      font-size: var(--font-sizes-md);\n}\n}\n}"
+      },
+      "unsupported": "extracted non-css items (pattern)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/preset-patterns.test.ts::preset patterns > flex::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/preset-patterns.test.ts",
+        "test": "preset patterns > flex",
+        "line": 90
+      },
+      "userConfig": null,
+      "inputs": [],
+      "expected": {
+        "css": "@layer utilities {\n  .d_flex {\n    display: flex;\n}\n}"
+      },
+      "unsupported": "extracted non-css items (pattern)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/preset-patterns.test.ts::preset patterns > float::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/preset-patterns.test.ts",
+        "test": "preset patterns > float",
+        "line": 825
+      },
+      "userConfig": null,
+      "inputs": [],
+      "expected": {
+        "css": "@layer utilities {\n  .d_inline-flex {\n    display: inline-flex;\n}\n\n  .jc_center {\n    justify-content: center;\n}\n\n  .ai_center {\n    align-items: center;\n}\n\n  .pos_absolute {\n    position: absolute;\n}\n\n  .inset-bs_0 {\n    inset-block-start: var(--spacing-0);\n}\n\n  .inset-be_auto {\n    inset-block-end: auto;\n}\n\n  .inset-s_auto {\n    inset-inline-start: auto;\n}\n\n  .inset-e_0 {\n    inset-inline-end: var(--spacing-0);\n}\n\n  .translate_50\\%_-50\\% {\n    translate: 50% -50%;\n}\n}"
+      },
+      "unsupported": "extracted non-css items (pattern)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/preset-patterns.test.ts::preset patterns > grid::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/preset-patterns.test.ts",
+        "test": "preset patterns > grid",
+        "line": 963
+      },
+      "userConfig": null,
+      "inputs": [],
+      "expected": {
+        "css": "@layer utilities {\n  .gap_8px {\n    gap: 8px;\n}\n\n  .d_grid {\n    display: grid;\n}\n}"
+      },
+      "unsupported": "extracted non-css items (pattern)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/preset-patterns.test.ts::preset patterns > gridItem::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/preset-patterns.test.ts",
+        "test": "preset patterns > gridItem",
+        "line": 1045
+      },
+      "userConfig": null,
+      "inputs": [],
+      "expected": {
+        "css": ""
+      },
+      "unsupported": "extracted non-css items (pattern)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/preset-patterns.test.ts::preset patterns > hstack::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/preset-patterns.test.ts",
+        "test": "preset patterns > hstack",
+        "line": 352
+      },
+      "userConfig": null,
+      "inputs": [],
+      "expected": {
+        "css": "@layer utilities {\n  .gap_8px {\n    gap: 8px;\n}\n\n  .d_flex {\n    display: flex;\n}\n\n  .ai_center {\n    align-items: center;\n}\n\n  .flex-d_row {\n    flex-direction: row;\n}\n}"
+      },
+      "unsupported": "extracted non-css items (pattern)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/preset-patterns.test.ts::preset patterns > jsx absoluteCenter::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/preset-patterns.test.ts",
+        "test": "preset patterns > jsx absoluteCenter",
+        "line": 891
+      },
+      "userConfig": null,
+      "inputs": [],
+      "expected": {
+        "css": "@layer utilities {\n  .d_inline-flex {\n    display: inline-flex;\n}\n\n  .jc_center {\n    justify-content: center;\n}\n\n  .ai_center {\n    align-items: center;\n}\n\n  .pos_absolute {\n    position: absolute;\n}\n\n  .inset-bs_0 {\n    inset-block-start: var(--spacing-0);\n}\n\n  .inset-be_auto {\n    inset-block-end: auto;\n}\n\n  .inset-s_auto {\n    inset-inline-start: auto;\n}\n\n  .inset-e_0 {\n    inset-inline-end: var(--spacing-0);\n}\n\n  .translate_50\\%_-50\\% {\n    translate: 50% -50%;\n}\n\n  .c_blue\\.100 {\n    color: var(--colors-blue-100);\n}\n}"
+      },
+      "unsupported": "extracted non-css items (jsx-pattern)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/preset-patterns.test.ts::preset patterns > jsx aspectRatio::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/preset-patterns.test.ts",
+        "test": "preset patterns > jsx aspectRatio",
+        "line": 1497
+      },
+      "userConfig": null,
+      "inputs": [],
+      "expected": {
+        "css": "@layer utilities {\n  .pos_relative {\n    position: relative;\n}\n\n  .c_blue\\.100 {\n    color: var(--colors-blue-100);\n}\n\n  .\\[\\&\\>\\*\\]\\:inset_0>* {\n    inset: var(--spacing-0);\n}\n\n  .\\[\\&\\>\\*\\]\\:ov_hidden>* {\n    overflow: hidden;\n}\n\n  .before\\:content_\\\"\\\"::before {\n    content: \"\";\n}\n\n  .before\\:d_block::before {\n    display: block;\n}\n\n  .\\[\\&\\>\\*\\]\\:d_flex>* {\n    display: flex;\n}\n\n  .\\[\\&\\>\\*\\]\\:jc_center>* {\n    justify-content: center;\n}\n\n  .\\[\\&\\>\\*\\]\\:ai_center>* {\n    align-items: center;\n}\n\n  .\\[\\&\\>\\*\\]\\:pos_absolute>* {\n    position: absolute;\n}\n\n  .\\[\\&\\>img\\,_\\&\\>video\\]\\:obj-f_cover>img,.\\[\\&\\>img\\,_\\&\\>video\\]\\:obj-f_cover>video {\n    object-fit: cover;\n}\n\n  .before\\:h_0::before {\n    height: var(--sizes-0);\n}\n\n  .before\\:pb_75\\%::before {\n    padding-bottom: 75%;\n}\n\n  .\\[\\&\\>\\*\\]\\:w_100\\%>* {\n    width: 100%;\n}\n\n  .\\[\\&\\>\\*\\]\\:h_100\\%>* {\n    height: 100%;\n}\n}"
+      },
+      "unsupported": "extracted non-css items (jsx-pattern)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/preset-patterns.test.ts::preset patterns > jsx box::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/preset-patterns.test.ts",
+        "test": "preset patterns > jsx box",
+        "line": 54
+      },
+      "userConfig": null,
+      "inputs": [],
+      "expected": {
+        "css": "@layer utilities {\n  .c_blue\\.100 {\n    color: var(--colors-blue-100);\n}\n}"
+      },
+      "unsupported": "extracted non-css items (jsx-pattern)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/preset-patterns.test.ts::preset patterns > jsx center::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/preset-patterns.test.ts",
+        "test": "preset patterns > jsx center",
+        "line": 1363
+      },
+      "userConfig": null,
+      "inputs": [],
+      "expected": {
+        "css": "@layer utilities {\n  .d_flex {\n    display: flex;\n}\n\n  .ai_center {\n    align-items: center;\n}\n\n  .jc_center {\n    justify-content: center;\n}\n\n  .c_blue\\.100 {\n    color: var(--colors-blue-100);\n}\n}"
+      },
+      "unsupported": "extracted non-css items (jsx-pattern)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/preset-patterns.test.ts::preset patterns > jsx circle::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/preset-patterns.test.ts",
+        "test": "preset patterns > jsx circle",
+        "line": 769
+      },
+      "userConfig": null,
+      "inputs": [],
+      "expected": {
+        "css": "@layer utilities {\n  .flex_0_0_auto {\n    flex: 0 0 auto;\n}\n\n  .bdr_9999px {\n    border-radius: 9999px;\n}\n\n  .d_flex {\n    display: flex;\n}\n\n  .ai_center {\n    align-items: center;\n}\n\n  .jc_center {\n    justify-content: center;\n}\n\n  .c_blue\\.100 {\n    color: var(--colors-blue-100);\n}\n}"
+      },
+      "unsupported": "extracted non-css items (jsx-pattern)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/preset-patterns.test.ts::preset patterns > jsx container::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/preset-patterns.test.ts",
+        "test": "preset patterns > jsx container",
+        "line": 1257
+      },
+      "userConfig": null,
+      "inputs": [],
+      "expected": {
+        "css": "@layer utilities {\n  .mx_auto {\n    margin-inline: auto;\n}\n\n  .px_4 {\n    padding-inline: var(--spacing-4);\n}\n\n  .pos_relative {\n    position: relative;\n}\n\n  .c_blue\\.100 {\n    color: var(--colors-blue-100);\n}\n\n  .max-w_8xl {\n    max-width: var(--sizes-8xl);\n}\n\n  @media screen and (min-width: 48rem) {\n    .md\\:px_6 {\n      padding-inline: var(--spacing-6);\n}\n}\n\n  @media screen and (min-width: 64rem) {\n    .lg\\:px_8 {\n      padding-inline: var(--spacing-8);\n}\n}\n}"
+      },
+      "unsupported": "extracted non-css items (jsx-pattern)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/preset-patterns.test.ts::preset patterns > jsx Cq::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/preset-patterns.test.ts",
+        "test": "preset patterns > jsx Cq",
+        "line": 1667
+      },
+      "userConfig": {
+        "theme": {
+          "extend": {
+            "containerNames": [
+              "",
+              "sidebar",
+              "content"
+            ]
+          }
+        }
+      },
+      "configPatch": {
+        "theme": {
+          "containerNames": {
+            "$value": [
+              "",
+              "sidebar",
+              "content"
+            ]
+          }
+        }
+      },
+      "inputs": [
+        {
+          "fontSize": {
+            "base": "lg",
+            "@sidebar/sm": "md"
+          }
+        }
+      ],
+      "expected": {
+        "css": "@layer utilities {\n  .cq-t_inline-size {\n    container-type: inline-size;\n}\n\n  .cq-n_sidebar {\n    container-name: sidebar;\n}\n\n  .fs_lg {\n    font-size: var(--font-sizes-lg);\n}\n\n  @container sidebar (min-width: 24rem) {\n    .\\@sidebar\\/sm\\:fs_md {\n      font-size: var(--font-sizes-md);\n}\n}\n}"
+      },
+      "unsupported": "extracted non-css items (jsx-pattern)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/preset-patterns.test.ts::preset patterns > jsx flex::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/preset-patterns.test.ts",
+        "test": "preset patterns > jsx flex",
+        "line": 124
+      },
+      "userConfig": null,
+      "inputs": [],
+      "expected": {
+        "css": "@layer utilities {\n  .d_flex {\n    display: flex;\n}\n\n  .c_blue\\.100 {\n    color: var(--colors-blue-100);\n}\n}"
+      },
+      "unsupported": "extracted non-css items (jsx-pattern)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/preset-patterns.test.ts::preset patterns > jsx grid::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/preset-patterns.test.ts",
+        "test": "preset patterns > jsx grid",
+        "line": 1001
+      },
+      "userConfig": null,
+      "inputs": [],
+      "expected": {
+        "css": "@layer utilities {\n  .gap_8px {\n    gap: 8px;\n}\n\n  .d_grid {\n    display: grid;\n}\n\n  .c_blue\\.100 {\n    color: var(--colors-blue-100);\n}\n}"
+      },
+      "unsupported": "extracted non-css items (jsx-pattern)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/preset-patterns.test.ts::preset patterns > jsx gridItem::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/preset-patterns.test.ts",
+        "test": "preset patterns > jsx gridItem",
+        "line": 1073
+      },
+      "userConfig": null,
+      "inputs": [],
+      "expected": {
+        "css": "@layer utilities {\n  .c_blue\\.100 {\n    color: var(--colors-blue-100);\n}\n}"
+      },
+      "unsupported": "extracted non-css items (jsx-pattern)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/preset-patterns.test.ts::preset patterns > jsx hStack::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/preset-patterns.test.ts",
+        "test": "preset patterns > jsx hStack",
+        "line": 398
+      },
+      "userConfig": null,
+      "inputs": [],
+      "expected": {
+        "css": "@layer utilities {\n  .gap_8px {\n    gap: 8px;\n}\n\n  .d_flex {\n    display: flex;\n}\n\n  .ai_center {\n    align-items: center;\n}\n\n  .flex-d_row {\n    flex-direction: row;\n}\n\n  .c_blue\\.100 {\n    color: var(--colors-blue-100);\n}\n}"
+      },
+      "unsupported": "extracted non-css items (jsx-pattern)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/preset-patterns.test.ts::preset patterns > jsx linkOverlay::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/preset-patterns.test.ts",
+        "test": "preset patterns > jsx linkOverlay",
+        "line": 612
+      },
+      "userConfig": null,
+      "inputs": [],
+      "expected": {
+        "css": "@layer utilities {\n  .pos_relative {\n    position: relative;\n}\n\n  .before\\:inset_0::before {\n    inset: var(--spacing-0);\n}\n\n  .before\\:content_\\\"\\\"::before {\n    content: \"\";\n}\n\n  .before\\:pos_absolute::before {\n    position: absolute;\n}\n\n  .before\\:z_0::before {\n    z-index: 0;\n}\n}"
+      },
+      "unsupported": "extracted non-css items (jsx-pattern)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/preset-patterns.test.ts::preset patterns > jsx spacer::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/preset-patterns.test.ts",
+        "test": "preset patterns > jsx spacer",
+        "line": 671
+      },
+      "userConfig": null,
+      "inputs": [],
+      "expected": {
+        "css": "@layer utilities {\n  .flex_1 {\n    flex: 1 1 0%;\n}\n\n  .as_stretch {\n    align-self: stretch;\n}\n\n  .justify-self_stretch {\n    justify-self: stretch;\n}\n\n  .c_blue\\.100 {\n    color: var(--colors-blue-100);\n}\n}"
+      },
+      "unsupported": "extracted non-css items (jsx-pattern)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/preset-patterns.test.ts::preset patterns > jsx stack::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/preset-patterns.test.ts",
+        "test": "preset patterns > jsx stack",
+        "line": 206
+      },
+      "userConfig": null,
+      "inputs": [],
+      "expected": {
+        "css": "@layer utilities {\n  .gap_8px {\n    gap: 8px;\n}\n\n  .d_flex {\n    display: flex;\n}\n\n  .flex-d_column {\n    flex-direction: column;\n}\n\n  .c_blue\\.100 {\n    color: var(--colors-blue-100);\n}\n}"
+      },
+      "unsupported": "extracted non-css items (jsx-pattern)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/preset-patterns.test.ts::preset patterns > jsx vStack::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/preset-patterns.test.ts",
+        "test": "preset patterns > jsx vStack",
+        "line": 300
+      },
+      "userConfig": null,
+      "inputs": [],
+      "expected": {
+        "css": "@layer utilities {\n  .gap_8px {\n    gap: 8px;\n}\n\n  .d_flex {\n    display: flex;\n}\n\n  .ai_center {\n    align-items: center;\n}\n\n  .flex-d_column {\n    flex-direction: column;\n}\n\n  .c_blue\\.100 {\n    color: var(--colors-blue-100);\n}\n}"
+      },
+      "unsupported": "extracted non-css items (jsx-pattern)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/preset-patterns.test.ts::preset patterns > jsx wrap::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/preset-patterns.test.ts",
+        "test": "preset patterns > jsx wrap",
+        "line": 1151
+      },
+      "userConfig": null,
+      "inputs": [],
+      "expected": {
+        "css": "@layer utilities {\n  .gap_8px {\n    gap: 8px;\n}\n\n  .d_flex {\n    display: flex;\n}\n\n  .flex-wrap_wrap {\n    flex-wrap: wrap;\n}\n\n  .c_blue\\.100 {\n    color: var(--colors-blue-100);\n}\n}"
+      },
+      "unsupported": "extracted non-css items (jsx-pattern)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/preset-patterns.test.ts::preset patterns > linkOverlay::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/preset-patterns.test.ts",
+        "test": "preset patterns > linkOverlay",
+        "line": 553
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          "pos": "relative"
+        }
+      ],
+      "expected": {
+        "css": "@layer utilities {\n  .pos_relative {\n    position: relative;\n}\n\n  .before\\:inset_0::before {\n    inset: var(--spacing-0);\n}\n\n  .before\\:content_\\\"\\\"::before {\n    content: \"\";\n}\n\n  .before\\:pos_absolute::before {\n    position: absolute;\n}\n\n  .before\\:z_0::before {\n    z-index: 0;\n}\n}"
+      },
+      "unsupported": "extracted non-css items (pattern)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/preset-patterns.test.ts::preset patterns > responsive array syntax::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/preset-patterns.test.ts",
+        "test": "preset patterns > responsive array syntax",
+        "line": 1737
+      },
+      "userConfig": null,
+      "inputs": [],
+      "expected": {
+        "css": "@layer utilities {\n  .gap_8px {\n    gap: 8px;\n}\n\n  .grid-c_span_1 {\n    grid-column: span 1;\n}\n\n  .d_grid {\n    display: grid;\n}\n\n  .grid-tc_repeat\\(2\\,_minmax\\(0\\,_1fr\\)\\) {\n    grid-template-columns: repeat(2, minmax(0, 1fr));\n}\n\n  @media screen and (min-width: 40rem) {\n    .sm\\:grid-c_span_2 {\n      grid-column: span 2;\n}\n    .sm\\:grid-tc_repeat\\(3\\,_minmax\\(0\\,_1fr\\)\\) {\n      grid-template-columns: repeat(3, minmax(0, 1fr));\n}\n}\n\n  @media screen and (min-width: 48rem) {\n    .md\\:grid-c_span_3 {\n      grid-column: span 3;\n}\n    .md\\:grid-tc_repeat\\(4\\,_minmax\\(0\\,_1fr\\)\\) {\n      grid-template-columns: repeat(4, minmax(0, 1fr));\n}\n}\n}"
+      },
+      "unsupported": "extracted non-css items (pattern)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/preset-patterns.test.ts::preset patterns > spacer - with css unit size::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/preset-patterns.test.ts",
+        "test": "preset patterns > spacer - with css unit size",
+        "line": 522
+      },
+      "userConfig": null,
+      "inputs": [],
+      "expected": {
+        "css": "@layer utilities {\n  .flex_0_0_40px {\n    flex: 0 0 40px;\n}\n\n  .as_stretch {\n    align-self: stretch;\n}\n\n  .justify-self_stretch {\n    justify-self: stretch;\n}\n}"
+      },
+      "unsupported": "extracted non-css items (pattern)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/preset-patterns.test.ts::preset patterns > spacer - with token size::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/preset-patterns.test.ts",
+        "test": "preset patterns > spacer - with token size",
+        "line": 492
+      },
+      "userConfig": null,
+      "inputs": [],
+      "expected": {
+        "css": "@layer utilities {\n  .flex_0_0_token\\(spacing\\.4\\,_4\\) {\n    flex: 0 0 var(--spacing-4, 4);\n}\n\n  .as_stretch {\n    align-self: stretch;\n}\n\n  .justify-self_stretch {\n    justify-self: stretch;\n}\n}"
+      },
+      "unsupported": "extracted non-css items (pattern)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/preset-patterns.test.ts::preset patterns > spacer::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/preset-patterns.test.ts",
+        "test": "preset patterns > spacer",
+        "line": 450
+      },
+      "userConfig": null,
+      "inputs": [],
+      "expected": {
+        "css": "@layer utilities {\n  .flex_1 {\n    flex: 1 1 0%;\n}\n\n  .as_stretch {\n    align-self: stretch;\n}\n\n  .justify-self_stretch {\n    justify-self: stretch;\n}\n}"
+      },
+      "unsupported": "extracted non-css items (pattern)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/preset-patterns.test.ts::preset patterns > stack::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/preset-patterns.test.ts",
+        "test": "preset patterns > stack",
+        "line": 164
+      },
+      "userConfig": null,
+      "inputs": [],
+      "expected": {
+        "css": "@layer utilities {\n  .gap_8px {\n    gap: 8px;\n}\n\n  .d_flex {\n    display: flex;\n}\n\n  .flex-d_column {\n    flex-direction: column;\n}\n}"
+      },
+      "unsupported": "extracted non-css items (pattern)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/preset-patterns.test.ts::preset patterns > vstack::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/preset-patterns.test.ts",
+        "test": "preset patterns > vstack",
+        "line": 254
+      },
+      "userConfig": null,
+      "inputs": [],
+      "expected": {
+        "css": "@layer utilities {\n  .gap_8px {\n    gap: 8px;\n}\n\n  .d_flex {\n    display: flex;\n}\n\n  .ai_center {\n    align-items: center;\n}\n\n  .flex-d_column {\n    flex-direction: column;\n}\n}"
+      },
+      "unsupported": "extracted non-css items (pattern)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/preset-patterns.test.ts::preset patterns > wrap::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/preset-patterns.test.ts",
+        "test": "preset patterns > wrap",
+        "line": 1109
+      },
+      "userConfig": null,
+      "inputs": [],
+      "expected": {
+        "css": "@layer utilities {\n  .gap_8px {\n    gap: 8px;\n}\n\n  .d_flex {\n    display: flex;\n}\n\n  .flex-wrap_wrap {\n    flex-wrap: wrap;\n}\n}"
+      },
+      "unsupported": "extracted non-css items (pattern)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/preset-patterns.test.ts::staticCss > type: enum *::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/preset-patterns.test.ts",
+        "test": "staticCss > type: enum *",
+        "line": 2714
+      },
+      "userConfig": {
+        "staticCss": {
+          "patterns": {
+            "float": [
+              "*"
+            ]
+          }
+        }
+      },
+      "configPatch": {
+        "staticCss": {
+          "$value": {
+            "patterns": {
+              "float": [
+                "*"
+              ]
+            }
+          }
+        }
+      },
+      "inputs": [],
+      "expected": {
+        "css": ""
+      }
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/preset-patterns.test.ts::staticCss > type: enum::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/preset-patterns.test.ts",
+        "test": "staticCss > type: enum",
+        "line": 2443
+      },
+      "userConfig": {
+        "staticCss": {
+          "patterns": {
+            "divider": [
+              {
+                "properties": {
+                  "orientation": [
+                    "*"
+                  ],
+                  "thickness": [
+                    "*"
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      },
+      "configPatch": {
+        "staticCss": {
+          "$value": {
+            "patterns": {
+              "divider": [
+                {
+                  "properties": {
+                    "orientation": [
+                      "*"
+                    ],
+                    "thickness": [
+                      "*"
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        }
+      },
+      "inputs": [],
+      "expected": {
+        "css": ""
+      }
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/preset-patterns.test.ts::staticCss > type: number + conditions::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/preset-patterns.test.ts",
+        "test": "staticCss > type: number + conditions",
+        "line": 1894
+      },
+      "userConfig": {
+        "staticCss": {
+          "patterns": {
+            "aspectRatio": [
+              {
+                "properties": {
+                  "ratio": [
+                    0.25
+                  ]
+                },
+                "conditions": [
+                  "md"
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "configPatch": {
+        "staticCss": {
+          "$value": {
+            "patterns": {
+              "aspectRatio": [
+                {
+                  "properties": {
+                    "ratio": [
+                      0.25
+                    ]
+                  },
+                  "conditions": [
+                    "md"
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      },
+      "inputs": [],
+      "expected": {
+        "css": ""
+      }
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/preset-patterns.test.ts::staticCss > type: number::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/preset-patterns.test.ts",
+        "test": "staticCss > type: number",
+        "line": 1811
+      },
+      "userConfig": {
+        "staticCss": {
+          "patterns": {
+            "aspectRatio": [
+              {
+                "properties": {
+                  "ratio": [
+                    1.3333333333333333,
+                    1.7777777777777777,
+                    1
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      },
+      "configPatch": {
+        "staticCss": {
+          "$value": {
+            "patterns": {
+              "aspectRatio": [
+                {
+                  "properties": {
+                    "ratio": [
+                      1.3333333333333333,
+                      1.7777777777777777,
+                      1
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        }
+      },
+      "inputs": [],
+      "expected": {
+        "css": ""
+      }
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/preset-patterns.test.ts::staticCss > type: property *::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/preset-patterns.test.ts",
+        "test": "staticCss > type: property *",
+        "line": 2116
+      },
+      "userConfig": {
+        "staticCss": {
+          "patterns": {
+            "bleed": [
+              {
+                "properties": {
+                  "inline": [
+                    "*"
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      },
+      "configPatch": {
+        "staticCss": {
+          "$value": {
+            "patterns": {
+              "bleed": [
+                {
+                  "properties": {
+                    "inline": [
+                      "*"
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        }
+      },
+      "inputs": [],
+      "expected": {
+        "css": ""
+      }
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/preset-patterns.test.ts::staticCss > type: property::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/preset-patterns.test.ts",
+        "test": "staticCss > type: property",
+        "line": 2053
+      },
+      "userConfig": {
+        "staticCss": {
+          "patterns": {
+            "circle": [
+              {
+                "properties": {
+                  "size": [
+                    "sm",
+                    "md",
+                    "lg"
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      },
+      "configPatch": {
+        "staticCss": {
+          "$value": {
+            "patterns": {
+              "circle": [
+                {
+                  "properties": {
+                    "size": [
+                      "sm",
+                      "md",
+                      "lg"
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        }
+      },
+      "inputs": [],
+      "expected": {
+        "css": ""
+      }
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/preset-patterns.test.ts::staticCss > type: token::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/preset-patterns.test.ts",
+        "test": "staticCss > type: token",
+        "line": 2014
+      },
+      "userConfig": {
+        "staticCss": {
+          "patterns": {
+            "spacer": [
+              {
+                "properties": {
+                  "size": [
+                    "2",
+                    "4",
+                    "6"
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      },
+      "configPatch": {
+        "staticCss": {
+          "$value": {
+            "patterns": {
+              "spacer": [
+                {
+                  "properties": {
+                    "size": [
+                      "2",
+                      "4",
+                      "6"
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        }
+      },
+      "inputs": [],
+      "expected": {
+        "css": ""
+      }
+    }
+  ]
+}

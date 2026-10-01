@@ -1,0 +1,57 @@
+{
+  "source": "packages/parser/__tests__/svelte.test.ts",
+  "cases": [
+    {
+      "id": "fixture::packages/parser/__tests__/svelte.test.ts::extract svelte templates > template with svelte-specific syntax + Typescript usage::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/svelte.test.ts",
+        "test": "extract svelte templates > template with svelte-specific syntax + Typescript usage",
+        "line": 175
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          "color": "blue.400"
+        },
+        {
+          "color": "blue.100"
+        },
+        {
+          "color": "green.400"
+        },
+        {
+          "color": "purple.400"
+        },
+        {
+          "color": "red.500"
+        },
+        {
+          "color": "teal.100"
+        },
+        {
+          "color": "teal.200"
+        },
+        {
+          "color": "teal.300"
+        },
+        {
+          "color": "teal.400"
+        },
+        {
+          "color": "teal.500"
+        },
+        {
+          "color": "teal.600"
+        },
+        {
+          "color": "teal.700"
+        }
+      ],
+      "expected": {
+        "css": "@layer utilities {\n  .c_blue\\.400 {\n    color: var(--colors-blue-400);\n}\n\n  .c_blue\\.100 {\n    color: var(--colors-blue-100);\n}\n\n  .c_green\\.400 {\n    color: var(--colors-green-400);\n}\n\n  .c_purple\\.400 {\n    color: var(--colors-purple-400);\n}\n\n  .c_red\\.500 {\n    color: var(--colors-red-500);\n}\n\n  .c_teal\\.100 {\n    color: var(--colors-teal-100);\n}\n\n  .c_teal\\.200 {\n    color: var(--colors-teal-200);\n}\n\n  .c_teal\\.300 {\n    color: var(--colors-teal-300);\n}\n\n  .c_teal\\.400 {\n    color: var(--colors-teal-400);\n}\n\n  .c_teal\\.500 {\n    color: var(--colors-teal-500);\n}\n\n  .c_teal\\.600 {\n    color: var(--colors-teal-600);\n}\n\n  .c_teal\\.700 {\n    color: var(--colors-teal-700);\n}\n}"
+      }
+    }
+  ]
+}

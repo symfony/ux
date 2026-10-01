@@ -1,0 +1,10 @@
+/.git* export-ignore
+/.symfony.bundle.yaml export-ignore
+/assets/test export-ignore
+/assets/playwright.config.ts export-ignore
+/CONTRIBUTING.md export-ignore
+/doc export-ignore
+/phpbench.json export-ignore
+/phpunit.dist.xml export-ignore
+/tests export-ignore
+/tools export-ignore

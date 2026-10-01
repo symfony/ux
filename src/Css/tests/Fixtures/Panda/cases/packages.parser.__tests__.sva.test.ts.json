@@ -1,0 +1,53 @@
+{
+  "source": "packages/parser/__tests__/sva.test.ts",
+  "cases": [
+    {
+      "id": "fixture::packages/parser/__tests__/sva.test.ts::ast parser / sva > unresolvable + concat - spread::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/sva.test.ts",
+        "test": "ast parser / sva > unresolvable + concat - spread",
+        "line": 305
+      },
+      "userConfig": null,
+      "inputs": [],
+      "expected": {
+        "css": "@layer utilities {\n  .bg-c_red {\n    background-color: red;\n}\n}"
+      },
+      "unsupported": "extracted non-css items (sva)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/sva.test.ts::ast parser / sva > unresolvable slots - spread::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/sva.test.ts",
+        "test": "ast parser / sva > unresolvable slots - spread",
+        "line": 258
+      },
+      "userConfig": null,
+      "inputs": [],
+      "expected": {
+        "css": "@layer utilities {\n  .p_6 {\n    padding: var(--spacing-6);\n}\n}"
+      },
+      "unsupported": "extracted non-css items (sva)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/sva.test.ts::ast parser / sva > unresolvable slots::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/sva.test.ts",
+        "test": "ast parser / sva > unresolvable slots",
+        "line": 163
+      },
+      "userConfig": null,
+      "inputs": [],
+      "expected": {
+        "css": "@layer utilities {\n  .p_6 {\n    padding: var(--spacing-6);\n}\n\n  .m_4 {\n    margin: var(--spacing-4);\n}\n\n  .bdr_md {\n    border-radius: var(--radii-md);\n}\n\n  .bx-sh_md {\n    box-shadow: var(--shadows-md);\n}\n\n  .fw_semibold {\n    font-weight: var(--font-weights-semibold);\n}\n\n  .w_md {\n    width: var(--sizes-md);\n}\n\n  .pb_2 {\n    padding-bottom: var(--spacing-2);\n}\n\n  [data-theme=dark] .dark\\:bg_\\#262626,.dark .dark\\:bg_\\#262626,.dark\\:bg_\\#262626.dark,.dark\\:bg_\\#262626[data-theme=dark] {\n    background: #262626;\n}\n\n  [data-theme=dark] .dark\\:c_white,.dark .dark\\:c_white,.dark\\:c_white.dark,.dark\\:c_white[data-theme=dark] {\n    color: var(--colors-white);\n}\n}"
+      },
+      "unsupported": "extracted non-css items (sva)"
+    }
+  ]
+}

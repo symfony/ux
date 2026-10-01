@@ -1,0 +1,35 @@
+{
+  "source": "packages/parser/__tests__/css-raw.test.ts",
+  "cases": [
+    {
+      "id": "fixture::packages/parser/__tests__/css-raw.test.ts::{fn}.raw > using raw syntax works::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/css-raw.test.ts",
+        "test": "{fn}.raw > using raw syntax works",
+        "line": 40
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          "mx": "3",
+          "paddingTop": "4",
+          "color": "amber.100"
+        },
+        {
+          "mx": "10",
+          "pt": "6",
+          "color": "blue.950"
+        },
+        {
+          "bg": "red.400"
+        }
+      ],
+      "expected": {
+        "css": "@layer recipes {\n  @layer _base {\n    .buttonStyle {\n      display: inline-flex;\n      align-items: center;\n      justify-content: center;\n}\n\n    .buttonStyle:is(:hover, [data-hover]) {\n      background-color: var(--colors-red-200);\n      font-size: var(--font-sizes-3xl);\n      color: var(--colors-white);\n}\n}\n\n  .buttonStyle--size_md {\n    padding: 0 0.75rem;\n    height: 3rem;\n    min-width: 3rem;\n}\n\n  .buttonStyle--variant_solid {\n    background-color: blue;\n    color: var(--colors-white);\n}\n\n  .buttonStyle--variant_solid[data-disabled] {\n    background-color: gray;\n    color: var(--colors-black);\n    font-size: var(--font-sizes-2xl);\n}\n\n  .buttonStyle--variant_solid:is(:hover, [data-hover]) {\n    background-color: darkblue;\n}\n\n  .buttonStyle--size_sm {\n    padding: 0 0.5rem;\n    height: 2.5rem;\n    min-width: 2.5rem;\n}\n}\n\n@layer utilities {\n  .bg_red\\.400 {\n    background: var(--colors-red-400);\n}\n\n  .mx_3 {\n    margin-inline: var(--spacing-3);\n}\n\n  .mx_10 {\n    margin-inline: var(--spacing-10);\n}\n\n  .gap_8px {\n    gap: 8px;\n}\n\n  .c_amber\\.100 {\n    color: var(--colors-amber-100);\n}\n\n  .c_blue\\.950 {\n    color: var(--colors-blue-950);\n}\n\n  .d_flex {\n    display: flex;\n}\n\n  .flex-d_column {\n    flex-direction: column;\n}\n\n  .flex-d_row {\n    flex-direction: row;\n}\n\n  .pt_4 {\n    padding-top: var(--spacing-4);\n}\n\n  .pt_6 {\n    padding-top: var(--spacing-6);\n}\n}"
+      },
+      "unsupported": "extracted non-css items (jsx-recipe, recipe, pattern)"
+    }
+  ]
+}

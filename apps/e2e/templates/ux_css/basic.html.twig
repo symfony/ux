@@ -1,0 +1,16 @@
+{% extends 'example.html.twig' %}
+
+{% block stylesheets %}
+    {{ ux_token_css() }}
+    <link rel="stylesheet" href="{{ asset('ux_css/styles.css') }}">
+{% endblock %}
+
+{% block example %}
+    <div data-testid="css-box" class="{{ css({ p: '4', mt: { md: '8' }, color: 'danger', _hover: { color: 'primary' } }) }}">
+        Hover me
+    </div>
+
+    <div data-testid="css-dynamic" class="{{ css({ color: tone }) }}">
+        This color comes from the query string
+    </div>
+{% endblock %}

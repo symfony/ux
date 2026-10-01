@@ -1,0 +1,583 @@
+{
+  "source": "packages/core/__tests__/template-literal.test.ts",
+  "cases": [
+    {
+      "id": "fixture::packages/core/__tests__/template-literal.test.ts::css template literal > deep native nested::1",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/template-literal.test.ts",
+        "test": "css template literal > deep native nested",
+        "line": 7
+      },
+      "userConfig": {
+        "syntax": "template-literal"
+      },
+      "inputs": [
+        {
+          "& .box": {
+            "& p": {
+              "background-color": "red",
+              "@media (min-width: 700px)": {
+                "background-color": "blue"
+              }
+            }
+          }
+        }
+      ],
+      "configPatch": {
+        "syntax": {
+          "$value": "template-literal"
+        }
+      },
+      "options": null,
+      "expected": {
+        "classNames": [
+          "\\[\\&_\\.box\\]\\:\\[\\&_p\\]\\:background-color_red",
+          "\\[\\&_\\.box\\]\\:\\[\\&_p\\]\\:\\[\\@media_\\(min-width\\:_700px\\)\\]\\:background-color_blue"
+        ],
+        "css": "@layer utilities {\n  .\\[\\&_\\.box\\]\\:\\[\\&_p\\]\\:background-color_red .box p {\n    background-color: red;\n}\n\n  @media (min-width: 700px) {\n    .\\[\\&_\\.box\\]\\:\\[\\&_p\\]\\:\\[\\@media_\\(min-width\\:_700px\\)\\]\\:background-color_blue .box p {\n      background-color: blue;\n}\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/core/__tests__/template-literal.test.ts::css template literal > deep native nested::2",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/template-literal.test.ts",
+        "test": "css template literal > deep native nested",
+        "line": 7
+      },
+      "userConfig": {
+        "syntax": "template-literal"
+      },
+      "inputs": [
+        {
+          "color": "hotpink",
+          "& > .is": {
+            "color": "rebeccapurple",
+            "& > .awesome": {
+              "color": "deeppink"
+            }
+          }
+        }
+      ],
+      "configPatch": {
+        "syntax": {
+          "$value": "template-literal"
+        }
+      },
+      "options": null,
+      "expected": {
+        "classNames": [
+          "color_hotpink",
+          "\\[\\&_\\>_\\.is\\]\\:color_rebeccapurple",
+          "\\[\\&_\\>_\\.is\\]\\:\\[\\&_\\>_\\.awesome\\]\\:color_deeppink"
+        ],
+        "css": "@layer utilities {\n  .color_hotpink {\n    color: hotpink;\n}\n\n  .\\[\\&_\\>_\\.is\\]\\:color_rebeccapurple > .is {\n    color: rebeccapurple;\n}\n\n  .\\[\\&_\\>_\\.is\\]\\:\\[\\&_\\>_\\.awesome\\]\\:color_deeppink > .is > .awesome {\n    color: deeppink;\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/core/__tests__/template-literal.test.ts::css template literal > deep native nested::3",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/template-literal.test.ts",
+        "test": "css template literal > deep native nested",
+        "line": 7
+      },
+      "userConfig": {
+        "syntax": "template-literal"
+      },
+      "inputs": [
+        {
+          "& .demo": {
+            "& .triangle, .square": {
+              "opacity": "0.25",
+              "filter": "blur(25px)"
+            }
+          }
+        }
+      ],
+      "configPatch": {
+        "syntax": {
+          "$value": "template-literal"
+        }
+      },
+      "options": null,
+      "expected": {
+        "classNames": [
+          "\\[\\&_\\.demo\\]\\:\\[\\&_\\.triangle\\,_\\.square\\]\\:opacity_0\\.25",
+          "\\[\\&_\\.demo\\]\\:\\[\\&_\\.triangle\\,_\\.square\\]\\:filter_blur\\(25px\\)"
+        ],
+        "css": "@layer utilities {\n  .\\[\\&_\\.demo\\]\\:\\[\\&_\\.triangle\\,_\\.square\\]\\:opacity_0\\.25 .demo .triangle,.\\[\\&_\\.demo\\]\\:\\[\\&_\\.triangle\\,_\\.square\\]\\:opacity_0\\.25 .demo .square {\n    opacity: 0.25;\n}\n\n  .\\[\\&_\\.demo\\]\\:\\[\\&_\\.triangle\\,_\\.square\\]\\:filter_blur\\(25px\\) .demo .triangle,.\\[\\&_\\.demo\\]\\:\\[\\&_\\.triangle\\,_\\.square\\]\\:filter_blur\\(25px\\) .demo .square {\n    filter: blur(25px);\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/core/__tests__/template-literal.test.ts::css template literal > deep native nested::4",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/template-literal.test.ts",
+        "test": "css template literal > deep native nested",
+        "line": 7
+      },
+      "userConfig": {
+        "syntax": "template-literal"
+      },
+      "inputs": [
+        {
+          "& :not(.pink)": {
+            "opacity": "0.25",
+            "filter": "blur(25px)"
+          }
+        }
+      ],
+      "configPatch": {
+        "syntax": {
+          "$value": "template-literal"
+        }
+      },
+      "options": null,
+      "expected": {
+        "classNames": [
+          "\\[\\&_\\:not\\(\\.pink\\)\\]\\:opacity_0\\.25",
+          "\\[\\&_\\:not\\(\\.pink\\)\\]\\:filter_blur\\(25px\\)"
+        ],
+        "css": "@layer utilities {\n  .\\[\\&_\\:not\\(\\.pink\\)\\]\\:opacity_0\\.25 :not(.pink) {\n    opacity: 0.25;\n}\n\n  .\\[\\&_\\:not\\(\\.pink\\)\\]\\:filter_blur\\(25px\\) :not(.pink) {\n    filter: blur(25px);\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/core/__tests__/template-literal.test.ts::css template literal > deep native nested::5",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/template-literal.test.ts",
+        "test": "css template literal > deep native nested",
+        "line": 7
+      },
+      "userConfig": {
+        "syntax": "template-literal"
+      },
+      "inputs": [
+        {
+          "& .one, #two": {
+            "& .three": {
+              "color": "red"
+            }
+          }
+        }
+      ],
+      "configPatch": {
+        "syntax": {
+          "$value": "template-literal"
+        }
+      },
+      "options": null,
+      "expected": {
+        "classNames": [
+          "\\[\\&_\\.one\\,_\\#two\\]\\:\\[\\&_\\.three\\]\\:color_red"
+        ],
+        "css": "@layer utilities {\n  .\\[\\&_\\.one\\,_\\#two\\]\\:\\[\\&_\\.three\\]\\:color_red .one .three,.\\[\\&_\\.one\\,_\\#two\\]\\:\\[\\&_\\.three\\]\\:color_red #two .three {\n    color: red;\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/core/__tests__/template-literal.test.ts::css template literal > deep native nested::6",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/template-literal.test.ts",
+        "test": "css template literal > deep native nested",
+        "line": 7
+      },
+      "userConfig": {
+        "syntax": "template-literal"
+      },
+      "inputs": [
+        {
+          "& .foo": {
+            "color": "blue",
+            "&": {
+              "padding": "2ch"
+            }
+          }
+        }
+      ],
+      "configPatch": {
+        "syntax": {
+          "$value": "template-literal"
+        }
+      },
+      "options": null,
+      "expected": {
+        "classNames": [
+          "\\[\\&_\\.foo\\]\\:color_blue",
+          "\\[\\&_\\.foo\\]\\:\\[\\&\\]\\:padding_2ch"
+        ],
+        "css": "@layer utilities {\n  .\\[\\&_\\.foo\\]\\:color_blue .foo {\n    color: blue;\n}\n\n  .\\[\\&_\\.foo\\]\\:\\[\\&\\]\\:padding_2ch .foo {\n    padding: 2ch;\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/core/__tests__/template-literal.test.ts::css template literal > deep native nested::7",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/template-literal.test.ts",
+        "test": "css template literal > deep native nested",
+        "line": 7
+      },
+      "userConfig": {
+        "syntax": "template-literal"
+      },
+      "inputs": [
+        {
+          "& .foo": {
+            "color": "blue",
+            "&&": {
+              "padding": "2ch"
+            }
+          }
+        }
+      ],
+      "configPatch": {
+        "syntax": {
+          "$value": "template-literal"
+        }
+      },
+      "options": null,
+      "expected": {
+        "classNames": [
+          "\\[\\&_\\.foo\\]\\:color_blue",
+          "\\[\\&_\\.foo\\]\\:\\[\\&\\&\\]\\:padding_2ch"
+        ],
+        "css": "@layer utilities {\n  .\\[\\&_\\.foo\\]\\:color_blue .foo {\n    color: blue;\n}\n\n  :is(.\\[\\&_\\.foo\\]\\:\\[\\&\\&\\]\\:padding_2ch .foo):is(.\\[\\&_\\.foo\\]\\:\\[\\&\\&\\]\\:padding_2ch .foo) {\n    padding: 2ch;\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/core/__tests__/template-literal.test.ts::css template literal > deep native nested::8",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/template-literal.test.ts",
+        "test": "css template literal > deep native nested",
+        "line": 7
+      },
+      "userConfig": {
+        "syntax": "template-literal"
+      },
+      "inputs": [
+        {
+          "& .foo": {
+            "& :is(.bar, &.baz)": {
+              "color": "red"
+            }
+          }
+        }
+      ],
+      "configPatch": {
+        "syntax": {
+          "$value": "template-literal"
+        }
+      },
+      "options": null,
+      "expected": {
+        "classNames": [
+          "\\[\\&_\\.foo\\]\\:\\[\\&_\\:is\\(\\.bar\\,_\\&\\.baz\\)\\]\\:color_red"
+        ],
+        "css": "@layer utilities {\n  .\\[\\&_\\.foo\\]\\:\\[\\&_\\:is\\(\\.bar\\,_\\&\\.baz\\)\\]\\:color_red .foo :is(.bar, .\\[\\&_\\.foo\\]\\:\\[\\&_\\:is\\(\\.bar\\,_\\&\\.baz\\)\\]\\:color_red .foo.baz) {\n    color: red;\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/core/__tests__/template-literal.test.ts::css template literal > deep native nested::9",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/template-literal.test.ts",
+        "test": "css template literal > deep native nested",
+        "line": 7
+      },
+      "userConfig": {
+        "syntax": "template-literal"
+      },
+      "inputs": [
+        {
+          "& figure": {
+            "margin": "0",
+            "& > figcaption": {
+              "background": "hsl(0 0% 0% / 50%)",
+              "& > p": {
+                "font-size": "0.9rem"
+              }
+            }
+          }
+        }
+      ],
+      "configPatch": {
+        "syntax": {
+          "$value": "template-literal"
+        }
+      },
+      "options": null,
+      "expected": {
+        "classNames": [
+          "\\[\\&_figure\\]\\:margin_0",
+          "\\[\\&_figure\\]\\:\\[\\&_\\>_figcaption\\]\\:background_hsl\\(0_0\\%_0\\%_\\/_50\\%\\)",
+          "\\[\\&_figure\\]\\:\\[\\&_\\>_figcaption\\]\\:\\[\\&_\\>_p\\]\\:font-size_0\\.9rem"
+        ],
+        "css": "@layer utilities {\n  .\\[\\&_figure\\]\\:margin_0 figure {\n    margin: 0;\n}\n\n  .\\[\\&_figure\\]\\:\\[\\&_\\>_figcaption\\]\\:background_hsl\\(0_0\\%_0\\%_\\/_50\\%\\) figure > figcaption {\n    background: hsl(0 0% 0% / 50%);\n}\n\n  .\\[\\&_figure\\]\\:\\[\\&_\\>_figcaption\\]\\:\\[\\&_\\>_p\\]\\:font-size_0\\.9rem figure > figcaption > p {\n    font-size: 0.9rem;\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/core/__tests__/template-literal.test.ts::css template literal > deep native nested::10",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/template-literal.test.ts",
+        "test": "css template literal > deep native nested",
+        "line": 7
+      },
+      "userConfig": {
+        "syntax": "template-literal"
+      },
+      "inputs": [
+        {
+          "& .card": {
+            "inline-size": "40ch",
+            "aspect-ratio": "3/4",
+            "@layer support": {
+              "& body": {
+                "min-block-size": "100%"
+              }
+            }
+          }
+        }
+      ],
+      "configPatch": {
+        "syntax": {
+          "$value": "template-literal"
+        }
+      },
+      "options": null,
+      "expected": {
+        "classNames": [
+          "\\[\\&_\\.card\\]\\:inline-size_40ch",
+          "\\[\\&_\\.card\\]\\:aspect-ratio_3\\/4",
+          "\\[\\&_\\.card\\]\\:\\[\\@layer_support\\]\\:\\[\\&_body\\]\\:min-block-size_100\\%"
+        ],
+        "css": "@layer utilities {\n  .\\[\\&_\\.card\\]\\:inline-size_40ch .card {\n    inline-size: 40ch;\n}\n\n  .\\[\\&_\\.card\\]\\:aspect-ratio_3\\/4 .card {\n    aspect-ratio: 3/4;\n}\n\n  @layer support {\n    .\\[\\&_\\.card\\]\\:\\[\\@layer_support\\]\\:\\[\\&_body\\]\\:min-block-size_100\\% .card body {\n      min-block-size: 100%;\n}\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/core/__tests__/template-literal.test.ts::css template literal > emits atomic css::1",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/template-literal.test.ts",
+        "test": "css template literal > emits atomic css",
+        "line": 7
+      },
+      "userConfig": {
+        "syntax": "template-literal"
+      },
+      "inputs": [
+        {
+          "width": "500px",
+          "height": "500px",
+          "background": "red",
+          "@media (min-width: 700px)": {
+            "background": "blue"
+          }
+        }
+      ],
+      "configPatch": {
+        "syntax": {
+          "$value": "template-literal"
+        }
+      },
+      "options": null,
+      "expected": {
+        "classNames": [
+          "background_red",
+          "width_500px",
+          "height_500px",
+          "\\[\\@media_\\(min-width\\:_700px\\)\\]\\:background_blue"
+        ],
+        "css": "@layer utilities {\n  .background_red {\n    background: red;\n}\n\n  .width_500px {\n    width: 500px;\n}\n\n  .height_500px {\n    height: 500px;\n}\n\n  @media (min-width: 700px) {\n    .\\[\\@media_\\(min-width\\:_700px\\)\\]\\:background_blue {\n      background: blue;\n}\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/core/__tests__/template-literal.test.ts::css template literal > nesting combinators::1",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/template-literal.test.ts",
+        "test": "css template literal > nesting combinators",
+        "line": 7
+      },
+      "userConfig": {
+        "syntax": "template-literal"
+      },
+      "inputs": [
+        {
+          "& p + p": {
+            "color": "red"
+          }
+        }
+      ],
+      "configPatch": {
+        "syntax": {
+          "$value": "template-literal"
+        }
+      },
+      "options": null,
+      "expected": {
+        "classNames": [
+          "\\[\\&_p_\\+_p\\]\\:color_red"
+        ],
+        "css": "@layer utilities {\n  .\\[\\&_p_\\+_p\\]\\:color_red p + p {\n    color: red;\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/core/__tests__/template-literal.test.ts::css template literal > nesting combinators::2",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/template-literal.test.ts",
+        "test": "css template literal > nesting combinators",
+        "line": 7
+      },
+      "userConfig": {
+        "syntax": "template-literal"
+      },
+      "inputs": [
+        {
+          "& p ~ p": {
+            "color": "red"
+          }
+        }
+      ],
+      "configPatch": {
+        "syntax": {
+          "$value": "template-literal"
+        }
+      },
+      "options": null,
+      "expected": {
+        "classNames": [
+          "\\[\\&_p_\\~_p\\]\\:color_red"
+        ],
+        "css": "@layer utilities {\n  .\\[\\&_p_\\~_p\\]\\:color_red p ~ p {\n    color: red;\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/core/__tests__/template-literal.test.ts::css template literal > nesting combinators::3",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/template-literal.test.ts",
+        "test": "css template literal > nesting combinators",
+        "line": 7
+      },
+      "userConfig": {
+        "syntax": "template-literal"
+      },
+      "inputs": [
+        {
+          ".box &": {
+            "background-color": "red"
+          }
+        }
+      ],
+      "configPatch": {
+        "syntax": {
+          "$value": "template-literal"
+        }
+      },
+      "options": null,
+      "expected": {
+        "classNames": [
+          "\\[\\.box_\\&\\]\\:background-color_red"
+        ],
+        "css": "@layer utilities {\n  .box .\\[\\.box_\\&\\]\\:background-color_red {\n    background-color: red;\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/core/__tests__/template-literal.test.ts::css template literal > should support native nesting::1",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/template-literal.test.ts",
+        "test": "css template literal > should support native nesting",
+        "line": 7
+      },
+      "userConfig": {
+        "syntax": "template-literal"
+      },
+      "inputs": [
+        {
+          "color": "red",
+          "& p": {
+            "color": "blue"
+          },
+          "& h1, h2, h3, h4": {
+            "color": "pink",
+            "font-weight": "bold",
+            "margin-bottom": "1rem"
+          }
+        }
+      ],
+      "configPatch": {
+        "syntax": {
+          "$value": "template-literal"
+        }
+      },
+      "options": null,
+      "expected": {
+        "classNames": [
+          "color_red",
+          "\\[\\&_p\\]\\:color_blue",
+          "\\[\\&_h1\\,_h2\\,_h3\\,_h4\\]\\:color_pink",
+          "\\[\\&_h1\\,_h2\\,_h3\\,_h4\\]\\:font-weight_bold",
+          "\\[\\&_h1\\,_h2\\,_h3\\,_h4\\]\\:margin-bottom_1rem"
+        ],
+        "css": "@layer utilities {\n  .color_red {\n    color: red;\n}\n\n  .\\[\\&_p\\]\\:color_blue p {\n    color: blue;\n}\n\n  .\\[\\&_h1\\,_h2\\,_h3\\,_h4\\]\\:color_pink h1,.\\[\\&_h1\\,_h2\\,_h3\\,_h4\\]\\:color_pink h2,.\\[\\&_h1\\,_h2\\,_h3\\,_h4\\]\\:color_pink h3,.\\[\\&_h1\\,_h2\\,_h3\\,_h4\\]\\:color_pink h4 {\n    color: pink;\n}\n\n  .\\[\\&_h1\\,_h2\\,_h3\\,_h4\\]\\:font-weight_bold h1,.\\[\\&_h1\\,_h2\\,_h3\\,_h4\\]\\:font-weight_bold h2,.\\[\\&_h1\\,_h2\\,_h3\\,_h4\\]\\:font-weight_bold h3,.\\[\\&_h1\\,_h2\\,_h3\\,_h4\\]\\:font-weight_bold h4 {\n    font-weight: bold;\n}\n\n  .\\[\\&_h1\\,_h2\\,_h3\\,_h4\\]\\:margin-bottom_1rem h1,.\\[\\&_h1\\,_h2\\,_h3\\,_h4\\]\\:margin-bottom_1rem h2,.\\[\\&_h1\\,_h2\\,_h3\\,_h4\\]\\:margin-bottom_1rem h3,.\\[\\&_h1\\,_h2\\,_h3\\,_h4\\]\\:margin-bottom_1rem h4 {\n    margin-bottom: 1rem;\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/core/__tests__/template-literal.test.ts::css template literal > should support native nesting::2",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/template-literal.test.ts",
+        "test": "css template literal > should support native nesting",
+        "line": 7
+      },
+      "userConfig": {
+        "syntax": "template-literal"
+      },
+      "inputs": [
+        {
+          "justify-content": "center",
+          "--test": "4px",
+          "& :is(.content, footer)": {
+            "padding": "16px"
+          }
+        }
+      ],
+      "configPatch": {
+        "syntax": {
+          "$value": "template-literal"
+        }
+      },
+      "options": null,
+      "expected": {
+        "classNames": [
+          "\\--test_4px",
+          "justify-content_center",
+          "\\[\\&_\\:is\\(\\.content\\,_footer\\)\\]\\:padding_16px"
+        ],
+        "css": "@layer utilities {\n  .\\--test_4px {\n    --test: 4px;\n}\n\n  .justify-content_center {\n    justify-content: center;\n}\n\n  .\\[\\&_\\:is\\(\\.content\\,_footer\\)\\]\\:padding_16px :is(.content, footer) {\n    padding: 16px;\n}\n}"
+      }
+    }
+  ]
+}

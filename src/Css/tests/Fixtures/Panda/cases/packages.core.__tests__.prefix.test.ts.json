@@ -1,0 +1,87 @@
+{
+  "source": "packages/core/__tests__/prefix.test.ts",
+  "cases": [
+    {
+      "id": "fixture::packages/core/__tests__/prefix.test.ts::atomic-rule / prefix > should product consistent hash::1",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/prefix.test.ts",
+        "test": "atomic-rule / prefix > should product consistent hash",
+        "line": 9
+      },
+      "userConfig": {
+        "prefix": "tw",
+        "hash": {
+          "className": true,
+          "cssVar": true
+        }
+      },
+      "inputs": [
+        {
+          "color": "red"
+        }
+      ],
+      "configPatch": {
+        "prefix": {
+          "$value": "tw"
+        },
+        "hash": {
+          "$value": {
+            "className": true,
+            "cssVar": true
+          }
+        }
+      },
+      "options": null,
+      "expected": {
+        "classNames": [
+          "tw-wxtrg"
+        ],
+        "css": "@layer utilities {\n  .tw-wxtrg {\n    color: red;\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/core/__tests__/prefix.test.ts::atomic-rule / prefix > should product consistent hash::2",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/prefix.test.ts",
+        "test": "atomic-rule / prefix > should product consistent hash",
+        "line": 9
+      },
+      "userConfig": {
+        "prefix": "tw",
+        "hash": {
+          "className": true,
+          "cssVar": true
+        }
+      },
+      "inputs": [
+        {
+          "color": {
+            "sm": "red"
+          }
+        }
+      ],
+      "configPatch": {
+        "prefix": {
+          "$value": "tw"
+        },
+        "hash": {
+          "$value": {
+            "className": true,
+            "cssVar": true
+          }
+        }
+      },
+      "options": null,
+      "expected": {
+        "classNames": [
+          "tw-eIFrkw"
+        ],
+        "css": "@layer utilities {\n  @media screen and (min-width: 40rem) {\n    .tw-eIFrkw {\n      color: red;\n}\n}\n}"
+      }
+    }
+  ]
+}

@@ -1,0 +1,2968 @@
+{
+  "conditions": {
+    "hover": "&:is(:hover, [data-hover])",
+    "focus": "&:is(:focus, [data-focus])",
+    "focusWithin": "&:focus-within",
+    "focusVisible": "&:is(:focus-visible, [data-focus-visible])",
+    "disabled": "&:is(:disabled, [disabled], [data-disabled], [aria-disabled=true])",
+    "active": "&:is(:active, [data-active])",
+    "visited": "&:visited",
+    "target": "&:target",
+    "readOnly": "&:is(:read-only, [data-read-only], [aria-readonly=true])",
+    "readWrite": "&:read-write",
+    "empty": "&:is(:empty, [data-empty])",
+    "checked": "&:is(:checked, [data-checked], [aria-checked=true], [data-state=\"checked\"])",
+    "enabled": "&:enabled",
+    "expanded": "&:is([aria-expanded=true], [data-expanded], [data-state=\"expanded\"])",
+    "highlighted": "&[data-highlighted]",
+    "complete": "&[data-complete]",
+    "incomplete": "&[data-incomplete]",
+    "dragging": "&[data-dragging]",
+    "before": "&::before",
+    "after": "&::after",
+    "firstLetter": "&::first-letter",
+    "firstLine": "&::first-line",
+    "marker": "&::marker, &::-webkit-details-marker",
+    "selection": "&::selection",
+    "file": "&::file-selector-button",
+    "backdrop": "&::backdrop",
+    "first": "&:first-child",
+    "last": "&:last-child",
+    "only": "&:only-child",
+    "even": "&:nth-child(even)",
+    "odd": "&:nth-child(odd)",
+    "firstOfType": "&:first-of-type",
+    "lastOfType": "&:last-of-type",
+    "onlyOfType": "&:only-of-type",
+    "peerFocus": ".peer:is(:focus, [data-focus]) ~ &",
+    "peerHover": ".peer:is(:hover, [data-hover]) ~ &",
+    "peerActive": ".peer:is(:active, [data-active]) ~ &",
+    "peerFocusWithin": ".peer:focus-within ~ &",
+    "peerFocusVisible": ".peer:is(:focus-visible, [data-focus-visible]) ~ &",
+    "peerDisabled": ".peer:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) ~ &",
+    "peerChecked": ".peer:is(:checked, [data-checked], [aria-checked=true], [data-state=\"checked\"]) ~ &",
+    "peerInvalid": ".peer:is(:invalid, [data-invalid], [aria-invalid=true]) ~ &",
+    "peerExpanded": ".peer:is([aria-expanded=true], [data-expanded], [data-state=\"expanded\"]) ~ &",
+    "peerPlaceholderShown": ".peer:placeholder-shown ~ &",
+    "groupFocus": ".group:is(:focus, [data-focus]) &",
+    "groupHover": ".group:is(:hover, [data-hover]) &",
+    "groupActive": ".group:is(:active, [data-active]) &",
+    "groupFocusWithin": ".group:focus-within &",
+    "groupFocusVisible": ".group:is(:focus-visible, [data-focus-visible]) &",
+    "groupDisabled": ".group:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) &",
+    "groupChecked": ".group:is(:checked, [data-checked], [aria-checked=true], [data-state=\"checked\"]) &",
+    "groupExpanded": ".group:is([aria-expanded=true], [data-expanded], [data-state=\"expanded\"]) &",
+    "groupInvalid": ".group:is(:invalid, [data-invalid], [aria-invalid=true]) &",
+    "indeterminate": "&:is(:indeterminate, [data-indeterminate], [aria-checked=mixed], [data-state=\"indeterminate\"])",
+    "required": "&:is(:required, [data-required], [aria-required=true])",
+    "valid": "&:is(:valid, [data-valid])",
+    "invalid": "&:is(:invalid, [data-invalid], [aria-invalid=true])",
+    "autofill": "&:autofill",
+    "inRange": "&:is(:in-range, [data-in-range])",
+    "outOfRange": "&:is(:out-of-range, [data-outside-range])",
+    "placeholder": "&::placeholder, &[data-placeholder]",
+    "placeholderShown": "&:is(:placeholder-shown, [data-placeholder-shown])",
+    "pressed": "&:is([aria-pressed=true], [data-pressed])",
+    "selected": "&:is([aria-selected=true], [data-selected])",
+    "grabbed": "&:is([aria-grabbed=true], [data-grabbed])",
+    "underValue": "&[data-state=under-value]",
+    "overValue": "&[data-state=over-value]",
+    "atValue": "&[data-state=at-value]",
+    "default": "&:default",
+    "optional": "&:optional",
+    "open": "&:is([open], [data-open], [data-state=\"open\"], :popover-open)",
+    "closed": "&:is([closed], [data-closed], [data-state=\"closed\"])",
+    "fullscreen": "&:is(:fullscreen, [data-fullscreen])",
+    "loading": "&:is([data-loading], [aria-busy=true])",
+    "hidden": "&:is([hidden], [data-hidden])",
+    "current": "&:is([aria-current=true], [data-current])",
+    "currentPage": "&[aria-current=page]",
+    "currentStep": "&[aria-current=step]",
+    "today": "&[data-today]",
+    "unavailable": "&[data-unavailable]",
+    "rangeStart": "&[data-range-start]",
+    "rangeEnd": "&[data-range-end]",
+    "now": "&[data-now]",
+    "topmost": "&[data-topmost]",
+    "motionReduce": "@media (prefers-reduced-motion: reduce)",
+    "motionSafe": "@media (prefers-reduced-motion: no-preference)",
+    "print": "@media print",
+    "landscape": "@media (orientation: landscape)",
+    "portrait": "@media (orientation: portrait)",
+    "dark": ".dark &",
+    "light": ".light &",
+    "osDark": "@media (prefers-color-scheme: dark)",
+    "osLight": "@media (prefers-color-scheme: light)",
+    "highContrast": "@media (forced-colors: active)",
+    "lessContrast": "@media (prefers-contrast: less)",
+    "moreContrast": "@media (prefers-contrast: more)",
+    "ltr": ":where([dir=ltr], :dir(ltr)) &",
+    "rtl": ":where([dir=rtl], :dir(rtl)) &",
+    "scrollbar": "&::-webkit-scrollbar",
+    "scrollbarThumb": "&::-webkit-scrollbar-thumb",
+    "scrollbarTrack": "&::-webkit-scrollbar-track",
+    "horizontal": "&[data-orientation=horizontal]",
+    "vertical": "&[data-orientation=vertical]",
+    "icon": "& :where(svg)",
+    "starting": "@starting-style",
+    "noscript": "@media (scripting: none)",
+    "invertedColors": "@media (inverted-colors: inverted)"
+  },
+  "utilities": {
+    "aspectRatio": {
+      "className": "asp",
+      "values": "aspectRatios",
+      "group": "Layout"
+    },
+    "boxDecorationBreak": {
+      "className": "bx-db",
+      "group": "Layout",
+      "transform": {
+        "__function": "transform"
+      }
+    },
+    "zIndex": {
+      "className": "z",
+      "values": "zIndex",
+      "group": "Visibility"
+    },
+    "boxSizing": {
+      "className": "bx-s",
+      "group": "System"
+    },
+    "objectPosition": {
+      "className": "obj-p",
+      "group": "Layout"
+    },
+    "objectFit": {
+      "className": "obj-f",
+      "group": "Layout"
+    },
+    "overscrollBehavior": {
+      "className": "ovs-b",
+      "group": "Scroll"
+    },
+    "overscrollBehaviorX": {
+      "className": "ovs-bx",
+      "group": "Scroll"
+    },
+    "overscrollBehaviorY": {
+      "className": "ovs-by",
+      "group": "Scroll"
+    },
+    "position": {
+      "className": "pos",
+      "shorthand": "pos",
+      "group": "Position"
+    },
+    "top": {
+      "className": "top",
+      "values": "spacing",
+      "group": "Position"
+    },
+    "left": {
+      "className": "left",
+      "values": "spacing",
+      "group": "Position"
+    },
+    "inset": {
+      "className": "inset",
+      "group": "Position",
+      "values": {
+        "__function": "values",
+        "probe": {
+          "auto": "auto",
+          "__category:spacing": "spacing"
+        }
+      }
+    },
+    "insetInline": {
+      "className": "inset-x",
+      "values": "spacing",
+      "group": "Position",
+      "shorthand": [
+        "insetX"
+      ]
+    },
+    "insetBlock": {
+      "className": "inset-y",
+      "values": "spacing",
+      "group": "Position",
+      "shorthand": [
+        "insetY"
+      ]
+    },
+    "insetBlockEnd": {
+      "className": "inset-be",
+      "values": "spacing",
+      "group": "Position"
+    },
+    "insetBlockStart": {
+      "className": "inset-bs",
+      "values": "spacing",
+      "group": "Position"
+    },
+    "insetInlineEnd": {
+      "className": "inset-e",
+      "values": "spacing",
+      "group": "Position",
+      "shorthand": [
+        "insetEnd",
+        "end"
+      ]
+    },
+    "insetInlineStart": {
+      "className": "inset-s",
+      "values": "spacing",
+      "group": "Position",
+      "shorthand": [
+        "insetStart",
+        "start"
+      ]
+    },
+    "right": {
+      "className": "right",
+      "values": "spacing",
+      "group": "Position"
+    },
+    "bottom": {
+      "className": "bottom",
+      "values": "spacing",
+      "group": "Position"
+    },
+    "float": {
+      "className": "float",
+      "values": [
+        "start",
+        "end"
+      ],
+      "property": "float",
+      "group": "Position",
+      "transform": {
+        "__function": "transform"
+      }
+    },
+    "visibility": {
+      "className": "vis",
+      "group": "Visibility"
+    },
+    "display": {
+      "className": "d",
+      "group": "Display"
+    },
+    "hideFrom": {
+      "className": "hide",
+      "values": "breakpoints",
+      "group": "Display",
+      "transform": {
+        "__function": "transform"
+      }
+    },
+    "hideBelow": {
+      "className": "show",
+      "values": "breakpoints",
+      "group": "Display",
+      "transform": {
+        "__function": "transform"
+      }
+    },
+    "flexBasis": {
+      "className": "flex-b",
+      "group": "Flex Layout",
+      "values": {
+        "__function": "values",
+        "probe": {
+          "__category:sizes": "sizes",
+          "1/2": "50%",
+          "1/3": "33.333333%",
+          "2/3": "66.666667%",
+          "1/4": "25%",
+          "2/4": "50%",
+          "3/4": "75%",
+          "1/5": "20%",
+          "2/5": "40%",
+          "3/5": "60%",
+          "4/5": "80%",
+          "1/6": "16.666667%",
+          "2/6": "33.333333%",
+          "3/6": "50%",
+          "4/6": "66.666667%",
+          "5/6": "83.333333%",
+          "1/12": "8.333333%",
+          "2/12": "16.666667%",
+          "3/12": "25%",
+          "4/12": "33.333333%",
+          "5/12": "41.666667%",
+          "6/12": "50%",
+          "7/12": "58.333333%",
+          "8/12": "66.666667%",
+          "9/12": "75%",
+          "10/12": "83.333333%",
+          "11/12": "91.666667%",
+          "full": "100%"
+        }
+      }
+    },
+    "flex": {
+      "className": "flex",
+      "group": "Flex Layout",
+      "values": {
+        "1": "1 1 0%",
+        "auto": "1 1 auto",
+        "initial": "0 1 auto",
+        "none": "none"
+      }
+    },
+    "flexDirection": {
+      "className": "flex-d",
+      "group": "Flex Layout",
+      "shorthand": "flexDir"
+    },
+    "flexGrow": {
+      "className": "flex-g",
+      "group": "Flex Layout"
+    },
+    "flexShrink": {
+      "className": "flex-sh",
+      "group": "Flex Layout"
+    },
+    "gridTemplateColumns": {
+      "className": "grid-tc",
+      "group": "Grid Layout"
+    },
+    "gridTemplateRows": {
+      "className": "grid-tr",
+      "group": "Grid Layout"
+    },
+    "gridColumn": {
+      "className": "grid-c",
+      "group": "Grid Layout"
+    },
+    "gridRow": {
+      "className": "grid-r",
+      "group": "Grid Layout"
+    },
+    "gridColumnStart": {
+      "className": "grid-cs",
+      "group": "Grid Layout"
+    },
+    "gridColumnEnd": {
+      "className": "grid-ce",
+      "group": "Grid Layout"
+    },
+    "gridAutoFlow": {
+      "className": "grid-af",
+      "group": "Grid Layout"
+    },
+    "gridAutoColumns": {
+      "className": "grid-ac",
+      "group": "Grid Layout",
+      "values": {
+        "min": "min-content",
+        "max": "max-content",
+        "fr": "minmax(0, 1fr)"
+      }
+    },
+    "gridAutoRows": {
+      "className": "grid-ar",
+      "group": "Grid Layout",
+      "values": {
+        "min": "min-content",
+        "max": "max-content",
+        "fr": "minmax(0, 1fr)"
+      }
+    },
+    "gap": {
+      "className": "gap",
+      "group": "Flex Layout",
+      "values": "spacing"
+    },
+    "gridGap": {
+      "className": "grid-g",
+      "group": "Grid Layout",
+      "values": "spacing"
+    },
+    "gridRowGap": {
+      "className": "grid-rg",
+      "group": "Grid Layout",
+      "values": "spacing"
+    },
+    "gridColumnGap": {
+      "className": "grid-cg",
+      "group": "Grid Layout",
+      "values": "spacing"
+    },
+    "rowGap": {
+      "className": "rg",
+      "group": "Grid Layout",
+      "values": "spacing"
+    },
+    "columnGap": {
+      "className": "cg",
+      "group": "Grid Layout",
+      "values": "spacing"
+    },
+    "justifyContent": {
+      "className": "jc",
+      "group": "Flex Layout"
+    },
+    "alignContent": {
+      "className": "ac",
+      "group": "Flex Layout"
+    },
+    "alignItems": {
+      "className": "ai",
+      "group": "Flex Layout"
+    },
+    "alignSelf": {
+      "className": "as",
+      "group": "Flex Layout"
+    },
+    "padding": {
+      "className": "p",
+      "shorthand": "p",
+      "values": "spacing",
+      "group": "Padding"
+    },
+    "paddingLeft": {
+      "className": "pl",
+      "shorthand": "pl",
+      "values": "spacing",
+      "group": "Padding"
+    },
+    "paddingRight": {
+      "className": "pr",
+      "shorthand": "pr",
+      "values": "spacing",
+      "group": "Padding"
+    },
+    "paddingTop": {
+      "className": "pt",
+      "shorthand": "pt",
+      "values": "spacing",
+      "group": "Padding"
+    },
+    "paddingBottom": {
+      "className": "pb",
+      "shorthand": "pb",
+      "values": "spacing",
+      "group": "Padding"
+    },
+    "paddingBlock": {
+      "className": "py",
+      "values": "spacing",
+      "group": "Padding",
+      "shorthand": [
+        "py",
+        "paddingY"
+      ]
+    },
+    "paddingBlockEnd": {
+      "className": "pbe",
+      "values": "spacing",
+      "group": "Padding"
+    },
+    "paddingBlockStart": {
+      "className": "pbs",
+      "values": "spacing",
+      "group": "Padding"
+    },
+    "paddingInline": {
+      "className": "px",
+      "values": "spacing",
+      "group": "Padding",
+      "shorthand": [
+        "paddingX",
+        "px"
+      ]
+    },
+    "paddingInlineEnd": {
+      "className": "pe",
+      "shorthand": [
+        "pe",
+        "paddingEnd"
+      ],
+      "values": "spacing",
+      "group": "Padding"
+    },
+    "paddingInlineStart": {
+      "className": "ps",
+      "shorthand": [
+        "ps",
+        "paddingStart"
+      ],
+      "values": "spacing",
+      "group": "Padding"
+    },
+    "marginLeft": {
+      "className": "ml",
+      "shorthand": "ml",
+      "values": {
+        "__function": "values",
+        "probe": {
+          "auto": "auto",
+          "__category:spacing": "spacing"
+        }
+      },
+      "group": "Margin"
+    },
+    "marginRight": {
+      "className": "mr",
+      "shorthand": "mr",
+      "values": {
+        "__function": "values",
+        "probe": {
+          "auto": "auto",
+          "__category:spacing": "spacing"
+        }
+      },
+      "group": "Margin"
+    },
+    "marginTop": {
+      "className": "mt",
+      "shorthand": "mt",
+      "values": {
+        "__function": "values",
+        "probe": {
+          "auto": "auto",
+          "__category:spacing": "spacing"
+        }
+      },
+      "group": "Margin"
+    },
+    "marginBottom": {
+      "className": "mb",
+      "shorthand": "mb",
+      "values": {
+        "__function": "values",
+        "probe": {
+          "auto": "auto",
+          "__category:spacing": "spacing"
+        }
+      },
+      "group": "Margin"
+    },
+    "margin": {
+      "className": "m",
+      "shorthand": "m",
+      "values": {
+        "__function": "values",
+        "probe": {
+          "auto": "auto",
+          "__category:spacing": "spacing"
+        }
+      },
+      "group": "Margin"
+    },
+    "marginBlock": {
+      "className": "my",
+      "values": {
+        "__function": "values",
+        "probe": {
+          "auto": "auto",
+          "__category:spacing": "spacing"
+        }
+      },
+      "group": "Margin",
+      "shorthand": [
+        "my",
+        "marginY"
+      ]
+    },
+    "marginBlockEnd": {
+      "className": "mbe",
+      "values": {
+        "__function": "values",
+        "probe": {
+          "auto": "auto",
+          "__category:spacing": "spacing"
+        }
+      },
+      "group": "Margin"
+    },
+    "marginBlockStart": {
+      "className": "mbs",
+      "values": {
+        "__function": "values",
+        "probe": {
+          "auto": "auto",
+          "__category:spacing": "spacing"
+        }
+      },
+      "group": "Margin"
+    },
+    "marginInline": {
+      "className": "mx",
+      "values": {
+        "__function": "values",
+        "probe": {
+          "auto": "auto",
+          "__category:spacing": "spacing"
+        }
+      },
+      "group": "Margin",
+      "shorthand": [
+        "mx",
+        "marginX"
+      ]
+    },
+    "marginInlineEnd": {
+      "className": "me",
+      "shorthand": [
+        "me",
+        "marginEnd"
+      ],
+      "values": {
+        "__function": "values",
+        "probe": {
+          "auto": "auto",
+          "__category:spacing": "spacing"
+        }
+      },
+      "group": "Margin"
+    },
+    "marginInlineStart": {
+      "className": "ms",
+      "shorthand": [
+        "ms",
+        "marginStart"
+      ],
+      "values": {
+        "__function": "values",
+        "probe": {
+          "auto": "auto",
+          "__category:spacing": "spacing"
+        }
+      },
+      "group": "Margin"
+    },
+    "spaceX": {
+      "className": "sx",
+      "values": {
+        "__function": "values",
+        "probe": {
+          "auto": "auto",
+          "__category:spacing": "spacing"
+        }
+      },
+      "property": "marginInlineStart",
+      "group": "Margin",
+      "transform": {
+        "__function": "transform"
+      }
+    },
+    "spaceY": {
+      "className": "sy",
+      "values": {
+        "__function": "values",
+        "probe": {
+          "auto": "auto",
+          "__category:spacing": "spacing"
+        }
+      },
+      "property": "marginBlockStart",
+      "group": "Margin",
+      "transform": {
+        "__function": "transform"
+      }
+    },
+    "outlineWidth": {
+      "className": "ring-w",
+      "shorthand": "ringWidth",
+      "values": "borderWidths",
+      "group": "Border"
+    },
+    "outlineColor": {
+      "className": "ring-c",
+      "values": "colors",
+      "group": "Color",
+      "shorthand": "ringColor",
+      "transform": {
+        "__function": "transform",
+        "colorMix": "outlineColor"
+      }
+    },
+    "outline": {
+      "className": "ring",
+      "shorthand": "ring",
+      "values": "borders",
+      "group": "Border",
+      "transform": {
+        "__function": "transform"
+      }
+    },
+    "outlineOffset": {
+      "className": "ring-o",
+      "shorthand": "ringOffset",
+      "values": "spacing",
+      "group": "Border"
+    },
+    "focusRing": {
+      "className": "focus-ring",
+      "group": "Focus Ring",
+      "values": [
+        "outside",
+        "inside",
+        "mixed",
+        "none"
+      ],
+      "transform": {
+        "__function": "transform"
+      }
+    },
+    "focusVisibleRing": {
+      "className": "focus-v-ring",
+      "group": "Focus Ring",
+      "values": [
+        "outside",
+        "inside",
+        "mixed",
+        "none"
+      ],
+      "transform": {
+        "__function": "transform"
+      }
+    },
+    "focusRingColor": {
+      "className": "focus-ring-c",
+      "values": "colors",
+      "group": "Focus Ring",
+      "transform": {
+        "__function": "transform",
+        "colorMix": "--focus-ring-color-prop"
+      }
+    },
+    "focusRingOffset": {
+      "className": "focus-ring-o",
+      "values": "spacing",
+      "group": "Focus Ring",
+      "transform": {
+        "__function": "transform"
+      }
+    },
+    "focusRingWidth": {
+      "className": "focus-ring-w",
+      "values": "borderWidths",
+      "property": "outlineWidth",
+      "group": "Focus Ring",
+      "transform": {
+        "__function": "transform"
+      }
+    },
+    "focusRingStyle": {
+      "className": "focus-ring-s",
+      "values": "borderStyles",
+      "property": "outlineStyle",
+      "group": "Focus Ring",
+      "transform": {
+        "__function": "transform"
+      }
+    },
+    "divideX": {
+      "className": "dvd-x",
+      "values": "borderWidths",
+      "group": "Border",
+      "transform": {
+        "__function": "transform"
+      }
+    },
+    "divideY": {
+      "className": "dvd-y",
+      "values": "borderWidths",
+      "group": "Border",
+      "transform": {
+        "__function": "transform"
+      }
+    },
+    "divideColor": {
+      "className": "dvd-c",
+      "values": "colors",
+      "group": "Border",
+      "transform": {
+        "__function": "transform"
+      }
+    },
+    "divideStyle": {
+      "className": "dvd-s",
+      "property": "borderStyle",
+      "group": "Border",
+      "transform": {
+        "__function": "transform"
+      }
+    },
+    "width": {
+      "shorthand": "w",
+      "className": "w",
+      "group": "Width",
+      "values": {
+        "__function": "values",
+        "probe": {
+          "auto": "auto",
+          "__category:sizes": "sizes",
+          "1/2": "50%",
+          "1/3": "33.333333%",
+          "2/3": "66.666667%",
+          "1/4": "25%",
+          "2/4": "50%",
+          "3/4": "75%",
+          "1/5": "20%",
+          "2/5": "40%",
+          "3/5": "60%",
+          "4/5": "80%",
+          "1/6": "16.666667%",
+          "2/6": "33.333333%",
+          "3/6": "50%",
+          "4/6": "66.666667%",
+          "5/6": "83.333333%",
+          "1/12": "8.333333%",
+          "2/12": "16.666667%",
+          "3/12": "25%",
+          "4/12": "33.333333%",
+          "5/12": "41.666667%",
+          "6/12": "50%",
+          "7/12": "58.333333%",
+          "8/12": "66.666667%",
+          "9/12": "75%",
+          "10/12": "83.333333%",
+          "11/12": "91.666667%",
+          "screen": "100vw"
+        }
+      }
+    },
+    "inlineSize": {
+      "className": "w-is",
+      "group": "Width",
+      "values": {
+        "__function": "values",
+        "probe": {
+          "auto": "auto",
+          "__category:sizes": "sizes",
+          "1/2": "50%",
+          "1/3": "33.333333%",
+          "2/3": "66.666667%",
+          "1/4": "25%",
+          "2/4": "50%",
+          "3/4": "75%",
+          "1/5": "20%",
+          "2/5": "40%",
+          "3/5": "60%",
+          "4/5": "80%",
+          "1/6": "16.666667%",
+          "2/6": "33.333333%",
+          "3/6": "50%",
+          "4/6": "66.666667%",
+          "5/6": "83.333333%",
+          "1/12": "8.333333%",
+          "2/12": "16.666667%",
+          "3/12": "25%",
+          "4/12": "33.333333%",
+          "5/12": "41.666667%",
+          "6/12": "50%",
+          "7/12": "58.333333%",
+          "8/12": "66.666667%",
+          "9/12": "75%",
+          "10/12": "83.333333%",
+          "11/12": "91.666667%",
+          "screen": "100vw"
+        }
+      }
+    },
+    "minWidth": {
+      "shorthand": "minW",
+      "className": "min-w",
+      "group": "Width",
+      "values": {
+        "__function": "values",
+        "probe": {
+          "auto": "auto",
+          "__category:sizes": "sizes",
+          "1/2": "50%",
+          "1/3": "33.333333%",
+          "2/3": "66.666667%",
+          "1/4": "25%",
+          "2/4": "50%",
+          "3/4": "75%",
+          "1/5": "20%",
+          "2/5": "40%",
+          "3/5": "60%",
+          "4/5": "80%",
+          "1/6": "16.666667%",
+          "2/6": "33.333333%",
+          "3/6": "50%",
+          "4/6": "66.666667%",
+          "5/6": "83.333333%",
+          "1/12": "8.333333%",
+          "2/12": "16.666667%",
+          "3/12": "25%",
+          "4/12": "33.333333%",
+          "5/12": "41.666667%",
+          "6/12": "50%",
+          "7/12": "58.333333%",
+          "8/12": "66.666667%",
+          "9/12": "75%",
+          "10/12": "83.333333%",
+          "11/12": "91.666667%",
+          "screen": "100vw"
+        }
+      }
+    },
+    "minInlineSize": {
+      "className": "min-w-is",
+      "group": "Width",
+      "values": {
+        "__function": "values",
+        "probe": {
+          "auto": "auto",
+          "__category:sizes": "sizes",
+          "1/2": "50%",
+          "1/3": "33.333333%",
+          "2/3": "66.666667%",
+          "1/4": "25%",
+          "2/4": "50%",
+          "3/4": "75%",
+          "1/5": "20%",
+          "2/5": "40%",
+          "3/5": "60%",
+          "4/5": "80%",
+          "1/6": "16.666667%",
+          "2/6": "33.333333%",
+          "3/6": "50%",
+          "4/6": "66.666667%",
+          "5/6": "83.333333%",
+          "1/12": "8.333333%",
+          "2/12": "16.666667%",
+          "3/12": "25%",
+          "4/12": "33.333333%",
+          "5/12": "41.666667%",
+          "6/12": "50%",
+          "7/12": "58.333333%",
+          "8/12": "66.666667%",
+          "9/12": "75%",
+          "10/12": "83.333333%",
+          "11/12": "91.666667%",
+          "screen": "100vw"
+        }
+      }
+    },
+    "maxWidth": {
+      "shorthand": "maxW",
+      "className": "max-w",
+      "group": "Width",
+      "values": {
+        "__function": "values",
+        "probe": {
+          "auto": "auto",
+          "__category:sizes": "sizes",
+          "1/2": "50%",
+          "1/3": "33.333333%",
+          "2/3": "66.666667%",
+          "1/4": "25%",
+          "2/4": "50%",
+          "3/4": "75%",
+          "1/5": "20%",
+          "2/5": "40%",
+          "3/5": "60%",
+          "4/5": "80%",
+          "1/6": "16.666667%",
+          "2/6": "33.333333%",
+          "3/6": "50%",
+          "4/6": "66.666667%",
+          "5/6": "83.333333%",
+          "1/12": "8.333333%",
+          "2/12": "16.666667%",
+          "3/12": "25%",
+          "4/12": "33.333333%",
+          "5/12": "41.666667%",
+          "6/12": "50%",
+          "7/12": "58.333333%",
+          "8/12": "66.666667%",
+          "9/12": "75%",
+          "10/12": "83.333333%",
+          "11/12": "91.666667%",
+          "screen": "100vw"
+        }
+      }
+    },
+    "maxInlineSize": {
+      "className": "max-w-is",
+      "group": "Width",
+      "values": {
+        "__function": "values",
+        "probe": {
+          "auto": "auto",
+          "__category:sizes": "sizes",
+          "1/2": "50%",
+          "1/3": "33.333333%",
+          "2/3": "66.666667%",
+          "1/4": "25%",
+          "2/4": "50%",
+          "3/4": "75%",
+          "1/5": "20%",
+          "2/5": "40%",
+          "3/5": "60%",
+          "4/5": "80%",
+          "1/6": "16.666667%",
+          "2/6": "33.333333%",
+          "3/6": "50%",
+          "4/6": "66.666667%",
+          "5/6": "83.333333%",
+          "1/12": "8.333333%",
+          "2/12": "16.666667%",
+          "3/12": "25%",
+          "4/12": "33.333333%",
+          "5/12": "41.666667%",
+          "6/12": "50%",
+          "7/12": "58.333333%",
+          "8/12": "66.666667%",
+          "9/12": "75%",
+          "10/12": "83.333333%",
+          "11/12": "91.666667%",
+          "screen": "100vw"
+        }
+      }
+    },
+    "height": {
+      "shorthand": "h",
+      "className": "h",
+      "group": "Height",
+      "values": {
+        "__function": "values",
+        "probe": {
+          "auto": "auto",
+          "__category:sizes": "sizes",
+          "svh": "100svh",
+          "lvh": "100lvh",
+          "dvh": "100dvh",
+          "screen": "100vh",
+          "1/2": "50%",
+          "1/3": "33.333333%",
+          "2/3": "66.666667%",
+          "1/4": "25%",
+          "2/4": "50%",
+          "3/4": "75%",
+          "1/5": "20%",
+          "2/5": "40%",
+          "3/5": "60%",
+          "4/5": "80%",
+          "1/6": "16.666667%",
+          "2/6": "33.333333%",
+          "3/6": "50%",
+          "4/6": "66.666667%",
+          "5/6": "83.333333%"
+        }
+      }
+    },
+    "blockSize": {
+      "className": "h-bs",
+      "group": "Height",
+      "values": {
+        "__function": "values",
+        "probe": {
+          "auto": "auto",
+          "__category:sizes": "sizes",
+          "svh": "100svh",
+          "lvh": "100lvh",
+          "dvh": "100dvh",
+          "screen": "100vh",
+          "1/2": "50%",
+          "1/3": "33.333333%",
+          "2/3": "66.666667%",
+          "1/4": "25%",
+          "2/4": "50%",
+          "3/4": "75%",
+          "1/5": "20%",
+          "2/5": "40%",
+          "3/5": "60%",
+          "4/5": "80%",
+          "1/6": "16.666667%",
+          "2/6": "33.333333%",
+          "3/6": "50%",
+          "4/6": "66.666667%",
+          "5/6": "83.333333%"
+        }
+      }
+    },
+    "minHeight": {
+      "shorthand": "minH",
+      "className": "min-h",
+      "group": "Height",
+      "values": {
+        "__function": "values",
+        "probe": {
+          "auto": "auto",
+          "__category:sizes": "sizes",
+          "svh": "100svh",
+          "lvh": "100lvh",
+          "dvh": "100dvh",
+          "screen": "100vh",
+          "1/2": "50%",
+          "1/3": "33.333333%",
+          "2/3": "66.666667%",
+          "1/4": "25%",
+          "2/4": "50%",
+          "3/4": "75%",
+          "1/5": "20%",
+          "2/5": "40%",
+          "3/5": "60%",
+          "4/5": "80%",
+          "1/6": "16.666667%",
+          "2/6": "33.333333%",
+          "3/6": "50%",
+          "4/6": "66.666667%",
+          "5/6": "83.333333%"
+        }
+      }
+    },
+    "minBlockSize": {
+      "className": "min-h-bs",
+      "group": "Height",
+      "values": {
+        "__function": "values",
+        "probe": {
+          "auto": "auto",
+          "__category:sizes": "sizes",
+          "svh": "100svh",
+          "lvh": "100lvh",
+          "dvh": "100dvh",
+          "screen": "100vh",
+          "1/2": "50%",
+          "1/3": "33.333333%",
+          "2/3": "66.666667%",
+          "1/4": "25%",
+          "2/4": "50%",
+          "3/4": "75%",
+          "1/5": "20%",
+          "2/5": "40%",
+          "3/5": "60%",
+          "4/5": "80%",
+          "1/6": "16.666667%",
+          "2/6": "33.333333%",
+          "3/6": "50%",
+          "4/6": "66.666667%",
+          "5/6": "83.333333%"
+        }
+      }
+    },
+    "maxHeight": {
+      "shorthand": "maxH",
+      "className": "max-h",
+      "group": "Height",
+      "values": {
+        "__function": "values",
+        "probe": {
+          "auto": "auto",
+          "__category:sizes": "sizes",
+          "svh": "100svh",
+          "lvh": "100lvh",
+          "dvh": "100dvh",
+          "screen": "100vh",
+          "1/2": "50%",
+          "1/3": "33.333333%",
+          "2/3": "66.666667%",
+          "1/4": "25%",
+          "2/4": "50%",
+          "3/4": "75%",
+          "1/5": "20%",
+          "2/5": "40%",
+          "3/5": "60%",
+          "4/5": "80%",
+          "1/6": "16.666667%",
+          "2/6": "33.333333%",
+          "3/6": "50%",
+          "4/6": "66.666667%",
+          "5/6": "83.333333%"
+        }
+      }
+    },
+    "maxBlockSize": {
+      "className": "max-b",
+      "group": "Height",
+      "values": {
+        "__function": "values",
+        "probe": {
+          "auto": "auto",
+          "__category:sizes": "sizes",
+          "svh": "100svh",
+          "lvh": "100lvh",
+          "dvh": "100dvh",
+          "screen": "100vh",
+          "1/2": "50%",
+          "1/3": "33.333333%",
+          "2/3": "66.666667%",
+          "1/4": "25%",
+          "2/4": "50%",
+          "3/4": "75%",
+          "1/5": "20%",
+          "2/5": "40%",
+          "3/5": "60%",
+          "4/5": "80%",
+          "1/6": "16.666667%",
+          "2/6": "33.333333%",
+          "3/6": "50%",
+          "4/6": "66.666667%",
+          "5/6": "83.333333%"
+        }
+      }
+    },
+    "boxSize": {
+      "className": "size",
+      "group": "Width",
+      "values": {
+        "__function": "values",
+        "probe": {
+          "auto": "auto",
+          "__category:sizes": "sizes",
+          "1/2": "50%",
+          "1/3": "33.333333%",
+          "2/3": "66.666667%",
+          "1/4": "25%",
+          "2/4": "50%",
+          "3/4": "75%",
+          "1/5": "20%",
+          "2/5": "40%",
+          "3/5": "60%",
+          "4/5": "80%",
+          "1/6": "16.666667%",
+          "2/6": "33.333333%",
+          "3/6": "50%",
+          "4/6": "66.666667%",
+          "5/6": "83.333333%",
+          "1/12": "8.333333%",
+          "2/12": "16.666667%",
+          "3/12": "25%",
+          "4/12": "33.333333%",
+          "5/12": "41.666667%",
+          "6/12": "50%",
+          "7/12": "58.333333%",
+          "8/12": "66.666667%",
+          "9/12": "75%",
+          "10/12": "83.333333%",
+          "11/12": "91.666667%",
+          "screen": "100vw"
+        }
+      },
+      "transform": {
+        "__function": "transform"
+      }
+    },
+    "color": {
+      "className": "c",
+      "values": "colors",
+      "group": "Color",
+      "transform": {
+        "__function": "transform",
+        "colorMix": "color"
+      }
+    },
+    "fontFamily": {
+      "className": "ff",
+      "values": "fonts",
+      "group": "Typography"
+    },
+    "fontSize": {
+      "className": "fs",
+      "values": "fontSizes",
+      "group": "Typography"
+    },
+    "fontSizeAdjust": {
+      "className": "fs-a",
+      "group": "Typography"
+    },
+    "fontPalette": {
+      "className": "fp",
+      "group": "Typography"
+    },
+    "fontKerning": {
+      "className": "fk",
+      "group": "Typography"
+    },
+    "fontFeatureSettings": {
+      "className": "ff-s",
+      "group": "Typography"
+    },
+    "fontWeight": {
+      "className": "fw",
+      "values": "fontWeights",
+      "group": "Typography"
+    },
+    "fontSmoothing": {
+      "className": "fsmt",
+      "group": "Typography",
+      "values": {
+        "antialiased": "antialiased",
+        "subpixel-antialiased": "auto"
+      },
+      "transform": {
+        "__function": "transform"
+      }
+    },
+    "fontVariant": {
+      "className": "fv",
+      "group": "Typography"
+    },
+    "fontVariantAlternates": {
+      "className": "fv-alt",
+      "group": "Typography"
+    },
+    "fontVariantCaps": {
+      "className": "fv-caps",
+      "group": "Typography"
+    },
+    "fontVariationSettings": {
+      "className": "fv-s",
+      "group": "Typography"
+    },
+    "fontVariantNumeric": {
+      "className": "fv-num",
+      "group": "Typography"
+    },
+    "letterSpacing": {
+      "className": "ls",
+      "values": "letterSpacings",
+      "group": "Typography"
+    },
+    "lineHeight": {
+      "className": "lh",
+      "values": "lineHeights",
+      "group": "Typography"
+    },
+    "textAlign": {
+      "className": "ta",
+      "group": "Typography"
+    },
+    "textDecoration": {
+      "className": "td",
+      "group": "Typography"
+    },
+    "textDecorationColor": {
+      "className": "td-c",
+      "values": "colors",
+      "transform": {
+        "__function": "transform",
+        "colorMix": "textDecorationColor"
+      },
+      "group": "Typography"
+    },
+    "textEmphasisColor": {
+      "className": "te-c",
+      "values": "colors",
+      "transform": {
+        "__function": "transform",
+        "colorMix": "textEmphasisColor"
+      },
+      "group": "Typography"
+    },
+    "textDecorationStyle": {
+      "className": "td-s",
+      "group": "Typography"
+    },
+    "textDecorationThickness": {
+      "className": "td-t",
+      "group": "Typography"
+    },
+    "textUnderlineOffset": {
+      "className": "tu-o",
+      "group": "Typography"
+    },
+    "textTransform": {
+      "className": "tt",
+      "group": "Typography"
+    },
+    "textIndent": {
+      "className": "ti",
+      "group": "Typography",
+      "values": "spacing"
+    },
+    "textShadow": {
+      "className": "tsh",
+      "values": "shadows",
+      "group": "Typography"
+    },
+    "textShadowColor": {
+      "shorthand": "textShadowColor",
+      "className": "tsh-c",
+      "values": "colors",
+      "transform": {
+        "__function": "transform",
+        "colorMix": "--text-shadow-color"
+      },
+      "group": "Typography"
+    },
+    "WebkitTextFillColor": {
+      "className": "wktf-c",
+      "values": "colors",
+      "transform": {
+        "__function": "transform",
+        "colorMix": "WebkitTextFillColor"
+      },
+      "group": "Typography"
+    },
+    "textOverflow": {
+      "className": "tov",
+      "group": "Typography"
+    },
+    "verticalAlign": {
+      "className": "va",
+      "group": "Typography"
+    },
+    "wordBreak": {
+      "className": "wb",
+      "group": "Typography"
+    },
+    "textWrap": {
+      "className": "tw",
+      "values": [
+        "wrap",
+        "balance",
+        "nowrap"
+      ],
+      "group": "Typography",
+      "transform": {
+        "__function": "transform"
+      }
+    },
+    "truncate": {
+      "className": "trunc",
+      "values": {
+        "type": "boolean"
+      },
+      "group": "Typography",
+      "transform": {
+        "__function": "transform"
+      }
+    },
+    "lineClamp": {
+      "className": "lc",
+      "group": "Typography",
+      "transform": {
+        "__function": "transform"
+      }
+    },
+    "listStyleType": {
+      "className": "li-t",
+      "group": "List"
+    },
+    "listStylePosition": {
+      "className": "li-pos",
+      "group": "List"
+    },
+    "listStyleImage": {
+      "className": "li-img",
+      "group": "List",
+      "values": "assets"
+    },
+    "listStyle": {
+      "className": "li-s",
+      "group": "List"
+    },
+    "backgroundPosition": {
+      "shorthand": "bgPosition",
+      "className": "bg-p",
+      "group": "Background"
+    },
+    "backgroundPositionX": {
+      "shorthand": "bgPositionX",
+      "className": "bg-p-x",
+      "group": "Background"
+    },
+    "backgroundPositionY": {
+      "shorthand": "bgPositionY",
+      "className": "bg-p-y",
+      "group": "Background"
+    },
+    "backgroundAttachment": {
+      "shorthand": "bgAttachment",
+      "className": "bg-a",
+      "group": "Background"
+    },
+    "backgroundClip": {
+      "shorthand": "bgClip",
+      "className": "bg-cp",
+      "group": "Background",
+      "transform": {
+        "__function": "transform"
+      }
+    },
+    "background": {
+      "shorthand": "bg",
+      "className": "bg",
+      "values": "colors",
+      "group": "Background",
+      "transform": {
+        "__function": "transform",
+        "colorMix": "background"
+      }
+    },
+    "backgroundColor": {
+      "shorthand": "bgColor",
+      "className": "bg-c",
+      "values": "colors",
+      "group": "Background",
+      "transform": {
+        "__function": "transform",
+        "colorMix": "backgroundColor"
+      }
+    },
+    "backgroundOrigin": {
+      "shorthand": "bgOrigin",
+      "className": "bg-o",
+      "group": "Background"
+    },
+    "backgroundImage": {
+      "shorthand": "bgImage",
+      "className": "bg-i",
+      "values": "assets",
+      "group": "Background"
+    },
+    "backgroundRepeat": {
+      "shorthand": "bgRepeat",
+      "className": "bg-r",
+      "group": "Background"
+    },
+    "backgroundBlendMode": {
+      "shorthand": "bgBlendMode",
+      "className": "bg-bm",
+      "group": "Background"
+    },
+    "backgroundSize": {
+      "shorthand": "bgSize",
+      "className": "bg-s",
+      "group": "Background"
+    },
+    "backgroundGradient": {
+      "shorthand": "bgGradient",
+      "className": "bg-grad",
+      "group": "Background Gradient",
+      "values": {
+        "__function": "values",
+        "probe": {
+          "__category:gradients": "gradients",
+          "to-t": "to top",
+          "to-tr": "to top right",
+          "to-r": "to right",
+          "to-br": "to bottom right",
+          "to-b": "to bottom",
+          "to-bl": "to bottom left",
+          "to-l": "to left",
+          "to-tl": "to top left"
+        }
+      },
+      "transform": {
+        "__function": "transform"
+      }
+    },
+    "backgroundLinear": {
+      "shorthand": "bgLinear",
+      "className": "bg-linear",
+      "group": "Background Gradient",
+      "values": {
+        "__function": "values",
+        "probe": {
+          "__category:gradients": "gradients",
+          "to-t": "to top",
+          "to-tr": "to top right",
+          "to-r": "to right",
+          "to-br": "to bottom right",
+          "to-b": "to bottom",
+          "to-bl": "to bottom left",
+          "to-l": "to left",
+          "to-tl": "to top left"
+        }
+      },
+      "transform": {
+        "__function": "transform"
+      }
+    },
+    "backgroundRadial": {
+      "shorthand": "bgRadial",
+      "className": "bg-radial",
+      "group": "Background Gradient",
+      "values": "gradients",
+      "transform": {
+        "__function": "transform"
+      }
+    },
+    "backgroundConic": {
+      "shorthand": "bgConic",
+      "className": "bg-conic",
+      "group": "Background Gradient",
+      "transform": {
+        "__function": "transform"
+      }
+    },
+    "textGradient": {
+      "className": "txt-grad",
+      "group": "Background Gradient",
+      "values": {
+        "__function": "values",
+        "probe": {
+          "__category:gradients": "gradients",
+          "to-t": "to top",
+          "to-tr": "to top right",
+          "to-r": "to right",
+          "to-br": "to bottom right",
+          "to-b": "to bottom",
+          "to-bl": "to bottom left",
+          "to-l": "to left",
+          "to-tl": "to top left"
+        }
+      },
+      "transform": {
+        "__function": "transform"
+      }
+    },
+    "gradientFromPosition": {
+      "className": "grad-from-pos",
+      "group": "Background Gradient",
+      "transform": {
+        "__function": "transform"
+      }
+    },
+    "gradientToPosition": {
+      "className": "grad-to-pos",
+      "group": "Background Gradient",
+      "transform": {
+        "__function": "transform"
+      }
+    },
+    "gradientFrom": {
+      "className": "grad-from",
+      "values": "colors",
+      "group": "Background Gradient",
+      "transform": {
+        "__function": "transform",
+        "colorMix": "--gradient-from"
+      }
+    },
+    "gradientTo": {
+      "className": "grad-to",
+      "values": "colors",
+      "group": "Background Gradient",
+      "transform": {
+        "__function": "transform",
+        "colorMix": "--gradient-to"
+      }
+    },
+    "gradientVia": {
+      "className": "grad-via",
+      "values": "colors",
+      "group": "Background Gradient",
+      "transform": {
+        "__function": "transform"
+      }
+    },
+    "gradientViaPosition": {
+      "className": "grad-via-pos",
+      "group": "Background Gradient",
+      "transform": {
+        "__function": "transform"
+      }
+    },
+    "borderRadius": {
+      "className": "bdr",
+      "shorthand": "rounded",
+      "values": "radii",
+      "group": "Border Radius"
+    },
+    "borderTopLeftRadius": {
+      "className": "bdr-tl",
+      "shorthand": "roundedTopLeft",
+      "values": "radii",
+      "group": "Border Radius"
+    },
+    "borderTopRightRadius": {
+      "className": "bdr-tr",
+      "shorthand": "roundedTopRight",
+      "values": "radii",
+      "group": "Border Radius"
+    },
+    "borderBottomRightRadius": {
+      "className": "bdr-br",
+      "shorthand": "roundedBottomRight",
+      "values": "radii",
+      "group": "Border Radius"
+    },
+    "borderBottomLeftRadius": {
+      "className": "bdr-bl",
+      "shorthand": "roundedBottomLeft",
+      "values": "radii",
+      "group": "Border Radius"
+    },
+    "borderTopRadius": {
+      "className": "bdr-t",
+      "shorthand": "roundedTop",
+      "property": "borderRadius",
+      "values": "radii",
+      "group": "Border Radius",
+      "transform": {
+        "__function": "transform"
+      }
+    },
+    "borderRightRadius": {
+      "className": "bdr-r",
+      "shorthand": "roundedRight",
+      "property": "borderRadius",
+      "values": "radii",
+      "group": "Border Radius",
+      "transform": {
+        "__function": "transform"
+      }
+    },
+    "borderBottomRadius": {
+      "className": "bdr-b",
+      "shorthand": "roundedBottom",
+      "property": "borderRadius",
+      "values": "radii",
+      "group": "Border Radius",
+      "transform": {
+        "__function": "transform"
+      }
+    },
+    "borderLeftRadius": {
+      "className": "bdr-l",
+      "shorthand": "roundedLeft",
+      "values": "radii",
+      "property": "borderRadius",
+      "group": "Border Radius",
+      "transform": {
+        "__function": "transform"
+      }
+    },
+    "borderStartStartRadius": {
+      "className": "bdr-ss",
+      "shorthand": "roundedStartStart",
+      "values": "radii",
+      "group": "Border Radius"
+    },
+    "borderStartEndRadius": {
+      "className": "bdr-se",
+      "shorthand": "roundedStartEnd",
+      "values": "radii",
+      "group": "Border Radius"
+    },
+    "borderStartRadius": {
+      "className": "bdr-s",
+      "values": "radii",
+      "property": "borderRadius",
+      "shorthand": "roundedStart",
+      "group": "Border Radius",
+      "transform": {
+        "__function": "transform"
+      }
+    },
+    "borderEndStartRadius": {
+      "className": "bdr-es",
+      "shorthand": "roundedEndStart",
+      "values": "radii",
+      "group": "Border Radius"
+    },
+    "borderEndEndRadius": {
+      "className": "bdr-ee",
+      "shorthand": "roundedEndEnd",
+      "values": "radii",
+      "group": "Border Radius"
+    },
+    "borderEndRadius": {
+      "className": "bdr-e",
+      "shorthand": "roundedEnd",
+      "property": "borderRadius",
+      "values": "radii",
+      "group": "Border Radius",
+      "transform": {
+        "__function": "transform"
+      }
+    },
+    "border": {
+      "className": "bd",
+      "values": "borders",
+      "group": "Border"
+    },
+    "borderWidth": {
+      "className": "bd-w",
+      "values": "borderWidths",
+      "group": "Border Radius"
+    },
+    "borderTopWidth": {
+      "className": "bd-t-w",
+      "values": "borderWidths",
+      "group": "Border"
+    },
+    "borderLeftWidth": {
+      "className": "bd-l-w",
+      "values": "borderWidths",
+      "group": "Border"
+    },
+    "borderRightWidth": {
+      "className": "bd-r-w",
+      "values": "borderWidths",
+      "group": "Border"
+    },
+    "borderBottomWidth": {
+      "className": "bd-b-w",
+      "values": "borderWidths",
+      "group": "Border"
+    },
+    "borderBlockStartWidth": {
+      "className": "bd-bs-w",
+      "values": "borderWidths",
+      "group": "Border Radius"
+    },
+    "borderBlockEndWidth": {
+      "className": "bd-be-w",
+      "values": "borderWidths",
+      "group": "Border Radius"
+    },
+    "borderColor": {
+      "className": "bd-c",
+      "values": "colors",
+      "group": "Border",
+      "transform": {
+        "__function": "transform",
+        "colorMix": "borderColor"
+      }
+    },
+    "borderInline": {
+      "className": "bd-x",
+      "values": "borders",
+      "group": "Border",
+      "shorthand": "borderX"
+    },
+    "borderInlineWidth": {
+      "className": "bd-x-w",
+      "values": "borderWidths",
+      "group": "Border",
+      "shorthand": "borderXWidth"
+    },
+    "borderInlineColor": {
+      "className": "bd-x-c",
+      "values": "colors",
+      "group": "Border",
+      "shorthand": "borderXColor",
+      "transform": {
+        "__function": "transform",
+        "colorMix": "borderInlineColor"
+      }
+    },
+    "borderBlock": {
+      "className": "bd-y",
+      "values": "borders",
+      "group": "Border",
+      "shorthand": "borderY"
+    },
+    "borderBlockWidth": {
+      "className": "bd-y-w",
+      "values": "borderWidths",
+      "group": "Border",
+      "shorthand": "borderYWidth"
+    },
+    "borderBlockColor": {
+      "className": "bd-y-c",
+      "values": "colors",
+      "group": "Border",
+      "shorthand": "borderYColor",
+      "transform": {
+        "__function": "transform",
+        "colorMix": "borderBlockColor"
+      }
+    },
+    "borderLeft": {
+      "className": "bd-l",
+      "values": "borders",
+      "group": "Border"
+    },
+    "borderLeftColor": {
+      "className": "bd-l-c",
+      "values": "colors",
+      "group": "Border",
+      "transform": {
+        "__function": "transform",
+        "colorMix": "borderLeftColor"
+      }
+    },
+    "borderInlineStart": {
+      "className": "bd-s",
+      "values": "borders",
+      "group": "Border",
+      "shorthand": "borderStart"
+    },
+    "borderInlineStartWidth": {
+      "className": "bd-s-w",
+      "values": "borderWidths",
+      "group": "Border",
+      "shorthand": "borderStartWidth"
+    },
+    "borderInlineStartColor": {
+      "className": "bd-s-c",
+      "values": "colors",
+      "group": "Border",
+      "shorthand": "borderStartColor",
+      "transform": {
+        "__function": "transform",
+        "colorMix": "borderInlineStartColor"
+      }
+    },
+    "borderRight": {
+      "className": "bd-r",
+      "values": "borders",
+      "group": "Border"
+    },
+    "borderRightColor": {
+      "className": "bd-r-c",
+      "values": "colors",
+      "group": "Border",
+      "transform": {
+        "__function": "transform",
+        "colorMix": "borderRightColor"
+      }
+    },
+    "borderInlineEnd": {
+      "className": "bd-e",
+      "values": "borders",
+      "group": "Border",
+      "shorthand": "borderEnd"
+    },
+    "borderInlineEndWidth": {
+      "className": "bd-e-w",
+      "values": "borderWidths",
+      "group": "Border",
+      "shorthand": "borderEndWidth"
+    },
+    "borderInlineEndColor": {
+      "className": "bd-e-c",
+      "values": "colors",
+      "group": "Border",
+      "shorthand": "borderEndColor",
+      "transform": {
+        "__function": "transform",
+        "colorMix": "borderInlineEndColor"
+      }
+    },
+    "borderTop": {
+      "className": "bd-t",
+      "values": "borders",
+      "group": "Border"
+    },
+    "borderTopColor": {
+      "className": "bd-t-c",
+      "values": "colors",
+      "group": "Border",
+      "transform": {
+        "__function": "transform",
+        "colorMix": "borderTopColor"
+      }
+    },
+    "borderBottom": {
+      "className": "bd-b",
+      "values": "borders",
+      "group": "Border"
+    },
+    "borderBottomColor": {
+      "className": "bd-b-c",
+      "values": "colors",
+      "group": "Border",
+      "transform": {
+        "__function": "transform",
+        "colorMix": "borderBottomColor"
+      }
+    },
+    "borderBlockEnd": {
+      "className": "bd-be",
+      "values": "borders",
+      "group": "Border"
+    },
+    "borderBlockEndColor": {
+      "className": "bd-be-c",
+      "values": "colors",
+      "group": "Border",
+      "transform": {
+        "__function": "transform",
+        "colorMix": "borderBlockEndColor"
+      }
+    },
+    "borderBlockStart": {
+      "className": "bd-bs",
+      "values": "borders",
+      "group": "Border"
+    },
+    "borderBlockStartColor": {
+      "className": "bd-bs-c",
+      "values": "colors",
+      "group": "Border",
+      "transform": {
+        "__function": "transform",
+        "colorMix": "borderBlockStartColor"
+      }
+    },
+    "opacity": {
+      "className": "op",
+      "values": "opacity",
+      "group": "Background"
+    },
+    "boxShadow": {
+      "shorthand": "shadow",
+      "className": "bx-sh",
+      "values": "shadows",
+      "group": "Shadow"
+    },
+    "boxShadowColor": {
+      "shorthand": "shadowColor",
+      "className": "bx-sh-c",
+      "values": "colors",
+      "transform": {
+        "__function": "transform",
+        "colorMix": "--shadow-color"
+      },
+      "group": "Color"
+    },
+    "mixBlendMode": {
+      "className": "mix-bm",
+      "group": "Effect"
+    },
+    "filter": {
+      "className": "filter",
+      "group": "Effect",
+      "values": {
+        "auto": "var(--blur, ) var(--brightness, ) var(--contrast, ) var(--grayscale, ) var(--hue-rotate, ) var(--invert, ) var(--saturate, ) var(--sepia, ) var(--drop-shadow, )"
+      }
+    },
+    "brightness": {
+      "className": "brightness",
+      "group": "Effect",
+      "transform": {
+        "__function": "transform"
+      }
+    },
+    "contrast": {
+      "className": "contrast",
+      "group": "Effect",
+      "transform": {
+        "__function": "transform"
+      }
+    },
+    "grayscale": {
+      "className": "grayscale",
+      "group": "Effect",
+      "transform": {
+        "__function": "transform"
+      }
+    },
+    "hueRotate": {
+      "className": "hue-rotate",
+      "group": "Effect",
+      "transform": {
+        "__function": "transform"
+      }
+    },
+    "invert": {
+      "className": "invert",
+      "group": "Effect",
+      "transform": {
+        "__function": "transform"
+      }
+    },
+    "saturate": {
+      "className": "saturate",
+      "group": "Effect",
+      "transform": {
+        "__function": "transform"
+      }
+    },
+    "sepia": {
+      "className": "sepia",
+      "group": "Effect",
+      "transform": {
+        "__function": "transform"
+      }
+    },
+    "dropShadow": {
+      "className": "drop-shadow",
+      "group": "Effect",
+      "values": "dropShadows",
+      "transform": {
+        "__function": "transform"
+      }
+    },
+    "blur": {
+      "className": "blur",
+      "group": "Effect",
+      "values": "blurs",
+      "transform": {
+        "__function": "transform"
+      }
+    },
+    "backdropFilter": {
+      "className": "bkdp",
+      "group": "Effect",
+      "values": {
+        "auto": "var(--backdrop-blur, ) var(--backdrop-brightness, ) var(--backdrop-contrast, ) var(--backdrop-grayscale, ) var(--backdrop-hue-rotate, ) var(--backdrop-invert, ) var(--backdrop-opacity, ) var(--backdrop-saturate, ) var(--backdrop-sepia, )"
+      },
+      "transform": {
+        "__function": "transform"
+      }
+    },
+    "backdropBlur": {
+      "className": "bkdp-blur",
+      "group": "Effect",
+      "values": "blurs",
+      "transform": {
+        "__function": "transform"
+      }
+    },
+    "backdropBrightness": {
+      "className": "bkdp-brightness",
+      "group": "Effect",
+      "transform": {
+        "__function": "transform"
+      }
+    },
+    "backdropContrast": {
+      "className": "bkdp-contrast",
+      "group": "Effect",
+      "transform": {
+        "__function": "transform"
+      }
+    },
+    "backdropGrayscale": {
+      "className": "bkdp-grayscale",
+      "group": "Effect",
+      "transform": {
+        "__function": "transform"
+      }
+    },
+    "backdropHueRotate": {
+      "className": "bkdp-hue-rotate",
+      "group": "Effect",
+      "transform": {
+        "__function": "transform"
+      }
+    },
+    "backdropInvert": {
+      "className": "bkdp-invert",
+      "group": "Effect",
+      "transform": {
+        "__function": "transform"
+      }
+    },
+    "backdropOpacity": {
+      "className": "bkdp-opacity",
+      "group": "Effect",
+      "transform": {
+        "__function": "transform"
+      }
+    },
+    "backdropSaturate": {
+      "className": "bkdp-saturate",
+      "group": "Effect",
+      "transform": {
+        "__function": "transform"
+      }
+    },
+    "backdropSepia": {
+      "className": "bkdp-sepia",
+      "group": "Effect",
+      "transform": {
+        "__function": "transform"
+      }
+    },
+    "borderCollapse": {
+      "className": "bd-cl",
+      "group": "Table"
+    },
+    "borderSpacing": {
+      "className": "bd-sp",
+      "group": "Table",
+      "values": {
+        "__function": "values",
+        "probe": {
+          "__category:spacing": "spacing",
+          "auto": "var(--border-spacing-x) var(--border-spacing-y)"
+        }
+      }
+    },
+    "borderSpacingX": {
+      "className": "bd-sx",
+      "values": "spacing",
+      "group": "Table",
+      "transform": {
+        "__function": "transform"
+      }
+    },
+    "borderSpacingY": {
+      "className": "bd-sy",
+      "values": "spacing",
+      "group": "Table",
+      "transform": {
+        "__function": "transform"
+      }
+    },
+    "tableLayout": {
+      "className": "tbl",
+      "group": "Table"
+    },
+    "transitionTimingFunction": {
+      "className": "trs-tmf",
+      "values": "easings",
+      "group": "Transition",
+      "transform": {
+        "__function": "transform"
+      }
+    },
+    "transitionDelay": {
+      "className": "trs-dly",
+      "values": "durations",
+      "group": "Transition"
+    },
+    "transitionDuration": {
+      "className": "trs-dur",
+      "values": "durations",
+      "group": "Transition",
+      "transform": {
+        "__function": "transform"
+      }
+    },
+    "transitionProperty": {
+      "className": "trs-prop",
+      "group": "Transition",
+      "values": {
+        "common": "color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter",
+        "colors": "color, background-color, border-color, outline-color, text-decoration-color, fill, stroke",
+        "size": "width, height, min-width, max-width, min-height, max-height",
+        "position": "left, right, top, bottom, inset, inset-inline, inset-block",
+        "background": "background, background-color, background-image, background-position"
+      },
+      "transform": {
+        "__function": "transform"
+      }
+    },
+    "transition": {
+      "className": "trs",
+      "values": [
+        "all",
+        "common",
+        "size",
+        "position",
+        "background",
+        "colors",
+        "opacity",
+        "shadow",
+        "transform"
+      ],
+      "group": "Transition",
+      "transform": {
+        "__function": "transform"
+      }
+    },
+    "animation": {
+      "className": "anim",
+      "values": "animations",
+      "group": "Animation"
+    },
+    "animationName": {
+      "className": "anim-n",
+      "values": "keyframes",
+      "group": "Animation"
+    },
+    "animationTimingFunction": {
+      "className": "anim-tmf",
+      "values": "easings",
+      "group": "Animation"
+    },
+    "animationDuration": {
+      "className": "anim-dur",
+      "values": "durations",
+      "group": "Animation"
+    },
+    "animationDelay": {
+      "className": "anim-dly",
+      "values": "durations",
+      "group": "Animation"
+    },
+    "animationPlayState": {
+      "className": "anim-ps",
+      "group": "Animation"
+    },
+    "animationComposition": {
+      "className": "anim-comp",
+      "group": "Animation"
+    },
+    "animationFillMode": {
+      "className": "anim-fm",
+      "group": "Animation"
+    },
+    "animationDirection": {
+      "className": "anim-dir",
+      "group": "Animation"
+    },
+    "animationIterationCount": {
+      "className": "anim-ic",
+      "group": "Animation"
+    },
+    "animationRange": {
+      "className": "anim-r",
+      "group": "Animation"
+    },
+    "animationState": {
+      "className": "anim-s",
+      "group": "Animation"
+    },
+    "animationRangeStart": {
+      "className": "anim-rs",
+      "group": "Animation"
+    },
+    "animationRangeEnd": {
+      "className": "anim-re",
+      "group": "Animation"
+    },
+    "animationTimeline": {
+      "className": "anim-tl",
+      "group": "Animation"
+    },
+    "transformOrigin": {
+      "className": "trf-o",
+      "group": "Transform"
+    },
+    "transformBox": {
+      "className": "trf-b",
+      "group": "Transform"
+    },
+    "transformStyle": {
+      "className": "trf-s",
+      "group": "Transform"
+    },
+    "transform": {
+      "className": "trf",
+      "group": "Transform"
+    },
+    "rotate": {
+      "className": "rotate",
+      "group": "Transform",
+      "property": "rotate",
+      "values": {
+        "auto": "var(--rotate-x) var(--rotate-y)",
+        "auto-3d": "var(--rotate-x) var(--rotate-y) var(--rotate-z)"
+      }
+    },
+    "rotateX": {
+      "className": "rotate-x",
+      "group": "Transform",
+      "property": "rotate",
+      "transform": {
+        "__function": "transform"
+      }
+    },
+    "rotateY": {
+      "className": "rotate-y",
+      "group": "Transform",
+      "property": "rotate",
+      "transform": {
+        "__function": "transform"
+      }
+    },
+    "rotateZ": {
+      "className": "rotate-z",
+      "group": "Transform",
+      "property": "rotate",
+      "transform": {
+        "__function": "transform"
+      }
+    },
+    "scale": {
+      "className": "scale",
+      "group": "Transform",
+      "property": "scale",
+      "values": {
+        "auto": "var(--scale-x) var(--scale-y)"
+      }
+    },
+    "scaleX": {
+      "className": "scale-x",
+      "group": "Transform",
+      "transform": {
+        "__function": "transform"
+      }
+    },
+    "scaleY": {
+      "className": "scale-y",
+      "group": "Transform",
+      "transform": {
+        "__function": "transform"
+      }
+    },
+    "translate": {
+      "className": "translate",
+      "group": "Transform",
+      "property": "translate",
+      "values": {
+        "auto": "var(--translate-x) var(--translate-y)",
+        "auto-3d": "var(--translate-x) var(--translate-y) var(--translate-z)"
+      }
+    },
+    "translateX": {
+      "shorthand": "x",
+      "className": "translate-x",
+      "group": "Transform",
+      "values": {
+        "__function": "values",
+        "probe": {
+          "__category:spacing": "spacing",
+          "1/2": "50%",
+          "1/3": "33.333333%",
+          "2/3": "66.666667%",
+          "1/4": "25%",
+          "2/4": "50%",
+          "3/4": "75%",
+          "full": "100%",
+          "-1/2": "-50%",
+          "-1/3": "-33.333333%",
+          "-2/3": "-66.666667%",
+          "-1/4": "-25%",
+          "-2/4": "-50%",
+          "-3/4": "-75%",
+          "-full": "-100%"
+        }
+      },
+      "transform": {
+        "__function": "transform"
+      }
+    },
+    "translateY": {
+      "shorthand": "y",
+      "className": "translate-y",
+      "group": "Transform",
+      "values": {
+        "__function": "values",
+        "probe": {
+          "__category:spacing": "spacing",
+          "1/2": "50%",
+          "1/3": "33.333333%",
+          "2/3": "66.666667%",
+          "1/4": "25%",
+          "2/4": "50%",
+          "3/4": "75%",
+          "full": "100%",
+          "-1/2": "-50%",
+          "-1/3": "-33.333333%",
+          "-2/3": "-66.666667%",
+          "-1/4": "-25%",
+          "-2/4": "-50%",
+          "-3/4": "-75%",
+          "-full": "-100%"
+        }
+      },
+      "transform": {
+        "__function": "transform"
+      }
+    },
+    "translateZ": {
+      "shorthand": "z",
+      "className": "translate-z",
+      "group": "Transform",
+      "values": {
+        "__function": "values",
+        "probe": {
+          "__category:spacing": "spacing",
+          "1/2": "50%",
+          "1/3": "33.333333%",
+          "2/3": "66.666667%",
+          "1/4": "25%",
+          "2/4": "50%",
+          "3/4": "75%",
+          "full": "100%",
+          "-1/2": "-50%",
+          "-1/3": "-33.333333%",
+          "-2/3": "-66.666667%",
+          "-1/4": "-25%",
+          "-2/4": "-50%",
+          "-3/4": "-75%",
+          "-full": "-100%"
+        }
+      },
+      "transform": {
+        "__function": "transform"
+      }
+    },
+    "accentColor": {
+      "className": "ac-c",
+      "values": "colors",
+      "transform": {
+        "__function": "transform",
+        "colorMix": "accentColor"
+      },
+      "group": "Color"
+    },
+    "caretColor": {
+      "className": "ca-c",
+      "values": "colors",
+      "group": "Color",
+      "transform": {
+        "__function": "transform",
+        "colorMix": "caretColor"
+      }
+    },
+    "scrollBehavior": {
+      "className": "scr-bhv",
+      "group": "Scroll"
+    },
+    "scrollbar": {
+      "className": "scr-bar",
+      "values": [
+        "visible",
+        "hidden"
+      ],
+      "group": "Scroll",
+      "transform": {
+        "__function": "transform"
+      }
+    },
+    "scrollbarColor": {
+      "className": "scr-bar-c",
+      "values": "colors",
+      "group": "Scroll",
+      "transform": {
+        "__function": "transform",
+        "colorMix": "scrollbarColor"
+      }
+    },
+    "scrollbarGutter": {
+      "className": "scr-bar-g",
+      "group": "Scroll"
+    },
+    "scrollbarWidth": {
+      "className": "scr-bar-w",
+      "values": "sizes",
+      "group": "Scroll"
+    },
+    "scrollMargin": {
+      "className": "scr-m",
+      "values": "spacing",
+      "group": "Scroll"
+    },
+    "scrollMarginLeft": {
+      "className": "scr-ml",
+      "values": "spacing",
+      "group": "Scroll"
+    },
+    "scrollMarginRight": {
+      "className": "scr-mr",
+      "values": "spacing",
+      "group": "Scroll"
+    },
+    "scrollMarginTop": {
+      "className": "scr-mt",
+      "values": "spacing",
+      "group": "Scroll"
+    },
+    "scrollMarginBottom": {
+      "className": "scr-mb",
+      "values": "spacing",
+      "group": "Scroll"
+    },
+    "scrollMarginBlock": {
+      "className": "scr-my",
+      "values": "spacing",
+      "group": "Scroll",
+      "shorthand": [
+        "scrollMarginY"
+      ]
+    },
+    "scrollMarginBlockEnd": {
+      "className": "scr-mbe",
+      "values": "spacing",
+      "group": "Scroll"
+    },
+    "scrollMarginBlockStart": {
+      "className": "scr-mbt",
+      "values": "spacing",
+      "group": "Scroll"
+    },
+    "scrollMarginInline": {
+      "className": "scr-mx",
+      "values": "spacing",
+      "group": "Scroll",
+      "shorthand": [
+        "scrollMarginX"
+      ]
+    },
+    "scrollMarginInlineEnd": {
+      "className": "scr-me",
+      "values": "spacing",
+      "group": "Scroll"
+    },
+    "scrollMarginInlineStart": {
+      "className": "scr-ms",
+      "values": "spacing",
+      "group": "Scroll"
+    },
+    "scrollPadding": {
+      "className": "scr-p",
+      "values": "spacing",
+      "group": "Scroll"
+    },
+    "scrollPaddingBlock": {
+      "className": "scr-py",
+      "values": "spacing",
+      "group": "Scroll",
+      "shorthand": [
+        "scrollPaddingY"
+      ]
+    },
+    "scrollPaddingBlockStart": {
+      "className": "scr-pbs",
+      "values": "spacing",
+      "group": "Scroll"
+    },
+    "scrollPaddingBlockEnd": {
+      "className": "scr-pbe",
+      "values": "spacing",
+      "group": "Scroll"
+    },
+    "scrollPaddingInline": {
+      "className": "scr-px",
+      "values": "spacing",
+      "group": "Scroll",
+      "shorthand": [
+        "scrollPaddingX"
+      ]
+    },
+    "scrollPaddingInlineEnd": {
+      "className": "scr-pe",
+      "values": "spacing",
+      "group": "Scroll"
+    },
+    "scrollPaddingInlineStart": {
+      "className": "scr-ps",
+      "values": "spacing",
+      "group": "Scroll"
+    },
+    "scrollPaddingLeft": {
+      "className": "scr-pl",
+      "values": "spacing",
+      "group": "Scroll"
+    },
+    "scrollPaddingRight": {
+      "className": "scr-pr",
+      "values": "spacing",
+      "group": "Scroll"
+    },
+    "scrollPaddingTop": {
+      "className": "scr-pt",
+      "values": "spacing",
+      "group": "Scroll"
+    },
+    "scrollPaddingBottom": {
+      "className": "scr-pb",
+      "values": "spacing",
+      "group": "Scroll"
+    },
+    "scrollSnapAlign": {
+      "className": "scr-sa",
+      "group": "Scroll"
+    },
+    "scrollSnapStop": {
+      "className": "scrs-s",
+      "group": "Scroll"
+    },
+    "scrollSnapType": {
+      "className": "scrs-t",
+      "group": "Scroll",
+      "values": {
+        "none": "none",
+        "x": "x var(--scroll-snap-strictness)",
+        "y": "y var(--scroll-snap-strictness)",
+        "both": "both var(--scroll-snap-strictness)"
+      }
+    },
+    "scrollSnapStrictness": {
+      "className": "scrs-strt",
+      "values": [
+        "mandatory",
+        "proximity"
+      ],
+      "group": "Scroll",
+      "transform": {
+        "__function": "transform"
+      }
+    },
+    "scrollSnapMargin": {
+      "className": "scrs-m",
+      "values": "spacing",
+      "group": "Scroll"
+    },
+    "scrollSnapMarginTop": {
+      "className": "scrs-mt",
+      "values": "spacing",
+      "group": "Scroll"
+    },
+    "scrollSnapMarginBottom": {
+      "className": "scrs-mb",
+      "values": "spacing",
+      "group": "Scroll"
+    },
+    "scrollSnapMarginLeft": {
+      "className": "scrs-ml",
+      "values": "spacing",
+      "group": "Scroll"
+    },
+    "scrollSnapMarginRight": {
+      "className": "scrs-mr",
+      "values": "spacing",
+      "group": "Scroll"
+    },
+    "scrollSnapCoordinate": {
+      "className": "scrs-c",
+      "group": "Scroll"
+    },
+    "scrollSnapDestination": {
+      "className": "scrs-d",
+      "group": "Scroll"
+    },
+    "scrollSnapPointsX": {
+      "className": "scrs-px",
+      "group": "Scroll"
+    },
+    "scrollSnapPointsY": {
+      "className": "scrs-py",
+      "group": "Scroll"
+    },
+    "scrollSnapTypeX": {
+      "className": "scrs-tx",
+      "group": "Scroll"
+    },
+    "scrollSnapTypeY": {
+      "className": "scrs-ty",
+      "group": "Scroll"
+    },
+    "scrollTimeline": {
+      "className": "scrtl",
+      "group": "Scroll"
+    },
+    "scrollTimelineAxis": {
+      "className": "scrtl-a",
+      "group": "Scroll"
+    },
+    "scrollTimelineName": {
+      "className": "scrtl-n",
+      "group": "Scroll"
+    },
+    "touchAction": {
+      "className": "tch-a",
+      "group": "Interactivity"
+    },
+    "userSelect": {
+      "className": "us",
+      "group": "Interactivity",
+      "transform": {
+        "__function": "transform"
+      }
+    },
+    "overflow": {
+      "className": "ov",
+      "group": "Scroll"
+    },
+    "overflowWrap": {
+      "className": "ov-wrap",
+      "group": "Scroll"
+    },
+    "overflowX": {
+      "className": "ov-x",
+      "group": "Scroll"
+    },
+    "overflowY": {
+      "className": "ov-y",
+      "group": "Scroll"
+    },
+    "overflowAnchor": {
+      "className": "ov-a",
+      "group": "Scroll"
+    },
+    "overflowBlock": {
+      "className": "ov-b",
+      "group": "Scroll"
+    },
+    "overflowInline": {
+      "className": "ov-i",
+      "group": "Scroll"
+    },
+    "overflowClipBox": {
+      "className": "ovcp-bx",
+      "group": "Scroll"
+    },
+    "overflowClipMargin": {
+      "className": "ovcp-m",
+      "group": "Scroll"
+    },
+    "overscrollBehaviorBlock": {
+      "className": "ovs-bb",
+      "group": "Scroll"
+    },
+    "overscrollBehaviorInline": {
+      "className": "ovs-bi",
+      "group": "Scroll"
+    },
+    "fill": {
+      "className": "fill",
+      "values": "colors",
+      "group": "Color",
+      "transform": {
+        "__function": "transform",
+        "colorMix": "fill"
+      }
+    },
+    "stroke": {
+      "className": "stk",
+      "values": "colors",
+      "group": "Color",
+      "transform": {
+        "__function": "transform",
+        "colorMix": "stroke"
+      }
+    },
+    "strokeWidth": {
+      "className": "stk-w",
+      "values": "borderWidths",
+      "group": "Border"
+    },
+    "strokeDasharray": {
+      "className": "stk-dsh",
+      "group": "Border"
+    },
+    "strokeDashoffset": {
+      "className": "stk-do",
+      "group": "Border"
+    },
+    "strokeLinecap": {
+      "className": "stk-lc",
+      "group": "Border"
+    },
+    "strokeLinejoin": {
+      "className": "stk-lj",
+      "group": "Border"
+    },
+    "strokeMiterlimit": {
+      "className": "stk-ml",
+      "group": "Border"
+    },
+    "strokeOpacity": {
+      "className": "stk-op",
+      "group": "Border"
+    },
+    "srOnly": {
+      "className": "sr",
+      "values": {
+        "type": "boolean"
+      },
+      "group": "Other",
+      "transform": {
+        "__function": "transform"
+      }
+    },
+    "debug": {
+      "className": "debug",
+      "values": {
+        "type": "boolean"
+      },
+      "group": "Other",
+      "transform": {
+        "__function": "transform"
+      }
+    },
+    "appearance": {
+      "className": "ap",
+      "group": "Visibility",
+      "transform": {
+        "__function": "transform"
+      }
+    },
+    "backfaceVisibility": {
+      "className": "bfv",
+      "group": "Visibility",
+      "transform": {
+        "__function": "transform"
+      }
+    },
+    "clipPath": {
+      "className": "cp-path",
+      "group": "Other",
+      "transform": {
+        "__function": "transform"
+      }
+    },
+    "hyphens": {
+      "className": "hy",
+      "group": "Other",
+      "transform": {
+        "__function": "transform"
+      }
+    },
+    "mask": {
+      "className": "msk",
+      "group": "Other",
+      "transform": {
+        "__function": "transform"
+      }
+    },
+    "maskImage": {
+      "className": "msk-i",
+      "group": "Other",
+      "transform": {
+        "__function": "transform"
+      }
+    },
+    "maskSize": {
+      "className": "msk-s",
+      "group": "Other",
+      "transform": {
+        "__function": "transform"
+      }
+    },
+    "textSizeAdjust": {
+      "className": "txt-adj",
+      "group": "Typography",
+      "transform": {
+        "__function": "transform"
+      }
+    },
+    "container": {
+      "className": "cq",
+      "group": "Container"
+    },
+    "containerName": {
+      "className": "cq-n",
+      "property": "containerName",
+      "values": "containerNames",
+      "group": "Container"
+    },
+    "containerType": {
+      "className": "cq-t",
+      "group": "Container"
+    },
+    "cursor": {
+      "className": "cursor",
+      "values": "cursor",
+      "group": "System"
+    }
+  },
+  "theme": {
+    "breakpoints": {
+      "sm": "640px",
+      "md": "768px",
+      "lg": "1024px",
+      "xl": "1280px",
+      "2xl": "1536px"
+    },
+    "containerSizes": {
+      "xs": "320px",
+      "sm": "384px",
+      "md": "448px",
+      "lg": "512px",
+      "xl": "576px",
+      "2xl": "672px",
+      "3xl": "768px",
+      "4xl": "896px",
+      "5xl": "1024px",
+      "6xl": "1152px",
+      "7xl": "1280px",
+      "8xl": "1440px"
+    }
+  }
+}

@@ -1,0 +1,253 @@
+{
+  "source": "sandbox/codegen/__tests__/frameworks/react.style-context.test.tsx",
+  "cases": [
+    {
+      "id": "react::sandbox/codegen/__tests__/frameworks/react.style-context.test.tsx::style context - react > default props::1",
+      "kind": "codegen-css",
+      "config": "codegen-react",
+      "source": {
+        "file": "sandbox/codegen/__tests__/frameworks/react.style-context.test.tsx",
+        "test": "style context - react > default props",
+        "line": null
+      },
+      "inputs": [
+        {},
+        {},
+        null
+      ],
+      "expected": {
+        "className": ""
+      },
+      "undefinedValues": true
+    },
+    {
+      "id": "react::sandbox/codegen/__tests__/frameworks/react.style-context.test.tsx::style context - react > default props::2",
+      "kind": "codegen-css",
+      "config": "codegen-react",
+      "source": {
+        "file": "sandbox/codegen/__tests__/frameworks/react.style-context.test.tsx",
+        "test": "style context - react > default props",
+        "line": null
+      },
+      "inputs": [
+        {},
+        {},
+        null
+      ],
+      "expected": {
+        "className": ""
+      },
+      "undefinedValues": true
+    },
+    {
+      "id": "react::sandbox/codegen/__tests__/frameworks/react.style-context.test.tsx::style context - react > forwardProps::1",
+      "kind": "codegen-css",
+      "config": "codegen-react",
+      "source": {
+        "file": "sandbox/codegen/__tests__/frameworks/react.style-context.test.tsx",
+        "test": "style context - react > forwardProps",
+        "line": null
+      },
+      "inputs": [
+        {},
+        {},
+        null
+      ],
+      "expected": {
+        "className": ""
+      },
+      "undefinedValues": true
+    },
+    {
+      "id": "react::sandbox/codegen/__tests__/frameworks/react.style-context.test.tsx::style context - react > withContext::1",
+      "kind": "codegen-css",
+      "config": "codegen-react",
+      "source": {
+        "file": "sandbox/codegen/__tests__/frameworks/react.style-context.test.tsx",
+        "test": "style context - react > withContext",
+        "line": null
+      },
+      "inputs": [
+        {}
+      ],
+      "expected": {
+        "className": ""
+      }
+    },
+    {
+      "id": "react::sandbox/codegen/__tests__/frameworks/react.style-context.test.tsx::style context - react > withContext::2",
+      "kind": "codegen-css",
+      "config": "codegen-react",
+      "source": {
+        "file": "sandbox/codegen/__tests__/frameworks/react.style-context.test.tsx",
+        "test": "style context - react > withContext",
+        "line": null
+      },
+      "inputs": [
+        {}
+      ],
+      "expected": {
+        "className": ""
+      }
+    },
+    {
+      "id": "react::sandbox/codegen/__tests__/frameworks/react.style-context.test.tsx::style context - react > withContext::3",
+      "kind": "codegen-css",
+      "config": "codegen-react",
+      "source": {
+        "file": "sandbox/codegen/__tests__/frameworks/react.style-context.test.tsx",
+        "test": "style context - react > withContext",
+        "line": null
+      },
+      "inputs": [
+        {},
+        {},
+        null
+      ],
+      "expected": {
+        "className": ""
+      },
+      "undefinedValues": true
+    },
+    {
+      "id": "react::sandbox/codegen/__tests__/frameworks/react.style-context.test.tsx::style context - react > withContext::4",
+      "kind": "codegen-css",
+      "config": "codegen-react",
+      "source": {
+        "file": "sandbox/codegen/__tests__/frameworks/react.style-context.test.tsx",
+        "test": "style context - react > withContext",
+        "line": null
+      },
+      "inputs": [
+        {},
+        {},
+        null
+      ],
+      "expected": {
+        "className": ""
+      },
+      "undefinedValues": true
+    },
+    {
+      "id": "react::sandbox/codegen/__tests__/frameworks/react.style-context.test.tsx::style context - react > withProvider::1",
+      "kind": "codegen-css",
+      "config": "codegen-react",
+      "source": {
+        "file": "sandbox/codegen/__tests__/frameworks/react.style-context.test.tsx",
+        "test": "style context - react > withProvider",
+        "line": null
+      },
+      "inputs": [
+        {}
+      ],
+      "expected": {
+        "className": ""
+      }
+    },
+    {
+      "id": "react::sandbox/codegen/__tests__/frameworks/react.style-context.test.tsx::style context - react > withProvider::2",
+      "kind": "codegen-css",
+      "config": "codegen-react",
+      "source": {
+        "file": "sandbox/codegen/__tests__/frameworks/react.style-context.test.tsx",
+        "test": "style context - react > withProvider",
+        "line": null
+      },
+      "inputs": [
+        {}
+      ],
+      "expected": {
+        "className": ""
+      }
+    },
+    {
+      "id": "react::sandbox/codegen/__tests__/frameworks/react.style-context.test.tsx::style context - react > withProvider::3",
+      "kind": "codegen-css",
+      "config": "codegen-react",
+      "source": {
+        "file": "sandbox/codegen/__tests__/frameworks/react.style-context.test.tsx",
+        "test": "style context - react > withProvider",
+        "line": null
+      },
+      "inputs": [
+        {},
+        {},
+        null
+      ],
+      "expected": {
+        "className": ""
+      },
+      "undefinedValues": true
+    },
+    {
+      "id": "react::sandbox/codegen/__tests__/frameworks/react.style-context.test.tsx::style context - react > withProvider::4",
+      "kind": "codegen-css",
+      "config": "codegen-react",
+      "source": {
+        "file": "sandbox/codegen/__tests__/frameworks/react.style-context.test.tsx",
+        "test": "style context - react > withProvider",
+        "line": null
+      },
+      "inputs": [
+        {}
+      ],
+      "expected": {
+        "className": ""
+      }
+    },
+    {
+      "id": "react::sandbox/codegen/__tests__/frameworks/react.style-context.test.tsx::style context - react > withProvider::5",
+      "kind": "codegen-css",
+      "config": "codegen-react",
+      "source": {
+        "file": "sandbox/codegen/__tests__/frameworks/react.style-context.test.tsx",
+        "test": "style context - react > withProvider",
+        "line": null
+      },
+      "inputs": [
+        {}
+      ],
+      "expected": {
+        "className": ""
+      }
+    },
+    {
+      "id": "react::sandbox/codegen/__tests__/frameworks/react.style-context.test.tsx::style context - react > withProvider::6",
+      "kind": "codegen-css",
+      "config": "codegen-react",
+      "source": {
+        "file": "sandbox/codegen/__tests__/frameworks/react.style-context.test.tsx",
+        "test": "style context - react > withProvider",
+        "line": null
+      },
+      "inputs": [
+        {},
+        {},
+        null
+      ],
+      "expected": {
+        "className": ""
+      },
+      "undefinedValues": true
+    },
+    {
+      "id": "react::sandbox/codegen/__tests__/frameworks/react.style-context.test.tsx::style context - react > withProvider::7",
+      "kind": "codegen-css",
+      "config": "codegen-react",
+      "source": {
+        "file": "sandbox/codegen/__tests__/frameworks/react.style-context.test.tsx",
+        "test": "style context - react > withProvider",
+        "line": null
+      },
+      "inputs": [
+        {},
+        {},
+        null
+      ],
+      "expected": {
+        "className": ""
+      },
+      "undefinedValues": true
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "source": "packages/parser/__tests__/css-2.test.ts",
+  "cases": [
+    {
+      "id": "fixture::packages/parser/__tests__/css-2.test.ts::ast parser > issue #1022: should extract css when using spread syntax on the child::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/css-2.test.ts",
+        "test": "ast parser > issue #1022: should extract css when using spread syntax on the child",
+        "line": 591
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          "color": "red.400",
+          "maxW": "1000px"
+        }
+      ],
+      "expected": {
+        "css": "@layer utilities {\n  .c_red\\.400 {\n    color: var(--colors-red-400);\n}\n\n  .max-w_1000px {\n    max-width: 1000px;\n}\n}"
+      },
+      "unsupported": "extracted non-css items (jsx)"
+    }
+  ]
+}

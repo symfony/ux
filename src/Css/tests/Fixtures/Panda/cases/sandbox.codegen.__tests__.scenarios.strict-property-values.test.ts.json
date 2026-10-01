@@ -1,0 +1,554 @@
+{
+  "source": "sandbox/codegen/__tests__/scenarios/strict-property-values.test.ts",
+  "cases": [
+    {
+      "id": "strict-property-values::sandbox/codegen/__tests__/scenarios/strict-property-values.test.ts::css > arbitrary selector::1",
+      "kind": "codegen-css",
+      "config": "codegen-strict-property-values",
+      "source": {
+        "file": "sandbox/codegen/__tests__/scenarios/strict-property-values.test.ts",
+        "test": "css > arbitrary selector",
+        "line": 111
+      },
+      "inputs": [
+        {
+          "&:data-panda": {
+            "display": "flex"
+          }
+        }
+      ],
+      "expected": {
+        "className": "[&:data-panda]:d_flex"
+      }
+    },
+    {
+      "id": "strict-property-values::sandbox/codegen/__tests__/scenarios/strict-property-values.test.ts::css > arbitrary value escape hatch with conditionals::1",
+      "kind": "codegen-css",
+      "config": "codegen-strict-property-values",
+      "source": {
+        "file": "sandbox/codegen/__tests__/scenarios/strict-property-values.test.ts",
+        "test": "css > arbitrary value escape hatch with conditionals",
+        "line": 90
+      },
+      "inputs": [
+        {
+          "color": "[#fff]",
+          "fontSize": "[123px]",
+          "bgColor": "[#fff!]",
+          "borderColor": "[#fff !important]",
+          "_hover": {
+            "color": "[#fff]",
+            "fontSize": "[123px]",
+            "bgColor": "[#fff!]",
+            "borderColor": "[#fff !important]"
+          },
+          "backgroundColor": {
+            "_dark": "[#3B00B9]",
+            "_hover": "[#3B00B9!]",
+            "_focus": "[#3B00B9 !important]"
+          }
+        }
+      ],
+      "expected": {
+        "className": "c_[#fff] fs_[123px] dark:bg-c_[#3B00B9] hover:bg-c_[#3B00B9]! focus:bg-c_[#3B00B9]! bd-c_[#fff]! hover:c_[#fff] hover:fs_[123px] hover:bg-c_[#fff]! hover:bd-c_[#fff]!"
+      }
+    },
+    {
+      "id": "strict-property-values::sandbox/codegen/__tests__/scenarios/strict-property-values.test.ts::css > arbitrary value escape hatch::1",
+      "kind": "codegen-css",
+      "config": "codegen-strict-property-values",
+      "source": {
+        "file": "sandbox/codegen/__tests__/scenarios/strict-property-values.test.ts",
+        "test": "css > arbitrary value escape hatch",
+        "line": 81
+      },
+      "inputs": [
+        {
+          "color": "[#fff]",
+          "fontSize": "[123px]"
+        }
+      ],
+      "expected": {
+        "className": "c_[#fff] fs_[123px]"
+      }
+    },
+    {
+      "id": "strict-property-values::sandbox/codegen/__tests__/scenarios/strict-property-values.test.ts::css > arbitrary value::1",
+      "kind": "codegen-css",
+      "config": "codegen-strict-property-values",
+      "source": {
+        "file": "sandbox/codegen/__tests__/scenarios/strict-property-values.test.ts",
+        "test": "css > arbitrary value",
+        "line": 73
+      },
+      "inputs": [
+        {
+          "color": "#fff"
+        }
+      ],
+      "expected": {
+        "className": "c_#fff"
+      }
+    },
+    {
+      "id": "strict-property-values::sandbox/codegen/__tests__/scenarios/strict-property-values.test.ts::css > condition prop::1",
+      "kind": "codegen-css",
+      "config": "codegen-strict-property-values",
+      "source": {
+        "file": "sandbox/codegen/__tests__/scenarios/strict-property-values.test.ts",
+        "test": "css > condition prop",
+        "line": 56
+      },
+      "inputs": [
+        {
+          "_hover": {
+            "bg": "yellow.200"
+          }
+        }
+      ],
+      "expected": {
+        "className": "hover:bg_yellow.200"
+      }
+    },
+    {
+      "id": "strict-property-values::sandbox/codegen/__tests__/scenarios/strict-property-values.test.ts::css > css var::1",
+      "kind": "codegen-css",
+      "config": "codegen-strict-property-values",
+      "source": {
+        "file": "sandbox/codegen/__tests__/scenarios/strict-property-values.test.ts",
+        "test": "css > css var",
+        "line": 30
+      },
+      "inputs": [
+        {
+          "color": "var(--button-color)"
+        }
+      ],
+      "expected": {
+        "className": "c_var(--button-color)"
+      }
+    },
+    {
+      "id": "strict-property-values::sandbox/codegen/__tests__/scenarios/strict-property-values.test.ts::css > css var::2",
+      "kind": "codegen-css",
+      "config": "codegen-strict-property-values",
+      "source": {
+        "file": "sandbox/codegen/__tests__/scenarios/strict-property-values.test.ts",
+        "test": "css > css var",
+        "line": 31
+      },
+      "inputs": [
+        {
+          "display": "var(--button-color)"
+        }
+      ],
+      "expected": {
+        "className": "d_var(--button-color)"
+      }
+    },
+    {
+      "id": "strict-property-values::sandbox/codegen/__tests__/scenarios/strict-property-values.test.ts::css > important::1",
+      "kind": "codegen-css",
+      "config": "codegen-strict-property-values",
+      "source": {
+        "file": "sandbox/codegen/__tests__/scenarios/strict-property-values.test.ts",
+        "test": "css > important",
+        "line": 116
+      },
+      "inputs": [
+        {
+          "fontSize": "2xl!",
+          "p": "4 !important",
+          "bgColor": "#fff!",
+          "bg": "#fff!",
+          "borderColor": "#fff !important",
+          "_hover": {
+            "fontSize": "2xl!",
+            "p": "4 !important",
+            "bgColor": "#fff!",
+            "borderColor": "#fff !important"
+          },
+          "backgroundColor": {
+            "_disabled": "2xl!",
+            "_active": "4 !important",
+            "_hover": "#3B00B9!",
+            "_focus": "#3B00B9 !important"
+          }
+        }
+      ],
+      "expected": {
+        "className": "fs_2xl! p_4! disabled:bg-c_2xl! active:bg-c_4! hover:bg-c_#3B00B9! focus:bg-c_#3B00B9! bg_#fff! bd-c_#fff! hover:fs_2xl! hover:p_4! hover:bg-c_#fff! hover:bd-c_#fff!"
+      }
+    },
+    {
+      "id": "strict-property-values::sandbox/codegen/__tests__/scenarios/strict-property-values.test.ts::css > native CSS prop and value::1",
+      "kind": "codegen-css",
+      "config": "codegen-strict-property-values",
+      "source": {
+        "file": "sandbox/codegen/__tests__/scenarios/strict-property-values.test.ts",
+        "test": "css > native CSS prop and value",
+        "line": 6
+      },
+      "inputs": [
+        {
+          "display": "flex"
+        }
+      ],
+      "expected": {
+        "className": "d_flex"
+      }
+    },
+    {
+      "id": "strict-property-values::sandbox/codegen/__tests__/scenarios/strict-property-values.test.ts::css > native CSS prop and value::2",
+      "kind": "codegen-css",
+      "config": "codegen-strict-property-values",
+      "source": {
+        "file": "sandbox/codegen/__tests__/scenarios/strict-property-values.test.ts",
+        "test": "css > native CSS prop and value",
+        "line": 9
+      },
+      "inputs": [
+        {
+          "display": "abc"
+        }
+      ],
+      "expected": {
+        "className": "d_abc"
+      },
+      "expectTypeError": true
+    },
+    {
+      "id": "strict-property-values::sandbox/codegen/__tests__/scenarios/strict-property-values.test.ts::css > native CSS prop and value::3",
+      "kind": "codegen-css",
+      "config": "codegen-strict-property-values",
+      "source": {
+        "file": "sandbox/codegen/__tests__/scenarios/strict-property-values.test.ts",
+        "test": "css > native CSS prop and value",
+        "line": 11
+      },
+      "inputs": [
+        {
+          "content": "abc"
+        }
+      ],
+      "expected": {
+        "className": "content_abc"
+      }
+    },
+    {
+      "id": "strict-property-values::sandbox/codegen/__tests__/scenarios/strict-property-values.test.ts::css > native CSS prop and value::4",
+      "kind": "codegen-css",
+      "config": "codegen-strict-property-values",
+      "source": {
+        "file": "sandbox/codegen/__tests__/scenarios/strict-property-values.test.ts",
+        "test": "css > native CSS prop and value",
+        "line": 12
+      },
+      "inputs": [
+        {
+          "willChange": "abc"
+        }
+      ],
+      "expected": {
+        "className": "will-change_abc"
+      }
+    },
+    {
+      "id": "strict-property-values::sandbox/codegen/__tests__/scenarios/strict-property-values.test.ts::css > native CSS prop and value::5",
+      "kind": "codegen-css",
+      "config": "codegen-strict-property-values",
+      "source": {
+        "file": "sandbox/codegen/__tests__/scenarios/strict-property-values.test.ts",
+        "test": "css > native CSS prop and value",
+        "line": 14
+      },
+      "inputs": [
+        {
+          "pos": "absolute"
+        }
+      ],
+      "expected": {
+        "className": "pos_absolute"
+      }
+    },
+    {
+      "id": "strict-property-values::sandbox/codegen/__tests__/scenarios/strict-property-values.test.ts::css > native CSS prop and value::6",
+      "kind": "codegen-css",
+      "config": "codegen-strict-property-values",
+      "source": {
+        "file": "sandbox/codegen/__tests__/scenarios/strict-property-values.test.ts",
+        "test": "css > native CSS prop and value",
+        "line": 17
+      },
+      "inputs": [
+        {
+          "pos": "absolute123"
+        }
+      ],
+      "expected": {
+        "className": "pos_absolute123"
+      },
+      "expectTypeError": true
+    },
+    {
+      "id": "strict-property-values::sandbox/codegen/__tests__/scenarios/strict-property-values.test.ts::css > native CSS prop and value::7",
+      "kind": "codegen-css",
+      "config": "codegen-strict-property-values",
+      "source": {
+        "file": "sandbox/codegen/__tests__/scenarios/strict-property-values.test.ts",
+        "test": "css > native CSS prop and value",
+        "line": 18
+      },
+      "inputs": [
+        {
+          "flex": "0 1"
+        }
+      ],
+      "expected": {
+        "className": "flex_0_1"
+      }
+    },
+    {
+      "id": "strict-property-values::sandbox/codegen/__tests__/scenarios/strict-property-values.test.ts::css > native CSS prop and value::8",
+      "kind": "codegen-css",
+      "config": "codegen-strict-property-values",
+      "source": {
+        "file": "sandbox/codegen/__tests__/scenarios/strict-property-values.test.ts",
+        "test": "css > native CSS prop and value",
+        "line": 20
+      },
+      "inputs": [
+        {
+          "borderTop": "1px solid red"
+        }
+      ],
+      "expected": {
+        "className": "bd-t_1px_solid_red"
+      }
+    },
+    {
+      "id": "strict-property-values::sandbox/codegen/__tests__/scenarios/strict-property-values.test.ts::css > native CSS prop and value::9",
+      "kind": "codegen-css",
+      "config": "codegen-strict-property-values",
+      "source": {
+        "file": "sandbox/codegen/__tests__/scenarios/strict-property-values.test.ts",
+        "test": "css > native CSS prop and value",
+        "line": 22
+      },
+      "inputs": [
+        {
+          "borderTopStyle": "aaa"
+        }
+      ],
+      "expected": {
+        "className": "border-top-style_aaa"
+      },
+      "expectTypeError": true
+    },
+    {
+      "id": "strict-property-values::sandbox/codegen/__tests__/scenarios/strict-property-values.test.ts::css > nested condition prop with array syntax::1",
+      "kind": "codegen-css",
+      "config": "codegen-strict-property-values",
+      "source": {
+        "file": "sandbox/codegen/__tests__/scenarios/strict-property-values.test.ts",
+        "test": "css > nested condition prop with array syntax",
+        "line": 169
+      },
+      "inputs": [
+        {
+          "_hover": {
+            "_dark": {
+              "bg": [
+                "pink.100",
+                "pink.200"
+              ]
+            }
+          }
+        }
+      ],
+      "expected": {
+        "className": "hover:dark:bg_pink.100 hover:dark:sm:bg_pink.200"
+      }
+    },
+    {
+      "id": "strict-property-values::sandbox/codegen/__tests__/scenarios/strict-property-values.test.ts::css > nested condition prop::1",
+      "kind": "codegen-css",
+      "config": "codegen-strict-property-values",
+      "source": {
+        "file": "sandbox/codegen/__tests__/scenarios/strict-property-values.test.ts",
+        "test": "css > nested condition prop",
+        "line": 61
+      },
+      "inputs": [
+        {
+          "_hover": {
+            "_dark": {
+              "bg": "pink"
+            }
+          }
+        }
+      ],
+      "expected": {
+        "className": "hover:dark:bg_pink"
+      }
+    },
+    {
+      "id": "strict-property-values::sandbox/codegen/__tests__/scenarios/strict-property-values.test.ts::css > object condition prop::1",
+      "kind": "codegen-css",
+      "config": "codegen-strict-property-values",
+      "source": {
+        "file": "sandbox/codegen/__tests__/scenarios/strict-property-values.test.ts",
+        "test": "css > object condition prop",
+        "line": 52
+      },
+      "inputs": [
+        {
+          "bg": {
+            "_hover": "yellow.100"
+          }
+        }
+      ],
+      "expected": {
+        "className": "hover:bg_yellow.100"
+      }
+    },
+    {
+      "id": "strict-property-values::sandbox/codegen/__tests__/scenarios/strict-property-values.test.ts::css > responsive array syntax prop::1",
+      "kind": "codegen-css",
+      "config": "codegen-strict-property-values",
+      "source": {
+        "file": "sandbox/codegen/__tests__/scenarios/strict-property-values.test.ts",
+        "test": "css > responsive array syntax prop",
+        "line": 150
+      },
+      "inputs": [
+        {
+          "bg": [
+            "cyan.100",
+            "cyan.200",
+            null,
+            null,
+            "cyan.300"
+          ]
+        }
+      ],
+      "expected": {
+        "className": "bg_cyan.100 sm:bg_cyan.200 xl:bg_cyan.300"
+      },
+      "undefinedValues": true
+    },
+    {
+      "id": "strict-property-values::sandbox/codegen/__tests__/scenarios/strict-property-values.test.ts::css > responsive condition::1",
+      "kind": "codegen-css",
+      "config": "codegen-strict-property-values",
+      "source": {
+        "file": "sandbox/codegen/__tests__/scenarios/strict-property-values.test.ts",
+        "test": "css > responsive condition",
+        "line": 140
+      },
+      "inputs": [
+        {
+          "sm": {
+            "bg": "purple"
+          }
+        }
+      ],
+      "expected": {
+        "className": "sm:bg_purple"
+      }
+    },
+    {
+      "id": "strict-property-values::sandbox/codegen/__tests__/scenarios/strict-property-values.test.ts::css > shorthand prop::1",
+      "kind": "codegen-css",
+      "config": "codegen-strict-property-values",
+      "source": {
+        "file": "sandbox/codegen/__tests__/scenarios/strict-property-values.test.ts",
+        "test": "css > shorthand prop",
+        "line": 44
+      },
+      "inputs": [
+        {
+          "backgroundColor": "red",
+          "bg": "red"
+        }
+      ],
+      "expected": {
+        "className": "bg-c_red bg_red"
+      }
+    },
+    {
+      "id": "strict-property-values::sandbox/codegen/__tests__/scenarios/strict-property-values.test.ts::css > token value::1",
+      "kind": "codegen-css",
+      "config": "codegen-strict-property-values",
+      "source": {
+        "file": "sandbox/codegen/__tests__/scenarios/strict-property-values.test.ts",
+        "test": "css > token value",
+        "line": 26
+      },
+      "inputs": [
+        {
+          "color": "blue.300"
+        }
+      ],
+      "expected": {
+        "className": "c_blue.300"
+      }
+    },
+    {
+      "id": "strict-property-values::sandbox/codegen/__tests__/scenarios/strict-property-values.test.ts::css > using inline token helper - in condition::1",
+      "kind": "codegen-css",
+      "config": "codegen-strict-property-values",
+      "source": {
+        "file": "sandbox/codegen/__tests__/scenarios/strict-property-values.test.ts",
+        "test": "css > using inline token helper - in condition",
+        "line": 165
+      },
+      "inputs": [
+        {
+          "@media screen and (min-width: token(sizes.4xl))": {
+            "bg": "blue.500"
+          }
+        }
+      ],
+      "expected": {
+        "className": "[@media_screen_and_(min-width:_token(sizes.4xl))]:bg_blue.500"
+      }
+    },
+    {
+      "id": "strict-property-values::sandbox/codegen/__tests__/scenarios/strict-property-values.test.ts::css > using inline token helper - in value::1",
+      "kind": "codegen-css",
+      "config": "codegen-strict-property-values",
+      "source": {
+        "file": "sandbox/codegen/__tests__/scenarios/strict-property-values.test.ts",
+        "test": "css > using inline token helper - in value",
+        "line": 158
+      },
+      "inputs": [
+        {
+          "border": "1px solid token(colors.blue.400)"
+        }
+      ],
+      "expected": {
+        "className": "bd_1px_solid_token(colors.blue.400)"
+      }
+    },
+    {
+      "id": "strict-property-values::sandbox/codegen/__tests__/scenarios/strict-property-values.test.ts::css > utility prop::1",
+      "kind": "codegen-css",
+      "config": "codegen-strict-property-values",
+      "source": {
+        "file": "sandbox/codegen/__tests__/scenarios/strict-property-values.test.ts",
+        "test": "css > utility prop",
+        "line": 36
+      },
+      "inputs": [
+        {
+          "srOnly": true
+        }
+      ],
+      "expected": {
+        "className": "sr_true"
+      }
+    }
+  ]
+}
