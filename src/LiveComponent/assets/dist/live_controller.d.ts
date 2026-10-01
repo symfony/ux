@@ -252,4 +252,4 @@ declare class LiveControllerDefault extends Controller<HTMLElement> implements L
   private dispatchEvent;
   private onMutations;
 }
-export { Component, LiveController, LiveEvent, LiveControllerDefault as default, getComponent };
+export { Component, type ComponentHooks, LiveController, LiveEvent, LiveControllerDefault as default, getComponent };
