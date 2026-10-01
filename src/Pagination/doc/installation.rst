@@ -31,7 +31,7 @@ Requirements
 
 Optional integrations require:
 
-* Doctrine ORM 3 for ORM ``QueryBuilder`` objects;
+* Doctrine ORM 3.7+ for ORM ``QueryBuilder`` objects;
 * Doctrine DBAL 4.4+ for DBAL ``QueryBuilder`` objects;
 * UX TwigComponent 3.0+ for component syntax;
 * UX LiveComponent 3.0+ for reactive component integration.

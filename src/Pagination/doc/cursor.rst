@@ -60,11 +60,16 @@ the remaining traversal.
 Use snapshot isolation or an immutable feed key when the product requires
 a fixed point-in-time view.
 
-PHP cursor values implementing ``DateTimeInterface`` are normalized to
-UTC before they are compared or encoded. Equivalent instants keep the
-same order even when the objects use different timezone offsets. Scalar
-DBAL values are compared as returned by the driver, so use a canonical
-database representation for ordered date fields.
+In the array adapter, PHP cursor values implementing ``DateTimeInterface``
+are normalized to UTC before they are compared or encoded. Equivalent
+instants keep the same order even when the objects use different timezone
+offsets. Scalar DBAL values are compared as returned by the driver, so use
+a canonical database representation for ordered date fields.
+
+The Doctrine ORM adapter delegates the boundary to Doctrine's own
+``CursorPaginator``: values are converted with the DBAL type of the ordered
+field and handed back unchanged, so a boundary round-trips exactly as the
+database stored it.
 
 Cursor pagination owns Doctrine's ``ORDER BY``. Do not order the source
 ``QueryBuilder`` first::
@@ -127,9 +132,11 @@ in the query and its parameters: active Doctrine filters, the current
 shard, tenant state or a user-specific scope.
 
 Tokens are authenticated, not encrypted. Their boundary values can be
-decoded by clients. The source context is stored as a hash, not as plain
-text, but low-entropy values can still be guessed. Treat tokens as opaque
-transport values and do not rely on them to conceal sensitive data.
+decoded by clients -- for the Doctrine ORM adapter, the decoded payload is
+the cursor Doctrine minted for that row. The source context is stored as a
+hash, not as plain text, but low-entropy values can still be guessed. Treat
+tokens as opaque transport values and do not rely on them to conceal
+sensitive data.
 
 The built-in array adapter requires an explicit, stable context::
 

@@ -66,7 +66,7 @@ application-provided total; invokable Symfony services work directly.
 - First-class signed cursor pagination with forward and backward navigation
 - Offset pagination with lazy totals and numbered pages
 - Lookahead pagination without a count query
-- Doctrine ORM 3 and DBAL 4.4+ adapters
+- Doctrine ORM 3.7+ and DBAL 4.4+ adapters
 - Callback builders and custom adapters for APIs, search engines and
   application sources
 - Request-aware URLs generated through the Symfony Router

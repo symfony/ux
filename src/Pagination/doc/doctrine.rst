@@ -82,11 +82,16 @@ first page should also serve the cursor boundary predicate.
 Cursor restrictions
 -------------------
 
+The adapter owns the effective order and the cursor payload, and delegates
+the boundary predicate to Doctrine's ``CursorPaginator``.
+
 Cursor fields must be non-nullable mapped scalar fields on the root
 entity. Associations, unmapped aliases, nullable fields and invalid field
 names are rejected against ORM metadata. Supported Doctrine types include
 small, regular and big integers, string, GUID, float, decimal, boolean,
-``datetime`` and ``datetimetz`` fields.
+``datetime`` and ``datetimetz`` fields. Fields are validated when the
+order is resolved, so an unusable one is reported on the first page rather
+than on the first navigation away from it.
 
 The adapter appends every missing entity identifier field to make the
 effective order deterministic. The direction passed to ``orderBy()``
@@ -100,6 +105,15 @@ passing field names to ``orderBy()``.
 The source query must contain one root entity and no existing
 ``ORDER BY``. Configure its complete order through
 ``cursor()->orderBy()``.
+
+Doctrine names the parameters of its boundary predicate after the ordered
+fields, as ``<alias>_<field>_<index>``. A source query binding a parameter
+under one of those names is rejected, since Doctrine would overwrite it
+and silently return the wrong rows.
+
+Rows are read back through ORM metadata. A ``SELECT NEW`` query returning
+a DTO is supported as long as the ordered fields are public properties on
+it.
 
 Doctrine DBAL
 -------------
