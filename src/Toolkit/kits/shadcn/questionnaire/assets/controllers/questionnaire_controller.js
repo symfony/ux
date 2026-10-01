@@ -27,7 +27,10 @@ export default class extends Controller {
     _freeformNames = new WeakMap();
 
     freeformTargetConnected(input) {
-        this._freeformNames.set(input, input.getAttribute('name'));
+        // On a reconnect, the input may have no name left: _syncFreeformName() parked it.
+        if (!this._freeformNames.has(input)) {
+            this._freeformNames.set(input, input.getAttribute('name'));
+        }
         this._syncFreeformName(input);
     }
 
