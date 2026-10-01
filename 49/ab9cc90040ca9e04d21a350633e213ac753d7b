@@ -1,0 +1,19 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2026-09-21T16:51:32Z
+
+I wonder if we need to export the values ourselves at all here.
+
+`assertSame()` already knows how to display the expected/actual values, including arrays and objects. Could we keep the custom message focused on identifying the event/key and let PHPUnit display the actual difference?
+
+Something like:
+
+```php
+self::assertSame(
+    $value,
+    $this->payload[$key],
+    sprintf('The event "%s" data "%s" is different than expected.', $this->eventName, $key),
+);
+```
+
+This would fix the original issue without introducing/duplicating our own value exporter.
