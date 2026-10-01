@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 3.6
+
+- Add a `controls.shouldSend` flag to the `request:started` JavaScript hook, to keep a request from being sent
+
 ## 3.5
 
 - Add support for Symfony 8.2's standalone `AssetMapperBundle`
