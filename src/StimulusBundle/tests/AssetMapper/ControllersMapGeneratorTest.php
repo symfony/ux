@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\StimulusBundle\Tests\AssetMapper;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\AssetMapper\AssetMapperInterface;
 use Symfony\Component\AssetMapper\MappedAsset;
@@ -202,5 +203,193 @@ class ControllersMapGeneratorTest extends TestCase
             'subdir--deeper-with-underscores',
             'typescript',
         ], $customControllers);
+    }
+
+    public function testApplicationControllersOverrideGlobalControllers(): void
+    {
+        $globalMap = $this->createGenerator([__DIR__.'/../fixtures/assets/controllers'])->getControllersMap();
+        $this->assertStringNotContainsString('override', file_get_contents($globalMap['hello']->asset->sourcePath));
+
+        $generator = $this->createGenerator(
+            [__DIR__.'/../fixtures/assets/controllers'],
+            [__DIR__.'/../fixtures/assets/more-controllers'],
+        );
+
+        $map = $generator->getControllersMap();
+        $this->assertStringContainsString('hello-controller.js override', file_get_contents($map['hello']->asset->sourcePath));
+        $this->assertArrayHasKey('bye', $map);
+        $this->assertArrayHasKey('minified', $map);
+    }
+
+    public function testEmptyControllerPathsDoNotThrow(): void
+    {
+        $generator = $this->createGenerator([], [], __DIR__.'/../fixtures/assets/nonexistent.json');
+
+        $this->assertSame([], $generator->getControllersMap());
+    }
+
+    public function testGetControllerPathsIncludesApplicationPathsAfterGlobalPaths(): void
+    {
+        $generator = $this->createGenerator(['/global/a', '/global/b'], ['/app/a']);
+
+        $this->assertSame(['/global/a', '/global/b', '/app/a'], $generator->getControllerPaths());
+    }
+
+    public function testApplicationControllersJsonReplacesTheGlobalOne(): void
+    {
+        $controllersJsonPath = self::writeControllersJson([
+            '@fake-vendor/ux-package1' => [
+                'controller_first' => ['enabled' => true, 'fetch' => 'lazy'],
+            ],
+        ]);
+
+        try {
+            $map = $this->createGenerator([], [], $controllersJsonPath)->getControllersMap();
+        } finally {
+            unlink($controllersJsonPath);
+        }
+
+        $this->assertSame(['fake-vendor--ux-package1--controller-first'], array_keys($map));
+        $this->assertTrue($map['fake-vendor--ux-package1--controller-first']->isLazy);
+        $this->assertSame([], $map['fake-vendor--ux-package1--controller-first']->autoImports);
+    }
+
+    public function testApplicationControllersJsonIsMergedOverTheGlobalOne(): void
+    {
+        $controllersJsonPath = self::writeControllersJson([
+            '@fake-vendor/ux-package1' => [
+                'controller_first' => ['enabled' => true],
+                'controller_second' => [
+                    'fetch' => 'eager',
+                    'autoimport' => [
+                        'in/asset/mapper/controller_second1.css' => false,
+                        'in/asset/mapper/controller_second2.css' => true,
+                    ],
+                ],
+            ],
+            '@fake-vendor/ux-package2' => [
+                'hello_controller' => ['enabled' => false],
+            ],
+        ]);
+
+        try {
+            $map = $this->createGenerator([], [], $controllersJsonPath, __DIR__.'/../fixtures/assets/controllers.json')->getControllersMap();
+        } finally {
+            unlink($controllersJsonPath);
+        }
+
+        $this->assertSame(['fake-vendor--ux-package1--controller-first', 'fake-vendor--ux-package1--controller-second'], array_keys($map));
+
+        $controllerFirst = $map['fake-vendor--ux-package1--controller-first'];
+        $this->assertFalse($controllerFirst->isLazy);
+        $this->assertSame(['/path/toin/asset/mapper/controller_first.css'], array_map(static fn ($autoImport) => $autoImport->path, $controllerFirst->autoImports));
+
+        $controllerSecond = $map['fake-vendor--ux-package1--controller-second'];
+        $this->assertFalse($controllerSecond->isLazy);
+        $this->assertSame([
+            '/path/toin/asset/mapper/controller_second2.css',
+            '/path/to@fake-vendor/ux-package1/dist/styles.css',
+            '/path/toneeded-vendor/file.css',
+            '/path/to@scoped/needed-vendor/the/file2.css',
+        ], array_map(static fn ($autoImport) => $autoImport->path, $controllerSecond->autoImports));
+    }
+
+    public function testMergedErrorsMentionTheFileOfTheController(): void
+    {
+        $baseControllersJsonPath = self::writeControllersJson([
+            '@fake-vendor/ux-package2' => ['unknown' => ['enabled' => true]],
+        ]);
+        $controllersJsonPath = self::writeControllersJson([
+            '@fake-vendor/ux-package2' => ['hello_controller' => ['enabled' => true]],
+        ]);
+        $generator = $this->createGenerator([], [], $controllersJsonPath, $baseControllersJsonPath);
+
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage(\sprintf('(read from "%s").', $baseControllersJsonPath));
+
+        try {
+            $generator->getControllersMap();
+        } finally {
+            unlink($baseControllersJsonPath);
+            unlink($controllersJsonPath);
+        }
+    }
+
+    public function testGetControllersJsonPathsIncludesTheBaseFileFirst(): void
+    {
+        $this->assertSame(['/app.json'], $this->createGenerator([], [], '/app.json')->getControllersJsonPaths());
+        $this->assertSame(['/global.json', '/app.json'], $this->createGenerator([], [], '/app.json', '/global.json')->getControllersJsonPaths());
+    }
+
+    /**
+     * @param array<string, array<string, array<string, mixed>>> $controllers
+     */
+    #[DataProvider('provideInvalidControllersJson')]
+    public function testErrorsMentionTheControllersJsonFile(array $controllers, string $expectedMessage): void
+    {
+        $controllersJsonPath = self::writeControllersJson($controllers);
+        $generator = $this->createGenerator([], [], $controllersJsonPath);
+
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage(\sprintf($expectedMessage, $controllersJsonPath));
+
+        try {
+            $generator->getControllersMap();
+        } finally {
+            unlink($controllersJsonPath);
+        }
+    }
+
+    /**
+     * @return iterable<string, array{array<string, array<string, array<string, mixed>>>, string}>
+     */
+    public static function provideInvalidControllersJson(): iterable
+    {
+        yield 'unknown package' => [
+            ['@fake-vendor/unknown' => ['hello' => ['enabled' => true]]],
+            'Could not find package "fake-vendor/unknown" referred to from controllers.json (read from "%s").',
+        ];
+        yield 'unknown controller' => [
+            ['@fake-vendor/ux-package2' => ['unknown' => ['enabled' => true]]],
+            'Controller "@fake-vendor/ux-package2/unknown" does not exist in the "fake-vendor/ux-package2" package (read from "%s").',
+        ];
+    }
+
+    /**
+     * @param array<string, array<string, array<string, mixed>>> $controllers
+     */
+    private static function writeControllersJson(array $controllers): string
+    {
+        $path = tempnam(sys_get_temp_dir(), 'stimulus_controllers_json');
+        file_put_contents($path, json_encode(['controllers' => $controllers], \JSON_THROW_ON_ERROR));
+
+        return $path;
+    }
+
+    private function createGenerator(array $controllerPaths, array $applicationControllerPaths = [], ?string $controllersJsonPath = null, ?string $baseControllersJsonPath = null): ControllersMapGenerator
+    {
+        $mapper = $this->createStub(AssetMapperInterface::class);
+        $mapper->method('getAssetFromSourcePath')
+            ->willReturnCallback(static function ($path) {
+                $path = str_replace('\\', '/', $path);
+
+                return new MappedAsset(basename($path), $path);
+            });
+
+        $autoImportLocator = $this->createStub(AutoImportLocator::class);
+        $autoImportLocator->method('locateAutoImport')
+            ->willReturnCallback(static function ($path) {
+                return new MappedControllerAutoImport('/path/to'.$path, false);
+            });
+
+        return new ControllersMapGenerator(
+            $mapper,
+            new UxPackageReader(__DIR__.'/../fixtures'),
+            $controllerPaths,
+            $controllersJsonPath ?? __DIR__.'/../fixtures/assets/controllers.json',
+            $autoImportLocator,
+            $applicationControllerPaths,
+            $baseControllersJsonPath,
+        );
     }
 }
