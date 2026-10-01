@@ -25,6 +25,25 @@ describeRecipe('shadcn/alert-dialog', () => {
         },
     });
 
+    testState('stays modal after being moved in the DOM', {
+        example: 'default',
+        state: 'open-after-move',
+        act: async (page) => {
+            await page.getByRole('button', { name: 'Show Dialog' }).click();
+            await page.locator('[data-controller="alert-dialog"]').evaluate(async (element) => {
+                const parent = element.parentNode!;
+                const next = element.nextSibling;
+                element.remove();
+                await new Promise((resolve) => setTimeout(resolve, 50));
+                parent.insertBefore(element, next);
+            });
+            const dialog = page.getByRole('dialog');
+
+            await expect(dialog).toBeVisible();
+            expect(await dialog.evaluate((element) => element.matches(':modal'))).toBe(true);
+        },
+    });
+
     test('exposes its title and description', async ({ page, gotoExample }) => {
         await gotoExample('shadcn/alert-dialog/default');
         const trigger = page.getByRole('button', { name: 'Show Dialog' });

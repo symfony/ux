@@ -10,6 +10,7 @@
 - [Flowbite v4] Fix the inactive triggers of `tabs` being unreadable in dark mode
 - [Shadcn] Fix the arrow keys of `accordion` getting stuck before a disabled item
 - [Shadcn] Fix `alert-dialog` opening on page load
+- [Shadcn] Fix an open `alert-dialog` no longer being modal once its element was moved in the DOM
 - [Shadcn] Fix a closed `drawer` staying reachable with the keyboard and exposed to screen readers
 - [Shadcn] Fix `tooltip` overflowing the viewport, and leaving an empty gap after the longest line of a wrapped text
 - [Shadcn] Align the text of `tooltip` toward its trigger: centered above or below it, toward it on the left or right
