@@ -27,6 +27,7 @@
 - [Shadcn] Fix the close button and the action of a `sonner` toast ignoring mouse clicks
 - [Shadcn] Fix the bookmark icon of the `toggle` examples not filling when pressed
 - [Shadcn] Fix the tooltip of the disabled button example of `tooltip` never opening
+- [Shadcn] Fix the freeform answer of `questionnaire` no longer being submitted once its element was moved in the DOM
 - [Shadcn] Rewrite `combobox` to match the upstream Shadcn UI component, as `Combobox:*` sub-components with multiple selection
 - [Shadcn] Focus the input of `input-group` when one of its addons is clicked, through a new `input-group` Stimulus controller
 - [Shadcn] Fix `InputGroup:Button` stacking the `Button` size classes on top of its own

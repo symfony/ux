@@ -155,6 +155,22 @@ describeRecipe('shadcn/questionnaire', () => {
         await expect(input).not.toHaveAttribute('name');
     });
 
+    test('still names a freeform answer after being moved in the DOM', async ({ page, gotoExample }) => {
+        await gotoExample('shadcn/questionnaire/freeform-answer');
+        await page.locator('[data-controller="questionnaire"]').evaluate(async (element) => {
+            const parent = element.parentNode!;
+            const next = element.nextSibling;
+            element.remove();
+            await new Promise((resolve) => setTimeout(resolve, 50));
+            parent.insertBefore(element, next);
+        });
+        const input = page.getByRole('textbox', { name: 'Another refactoring approach' });
+
+        await input.fill('Start with the tests');
+
+        await expect(input).toHaveAttribute('name', 'approach');
+    });
+
     test('ignores the shortcut keys while typing a freeform answer', async ({ page, gotoExample }) => {
         await gotoExample('shadcn/questionnaire/freeform-answer');
         const input = page.getByRole('textbox', { name: 'Another refactoring approach' });
