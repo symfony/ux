@@ -47,6 +47,105 @@ describe('Component parent -> child initialization and rendering tests', () => {
         await waitFor(() => expect(test.element).toHaveAttribute('aria-busy', 'true'));
     });
 
+    it('does not send the fingerprint of a child inside a data-skip-morph element', async () => {
+        const test = await createTest(
+            { updated: false },
+            (data: any) => `
+            <div ${initComponent(data)}>
+                ${
+                    data.updated
+                        ? '<div id="the-child-id1" data-live-preserve></div>'
+                        : `<div ${initComponent({}, { id: 'the-child-id1', fingerprint: 'child-fingerprint1' })}>Child1</div>`
+                }
+                <div data-skip-morph>
+                    <div>
+                        <div ${initComponent({}, { id: 'the-child-id2', fingerprint: 'child-fingerprint2' })} data-testid="child2">
+                            Child2 ${data.updated ? 'updated' : 'original'}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `
+        );
+
+        test.expectsAjaxCall()
+            .expectChildFingerprints({
+                'the-child-id1': { fingerprint: 'child-fingerprint1', tag: 'div' },
+            })
+            .serverWillChangeProps((data: any) => {
+                data.updated = true;
+            });
+
+        await test.component.render();
+
+        expect(test.element).toHaveTextContent('Child1');
+        expect(test.element).toHaveTextContent('Child2 updated');
+        expect(getComponent(getByTestId(test.element, 'child2')).id).toBe('the-child-id2');
+    });
+
+    it.each(['child', 'parent'])(
+        'sends the fingerprint of a child when data-skip-morph is on the %s root element',
+        async (skipMorphOn) => {
+            const test = await createTest(
+                { updated: false },
+                (data: any) => `
+                <div ${initComponent(data)} ${skipMorphOn === 'parent' ? 'data-skip-morph' : ''}>
+                    ${
+                        data.updated
+                            ? '<div id="the-child-id" data-live-preserve></div>'
+                            : `<div ${initComponent({}, { id: 'the-child-id', fingerprint: 'child-fingerprint' })} ${skipMorphOn === 'child' ? 'data-skip-morph' : ''} data-testid="child">Child</div>`
+                    }
+                </div>
+            `
+            );
+            const childElement = getByTestId(test.element, 'child');
+
+            test.expectsAjaxCall()
+                .expectChildFingerprints({
+                    'the-child-id': { fingerprint: 'child-fingerprint', tag: 'div' },
+                })
+                .serverWillChangeProps((data: any) => {
+                    data.updated = true;
+                });
+
+            await test.component.render();
+
+            expect(getByTestId(test.element, 'child')).toBe(childElement);
+            expect(childElement).toHaveTextContent('Child');
+        }
+    );
+
+    it('sends the fingerprint of a child when the data-skip-morph element is outside the parent', async () => {
+        const test = await createTest(
+            {},
+            (data: any) => `
+            <div data-skip-morph>
+                <div ${initComponent(data)}>
+                    <div ${initComponent({}, { id: 'the-child-id', fingerprint: 'child-fingerprint' })} data-testid="child">Child</div>
+                </div>
+            </div>
+        `
+        );
+        const childElement = getByTestId(test.element, 'child');
+
+        test.expectsAjaxCall()
+            .expectChildFingerprints({
+                'the-child-id': { fingerprint: 'child-fingerprint', tag: 'div' },
+            })
+            .willReturn(
+                (data: any) => `
+                <div ${initComponent(data)}>
+                    <div id="the-child-id" data-live-preserve></div>
+                </div>
+            `
+            );
+
+        await test.component.render();
+
+        expect(getByTestId(test.element, 'child')).toBe(childElement);
+        expect(childElement).toHaveTextContent('Child');
+    });
+
     it('removes missing child component on re-render', async () => {
         const test = await createTest(
             { renderChild: true },

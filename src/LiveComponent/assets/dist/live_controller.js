@@ -1978,6 +1978,7 @@ var ChildComponentPlugin_default = class {
 		const fingerprints = {};
 		this.getChildren().forEach((child) => {
 			if (!child.id) throw new Error("missing id");
+			if (this.isInsideSkipMorphElement(child)) return;
 			fingerprints[child.id] = {
 				fingerprint: child.fingerprint,
 				tag: child.element.tagName.toLowerCase()
@@ -1995,6 +1996,10 @@ var ChildComponentPlugin_default = class {
 	}
 	getChildren() {
 		return findChildren(this.component);
+	}
+	isInsideSkipMorphElement(child) {
+		const skipMorphElement = child.element.parentElement?.closest("[data-skip-morph]");
+		return !!skipMorphElement && skipMorphElement !== this.component.element && this.component.element.contains(skipMorphElement);
 	}
 };
 var LazyPlugin_default = class {
