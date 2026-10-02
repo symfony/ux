@@ -9,6 +9,7 @@
 
 import { Controller } from '@hotwired/stimulus';
 import '@hotwired/turbo';
+import './stream_actions';
 
 /**
  * Empty Stimulus controller only used for Symfony Flex wiring.
