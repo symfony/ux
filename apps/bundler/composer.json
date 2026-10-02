@@ -11,7 +11,7 @@
         "symfony/dotenv": "7.4.*",
         "symfony/flex": "^2.10",
         "symfony/framework-bundle": "7.4.*",
-        "symfony/reprise": "^0.7.0",
+        "symfony/reprise": "^1.0.0",
         "symfony/runtime": "7.4.*",
         "symfony/stimulus-bundle": "3.x-dev",
         "symfony/ux-autocomplete": "3.x-dev",
