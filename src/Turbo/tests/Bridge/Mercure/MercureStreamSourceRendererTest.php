@@ -13,6 +13,7 @@ namespace Symfony\UX\Turbo\Tests\Bridge\Mercure;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\Mercure\ProtocolVersion;
 use Symfony\UX\Turbo\Tests\Fixtures\Book;
 
 final class MercureStreamSourceRendererTest extends KernelTestCase
@@ -76,6 +77,62 @@ final class MercureStreamSourceRendererTest extends KernelTestCase
             "{{ turbo_stream_from(['topic_a', 'topic_b']) }}",
             [],
             '<turbo-mercure-stream-source src="http://127.0.0.1:3000/.well-known/mercure?topic=topic_a&amp;topic=topic_b"></turbo-mercure-stream-source>',
+        ];
+    }
+
+    /**
+     * @param array<mixed> $context
+     */
+    #[DataProvider('provideProtocolV1TestCases')]
+    public function testRenderTurboStreamFromWithProtocolV1(string $template, array $context, string $expectedResult): void
+    {
+        if (!enum_exists(ProtocolVersion::class)) {
+            $this->markTestSkipped('The Mercure protocol 1.0 needs symfony/mercure 0.8+.');
+        }
+
+        $twig = self::getContainer()->get('twig');
+        self::assertInstanceOf(\Twig\Environment::class, $twig);
+
+        $this->assertSame($expectedResult, $twig->createTemplate($template)->render($context));
+    }
+
+    /**
+     * @return iterable<string, array{0: string, 1: array<mixed>, 2: string}>
+     */
+    public static function provideProtocolV1TestCases(): iterable
+    {
+        $book = new Book();
+        $book->id = 123;
+
+        yield 'string topic' => [
+            "{{ turbo_stream_from('a_topic', transport='v1') }}",
+            [],
+            '<turbo-mercure-stream-source src="http://127.0.0.1:3000/.well-known/mercure?match=a_topic"></turbo-mercure-stream-source>',
+        ];
+
+        yield 'entity topic' => [
+            "{{ turbo_stream_from(book, transport='v1') }}",
+            ['book' => $book],
+            '<turbo-mercure-stream-source src="http://127.0.0.1:3000/.well-known/mercure?match=https%3A%2F%2Fsymfony.com%2Fux-turbo%2FSymfony%255CUX%255CTurbo%255CTests%255CFixtures%255CBook%2F123"></turbo-mercure-stream-source>',
+        ];
+
+        // URI Templates are gone in the protocol 1.0: every entity of a class is a URL Pattern
+        yield 'class name' => [
+            "{{ turbo_stream_from('Symfony\\\\UX\\\\Turbo\\\\Tests\\\\Fixtures\\\\Book', transport='v1') }}",
+            [],
+            '<turbo-mercure-stream-source src="http://127.0.0.1:3000/.well-known/mercure?match_urlpattern=https%3A%2F%2Fsymfony.com%2Fux-turbo%2FSymfony%255CUX%255CTurbo%255CTests%255CFixtures%255CBook%2F%3Aid"></turbo-mercure-stream-source>',
+        ];
+
+        yield 'topics and a class name' => [
+            "{{ turbo_stream_from(['topic_a', 'Symfony\\\\UX\\\\Turbo\\\\Tests\\\\Fixtures\\\\Book', 'topic_b'], transport='v1') }}",
+            [],
+            '<turbo-mercure-stream-source src="http://127.0.0.1:3000/.well-known/mercure?match=topic_a&amp;match=topic_b&amp;match_urlpattern=https%3A%2F%2Fsymfony.com%2Fux-turbo%2FSymfony%255CUX%255CTurbo%255CTests%255CFixtures%255CBook%2F%3Aid"></turbo-mercure-stream-source>',
+        ];
+
+        yield 'private' => [
+            "{{ turbo_stream_from('a_topic', private=true, transport='v1') }}",
+            [],
+            '<turbo-mercure-stream-source src="http://127.0.0.1:3000/.well-known/mercure?match=a_topic" private></turbo-mercure-stream-source>',
         ];
     }
 }

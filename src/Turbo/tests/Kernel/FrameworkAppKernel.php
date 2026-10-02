@@ -20,6 +20,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Kernel;
+use Symfony\Component\Mercure\ProtocolVersion;
 use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 use Symfony\UX\StimulusBundle\StimulusBundle;
 use Symfony\UX\Turbo\TurboBundle;
@@ -70,14 +71,25 @@ final class FrameworkAppKernel extends Kernel
             'php_errors' => ['log' => true],
         ]);
 
-        $container->extension('mercure', [
-            'hubs' => [
-                'default' => [
-                    'url' => 'http://127.0.0.1:3000/.well-known/mercure',
-                    'jwt' => 'eyJhbGciOiJIUzI1NiJ9.eyJtZXJjdXJlIjp7InB1Ymxpc2giOlsiKiJdfX0.vhMwOaN5K68BTIhWokMLOeOJO4EPfT64brd8euJOA4M',
-                ],
+        $hubs = [
+            'default' => [
+                'url' => 'http://127.0.0.1:3000/.well-known/mercure',
+                'jwt' => 'eyJhbGciOiJIUzI1NiJ9.eyJtZXJjdXJlIjp7InB1Ymxpc2giOlsiKiJdfX0.vhMwOaN5K68BTIhWokMLOeOJO4EPfT64brd8euJOA4M',
             ],
-        ]);
+        ];
+        // A hub speaking the Mercure protocol 1.0 (symfony/mercure 0.8+)
+        if (enum_exists(ProtocolVersion::class)) {
+            $hubs['v1'] = [
+                'url' => 'http://127.0.0.1:3000/.well-known/mercure',
+                'protocol_version' => '1.0',
+                'jwt' => [
+                    'secret' => '!ChangeThisMercureHubJWTSecretKey!',
+                    'publish' => '*',
+                    'claims' => ['iss' => 'https://example.com', 'sub' => 'test', 'client_id' => 'test'],
+                ],
+            ];
+        }
+        $container->extension('mercure', ['hubs' => $hubs]);
     }
 
     protected function configureRoutes(RoutingConfigurator $routes): void
