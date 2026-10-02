@@ -1,0 +1,23 @@
+---------------------------------------------------------------------------
+
+by github-actions[bot] at 2026-09-26T15:37:26Z
+
+<h1>📊 Packages dist files size difference</h1>
+
+Thanks for the PR! Here is the difference in size of the packages dist files between the base branch and the PR.
+Please review the changes and make sure they are expected.
+
+<table>
+    <thead><tr><th>File</th><th>Before (Size / Gzip)</th><th>After (Size / Gzip)</th></tr></thead>
+    <tbody><tr><td colspan="3"><a href="https://github.com/Pechynho/ux/tree/types-render-started/src/LiveComponent/assets/dist"><b>LiveComponent</b></a></td></tr><tr>
+                <td><a href="https://github.com/Pechynho/ux/blob/types-render-started/src/LiveComponent/assets/dist/live_controller.d.ts"><code>live_controller.d.ts</code></a></td>
+            <td>
+                    <code>7.82 kB</code>
+                    / <code>2.03 kB</code>
+                </td><td>
+                    <code>7.95 kB</code><sup>+2% 📈</sup>
+                    / <code>2.05 kB</code><sup>+1% 📈</sup>
+                </td></tr></tbody>
+</table>
+
+<!-- Sticky Pull Request Comment -->
