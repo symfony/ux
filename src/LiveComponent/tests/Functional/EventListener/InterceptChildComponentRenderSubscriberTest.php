@@ -105,6 +105,27 @@ final class InterceptChildComponentRenderSubscriberTest extends KernelTestCase
             });
     }
 
+    public function testItKeepsTheCustomIdWhenFingerprintDoesNotMatch(): void
+    {
+        // the ids set in todo_list.html.twig, with fingerprints that do not match
+        $fingerprints = [
+            'todo-item-1' => 'wrong fingerprint',
+            'todo-item-2' => 'wrong fingerprint',
+            'todo-item-3' => 'wrong fingerprint',
+        ];
+
+        $this->browser()
+            ->visit($this->buildUrlForTodoListComponent($fingerprints, true))
+            ->assertSuccessful()
+            ->assertHtml()
+            ->assertElementCount('ul li', 3)
+            ->assertNotContains('todo item')
+            ->assertSeeElement('li#todo-item-1[data-live-preserve][data-live-props-updated-from-parent-value]')
+            ->assertSeeElement('li#todo-item-2[data-live-preserve][data-live-props-updated-from-parent-value]')
+            ->assertSeeElement('li#todo-item-3[data-live-preserve][data-live-props-updated-from-parent-value]')
+        ;
+    }
+
     public function testItUsesKeysToRenderChildrenLiveIds(): void
     {
         $fingerprintValues = array_values(self::$actualTodoItemFingerprints);
