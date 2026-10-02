@@ -387,6 +387,7 @@ export default class Component {
             ) {
                 const controls = { displayError: true };
                 this.valueStore.pushPendingPropsBackToDirty();
+                this.hooks.triggerHook('loading.state:finished', this.element);
                 this.hooks.triggerHook('response:error', backendResponse, controls);
 
                 if (controls.displayError) {

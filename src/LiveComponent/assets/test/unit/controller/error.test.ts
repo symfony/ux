@@ -120,4 +120,58 @@ describe('LiveController Error Handling', () => {
         const errorContainer = getErrorElement();
         expect(errorContainer).toBeNull();
     });
+
+    it('finishes the loading state when an error modal is displayed', async () => {
+        const test = await createTest(
+            {},
+            (data: any) => `
+            <div ${initComponent(data)}>
+                <button data-action="live#action" data-live-action-param="save" data-loading="addAttribute(disabled)">Save</button>
+            </div>
+        `
+        );
+
+        test.expectsAjaxCall()
+            .serverWillReturnCustomResponse(500, 'Error!')
+            .expectActionCalled('save')
+            .delayResponse(50);
+
+        const button = getByText(test.element, 'Save');
+        button.click();
+        await waitFor(() => expect(test.element).toHaveAttribute('aria-busy', 'true'));
+        expect(button).toBeDisabled();
+
+        await waitFor(() => expect(getErrorElement()).not.toBeNull());
+        expect(button).not.toBeDisabled();
+        expect(test.element).not.toHaveAttribute('aria-busy');
+    });
+
+    it('finishes the loading state when the error modal is disabled', async () => {
+        const test = await createTest(
+            {},
+            (data: any) => `
+            <div ${initComponent(data)}>
+                <button data-action="live#action" data-live-action-param="save" data-loading="addAttribute(disabled)">Save</button>
+            </div>
+        `
+        );
+
+        test.expectsAjaxCall()
+            .serverWillReturnCustomResponse(500, 'Error!')
+            .expectActionCalled('save')
+            .delayResponse(50);
+
+        test.component.on('response:error', (_backendResponse: BackendResponse, controls) => {
+            controls.displayError = false;
+        });
+
+        const button = getByText(test.element, 'Save');
+        button.click();
+        await waitFor(() => expect(test.element).toHaveAttribute('aria-busy', 'true'));
+        expect(button).toBeDisabled();
+
+        await waitFor(() => expect(button).not.toBeDisabled());
+        expect(test.element).not.toHaveAttribute('aria-busy');
+        expect(getErrorElement()).toBeNull();
+    });
 });
