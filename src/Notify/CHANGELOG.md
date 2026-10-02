@@ -2,7 +2,7 @@
 
 ## 3.5.1
 
--  Add support for MercureBundle ^0.5.0 and Mercure ^0.8
+- Add support for MercureBundle ^0.5.0 and Mercure ^0.8
 
 ## 3.5.0
 
