@@ -20,8 +20,6 @@ use Twig\Environment;
 use Twig\Error\RuntimeError;
 use Twig\Extension\AbstractExtension;
 
-trigger_deprecation('symfony/ux-turbo', '3.1', 'The "%s" class is deprecated since Symfony UX 3.1, use "%s" with turbo_stream_from() or the <twig:Turbo:Stream:From> Twig component instead. It will be removed in 4.0.', TurboStreamListenRenderer::class, MercureStreamSourceRenderer::class);
-
 /**
  * Renders the attributes to load the "mercure-turbo-stream" controller.
  *
