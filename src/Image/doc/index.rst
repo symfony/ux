@@ -6,7 +6,8 @@ to change, or even change drastically.
 
 Symfony UX Image renders responsive images in Symfony applications by
 delegating every transformation to a URL-based image provider, such as
-`Cloudflare`_ or `KeyCDN`_. It is part of `the Symfony UX initiative`_.
+`Cloudflare`_, `Cloudinary`_ or `KeyCDN`_. It is part of
+`the Symfony UX initiative`_.
 
 The package never decodes, resizes or encodes an image itself. Every
 transformation is expressed as a URL, built by whichever provider is
@@ -48,9 +49,9 @@ The ``<twig:ux:image>`` component renders a single image:
     <twig:ux:image src="/uploads/hero.jpg" alt="Hero" width="800" height="450" />
 
 ``src`` is the public URL path of the original image, as your application
-serves it. Every provider reads it the same way: Cloudflare and KeyCDN fetch it
-from your origin, and ``null://`` renders it as is. Switching providers
-therefore never changes your templates.
+serves it. Every provider reads it the same way: Cloudflare, Cloudinary and
+KeyCDN fetch it from your origin, and ``null://`` renders it as is.
+Switching providers therefore never changes your templates.
 
 For example, with ``UX_IMAGE_DSN=cloudflare://cdn.example.com``, this template:
 
@@ -281,12 +282,13 @@ available.
 Each bridge is only registered when its Composer package is actually
 installed. Install the one matching the scheme used in the DSN:
 
-============== ================================================ ===========================================
+============== ================================================ ===========================================================
 Scheme         Install                                          DSN example
-============== ================================================ ===========================================
+============== ================================================ ===========================================================
 ``keycdn``     ``composer require symfony/ux-keycdn-image``     ``keycdn://myzone.kxcdn.com``
 ``cloudflare`` ``composer require symfony/ux-cloudflare-image`` ``cloudflare://cdn.example.com``
-============== ================================================ ===========================================
+``cloudinary`` ``composer require symfony/ux-cloudinary-image`` ``cloudinary://my-cloud?origin=https://example.com``
+============== ================================================ ===========================================================
 
 See :ref:`Providers <image_providers>` for what each DSN option means and how
 transformation parameters map to that provider's own query string. A DSN
@@ -546,17 +548,16 @@ Parameter mapping
 Every ``ImageTransformation`` property maps to a provider-specific query
 parameter:
 
-=========================== ================== ==============
-``ImageTransformation``     `Cloudflare`_      `KeyCDN`_
-=========================== ================== ==============
-``width``                   ``width``          ``width``
-``height``                  ``height``         ``height``
-``format``                  ``format``         ``format``
-``quality``                 ``quality``        ``quality``
-``fit``: ``Fit::Cover``     ``fit=cover``      ``fit=cover``
-=========================== ================== ==============
-
-``Fit::Contain`` maps to ``fit=contain`` on every provider.
+=========================== ================== ================== ==============
+``ImageTransformation``     `Cloudflare`_      `Cloudinary`_      `KeyCDN`_
+=========================== ================== ================== ==============
+``width``                   ``width``          ``w``              ``width``
+``height``                  ``height``         ``h``              ``height``
+``format``                  ``format``         ``f``              ``format``
+``quality``                 ``quality``        ``q``              ``quality``
+``fit``: ``Fit::Cover``     ``fit=cover``      ``c_fill``         ``fit=cover``
+``fit``: ``Fit::Contain``   ``fit=contain``    ``c_fit``          ``fit=contain``
+=========================== ================== ================== ==============
 
 ``operations`` (see
 :ref:`Provider-specific operations <image_provider_operations>`) is merged
@@ -569,10 +570,12 @@ Supported formats and negotiation
 Provider      Supported formats                     Negotiates automatically?
 ============= ===================================== =========================
 `Cloudflare`_ ``avif``, ``webp``, ``jpeg``, ``png`` **Yes**
+`Cloudinary`_ ``avif``, ``webp``, ``jpeg``, ``png`` **Yes**
 `KeyCDN`_     ``webp``, ``jpeg``, ``png``           **No**
 ============= ===================================== =========================
 
-Cloudflare negotiates natively, through its own ``format=auto``. KeyCDN has
+Cloudflare and Cloudinary negotiate natively, through their own ``format=auto``
+and ``f_auto``. KeyCDN has
 no automatic format negotiation at all, and no AVIF support either: with it,
 ``ux_image()`` serves the last configured format KeyCDN supports, and
 ``ux_picture()`` is the way to offer WebP to the browsers that accept it (see
@@ -605,6 +608,62 @@ Extra operations, forwarded as-is: ``gravity``, ``dpr``, ``rotate``,
 ``onerror``, ``compression``. See `Cloudflare's own options reference`_ for
 what each one does.
 
+Cloudinary
+~~~~~~~~~~
+
+`Cloudinary`_ transforms images either from your own origin or from your
+Cloudinary media library.
+
+.. code-block:: terminal
+
+    $ composer require symfony/ux-cloudinary-image
+
+.. code-block:: bash
+
+    # .env.prod
+    UX_IMAGE_DSN=cloudinary://my-cloud?origin=https://example.com
+
+The host is your Cloudinary cloud name. The ``origin`` option picks how
+images are delivered:
+
+* With ``origin``, the provider uses `fetch delivery`_. ``origin`` is the base
+  URL your application serves the original images from, and every ``src`` is
+  appended to it. Cloudinary downloads each original from there, then
+  transforms and caches it. No upload to Cloudinary is needed.
+* Without ``origin`` (``cloudinary://my-cloud``), the provider uses upload
+  delivery, and ``src`` is the public ID of an image in your media library,
+  without its leading slash. To keep the same ``src`` as your application,
+  set up an `auto-upload mapping`_ from a folder to your origin: Cloudinary
+  then copies each original into the media library on the first request.
+
+An account can require every delivery URL to be signed, with the
+`Strict transformations`_ setting. Give the account's API secret as the
+``api_secret`` DSN option, and every generated URL then carries the matching
+``s--…--`` signature:
+
+.. code-block:: bash
+
+    # .env.prod
+    CLOUDINARY_API_SECRET="<override me>"
+    UX_IMAGE_DSN=cloudinary://my-cloud?origin=https://example.com&api_secret=${CLOUDINARY_API_SECRET}
+
+    # .env.prod.local
+    CLOUDINARY_API_SECRET=the-api-secret
+
+.. warning::
+
+    The API secret signs every URL, and it also grants full access to your
+    Cloudinary account through its API. Keep it out of the files you commit,
+    and store it the way you store your other secrets.
+
+Extra operations, forwarded as-is with Cloudinary's own short names: ``a``
+(angle), ``b`` (background), ``bo`` (border), ``co`` (color), ``d`` (default
+image), ``dpr``, ``e`` (effect), ``fl`` (flags), ``g`` (gravity), ``o``
+(opacity), ``r`` (radius), ``t`` (named transformation), ``x``, ``y``, ``z``
+(zoom). A value can contain a ``:``, like ``{e: 'sharpen:100'}``, but not a
+``/`` or a ``,``. See `Cloudinary's own transformation reference`_ for what
+each one does.
+
 KeyCDN
 ~~~~~~
 
@@ -636,6 +695,10 @@ distinct URL is one more image the provider generates and caches:
 * Cloudflare only transforms images from the zone that serves the
   transformations by default. Keep it that way unless you need other origins,
   see the source origins settings of `Cloudflare Image Resizing`_.
+* Cloudinary can require signed URLs on the account, with
+  `Strict transformations`_. Turn it on, and give the API secret to the
+  provider with the ``api_secret`` DSN option: the account then serves only
+  the URLs your application generated.
 * KeyCDN can require a signed token on the zone, with `Secure Token`_. The
   KeyCDN provider does not generate tokens yet, so it cannot be used with a
   zone that requires them.
@@ -674,6 +737,11 @@ The package supports PHP 8.4 or later and Symfony 7.4 or 8.x.
 .. _`Cloudflare Image Resizing`: https://developers.cloudflare.com/images/transform-images/
 .. _`Cloudflare's own options reference`: https://developers.cloudflare.com/images/transform-images/transform-via-url/#options
 .. _`Enable transformations`: https://developers.cloudflare.com/images/transform-images/#enable-transformations-via-dashboard
+.. _`Cloudinary`: https://github.com/symfony/ux/blob/3.x/src/Image/src/Bridge/Cloudinary/README.md
+.. _`fetch delivery`: https://cloudinary.com/documentation/fetch_remote_images
+.. _`auto-upload mapping`: https://cloudinary.com/documentation/migration#lazy_migration_with_auto_upload
+.. _`Cloudinary's own transformation reference`: https://cloudinary.com/documentation/transformation_reference
+.. _`Strict transformations`: https://cloudinary.com/documentation/control_access_to_media#strict_transformations
 .. _`KeyCDN`: https://github.com/symfony/ux/blob/3.x/src/Image/src/Bridge/KeyCdn/README.md
 .. _`KeyCDN Image Processing`: https://www.keycdn.com/support/image-processing
 .. _`KeyCDN's own parameter reference`: https://www.keycdn.com/support/image-processing
