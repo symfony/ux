@@ -12,6 +12,8 @@
 namespace Symfony\UX\LiveComponent;
 
 /**
+ * Emits component events and dispatches browser events from a live action.
+ *
  * @author Ryan Weaver <ryan@symfonycasts.com>
  */
 final class LiveResponder

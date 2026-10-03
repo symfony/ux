@@ -16,6 +16,8 @@ use Twig\Environment;
 use Twig\Loader\ArrayLoader;
 
 /**
+ * Creates the HTML attributes that connect elements to Stimulus controllers.
+ *
  * @author Ryan Weaver <ryan@symfonycasts.com>
  */
 final class StimulusHelper
