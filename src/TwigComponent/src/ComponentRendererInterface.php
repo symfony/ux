@@ -14,6 +14,8 @@ namespace Symfony\UX\TwigComponent;
 use Symfony\UX\TwigComponent\Event\PreRenderEvent;
 
 /**
+ * Creates and renders Twig components by name.
+ *
  * @method ?string        preCreateForRender(string $name, array $props = [])
  * @method PreRenderEvent startEmbeddedComponentRender(string $name, array $props, array $context, string $hostTemplateName, int $index)
  * @method void           finishEmbeddedComponentRender()

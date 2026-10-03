@@ -14,6 +14,8 @@ namespace Symfony\UX\LiveComponent;
 use Symfony\Component\Validator\ConstraintViolation;
 
 /**
+ * Validates the properties of a live component.
+ *
  * @author Ryan Weaver <ryan@symfonycasts.com>
  */
 interface ComponentValidatorInterface
