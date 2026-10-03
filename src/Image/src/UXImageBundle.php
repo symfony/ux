@@ -18,6 +18,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
 use Symfony\UX\Image\Bridge\Cloudflare\CloudflareProviderFactory;
+use Symfony\UX\Image\Bridge\Imgix\ImgixProviderFactory;
 use Symfony\UX\Image\Bridge\KeyCdn\KeyCdnProviderFactory;
 use Symfony\UX\Image\DependencyInjection\ProviderNamesPass;
 use Symfony\UX\Image\Provider\NullProviderFactory;
@@ -39,6 +40,7 @@ final class UXImageBundle extends AbstractBundle
     public static array $bridges = [
         'cloudflare' => ['factory' => CloudflareProviderFactory::class],
         'keycdn' => ['factory' => KeyCdnProviderFactory::class],
+        'imgix' => ['factory' => ImgixProviderFactory::class],
     ];
 
     public function getPath(): string
