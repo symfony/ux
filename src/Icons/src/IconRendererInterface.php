@@ -14,6 +14,8 @@ namespace Symfony\UX\Icons;
 use Symfony\UX\Icons\Exception\IconNotFoundException;
 
 /**
+ * Renders an icon by its name as an SVG string.
+ *
  * @author Simon André <smn.andre@gmail.com>
  * @author Kevin Bond <kevinbond@gmail.com>
  */
