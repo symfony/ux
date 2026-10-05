@@ -100,26 +100,26 @@ final class ComponentDocScanner
     private static function blockNameAt(array $tokens, int $i): ?string
     {
         $value = static fn (int $k): string => isset($tokens[$k]) ? (string) $tokens[$k]->getValue() : '';
-        $isName = static fn (int $k): bool => isset($tokens[$k]) && Token::NAME_TYPE === $tokens[$k]->getType();
+        $isName = static fn (int $k): bool => isset($tokens[$k]) && $tokens[$k]->test(Token::NAME_TYPE);
 
-        $type = $tokens[$i]->getType();
-        if (Token::BLOCK_START_TYPE !== $type && Token::VAR_START_TYPE !== $type) {
+        $isBlockTag = $tokens[$i]->test(Token::BLOCK_START_TYPE);
+        if (!$isBlockTag && !$tokens[$i]->test(Token::VAR_START_TYPE)) {
             return null;
         }
 
         // {% block x %}
-        if (Token::BLOCK_START_TYPE === $type && 'block' === $value($i + 1) && $isName($i + 2)) {
+        if ($isBlockTag && 'block' === $value($i + 1) && $isName($i + 2)) {
             return $value($i + 2);
         }
 
         // The first `block('x')` / `block(outerBlocks.x)` call within this statement.
-        $endType = Token::BLOCK_START_TYPE === $type ? Token::BLOCK_END_TYPE : Token::VAR_END_TYPE;
-        for ($k = $i + 1, $n = \count($tokens); $k < $n && $endType !== $tokens[$k]->getType(); ++$k) {
+        $endType = $isBlockTag ? Token::BLOCK_END_TYPE : Token::VAR_END_TYPE;
+        for ($k = $i + 1, $n = \count($tokens); $k < $n && !$tokens[$k]->test($endType); ++$k) {
             if ('block' === $value($k) && '(' === $value($k + 1)) {
                 if ('outerBlocks' === $value($k + 2) && '.' === $value($k + 3) && $isName($k + 4)) {
                     return $value($k + 4);
                 }
-                if (isset($tokens[$k + 2]) && Token::STRING_TYPE === $tokens[$k + 2]->getType()) {
+                if (isset($tokens[$k + 2]) && $tokens[$k + 2]->test(Token::STRING_TYPE)) {
                     return $value($k + 2);
                 }
             }
