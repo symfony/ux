@@ -15,6 +15,8 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Security\Core\User\InMemoryUser;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\UX\LiveComponent\Controller\BatchActionController;
 use Symfony\UX\LiveComponent\Tests\LiveComponentTestHelper;
 use Zenstruck\Browser\KernelBrowser;
@@ -333,5 +335,105 @@ final class BatchActionControllerTest extends KernelTestCase
                 ]);
             })
         ;
+    }
+
+    public function testRejectsEmptyBatch(): void
+    {
+        $this->browser()
+            ->expectException(BadRequestHttpException::class, 'No actions in batch.')
+            ->post('/_components/with_actions/_batch', $this->liveRequestBody('with_actions', ['actions' => []]))
+        ;
+    }
+
+    public function testEmptyBatchDoesNotRenderComponentWithClassLevelIsGrantedForAnonymousUser(): void
+    {
+        if (!class_exists(IsGranted::class)) {
+            $this->markTestSkipped('The security attributes are not available.');
+        }
+
+        $body = $this->liveRequestBody('with_admin_only_class', ['actions' => []]);
+
+        $this->browser()
+            ->post('/_components/with_admin_only_class', $body)
+            ->assertStatus(401)
+            ->post('/_components/with_admin_only_class/_batch', $body)
+            ->assertStatus(400)
+        ;
+    }
+
+    public function testEmptyBatchDoesNotRenderComponentWithClassLevelIsGrantedForUserWithoutRole(): void
+    {
+        if (!class_exists(IsGranted::class)) {
+            $this->markTestSkipped('The security attributes are not available.');
+        }
+
+        $body = $this->liveRequestBody('with_admin_only_class', ['actions' => []]);
+
+        $this->browser()
+            ->actingAs(new InMemoryUser('kevin', 'pass', ['ROLE_USER']))
+            ->post('/_components/with_admin_only_class', $body)
+            ->assertStatus(403)
+            ->post('/_components/with_admin_only_class/_batch', $body)
+            ->assertStatus(400)
+        ;
+    }
+
+    public function testEmptyBatchDoesNotRenderComponentWithIsGrantedOnDefaultAction(): void
+    {
+        if (!class_exists(IsGranted::class)) {
+            $this->markTestSkipped('The security attributes are not available.');
+        }
+
+        $body = $this->liveRequestBody('with_admin_only_default_action', ['actions' => []]);
+
+        $this->browser()
+            ->post('/_components/with_admin_only_default_action', $body)
+            ->assertStatus(401)
+            ->post('/_components/with_admin_only_default_action/_batch', $body)
+            ->assertStatus(400)
+        ;
+    }
+
+    public function testEmptyBatchDoesNotRenderComponentWithSecurity(): void
+    {
+        if (!class_exists(IsGranted::class)) {
+            $this->markTestSkipped('The security attributes are not available.');
+        }
+
+        $body = $this->liveRequestBody('with_security', ['actions' => []]);
+
+        $this->browser()
+            ->post('/_components/with_security', $body)
+            ->assertStatus(401)
+            ->post('/_components/with_security/_batch', $body)
+            ->assertStatus(400)
+        ;
+    }
+
+    public function testBatchChecksIsGrantedForEachAction(): void
+    {
+        if (!class_exists(IsGranted::class)) {
+            $this->markTestSkipped('The security attributes are not available.');
+        }
+
+        $this->browser()
+            ->actingAs(new InMemoryUser('kevin', 'pass', ['ROLE_USER']))
+            ->post('/_components/with_admin_only_class/_batch', $this->liveRequestBody('with_admin_only_class', [
+                'actions' => [['name' => 'noop'], ['name' => 'noop']],
+            ]))
+            ->assertStatus(403)
+            ->post('/_components/with_security/_batch', $this->liveRequestBody('with_security', [
+                'actions' => [['name' => 'setUsername'], ['name' => 'setUsername']],
+            ]))
+            ->assertSuccessful()
+            ->assertSee('Username: kevin')
+        ;
+    }
+
+    private function liveRequestBody(string $componentName, array $data): array
+    {
+        $dehydrated = $this->dehydrateComponent($this->mountComponent($componentName));
+
+        return ['body' => ['data' => json_encode(['props' => $dehydrated->getProps(), ...$data])]];
     }
 }
