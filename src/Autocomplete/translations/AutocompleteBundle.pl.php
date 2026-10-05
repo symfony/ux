@@ -10,8 +10,8 @@
  */
 
 return [
-    'Loading more results...' => 'Wczytywanie więcej wyników...',
+    'Loading more results...' => 'Wczytywanie kolejnych wyników...',
     'No results found' => 'Brak wyników',
-    'No more results' => 'Brak więcej wyników',
+    'No more results' => 'Brak kolejnych wyników',
     'Add %placeholder%...' => 'Dodaj %placeholder%...',
 ];
