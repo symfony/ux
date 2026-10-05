@@ -66,8 +66,11 @@ if [[ -n "$kit" ]]; then
 fi
 
 # Each screenshot test declares the file it compares in a "screenshot" annotation.
-expected=$(pnpm exec playwright test "${playwright_args[@]}" --list --reporter=json \
-    | jq -r '.. | objects | select(has("annotations")) | .annotations[] | select(.type == "screenshot") | "src/Toolkit/kits/" + .description' \
+# Read from a file, not stdout: pnpm prints its install report there when the lockfile changed.
+test_list=$(mktemp)
+trap 'rm -f "$test_list"' EXIT
+PLAYWRIGHT_JSON_OUTPUT_FILE="$test_list" pnpm exec playwright test "${playwright_args[@]}" --list --reporter=json
+expected=$(jq -r '.. | objects | select(has("annotations")) | .annotations[] | select(.type == "screenshot") | "src/Toolkit/kits/" + .description' "$test_list" \
     | sort -u)
 if [[ -z "$expected" ]]; then
     echo "No screenshot test found for ${scope:-every kit}." >&2
