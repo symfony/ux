@@ -70,6 +70,31 @@ class IconRendererTest extends TestCase
         $this->assertSame('<svg viewBox="0 0 24 24" class="icon" id="FooBar" aria-hidden="true"><path d="M0 0L12 12"/></svg>', $svg);
     }
 
+    public function testRenderIconRendersTheSameIconOnlyOnceUntilReset(): void
+    {
+        $registry = $this->createMock(IconRegistryInterface::class);
+        $registry->expects($this->exactly(3))->method('get')->with('foo')->willReturn(new Icon('<path d="M0 0L12 12"/>'));
+        $iconRenderer = new IconRenderer($registry);
+
+        $svg = $iconRenderer->renderIcon('foo', ['class' => 'icon']);
+        $this->assertSame('<svg class="icon" aria-hidden="true"><path d="M0 0L12 12"/></svg>', $svg);
+        $this->assertSame($svg, $iconRenderer->renderIcon('foo', ['class' => 'icon']));
+        $this->assertSame('<svg class="other" aria-hidden="true"><path d="M0 0L12 12"/></svg>', $iconRenderer->renderIcon('foo', ['class' => 'other']));
+
+        $iconRenderer->reset();
+
+        $this->assertSame($svg, $iconRenderer->renderIcon('foo', ['class' => 'icon']));
+    }
+
+    public function testRenderIconDoesNotMixUpAttributeValuesOfDifferentTypes(): void
+    {
+        $registry = $this->createRegistry(['foo' => '<path d="M0 0L12 12"/>']);
+        $iconRenderer = new IconRenderer($registry);
+
+        $this->assertSame('<svg hidden aria-hidden="true"><path d="M0 0L12 12"/></svg>', $iconRenderer->renderIcon('foo', ['hidden' => true]));
+        $this->assertSame('<svg hidden="1" aria-hidden="true"><path d="M0 0L12 12"/></svg>', $iconRenderer->renderIcon('foo', ['hidden' => '1']));
+    }
+
     public function testRenderIconWithDefaultAttributes(): void
     {
         $registry = $this->createRegistry([

@@ -11,13 +11,20 @@
 
 namespace Symfony\UX\Icons;
 
+use Symfony\Contracts\Service\ResetInterface;
+
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
  *
  * @internal
  */
-final class IconRenderer implements IconRendererInterface
+final class IconRenderer implements IconRendererInterface, ResetInterface
 {
+    private const MAX_RENDERED = 1000;
+
+    /** @var array<string, string> */
+    private array $rendered = [];
+
     /**
      * @param array<string, mixed>                               $defaultIconAttributes
      * @param array<string, string>                              $iconAliases
@@ -43,6 +50,44 @@ final class IconRenderer implements IconRendererInterface
      *   Icon file < Renderer configuration < Renderer invocation
      */
     public function renderIcon(string $name, array $attributes = []): string
+    {
+        if (null === $key = self::cacheKey($name, $attributes)) {
+            return $this->doRenderIcon($name, $attributes);
+        }
+
+        if (isset($this->rendered[$key])) {
+            return $this->rendered[$key];
+        }
+
+        if (\count($this->rendered) >= self::MAX_RENDERED) {
+            $this->rendered = [];
+        }
+
+        return $this->rendered[$key] = $this->doRenderIcon($name, $attributes);
+    }
+
+    public function reset(): void
+    {
+        $this->rendered = [];
+    }
+
+    /**
+     * Pages render the same few icons over and over, and the HTML only depends on the name and the attributes.
+     *
+     * Returns null when an attribute value is not a scalar: Icon::withAttributes() rejects it anyway.
+     */
+    private static function cacheKey(string $name, array $attributes): ?string
+    {
+        foreach ($attributes as $value) {
+            if (!\is_scalar($value)) {
+                return null;
+            }
+        }
+
+        return serialize([$name, $attributes]);
+    }
+
+    private function doRenderIcon(string $name, array $attributes): string
     {
         $iconName = $this->iconAliases[$name] ?? $name;
 
