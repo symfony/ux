@@ -126,8 +126,8 @@ final class IcsBuilder
 
     /**
      * A region time zone is serialized as local time anchored with `;TZID=`, so a recurring
-     * local time (e.g. 09:00) stays fixed across DST instead of drifting by an hour. UTC and
-     * fixed offsets carry no DST, so the lossless `...Z` form is kept.
+     * local time (e.g. 09:00) stays fixed across DST instead of drifting by an hour. UTC,
+     * abbreviations and fixed offsets carry no DST, so the lossless `...Z` form is kept.
      */
     private function formatTimedLine(string $property, \DateTimeImmutable $dt): string
     {
@@ -174,10 +174,8 @@ final class IcsBuilder
 
     private function isRegionZone(\DateTimeZone $tz): bool
     {
-        $name = $tz->getName();
-
         // UTC and fixed numeric offsets (e.g. "+02:00") carry no DST, so no VTIMEZONE is needed.
-        return 'UTC' !== $name && !preg_match('/^[+-]\d{2}:\d{2}$/', $name);
+        return 'UTC' !== $tz->getName() && false !== $tz->getTransitions(0, 1);
     }
 
     /**
