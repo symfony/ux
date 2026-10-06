@@ -1,0 +1,15 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2026-10-05T06:01:31Z
+
+Thanks for this, it's a nice addition to the Shadcn kit. I reworked the branch before merging:
+
+- Rebased on `3.x` and squashed into one commit.
+- Fixed a bug where moving the `Toaster` element in the DOM (Stimulus disconnects then reconnects it) stopped toasts from auto-dismissing. Timers now pause on disconnect and resume on connect, the same fix `sonner` got on `3.x`.
+- Toasts beyond `limit` are now `inert`, so Tab no longer reaches their buttons while they're hidden.
+- The viewport is now a `region` landmark with an accessible name, from a new `label` prop on `Toaster` (default `Notifications`), like Base UI and the `sonner` recipe.
+- Escape now closes the toast that holds the focus, as in Base UI.
+- `toast:close` now carries a `reason` (`action`, `close`, `escape`, `swipe` or `timeout`), so an app can react to the "Undo" action.
+- `toast.promise()` built its ids from `Date.now()`, so two calls in the same millisecond ended up as one toast. Ids now come from a counter.
+- `data-toast-part` is gone: since the `data-slot` fix for `Button` on `3.x`, the controller finds the action by `[data-slot="toast-action"]`.
+- Each fix comes with a Playwright test.
