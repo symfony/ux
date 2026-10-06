@@ -1,0 +1,9 @@
+<div
+    data-slot="toast-title"
+    {{ attributes.defaults({
+        class: 'text-sm font-medium'|tailwind_classes,
+    }) }}
+>
+    {##- The toast title. -#}
+    {%- block content %}{% endblock -%}
+</div>
