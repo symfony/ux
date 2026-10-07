@@ -136,9 +136,8 @@ final class ComponentRenderer implements ComponentRendererInterface, ResetInterf
             ...$classProps,
             $metadata->getAttributesVar() => $mounted->getAttributes(),
         ];
-        $event = new PreRenderEvent($mounted, $metadata, $variables);
-
         if (null === $this->introspectableDispatcher || $this->introspectableDispatcher->hasListeners(PreRenderEvent::class)) {
+            $event = new PreRenderEvent($mounted, $metadata, $variables);
             $this->dispatcher->dispatch($event);
             $variables = $event->getVariables();
         }
@@ -154,9 +153,8 @@ final class ComponentRenderer implements ComponentRendererInterface, ResetInterf
         // as they override initial context values
         $variables['__context'] = [] === $context ? [] : array_diff_key($context, $inputProps, $classProps);
 
-        $event->setVariables($variables);
-
-        return $event;
+        // Without listeners, creating the event once the variables are complete spares a copy of them
+        return isset($event) ? $event->setVariables($variables) : new PreRenderEvent($mounted, $metadata, $variables);
     }
 
     public function reset(): void
