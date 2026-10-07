@@ -33,7 +33,7 @@ final class BlockStack
      */
     private static array $templateIndexStack = [];
 
-    public function convert(array $blocks, int $targetEmbeddedTemplateIndex): array
+    public function convert(array $blocks, int $targetEmbeddedTemplateIndex, ?Template $caller = null): array
     {
         $newBlocks = [];
         $hostEmbeddedTemplateIndex = null;
@@ -47,7 +47,7 @@ final class BlockStack
             // Determine the location of the block where it is defined in the host Template.
             // Each component has its own embedded template. That template's index uniquely
             // identifies the block definition.
-            $hostEmbeddedTemplateIndex ??= $this->findHostEmbeddedTemplateIndex();
+            $hostEmbeddedTemplateIndex ??= $this->findHostEmbeddedTemplateIndex($caller);
 
             // Change the name of outer blocks to something unique so blocks of nested components aren't overridden,
             // which otherwise might cause a recursion loop when nesting components.
@@ -71,8 +71,13 @@ final class BlockStack
         return $this->stack[$name][$callingEmbeddedTemplateIndex][$hostEmbeddedTemplateIndex] ?? self::OUTER_BLOCK_FALLBACK_NAME;
     }
 
-    private function findHostEmbeddedTemplateIndex(): int
+    private function findHostEmbeddedTemplateIndex(?Template $caller): int
     {
+        // The template calling convert() is the first one the call stack scan below would find
+        if (null !== $caller && $templateIndex = self::getTemplateIndexFromTemplateClassname($caller::class)) {
+            return $templateIndex;
+        }
+
         $backtrace = debug_backtrace(\DEBUG_BACKTRACE_IGNORE_ARGS | \DEBUG_BACKTRACE_PROVIDE_OBJECT);
 
         foreach ($backtrace as $trace) {

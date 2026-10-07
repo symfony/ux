@@ -180,7 +180,7 @@ final class ComponentNode extends Node implements NodeOutputInterface
 
         $compiler->write('$embeddedBlocks = $embeddedContext["outerBlocks"]->convert($blocks, ')
             ->raw($this->getAttribute('embedded_index'))
-            ->raw(");\n");
+            ->raw(", \$this);\n");
 
         /*
          * Block 4) Render the component template
