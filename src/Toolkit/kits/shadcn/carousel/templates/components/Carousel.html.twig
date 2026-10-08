@@ -18,7 +18,6 @@
 <div
     role="region"
     aria-roledescription="carousel"
-    aria-label="{{ label }}"
     tabindex="0"
     data-slot="carousel"
     data-orientation="{{ orientation }}"
@@ -26,6 +25,7 @@
     data-carousel-options-value="{{ _carousel_options|json_encode }}"
     data-carousel-autoplay-value="{{ autoplay }}"
     {{ attributes.defaults({
+        'aria-label': label,
         class: 'relative outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50'|tailwind_classes,
         'data-controller': 'carousel',
         'data-action': 'keydown->carousel#handleKeydown'|html_attr_type('sst'),

@@ -1,0 +1,7 @@
+<div
+    data-slot="widget"
+    class="{{ ('flex ' ~ attributes.render('class'))|tailwind_merge }}"
+    {{ attributes.defaults({
+        'aria-label': 'Widget',
+    }) }}
+></div>

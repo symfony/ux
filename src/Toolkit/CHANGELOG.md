@@ -38,6 +38,7 @@
 - [Shadcn] Focus the input of `input-group` when one of its addons is clicked, through a new `input-group` Stimulus controller
 - [Shadcn] Fix `InputGroup:Button` stacking the `Button` size classes on top of its own
 - [Shadcn] Fix a `data-slot` passed to `Button`, `Input`, `Label`, and other components being ignored, leaving `input-group` without its focus ring
+- [Shadcn] Fix `breadcrumb`, `calendar`, `carousel`, `input-otp`, `navigation-menu`, `pagination`, `questionnaire` and `sidebar` ignoring a caller's `aria-label`, keeping the hard-coded English default
 - [Shadcn] Rewrite `select` to match the upstream Shadcn Select, as `Select:*` sub-components; use `native-select` for a native `<select>`
 - Show a diff before `ux:install` asks to overwrite an existing file, and skip the question when the file already matches the recipe
 - [Shadcn] Add `toast` recipe

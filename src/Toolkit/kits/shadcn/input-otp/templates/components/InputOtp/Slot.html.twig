@@ -13,8 +13,8 @@
 <input
     data-slot="input-otp-slot"
     data-input-otp-target="slot"
-    {% if label %}aria-label="{{ label }}"{% endif %}
     {{ attributes.defaults({
+        'aria-label': label,
         class: 'relative flex h-10 w-10 items-center justify-center border-y border-e border-input bg-transparent text-center text-sm shadow-xs transition-all outline-none focus-visible:z-10 focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/40 dark:aria-invalid:border-destructive/60 first:rounded-s-md first:border-s last:rounded-e-md'|tailwind_classes,
         'data-action': 'input->input-otp#onInput keydown->input-otp#onKeyDown paste->input-otp#onPaste',
         type: 'text',

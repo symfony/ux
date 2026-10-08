@@ -8,10 +8,10 @@
 -%}
 <nav
     data-slot="navigation-menu"
-    aria-label="{{ ariaLabel }}"
     data-navigation-menu-open-delay-value="{{ openDelay }}"
     data-navigation-menu-close-delay-value="{{ closeDelay }}"
     {{ attributes.defaults({
+        'aria-label': ariaLabel,
         class: 'relative flex max-w-max flex-1 items-center justify-center'|tailwind_classes,
         'data-controller': 'navigation-menu',
         'data-action': 'mouseleave->navigation-menu#scheduleClose focusin->navigation-menu#onFocusIn focusout->navigation-menu#onFocusOut keydown->navigation-menu#onKeyDown',
