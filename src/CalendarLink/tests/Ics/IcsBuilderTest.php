@@ -131,18 +131,29 @@ final class IcsBuilderTest extends TestCase
         $this->assertStringContainsString("DTEND;VALUE=DATE:20260516\r\n", $ics);
     }
 
-    public function testTimedEventInNamedZoneUsesTzidInsteadOfUtc(): void
+    /**
+     * @return iterable<string, array{string}>
+     */
+    public static function regionZoneProvider(): iterable
+    {
+        yield 'with DST' => ['Europe/Paris'];
+        yield 'without DST' => ['Asia/Kolkata'];
+    }
+
+    #[DataProvider('regionZoneProvider')]
+    public function testTimedEventInRegionZoneUsesTzid(string $timezone): void
     {
         $event = new CalendarEvent(
             title: 'Standup',
-            start: new \DateTimeImmutable('2026-07-01 09:00', new \DateTimeZone('Europe/Paris')),
-            end: new \DateTimeImmutable('2026-07-01 09:30', new \DateTimeZone('Europe/Paris')),
+            start: new \DateTimeImmutable('2026-07-01 09:00', new \DateTimeZone($timezone)),
+            end: new \DateTimeImmutable('2026-07-01 09:30', new \DateTimeZone($timezone)),
         );
 
         $ics = $this->builder->build($event);
 
-        $this->assertStringContainsString("DTSTART;TZID=Europe/Paris:20260701T090000\r\n", $ics);
-        $this->assertStringContainsString("DTEND;TZID=Europe/Paris:20260701T093000\r\n", $ics);
+        $this->assertStringContainsString("BEGIN:VTIMEZONE\r\nTZID:$timezone\r\n", $ics);
+        $this->assertStringContainsString("DTSTART;TZID=$timezone:20260701T090000\r\n", $ics);
+        $this->assertStringContainsString("DTEND;TZID=$timezone:20260701T093000\r\n", $ics);
     }
 
     public function testNamedZoneEmitsVtimezoneWithDstRules(): void
@@ -165,18 +176,56 @@ final class IcsBuilderTest extends TestCase
         $this->assertStringContainsString("RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU\r\n", $ics);
     }
 
-    public function testUtcEventDoesNotEmitVtimezone(): void
+    public function testZoneWithoutDstEmitsSingleFixedObservance(): void
     {
         $event = new CalendarEvent(
-            title: 'Demo',
-            start: new \DateTimeImmutable('2026-05-14 09:00', new \DateTimeZone('UTC')),
-            end: new \DateTimeImmutable('2026-05-14 10:00', new \DateTimeZone('UTC')),
+            title: 'Standup',
+            start: new \DateTimeImmutable('2026-07-01 09:00', new \DateTimeZone('Asia/Kolkata')),
+            end: new \DateTimeImmutable('2026-07-01 09:30', new \DateTimeZone('Asia/Kolkata')),
         );
 
         $ics = $this->builder->build($event);
 
+        $this->assertStringContainsString("BEGIN:STANDARD\r\n", $ics);
+        $this->assertStringContainsString("TZOFFSETFROM:+0530\r\nTZOFFSETTO:+0530\r\n", $ics);
+        $this->assertStringNotContainsString('BEGIN:DAYLIGHT', $ics);
+        $this->assertStringNotContainsString('RRULE', $ics);
+    }
+
+    /**
+     * @return iterable<string, array{string, string}>
+     */
+    public static function fixedZoneProvider(): iterable
+    {
+        yield 'ISO timestamp ending in Z' => ['Z', '20260514T090000Z'];
+        yield 'UTC' => [' UTC', '20260514T090000Z'];
+        yield 'zero offset' => ['+00:00', '20260514T090000Z'];
+        yield 'positive offset' => ['+05:30', '20260514T033000Z'];
+        yield 'negative offset' => ['-04:00', '20260514T130000Z'];
+        yield 'offset with seconds' => ['+01:23:45', '20260514T073615Z'];
+        yield 'GMT abbreviation' => [' GMT', '20260514T090000Z'];
+        yield 'standard time abbreviation' => [' EST', '20260514T140000Z'];
+        yield 'daylight time abbreviation' => [' EDT', '20260514T130000Z'];
+    }
+
+    #[DataProvider('fixedZoneProvider')]
+    public function testTimedEventInFixedZoneUsesUtc(string $timezone, string $expectedStart): void
+    {
+        $event = new CalendarEvent(
+            title: 'Demo',
+            start: new \DateTimeImmutable('2026-05-14T09:00:00'.$timezone),
+            end: new \DateTimeImmutable('2026-05-14T10:00:00'.$timezone),
+        );
+        $expectedEnd = \DateTimeImmutable::createFromFormat('Ymd\THis\Z', $expectedStart, new \DateTimeZone('UTC'))
+            ->modify('+1 hour')
+            ->format('Ymd\THis\Z');
+
+        $ics = $this->builder->build($event);
+
         $this->assertStringNotContainsString('BEGIN:VTIMEZONE', $ics);
-        $this->assertStringContainsString("DTSTART:20260514T090000Z\r\n", $ics);
+        $this->assertStringNotContainsString('TZID', $ics);
+        $this->assertStringContainsString("DTSTART:$expectedStart\r\n", $ics);
+        $this->assertStringContainsString("DTEND:$expectedEnd\r\n", $ics);
     }
 
     public function testTextEscaping(): void
