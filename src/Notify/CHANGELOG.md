@@ -2,7 +2,8 @@
 
 ## 3.6.0
 
-- Add support for MercureBundle ^0.5 and Mercure ^0.8
+- Add support for MercureBundle 0.5 and 0.6
+- Support the Mercure protocol 1.0, which MercureBundle 0.6 makes the default: the Stimulus controller takes a `protocolVersion` value, and subscribes with the `match` query parameter instead of `topic`
 
 ## 3.5.0
 

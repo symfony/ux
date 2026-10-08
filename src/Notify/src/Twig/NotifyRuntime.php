@@ -12,6 +12,7 @@
 namespace Symfony\UX\Notify\Twig;
 
 use Symfony\Component\Mercure\HubInterface;
+use Symfony\Component\Mercure\ProtocolVersion;
 use Symfony\UX\StimulusBundle\Helper\StimulusHelper;
 use Twig\Extension\RuntimeExtensionInterface;
 
@@ -34,7 +35,14 @@ final class NotifyRuntime implements RuntimeExtensionInterface
         if (null !== ($customController = $options['data-controller'] ?? null)) {
             $controllers[$customController] = [];
         }
-        $controllers['@symfony/ux-notify/notify'] = ['topics' => $topics, 'hub' => $this->hub->getPublicUrl()];
+        $values = ['topics' => $topics, 'hub' => $this->hub->getPublicUrl()];
+
+        // The controller subscribes with the "topic" query parameter of the protocol 0.x, and with "match" on a 1.0 hub.
+        if ($this->speaksProtocolV1()) {
+            $values['protocolVersion'] = ProtocolVersion::V1->value;
+        }
+
+        $controllers['@symfony/ux-notify/notify'] = $values;
 
         $stimulusAttributes = $this->stimulusHelper->createStimulusAttributes();
         foreach ($controllers as $name => $controllerValues) {
@@ -42,5 +50,11 @@ final class NotifyRuntime implements RuntimeExtensionInterface
         }
 
         return trim(\sprintf('<div %s></div>', $stimulusAttributes));
+    }
+
+    private function speaksProtocolV1(): bool
+    {
+        return enum_exists(ProtocolVersion::class)
+            && ProtocolVersion::V1 === $this->hub->getProtocolVersion();
     }
 }

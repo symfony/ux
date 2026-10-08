@@ -134,6 +134,16 @@ Then in your render call, add your controller as an HTML attribute:
 
     {{ stream_notifications(options = {'data-controller': 'mynotify'}) }}
 
+Mercure protocol version
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+Notify speaks the Mercure protocol of the hub it uses, as set by MercureBundle's
+``protocol_version`` option. The Stimulus controller subscribes with the ``topic``
+query parameter on a ``0.x`` hub, and with ``match`` on a ``1.0`` hub.
+
+MercureBundle 0.6 and Mercure 0.9 made ``1.0`` the default. On an older version, or
+on a hub pinned to ``protocol_version: 0.x``, nothing changes.
+
 Using another Mercure hub
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 

@@ -16,9 +16,11 @@ export default class extends Controller {
     static values = {
         hub: String,
         topics: Array,
+        protocolVersion: { type: String, default: '0.x' },
     };
     declare hubValue: string;
     declare topicsValue: Array<string>;
+    declare protocolVersionValue: string;
     declare readonly hasHubValue: boolean;
     declare readonly hasTopicsValue: boolean;
 
@@ -33,9 +35,11 @@ export default class extends Controller {
 
         if (errorMessages.length) throw new Error(errorMessages.join(' '));
 
+        const parameter = '1.0' === this.protocolVersionValue ? 'match' : 'topic';
+
         this.eventSources = this.topicsValue.map((topic) => {
             const u = new URL(this.hubValue);
-            u.searchParams.append('topic', topic);
+            u.searchParams.append(parameter, topic);
 
             return new EventSource(u);
         });

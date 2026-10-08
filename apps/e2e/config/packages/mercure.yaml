@@ -3,6 +3,8 @@ mercure:
         default:
             url: '%env(MERCURE_URL)%'
             public_url: '%env(MERCURE_PUBLIC_URL)%'
+            # The hub in compose.yaml speaks the Mercure protocol 0.x, which MercureBundle 0.6 no longer defaults to.
+            protocol_version: '0.x'
             jwt:
                 secret: '%env(MERCURE_JWT_SECRET)%'
                 publish: '*'

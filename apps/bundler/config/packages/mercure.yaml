@@ -3,6 +3,8 @@ mercure:
         default:
             url: '%env(MERCURE_URL)%'
             public_url: '%env(MERCURE_PUBLIC_URL)%'
+            # This app talks to no Mercure hub; MercureBundle 0.6 would otherwise default to the protocol 1.0 and require RFC 9068 claims.
+            protocol_version: '0.x'
             jwt:
                 secret: '%env(MERCURE_JWT_SECRET)%'
                 publish: '*'
