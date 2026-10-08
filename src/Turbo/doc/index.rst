@@ -879,10 +879,11 @@ You can also use the ``turbo_stream_from()`` Twig function directly:
     Support for the Mercure protocol 1.0 was introduced in Symfony UX 3.6.
 
 When the hub speaks the Mercure protocol 1.0 (``protocol_version: '1.0'`` in the
-MercureBundle configuration), ``turbo_stream_from()`` subscribes with the query
-parameters of this protocol, and listening to every entity of a class uses a
-URL Pattern (``https://symfony.com/ux-turbo/App%5CEntity%5CBook/:id``). The
-deprecated ``turbo_stream_listen()`` function does not support this protocol.
+MercureBundle configuration, the default since 0.6), ``turbo_stream_from()``
+subscribes with the query parameters of this protocol, and listening to every
+entity of a class uses a URL Pattern
+(``https://symfony.com/ux-turbo/App%5CEntity%5CBook/:id``). The deprecated
+``turbo_stream_listen()`` function does not support this protocol.
 
 Broadcast Doctrine Entities Update
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
