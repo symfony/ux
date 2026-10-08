@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 3.6.0
+
+- Add support for MercureBundle ^0.5 and Mercure ^0.8
+
 ## 3.5.0
 
 - Add support for Symfony 8.2's standalone `AssetMapperBundle`
