@@ -75,4 +75,14 @@ final class TemplateCacheWarmerTest extends TestCase
 
         $this->assertSame($map1, $map2);
     }
+
+    public function testWarmUpCreatesTemplateMapIndependentOfTemplateOrder(): void
+    {
+        $this->templateCacheWarmer->warmUp($this->cacheDir);
+        $expected = file_get_contents($this->cacheFile);
+
+        (new TemplateCacheWarmer(new \ArrayObject(['template2', 'template1']), 'cache_file', 'secret'))->warmUp($this->cacheDir);
+
+        $this->assertSame($expected, file_get_contents($this->cacheFile));
+    }
 }
