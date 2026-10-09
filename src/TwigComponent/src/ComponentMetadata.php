@@ -62,7 +62,7 @@ final class ComponentMetadata
 
     public function isPublicPropsExposed(): bool
     {
-        return $this->get('expose_public_props', false);
+        return $this->config['expose_public_props'] ?? false;
     }
 
     public function isAnonymous(): bool
@@ -72,7 +72,7 @@ final class ComponentMetadata
 
     public function getAttributesVar(): string
     {
-        return $this->get('attributes_var', 'attributes');
+        return $this->config['attributes_var'] ?? 'attributes';
     }
 
     /**
@@ -82,7 +82,7 @@ final class ComponentMetadata
      */
     public function getPreMounts(): array
     {
-        return $this->get('pre_mount', []);
+        return $this->config['pre_mount'] ?? [];
     }
 
     /**
@@ -92,7 +92,7 @@ final class ComponentMetadata
      */
     public function getMounts(): array
     {
-        return $this->get('mount', []);
+        return $this->config['mount'] ?? [];
     }
 
     /**
@@ -102,7 +102,7 @@ final class ComponentMetadata
      */
     public function getPostMounts(): array
     {
-        return $this->get('post_mount', []);
+        return $this->config['post_mount'] ?? [];
     }
 
     public function get(string $key, mixed $default = null): mixed

@@ -30,6 +30,7 @@ final class ComponentFactory implements ResetInterface
 {
     private array $mountMethods = [];
     private array $writableProperties = [];
+    private ?EscaperRuntime $escaper = null;
 
     /** @var array<string, ComponentMetadata> */
     private array $metadata = [];
@@ -106,21 +107,29 @@ final class ComponentFactory implements ResetInterface
     public function mountFromObject(object $component, array $data, ComponentMetadata $componentMetadata): MountedComponent
     {
         $originalData = $data;
-        $this->preMount($component, $data, $componentMetadata);
+        $dispatchPreMount = null === $this->introspectableDispatcher || $this->introspectableDispatcher->hasListeners(PreMountEvent::class);
 
-        $this->mount($component, $data, $componentMetadata);
+        // Without mount listeners, nothing can change the data of an anonymous component: it has no hooks and no properties
+        if (!$dispatchPreMount && $component instanceof AnonymousComponent && !$this->introspectableDispatcher->hasListeners(PostMountEvent::class)) {
+            $component->mount($data);
+            $extraMetadata = [];
+        } else {
+            $this->preMount($component, $data, $componentMetadata, $dispatchPreMount);
 
-        if (!$componentMetadata->isAnonymous()) {
-            // set data that wasn't set in mount on the component directly
-            foreach ($data as $property => $value) {
-                if ($this->writableProperties[$componentMetadata->getName()][$property] ??= $this->propertyAccessor->isWritable($component, $property)) {
-                    $this->propertyAccessor->setValue($component, $property, $value);
-                    unset($data[$property]);
+            $this->mount($component, $data, $componentMetadata);
+
+            if (!$componentMetadata->isAnonymous()) {
+                // set data that wasn't set in mount on the component directly
+                foreach ($data as $property => $value) {
+                    if ($this->writableProperties[$componentMetadata->getName()][$property] ??= $this->propertyAccessor->isWritable($component, $property)) {
+                        $this->propertyAccessor->setValue($component, $property, $value);
+                        unset($data[$property]);
+                    }
                 }
             }
-        }
 
-        $extraMetadata = $this->postMount($component, $data, $componentMetadata);
+            $extraMetadata = $this->postMount($component, $data, $componentMetadata);
+        }
 
         // create attributes from "attributes" key if exists
         $attributesVar = $componentMetadata->getAttributesVar();
@@ -136,7 +145,7 @@ final class ComponentFactory implements ResetInterface
         return new MountedComponent(
             $componentMetadata->getName(),
             $component,
-            new ComponentAttributes([...$attributes, ...$data], $this->twig->getRuntime(EscaperRuntime::class)),
+            new ComponentAttributes([...$attributes, ...$data], $this->escaper ??= $this->twig->getRuntime(EscaperRuntime::class)),
             $originalData,
             $extraMetadata,
         );
@@ -188,9 +197,9 @@ final class ComponentFactory implements ResetInterface
         $mount->invoke($component, ...$parameters);
     }
 
-    private function preMount(object $component, array &$data, ComponentMetadata $componentMetadata): void
+    private function preMount(object $component, array &$data, ComponentMetadata $componentMetadata, bool $dispatch): void
     {
-        if (null === $this->introspectableDispatcher || $this->introspectableDispatcher->hasListeners(PreMountEvent::class)) {
+        if ($dispatch) {
             $event = new PreMountEvent($component, $data, $componentMetadata);
             $this->eventDispatcher->dispatch($event);
             $data = $event->getData();
