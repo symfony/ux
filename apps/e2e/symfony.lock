@@ -331,6 +331,9 @@
             "assets/react/controllers/Hello.jsx"
         ]
     },
+    "symfony/ux-router": {
+        "version": "3.x-dev"
+    },
     "symfony/ux-svelte": {
         "version": "2.29",
         "recipe": {

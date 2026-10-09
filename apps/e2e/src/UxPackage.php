@@ -24,6 +24,7 @@ enum UxPackage: string
     case Map = 'UX Map';
     case Notify = 'UX Notify';
     case React = 'UX React';
+    case Router = 'UX Router';
     case StimulusBundle = 'UX StimulusBundle';
     // case Svelte = 'UX Svelte'; deprecated/removed
     // case Swup; // deprecated/removed
@@ -47,6 +48,7 @@ enum UxPackage: string
             self::Map => 'https://ux.symfony.com/map',
             self::Notify => 'https://ux.symfony.com/notify',
             self::React => 'https://ux.symfony.com/react',
+            self::Router => 'https://ux.symfony.com/router',
             self::StimulusBundle => 'https://ux.symfony.com/stimulus',
             self::Translator => 'https://ux.symfony.com/translator',
             self::Turbo => 'https://ux.symfony.com/turbo',

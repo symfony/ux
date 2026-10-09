@@ -75,6 +75,7 @@ class ExampleRepository
             new Example(UxPackage::Map, 'With rectangles (Leaflet)', 'A map with two rectangles: one from Paris to Lille, the other from Lyon to Bordeaux', 'app_ux_map_with_rectangles', ['renderer' => 'leaflet']),
             new Example(UxPackage::Map, 'With rectangles (Google)', 'A map with two rectangles: one from Paris to Lille, the other from Lyon to Bordeaux', 'app_ux_map_with_rectangles', ['renderer' => 'google']),
             new Example(UxPackage::React, 'Basic React Component', 'A basic React component that displays a welcoming message', 'app_ux_react_index'),
+            new Example(UxPackage::Router, 'Generate paths and URLs', 'Generate paths, localized paths and absolute URLs in JavaScript', 'app_ux_router_basic'),
             new Example(UxPackage::Translator, 'Basic translation', 'A simple translation example using the Translator component', 'app_ux_translator_basic'),
             new Example(UxPackage::Translator, 'Translation with parameter', 'Translation example with dynamic parameters', 'app_ux_translator_with_parameter'),
             new Example(UxPackage::Translator, 'ICU Translation with `select` argument', 'ICU message format example using the `select` argument', 'app_ux_translator_icu_select'),
