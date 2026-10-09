@@ -22,15 +22,20 @@ use Symfony\UX\Toolkit\Kit\Lint\LintSeverity;
  * Enforces where component attributes are rendered relative to `attributes.defaults()`.
  *
  * `attributes.defaults()` is for values the consumer may override or extend — in practice
- * `data-controller`/`data-action` plus a few overridable HTML defaults (`type`, `alt`). Identity
- * and state attributes must instead be rendered directly as literal attributes, so they are always
- * present and can neither be silently dropped nor overridden:
+ * `data-controller`/`data-action`, `aria-label` plus a few overridable HTML defaults (`type`, `alt`).
+ * Identity and state attributes must instead be rendered directly as literal attributes, so they are
+ * always present and can neither be silently dropped nor overridden:
  *
  *  - `data-slot` is a structural marker (Shadcn) consumers must never override (checked in every kit);
  *  - every other `data-*`/`aria-*` attribute — ARIA, Stimulus value attributes (`data-<controller>-<key>-value`)
  *    and state `data-*` (`data-state`, `data-open`, `data-size`, ...) — must be a literal attribute so it is
- *    always present; only `data-controller`/`data-action` may stay in `defaults()` (checked only in Tailwind
- *    kits, detected by the `tailwind_merge`/`tailwind_classes` idiom).
+ *    always present; only `data-controller`/`data-action` and `aria-label` may stay in `defaults()` (checked
+ *    only in Tailwind kits, detected by the `tailwind_merge`/`tailwind_classes` idiom).
+ *
+ * `aria-label` is the exception among ARIA attributes: it is an accessible name, not a state, so a
+ * consumer has to be able to replace it to name a landmark more precisely or to translate it. Written
+ * as a literal attribute next to the sink it would be emitted twice, and a browser keeps the first
+ * occurrence, so the consumer's value would never win.
  *
  * Non-Tailwind kits (Bootstrap, Common) keep their own idiom (`class` merged inside `defaults()`,
  * no `data-slot`) and are therefore only checked against the universal `data-slot` rule.
@@ -58,7 +63,7 @@ final class AttributesDefaultsChecker implements KitCheckerInterface
      *
      * @var list<string>
      */
-    private const ALLOWED_IN_DEFAULTS = ['data-controller', 'data-action', 'data-slot'];
+    private const ALLOWED_IN_DEFAULTS = ['data-controller', 'data-action', 'data-slot', 'aria-label'];
 
     public function check(Kit $kit): iterable
     {
@@ -111,7 +116,7 @@ final class AttributesDefaultsChecker implements KitCheckerInterface
                     yield new LintIssue(
                         severity: LintSeverity::Error,
                         category: 'component.attributes.state-in-defaults',
-                        message: \sprintf('`%s` must not be defined inside `attributes.defaults()` (line %d): only `data-controller` and `data-action` may live in `defaults()`. Render ARIA, Stimulus value (`data-*-value`) and state `data-*` attributes directly so they are always present.', $key, $line),
+                        message: \sprintf('`%s` must not be defined inside `attributes.defaults()` (line %d): only `data-controller`, `data-action` and `aria-label` may live in `defaults()`. Render the other ARIA, Stimulus value (`data-*-value`) and state `data-*` attributes directly so they are always present.', $key, $line),
                         recipe: $recipe,
                         file: $file,
                     );

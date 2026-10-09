@@ -11,11 +11,11 @@
     data-slot="questionnaire-progress"
     {% if _questionnaire_interactive %}data-questionnaire-target="progress"{% endif %}
     role="progressbar"
-    aria-label="Questionnaire progress"
     aria-valuemin="1"
     aria-valuenow="{{ _current }}"
     aria-valuemax="{{ _total }}"
     {{ attributes.defaults({
+        'aria-label': 'Questionnaire progress',
         class: 'min-h-[1lh] w-fit min-w-[14ch] text-xs font-medium text-muted-foreground tabular-nums'|tailwind_classes,
     }) }}
 >

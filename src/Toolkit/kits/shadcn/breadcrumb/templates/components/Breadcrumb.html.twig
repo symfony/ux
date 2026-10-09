@@ -1,7 +1,6 @@
 <nav
     data-slot="breadcrumb"
-    aria-label="breadcrumb"
-    {{ attributes }}
+    {{ attributes.defaults({'aria-label': 'breadcrumb'}) }}
 >
     {##- The breadcrumb structure, typically a `Breadcrumb:List`. -#}
     {%- block content %}{% endblock -%}

@@ -265,6 +265,7 @@ class KitLinterTest extends TestCase
         yield 'controller/action + type is valid' => ['ValidControllerAction.html.twig', 0];
         yield 'data-slot in defaults (Tailwind)' => ['DataSlotInDefaults.html.twig', 1];
         yield 'aria in defaults (Tailwind)' => ['AriaInDefaults.html.twig', 1];
+        yield 'aria-label in defaults (Tailwind) is valid' => ['AriaLabelInDefaults.html.twig', 0];
         yield 'Stimulus value in defaults (Tailwind)' => ['StimulusValueInDefaults.html.twig', 1];
         yield 'state data-* in defaults (Tailwind)' => ['StateDataInDefaults.html.twig', 1];
         yield 'class + aria in defaults (non-Tailwind) is ignored' => ['NonTailwindClassInDefaults.html.twig', 0];

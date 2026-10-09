@@ -83,7 +83,6 @@
 {%- set _weekdayReference = '2024-01-07' -%}
 <div
     role="group"
-    aria-label="{{ label }}"
     data-slot="calendar"
     data-mode="{{ mode }}"
     data-calendar-mode-value="{{ mode }}"
@@ -104,6 +103,7 @@
     data-calendar-show-week-number-value="{{ showWeekNumber ? 'true' : 'false' }}"
     data-calendar-fixed-weeks-value="{{ fixedWeeks ? 'true' : 'false' }}"
     {{ attributes.defaults({
+        'aria-label': label,
         class: 'group/calendar w-fit bg-background p-2 [--cell-radius:var(--radius-md)] [--cell-size:--spacing(7)] in-data-[slot=card-content]:bg-transparent in-data-[slot=popover-content]:bg-transparent'|tailwind_classes,
         'data-controller': 'calendar',
         'data-action': [

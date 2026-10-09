@@ -834,7 +834,7 @@ To enable RTL support, set the `dir="rtl"` attribute on the root element.
 - An item that isn't the active one is rendered `hidden inert`, and an item marked `disabled` gets the native `disabled` attribute on its fieldset, so neither one is focusable or submitted.
 - `Questionnaire:Choice` is a `<label>` wrapping a real `<input type="radio">` or `<input type="checkbox">`, picked from the item's `multiple` prop. The input stays transparent rather than removed, so checked state, keyboard behavior and form submission stay the browser's.
 - `Questionnaire:Error` renders `role="alert"` with a stable id. When validation fails the controller sets `aria-invalid="true"` and `aria-describedby` pointing at it on the fieldset, and clears both once the item is answered.
-- `Questionnaire:Progress` renders `role="progressbar"` with `aria-label="Questionnaire progress"`, `aria-valuemin`, `aria-valuenow` and `aria-valuemax`.
+- `Questionnaire:Progress` renders `role="progressbar"` with `aria-label="Questionnaire progress"`, `aria-valuemin`, `aria-valuenow` and `aria-valuemax`. Pass your own `aria-label` to replace the default label.
 - The choice indicator (the dot or the check) and the shortcut badge are decorative and carry `aria-hidden="true"`, so the choice label text has to carry the meaning on its own.
 - `Enter` moves to the next item, or submits the form on the last one, unless focus is already on a submit button.
 - With the `shortcuts` prop, pressing a choice's letter or number selects it. Shortcuts are ignored while focus is in a `Questionnaire:Input` so a freeform answer can be typed normally, and a disabled choice ignores its shortcut.

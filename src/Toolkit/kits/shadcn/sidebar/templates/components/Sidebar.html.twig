@@ -20,8 +20,8 @@
         data-variant="{{ variant }}"
         data-collapsible=""
         data-collapsible-mode="{{ collapsible }}"
-        aria-label="{{ label }}"
         {{ attributes.defaults({
+            'aria-label': label,
             class: 'flex h-full w-(--sidebar-width) flex-col bg-sidebar text-sidebar-foreground'|tailwind_classes,
         }) }}
     >
@@ -57,8 +57,8 @@
         ></div>
         <aside
             data-slot="sidebar-container"
-            aria-label="{{ label }}"
             {{ attributes.defaults({
+                'aria-label': label,
                 class: ('fixed inset-y-0 z-10 hidden h-svh w-(--sidebar-width) transition-[left,right,width] duration-200 ease-linear md:flex'
                     ~ ('left' == side
                         ? ' left-0 group-data-[collapsible=offcanvas]:left-[calc(var(--sidebar-width)*-1)]'

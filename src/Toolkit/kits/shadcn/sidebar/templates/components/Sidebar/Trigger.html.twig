@@ -8,11 +8,11 @@
 {%- set _sidebar_initial_open = inject('sidebar.defaultOpen', true) -%}
 <button
     data-slot="sidebar-trigger"
-    aria-label="{{ label }}"
     aria-expanded="{{ _sidebar_initial_open ? 'true' : 'false' }}"
     {% if _sidebar_for %}data-sidebar-target="{{ _sidebar_for }}" aria-controls="{{ _sidebar_for }}"{% endif %}
     {{ attributes.defaults({
         type: 'button',
+        'aria-label': label,
         class: 'inline-flex size-7 shrink-0 items-center justify-center rounded-md outline-none ring-sidebar-ring transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:ring-2 disabled:pointer-events-none disabled:opacity-50 [&>svg]:size-4 [&>svg]:shrink-0'|tailwind_classes,
         'data-action': 'click->sidebar#toggle',
     }) }}
