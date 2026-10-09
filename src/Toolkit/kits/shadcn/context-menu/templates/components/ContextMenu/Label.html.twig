@@ -1,0 +1,21 @@
+{%- props
+    ## boolean Whether the label is inset with extra start padding.
+    inset = false
+-%}
+{%- set style = html_cva(
+    base: 'px-1.5 py-1 text-xs font-medium text-muted-foreground',
+    variants: {
+        inset: {
+            true: 'ps-7',
+        },
+    },
+) -%}
+<div
+    data-slot="context-menu-label"
+    {{ attributes.defaults({
+        class: style.apply({inset: inset ? 'true' : 'false'})|tailwind_classes,
+    }) }}
+>
+    {##- The label text. -#}
+    {%- block content %}{% endblock -%}
+</div>

@@ -1,0 +1,13 @@
+<div
+    role="menu"
+    data-slot="context-menu-sub-content"
+    data-context-menu-sub-target="content"
+    data-state="closed"
+    data-side="inline-end"
+    {{ attributes.defaults({
+        class: 'invisible opacity-0 transition-[opacity,translate,visibility] duration-100 ease-out data-[state=open]:transition-[opacity,translate] data-[state=open]:visible data-[state=open]:opacity-100 data-[state=open]:translate-x-0 data-[state=closed]:ltr:-translate-x-2 data-[state=closed]:rtl:translate-x-2 data-[side=inline-start]:data-[state=closed]:ltr:translate-x-2 data-[side=inline-start]:data-[state=closed]:rtl:-translate-x-2 absolute data-[side=inline-end]:start-full data-[side=inline-start]:end-full top-0 z-50 mx-1 w-max min-w-32 rounded-lg border bg-popover p-1 text-popover-foreground shadow-lg outline-hidden'|tailwind_classes,
+    }) }}
+>
+    {##- The sub-menu items, e.g. `ContextMenu:Item`. -#}
+    {%- block content %}{% endblock -%}
+</div>
