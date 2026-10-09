@@ -4,6 +4,7 @@
 
 - Support the Mercure protocol 1.0 in `turbo_stream_from()` and `<twig:Turbo:Stream:From>`: listening to every entity of a class subscribes to a URL Pattern (`:id`) instead of a URI Template (`{id}`), which the protocol 1.0 dropped
 - `turbo_stream_listen()` throws an exception when the hub speaks the Mercure protocol 1.0: its Stimulus controller subscribes with the `topic` query parameter of the protocol 0.x; use `turbo_stream_from()` instead
+- Add support for MercureBundle ^0.6 and Mercure ^0.9, which default hubs to the Mercure protocol 1.0
 
 ## 3.5.0
 

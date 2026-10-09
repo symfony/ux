@@ -72,13 +72,19 @@ final class FrameworkAppKernel extends Kernel
         ]);
 
         $hubs = [
+            // Speaks whatever protocol MercureBundle defaults to: "0.x" up to MercureBundle 0.5, "1.0" since 0.6
             'default' => [
                 'url' => 'http://127.0.0.1:3000/.well-known/mercure',
                 'jwt' => 'eyJhbGciOiJIUzI1NiJ9.eyJtZXJjdXJlIjp7InB1Ymxpc2giOlsiKiJdfX0.vhMwOaN5K68BTIhWokMLOeOJO4EPfT64brd8euJOA4M',
             ],
         ];
-        // A hub speaking the Mercure protocol 1.0 (symfony/mercure 0.8+)
+        // The hub the protocol 0.x tests target, so that they do not depend on that default
+        $hubs['legacy'] = $hubs['default'];
+
         if (enum_exists(ProtocolVersion::class)) {
+            $hubs['legacy']['protocol_version'] = '0.x';
+
+            // A hub speaking the Mercure protocol 1.0 (symfony/mercure 0.8+)
             $hubs['v1'] = [
                 'url' => 'http://127.0.0.1:3000/.well-known/mercure',
                 'protocol_version' => '1.0',
