@@ -1,0 +1,11 @@
+<div
+    data-slot="context-menu-trigger"
+    data-context-menu-target="trigger"
+    {{ attributes.defaults({
+        class: 'select-none [-webkit-touch-callout:none]'|tailwind_classes,
+        'data-action': 'contextmenu->context-menu#open pointerdown->context-menu#startLongPress pointermove->context-menu#moveLongPress pointerup->context-menu#cancelLongPress pointercancel->context-menu#cancelLongPress',
+    }) }}
+>
+    {##- The region that opens the menu on right click or long press. -#}
+    {%- block content %}{% endblock -%}
+</div>

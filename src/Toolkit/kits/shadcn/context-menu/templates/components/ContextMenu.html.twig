@@ -1,0 +1,10 @@
+<div
+    data-slot="context-menu"
+    {{ attributes.defaults({
+        class: 'contents'|tailwind_classes,
+        'data-controller': 'context-menu',
+    }) }}
+>
+    {##- A `ContextMenu:Trigger` and a `ContextMenu:Content`. -#}
+    {%- block content %}{% endblock -%}
+</div>

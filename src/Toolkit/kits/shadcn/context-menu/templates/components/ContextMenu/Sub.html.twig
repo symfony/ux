@@ -1,0 +1,19 @@
+{%- props
+    ## number Delay in milliseconds before showing the sub-menu.
+    openDelay = 0,
+    ## number Delay in milliseconds before hiding the sub-menu.
+    closeDelay = 0
+-%}
+<div
+    data-slot="context-menu-sub"
+    data-context-menu-sub-open-delay-value="{{ openDelay }}"
+    data-context-menu-sub-close-delay-value="{{ closeDelay }}"
+    {{ attributes.defaults({
+        class: 'relative'|tailwind_classes,
+        'data-controller': 'context-menu-sub',
+        'data-action': 'mouseenter->context-menu-sub#show mouseleave->context-menu-sub#hide',
+    }) }}
+>
+    {##- A `ContextMenu:SubTrigger` and a `ContextMenu:SubContent`. -#}
+    {%- block content %}{% endblock -%}
+</div>
