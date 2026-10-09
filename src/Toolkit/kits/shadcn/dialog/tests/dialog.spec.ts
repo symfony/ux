@@ -147,4 +147,87 @@ describeRecipe('shadcn/dialog', () => {
 
         await expect(dialog).toBeHidden();
     });
+
+    test('closes while its content runs an endless animation', async ({ page, gotoExample }) => {
+        await gotoExample('shadcn/dialog/default');
+        await page.getByRole('button', { name: 'Open Dialog' }).click();
+        const dialog = page.locator('[data-slot="dialog-content"]');
+        await expect(dialog).toBeVisible();
+        await dialog.evaluate((element) => {
+            const spinner = document.createElement('span');
+            spinner.className = 'size-4 animate-spin';
+            element.append(spinner);
+        });
+
+        await page.keyboard.press('Escape');
+
+        await expect(dialog).not.toHaveAttribute('open');
+    });
+
+    test('leaves the top layer as soon as it closes', async ({ page, gotoExample }) => {
+        await gotoExample('shadcn/dialog/default');
+        await page.getByRole('button', { name: 'Open Dialog' }).click();
+        const dialog = page.locator('[data-slot="dialog-content"]');
+        await expect(dialog).toBeVisible();
+        await dialog.evaluate((element) => {
+            element.addEventListener(
+                'close',
+                () => {
+                    element.dataset.displayOnClose = getComputedStyle(element).display;
+                },
+                { once: true }
+            );
+        });
+
+        await page.keyboard.press('Escape');
+
+        await expect(dialog).toHaveAttribute('data-display-on-close', 'none');
+    });
+
+    test('opens again when a native close cut its exit short', async ({ page, gotoExample }) => {
+        await gotoExample('shadcn/dialog/default');
+        await page.getByRole('button', { name: 'Open Dialog' }).click();
+        const dialog = page.locator('[data-slot="dialog-content"]');
+        await expect(dialog).toBeVisible();
+
+        await dialog.evaluate((element: HTMLDialogElement) => {
+            element.querySelector<HTMLElement>('[data-slot="dialog-close"]')!.click();
+            element.close();
+            document.querySelector<HTMLElement>('[data-dialog-target="trigger"]')!.click();
+        });
+
+        await expect(dialog).toHaveAttribute('open');
+        await expect(dialog).not.toHaveAttribute('data-closing');
+    });
+
+    test('plays its whole exit when closed again after reopening during the first one', async ({
+        page,
+        gotoExample,
+    }) => {
+        await gotoExample('shadcn/dialog/default');
+        await page.getByRole('button', { name: 'Open Dialog' }).click();
+        const dialog = page.locator('[data-slot="dialog-content"]');
+        await expect(dialog).toBeVisible();
+        await dialog.evaluate((element) => Promise.all(element.getAnimations().map((animation) => animation.finished)));
+
+        const openAfterTheFirstExit = await dialog.evaluate(async (element: HTMLDialogElement) => {
+            const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+            const closeButton = element.querySelector<HTMLElement>('[data-slot="dialog-close"]')!;
+            const trigger = document.querySelector<HTMLElement>('[data-dialog-target="trigger"]')!;
+            // Slow enough for the two exits to overlap.
+            element.style.transitionDuration = '1000ms';
+
+            closeButton.click();
+            await wait(100);
+            trigger.click();
+            await wait(500);
+            closeButton.click();
+            await wait(700);
+
+            return element.open;
+        });
+
+        expect(openAfterTheFirstExit).toBe(true);
+        await expect(dialog).not.toHaveAttribute('open');
+    });
 });

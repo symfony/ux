@@ -7,13 +7,13 @@
 {%- set _sheet_descriptionId = inject('sheet.descriptionId') -%}
 {%- set _sheet_side = inject('sheet.side', 'right') -%}
 {%- set style = html_cva(
-    base: 'fixed z-50 m-0 open:flex max-h-none max-w-none flex-col gap-4 bg-background p-0 shadow-lg outline-none transition duration-300 ease-in-out transition-discrete backdrop:bg-black/50 backdrop:opacity-0 backdrop:transition-[opacity,display,overlay] backdrop:duration-300 backdrop:ease-in-out backdrop:transition-discrete open:backdrop:opacity-100 starting:open:backdrop:opacity-0',
+    base: 'fixed z-50 m-0 open:flex max-h-none max-w-none flex-col gap-4 bg-background p-0 shadow-lg outline-none transition duration-300 ease-in-out backdrop:bg-black/50 backdrop:opacity-0 backdrop:transition-opacity backdrop:duration-300 backdrop:ease-in-out open:backdrop:opacity-100 starting:open:backdrop:opacity-0 data-closing:backdrop:opacity-0',
     variants: {
         side: {
-            right: 'inset-y-0 right-0 left-auto h-full w-3/4 border-l translate-x-full open:translate-x-0 starting:open:translate-x-full sm:max-w-sm',
-            left: 'inset-y-0 left-0 right-auto h-full w-3/4 border-r -translate-x-full open:translate-x-0 starting:open:-translate-x-full sm:max-w-sm',
-            top: 'inset-x-0 top-0 bottom-auto h-auto border-b -translate-y-full open:translate-y-0 starting:open:-translate-y-full',
-            bottom: 'inset-x-0 bottom-0 top-auto h-auto border-t translate-y-full open:translate-y-0 starting:open:translate-y-full',
+            right: 'inset-y-0 right-0 left-auto h-full w-3/4 border-l translate-x-full open:translate-x-0 starting:open:translate-x-full data-closing:translate-x-full sm:max-w-sm',
+            left: 'inset-y-0 left-0 right-auto h-full w-3/4 border-r -translate-x-full open:translate-x-0 starting:open:-translate-x-full data-closing:-translate-x-full sm:max-w-sm',
+            top: 'inset-x-0 top-0 bottom-auto h-auto w-auto border-b -translate-y-full open:translate-y-0 starting:open:-translate-y-full data-closing:-translate-y-full',
+            bottom: 'inset-x-0 bottom-0 top-auto h-auto w-auto border-t translate-y-full open:translate-y-0 starting:open:translate-y-full data-closing:translate-y-full',
         },
     },
 ) -%}
