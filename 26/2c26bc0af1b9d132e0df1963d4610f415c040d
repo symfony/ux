@@ -1,0 +1,31 @@
+---------------------------------------------------------------------------
+
+by github-actions[bot] at 2026-10-08T14:21:32Z
+
+<h1>📊 Packages dist files size difference</h1>
+
+Thanks for the PR! Here is the difference in size of the packages dist files between the base branch and the PR.
+Please review the changes and make sure they are expected.
+
+<table>
+    <thead><tr><th>File</th><th>Before (Size / Gzip)</th><th>After (Size / Gzip)</th></tr></thead>
+    <tbody><tr><td colspan="3"><a href="https://github.com/Kocal/symfony-ux/tree/claude/mercurebundle-0-6-support-bbeb01/src/Notify/assets/dist"><b>Notify</b></a></td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/claude/mercurebundle-0-6-support-bbeb01/src/Notify/assets/dist/controller.d.ts"><code>controller.d.ts</code></a></td>
+            <td>
+                    <code>615 B</code>
+                    / <code>351 B</code>
+                </td><td>
+                    <code>731 B</code><sup>+19% 📈</sup>
+                    / <code>382 B</code><sup>+9% 📈</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/claude/mercurebundle-0-6-support-bbeb01/src/Notify/assets/dist/controller.js"><code>controller.js</code></a></td>
+            <td>
+                    <code>1.88 kB</code>
+                    / <code>793 B</code>
+                </td><td>
+                    <code>2.01 kB</code><sup>+7% 📈</sup>
+                    / <code>861 B</code><sup>+9% 📈</sup>
+                </td></tr></tbody>
+</table>
+
+<!-- Sticky Pull Request Comment -->
