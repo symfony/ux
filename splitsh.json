@@ -10,6 +10,7 @@
         "ux-image": { "prefixes": [{ "from": "src/Image", "to": "", "excludes": ["src/Bridge"] }] },
         "ux-cloudflare-image": "src/Image/src/Bridge/Cloudflare",
         "ux-keycdn-image": "src/Image/src/Bridge/KeyCdn",
+        "ux-imgix-image": "src/Image/src/Bridge/Imgix",
         "ux-inspector": "src/Inspector",
         "ux-live-component": "src/LiveComponent",
         "ux-map": {
