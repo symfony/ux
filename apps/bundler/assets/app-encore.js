@@ -11,6 +11,7 @@ import { registerReactControllerComponents } from '@symfony/ux-react';
 // any CSS you import will output into a single css file (app.css in this case)
 import './styles/app.css';
 import { trans } from './translator.js';
+import { path } from './router.js';
 
 registerReactControllerComponents(require.context('./react/controllers', true, /\.(j|t)sx?$/));
 registerVueControllerComponents(require.context('./vue/controllers', true, /\.vue$/));
@@ -19,4 +20,5 @@ startStimulusApp(require.context('@symfony/stimulus-bridge/lazy-controller-loade
 
 document.addEventListener('DOMContentLoaded', () => {
     console.log(trans('say_hello', { name: 'Fabien' }));
+    console.log(path('app_blog_show', { slug: 'hello' }));
 });
