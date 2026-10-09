@@ -35,6 +35,7 @@ final class TemplateCacheWarmer implements CacheWarmerInterface
         foreach ($this->templateIterator as $item) {
             $map[hash('xxh128', $item.$this->secret)] = $item;
         }
+        asort($map);
 
         $cacheFile = \sprintf('%s%s%s', $buildDir ?? $cacheDir, \DIRECTORY_SEPARATOR, $this->cacheFilename);
         PhpArrayAdapter::create($cacheFile, new NullAdapter())->warmUp(['map' => $map]);
