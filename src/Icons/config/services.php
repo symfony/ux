@@ -80,6 +80,7 @@ return static function (ContainerConfigurator $container): void {
                 abstract_arg('icon_set_attributes'),
                 abstract_arg('icon_suffix_attributes'),
             ])
+            ->tag('kernel.reset', ['method' => 'reset'])
 
         ->alias(IconRendererInterface::class, '.ux_icons.icon_renderer')
 
