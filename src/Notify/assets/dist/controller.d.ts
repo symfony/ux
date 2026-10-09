@@ -3,9 +3,14 @@ declare class export_default extends Controller {
   static values: {
     hub: StringConstructor;
     topics: ArrayConstructor;
+    protocolVersion: {
+      type: StringConstructor;
+      default: string;
+    };
   };
   hubValue: string;
   topicsValue: Array<string>;
+  protocolVersionValue: string;
   readonly hasHubValue: boolean;
   readonly hasTopicsValue: boolean;
   eventSources: Array<EventSource>;

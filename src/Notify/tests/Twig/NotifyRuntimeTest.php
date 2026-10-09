@@ -26,13 +26,8 @@ class NotifyRuntimeTest extends TestCase
     #[DataProvider('streamNotificationsDataProvider')]
     public function testStreamNotifications(array $params, string $expected): void
     {
-        $kernel = new TwigAppKernel('test', true);
-        $kernel->boot();
-        $container = $kernel->getContainer()->get('test.service_container');
+        $rendered = $this->createRuntime()->renderStreamNotifications(...$params);
 
-        $runtime = $container->get('test.notify.twig_runtime');
-        \assert($runtime instanceof NotifyRuntime);
-        $rendered = $runtime->renderStreamNotifications(...$params);
         $this->assertSame($expected, $rendered);
     }
 
@@ -66,5 +61,35 @@ class NotifyRuntimeTest extends TestCase
                 'data-symfony--ux-notify--notify-hub-value="'.$publicUrl.'"'.
             '></div>',
         ];
+    }
+
+    public function testStreamNotificationsFromProtocolV1Hub(): void
+    {
+        if (!TwigAppKernel::supportsProtocolVersion()) {
+            self::markTestSkipped('A hub speaking the Mercure protocol 1.0 requires symfony/mercure-bundle 0.5 or higher.');
+        }
+
+        $rendered = $this->createRuntime('mercure.hub.v1')->renderStreamNotifications('/topic/1');
+
+        $this->assertSame(
+            '<div '.
+                'data-controller="symfony--ux-notify--notify" '.
+                'data-symfony--ux-notify--notify-topics-value="[&quot;\/topic\/1&quot;]" '.
+                'data-symfony--ux-notify--notify-hub-value="http://localhost:9090/.well-known/mercure" '.
+                'data-symfony--ux-notify--notify-protocol-version-value="1.0"'.
+            '></div>',
+            $rendered,
+        );
+    }
+
+    private function createRuntime(string $mercureHub = 'mercure.hub.default'): NotifyRuntime
+    {
+        $kernel = new TwigAppKernel('test', true, $mercureHub);
+        $kernel->boot();
+
+        $runtime = $kernel->getContainer()->get('test.notify.twig_runtime');
+        \assert($runtime instanceof NotifyRuntime);
+
+        return $runtime;
     }
 }

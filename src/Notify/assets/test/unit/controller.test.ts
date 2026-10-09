@@ -55,15 +55,19 @@ describe('NotifyController', () => {
 
     global.Notification = {};
 
-    it('create and destroy event sources', async () => {
-        const container = mountDOM(`
+    const mountNotify = (extraAttributes = '') =>
+        mountDOM(`
             <div
                 data-testid="notify"
                 data-controller="check notify"
                 data-notify-topics-value="&#x5B;&quot;https&#x3A;&#x5C;&#x2F;&#x5C;&#x2F;symfony.com&#x5C;&#x2F;notifier&quot;&#x5D;"
                 data-notify-hub-value="http&#x3A;&#x2F;&#x2F;localhost&#x3A;9090&#x2F;.well-known&#x2F;mercure"
+                ${extraAttributes}
             ></div>
         `);
+
+    it('create and destroy event sources', async () => {
+        const container = mountNotify();
 
         expect(getByTestId(container, 'notify')).not.toHaveClass('connected');
 
@@ -84,5 +88,19 @@ describe('NotifyController', () => {
 
         expect(removeEventListenerMock).toBeCalledTimes(1);
         expect(closeMock).toBeCalledTimes(1);
+    });
+
+    it('subscribes with the "match" query parameter on a Mercure protocol 1.0 hub', async () => {
+        const container = mountNotify('data-notify-protocol-version-value="1.0"');
+
+        application = startStimulus();
+
+        await waitFor(() => expect(getByTestId(container, 'notify')).toHaveClass('connected'));
+
+        const u = new URL('http://localhost:9090/.well-known/mercure');
+        u.searchParams.append('match', 'https://symfony.com/notifier');
+
+        expect(global.EventSource).toBeCalledTimes(1);
+        expect(global.EventSource).toBeCalledWith(u);
     });
 });

@@ -2,7 +2,11 @@ import { Controller } from "@hotwired/stimulus";
 var controller_default = class extends Controller {
 	static values = {
 		hub: String,
-		topics: Array
+		topics: Array,
+		protocolVersion: {
+			type: String,
+			default: "0.x"
+		}
 	};
 	eventSources = [];
 	listeners = /* @__PURE__ */ new WeakMap();
@@ -11,9 +15,10 @@ var controller_default = class extends Controller {
 		if (!this.hasHubValue) errorMessages.push("A \"hub\" value pointing to the Mercure hub must be provided.");
 		if (!this.hasTopicsValue) errorMessages.push("A \"topics\" value must be provided.");
 		if (errorMessages.length) throw new Error(errorMessages.join(" "));
+		const parameter = "1.0" === this.protocolVersionValue ? "match" : "topic";
 		this.eventSources = this.topicsValue.map((topic) => {
 			const u = new URL(this.hubValue);
-			u.searchParams.append("topic", topic);
+			u.searchParams.append(parameter, topic);
 			return new EventSource(u);
 		});
 	}

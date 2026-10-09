@@ -11,6 +11,8 @@
 
 namespace Symfony\UX\Notify\Tests\Kernel;
 
+use Composer\InstalledVersions;
+use Composer\Semver\VersionParser;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\MercureBundle\MercureBundle;
 use Symfony\Bundle\TwigBundle\TwigBundle;
@@ -27,6 +29,14 @@ use Symfony\UX\StimulusBundle\StimulusBundle;
  */
 class TwigAppKernel extends Kernel
 {
+    public function __construct(
+        string $environment,
+        bool $debug,
+        private readonly string $mercureHub = 'mercure.hub.default',
+    ) {
+        parent::__construct($environment, $debug);
+    }
+
     public function registerBundles(): iterable
     {
         yield new FrameworkBundle();
@@ -38,7 +48,9 @@ class TwigAppKernel extends Kernel
 
     public function registerContainerConfiguration(LoaderInterface $loader): void
     {
-        $loader->load(static function (ContainerBuilder $container) {
+        $mercureHub = $this->mercureHub;
+
+        $loader->load(static function (ContainerBuilder $container) use ($mercureHub) {
             $container->loadFromExtension('framework', [
                 'secret' => '$ecret',
                 'test' => true,
@@ -54,18 +66,32 @@ class TwigAppKernel extends Kernel
                 'default_path' => __DIR__.'/templates',
                 'strict_variables' => true,
             ]);
-            $container->loadFromExtension('mercure', [
-                'hubs' => [
-                    'default' => [
-                        'url' => 'http://localhost:9090/.well-known/mercure',
-                        'public_url' => 'http://localhost:9090/.well-known/mercure',
-                        'jwt' => [
-                            'secret' => '$ecret',
-                            'publish' => '*',
-                        ],
+            $hubs = [
+                'default' => [
+                    'url' => 'http://localhost:9090/.well-known/mercure',
+                    'public_url' => 'http://localhost:9090/.well-known/mercure',
+                    'jwt' => [
+                        'secret' => '$ecret',
+                        'publish' => '*',
                     ],
                 ],
-            ]);
+            ];
+
+            // MercureBundle 0.6 defaults "protocol_version" to "1.0", and its "jwt.secret" hubs then require the RFC 9068 claims.
+            if (self::supportsProtocolVersion()) {
+                $hubs['default']['protocol_version'] = '0.x';
+                $hubs['v1'] = [
+                    'url' => $hubs['default']['url'],
+                    'protocol_version' => '1.0',
+                    'jwt' => [
+                        ...$hubs['default']['jwt'],
+                        'claims' => ['iss' => 'https://example.com', 'sub' => 'test', 'client_id' => 'test'],
+                    ],
+                ];
+            }
+
+            $container->loadFromExtension('mercure', ['hubs' => $hubs]);
+            $container->loadFromExtension('notify', ['mercure_hub' => $mercureHub]);
 
             $container->setAlias('test.notify.twig_runtime', 'notify.twig_runtime')->setPublic(true);
         });
@@ -79,6 +105,13 @@ class TwigAppKernel extends Kernel
     public function getLogDir(): string
     {
         return $this->createTmpDir('logs');
+    }
+
+    // MercureBundle 0.5 introduced "protocol_version". Checking the installed symfony/mercure instead
+    // would be wrong: MercureBundle 0.4.1 and older declare no constraint on the component.
+    public static function supportsProtocolVersion(): bool
+    {
+        return InstalledVersions::satisfies(new VersionParser(), 'symfony/mercure-bundle', '>=0.5');
     }
 
     private function createTmpDir(string $type): string
