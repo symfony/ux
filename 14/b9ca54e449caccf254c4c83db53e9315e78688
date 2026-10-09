@@ -1,0 +1,31 @@
+---------------------------------------------------------------------------
+
+by dragosprotung at 2026-10-08T16:54:03Z
+
+I quickly checked other components that i currently do not use, but same issue (`aria-label="{{ label }}"` before `{{ attributes }}`) in:
+
+- `Calendar`
+- `Carousel`
+- `NavigationMenu`
+- `Sidebar`
+- `Sidebar:Rail`
+- `Sidebar:Trigger`
+
+The same `attributes.defaults({'aria-label': label})` fix applies i guess.
+
+One extra thing: hard-coded English `aria-label`s that can't be changed at all:
+
+- `Sonner`: "Notifications"
+- `Toast`: "Close notification"
+- `Combobox`: "Clear selection"
+- `Calendar`: "Month", "Year"
+
+Those can not have the same fix, and not sure if they should be handled in this PR, but wanted to mention them
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-10-09T09:07:26Z
+
+The `aria-label` for `Calendar`, `Carousel`, `NavigationMenu`, `Sidebar`, `Sidebar:Rail`, `Sidebar:Trigger` have been made configurable through `attributes.defaults()`.
+
+But not the other one you mentioned, I don't see a use-case when their `aria-label` could change in a specific context. `Close (...)` is good enough, if people need to add translations, they will do it.
