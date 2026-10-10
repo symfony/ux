@@ -1,0 +1,35 @@
+{
+    "name": "@symfony/ux-router",
+    "description": "Symfony Router for JavaScript",
+    "license": "MIT",
+    "version": "3.6.0",
+    "keywords": [
+        "symfony-ux"
+    ],
+    "homepage": "https://ux.symfony.com/router",
+    "repository": "https://github.com/symfony/ux",
+    "type": "module",
+    "files": [
+        "dist"
+    ],
+    "main": "dist/router_controller.js",
+    "types": "dist/router_controller.d.ts",
+    "scripts": {
+        "build": "node ../../../bin/build_package.ts .",
+        "watch": "node ../../../bin/build_package.ts . --watch",
+        "test": "pnpm run test:unit && pnpm run test:browser",
+        "test:unit": "../../../bin/unit_test_package.sh .",
+        "test:browser": "playwright test",
+        "test:browser:ui": "playwright test --ui"
+    },
+    "symfony": {
+        "importmap": {
+            "@symfony/ux-router": "path:%PACKAGE%/dist/router_controller.js"
+        }
+    },
+    "devDependencies": {
+        "jsdom": "^26.1.0",
+        "typescript": "^5.8.3",
+        "vitest": "^4.1.0"
+    }
+}

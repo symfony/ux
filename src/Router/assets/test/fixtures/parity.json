@@ -1,0 +1,1500 @@
+{
+    "routes": {
+        "static": {
+            "tokens": [
+                [
+                    "text",
+                    "/static/path"
+                ]
+            ],
+            "defaults": {},
+            "hostTokens": [],
+            "schemes": []
+        },
+        "colon": {
+            "tokens": [
+                [
+                    "text",
+                    "/x:y"
+                ]
+            ],
+            "defaults": {},
+            "hostTokens": [],
+            "schemes": []
+        },
+        "blog_show": {
+            "tokens": [
+                [
+                    "variable",
+                    "/",
+                    "[^/]+",
+                    "slug"
+                ],
+                [
+                    "text",
+                    "/blog"
+                ]
+            ],
+            "defaults": {},
+            "hostTokens": [],
+            "schemes": []
+        },
+        "blog_list": {
+            "tokens": [
+                [
+                    "variable",
+                    "/",
+                    "\\d+",
+                    "page"
+                ],
+                [
+                    "text",
+                    "/blog"
+                ]
+            ],
+            "defaults": {
+                "page": 1
+            },
+            "hostTokens": [],
+            "schemes": []
+        },
+        "archive": {
+            "tokens": [
+                [
+                    "variable",
+                    "/",
+                    "[^/]+",
+                    "month"
+                ],
+                [
+                    "variable",
+                    "/",
+                    "[^/]+",
+                    "year"
+                ],
+                [
+                    "text",
+                    "/archive"
+                ]
+            ],
+            "defaults": {
+                "year": 2026,
+                "month": 1
+            },
+            "hostTokens": [],
+            "schemes": []
+        },
+        "important": {
+            "tokens": [
+                [
+                    "variable",
+                    "/",
+                    "[^/]+",
+                    "page",
+                    false,
+                    true
+                ],
+                [
+                    "text",
+                    "/important"
+                ]
+            ],
+            "defaults": {
+                "page": 1
+            },
+            "hostTokens": [],
+            "schemes": []
+        },
+        "category": {
+            "tokens": [
+                [
+                    "variable",
+                    "/",
+                    "[^/]+",
+                    "name",
+                    true
+                ],
+                [
+                    "text",
+                    "/category"
+                ]
+            ],
+            "defaults": {},
+            "hostTokens": [],
+            "schemes": []
+        },
+        "word": {
+            "tokens": [
+                [
+                    "variable",
+                    "/",
+                    "[\\p{L}\\p{N}\\p{Mn}\\p{Pc}]+",
+                    "name",
+                    true
+                ],
+                [
+                    "text",
+                    "/word"
+                ]
+            ],
+            "defaults": {},
+            "hostTokens": [],
+            "schemes": []
+        },
+        "number": {
+            "tokens": [
+                [
+                    "variable",
+                    "/",
+                    "\\p{Nd}+",
+                    "value",
+                    true
+                ],
+                [
+                    "text",
+                    "/number"
+                ]
+            ],
+            "defaults": {},
+            "hostTokens": [],
+            "schemes": []
+        },
+        "lookahead": {
+            "tokens": [
+                [
+                    "variable",
+                    "/",
+                    "\\w+",
+                    "id"
+                ],
+                [
+                    "text",
+                    "/look"
+                ]
+            ],
+            "defaults": {},
+            "hostTokens": [],
+            "schemes": []
+        },
+        "about.en": {
+            "tokens": [
+                [
+                    "text",
+                    "/about"
+                ]
+            ],
+            "defaults": {
+                "_locale": "en",
+                "_canonical_route": "about"
+            },
+            "hostTokens": [],
+            "schemes": []
+        },
+        "about.fr": {
+            "tokens": [
+                [
+                    "text",
+                    "/a-propos"
+                ]
+            ],
+            "defaults": {
+                "_locale": "fr",
+                "_canonical_route": "about"
+            },
+            "hostTokens": [],
+            "schemes": []
+        },
+        "locale_home": {
+            "tokens": [
+                [
+                    "text",
+                    "/home"
+                ],
+                [
+                    "variable",
+                    "/",
+                    "en|fr",
+                    "_locale"
+                ]
+            ],
+            "defaults": {},
+            "hostTokens": [],
+            "schemes": []
+        },
+        "french": {
+            "tokens": [
+                [
+                    "text",
+                    "/french"
+                ]
+            ],
+            "defaults": {
+                "_locale": "fr"
+            },
+            "hostTokens": [],
+            "schemes": []
+        },
+        "host": {
+            "tokens": [
+                [
+                    "text",
+                    "/host"
+                ]
+            ],
+            "defaults": {
+                "sub": "www"
+            },
+            "hostTokens": [
+                [
+                    "text",
+                    ".example.com"
+                ],
+                [
+                    "variable",
+                    "",
+                    "www|m",
+                    "sub"
+                ]
+            ],
+            "schemes": []
+        },
+        "host_and_path": {
+            "tokens": [
+                [
+                    "variable",
+                    "/",
+                    "[^/]+",
+                    "id"
+                ],
+                [
+                    "text",
+                    "/users"
+                ]
+            ],
+            "defaults": {},
+            "hostTokens": [
+                [
+                    "text",
+                    ".example.com"
+                ],
+                [
+                    "variable",
+                    "",
+                    "[^\\.]+",
+                    "tenant"
+                ]
+            ],
+            "schemes": []
+        },
+        "secure": {
+            "tokens": [
+                [
+                    "text",
+                    "/secure"
+                ]
+            ],
+            "defaults": {},
+            "hostTokens": [],
+            "schemes": [
+                "https"
+            ]
+        },
+        "fragment": {
+            "tokens": [
+                [
+                    "text",
+                    "/fragment"
+                ]
+            ],
+            "defaults": {
+                "_fragment": "top"
+            },
+            "hostTokens": [],
+            "schemes": []
+        },
+        "files": {
+            "tokens": [
+                [
+                    "variable",
+                    "/",
+                    ".+",
+                    "path"
+                ],
+                [
+                    "text",
+                    "/files"
+                ]
+            ],
+            "defaults": {},
+            "hostTokens": [],
+            "schemes": []
+        }
+    },
+    "cases": [
+        {
+            "description": "static path",
+            "name": "static",
+            "parameters": {},
+            "referenceType": "path",
+            "context": {
+                "parameters": {
+                    "_locale": "en"
+                },
+                "baseUrl": "",
+                "pathInfo": "/",
+                "host": "localhost",
+                "scheme": "http",
+                "httpPort": 80,
+                "httpsPort": 443
+            },
+            "expected": "/static/path"
+        },
+        {
+            "description": "static url",
+            "name": "static",
+            "parameters": {},
+            "referenceType": "url",
+            "context": {
+                "parameters": {
+                    "_locale": "en"
+                },
+                "baseUrl": "",
+                "pathInfo": "/",
+                "host": "localhost",
+                "scheme": "http",
+                "httpPort": 80,
+                "httpsPort": 443
+            },
+            "expected": "http://localhost/static/path"
+        },
+        {
+            "description": "static network path",
+            "name": "static",
+            "parameters": {},
+            "referenceType": "network",
+            "context": {
+                "parameters": {
+                    "_locale": "en"
+                },
+                "baseUrl": "",
+                "pathInfo": "/",
+                "host": "localhost",
+                "scheme": "http",
+                "httpPort": 80,
+                "httpsPort": 443
+            },
+            "expected": "//localhost/static/path"
+        },
+        {
+            "description": "relative path",
+            "name": "static",
+            "parameters": {},
+            "referenceType": "relative",
+            "context": {
+                "parameters": {
+                    "_locale": "en"
+                },
+                "baseUrl": "",
+                "pathInfo": "/blog/foo",
+                "host": "localhost",
+                "scheme": "http",
+                "httpPort": 80,
+                "httpsPort": 443
+            },
+            "expected": "../static/path"
+        },
+        {
+            "description": "relative path to the current page",
+            "name": "static",
+            "parameters": {},
+            "referenceType": "relative",
+            "context": {
+                "parameters": {
+                    "_locale": "en"
+                },
+                "baseUrl": "",
+                "pathInfo": "/static/path",
+                "host": "localhost",
+                "scheme": "http",
+                "httpPort": 80,
+                "httpsPort": 443
+            },
+            "expected": ""
+        },
+        {
+            "description": "relative path to a parent directory",
+            "name": "blog_list",
+            "parameters": {},
+            "referenceType": "relative",
+            "context": {
+                "parameters": {
+                    "_locale": "en"
+                },
+                "baseUrl": "",
+                "pathInfo": "/blog/2/comments",
+                "host": "localhost",
+                "scheme": "http",
+                "httpPort": 80,
+                "httpsPort": 443
+            },
+            "expected": "../../blog"
+        },
+        {
+            "description": "relative path starting with a colon segment",
+            "name": "colon",
+            "parameters": {},
+            "referenceType": "relative",
+            "context": {
+                "parameters": {
+                    "_locale": "en"
+                },
+                "baseUrl": "",
+                "pathInfo": "/",
+                "host": "localhost",
+                "scheme": "http",
+                "httpPort": 80,
+                "httpsPort": 443
+            },
+            "expected": "./x:y"
+        },
+        {
+            "description": "variable",
+            "name": "blog_show",
+            "parameters": {
+                "slug": "hello"
+            },
+            "referenceType": "path",
+            "context": {
+                "parameters": {
+                    "_locale": "en"
+                },
+                "baseUrl": "",
+                "pathInfo": "/",
+                "host": "localhost",
+                "scheme": "http",
+                "httpPort": 80,
+                "httpsPort": 443
+            },
+            "expected": "/blog/hello"
+        },
+        {
+            "description": "missing mandatory parameter",
+            "name": "blog_show",
+            "parameters": {},
+            "referenceType": "path",
+            "context": {
+                "parameters": {
+                    "_locale": "en"
+                },
+                "baseUrl": "",
+                "pathInfo": "/",
+                "host": "localhost",
+                "scheme": "http",
+                "httpPort": 80,
+                "httpsPort": 443
+            },
+            "error": {
+                "name": "MissingMandatoryParametersError",
+                "message": "Some mandatory parameters are missing (\"slug\") to generate a URL for route \"blog_show\"."
+            }
+        },
+        {
+            "description": "missing host and path parameters",
+            "name": "host_and_path",
+            "parameters": {},
+            "referenceType": "path",
+            "context": {
+                "parameters": {
+                    "_locale": "en"
+                },
+                "baseUrl": "",
+                "pathInfo": "/",
+                "host": "localhost",
+                "scheme": "http",
+                "httpPort": 80,
+                "httpsPort": 443
+            },
+            "error": {
+                "name": "MissingMandatoryParametersError",
+                "message": "Some mandatory parameters are missing (\"tenant\", \"id\") to generate a URL for route \"host_and_path\"."
+            }
+        },
+        {
+            "description": "null mandatory parameter",
+            "name": "blog_show",
+            "parameters": {
+                "slug": null
+            },
+            "referenceType": "path",
+            "context": {
+                "parameters": {
+                    "_locale": "en"
+                },
+                "baseUrl": "",
+                "pathInfo": "/",
+                "host": "localhost",
+                "scheme": "http",
+                "httpPort": 80,
+                "httpsPort": 443
+            },
+            "error": {
+                "name": "InvalidParameterError",
+                "message": "Parameter \"slug\" for route \"blog_show\" must match \"[^/]+\" (\"\" given) to generate a corresponding URL."
+            }
+        },
+        {
+            "description": "optional variable omitted",
+            "name": "blog_list",
+            "parameters": {},
+            "referenceType": "path",
+            "context": {
+                "parameters": {
+                    "_locale": "en"
+                },
+                "baseUrl": "",
+                "pathInfo": "/",
+                "host": "localhost",
+                "scheme": "http",
+                "httpPort": 80,
+                "httpsPort": 443
+            },
+            "expected": "/blog"
+        },
+        {
+            "description": "optional variable given",
+            "name": "blog_list",
+            "parameters": {
+                "page": 2
+            },
+            "referenceType": "path",
+            "context": {
+                "parameters": {
+                    "_locale": "en"
+                },
+                "baseUrl": "",
+                "pathInfo": "/",
+                "host": "localhost",
+                "scheme": "http",
+                "httpPort": 80,
+                "httpsPort": 443
+            },
+            "expected": "/blog/2"
+        },
+        {
+            "description": "optional variable equal to its default",
+            "name": "blog_list",
+            "parameters": {
+                "page": "1"
+            },
+            "referenceType": "path",
+            "context": {
+                "parameters": {
+                    "_locale": "en"
+                },
+                "baseUrl": "",
+                "pathInfo": "/",
+                "host": "localhost",
+                "scheme": "http",
+                "httpPort": 80,
+                "httpsPort": 443
+            },
+            "expected": "/blog"
+        },
+        {
+            "description": "optional variable set to null",
+            "name": "blog_list",
+            "parameters": {
+                "page": null
+            },
+            "referenceType": "path",
+            "context": {
+                "parameters": {
+                    "_locale": "en"
+                },
+                "baseUrl": "",
+                "pathInfo": "/",
+                "host": "localhost",
+                "scheme": "http",
+                "httpPort": 80,
+                "httpsPort": 443
+            },
+            "expected": "/blog"
+        },
+        {
+            "description": "optional variable set to zero",
+            "name": "blog_list",
+            "parameters": {
+                "page": 0
+            },
+            "referenceType": "path",
+            "context": {
+                "parameters": {
+                    "_locale": "en"
+                },
+                "baseUrl": "",
+                "pathInfo": "/",
+                "host": "localhost",
+                "scheme": "http",
+                "httpPort": 80,
+                "httpsPort": 443
+            },
+            "expected": "/blog/0"
+        },
+        {
+            "description": "requirement not met",
+            "name": "blog_list",
+            "parameters": {
+                "page": "abc"
+            },
+            "referenceType": "path",
+            "context": {
+                "parameters": {
+                    "_locale": "en"
+                },
+                "baseUrl": "",
+                "pathInfo": "/",
+                "host": "localhost",
+                "scheme": "http",
+                "httpPort": 80,
+                "httpsPort": 443
+            },
+            "error": {
+                "name": "InvalidParameterError",
+                "message": "Parameter \"page\" for route \"blog_list\" must match \"\\d+\" (\"abc\" given) to generate a corresponding URL."
+            }
+        },
+        {
+            "description": "default requirement not met",
+            "name": "blog_show",
+            "parameters": {
+                "slug": ""
+            },
+            "referenceType": "path",
+            "context": {
+                "parameters": {
+                    "_locale": "en"
+                },
+                "baseUrl": "",
+                "pathInfo": "/",
+                "host": "localhost",
+                "scheme": "http",
+                "httpPort": 80,
+                "httpsPort": 443
+            },
+            "error": {
+                "name": "InvalidParameterError",
+                "message": "Parameter \"slug\" for route \"blog_show\" must match \"[^/]+\" (\"\" given) to generate a corresponding URL."
+            }
+        },
+        {
+            "description": "trailing optional variables",
+            "name": "archive",
+            "parameters": {
+                "month": 3
+            },
+            "referenceType": "path",
+            "context": {
+                "parameters": {
+                    "_locale": "en"
+                },
+                "baseUrl": "",
+                "pathInfo": "/",
+                "host": "localhost",
+                "scheme": "http",
+                "httpPort": 80,
+                "httpsPort": 443
+            },
+            "expected": "/archive/2026/3"
+        },
+        {
+            "description": "all optional variables omitted",
+            "name": "archive",
+            "parameters": {},
+            "referenceType": "path",
+            "context": {
+                "parameters": {
+                    "_locale": "en"
+                },
+                "baseUrl": "",
+                "pathInfo": "/",
+                "host": "localhost",
+                "scheme": "http",
+                "httpPort": 80,
+                "httpsPort": 443
+            },
+            "expected": "/archive"
+        },
+        {
+            "description": "important variable",
+            "name": "important",
+            "parameters": {},
+            "referenceType": "path",
+            "context": {
+                "parameters": {
+                    "_locale": "en"
+                },
+                "baseUrl": "",
+                "pathInfo": "/",
+                "host": "localhost",
+                "scheme": "http",
+                "httpPort": 80,
+                "httpsPort": 443
+            },
+            "expected": "/important/1"
+        },
+        {
+            "description": "utf-8 variable",
+            "name": "category",
+            "parameters": {
+                "name": "café"
+            },
+            "referenceType": "path",
+            "context": {
+                "parameters": {
+                    "_locale": "en"
+                },
+                "baseUrl": "",
+                "pathInfo": "/",
+                "host": "localhost",
+                "scheme": "http",
+                "httpPort": 80,
+                "httpsPort": 443
+            },
+            "expected": "/category/caf%C3%A9"
+        },
+        {
+            "description": "utf-8 word requirement",
+            "name": "word",
+            "parameters": {
+                "name": "élan"
+            },
+            "referenceType": "path",
+            "context": {
+                "parameters": {
+                    "_locale": "en"
+                },
+                "baseUrl": "",
+                "pathInfo": "/",
+                "host": "localhost",
+                "scheme": "http",
+                "httpPort": 80,
+                "httpsPort": 443
+            },
+            "expected": "/word/%C3%A9lan"
+        },
+        {
+            "description": "utf-8 digit requirement",
+            "name": "number",
+            "parameters": {
+                "value": "٣٤"
+            },
+            "referenceType": "path",
+            "context": {
+                "parameters": {
+                    "_locale": "en"
+                },
+                "baseUrl": "",
+                "pathInfo": "/",
+                "host": "localhost",
+                "scheme": "http",
+                "httpPort": 80,
+                "httpsPort": 443
+            },
+            "expected": "/number/%D9%A3%D9%A4"
+        },
+        {
+            "description": "look-around requirement ignored",
+            "name": "lookahead",
+            "parameters": {
+                "id": "new"
+            },
+            "referenceType": "path",
+            "context": {
+                "parameters": {
+                    "_locale": "en"
+                },
+                "baseUrl": "",
+                "pathInfo": "/",
+                "host": "localhost",
+                "scheme": "http",
+                "httpPort": 80,
+                "httpsPort": 443
+            },
+            "expected": "/look/new"
+        },
+        {
+            "description": "localized route from context locale",
+            "name": "about",
+            "parameters": {},
+            "referenceType": "path",
+            "context": {
+                "parameters": {
+                    "_locale": "fr"
+                },
+                "baseUrl": "",
+                "pathInfo": "/",
+                "host": "localhost",
+                "scheme": "http",
+                "httpPort": 80,
+                "httpsPort": 443
+            },
+            "expected": "/a-propos"
+        },
+        {
+            "description": "localized route from parameter",
+            "name": "about",
+            "parameters": {
+                "_locale": "en"
+            },
+            "referenceType": "path",
+            "context": {
+                "parameters": {
+                    "_locale": "fr"
+                },
+                "baseUrl": "",
+                "pathInfo": "/",
+                "host": "localhost",
+                "scheme": "http",
+                "httpPort": 80,
+                "httpsPort": 443
+            },
+            "expected": "/about"
+        },
+        {
+            "description": "localized route with region fallback",
+            "name": "about",
+            "parameters": {},
+            "referenceType": "path",
+            "context": {
+                "parameters": {
+                    "_locale": "fr_CA"
+                },
+                "baseUrl": "",
+                "pathInfo": "/",
+                "host": "localhost",
+                "scheme": "http",
+                "httpPort": 80,
+                "httpsPort": 443
+            },
+            "expected": "/a-propos"
+        },
+        {
+            "description": "localized variant called directly",
+            "name": "about.fr",
+            "parameters": {},
+            "referenceType": "path",
+            "context": {
+                "parameters": {
+                    "_locale": "en"
+                },
+                "baseUrl": "",
+                "pathInfo": "/",
+                "host": "localhost",
+                "scheme": "http",
+                "httpPort": 80,
+                "httpsPort": 443
+            },
+            "expected": "/a-propos"
+        },
+        {
+            "description": "localized route without matching locale",
+            "name": "about",
+            "parameters": {
+                "_locale": "de"
+            },
+            "referenceType": "path",
+            "context": {
+                "parameters": {
+                    "_locale": "en"
+                },
+                "baseUrl": "",
+                "pathInfo": "/",
+                "host": "localhost",
+                "scheme": "http",
+                "httpPort": 80,
+                "httpsPort": 443
+            },
+            "error": {
+                "name": "RouteNotFoundError",
+                "message": "Unable to generate a URL for the named route \"about\" as such route does not exist."
+            }
+        },
+        {
+            "description": "locale variable from context",
+            "name": "locale_home",
+            "parameters": {},
+            "referenceType": "path",
+            "context": {
+                "parameters": {
+                    "_locale": "fr"
+                },
+                "baseUrl": "",
+                "pathInfo": "/",
+                "host": "localhost",
+                "scheme": "http",
+                "httpPort": 80,
+                "httpsPort": 443
+            },
+            "expected": "/fr/home"
+        },
+        {
+            "description": "locale variable from parameter",
+            "name": "locale_home",
+            "parameters": {
+                "_locale": "en"
+            },
+            "referenceType": "path",
+            "context": {
+                "parameters": {
+                    "_locale": "fr"
+                },
+                "baseUrl": "",
+                "pathInfo": "/",
+                "host": "localhost",
+                "scheme": "http",
+                "httpPort": 80,
+                "httpsPort": 443
+            },
+            "expected": "/en/home"
+        },
+        {
+            "description": "locale variable not met",
+            "name": "locale_home",
+            "parameters": {
+                "_locale": "de"
+            },
+            "referenceType": "path",
+            "context": {
+                "parameters": {
+                    "_locale": "en"
+                },
+                "baseUrl": "",
+                "pathInfo": "/",
+                "host": "localhost",
+                "scheme": "http",
+                "httpPort": 80,
+                "httpsPort": 443
+            },
+            "error": {
+                "name": "InvalidParameterError",
+                "message": "Parameter \"_locale\" for route \"locale_home\" must match \"en|fr\" (\"de\" given) to generate a corresponding URL."
+            }
+        },
+        {
+            "description": "locale on a non-localized route",
+            "name": "static",
+            "parameters": {
+                "_locale": "fr"
+            },
+            "referenceType": "path",
+            "context": {
+                "parameters": {
+                    "_locale": "en"
+                },
+                "baseUrl": "",
+                "pathInfo": "/",
+                "host": "localhost",
+                "scheme": "http",
+                "httpPort": 80,
+                "httpsPort": 443
+            },
+            "expected": "/static/path?_locale=fr"
+        },
+        {
+            "description": "locale equal to a non-variable default",
+            "name": "french",
+            "parameters": {
+                "_locale": "fr"
+            },
+            "referenceType": "path",
+            "context": {
+                "parameters": {
+                    "_locale": "en"
+                },
+                "baseUrl": "",
+                "pathInfo": "/",
+                "host": "localhost",
+                "scheme": "http",
+                "httpPort": 80,
+                "httpsPort": 443
+            },
+            "expected": "/french"
+        },
+        {
+            "description": "locale different from a non-variable default",
+            "name": "french",
+            "parameters": {
+                "_locale": "en"
+            },
+            "referenceType": "path",
+            "context": {
+                "parameters": {
+                    "_locale": "en"
+                },
+                "baseUrl": "",
+                "pathInfo": "/",
+                "host": "localhost",
+                "scheme": "http",
+                "httpPort": 80,
+                "httpsPort": 443
+            },
+            "expected": "/french?_locale=en"
+        },
+        {
+            "description": "host with default variable",
+            "name": "host",
+            "parameters": {},
+            "referenceType": "url",
+            "context": {
+                "parameters": {
+                    "_locale": "en"
+                },
+                "baseUrl": "",
+                "pathInfo": "/",
+                "host": "localhost",
+                "scheme": "http",
+                "httpPort": 80,
+                "httpsPort": 443
+            },
+            "expected": "http://www.example.com/host"
+        },
+        {
+            "description": "host differing from context",
+            "name": "host",
+            "parameters": {},
+            "referenceType": "path",
+            "context": {
+                "parameters": {
+                    "_locale": "en"
+                },
+                "baseUrl": "",
+                "pathInfo": "/",
+                "host": "localhost",
+                "scheme": "http",
+                "httpPort": 80,
+                "httpsPort": 443
+            },
+            "expected": "//www.example.com/host"
+        },
+        {
+            "description": "host matching context",
+            "name": "host",
+            "parameters": {},
+            "referenceType": "path",
+            "context": {
+                "parameters": {
+                    "_locale": "en"
+                },
+                "baseUrl": "",
+                "pathInfo": "/",
+                "host": "www.example.com",
+                "scheme": "http",
+                "httpPort": 80,
+                "httpsPort": 443
+            },
+            "expected": "/host"
+        },
+        {
+            "description": "host variable",
+            "name": "host",
+            "parameters": {
+                "sub": "m"
+            },
+            "referenceType": "path",
+            "context": {
+                "parameters": {
+                    "_locale": "en"
+                },
+                "baseUrl": "",
+                "pathInfo": "/",
+                "host": "localhost",
+                "scheme": "http",
+                "httpPort": 80,
+                "httpsPort": 443
+            },
+            "expected": "//m.example.com/host"
+        },
+        {
+            "description": "host requirement not met",
+            "name": "host",
+            "parameters": {
+                "sub": "api"
+            },
+            "referenceType": "path",
+            "context": {
+                "parameters": {
+                    "_locale": "en"
+                },
+                "baseUrl": "",
+                "pathInfo": "/",
+                "host": "localhost",
+                "scheme": "http",
+                "httpPort": 80,
+                "httpsPort": 443
+            },
+            "error": {
+                "name": "InvalidParameterError",
+                "message": "Parameter \"sub\" for route \"host\" must match \"www|m\" (\"api\" given) to generate a corresponding URL."
+            }
+        },
+        {
+            "description": "required scheme from another scheme",
+            "name": "secure",
+            "parameters": {},
+            "referenceType": "path",
+            "context": {
+                "parameters": {
+                    "_locale": "en"
+                },
+                "baseUrl": "",
+                "pathInfo": "/",
+                "host": "localhost",
+                "scheme": "http",
+                "httpPort": 80,
+                "httpsPort": 443
+            },
+            "expected": "https://localhost/secure"
+        },
+        {
+            "description": "required scheme from the same scheme",
+            "name": "secure",
+            "parameters": {},
+            "referenceType": "path",
+            "context": {
+                "parameters": {
+                    "_locale": "en"
+                },
+                "baseUrl": "",
+                "pathInfo": "/",
+                "host": "localhost",
+                "scheme": "https",
+                "httpPort": 80,
+                "httpsPort": 443
+            },
+            "expected": "/secure"
+        },
+        {
+            "description": "custom http port",
+            "name": "static",
+            "parameters": {},
+            "referenceType": "url",
+            "context": {
+                "parameters": {
+                    "_locale": "en"
+                },
+                "baseUrl": "",
+                "pathInfo": "/",
+                "host": "localhost",
+                "scheme": "http",
+                "httpPort": 8080,
+                "httpsPort": 443
+            },
+            "expected": "http://localhost:8080/static/path"
+        },
+        {
+            "description": "custom https port",
+            "name": "static",
+            "parameters": {},
+            "referenceType": "url",
+            "context": {
+                "parameters": {
+                    "_locale": "en"
+                },
+                "baseUrl": "",
+                "pathInfo": "/",
+                "host": "localhost",
+                "scheme": "https",
+                "httpPort": 80,
+                "httpsPort": 8443
+            },
+            "expected": "https://localhost:8443/static/path"
+        },
+        {
+            "description": "base url",
+            "name": "static",
+            "parameters": {},
+            "referenceType": "path",
+            "context": {
+                "parameters": {
+                    "_locale": "en"
+                },
+                "baseUrl": "/app.php",
+                "pathInfo": "/",
+                "host": "localhost",
+                "scheme": "http",
+                "httpPort": 80,
+                "httpsPort": 443
+            },
+            "expected": "/app.php/static/path"
+        },
+        {
+            "description": "base url in absolute url",
+            "name": "static",
+            "parameters": {},
+            "referenceType": "url",
+            "context": {
+                "parameters": {
+                    "_locale": "en"
+                },
+                "baseUrl": "/sub",
+                "pathInfo": "/",
+                "host": "localhost",
+                "scheme": "http",
+                "httpPort": 80,
+                "httpsPort": 443
+            },
+            "expected": "http://localhost/sub/static/path"
+        },
+        {
+            "description": "default fragment",
+            "name": "fragment",
+            "parameters": {},
+            "referenceType": "path",
+            "context": {
+                "parameters": {
+                    "_locale": "en"
+                },
+                "baseUrl": "",
+                "pathInfo": "/",
+                "host": "localhost",
+                "scheme": "http",
+                "httpPort": 80,
+                "httpsPort": 443
+            },
+            "expected": "/fragment#top"
+        },
+        {
+            "description": "fragment parameter",
+            "name": "static",
+            "parameters": {
+                "_fragment": "a b/c?d@e"
+            },
+            "referenceType": "path",
+            "context": {
+                "parameters": {
+                    "_locale": "en"
+                },
+                "baseUrl": "",
+                "pathInfo": "/",
+                "host": "localhost",
+                "scheme": "http",
+                "httpPort": 80,
+                "httpsPort": 443
+            },
+            "expected": "/static/path#a%20b/c?d@e"
+        },
+        {
+            "description": "query parameter",
+            "name": "static",
+            "parameters": {
+                "_query": {
+                    "sort": "desc",
+                    "page": 2
+                }
+            },
+            "referenceType": "path",
+            "context": {
+                "parameters": {
+                    "_locale": "en"
+                },
+                "baseUrl": "",
+                "pathInfo": "/",
+                "host": "localhost",
+                "scheme": "http",
+                "httpPort": 80,
+                "httpsPort": 443
+            },
+            "expected": "/static/path?sort=desc&page=2"
+        },
+        {
+            "description": "extra parameters",
+            "name": "blog_show",
+            "parameters": {
+                "slug": "hello",
+                "foo": "bar",
+                "empty": null
+            },
+            "referenceType": "path",
+            "context": {
+                "parameters": {
+                    "_locale": "en"
+                },
+                "baseUrl": "",
+                "pathInfo": "/",
+                "host": "localhost",
+                "scheme": "http",
+                "httpPort": 80,
+                "httpsPort": 443
+            },
+            "expected": "/blog/hello?foo=bar"
+        },
+        {
+            "description": "nested extra parameters",
+            "name": "static",
+            "parameters": {
+                "filters": {
+                    "tags": [
+                        "a",
+                        "b"
+                    ],
+                    "author": "me"
+                }
+            },
+            "referenceType": "path",
+            "context": {
+                "parameters": {
+                    "_locale": "en"
+                },
+                "baseUrl": "",
+                "pathInfo": "/",
+                "host": "localhost",
+                "scheme": "http",
+                "httpPort": 80,
+                "httpsPort": 443
+            },
+            "expected": "/static/path?filters%5Btags%5D%5B0%5D=a&filters%5Btags%5D%5B1%5D=b&filters%5Bauthor%5D=me"
+        },
+        {
+            "description": "boolean extra parameters",
+            "name": "static",
+            "parameters": {
+                "yes": true,
+                "no": false
+            },
+            "referenceType": "path",
+            "context": {
+                "parameters": {
+                    "_locale": "en"
+                },
+                "baseUrl": "",
+                "pathInfo": "/",
+                "host": "localhost",
+                "scheme": "http",
+                "httpPort": 80,
+                "httpsPort": 443
+            },
+            "expected": "/static/path?yes=1&no=0"
+        },
+        {
+            "description": "special characters in query",
+            "name": "static",
+            "parameters": {
+                "q": "a b&c=d/e?f@g:h!i;j,k*l+m#n"
+            },
+            "referenceType": "path",
+            "context": {
+                "parameters": {
+                    "_locale": "en"
+                },
+                "baseUrl": "",
+                "pathInfo": "/",
+                "host": "localhost",
+                "scheme": "http",
+                "httpPort": 80,
+                "httpsPort": 443
+            },
+            "expected": "/static/path?q=a%20b%26c%3Dd/e?f@g:h!i;j,k*l%2Bm%23n"
+        },
+        {
+            "description": "special characters in path",
+            "name": "files",
+            "parameters": {
+                "path": "a b/c@d:e;f,g=h+i!j*k|l'm(n)o~p#q?r"
+            },
+            "referenceType": "path",
+            "context": {
+                "parameters": {
+                    "_locale": "en"
+                },
+                "baseUrl": "",
+                "pathInfo": "/",
+                "host": "localhost",
+                "scheme": "http",
+                "httpPort": 80,
+                "httpsPort": 443
+            },
+            "expected": "/files/a%20b/c@d:e;f,g=h+i!j*k|l%27m%28n%29o~p%23q%3Fr"
+        },
+        {
+            "description": "dot segments",
+            "name": "files",
+            "parameters": {
+                "path": "a/../b/./c"
+            },
+            "referenceType": "path",
+            "context": {
+                "parameters": {
+                    "_locale": "en"
+                },
+                "baseUrl": "",
+                "pathInfo": "/",
+                "host": "localhost",
+                "scheme": "http",
+                "httpPort": 80,
+                "httpsPort": 443
+            },
+            "expected": "/files/a/%2E%2E/b/%2E/c"
+        },
+        {
+            "description": "single dot segment",
+            "name": "files",
+            "parameters": {
+                "path": "."
+            },
+            "referenceType": "path",
+            "context": {
+                "parameters": {
+                    "_locale": "en"
+                },
+                "baseUrl": "",
+                "pathInfo": "/",
+                "host": "localhost",
+                "scheme": "http",
+                "httpPort": 80,
+                "httpsPort": 443
+            },
+            "expected": "/files/%2E"
+        },
+        {
+            "description": "encoded slash stays encoded",
+            "name": "files",
+            "parameters": {
+                "path": "a%2Fb"
+            },
+            "referenceType": "path",
+            "context": {
+                "parameters": {
+                    "_locale": "en"
+                },
+                "baseUrl": "",
+                "pathInfo": "/",
+                "host": "localhost",
+                "scheme": "http",
+                "httpPort": 80,
+                "httpsPort": 443
+            },
+            "expected": "/files/a%2Fb"
+        },
+        {
+            "description": "unknown route",
+            "name": "unknown",
+            "parameters": {},
+            "referenceType": "path",
+            "context": {
+                "parameters": {
+                    "_locale": "en"
+                },
+                "baseUrl": "",
+                "pathInfo": "/",
+                "host": "localhost",
+                "scheme": "http",
+                "httpPort": 80,
+                "httpsPort": 443
+            },
+            "error": {
+                "name": "RouteNotFoundError",
+                "message": "Unable to generate a URL for the named route \"unknown\" as such route does not exist."
+            }
+        }
+    ]
+}

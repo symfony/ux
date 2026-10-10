@@ -56,7 +56,7 @@ jobs:
             - name: Build root PHP packages
               run: php .github/build-packages.php
 
-            # We always install PHP deps because of the UX Translator, which requires `var/translations` to exists
+            # We always install PHP deps because of the UX Translator and UX Router, which require `var/translations` and `var/routes` to exist
             - name: Install app dependencies
               uses: ramsey/composer-install@65e4f84970763564f46a70b8a54b90d033b3bdda # 4.0.0
               with:

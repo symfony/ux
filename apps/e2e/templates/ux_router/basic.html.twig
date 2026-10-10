@@ -1,0 +1,28 @@
+{% extends 'example.html.twig' %}
+
+{% block example %}
+    <div class="mb-3">
+        <button id="doGenerate" class="btn btn-primary">Generate</button>
+    </div>
+    <dl>
+        <dt>Path</dt><dd data-testid="path"></dd>
+        <dt>Localized path</dt><dd data-testid="localized"></dd>
+        <dt>URL</dt><dd data-testid="url"></dd>
+    </dl>
+    <a id="link" href="#">Blog post</a>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="module">
+        import { path, url } from 'app';
+
+        document.querySelector('#doGenerate').addEventListener('click', () => {
+            const blogPath = path('app_ux_router_blog_show', { slug: 'hello-world', _query: { page: 2 } });
+            document.querySelector('[data-testid="path"]').textContent = blogPath;
+            document.querySelector('[data-testid="localized"]').textContent = path('app_ux_router_about', { _locale: 'fr' });
+            document.querySelector('[data-testid="url"]').textContent = url('app_ux_router_blog_show', { slug: 'hello-world' });
+            document.querySelector('#link').href = blogPath;
+        });
+    </script>
+{% endblock %}

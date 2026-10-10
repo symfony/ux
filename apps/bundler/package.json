@@ -14,6 +14,7 @@
         "@symfony/ux-live-component": "file:vendor/symfony/ux-live-component/assets",
         "@symfony/ux-notify": "file:vendor/symfony/ux-notify/assets",
         "@symfony/ux-react": "file:vendor/symfony/ux-react/assets",
+        "@symfony/ux-router": "file:vendor/symfony/ux-router/assets",
         "@symfony/ux-translator": "file:vendor/symfony/ux-translator/assets",
         "@symfony/ux-turbo": "file:vendor/symfony/ux-turbo/assets",
         "@symfony/ux-vue": "file:vendor/symfony/ux-vue/assets",
