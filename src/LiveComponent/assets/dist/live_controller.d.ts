@@ -150,6 +150,7 @@ declare class Component {
   private renderError;
   private resetPromise;
   _updateFromParentProps(props: any): void;
+  private getCurrentHistoryEntryKey;
 }
 declare const getComponent: (element: HTMLElement) => Promise<Component>;
 interface LiveEvent extends CustomEvent {
