@@ -12,8 +12,10 @@
 namespace Symfony\UX\Toolkit\Tests;
 
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 use Symfony\UX\Toolkit\Component\ComponentDocParser;
 use Symfony\UX\Toolkit\UXToolkitBundle;
 use Twig\Environment;
@@ -34,6 +36,49 @@ class UXToolkitBundleTest extends KernelTestCase
         $container = self::$kernel->getContainer();
 
         $this->assertInstanceOf(ComponentDocParser::class, $container->get('ux_toolkit.component.component_doc_parser'));
+    }
+
+    public function testComponentDirDefaultsToTheAnonymousTemplateDirectory(): void
+    {
+        $this->assertNull($this->loadExtension([]));
+    }
+
+    public function testComponentDirCanBeConfigured(): void
+    {
+        $this->assertSame('templates/components/ui', $this->loadExtension([['component_dir' => 'templates/components/ui']]));
+    }
+
+    public function testComponentDirMustNotEscapeTheDestination(): void
+    {
+        $this->expectException(InvalidConfigurationException::class);
+        $this->expectExceptionMessage('must not escape its target directory');
+
+        $this->loadExtension([['component_dir' => '../PWNED']]);
+    }
+
+    public function testComponentDirMustBeRelative(): void
+    {
+        $this->expectException(InvalidConfigurationException::class);
+        $this->expectExceptionMessage('must be relative to the destination directory');
+
+        $this->loadExtension([['component_dir' => '/templates/ui']]);
+    }
+
+    /**
+     * @param list<array<string,mixed>> $configs
+     */
+    private function loadExtension(array $configs): ?string
+    {
+        $extension = new UXToolkitBundle()->getContainerExtension();
+
+        // The extension built by AbstractBundle reads these parameters to create its config
+        // loader, and does so unconditionally on Symfony < 8.1.
+        $extension->load($configs, $container = new ContainerBuilder(new ParameterBag([
+            'kernel.environment' => 'test',
+            'kernel.build_dir' => sys_get_temp_dir(),
+        ])));
+
+        return $container->getParameter('.ux_toolkit.component_dir');
     }
 
     public function testToolkitTemplateNamespaceResolves(): void
