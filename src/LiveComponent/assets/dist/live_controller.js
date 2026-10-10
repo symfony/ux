@@ -1700,6 +1700,10 @@ var Component = class {
 				if (controls.displayError) this.renderError(html);
 				this.backendRequest = null;
 				thisPromiseResolve(backendResponse);
+				if (this.isRequestPending) {
+					this.isRequestPending = false;
+					this.performRequest();
+				}
 				return response;
 			}
 			if (backendResponse.isRemoved()) {
