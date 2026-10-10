@@ -11,21 +11,21 @@ A collection of navigation links with optional hover-triggered submenus.
                 <twig:NavigationMenu:Content>
                     <ul class="grid w-96 gap-1">
                         <li>
-                            <a class="block rounded-md p-3 hover:bg-accent" href="/docs">
-                                <div class="text-sm font-medium leading-none">Introduction</div>
-                                <p class="line-clamp-2 text-sm text-muted-foreground">Reusable components built with Tailwind CSS.</p>
+                            <a class="flex flex-col gap-1 rounded-md p-2 text-sm transition-all outline-none hover:bg-muted focus:bg-muted" href="/docs">
+                                <div class="leading-none font-medium">Introduction</div>
+                                <p class="line-clamp-2 text-muted-foreground">Reusable components built with Tailwind CSS.</p>
                             </a>
                         </li>
                         <li>
-                            <a class="block rounded-md p-3 hover:bg-accent" href="/docs/installation">
-                                <div class="text-sm font-medium leading-none">Installation</div>
-                                <p class="line-clamp-2 text-sm text-muted-foreground">How to install dependencies and structure your app.</p>
+                            <a class="flex flex-col gap-1 rounded-md p-2 text-sm transition-all outline-none hover:bg-muted focus:bg-muted" href="/docs/installation">
+                                <div class="leading-none font-medium">Installation</div>
+                                <p class="line-clamp-2 text-muted-foreground">How to install dependencies and structure your app.</p>
                             </a>
                         </li>
                         <li>
-                            <a class="block rounded-md p-3 hover:bg-accent" href="/docs/primitives/typography">
-                                <div class="text-sm font-medium leading-none">Typography</div>
-                                <p class="line-clamp-2 text-sm text-muted-foreground">Styles for headings, paragraphs, lists, and more.</p>
+                            <a class="flex flex-col gap-1 rounded-md p-2 text-sm transition-all outline-none hover:bg-muted focus:bg-muted" href="/docs/primitives/typography">
+                                <div class="leading-none font-medium">Typography</div>
+                                <p class="line-clamp-2 text-muted-foreground">Styles for headings, paragraphs, lists, and more.</p>
                             </a>
                         </li>
                     </ul>
@@ -45,9 +45,9 @@ A collection of navigation links with optional hover-triggered submenus.
                         ] %}
                         {% for component in components %}
                             <li>
-                                <a class="block rounded-md p-3 hover:bg-accent" href="{{ component.href }}">
-                                    <div class="text-sm font-medium leading-none">{{ component.title }}</div>
-                                    <p class="line-clamp-2 text-sm text-muted-foreground">{{ component.description }}</p>
+                                <a class="flex flex-col gap-1 rounded-md p-2 text-sm transition-all outline-none hover:bg-muted focus:bg-muted" href="{{ component.href }}">
+                                    <div class="leading-none font-medium">{{ component.title }}</div>
+                                    <p class="line-clamp-2 text-muted-foreground">{{ component.description }}</p>
                                 </a>
                             </li>
                         {% endfor %}
@@ -69,9 +69,9 @@ A collection of navigation links with optional hover-triggered submenus.
                         ] %}
                         {% for resource in resources %}
                             <li>
-                                <a class="block rounded-md p-3 hover:bg-accent" href="{{ resource.href }}">
-                                    <div class="text-sm font-medium leading-none">{{ resource.title }}</div>
-                                    <p class="line-clamp-2 text-sm text-muted-foreground">{{ resource.description }}</p>
+                                <a class="flex flex-col gap-1 rounded-md p-2 text-sm transition-all outline-none hover:bg-muted focus:bg-muted" href="{{ resource.href }}">
+                                    <div class="leading-none font-medium">{{ resource.title }}</div>
+                                    <p class="line-clamp-2 text-muted-foreground">{{ resource.description }}</p>
                                 </a>
                             </li>
                         {% endfor %}
@@ -141,15 +141,15 @@ To enable RTL support, set the `dir="rtl"` attribute on the root element.
                     <twig:NavigationMenu:Content>
                         <ul class="grid w-96 gap-1">
                             <li>
-                                <a class="block rounded-md p-3 hover:bg-accent" href="/docs">
-                                    <div class="text-sm font-medium leading-none">مقدمة</div>
-                                    <p class="line-clamp-2 text-sm text-muted-foreground">مكونات قابلة لإعادة الاستخدام مبنية باستخدام Tailwind CSS.</p>
+                                <a class="flex flex-col gap-1 rounded-md p-2 text-sm transition-all outline-none hover:bg-muted focus:bg-muted" href="/docs">
+                                    <div class="leading-none font-medium">مقدمة</div>
+                                    <p class="line-clamp-2 text-muted-foreground">مكونات قابلة لإعادة الاستخدام مبنية باستخدام Tailwind CSS.</p>
                                 </a>
                             </li>
                             <li>
-                                <a class="block rounded-md p-3 hover:bg-accent" href="/docs/installation">
-                                    <div class="text-sm font-medium leading-none">التثبيت</div>
-                                    <p class="line-clamp-2 text-sm text-muted-foreground">كيفية تثبيت التبعيات وتنظيم تطبيقك.</p>
+                                <a class="flex flex-col gap-1 rounded-md p-2 text-sm transition-all outline-none hover:bg-muted focus:bg-muted" href="/docs/installation">
+                                    <div class="leading-none font-medium">التثبيت</div>
+                                    <p class="line-clamp-2 text-muted-foreground">كيفية تثبيت التبعيات وتنظيم تطبيقك.</p>
                                 </a>
                             </li>
                         </ul>
@@ -171,15 +171,15 @@ To enable RTL support, set the `dir="rtl"` attribute on the root element.
                     <twig:NavigationMenu:Content>
                         <ul class="grid w-96 gap-1">
                             <li>
-                                <a class="block rounded-md p-3 hover:bg-accent" href="/docs">
-                                    <div class="text-sm font-medium leading-none">מבוא</div>
-                                    <p class="line-clamp-2 text-sm text-muted-foreground">רכיבים לשימוש חוזר הבנויים עם Tailwind CSS.</p>
+                                <a class="flex flex-col gap-1 rounded-md p-2 text-sm transition-all outline-none hover:bg-muted focus:bg-muted" href="/docs">
+                                    <div class="leading-none font-medium">מבוא</div>
+                                    <p class="line-clamp-2 text-muted-foreground">רכיבים לשימוש חוזר הבנויים עם Tailwind CSS.</p>
                                 </a>
                             </li>
                             <li>
-                                <a class="block rounded-md p-3 hover:bg-accent" href="/docs/installation">
-                                    <div class="text-sm font-medium leading-none">התקנה</div>
-                                    <p class="line-clamp-2 text-sm text-muted-foreground">כיצד להתקין תלויות ולבנות את האפליקציה שלך.</p>
+                                <a class="flex flex-col gap-1 rounded-md p-2 text-sm transition-all outline-none hover:bg-muted focus:bg-muted" href="/docs/installation">
+                                    <div class="leading-none font-medium">התקנה</div>
+                                    <p class="line-clamp-2 text-muted-foreground">כיצד להתקין תלויות ולבנות את האפליקציה שלך.</p>
                                 </a>
                             </li>
                         </ul>

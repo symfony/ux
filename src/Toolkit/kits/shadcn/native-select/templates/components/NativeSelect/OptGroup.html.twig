@@ -1,4 +1,4 @@
-<optgroup data-slot="native-select-optgroup" {{ attributes }}>
+<optgroup data-slot="native-select-optgroup" {{ attributes.defaults({class: 'bg-[Canvas] text-[CanvasText]'|tailwind_classes}) }}>
     {##- The `NativeSelect:Option` components in this group. -#}
     {%- block content %}{% endblock -%}
 </optgroup>

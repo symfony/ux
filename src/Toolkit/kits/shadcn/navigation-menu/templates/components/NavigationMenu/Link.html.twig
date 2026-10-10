@@ -6,7 +6,7 @@
     href="{{ href }}"
     data-slot="navigation-menu-link"
     {{ attributes.defaults({
-        class: 'inline-flex h-9 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50'|tailwind_classes,
+        class: 'inline-flex h-9 w-max items-center justify-center gap-2 rounded-lg px-2.5 py-1.5 text-sm font-medium transition-all outline-none hover:bg-muted focus:bg-muted focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-1 aria-current:bg-muted/50 aria-current:hover:bg-muted in-data-[slot=navigation-menu-content]:rounded-md disabled:pointer-events-none disabled:opacity-50 [&_svg:not([class*=size-])]:size-4'|tailwind_classes,
     }) }}
 >
     {##- The link label. -#}

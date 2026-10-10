@@ -21,6 +21,21 @@ Displays a button or a component that looks like a button.
 <twig:Button variant="outline">Button</twig:Button>
 ```
 
+## Cursor
+
+Tailwind v4 [switched](https://tailwindcss.com/docs/upgrade-guide#buttons-use-the-default-cursor) from `cursor: pointer` to `cursor: default` for the button element.
+
+If you want to keep the `cursor: pointer` behavior, add the following code to your stylesheet:
+
+```css
+@layer base {
+    button:not(:disabled),
+    [role='button']:not(:disabled) {
+        cursor: pointer;
+    }
+}
+```
+
 ## Examples
 
 ### Size
@@ -169,7 +184,7 @@ To enable RTL support, set the `dir="rtl"` attribute on the root element.
         </twig:Button>
     </div>
     <div class="flex flex-wrap items-center gap-2 md:flex-row" dir="rtl">
-        <twig:Button variant="outline">לחצן</twig:Button>
+        <twig:Button variant="outline">כפתור</twig:Button>
         <twig:Button variant="destructive">מחק</twig:Button>
         <twig:Button variant="outline">
             שלח
