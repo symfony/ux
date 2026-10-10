@@ -11,12 +11,14 @@
 
 namespace Symfony\UX\TwigComponent;
 
+use Symfony\Contracts\Service\ResetInterface;
+
 /**
  * @author Ryan Weaver <ryan@symfonycasts.com>
  *
  * @internal
  */
-class ComponentStack implements \IteratorAggregate
+class ComponentStack implements \IteratorAggregate, ResetInterface
 {
     /**
      * @var MountedComponent[]
@@ -67,5 +69,10 @@ class ComponentStack implements \IteratorAggregate
     public function getIterator(): \Traversable
     {
         return new \ArrayIterator(array_reverse($this->components));
+    }
+
+    public function reset(): void
+    {
+        $this->components = [];
     }
 }
