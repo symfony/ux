@@ -2282,6 +2282,18 @@ var SetValueOntoModelFieldsPlugin_default = class {
 			if (component.valueStore.has(modelName)) setValueOnElement(element, component.valueStore.get(modelName));
 			if (element instanceof HTMLSelectElement && !element.multiple) component.valueStore.set(modelName, getValueFromElement(element, component.valueStore));
 		});
+		this.synchronizeValueOfSelectsMappedViaForm(component);
+	}
+	synchronizeValueOfSelectsMappedViaForm(component) {
+		component.element.querySelectorAll("form[data-model] select[name]:not([data-model])").forEach((element) => {
+			if (!(element instanceof HTMLSelectElement) || element.multiple) return;
+			if (!elementBelongsToThisComponent(element, component)) return;
+			const modelDirective = getModelDirectiveFromElement(element, false);
+			if (!modelDirective) return;
+			const modelName = modelDirective.action;
+			if (component.getUnsyncedModels().includes(modelName) || !component.valueStore.has(modelName)) return;
+			component.valueStore.set(modelName, getValueFromElement(element, component.valueStore));
+		});
 	}
 };
 var ValidatedFieldsPlugin_default = class {
