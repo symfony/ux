@@ -1,0 +1,9 @@
+<span
+    data-slot="context-menu-shortcut"
+    {{ attributes.defaults({
+        class: 'ms-auto text-xs tracking-widest text-muted-foreground'|tailwind_classes,
+    }) }}
+>
+    {##- The shortcut label, e.g. "⌘K". -#}
+    {%- block content %}{% endblock -%}
+</span>

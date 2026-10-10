@@ -1,0 +1,115 @@
+<!--
+- Kit: Shadcn UI
+- Component: Context Menu
+- Code:
+```twig
+<twig:ContextMenu>
+    <twig:ContextMenu:Trigger class="flex aspect-video w-full max-w-xs items-center justify-center rounded-xl border border-dashed text-sm">
+        <span class="hidden pointer-fine:inline-block">Right click here</span>
+        <span class="hidden pointer-coarse:inline-block">Long press here</span>
+    </twig:ContextMenu:Trigger>
+    <twig:ContextMenu:Content class="w-48">
+        <twig:ContextMenu:Group>
+            <twig:ContextMenu:Item>
+                Back
+                <twig:ContextMenu:Shortcut>⌘[</twig:ContextMenu:Shortcut>
+            </twig:ContextMenu:Item>
+            <twig:ContextMenu:Item disabled>
+                Forward
+                <twig:ContextMenu:Shortcut>⌘]</twig:ContextMenu:Shortcut>
+            </twig:ContextMenu:Item>
+            <twig:ContextMenu:Item>
+                Reload
+                <twig:ContextMenu:Shortcut>⌘R</twig:ContextMenu:Shortcut>
+            </twig:ContextMenu:Item>
+            <twig:ContextMenu:Sub>
+                <twig:ContextMenu:SubTrigger>More Tools</twig:ContextMenu:SubTrigger>
+                <twig:ContextMenu:SubContent class="w-44">
+                    <twig:ContextMenu:Group>
+                        <twig:ContextMenu:Item>Save Page...</twig:ContextMenu:Item>
+                        <twig:ContextMenu:Item>Create Shortcut...</twig:ContextMenu:Item>
+                        <twig:ContextMenu:Item>Name Window...</twig:ContextMenu:Item>
+                    </twig:ContextMenu:Group>
+                    <twig:ContextMenu:Separator />
+                    <twig:ContextMenu:Group>
+                        <twig:ContextMenu:Item>Developer Tools</twig:ContextMenu:Item>
+                    </twig:ContextMenu:Group>
+                    <twig:ContextMenu:Separator />
+                    <twig:ContextMenu:Group>
+                        <twig:ContextMenu:Item variant="destructive">Delete</twig:ContextMenu:Item>
+                    </twig:ContextMenu:Group>
+                </twig:ContextMenu:SubContent>
+            </twig:ContextMenu:Sub>
+        </twig:ContextMenu:Group>
+        <twig:ContextMenu:Separator />
+        <twig:ContextMenu:Group>
+            <twig:ContextMenu:CheckboxItem checked>Show Bookmarks</twig:ContextMenu:CheckboxItem>
+            <twig:ContextMenu:CheckboxItem>Show Full URLs</twig:ContextMenu:CheckboxItem>
+        </twig:ContextMenu:Group>
+        <twig:ContextMenu:Separator />
+        <twig:ContextMenu:Group>
+            <twig:ContextMenu:RadioGroup value="pedro">
+                <twig:ContextMenu:Label>People</twig:ContextMenu:Label>
+                <twig:ContextMenu:RadioItem value="pedro" checked>Pedro Duarte</twig:ContextMenu:RadioItem>
+                <twig:ContextMenu:RadioItem value="colm">Colm Tuite</twig:ContextMenu:RadioItem>
+            </twig:ContextMenu:RadioGroup>
+        </twig:ContextMenu:Group>
+    </twig:ContextMenu:Content>
+</twig:ContextMenu>
+```
+- Rendered code (run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div data-slot="context-menu" class="contents" data-controller="context-menu"><div data-slot="context-menu-trigger" data-context-menu-target="trigger" class="select-none [-webkit-touch-callout:none] flex aspect-video w-full max-w-xs items-center justify-center rounded-xl border border-dashed text-sm" data-action="contextmenu->context-menu#open pointerdown->context-menu#startLongPress pointermove->context-menu#moveLongPress pointerup->context-menu#cancelLongPress pointercancel->context-menu#cancelLongPress"><span class="hidden pointer-fine:inline-block">Right click here</span>
+        <span class="hidden pointer-coarse:inline-block">Long press here</span>
+    </div>
+    <div role="menu" tabindex="-1" aria-orientation="vertical" data-slot="context-menu-content" data-context-menu-target="content" data-state="closed" data-side="bottom" class="invisible fixed start-0 top-0 z-50 min-w-[8rem] scale-95 rounded-md border bg-popover p-1 text-popover-foreground opacity-0 shadow-md outline-none transition-[opacity,scale,visibility] duration-150 ease-out data-[state=open]:visible data-[state=open]:scale-100 data-[state=open]:opacity-100 w-48" data-action="keydown->context-menu#onContentKeydown contextmenu->context-menu#preventContextMenu"><div role="group" data-slot="context-menu-group"><button type="button" role="menuitem" tabindex="-1" data-slot="context-menu-item" data-context-menu-target="item" data-variant="default" data-close-on-select="true" data-disabled="false" aria-disabled="false" class="group/context-menu-item relative flex w-full cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground" data-action="click->context-menu#closeFromItem">Back
+                <span data-slot="context-menu-shortcut" class="ms-auto text-xs tracking-widest text-muted-foreground">⌘[</span>
+            </button>
+            <button type="button" role="menuitem" tabindex="-1" data-slot="context-menu-item" data-context-menu-target="item" data-variant="default" data-close-on-select="true" data-disabled="true" aria-disabled="true" disabled="" class="group/context-menu-item relative flex w-full cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground" data-action="click->context-menu#closeFromItem">Forward
+                <span data-slot="context-menu-shortcut" class="ms-auto text-xs tracking-widest text-muted-foreground">⌘]</span>
+            </button>
+            <button type="button" role="menuitem" tabindex="-1" data-slot="context-menu-item" data-context-menu-target="item" data-variant="default" data-close-on-select="true" data-disabled="false" aria-disabled="false" class="group/context-menu-item relative flex w-full cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground" data-action="click->context-menu#closeFromItem">Reload
+                <span data-slot="context-menu-shortcut" class="ms-auto text-xs tracking-widest text-muted-foreground">⌘R</span>
+            </button>
+            <div data-slot="context-menu-sub" data-context-menu-sub-open-delay-value="0" data-context-menu-sub-close-delay-value="0" class="relative" data-controller="context-menu-sub" data-action="mouseenter->context-menu-sub#show mouseleave->context-menu-sub#hide"><button type="button" role="menuitem" tabindex="-1" aria-haspopup="menu" data-slot="context-menu-sub-trigger" data-context-menu-target="item" data-context-menu-sub-target="trigger" data-state="closed" class="relative flex w-full cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[state=open]:bg-accent data-[state=open]:text-accent-foreground [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0" data-action="mouseenter->context-menu-sub#show focus->context-menu-sub#show blur->context-menu-sub#hide">More Tools<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="ms-auto size-4 rtl:rotate-180" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 18l6-6l-6-6"></path></svg>
+</button>
+                <div role="menu" data-slot="context-menu-sub-content" data-context-menu-sub-target="content" data-state="closed" class="invisible opacity-0 transition-[opacity,translate,visibility] duration-150 ease-out data-[state=open]:visible data-[state=open]:opacity-100 data-[state=open]:translate-x-0 data-[state=closed]:ltr:-translate-x-2 data-[state=closed]:rtl:translate-x-2 absolute start-full top-0 z-50 ms-1 min-w-[8rem] rounded-md border bg-popover p-1 text-popover-foreground shadow-md outline-none w-44"><div role="group" data-slot="context-menu-group"><button type="button" role="menuitem" tabindex="-1" data-slot="context-menu-item" data-context-menu-target="item" data-variant="default" data-close-on-select="true" data-disabled="false" aria-disabled="false" class="group/context-menu-item relative flex w-full cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground" data-action="click->context-menu#closeFromItem">Save Page...</button>
+                        <button type="button" role="menuitem" tabindex="-1" data-slot="context-menu-item" data-context-menu-target="item" data-variant="default" data-close-on-select="true" data-disabled="false" aria-disabled="false" class="group/context-menu-item relative flex w-full cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground" data-action="click->context-menu#closeFromItem">Create Shortcut...</button>
+                        <button type="button" role="menuitem" tabindex="-1" data-slot="context-menu-item" data-context-menu-target="item" data-variant="default" data-close-on-select="true" data-disabled="false" aria-disabled="false" class="group/context-menu-item relative flex w-full cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground" data-action="click->context-menu#closeFromItem">Name Window...</button>
+                    </div>
+                    <div role="separator" aria-orientation="horizontal" data-slot="context-menu-separator" class="-mx-1 my-1 h-px bg-border"></div>
+
+                    <div role="group" data-slot="context-menu-group"><button type="button" role="menuitem" tabindex="-1" data-slot="context-menu-item" data-context-menu-target="item" data-variant="default" data-close-on-select="true" data-disabled="false" aria-disabled="false" class="group/context-menu-item relative flex w-full cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground" data-action="click->context-menu#closeFromItem">Developer Tools</button>
+                    </div>
+                    <div role="separator" aria-orientation="horizontal" data-slot="context-menu-separator" class="-mx-1 my-1 h-px bg-border"></div>
+
+                    <div role="group" data-slot="context-menu-group"><button type="button" role="menuitem" tabindex="-1" data-slot="context-menu-item" data-context-menu-target="item" data-variant="destructive" data-close-on-select="true" data-disabled="false" aria-disabled="false" class="group/context-menu-item relative flex w-full cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 text-destructive hover:bg-destructive/10 hover:text-destructive focus:bg-destructive/10 focus:text-destructive dark:hover:bg-destructive/20 dark:focus:bg-destructive/20 [&amp;_svg]:text-destructive" data-action="click->context-menu#closeFromItem">Delete</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div role="separator" aria-orientation="horizontal" data-slot="context-menu-separator" class="-mx-1 my-1 h-px bg-border"></div>
+
+        <div role="group" data-slot="context-menu-group"><button type="button" role="menuitemcheckbox" tabindex="-1" data-slot="context-menu-checkbox-item" data-context-menu-target="item" data-close-on-select="false" data-disabled="false" aria-checked="true" aria-disabled="false" class="relative flex w-full cursor-default select-none items-center gap-2 rounded-sm py-1.5 ps-8 pe-2 text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0" data-action="click->context-menu#toggleCheckbox">
+    <span class="pointer-events-none absolute start-2 flex size-3.5 items-center justify-center" data-checkbox-indicator="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+    </span>Show Bookmarks</button>
+            <button type="button" role="menuitemcheckbox" tabindex="-1" data-slot="context-menu-checkbox-item" data-context-menu-target="item" data-close-on-select="false" data-disabled="false" aria-checked="false" aria-disabled="false" class="relative flex w-full cursor-default select-none items-center gap-2 rounded-sm py-1.5 ps-8 pe-2 text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0" data-action="click->context-menu#toggleCheckbox">
+    <span class="pointer-events-none absolute start-2 flex size-3.5 items-center justify-center" data-checkbox-indicator="" hidden="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+    </span>Show Full URLs</button>
+        </div>
+        <div role="separator" aria-orientation="horizontal" data-slot="context-menu-separator" class="-mx-1 my-1 h-px bg-border"></div>
+
+        <div role="group" data-slot="context-menu-group"><div role="group" data-slot="context-menu-radio-group" data-value="pedro"><div data-slot="context-menu-label" class="px-2 py-1.5 text-sm font-semibold">People</div>
+                <button type="button" role="menuitemradio" tabindex="-1" data-slot="context-menu-radio-item" data-context-menu-target="item" data-value="pedro" data-close-on-select="false" data-disabled="false" aria-checked="true" aria-disabled="false" class="relative flex w-full cursor-default select-none items-center gap-2 rounded-sm py-1.5 ps-8 pe-2 text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0" data-action="click->context-menu#selectRadio">
+    <span class="pointer-events-none absolute start-2 flex size-3.5 items-center justify-center" data-radio-indicator="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-2 *:fill-current" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></circle></svg>
+    </span>Pedro Duarte</button>
+                <button type="button" role="menuitemradio" tabindex="-1" data-slot="context-menu-radio-item" data-context-menu-target="item" data-value="colm" data-close-on-select="false" data-disabled="false" aria-checked="false" aria-disabled="false" class="relative flex w-full cursor-default select-none items-center gap-2 rounded-sm py-1.5 ps-8 pe-2 text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0" data-action="click->context-menu#selectRadio">
+    <span class="pointer-events-none absolute start-2 flex size-3.5 items-center justify-center" data-radio-indicator="" hidden="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-2 *:fill-current" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></circle></svg>
+    </span>Colm Tuite</button>
+            </div>
+        </div>
+    </div>
+</div>
