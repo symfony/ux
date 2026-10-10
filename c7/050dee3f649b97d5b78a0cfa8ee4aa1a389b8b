@@ -1,0 +1,12 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2026-10-10T09:40:47Z
+
+I made a few changes to your commit during review:
+
+- The `dialog` controller now waits only for the exit transitions of the `<dialog>` and its `::backdrop`. `getAnimations({ subtree: true })` also returned the endless animations of the content (a spinner, a skeleton), so the dialog never closed.
+- A timeout now closes the dialog if a transition never finishes. Each close gets its own token, so a promise or timer left over from an earlier close cannot end a later exit early.
+- `open()` now calls `showModal()` when the `<dialog>` was closed natively during the exit. Before, it only removed `data-closing` and the dialog stayed closed.
+- The `dialog`, `sheet` and `drawer` templates no longer transition `display` and `overlay`. Now that the controller plays the exit, these transitions kept the closed `<dialog>` in the top layer for one more full duration in Chromium and Safari.
+
+Six new specs cover these cases, and the dialog, sheet and drawer specs pass in Chromium, Firefox and WebKit.
