@@ -12,9 +12,12 @@
 namespace Symfony\UX\TwigComponent\Twig;
 
 use Psr\Container\ContainerInterface;
+use Symfony\Contracts\Service\ResetInterface;
 use Symfony\UX\TwigComponent\ComponentRendererInterface;
 use Symfony\UX\TwigComponent\ComponentStack;
 use Symfony\UX\TwigComponent\Event\PreRenderEvent;
+use Twig\Environment;
+use Twig\TemplateWrapper;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
@@ -22,8 +25,11 @@ use Symfony\UX\TwigComponent\Event\PreRenderEvent;
  *
  * @internal
  */
-final class ComponentRuntime
+final class ComponentRuntime implements ResetInterface
 {
+    /** @var array<string, TemplateWrapper> */
+    private array $embeddedParentTemplates = [];
+
     public function __construct(
         private readonly ComponentRendererInterface $renderer,
         private readonly ContainerInterface $renderers,
@@ -62,6 +68,14 @@ final class ComponentRuntime
         return $this->renderer->startEmbeddedComponentRender($name, $props, $context, $hostTemplateName, $index);
     }
 
+    /**
+     * Handing the embedded template a loaded parent spares Twig from resolving its name on every render.
+     */
+    public function getEmbeddedParentTemplate(Environment $env, string $template): TemplateWrapper
+    {
+        return $this->embeddedParentTemplates[$template] ??= $env->load($template);
+    }
+
     public function provide(string $key, mixed $value): void
     {
         $current = $this->componentStack->getCurrentComponent();
@@ -87,5 +101,10 @@ final class ComponentRuntime
         }
 
         return $default;
+    }
+
+    public function reset(): void
+    {
+        $this->embeddedParentTemplates = [];
     }
 }
