@@ -1,0 +1,37 @@
+---------------------------------------------------------------------------
+
+by tnytown at 2026-10-08T21:41:00Z
+
+fabbot is complaining about code that isn't changed by this PR: https://github.com/symfony/ux/actions/runs/37848076054/job/113553856954?pr=4059#step:6:38
+
+It's also wrong about `conflit => conflict` because the strings are in French
+
+---------------------------------------------------------------------------
+
+by kbond at 2026-10-08T21:52:37Z
+
+All good, we'll get the fabbot stuff fixed
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-10-09T08:54:57Z
+
+Is this hardening/security issue? If no, we should target 3.x branch
+
+---------------------------------------------------------------------------
+
+by tnytown at 2026-10-09T12:59:44Z
+
+IMO this is a hardening issue; but I'm happy to retarget if you think it doesn't qualify 🙂
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-10-10T11:09:49Z
+
+Thanks for the fix @tnytown! I pushed a few changes during review:
+
+- I retargeted the PR to 3.x. 2.x only receives security fixes, and this is a bug fix (an ID with a backslash, like `App\Enum\user`, produced a wrong key or a JS syntax error).
+- I added `JSON_INVALID_UTF8_SUBSTITUTE`. With only `JSON_THROW_ON_ERROR`, an ID that is not valid UTF-8 made `cache:warmup` fail with a `JsonException`. Before this PR the file was dumped and the browser decoded those bytes as U+FFFD, so the flag keeps that result.
+- I added `JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES`. Keys with non-ASCII characters or `/` keep the same spelling as before in `index.js` and `index.d.ts`. Quotes, backslashes, control characters and U+2028/U+2029 are still escaped.
+- Tests: each case now also checks that the expected literal decodes back to the original ID. New cases cover line terminators, slashes and invalid UTF-8. Test methods have `: void`, as on 3.x.
+- Everything is squashed into your commit.
