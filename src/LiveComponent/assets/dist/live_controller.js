@@ -97,6 +97,7 @@ var BackendResponse_default = class {
 	body;
 	liveUrl;
 	download = null;
+	data = null;
 	parsePromise = null;
 	constructor(response) {
 		this.response = response;
@@ -108,6 +109,10 @@ var BackendResponse_default = class {
 	}
 	getDownload() {
 		return this.download;
+	}
+	getData() {
+		if (null === this.data) return null;
+		return new Response(this.data.bytes, { headers: { "Content-Type": this.data.type } });
 	}
 	getLiveUrl() {
 		if (void 0 === this.liveUrl) this.liveUrl = this.response.headers.get("X-Live-Url");
@@ -128,6 +133,14 @@ var BackendResponse_default = class {
 		const buffer = await this.response.arrayBuffer();
 		const splitAt = Number.parseInt(htmlLength, 10);
 		this.body = new TextDecoder().decode(buffer.slice(0, splitAt));
+		const dataType = this.response.headers.get("X-Live-Data-Type");
+		if (null !== dataType) {
+			this.data = {
+				bytes: buffer.slice(splitAt),
+				type: dataType
+			};
+			return;
+		}
 		this.download = {
 			filename: decodeFilename(this.response.headers.get("X-Live-Download-Filename")),
 			blob: new Blob([buffer.slice(splitAt)], { type: this.response.headers.get("X-Live-Download-Type") ?? "application/octet-stream" })

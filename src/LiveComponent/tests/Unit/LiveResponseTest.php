@@ -145,6 +145,108 @@ final class LiveResponseTest extends TestCase
         LiveResponse::downloadUrl('  ');
     }
 
+    public function testDataEncodesAnArrayAsJson(): void
+    {
+        $response = LiveResponse::data(['results' => ['foo', 'bar'], 'total' => 2]);
+
+        $this->assertTrue($response->isData());
+        $this->assertSame('{"results":["foo","bar"],"total":2}', $response->content);
+        $this->assertSame('application/json', $response->contentType);
+    }
+
+    public function testDataEncodesAJsonSerializable(): void
+    {
+        $data = new class implements \JsonSerializable {
+            public function jsonSerialize(): array
+            {
+                return ['id' => 42];
+            }
+        };
+
+        $this->assertSame('{"id":42}', LiveResponse::data($data)->content);
+    }
+
+    public function testDataEncodesScalarsAndNullAsJson(): void
+    {
+        $this->assertSame('42', LiveResponse::data(42)->content);
+        $this->assertSame('true', LiveResponse::data(true)->content);
+        $this->assertSame('null', LiveResponse::data(null)->content);
+    }
+
+    public function testDataEncodesJsonLikeAJsonResponse(): void
+    {
+        $this->assertSame('{"html":"\u003Cb\u003E\u0026\u0027\u0022"}', LiveResponse::data(['html' => '<b>&\'"'])->content);
+    }
+
+    public function testDataKeepsTheGivenContentTypeForEncodedData(): void
+    {
+        $this->assertSame('application/problem+json', LiveResponse::data(['title' => 'Oops'], 'application/problem+json')->contentType);
+    }
+
+    public function testDataRejectsWhatCannotBeEncoded(): void
+    {
+        $this->expectException(\JsonException::class);
+
+        LiveResponse::data(['value' => \NAN]);
+    }
+
+    public function testDataSendsAStringAsIs(): void
+    {
+        $response = LiveResponse::data('<result><item>foo</item></result>', 'application/xml');
+
+        $this->assertTrue($response->isData());
+        $this->assertSame('<result><item>foo</item></result>', $response->content);
+        $this->assertSame('application/xml', $response->contentType);
+    }
+
+    public function testDataRequiresAContentTypeForAString(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('A content type is required when the data is a string.');
+
+        LiveResponse::data('foo');
+    }
+
+    public function testDataRejectsABlankContentTypeForAString(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('A content type is required when the data is a string.');
+
+        LiveResponse::data('foo', ' ');
+    }
+
+    public function testDataRejectsABlankContentTypeForEncodedData(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('The content type cannot be blank.');
+
+        LiveResponse::data(['foo' => 'bar'], ' ');
+    }
+
+    public function testDataRejectsAContentTypeWithALineBreak(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('The content type cannot contain a line break.');
+
+        LiveResponse::data('foo', "text/plain\r\nX-Injected: 1");
+    }
+
+    public function testDataIsNeitherADownloadNorARemoval(): void
+    {
+        $response = LiveResponse::data(['foo' => 'bar']);
+
+        $this->assertFalse($response->isDownloadUrl());
+        $this->assertFalse($response->isRemove());
+        $this->assertNull($response->filename);
+    }
+
+    public function testDownloadsAndRemovalsAreNotData(): void
+    {
+        $this->assertFalse(LiveResponse::downloadFile('x', 'f.bin')->isData());
+        $this->assertFalse(LiveResponse::downloadUrl('/f.bin')->isData());
+        $this->assertFalse(LiveResponse::remove()->isData());
+    }
+
     public function testRemove(): void
     {
         $response = LiveResponse::remove();
