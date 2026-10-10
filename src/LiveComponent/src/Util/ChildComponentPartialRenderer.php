@@ -67,6 +67,9 @@ class ChildComponentPartialRenderer implements ServiceSubscriberInterface
             true,
             $deterministicId
         );
+        // the frontend matches the placeholder with the current child by its id, also when the child
+        // got an explicit "id", which attributesForRendering() leaves to the rendered template
+        $attributesCollection->setLiveId($deterministicId);
 
         $props = $attributesCollection->getProps();
 
