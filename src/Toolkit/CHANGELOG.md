@@ -43,6 +43,8 @@
 - Show a diff before `ux:install` asks to overwrite an existing file, and skip the question when the file already matches the recipe
 - [Shadcn] Add `toast` recipe
 - [Shadcn] Rename the `sonner` recipe's `Toast` component to `Sonner:Toast`, freeing the `Toast` component name for the new `toast` recipe
+- [Shadcn] Fix the `top` and `bottom` sides of `sheet` being only as wide as their content instead of the viewport
+- [Shadcn] Fix `dialog`, `sheet` and `drawer` closing without their exit transition outside Chromium
 
 ## 3.5.0
 

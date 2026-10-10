@@ -49,6 +49,8 @@ describeRecipe('shadcn/sheet', () => {
     });
 
     test('slides in against the edge given by the side prop', async ({ page, gotoExample }) => {
+        // Wider than the content, so a top or bottom sheet that does not stretch shows.
+        await page.setViewportSize({ width: 1600, height: 900 });
         await gotoExample('shadcn/sheet/sides');
         const viewport = page.viewportSize()!;
 
@@ -68,6 +70,9 @@ describeRecipe('shadcn/sheet', () => {
                 left: box.x,
             };
             expect(Math.abs(edges[side as keyof typeof edges])).toBeLessThan(1);
+            if (side === 'top' || side === 'bottom') {
+                expect(box.width).toBe(viewport.width);
+            }
 
             await page.keyboard.press('Escape');
             await expect(dialog).toBeHidden();
@@ -163,5 +168,42 @@ describeRecipe('shadcn/sheet', () => {
         await page.mouse.click(10, 10);
 
         await expect(dialog).toBeHidden();
+    });
+
+    test('slides out before closing', async ({ page, gotoExample }) => {
+        await gotoExample('shadcn/sheet/sides');
+        await page.getByRole('button', { name: /^right$/i }).click();
+        const dialog = page.getByRole('dialog');
+        await expect(dialog).toBeVisible();
+        await dialog.evaluate((element) => Promise.all(element.getAnimations().map((animation) => animation.finished)));
+
+        await dialog.getByRole('button', { name: 'Cancel' }).click();
+
+        // Still open while the exit transition plays, in every browser.
+        await expect(dialog).toHaveAttribute('data-closing', '');
+        expect(await dialog.evaluate((element) => (element as HTMLDialogElement).open)).toBe(true);
+        await expect(dialog).toBeHidden();
+        // A closed <dialog> leaves the accessibility tree, so find it by its side.
+        await expect(page.locator('dialog[data-side="right"]')).not.toHaveAttribute('data-closing');
+    });
+
+    test('leaves the top layer as soon as it closes', async ({ page, gotoExample }) => {
+        await gotoExample('shadcn/sheet/default');
+        await page.getByRole('button', { name: 'Open', exact: true }).click();
+        const dialog = page.locator('[data-slot="sheet-content"]');
+        await expect(dialog).toBeVisible();
+        await dialog.evaluate((element) => {
+            element.addEventListener(
+                'close',
+                () => {
+                    element.dataset.displayOnClose = getComputedStyle(element).display;
+                },
+                { once: true }
+            );
+        });
+
+        await page.keyboard.press('Escape');
+
+        await expect(dialog).toHaveAttribute('data-display-on-close', 'none');
     });
 });

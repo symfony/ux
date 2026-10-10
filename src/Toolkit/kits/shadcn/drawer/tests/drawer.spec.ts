@@ -116,4 +116,24 @@ describeRecipe('shadcn/drawer', () => {
 
         await expect(dialog).toBeVisible();
     });
+
+    test('leaves the top layer as soon as it closes', async ({ page, gotoExample }) => {
+        await gotoExample('shadcn/drawer/default');
+        await page.getByRole('button', { name: 'Open Drawer' }).click();
+        const dialog = page.locator('[data-slot="drawer-content"]');
+        await expect(dialog).toBeVisible();
+        await dialog.evaluate((element) => {
+            element.addEventListener(
+                'close',
+                () => {
+                    element.dataset.displayOnClose = getComputedStyle(element).display;
+                },
+                { once: true }
+            );
+        });
+
+        await page.keyboard.press('Escape');
+
+        await expect(dialog).toHaveAttribute('data-display-on-close', 'none');
+    });
 });
