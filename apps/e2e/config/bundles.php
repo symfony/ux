@@ -27,4 +27,5 @@ return [
     Zenstruck\Foundry\ZenstruckFoundryBundle::class => ['all' => true],
     Symfony\UX\Native\UXNativeBundle::class => ['all' => true],
     Symfony\UX\CalendarLink\UXCalendarLinkBundle::class => ['all' => true],
+    Symfony\UX\Upload\UXUploadBundle::class => ['all' => true],
 ];
