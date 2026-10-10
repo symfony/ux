@@ -121,6 +121,23 @@ class FormWithManyDifferentFieldsType extends AbstractType
                 'expanded' => true,
                 'multiple' => true,
             ])
+            ->add('choice_multiple_disabled', ChoiceType::class, [
+                'choices' => [
+                    'foo' => 1,
+                    'bar' => 2,
+                ],
+                'expanded' => true,
+                'multiple' => true,
+                'choice_attr' => static fn ($choice) => 1 === $choice ? ['disabled' => true] : [],
+            ])
+            ->add('choice_expanded_disabled', ChoiceType::class, [
+                'choices' => [
+                    'foo' => 1,
+                    'bar' => 2,
+                ],
+                'expanded' => true,
+                'choice_attr' => static fn ($choice) => 1 === $choice ? ['disabled' => true] : [],
+            ])
             ->add('select_multiple', ChoiceType::class, [
                 'choices' => [
                     'foo' => 1,
@@ -134,6 +151,9 @@ class FormWithManyDifferentFieldsType extends AbstractType
             ])
             ->add('checkbox', CheckboxType::class)
             ->add('checkbox_checked', CheckboxType::class)
+            ->add('checkbox_checked_disabled', CheckboxType::class, [
+                'disabled' => true,
+            ])
             ->add('file', FileType::class)
             ->add('hidden', HiddenType::class)
             ->add('complexType', ComplexFieldType::class)
