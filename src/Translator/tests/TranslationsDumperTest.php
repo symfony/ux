@@ -132,6 +132,71 @@ class TranslationsDumperTest extends TestCase
         $this->assertFileDoesNotExist(self::$translationsDumpDir.'/index.d.ts');
     }
 
+    #[DataProvider('translationIdentifierProvider')]
+    public function testDumpTranslationIdentifier(string $id, string $expectedLiteral, string $extension): void
+    {
+        $translationsDumper = new TranslationsDumper(
+            new MessageParametersExtractor(),
+            new IntlMessageParametersExtractor(),
+            new TypeScriptMessageParametersPrinter(),
+            new Filesystem(),
+        );
+        $translationsDumper->dump(
+            catalogues: [new MessageCatalogue('en', ['messages' => [$id => 'Translated message']])],
+            dumpDir: self::$translationsDumpDir,
+        );
+
+        $expectedValue = 'js' === $extension
+            ? '{"translations":{"messages":{"en":"Translated message"}}},'
+            : "Message<{ 'messages': { parameters: NoParametersType } }, 'en'>;";
+        $content = file_get_contents(self::$translationsDumpDir.'/index.'.$extension);
+
+        $this->assertStringEndsWith("    $expectedLiteral: $expectedValue\n};\n", $content);
+        $this->assertSame($id, json_decode($expectedLiteral, flags: \JSON_THROW_ON_ERROR));
+    }
+
+    public static function translationIdentifierProvider(): iterable
+    {
+        $identifiers = [
+            'ordinary' => ['notification.comment_created', '"notification.comment_created"'],
+            'quote' => ['a"b', '"a\\"b"'],
+            'backslash' => ['a\\b', '"a\\\\b"'],
+            'injection' => [
+                'audit\\": alert(\'hello!\'), //',
+                '"audit\\\\\\": alert(\'hello!\'), //"',
+            ],
+            'newline' => ["line\nbreak", '"line\\nbreak"'],
+            'controls' => ["\0\x01\x08\t\r\f", '"\\u0000\\u0001\\b\\t\\r\\f"'],
+            'unicode' => ["\u{03BB}\u{96EA}\u{2023}🔥㊋", "\"\u{03BB}\u{96EA}\u{2023}🔥㊋\""],
+            'line terminators' => ["a\u{2028}b\u{2029}c", '"a\\u2028b\\u2029c"'],
+            'slash' => ['form/label', '"form/label"'],
+            'numeric' => ['123', '"123"'],
+        ];
+
+        foreach ($identifiers as $name => [$id, $expectedLiteral]) {
+            foreach (['js', 'd.ts'] as $extension) {
+                yield $name.' '.$extension => [$id, $expectedLiteral, $extension];
+            }
+        }
+    }
+
+    public function testDumpTranslationIdentifierWithInvalidUtf8(): void
+    {
+        $translationsDumper = new TranslationsDumper(
+            new MessageParametersExtractor(),
+            new IntlMessageParametersExtractor(),
+            new TypeScriptMessageParametersPrinter(),
+            new Filesystem(),
+        );
+        $translationsDumper->dump(
+            catalogues: [new MessageCatalogue('en', ['messages' => ["caf\xE9" => 'Translated message']])],
+            dumpDir: self::$translationsDumpDir,
+        );
+
+        $this->assertStringContainsString("    \"caf\u{FFFD}\": {", file_get_contents(self::$translationsDumpDir.'/index.js'));
+        $this->assertStringContainsString("    \"caf\u{FFFD}\": Message<", file_get_contents(self::$translationsDumpDir.'/index.d.ts'));
+    }
+
     public function testDumpWithExcludedDomains(): void
     {
         $translationsDumper = new TranslationsDumper(
