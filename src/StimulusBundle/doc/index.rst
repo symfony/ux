@@ -436,6 +436,23 @@ directory and the ``controllers.json`` file if you need to use different paths:
         controller_paths:
             - '%kernel.project_dir%/assets/controllers'
         controllers_json: '%kernel.project_dir%/assets/controllers.json'
+        # no application by default
+        applications:
+            # the application name: lowercase letters, digits, "_" and "-", "default" is reserved
+            admin:
+                # required: an empty ".js" file inside an AssetMapper path
+                loader: '%kernel.project_dir%/assets/admin/stimulus_loader.js'
+                controller_paths: []
+                include_global_paths: true
+                # null (the global controllers_json file) or the path of a file
+                # that replaces it for this application
+                controllers_json: ~
+                # true to merge the controllers_json file of the application over
+                # the global one instead of replacing it (requires controllers_json)
+                merge_controllers_json: false
+
+See :ref:`Scoping Controllers with AssetMapper <assetmapper-applications>` for
+the ``applications`` option.
 
 .. _manual-installation:
 
@@ -632,11 +649,172 @@ An application can have distinct areas, for example a public site and an
 admin back office. By default, every registered controller loads on every
 page, so eagerly loaded controllers from one area ship to the other.
 
+AssetMapper, Webpack Encore and Reprise all let you load a distinct set of
+controllers per area. With AssetMapper, see
+:ref:`Scoping Controllers with AssetMapper <assetmapper-applications>`.
+
+.. _assetmapper-applications:
+
+Scoping Controllers with AssetMapper
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+With AssetMapper, declare one Stimulus application per area under the
+``applications`` option. Each application gets its own loader, which only
+imports and preloads the controllers of that application:
+
+.. code-block:: yaml
+
+    # config/packages/stimulus.yaml
+    stimulus:
+        applications:
+            admin:
+                loader: '%kernel.project_dir%/assets/admin/stimulus_loader.js'
+                controller_paths: ['%kernel.project_dir%/assets/admin/controllers']
+                include_global_paths: false
+                controllers_json: '%kernel.project_dir%/assets/admin/controllers.json'
+
+The application name must start with a lowercase letter and contain only
+lowercase letters, digits, ``_`` and ``-``. The name ``default`` is reserved.
+
+Create the loader as an empty file, inside a path mapped by AssetMapper. The
+file must exist and each application needs its own loader. The bundle
+replaces its content when the asset is compiled:
+
+.. code-block:: terminal
+
+    $ mkdir -p assets/admin && touch assets/admin/stimulus_loader.js
+
+Then add two entries to your ``importmap.php`` file: one for the loader and
+one for the entrypoint of the area::
+
+    // importmap.php
+    return [
+        // ...
+
+        'admin' => [
+            'path' => './assets/admin.js',
+            'entrypoint' => true,
+        ],
+        '@symfony/stimulus-bundle/admin' => [
+            'path' => './assets/admin/stimulus_loader.js',
+        ],
+    ];
+
+The entrypoint starts the application from its loader:
+
+.. code-block:: javascript
+
+    // assets/admin.js
+    import { startStimulusApp } from '@symfony/stimulus-bundle/admin';
+
+    startStimulusApp();
+
+Finally, render this entrypoint in the templates of the area:
+
+.. code-block:: twig
+
+    {# templates/admin/base.html.twig #}
+    {{ importmap('admin') }}
+
+The controllers of an application are resolved as follows:
+
+* ``include_global_paths`` (default ``true``) also loads the controllers found
+  in the global ``controller_paths``. Set it to ``false`` to load only the
+  controllers of the application;
+* ``controllers_json`` points to a file with the same format as
+  ``assets/controllers.json``. When set, this file replaces the global
+  ``controllers_json`` file for the application, so the ``enabled``, ``fetch``
+  and ``autoimport`` settings of the global file do not apply to the
+  application. When omitted, the application uses the global file. The
+  configured file must exist;
+* ``merge_controllers_json`` (default ``false``) merges the ``controllers_json``
+  file of the application over the global one instead of replacing it. It
+  requires the ``controllers_json`` option;
+* when two controllers have the same name, a controller from the global
+  ``controller_paths`` overrides a UX controller, and a controller from the
+  application ``controller_paths`` overrides both.
+
+Eager and lazy controllers, as well as the debug mode, work the same way as
+with the global ``@symfony/stimulus-bundle`` loader, which is unchanged.
+
+Load only one Stimulus application per page: do not render the global
+``app`` entrypoint and an application entrypoint on the same page.
+
+For example, this ``assets/admin/controllers.json`` file loads only the Chart.js
+controller in the admin application:
+
+.. code-block:: json
+
+    {
+        "controllers": {
+            "@symfony/ux-chartjs": {
+                "chart": {
+                    "enabled": true,
+                    "fetch": "eager"
+                }
+            }
+        }
+    }
+
+.. caution::
+
+    Symfony Flex only updates the global ``assets/controllers.json`` file. When
+    you install, update or remove a UX package, apply the change to the
+    ``controllers_json`` file of each application.
+
+With ``merge_controllers_json: true``, the application file only lists the
+settings that differ from the global file:
+
+* a controller that is not listed in the application file keeps its settings
+  from the global file, so a controller added to the global file by Symfony
+  Flex is also loaded in the application;
+* for a listed controller, each setting of the application file (``enabled``,
+  ``fetch``, ``name``) overrides the one of the global file, and the other
+  settings are kept;
+* ``autoimport`` entries are merged by path, and the application file wins;
+* to remove a controller of the global file from the application, set
+  ``"enabled": false``.
+
+For example, this application file loads the Chart.js controller lazily and
+does not load the Autocomplete controller, while all the other controllers of
+the global file are loaded unchanged:
+
+.. code-block:: yaml
+
+    # config/packages/stimulus.yaml
+    stimulus:
+        applications:
+            admin:
+                loader: '%kernel.project_dir%/assets/admin/stimulus_loader.js'
+                controllers_json: '%kernel.project_dir%/assets/admin/controllers.json'
+                merge_controllers_json: true
+
+.. code-block:: json
+
+    {
+        "controllers": {
+            "@symfony/ux-chartjs": {
+                "chart": {
+                    "fetch": "lazy"
+                }
+            },
+            "@symfony/ux-autocomplete": {
+                "autocomplete": {
+                    "enabled": false
+                }
+            }
+        }
+    }
+
+If your entrypoint used to start the global application and register extra
+controllers with ``app.register()``, move those controllers into the
+``controller_paths`` of the application and remove the manual calls.
+
 .. note::
 
-    Webpack Encore and Reprise both support this. AssetMapper does not:
-    ``startStimulusApp()`` in ``@symfony/stimulus-bundle`` takes no arguments
-    and always reads the full ``controllers.json``.
+    The importmap is not a security boundary. It only decides which modules
+    a page imports and preloads: any asset published by AssetMapper, such as
+    the controllers of another application, remains publicly reachable.
 
 Scoping Controllers with Reprise
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -723,9 +901,6 @@ can load several contexts into the same application:
 
 This second form drops the lazy controller loader, so add it back to the
 context path if you rely on lazy loading.
-
-If you need this with AssetMapper, follow the discussion in issue #2321 in
-the ``symfony/ux`` repository.
 
 .. _Reprise vs Encore vs AssetMapper: https://symfony.com/doc/current/frontend.html
 .. _Symfony Flex: https://symfony.com/doc/current/setup/flex.html
