@@ -1,0 +1,29 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2026-10-11T20:26:16Z
+
+Thanks @Enz000! I pushed a few changes on top of your work:
+
+- The classes now follow Shadcn's Nova style, like the kit's `dropdown-menu` (the PR had the older new-york classes).
+- In a `dir="rtl"` container, a menu without an explicit width stretched to the edge of the viewport, because `start-0` became `right: 0` while the controller sets `left`. It now uses `left-0`.
+- A submenu now opens on the other side when there is no room, and moves up when it would overflow the bottom of the viewport (new `submenu-flipped` screenshots).
+- Closing the menu left an open submenu invisible but still clickable. Submenus now close with their menu.
+- `ArrowRight`, `Enter` or `Space` on a submenu trigger moves the focus into the submenu, and `ArrowLeft` moves it back (mirrored in RTL).
+- The menu sometimes did not get the focus when it opened (4 failures in 40 runs of the tests), because `visibility` was transitioned. It now becomes visible immediately on open, and still fades out on close.
+- The `height` preview option no longer exists in the Toolkit, so every preview was 200px tall and the main example was cut off. The examples now use a `min-height` wrapper.
+
+---------------------------------------------------------------------------
+
+by Enz000 at 2026-10-11T20:32:19Z
+
+> Thanks @Enz000! I pushed a few changes on top of your work:
+>
+> * The classes now follow Shadcn's Nova style, like the kit's `dropdown-menu` (the PR had the older new-york classes).
+> * In a `dir="rtl"` container, a menu without an explicit width stretched to the edge of the viewport, because `start-0` became `right: 0` while the controller sets `left`. It now uses `left-0`.
+> * A submenu now opens on the other side when there is no room, and moves up when it would overflow the bottom of the viewport (new `submenu-flipped` screenshots).
+> * Closing the menu left an open submenu invisible but still clickable. Submenus now close with their menu.
+> * `ArrowRight`, `Enter` or `Space` on a submenu trigger moves the focus into the submenu, and `ArrowLeft` moves it back (mirrored in RTL).
+> * The menu sometimes did not get the focus when it opened (4 failures in 40 runs of the tests), because `visibility` was transitioned. It now becomes visible immediately on open, and still fades out on close.
+> * The `height` preview option no longer exists in the Toolkit, so every preview was 200px tall and the main example was cut off. The examples now use a `min-height` wrapper.
+
+Ok ! thank you for your time, i will apply the nova style for #4068 btw !
