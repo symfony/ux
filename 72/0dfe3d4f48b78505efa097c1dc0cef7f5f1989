@@ -1,0 +1,47 @@
+---------------------------------------------------------------------------
+
+by github-actions[bot] at 2026-09-26T16:38:43Z
+
+<h1>📊 Packages dist files size difference</h1>
+
+Thanks for the PR! Here is the difference in size of the packages dist files between the base branch and the PR.
+Please review the changes and make sure they are expected.
+
+<table>
+    <thead><tr><th>File</th><th>Before (Size / Gzip)</th><th>After (Size / Gzip)</th></tr></thead>
+    <tbody><tr><td colspan="3"><a href="https://github.com/Pechynho/ux/tree/fix-live-url-navigation/src/LiveComponent/assets/dist"><b>LiveComponent</b></a></td></tr><tr>
+                <td><a href="https://github.com/Pechynho/ux/blob/fix-live-url-navigation/src/LiveComponent/assets/dist/live_controller.d.ts"><code>live_controller.d.ts</code></a></td>
+            <td>
+                    <code>7.95 kB</code>
+                    / <code>2.05 kB</code>
+                </td><td>
+                    <code>8.01 kB</code><sup>+1% 📈</sup>
+                    / <code>2.07 kB</code><sup>+1% 📈</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/Pechynho/ux/blob/fix-live-url-navigation/src/LiveComponent/assets/dist/live_controller.js"><code>live_controller.js</code></a></td>
+            <td>
+                    <code>90.91 kB</code>
+                    / <code>20.62 kB</code>
+                </td><td>
+                    <code>91.39 kB</code><sup>+1% 📈</sup>
+                    / <code>20.75 kB</code><sup>+1% 📈</sup>
+                </td></tr></tbody>
+</table>
+
+<!-- Sticky Pull Request Comment -->
+
+---------------------------------------------------------------------------
+
+by smnandre at 2026-09-27T11:29:34Z
+
+(100% for using the Navigation API 👍 )
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-10-11T06:07:21Z
+
+I pushed a change on top of this. Skipping the `X-Live-Url` update when the Navigation API history entry key changed broke one case: jumping to an in-page anchor (`#section`) also creates a new history entry, so the key changes even though the user stays on the same page. I checked this behavior in Chromium. Before this PR, the URL was still updated in that case, so this needed a fix.
+
+Now, when the key changed, the URL is still updated if the path and query string are the same as when the request was sent. I added a test for the anchor case, and updated the "history entry changed" test to also change the URL, like a real Turbo visit or a back/forward navigation would. Without that, the test looks like the same page under the new rule and no longer exercises the skip.
+
+Commit message and PR description are updated to match.
