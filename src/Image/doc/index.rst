@@ -575,11 +575,10 @@ Provider      Supported formats                     Negotiates automatically?
 ============= ===================================== =========================
 
 Cloudflare and Cloudinary negotiate natively, through their own ``format=auto``
-and ``f_auto``. KeyCDN has
-no automatic format negotiation at all, and no AVIF support either: with it,
-``ux_image()`` serves the last configured format KeyCDN supports, and
-``ux_picture()`` is the way to offer WebP to the browsers that accept it (see
-:ref:`<img> or <picture> <image_img_or_picture>`).
+and ``f_auto``. KeyCDN has no automatic format negotiation at all, and no AVIF
+support either: with it, ``ux_image()`` serves the last configured format
+KeyCDN supports, and ``ux_picture()`` is the way to offer WebP to the browsers
+that accept it (see :ref:`<img> or <picture> <image_img_or_picture>`).
 
 Cloudflare
 ~~~~~~~~~~
@@ -635,6 +634,12 @@ images are delivered:
   without its leading slash. To keep the same ``src`` as your application,
   set up an `auto-upload mapping`_ from a folder to your origin: Cloudinary
   then copies each original into the media library on the first request.
+
+Fetch delivery only works when the "Fetched URL" box is cleared in the
+"Restricted media types" section of the account's security settings.
+Cloudinary ticks this box by itself when an account does not use fetch within
+7 days of its creation. If the box is ticked, sign every URL with the
+``api_secret`` option described below.
 
 An account can require every delivery URL to be signed, with the
 `Strict transformations`_ setting. Give the account's API secret as the
@@ -719,6 +724,9 @@ distinct URL is one more image the provider generates and caches:
   `Strict transformations`_. Turn it on, and give the API secret to the
   provider with the ``api_secret`` DSN option: the account then serves only
   the URLs your application generated.
+* With fetch delivery, anyone can also ask your Cloudinary account to fetch
+  an image from any other domain. Restrict the `allowed fetch domains`_ to
+  your origin.
 * KeyCDN can require a signed token on the zone, with `Secure Token`_. Turn
   it on, and give the key to the provider with the ``secure_token`` DSN
   option: the zone then serves only the URLs your application generated.
@@ -759,6 +767,7 @@ The package supports PHP 8.4 or later and Symfony 7.4 or 8.x.
 .. _`Enable transformations`: https://developers.cloudflare.com/images/transform-images/#enable-transformations-via-dashboard
 .. _`Cloudinary`: https://github.com/symfony/ux/blob/3.x/src/Image/src/Bridge/Cloudinary/README.md
 .. _`fetch delivery`: https://cloudinary.com/documentation/fetch_remote_images
+.. _`allowed fetch domains`: https://cloudinary.com/documentation/fetch_remote_images#restricting_the_allowed_fetch_domains
 .. _`auto-upload mapping`: https://cloudinary.com/documentation/migration#lazy_migration_with_auto_upload
 .. _`Cloudinary's own transformation reference`: https://cloudinary.com/documentation/transformation_reference
 .. _`Strict transformations`: https://cloudinary.com/documentation/control_access_to_media#strict_transformations

@@ -24,6 +24,8 @@ The host is your Cloudinary cloud name. The `origin` option picks how images are
 - With `origin`, the provider uses [fetch delivery](https://cloudinary.com/documentation/fetch_remote_images). `origin` is the base URL your application serves the original images from, and every `src` is appended to it. Cloudinary downloads each original from there, then transforms and caches it. No upload to Cloudinary is needed.
 - Without `origin` (`cloudinary://my-cloud`), the provider uses upload delivery, and `src` is the public ID of an image in your media library, without its leading slash. To keep the same `src` as your application, set up an [auto-upload mapping](https://cloudinary.com/documentation/migration#lazy_migration_with_auto_upload) from a folder to your origin: Cloudinary then copies each original into the media library on the first request.
 
+Fetch delivery only works when the "Fetched URL" box is cleared in the "Restricted media types" section of the account's security settings. Cloudinary ticks this box by itself when an account does not use fetch within 7 days of its creation. If the box is ticked, sign every URL (see below). Also restrict the [allowed fetch domains](https://cloudinary.com/documentation/fetch_remote_images#restricting_the_allowed_fetch_domains) to your origin.
+
 ## Signed URLs
 
 An account can require every delivery URL to be signed, with [Strict transformations](https://cloudinary.com/documentation/control_access_to_media#strict_transformations). Give the account's API secret as the `api_secret` DSN option:
