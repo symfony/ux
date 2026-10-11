@@ -261,6 +261,9 @@
             "assets/react/controllers/Hello.jsx"
         ]
     },
+    "symfony/ux-router": {
+        "version": "3.x-dev"
+    },
     "symfony/ux-translator": {
         "version": "2.23",
         "recipe": {

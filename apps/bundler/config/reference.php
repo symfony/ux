@@ -811,6 +811,11 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     controllers_path?: scalar|Param|null, // The path to the directory where React controller components are stored - relevant only when using symfony/asset-mapper. // Default: "%kernel.project_dir%/assets/react/controllers"
  *     name_glob?: list<scalar|Param|null>,
  * }
+ * @psalm-type UxRouterConfig = array{
+ *     dump_directory?: scalar|Param|null, // The directory where routes and TypeScript types are dumped. // Default: "%kernel.project_dir%/var/routes"
+ *     dump_typescript?: bool|Param, // Control whether TypeScript types are dumped alongside routes. Disable this if you do not use TypeScript (e.g. in production when using AssetMapper). // Default: true
+ *     routes?: Param|string|list<scalar|Param|null>,
+ * }
  * @psalm-type UxTranslatorConfig = array{
  *     dump_directory?: scalar|Param|null, // The directory where translations and TypeScript types are dumped. // Default: "%kernel.project_dir%/var/translations"
  *     dump_typescript?: bool|Param, // Control whether TypeScript types are dumped alongside translations. Disable this if you do not use TypeScript (e.g. in production when using AssetMapper). // Default: true
@@ -865,6 +870,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     mercure?: MercureConfig,
  *     notify?: NotifyConfig,
  *     react?: ReactConfig,
+ *     ux_router?: UxRouterConfig,
  *     ux_translator?: UxTranslatorConfig,
  *     turbo?: TurboConfig,
  *     vue?: VueConfig,
@@ -886,6 +892,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         mercure?: MercureConfig,
  *         notify?: NotifyConfig,
  *         react?: ReactConfig,
+ *         ux_router?: UxRouterConfig,
  *         ux_translator?: UxTranslatorConfig,
  *         turbo?: TurboConfig,
  *         vue?: VueConfig,
@@ -908,6 +915,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         mercure?: MercureConfig,
  *         notify?: NotifyConfig,
  *         react?: ReactConfig,
+ *         ux_router?: UxRouterConfig,
  *         ux_translator?: UxTranslatorConfig,
  *         turbo?: TurboConfig,
  *         vue?: VueConfig,
@@ -930,6 +938,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         mercure?: MercureConfig,
  *         notify?: NotifyConfig,
  *         react?: ReactConfig,
+ *         ux_router?: UxRouterConfig,
  *         ux_translator?: UxTranslatorConfig,
  *         turbo?: TurboConfig,
  *         vue?: VueConfig,

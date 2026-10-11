@@ -21,6 +21,7 @@
         "ux-notify": "src/Notify",
         "ux-pagination": "src/Pagination",
         "ux-react": "src/React",
+        "ux-router": "src/Router",
         "ux-toolkit": "src/Toolkit",
         "ux-translator": "src/Translator",
         "ux-turbo": "src/Turbo",

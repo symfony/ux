@@ -15,6 +15,7 @@
         "src/**/var",
         "src/**/tests/**/fixtures/**",
         "src/**/tests/**/Fixtures/**",
+        "src/Router/assets/test/fixtures/**",
         "src/**/tests/**/__snapshots__/**"
     ],
     "printWidth": 120,

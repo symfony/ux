@@ -2,6 +2,7 @@ import { registerVueControllerComponents } from '@symfony/ux-vue';
 import { registerReactControllerComponents } from '@symfony/ux-react';
 import './bootstrap.js';
 import { trans } from './translator.js';
+import { path, url } from './router.js';
 
 /*
  * Welcome to your app's main JavaScript file!
@@ -17,4 +18,4 @@ console.log('This log comes from assets/app.js - welcome to AssetMapper! 🎉');
 registerReactControllerComponents();
 registerVueControllerComponents();
 
-export { trans };
+export { trans, path, url };

@@ -1,0 +1,12 @@
+{
+    "extends": "../tsconfig.json",
+    "compilerOptions": {
+        "noEmit": true,
+        "rootDir": "..",
+        "baseUrl": "..",
+        "paths": {
+            "@symfony/ux-router": ["./src/router_controller.ts"]
+        }
+    },
+    "include": ["../src", "types", "fixtures/routes"]
+}

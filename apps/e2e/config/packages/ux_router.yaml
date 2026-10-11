@@ -1,0 +1,3 @@
+ux_router:
+    routes:
+        - 'app_ux_router_*'
