@@ -657,3 +657,19 @@ test('Preserves an external widget while rendering new server siblings', async (
         }
     }
 });
+
+test('Preserves a child component whose root element is a form with a field named "id"', async ({ page }) => {
+    await page.goto('/ux-live-component/with-form-child');
+    const title = page.getByRole('textbox', { name: 'Title' });
+    await title.fill('Client-only draft');
+    const original = await title.elementHandle();
+
+    for (const renders of ['1', '2']) {
+        const response = page.waitForResponse('/_components/LiveComponentWithFormChild/rerender');
+        await page.getByRole('button', { name: 'Re-render' }).click();
+        await response;
+        await expect(page.getByTestId('renders')).toHaveText(renders);
+        await expect(title).toHaveValue('Client-only draft');
+        expect(await original!.evaluate((element) => element.isConnected)).toBe(true);
+    }
+});

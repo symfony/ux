@@ -279,7 +279,7 @@ export default class LiveControllerDefault extends Controller<HTMLElement> imple
     }
 
     private createComponent(): void {
-        const id = this.element.id || null;
+        const id = this.element.getAttribute('id') || null;
 
         this.component = new Component(
             this.element,

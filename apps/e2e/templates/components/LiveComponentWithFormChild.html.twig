@@ -1,0 +1,10 @@
+<div{{ attributes }}>
+    <button
+        type="button"
+        class="btn btn-primary mb-2"
+        {{ live_action('rerender') }}
+    >Re-render</button>
+    <p>Renders: <span data-testid="renders">{{ renders }}</span></p>
+
+    <twig:LiveFormWithIdField :itemId="5" />
+</div>
