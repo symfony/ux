@@ -50,7 +50,7 @@ There is **no `examples/` directory** — examples live inline in `README.md` (s
 
 <One-sentence description.>    <!-- first paragraph; read by Recipe::getDescription(), the manifest has no description -->
 
-```twig {"preview":true,"height":"300px"}
+```twig {"preview":true}
 <!-- hero preview: rich showcase -->
 <twig:Recipe ... />
 ```
@@ -72,7 +72,7 @@ There is **no `examples/` directory** — examples live inline in `README.md` (s
 
 <Optional sentence describing the variant.>
 
-```twig {"preview":true,"height":"150px"}
+```twig {"preview":true}
 <!-- one live-preview block per upstream example -->
 <twig:Recipe ... />
 ```
@@ -87,8 +87,12 @@ There is **no `examples/` directory** — examples live inline in `README.md` (s
 
 Info-string options on a preview block (JSON after the language):
 - **`"preview":true`** — required marker that turns the block into a live iframe + Code tab. Without it the block is a plain static snippet.
-- **`"height":"<px>"`** — iframe height (e.g. `"150px"`, `"300px"`); default `200px`.
 - **`"collapseClass":true`** — collapse long `class="..."` attributes in the Code tab (use for examples with long Tailwind class lists, e.g. `post-link`).
+
+There is no height option: the iframe sizes itself to its content. It takes the height of the tallest direct child of the preview's `<body>`, plus the body padding, and never less than `200px`. Two kinds of content escape that measure, and need a `style="min-height: <px>"` on the outer `<div>` of the example, as in `dialog`, `sheet` or `popover`:
+
+- An overlay taken out of the flow (a `<dialog>`, a sheet, a popover or a menu) once it is open.
+- A root element sized from the body (`h-full`, `size-full`): it measures the iframe instead of its own content, so the iframe never grows.
 
 READMEs use exactly two directives: `::: installation` and `::: api-reference`.
 
@@ -482,7 +486,7 @@ Examples are **inline in `README.md`**, not separate files. Each is an `### <Var
 
 You can render an icon inside the badge.
 
-```twig {"preview":true,"height":"150px"}
+```twig {"preview":true}
 <twig:Badge variant="secondary">
     <twig:ux:icon name="lucide:badge-check" data-icon="inline-start" />
     Verified
@@ -617,6 +621,7 @@ describeRecipe('shadcn/popover', () => {
 | Native `<details>`/`<summary>` when upstream has animation/ARIA parity | Replace with `<div>` + Stimulus controller |
 | Example as a separate `examples/*.html.twig` file or `::: example` directive | Inline as a ` ```twig {"preview":true} ` block in `README.md` |
 | Subset of upstream examples | Reuse full set, inline in `README.md` |
+| `"height":"<px>"` in a preview info string | Remove it: the option no longer exists. Wrap the example in `<div style="min-height: <px>">` when the auto-sized iframe clips it |
 | `hidden` class for collapse/expand | `grid-template-rows: 0fr` + `overflow:hidden` + CSS transition |
 | `group-hover` + `group-focus-within` for hover-triggered components | Stimulus controller with `openDelay`/`closeDelay` values |
 | `in-data-[state=open]:visible` on nested open-state | Named Tailwind groups (`group/<recipe>-menu`, `group/<recipe>-sub`) |
