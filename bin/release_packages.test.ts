@@ -1,7 +1,15 @@
 import * as fs from 'node:fs';
 import { globSync } from 'tinyglobby';
 import { expect, test } from 'vitest';
-import { bumpDirectories, hasVersionToBump, prefixOf } from './release_packages.ts';
+import {
+    assertBumped,
+    bumpDirectories,
+    firstPublishSteps,
+    hasVersionToBump,
+    prefixOf,
+    publishablePackages,
+    unpublishedPackages,
+} from './release_packages.ts';
 
 const CONFIG = {
     subtrees: {
@@ -71,4 +79,39 @@ test('every package this repository publishes belongs to a subtree splitsh.json 
         .filter((file) => true !== JSON.parse(fs.readFileSync(file, 'utf8')).private);
 
     expect(orphans).toEqual([]);
+});
+
+const VUE = { directory: 'src/Vue/assets', name: '@symfony/ux-vue' };
+const ROUTER = { directory: 'src/Router/assets', name: '@symfony/ux-router' };
+const BRAND_NEW = { directory: 'src/BrandNew/assets', name: '@symfony/ux-brand-new' };
+
+test('publishes every versioned manifest that is not private', () => {
+    expect(publishablePackages(CONFIG)).toEqual([VUE]);
+});
+
+test('keeps the packages npm does not serve at all', async () => {
+    const unpublished = await unpublishedPackages([VUE, ROUTER], async (name) => '@symfony/ux-vue' === name);
+
+    expect(unpublished).toEqual([ROUTER]);
+});
+
+test('refuses a release that leaves out a package npm does not have yet, which the workflow would fail to publish', () => {
+    expect(() => assertBumped([ROUTER], ['src/Vue/assets'])).toThrow('@symfony/ux-router');
+});
+
+test('accepts a release that bumps every package npm does not have yet', () => {
+    expect(() => assertBumped([ROUTER], ['src/Vue/assets', 'src/Router/assets'])).not.toThrow();
+});
+
+test('lists one publish command and one trusted publisher page per package npm does not have yet', () => {
+    const lines = firstPublishSteps([ROUTER, BRAND_NEW]).split('\n');
+
+    expect(lines).toContain('    pnpm --filter @symfony/ux-router publish --access public --no-git-checks');
+    expect(lines).toContain('    pnpm --filter @symfony/ux-brand-new publish --access public --no-git-checks');
+    expect(lines).toContain('    https://www.npmjs.com/package/@symfony/ux-router/access');
+    expect(lines).toContain('    https://www.npmjs.com/package/@symfony/ux-brand-new/access');
+});
+
+test('has no step to list when npm already has every package', () => {
+    expect(firstPublishSteps([])).toBe('');
 });

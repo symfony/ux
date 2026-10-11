@@ -52,6 +52,7 @@ fi
 # says which repositories this release will tag, for the branch state just checked above. Asking before the build so
 # that a release it refuses costs a second rather than a full rebuild.
 bump_dirs="$(node bin/release_packages.ts --branch "$branch" --version "$version")"
+first_publish_steps="$(node bin/release_packages.ts --first-publish)"
 
 directories=()
 while IFS= read -r directory; do
@@ -100,7 +101,15 @@ fi
 git tag -s -m "Create tag $tag" "$tag"
 
 echo
-echo "Prepared $tag. Review what it points at, then publish with:"
+if [ -z "$first_publish_steps" ]; then
+    echo "Prepared $tag. Review what it points at, then publish with:"
+else
+    echo "Prepared $tag. Review what it points at."
+    echo
+    echo "$first_publish_steps"
+    echo
+    echo "Then publish the rest with:"
+fi
 echo
 echo "    git push upstream $branch --follow-tags"
 echo
