@@ -1,0 +1,21 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2026-10-10T12:33:33Z
+
+I'm on it
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-10-10T16:24:17Z
+
+I reworked a few things during review:
+
+- Rebased on 3.x. `sheet` and `drawer` keep the `data-closing` exit transition that landed in the meantime.
+- `Sidebar:Content` no longer gets `overflow-auto`: it clipped the dropdown menus nested in the sidebar. A new sidebar spec checks it.
+- `Field:Label` no longer draws a focus ring on a choice card: the control kept its own ring, so two rings showed. A new `field` spec checks it. Moving the ring to the card like Nova does needs changes to `checkbox`, `radio-group` and `switch`, so it is left for later.
+- `NativeSelect` lost its `[&_option]` and `[&_optgroup]` classes: they beat the new `Canvas`/`CanvasText` colours, which never applied.
+- `Combobox:Chip` lost its `has-disabled:*` classes, since nothing disabled is ever rendered inside a chip. `NavigationMenu:Trigger` gets back its `outline-none`.
+- The two CHANGELOG lines about the radio items of `dropdown-menu` and `menubar` now say "check mark" instead of "dot".
+- The new screenshot specs of the `complex` example were flaky: the dropdown menu sometimes never focused its first item on a busy browser. That bug already exists on 3.x, so it is fixed in a separate PR. These specs now wait for the focus before the screenshot.
+- The `Avatar:Image` `alt` bug and the `menubar` focus bug also exist on 3.x, but I fixed them here. The `menubar` fix would conflict with this PR, which rewrites the same lines. The `avatar` fix would not conflict, but this PR adds a `dropdown-menu` example with an avatar. That example's rendering snapshot would go stale once both changes are merged. New `avatar` and `menubar` specs cover both fixes, and the avatar spec of `dropdown-menu` now finds its trigger by its name.
+- The `isUnderPointer()` checks now use `expect.poll()`, and the nested radio spec checks that the submenu really opened.
