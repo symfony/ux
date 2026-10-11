@@ -1,0 +1,193 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2023-10-27T13:56:38Z
+
+Nice!
+
+Do you already have some thought about the security / splits questions or do you prefer we address those later in the process ?
+
+---------------------------------------------------------------------------
+
+by Kocal at 2023-10-27T20:44:34Z
+
+The sooner the better I guess :p
+
+---------------------------------------------------------------------------
+
+by kbond at 2023-10-28T15:09:50Z
+
+I think, at least by default, only routes flagged with an `expose: true` option should be dumped. This matches FOSJsRoutingBundle and makes migration easier.
+
+---------------------------------------------------------------------------
+
+by tacman at 2023-10-30T09:37:18Z
+
+I _think_ FOSJsRoutingBundle may already work, by dumping not the JSON but a JS file.
+
+```bash
+bin/console fos:js-routing:dump  --target=assets/js/fos_js_routes.js --pretty-print
+```
+
+Ryan had some comments here: https://github.com/FriendsOfSymfony/FOSJsRoutingBundle/issues/466 that would automatically publish the routes (I think during the CompilerPass).  That'd be really cool, but as a start a simple working example of FOSJsRoutingBundle with importmap('app') and loading the routes via a module would be great. We could document that here, and perhaps we wouldn't need a UX Router package, at least not right away.
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-10-31T18:12:12Z
+
+Hi!
+
+Thanks for getting this starts! But... since FOSJsRoutingBundle already exists and has for a long time, I would love to just add AssetMapper support for *that*. I think it would be fairly easy. Then the community doesn't need to migrate to a new package and we don't kill a community-supported package.
+
+---------------------------------------------------------------------------
+
+by Kocal at 2023-10-31T21:44:44Z
+
+Hey,
+
+That's fair enough, I will just push my latest work and close the PR. We could re-open it later if needed :)
+
+---------------------------------------------------------------------------
+
+by tacman at 2023-11-01T09:43:27Z
+
+@Kocal would you be able to work on adding the AssetMapCompiler that Ryan described to the FOS bundle?  I think that'd be a huge contribution and a nice solution to the problem addressed in this issue title.
+
+I've added a comment to https://github.com/FriendsOfSymfony/FOSJsRoutingBundle/issues/466 that shows a working version in a module, and Ryan added his idea to greatly simplify the DX experience.
+
+---------------------------------------------------------------------------
+
+by tacman at 2023-11-01T09:46:22Z
+
+If you create your own version, though, I'm happy to test it.  I'm pretty much just looking for a Routing.generate() in javascript.
+
+---------------------------------------------------------------------------
+
+by tacman at 2026-10-09T10:25:14Z
+
+Glad to see this reopened! A data point from our side, since we went down the "make FOSJsRouting work with AssetMapper" path from 2023 and recently replaced it.
+
+**Before:** a cache warmer wrote a self-contained ES module (`var/.../fos_routes.js`): the route data inlined as a JS literal, plus a `path()` generator ported from isychev/fos-routing. It worked, but generating JS from PHP was messy. Each app also needed an `importmap.php` entry pointing into `var/`, and that was easy to get wrong when deploying.
+
+**Now:** the cache warmer writes plain **`routes.json`** only. The `path()`/`generate()` code is an ordinary static JS file that ships with the bundle and simply does:
+
+```js
+import routesPromise from './routes.json';
+const data = await routesPromise;
+```
+
+That's possible because AssetMapper now supports JSON imports (symfony/symfony#61133, 7.4), and symfony/symfony#66282 fixed the loader under es-module-shims (7.4.20 / 8.1.8). That feature is what prompted the change. The result:
+
+- No JS generated in PHP, so the generator can be linted and tested like any other module
+- No routing entry in the app's `importmap.php`, and no dump command: `cache:warmup` (before `asset-map:compile`) is the whole build step
+- Routes are exposed the FOS way (`options: ['expose' => true]`), as @kbond suggested above
+
+One gotcha: the JSON import returns a promise, so the module needs a top-level `await`.
+
+The code is in [survos/js-twig-bundle](https://github.com/survos/js-twig-bundle) (`assets/routing.js` and the cache warmer). If UX Router goes the "dump JSON + ship a static generator" route, I think it would be quite small. Happy to share more or test.
+
+---------------------------------------------------------------------------
+
+by tacman at 2026-10-09T10:48:19Z
+
+@Kocal since `RoutesDumper::dump()` is still a TODO, here's the shape that has worked well for us, in case it's useful:
+
+- **Dump data, not code.** The cache warmer writes one `routes.json` (the same normalized `defaults`/`requirements`/`tokens`/`hostTokens` your `normalizedRoute()` produces, plus `base_url`/`scheme`/`host`). The generator is a normal module in `assets/src/`, so nothing is generated except data.
+- **Load it with an AssetMapper JSON import.** Register the dump dir as an `asset_mapper.paths` entry, and the static module does `import routes from './routes.json'` (the import resolves to a promise, so `await` it). Apps need no `importmap.php` entry for the routes and no dump command; `cache:warmup` is the whole build step. Requires 7.4.20 / 8.1.8 (symfony/symfony#61133 + symfony/symfony#66282).
+- **Types can still be generated.** If you want typed route names/params like UX Translator, emit just an `index.d.ts` next to the JSON; it's data-derived and never executed.
+- **Exposure:** `expose: true` per route, plus a config list, as @kbond suggested.
+
+Our generator is an MIT port of isychev/fos-routing. Happy to open a PR against your branch with the JSON dump + generator if that helps move this along.
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-10-09T12:47:09Z
+
+Thanks @tacman, but I already have a Claude running to make the PR more "UX 3.x" friendly. I'll see what I can take from what you've written
+
+---------------------------------------------------------------------------
+
+by tacman at 2026-10-09T13:22:19Z
+
+great.
+
+For us, using json rather than .js allowed us to get rid of the importmap.php integration, which had been a pain point when our tools were part of a bundle and FosJsRouting was optional.
+
+---------------------------------------------------------------------------
+
+by github-actions[bot] at 2026-10-09T14:17:39Z
+
+<h1>📊 Packages dist files size difference</h1>
+
+Thanks for the PR! Here is the difference in size of the packages dist files between the base branch and the PR.
+Please review the changes and make sure they are expected.
+
+<table>
+    <thead><tr><th>File</th><th>Before (Size / Gzip)</th><th>After (Size / Gzip)</th></tr></thead>
+    <tbody><tr><td colspan="3"><a href="https://github.com/Kocal/symfony-ux/tree/feat/router-component/src/Router/assets/dist"><b>Router</b></a></td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/feat/router-component/src/Router/assets/dist/router_controller.d.ts"><code>router_controller.d.ts</code></a></td>
+            <td><em>Added</em></td><td>
+                    <code>3.32 kB</code>
+                    / <code>963 B</code>
+                </td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/feat/router-component/src/Router/assets/dist/router_controller.js"><code>router_controller.js</code></a></td>
+            <td><em>Added</em></td><td>
+                    <code>12.43 kB</code>
+                    / <code>3.73 kB</code>
+                </td></tr></tbody>
+</table>
+
+<!-- Sticky Pull Request Comment -->
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-10-09T14:50:11Z
+
+Symfony UX Router is back!
+
+**EDIT:** I still have some minor things to fix, but the main logic is here!
+
+---------------------------------------------------------------------------
+
+by kbond at 2026-10-09T15:47:01Z
+
+This looks great!
+
+> For us, using json rather than .js allowed us to get rid of the importmap.php integration
+
+@tacman to clarify, with this package you won't need the json?
+
+---------------------------------------------------------------------------
+
+by tacman at 2026-10-09T18:14:45Z
+
+With FosRoutingBundle, i used to use the --format=js --callback, which allowed the js to be loaded with AssetMapper as a reguar JS file, which in turn simply set a variable to an array, same structure as the JSON.  But it's much easier to simply consume the json and skip the awkward callback.
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-10-10T11:32:22Z
+
+There is no _suspect_ callback with the current solution. The API is simplified is looks like UX Translator's API.
+
+Installing UX Router will create the following file (it can be renamed to `router.ts` to have TypeScript autocompletion and typings):
+```js
+// assets/router.js
+import { createRouter } from '@symfony/ux-router';
+import { routes } from '../var/routes/index.js';
+
+/*
+ * This file is part of the Symfony UX Router package.
+ *
+ * If folder "../var/routes" does not exist, or some routes are missing,
+ * you must warmup your Symfony cache to refresh JavaScript routes.
+ *
+ * If you use TypeScript, you can rename this file to "router.ts" to take advantage of types checking.
+ */
+
+export const { path, url } = createRouter({ routes });
+```
+
+Here, you have:
+1. The (exposed) routes are dumped in a JS file `var/routes/index.js`, it's either automatic (if you modify a `Route` in PHP's side), or when running `cache:clear` or the dedicated command to warm JS routes
+2. These routes are then passed to `createRouter()`
+3. Finally, you import `path()` and `url()` from `assets/router.js`
+4. And the best, it works for both AssetMapper and bundlers, nothing to change
