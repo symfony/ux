@@ -1,0 +1,20 @@
+{%- props
+    ## 'top'|'right'|'bottom'|'left' Which side of the pointer the menu appears on.
+    side = 'bottom'
+-%}
+<div
+    role="menu"
+    tabindex="-1"
+    aria-orientation="vertical"
+    data-slot="context-menu-content"
+    data-context-menu-target="content"
+    data-state="closed"
+    data-side="{{ side }}"
+    {{ attributes.defaults({
+        class: 'invisible fixed left-0 top-0 z-50 min-w-36 scale-95 rounded-lg bg-popover p-1 text-popover-foreground opacity-0 shadow-md ring-1 ring-foreground/10 outline-hidden transition-[opacity,scale,visibility] duration-100 ease-out data-[state=open]:transition-[opacity,scale] data-[state=open]:visible data-[state=open]:scale-100 data-[state=open]:opacity-100'|tailwind_classes,
+        'data-action': 'keydown->context-menu#onContentKeydown contextmenu->context-menu#preventContextMenu',
+    }) }}
+>
+    {##- The menu items, e.g. `ContextMenu:Item`, `ContextMenu:Separator`. -#}
+    {%- block content %}{% endblock -%}
+</div>

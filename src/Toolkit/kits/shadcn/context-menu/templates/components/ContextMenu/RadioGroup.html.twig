@@ -1,0 +1,13 @@
+{%- props
+    ## string|null The currently selected value.
+    value = null
+-%}
+<div
+    role="group"
+    data-slot="context-menu-radio-group"
+    data-value="{{ value }}"
+    {{ attributes }}
+>
+    {##- One or more `ContextMenu:RadioItem` components. -#}
+    {%- block content %}{% endblock -%}
+</div>
