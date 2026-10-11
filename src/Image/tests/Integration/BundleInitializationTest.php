@@ -48,6 +48,7 @@ final class BundleInitializationTest extends KernelTestCase
         self::assertSame('hero.jpg', $provider->generateUrl(new ImageTransformation('hero.jpg')));
 
         self::assertFalse(self::getContainer()->has('ux_image.provider_factory.cloudflare'));
+        self::assertFalse(self::getContainer()->has('ux_image.provider_factory.cloudinary'));
         self::assertFalse(self::getContainer()->has('ux_image.provider_factory.keycdn'));
     }
 

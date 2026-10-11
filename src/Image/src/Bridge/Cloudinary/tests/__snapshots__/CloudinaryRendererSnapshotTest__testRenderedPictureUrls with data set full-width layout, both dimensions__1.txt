@@ -1,0 +1,70 @@
+src:
+https://res.cloudinary.com/demo/image/fetch/w_800,h_450,c_fill,f_jpg/https://example.com/hero.jpg
+
+srcset:
+https://res.cloudinary.com/demo/image/fetch/w_640,h_360,c_fill,f_jpg/https://example.com/hero.jpg 640w
+https://res.cloudinary.com/demo/image/fetch/w_750,h_422,c_fill,f_jpg/https://example.com/hero.jpg 750w
+https://res.cloudinary.com/demo/image/fetch/w_828,h_466,c_fill,f_jpg/https://example.com/hero.jpg 828w
+https://res.cloudinary.com/demo/image/fetch/w_960,h_540,c_fill,f_jpg/https://example.com/hero.jpg 960w
+https://res.cloudinary.com/demo/image/fetch/w_1080,h_608,c_fill,f_jpg/https://example.com/hero.jpg 1080w
+https://res.cloudinary.com/demo/image/fetch/w_1280,h_720,c_fill,f_jpg/https://example.com/hero.jpg 1280w
+https://res.cloudinary.com/demo/image/fetch/w_1668,h_938,c_fill,f_jpg/https://example.com/hero.jpg 1668w
+https://res.cloudinary.com/demo/image/fetch/w_1920,h_1080,c_fill,f_jpg/https://example.com/hero.jpg 1920w
+https://res.cloudinary.com/demo/image/fetch/w_2048,h_1152,c_fill,f_jpg/https://example.com/hero.jpg 2048w
+https://res.cloudinary.com/demo/image/fetch/w_2560,h_1440,c_fill,f_jpg/https://example.com/hero.jpg 2560w
+https://res.cloudinary.com/demo/image/fetch/w_3200,h_1800,c_fill,f_jpg/https://example.com/hero.jpg 3200w
+https://res.cloudinary.com/demo/image/fetch/w_3840,h_2160,c_fill,f_jpg/https://example.com/hero.jpg 3840w
+https://res.cloudinary.com/demo/image/fetch/w_4480,h_2520,c_fill,f_jpg/https://example.com/hero.jpg 4480w
+https://res.cloudinary.com/demo/image/fetch/w_5120,h_2880,c_fill,f_jpg/https://example.com/hero.jpg 5120w
+https://res.cloudinary.com/demo/image/fetch/w_6016,h_3384,c_fill,f_jpg/https://example.com/hero.jpg 6016w
+
+source (image/avif):
+https://res.cloudinary.com/demo/image/fetch/w_640,h_360,c_fill,f_avif/https://example.com/hero.jpg 640w
+https://res.cloudinary.com/demo/image/fetch/w_750,h_422,c_fill,f_avif/https://example.com/hero.jpg 750w
+https://res.cloudinary.com/demo/image/fetch/w_828,h_466,c_fill,f_avif/https://example.com/hero.jpg 828w
+https://res.cloudinary.com/demo/image/fetch/w_960,h_540,c_fill,f_avif/https://example.com/hero.jpg 960w
+https://res.cloudinary.com/demo/image/fetch/w_1080,h_608,c_fill,f_avif/https://example.com/hero.jpg 1080w
+https://res.cloudinary.com/demo/image/fetch/w_1280,h_720,c_fill,f_avif/https://example.com/hero.jpg 1280w
+https://res.cloudinary.com/demo/image/fetch/w_1668,h_938,c_fill,f_avif/https://example.com/hero.jpg 1668w
+https://res.cloudinary.com/demo/image/fetch/w_1920,h_1080,c_fill,f_avif/https://example.com/hero.jpg 1920w
+https://res.cloudinary.com/demo/image/fetch/w_2048,h_1152,c_fill,f_avif/https://example.com/hero.jpg 2048w
+https://res.cloudinary.com/demo/image/fetch/w_2560,h_1440,c_fill,f_avif/https://example.com/hero.jpg 2560w
+https://res.cloudinary.com/demo/image/fetch/w_3200,h_1800,c_fill,f_avif/https://example.com/hero.jpg 3200w
+https://res.cloudinary.com/demo/image/fetch/w_3840,h_2160,c_fill,f_avif/https://example.com/hero.jpg 3840w
+https://res.cloudinary.com/demo/image/fetch/w_4480,h_2520,c_fill,f_avif/https://example.com/hero.jpg 4480w
+https://res.cloudinary.com/demo/image/fetch/w_5120,h_2880,c_fill,f_avif/https://example.com/hero.jpg 5120w
+https://res.cloudinary.com/demo/image/fetch/w_6016,h_3384,c_fill,f_avif/https://example.com/hero.jpg 6016w
+
+source (image/webp):
+https://res.cloudinary.com/demo/image/fetch/w_640,h_360,c_fill,f_webp/https://example.com/hero.jpg 640w
+https://res.cloudinary.com/demo/image/fetch/w_750,h_422,c_fill,f_webp/https://example.com/hero.jpg 750w
+https://res.cloudinary.com/demo/image/fetch/w_828,h_466,c_fill,f_webp/https://example.com/hero.jpg 828w
+https://res.cloudinary.com/demo/image/fetch/w_960,h_540,c_fill,f_webp/https://example.com/hero.jpg 960w
+https://res.cloudinary.com/demo/image/fetch/w_1080,h_608,c_fill,f_webp/https://example.com/hero.jpg 1080w
+https://res.cloudinary.com/demo/image/fetch/w_1280,h_720,c_fill,f_webp/https://example.com/hero.jpg 1280w
+https://res.cloudinary.com/demo/image/fetch/w_1668,h_938,c_fill,f_webp/https://example.com/hero.jpg 1668w
+https://res.cloudinary.com/demo/image/fetch/w_1920,h_1080,c_fill,f_webp/https://example.com/hero.jpg 1920w
+https://res.cloudinary.com/demo/image/fetch/w_2048,h_1152,c_fill,f_webp/https://example.com/hero.jpg 2048w
+https://res.cloudinary.com/demo/image/fetch/w_2560,h_1440,c_fill,f_webp/https://example.com/hero.jpg 2560w
+https://res.cloudinary.com/demo/image/fetch/w_3200,h_1800,c_fill,f_webp/https://example.com/hero.jpg 3200w
+https://res.cloudinary.com/demo/image/fetch/w_3840,h_2160,c_fill,f_webp/https://example.com/hero.jpg 3840w
+https://res.cloudinary.com/demo/image/fetch/w_4480,h_2520,c_fill,f_webp/https://example.com/hero.jpg 4480w
+https://res.cloudinary.com/demo/image/fetch/w_5120,h_2880,c_fill,f_webp/https://example.com/hero.jpg 5120w
+https://res.cloudinary.com/demo/image/fetch/w_6016,h_3384,c_fill,f_webp/https://example.com/hero.jpg 6016w
+
+source (image/jpeg):
+https://res.cloudinary.com/demo/image/fetch/w_640,h_360,c_fill,f_jpg/https://example.com/hero.jpg 640w
+https://res.cloudinary.com/demo/image/fetch/w_750,h_422,c_fill,f_jpg/https://example.com/hero.jpg 750w
+https://res.cloudinary.com/demo/image/fetch/w_828,h_466,c_fill,f_jpg/https://example.com/hero.jpg 828w
+https://res.cloudinary.com/demo/image/fetch/w_960,h_540,c_fill,f_jpg/https://example.com/hero.jpg 960w
+https://res.cloudinary.com/demo/image/fetch/w_1080,h_608,c_fill,f_jpg/https://example.com/hero.jpg 1080w
+https://res.cloudinary.com/demo/image/fetch/w_1280,h_720,c_fill,f_jpg/https://example.com/hero.jpg 1280w
+https://res.cloudinary.com/demo/image/fetch/w_1668,h_938,c_fill,f_jpg/https://example.com/hero.jpg 1668w
+https://res.cloudinary.com/demo/image/fetch/w_1920,h_1080,c_fill,f_jpg/https://example.com/hero.jpg 1920w
+https://res.cloudinary.com/demo/image/fetch/w_2048,h_1152,c_fill,f_jpg/https://example.com/hero.jpg 2048w
+https://res.cloudinary.com/demo/image/fetch/w_2560,h_1440,c_fill,f_jpg/https://example.com/hero.jpg 2560w
+https://res.cloudinary.com/demo/image/fetch/w_3200,h_1800,c_fill,f_jpg/https://example.com/hero.jpg 3200w
+https://res.cloudinary.com/demo/image/fetch/w_3840,h_2160,c_fill,f_jpg/https://example.com/hero.jpg 3840w
+https://res.cloudinary.com/demo/image/fetch/w_4480,h_2520,c_fill,f_jpg/https://example.com/hero.jpg 4480w
+https://res.cloudinary.com/demo/image/fetch/w_5120,h_2880,c_fill,f_jpg/https://example.com/hero.jpg 5120w
+https://res.cloudinary.com/demo/image/fetch/w_6016,h_3384,c_fill,f_jpg/https://example.com/hero.jpg 6016w

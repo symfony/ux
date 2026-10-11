@@ -1,0 +1,28 @@
+{
+    "name": "symfony/ux-cloudinary-image",
+    "type": "symfony-ux-image-bridge",
+    "description": "Symfony UX Image Cloudinary Bridge",
+    "keywords": ["symfony-ux", "cloudinary", "image", "responsive", "cdn"],
+    "homepage": "https://symfony.com",
+    "license": "MIT",
+    "authors": [
+        { "name": "Kevin Bond", "email": "kevinbond@gmail.com" },
+        { "name": "Symfony Community", "homepage": "https://symfony.com/contributors" }
+    ],
+    "require": {
+        "php": ">=8.4",
+        "symfony/ux-image": "^3.6"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^12.0",
+        "spatie/phpunit-snapshot-assertions": "^5.2.3"
+    },
+    "autoload": {
+        "psr-4": { "Symfony\\UX\\Image\\Bridge\\Cloudinary\\": "src/" },
+        "exclude-from-classmap": []
+    },
+    "autoload-dev": {
+        "psr-4": { "Symfony\\UX\\Image\\Bridge\\Cloudinary\\Tests\\": "tests/" }
+    },
+    "minimum-stability": "dev"
+}
