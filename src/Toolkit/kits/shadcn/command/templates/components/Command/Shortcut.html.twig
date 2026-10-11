@@ -1,0 +1,9 @@
+<span
+    data-slot="command-shortcut"
+    {{ attributes.defaults({
+        class: 'ms-auto text-xs tracking-widest text-muted-foreground group-data-[selected=true]/command-item:text-foreground'|tailwind_classes,
+    }) }}
+>
+    {##- The keyboard shortcut text (e.g., "⌘P"). -#}
+    {%- block content %}{% endblock -%}
+</span>

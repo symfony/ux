@@ -1,0 +1,55 @@
+<!--
+- Kit: Shadcn UI
+- Component: Command
+- Code:
+```twig
+<div class="flex w-full max-w-sm flex-col">
+    <twig:Command class="max-w-sm rounded-lg border">
+        <twig:Command:Input placeholder="Search a page..." />
+        <twig:Command:List>
+            <twig:Command:Empty>No results found.</twig:Command:Empty>
+            <twig:Command:Group heading="Pages">
+                <twig:Command:Item as="a" href="#home">
+                    <twig:ux:icon name="lucide:house" />
+                    <span>Home</span>
+                </twig:Command:Item>
+                <twig:Command:Item as="a" href="#inbox">
+                    <twig:ux:icon name="lucide:inbox" />
+                    <span>Inbox</span>
+                </twig:Command:Item>
+                <twig:Command:Item as="a" href="#settings">
+                    <twig:ux:icon name="lucide:settings" />
+                    <span>Settings</span>
+                </twig:Command:Item>
+            </twig:Command:Group>
+        </twig:Command:List>
+    </twig:Command>
+</div>
+```
+- Rendered code (run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="flex w-full max-w-sm flex-col">
+    <div data-slot="command" tabindex="-1" class="flex size-full flex-col overflow-hidden rounded-xl! bg-popover p-1 text-popover-foreground max-w-sm rounded-lg border" data-controller="command" data-action="keydown->command#navigate"><div data-slot="command-input-wrapper" class="p-1 pb-0">
+    <div data-slot="input-group" role="group" class="group/input-group relative flex h-8 w-full min-w-0 items-center rounded-lg border transition-colors outline-none in-data-[slot=combobox-content]:focus-within:border-inherit in-data-[slot=combobox-content]:focus-within:ring-0 has-disabled:bg-input/50 has-disabled:opacity-50 has-[[data-slot=input-group-control]:focus-visible]:border-ring has-[[data-slot=input-group-control]:focus-visible]:ring-3 has-[[data-slot=input-group-control]:focus-visible]:ring-ring/50 has-[[data-slot][aria-invalid=true]]:border-destructive has-[[data-slot][aria-invalid=true]]:ring-3 has-[[data-slot][aria-invalid=true]]:ring-destructive/20 has-[>[data-align=block-end]]:h-auto has-[>[data-align=block-end]]:flex-col has-[>[data-align=block-start]]:h-auto has-[>[data-align=block-start]]:flex-col has-[>textarea]:h-auto dark:bg-input/30 dark:has-disabled:bg-input/80 dark:has-[[data-slot][aria-invalid=true]]:ring-destructive/40 has-[>[data-align=block-end]]:[&amp;>input]:pt-3 has-[>[data-align=block-start]]:[&amp;>input]:pb-3 has-[>[data-align=inline-end]]:[&amp;>input]:pe-1.5 has-[>[data-align=inline-start]]:[&amp;>input]:ps-1.5 h-8! rounded-lg! border-input/30 bg-input/30 shadow-none! *:data-[slot=input-group-addon]:ps-2!" data-controller="input-group"><input type="text" role="combobox" autocomplete="off" autocorrect="off" spellcheck="false" aria-autocomplete="list" aria-expanded="true" data-slot="command-input" data-command-target="input" class="w-full text-sm outline-hidden disabled:cursor-not-allowed disabled:opacity-50" data-action="input->command#filter" placeholder="Search a page...">
+        <div data-slot="input-group-addon" data-align="inline-start" role="group" class="flex h-auto cursor-text items-center justify-center gap-2 py-1.5 text-sm font-medium text-muted-foreground select-none group-data-[disabled=true]/input-group:opacity-50 [&amp;>kbd]:rounded-[calc(var(--radius)-5px)] [&amp;>svg:not([class*='size-'])]:size-4 order-first ps-2 has-[>button]:ms-[-0.3rem] has-[>kbd]:ms-[-0.15rem]" data-action="click->input-group#focusInput"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4 shrink-0 opacity-50" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="m21 21l-4.34-4.34"></path><circle cx="11" cy="11" r="8"></circle></g></svg>
+        </div>
+    </div>
+</div>
+
+        <div role="listbox" tabindex="-1" data-slot="command-list" data-command-target="list" class="no-scrollbar max-h-72 scroll-py-1 overflow-x-hidden overflow-y-auto outline-none"><div role="presentation" hidden="" data-slot="command-empty" data-command-target="empty" class="py-6 text-center text-sm">No results found.</div>
+            <div role="presentation" data-slot="command-group" data-command-target="group" class="overflow-hidden p-1 text-foreground"><div data-slot="command-group-heading" aria-hidden="true" class="px-2 py-1.5 text-xs font-medium text-muted-foreground">Pages</div><div role="group" data-slot="command-group-items" aria-label="Pages"><a role="option" tabindex="-1" data-slot="command-item" data-command-target="item" data-selected="false" data-disabled="false" aria-selected="false" aria-disabled="false" class="group/command-item relative flex cursor-default items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-hidden select-none in-data-[slot=dialog-content]:rounded-lg! data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 data-[selected=true]:bg-muted data-[selected=true]:text-foreground data-[selected=true]:*:[svg]:text-foreground [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4" data-action="pointermove->command#highlight" href="#home"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"></path><path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></g></svg>
+                    <span>Home</span>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="ms-auto opacity-0 group-has-data-[slot=command-shortcut]/command-item:hidden group-data-[checked=true]/command-item:opacity-100" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+</a>
+                <a role="option" tabindex="-1" data-slot="command-item" data-command-target="item" data-selected="false" data-disabled="false" aria-selected="false" aria-disabled="false" class="group/command-item relative flex cursor-default items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-hidden select-none in-data-[slot=dialog-content]:rounded-lg! data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 data-[selected=true]:bg-muted data-[selected=true]:text-foreground data-[selected=true]:*:[svg]:text-foreground [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4" data-action="pointermove->command#highlight" href="#inbox"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M22 12h-6l-2 3h-4l-2-3H2"></path><path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11"></path></g></svg>
+                    <span>Inbox</span>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="ms-auto opacity-0 group-has-data-[slot=command-shortcut]/command-item:hidden group-data-[checked=true]/command-item:opacity-100" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+</a>
+                <a role="option" tabindex="-1" data-slot="command-item" data-command-target="item" data-selected="false" data-disabled="false" aria-selected="false" aria-disabled="false" class="group/command-item relative flex cursor-default items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-hidden select-none in-data-[slot=dialog-content]:rounded-lg! data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 data-[selected=true]:bg-muted data-[selected=true]:text-foreground data-[selected=true]:*:[svg]:text-foreground [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4" data-action="pointermove->command#highlight" href="#settings"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0a2.34 2.34 0 0 0 3.319 1.915a2.34 2.34 0 0 1 2.33 4.033a2.34 2.34 0 0 0 0 3.831a2.34 2.34 0 0 1-2.33 4.033a2.34 2.34 0 0 0-3.319 1.915a2.34 2.34 0 0 1-4.659 0a2.34 2.34 0 0 0-3.32-1.915a2.34 2.34 0 0 1-2.33-4.033a2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"></path><circle cx="12" cy="12" r="3"></circle></g></svg>
+                    <span>Settings</span>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="ms-auto opacity-0 group-has-data-[slot=command-shortcut]/command-item:hidden group-data-[checked=true]/command-item:opacity-100" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+</a>
+            </div>
+</div>
+        </div>
+    </div>
+</div>

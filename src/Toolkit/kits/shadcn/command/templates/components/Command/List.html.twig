@@ -1,0 +1,12 @@
+<div
+    role="listbox"
+    tabindex="-1"
+    data-slot="command-list"
+    data-command-target="list"
+    {{ attributes.defaults({
+        class: 'no-scrollbar max-h-72 scroll-py-1 overflow-x-hidden overflow-y-auto outline-none'|tailwind_classes,
+    }) }}
+>
+    {##- The list content, typically includes `Command:Empty`, `Command:Group` and `Command:Separator`. -#}
+    {%- block content %}{% endblock -%}
+</div>

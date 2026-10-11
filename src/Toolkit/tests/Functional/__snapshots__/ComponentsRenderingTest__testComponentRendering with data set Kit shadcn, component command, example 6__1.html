@@ -1,0 +1,177 @@
+<!--
+- Kit: Shadcn UI
+- Component: Command
+- Code:
+```twig
+<div class="flex w-full max-w-sm flex-col gap-4">
+    {# Arabic #}
+    <twig:Command class="max-w-sm rounded-lg border" dir="rtl">
+        <twig:Command:Input placeholder="اكتب أمرًا أو ابحث..." />
+        <twig:Command:List>
+            <twig:Command:Empty>لم يتم العثور على نتائج.</twig:Command:Empty>
+            <twig:Command:Group heading="اقتراحات">
+                <twig:Command:Item>
+                    <twig:ux:icon name="lucide:calendar" />
+                    <span>التقويم</span>
+                </twig:Command:Item>
+                <twig:Command:Item>
+                    <twig:ux:icon name="lucide:smile" />
+                    <span>البحث عن الرموز التعبيرية</span>
+                </twig:Command:Item>
+                <twig:Command:Item disabled>
+                    <twig:ux:icon name="lucide:calculator" />
+                    <span>الآلة الحاسبة</span>
+                </twig:Command:Item>
+            </twig:Command:Group>
+            <twig:Command:Separator />
+            <twig:Command:Group heading="الإعدادات">
+                <twig:Command:Item>
+                    <twig:ux:icon name="lucide:user" />
+                    <span>الملف الشخصي</span>
+                    <twig:Command:Shortcut>⌘P</twig:Command:Shortcut>
+                </twig:Command:Item>
+                <twig:Command:Item>
+                    <twig:ux:icon name="lucide:credit-card" />
+                    <span>الفوترة</span>
+                    <twig:Command:Shortcut>⌘B</twig:Command:Shortcut>
+                </twig:Command:Item>
+                <twig:Command:Item>
+                    <twig:ux:icon name="lucide:settings" />
+                    <span>الإعدادات</span>
+                    <twig:Command:Shortcut>⌘S</twig:Command:Shortcut>
+                </twig:Command:Item>
+            </twig:Command:Group>
+        </twig:Command:List>
+    </twig:Command>
+
+    {# Hebrew #}
+    <twig:Command class="max-w-sm rounded-lg border" dir="rtl">
+        <twig:Command:Input placeholder="הקלד פקודה או חפש..." />
+        <twig:Command:List>
+            <twig:Command:Empty>לא נמצאו תוצאות.</twig:Command:Empty>
+            <twig:Command:Group heading="הצעות">
+                <twig:Command:Item>
+                    <twig:ux:icon name="lucide:calendar" />
+                    <span>לוח שנה</span>
+                </twig:Command:Item>
+                <twig:Command:Item>
+                    <twig:ux:icon name="lucide:smile" />
+                    <span>חפש אמוג'י</span>
+                </twig:Command:Item>
+                <twig:Command:Item disabled>
+                    <twig:ux:icon name="lucide:calculator" />
+                    <span>מחשבון</span>
+                </twig:Command:Item>
+            </twig:Command:Group>
+            <twig:Command:Separator />
+            <twig:Command:Group heading="הגדרות">
+                <twig:Command:Item>
+                    <twig:ux:icon name="lucide:user" />
+                    <span>פרופיל</span>
+                    <twig:Command:Shortcut>⌘P</twig:Command:Shortcut>
+                </twig:Command:Item>
+                <twig:Command:Item>
+                    <twig:ux:icon name="lucide:credit-card" />
+                    <span>חיוב</span>
+                    <twig:Command:Shortcut>⌘B</twig:Command:Shortcut>
+                </twig:Command:Item>
+                <twig:Command:Item>
+                    <twig:ux:icon name="lucide:settings" />
+                    <span>הגדרות</span>
+                    <twig:Command:Shortcut>⌘S</twig:Command:Shortcut>
+                </twig:Command:Item>
+            </twig:Command:Group>
+        </twig:Command:List>
+    </twig:Command>
+</div>
+```
+- Rendered code (run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="flex w-full max-w-sm flex-col gap-4">
+        <div data-slot="command" tabindex="-1" class="flex size-full flex-col overflow-hidden rounded-xl! bg-popover p-1 text-popover-foreground max-w-sm rounded-lg border" data-controller="command" data-action="keydown->command#navigate" dir="rtl"><div data-slot="command-input-wrapper" class="p-1 pb-0">
+    <div data-slot="input-group" role="group" class="group/input-group relative flex h-8 w-full min-w-0 items-center rounded-lg border transition-colors outline-none in-data-[slot=combobox-content]:focus-within:border-inherit in-data-[slot=combobox-content]:focus-within:ring-0 has-disabled:bg-input/50 has-disabled:opacity-50 has-[[data-slot=input-group-control]:focus-visible]:border-ring has-[[data-slot=input-group-control]:focus-visible]:ring-3 has-[[data-slot=input-group-control]:focus-visible]:ring-ring/50 has-[[data-slot][aria-invalid=true]]:border-destructive has-[[data-slot][aria-invalid=true]]:ring-3 has-[[data-slot][aria-invalid=true]]:ring-destructive/20 has-[>[data-align=block-end]]:h-auto has-[>[data-align=block-end]]:flex-col has-[>[data-align=block-start]]:h-auto has-[>[data-align=block-start]]:flex-col has-[>textarea]:h-auto dark:bg-input/30 dark:has-disabled:bg-input/80 dark:has-[[data-slot][aria-invalid=true]]:ring-destructive/40 has-[>[data-align=block-end]]:[&amp;>input]:pt-3 has-[>[data-align=block-start]]:[&amp;>input]:pb-3 has-[>[data-align=inline-end]]:[&amp;>input]:pe-1.5 has-[>[data-align=inline-start]]:[&amp;>input]:ps-1.5 h-8! rounded-lg! border-input/30 bg-input/30 shadow-none! *:data-[slot=input-group-addon]:ps-2!" data-controller="input-group"><input type="text" role="combobox" autocomplete="off" autocorrect="off" spellcheck="false" aria-autocomplete="list" aria-expanded="true" data-slot="command-input" data-command-target="input" class="w-full text-sm outline-hidden disabled:cursor-not-allowed disabled:opacity-50" data-action="input->command#filter" placeholder="اكتب أمرًا أو ابحث...">
+        <div data-slot="input-group-addon" data-align="inline-start" role="group" class="flex h-auto cursor-text items-center justify-center gap-2 py-1.5 text-sm font-medium text-muted-foreground select-none group-data-[disabled=true]/input-group:opacity-50 [&amp;>kbd]:rounded-[calc(var(--radius)-5px)] [&amp;>svg:not([class*='size-'])]:size-4 order-first ps-2 has-[>button]:ms-[-0.3rem] has-[>kbd]:ms-[-0.15rem]" data-action="click->input-group#focusInput"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4 shrink-0 opacity-50" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="m21 21l-4.34-4.34"></path><circle cx="11" cy="11" r="8"></circle></g></svg>
+        </div>
+    </div>
+</div>
+
+        <div role="listbox" tabindex="-1" data-slot="command-list" data-command-target="list" class="no-scrollbar max-h-72 scroll-py-1 overflow-x-hidden overflow-y-auto outline-none"><div role="presentation" hidden="" data-slot="command-empty" data-command-target="empty" class="py-6 text-center text-sm">لم يتم العثور على نتائج.</div>
+            <div role="presentation" data-slot="command-group" data-command-target="group" class="overflow-hidden p-1 text-foreground"><div data-slot="command-group-heading" aria-hidden="true" class="px-2 py-1.5 text-xs font-medium text-muted-foreground">اقتراحات</div><div role="group" data-slot="command-group-items" aria-label="اقتراحات"><div role="option" data-slot="command-item" data-command-target="item" data-selected="false" data-disabled="false" aria-selected="false" aria-disabled="false" class="group/command-item relative flex cursor-default items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-hidden select-none in-data-[slot=dialog-content]:rounded-lg! data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 data-[selected=true]:bg-muted data-[selected=true]:text-foreground data-[selected=true]:*:[svg]:text-foreground [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4" data-action="pointermove->command#highlight"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M8 2v3m8-3v3"></path><rect width="18" height="18" x="3" y="3" rx="2"></rect><path d="M3 9h18"></path></g></svg>
+                    <span>التقويم</span>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="ms-auto opacity-0 group-has-data-[slot=command-shortcut]/command-item:hidden group-data-[checked=true]/command-item:opacity-100" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+</div>
+                <div role="option" data-slot="command-item" data-command-target="item" data-selected="false" data-disabled="false" aria-selected="false" aria-disabled="false" class="group/command-item relative flex cursor-default items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-hidden select-none in-data-[slot=dialog-content]:rounded-lg! data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 data-[selected=true]:bg-muted data-[selected=true]:text-foreground data-[selected=true]:*:[svg]:text-foreground [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4" data-action="pointermove->command#highlight"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M8 14s1.5 2 4 2s4-2 4-2M9 9h.01M15 9h.01"></path></g></svg>
+                    <span>البحث عن الرموز التعبيرية</span>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="ms-auto opacity-0 group-has-data-[slot=command-shortcut]/command-item:hidden group-data-[checked=true]/command-item:opacity-100" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+</div>
+                <div role="option" data-slot="command-item" data-command-target="item" data-selected="false" data-disabled="true" aria-selected="false" aria-disabled="true" class="group/command-item relative flex cursor-default items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-hidden select-none in-data-[slot=dialog-content]:rounded-lg! data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 data-[selected=true]:bg-muted data-[selected=true]:text-foreground data-[selected=true]:*:[svg]:text-foreground [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4" data-action="pointermove->command#highlight"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><rect width="16" height="20" x="4" y="2" rx="2"></rect><path d="M8 6h8m0 8v4m0-8h.01M12 10h.01M8 10h.01M12 14h.01M8 14h.01M12 18h.01M8 18h.01"></path></g></svg>
+                    <span>الآلة الحاسبة</span>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="ms-auto opacity-0 group-has-data-[slot=command-shortcut]/command-item:hidden group-data-[checked=true]/command-item:opacity-100" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+</div>
+            </div>
+</div>
+            <div role="separator" data-slot="command-separator" data-command-target="separator" class="-mx-1 h-px bg-border"></div>
+
+            <div role="presentation" data-slot="command-group" data-command-target="group" class="overflow-hidden p-1 text-foreground"><div data-slot="command-group-heading" aria-hidden="true" class="px-2 py-1.5 text-xs font-medium text-muted-foreground">الإعدادات</div><div role="group" data-slot="command-group-items" aria-label="الإعدادات"><div role="option" data-slot="command-item" data-command-target="item" data-selected="false" data-disabled="false" aria-selected="false" aria-disabled="false" class="group/command-item relative flex cursor-default items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-hidden select-none in-data-[slot=dialog-content]:rounded-lg! data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 data-[selected=true]:bg-muted data-[selected=true]:text-foreground data-[selected=true]:*:[svg]:text-foreground [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4" data-action="pointermove->command#highlight"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></g></svg>
+                    <span>الملف الشخصي</span>
+                    <span data-slot="command-shortcut" class="ms-auto text-xs tracking-widest text-muted-foreground group-data-[selected=true]/command-item:text-foreground">⌘P</span>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="ms-auto opacity-0 group-has-data-[slot=command-shortcut]/command-item:hidden group-data-[checked=true]/command-item:opacity-100" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+</div>
+                <div role="option" data-slot="command-item" data-command-target="item" data-selected="false" data-disabled="false" aria-selected="false" aria-disabled="false" class="group/command-item relative flex cursor-default items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-hidden select-none in-data-[slot=dialog-content]:rounded-lg! data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 data-[selected=true]:bg-muted data-[selected=true]:text-foreground data-[selected=true]:*:[svg]:text-foreground [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4" data-action="pointermove->command#highlight"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><rect width="20" height="14" x="2" y="5" rx="2"></rect><path d="M2 10h20"></path></g></svg>
+                    <span>الفوترة</span>
+                    <span data-slot="command-shortcut" class="ms-auto text-xs tracking-widest text-muted-foreground group-data-[selected=true]/command-item:text-foreground">⌘B</span>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="ms-auto opacity-0 group-has-data-[slot=command-shortcut]/command-item:hidden group-data-[checked=true]/command-item:opacity-100" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+</div>
+                <div role="option" data-slot="command-item" data-command-target="item" data-selected="false" data-disabled="false" aria-selected="false" aria-disabled="false" class="group/command-item relative flex cursor-default items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-hidden select-none in-data-[slot=dialog-content]:rounded-lg! data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 data-[selected=true]:bg-muted data-[selected=true]:text-foreground data-[selected=true]:*:[svg]:text-foreground [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4" data-action="pointermove->command#highlight"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0a2.34 2.34 0 0 0 3.319 1.915a2.34 2.34 0 0 1 2.33 4.033a2.34 2.34 0 0 0 0 3.831a2.34 2.34 0 0 1-2.33 4.033a2.34 2.34 0 0 0-3.319 1.915a2.34 2.34 0 0 1-4.659 0a2.34 2.34 0 0 0-3.32-1.915a2.34 2.34 0 0 1-2.33-4.033a2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"></path><circle cx="12" cy="12" r="3"></circle></g></svg>
+                    <span>الإعدادات</span>
+                    <span data-slot="command-shortcut" class="ms-auto text-xs tracking-widest text-muted-foreground group-data-[selected=true]/command-item:text-foreground">⌘S</span>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="ms-auto opacity-0 group-has-data-[slot=command-shortcut]/command-item:hidden group-data-[checked=true]/command-item:opacity-100" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+</div>
+            </div>
+</div>
+        </div>
+    </div>
+
+        <div data-slot="command" tabindex="-1" class="flex size-full flex-col overflow-hidden rounded-xl! bg-popover p-1 text-popover-foreground max-w-sm rounded-lg border" data-controller="command" data-action="keydown->command#navigate" dir="rtl"><div data-slot="command-input-wrapper" class="p-1 pb-0">
+    <div data-slot="input-group" role="group" class="group/input-group relative flex h-8 w-full min-w-0 items-center rounded-lg border transition-colors outline-none in-data-[slot=combobox-content]:focus-within:border-inherit in-data-[slot=combobox-content]:focus-within:ring-0 has-disabled:bg-input/50 has-disabled:opacity-50 has-[[data-slot=input-group-control]:focus-visible]:border-ring has-[[data-slot=input-group-control]:focus-visible]:ring-3 has-[[data-slot=input-group-control]:focus-visible]:ring-ring/50 has-[[data-slot][aria-invalid=true]]:border-destructive has-[[data-slot][aria-invalid=true]]:ring-3 has-[[data-slot][aria-invalid=true]]:ring-destructive/20 has-[>[data-align=block-end]]:h-auto has-[>[data-align=block-end]]:flex-col has-[>[data-align=block-start]]:h-auto has-[>[data-align=block-start]]:flex-col has-[>textarea]:h-auto dark:bg-input/30 dark:has-disabled:bg-input/80 dark:has-[[data-slot][aria-invalid=true]]:ring-destructive/40 has-[>[data-align=block-end]]:[&amp;>input]:pt-3 has-[>[data-align=block-start]]:[&amp;>input]:pb-3 has-[>[data-align=inline-end]]:[&amp;>input]:pe-1.5 has-[>[data-align=inline-start]]:[&amp;>input]:ps-1.5 h-8! rounded-lg! border-input/30 bg-input/30 shadow-none! *:data-[slot=input-group-addon]:ps-2!" data-controller="input-group"><input type="text" role="combobox" autocomplete="off" autocorrect="off" spellcheck="false" aria-autocomplete="list" aria-expanded="true" data-slot="command-input" data-command-target="input" class="w-full text-sm outline-hidden disabled:cursor-not-allowed disabled:opacity-50" data-action="input->command#filter" placeholder="הקלד פקודה או חפש...">
+        <div data-slot="input-group-addon" data-align="inline-start" role="group" class="flex h-auto cursor-text items-center justify-center gap-2 py-1.5 text-sm font-medium text-muted-foreground select-none group-data-[disabled=true]/input-group:opacity-50 [&amp;>kbd]:rounded-[calc(var(--radius)-5px)] [&amp;>svg:not([class*='size-'])]:size-4 order-first ps-2 has-[>button]:ms-[-0.3rem] has-[>kbd]:ms-[-0.15rem]" data-action="click->input-group#focusInput"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4 shrink-0 opacity-50" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="m21 21l-4.34-4.34"></path><circle cx="11" cy="11" r="8"></circle></g></svg>
+        </div>
+    </div>
+</div>
+
+        <div role="listbox" tabindex="-1" data-slot="command-list" data-command-target="list" class="no-scrollbar max-h-72 scroll-py-1 overflow-x-hidden overflow-y-auto outline-none"><div role="presentation" hidden="" data-slot="command-empty" data-command-target="empty" class="py-6 text-center text-sm">לא נמצאו תוצאות.</div>
+            <div role="presentation" data-slot="command-group" data-command-target="group" class="overflow-hidden p-1 text-foreground"><div data-slot="command-group-heading" aria-hidden="true" class="px-2 py-1.5 text-xs font-medium text-muted-foreground">הצעות</div><div role="group" data-slot="command-group-items" aria-label="הצעות"><div role="option" data-slot="command-item" data-command-target="item" data-selected="false" data-disabled="false" aria-selected="false" aria-disabled="false" class="group/command-item relative flex cursor-default items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-hidden select-none in-data-[slot=dialog-content]:rounded-lg! data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 data-[selected=true]:bg-muted data-[selected=true]:text-foreground data-[selected=true]:*:[svg]:text-foreground [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4" data-action="pointermove->command#highlight"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M8 2v3m8-3v3"></path><rect width="18" height="18" x="3" y="3" rx="2"></rect><path d="M3 9h18"></path></g></svg>
+                    <span>לוח שנה</span>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="ms-auto opacity-0 group-has-data-[slot=command-shortcut]/command-item:hidden group-data-[checked=true]/command-item:opacity-100" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+</div>
+                <div role="option" data-slot="command-item" data-command-target="item" data-selected="false" data-disabled="false" aria-selected="false" aria-disabled="false" class="group/command-item relative flex cursor-default items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-hidden select-none in-data-[slot=dialog-content]:rounded-lg! data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 data-[selected=true]:bg-muted data-[selected=true]:text-foreground data-[selected=true]:*:[svg]:text-foreground [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4" data-action="pointermove->command#highlight"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M8 14s1.5 2 4 2s4-2 4-2M9 9h.01M15 9h.01"></path></g></svg>
+                    <span>חפש אמוג'י</span>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="ms-auto opacity-0 group-has-data-[slot=command-shortcut]/command-item:hidden group-data-[checked=true]/command-item:opacity-100" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+</div>
+                <div role="option" data-slot="command-item" data-command-target="item" data-selected="false" data-disabled="true" aria-selected="false" aria-disabled="true" class="group/command-item relative flex cursor-default items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-hidden select-none in-data-[slot=dialog-content]:rounded-lg! data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 data-[selected=true]:bg-muted data-[selected=true]:text-foreground data-[selected=true]:*:[svg]:text-foreground [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4" data-action="pointermove->command#highlight"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><rect width="16" height="20" x="4" y="2" rx="2"></rect><path d="M8 6h8m0 8v4m0-8h.01M12 10h.01M8 10h.01M12 14h.01M8 14h.01M12 18h.01M8 18h.01"></path></g></svg>
+                    <span>מחשבון</span>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="ms-auto opacity-0 group-has-data-[slot=command-shortcut]/command-item:hidden group-data-[checked=true]/command-item:opacity-100" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+</div>
+            </div>
+</div>
+            <div role="separator" data-slot="command-separator" data-command-target="separator" class="-mx-1 h-px bg-border"></div>
+
+            <div role="presentation" data-slot="command-group" data-command-target="group" class="overflow-hidden p-1 text-foreground"><div data-slot="command-group-heading" aria-hidden="true" class="px-2 py-1.5 text-xs font-medium text-muted-foreground">הגדרות</div><div role="group" data-slot="command-group-items" aria-label="הגדרות"><div role="option" data-slot="command-item" data-command-target="item" data-selected="false" data-disabled="false" aria-selected="false" aria-disabled="false" class="group/command-item relative flex cursor-default items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-hidden select-none in-data-[slot=dialog-content]:rounded-lg! data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 data-[selected=true]:bg-muted data-[selected=true]:text-foreground data-[selected=true]:*:[svg]:text-foreground [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4" data-action="pointermove->command#highlight"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></g></svg>
+                    <span>פרופיל</span>
+                    <span data-slot="command-shortcut" class="ms-auto text-xs tracking-widest text-muted-foreground group-data-[selected=true]/command-item:text-foreground">⌘P</span>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="ms-auto opacity-0 group-has-data-[slot=command-shortcut]/command-item:hidden group-data-[checked=true]/command-item:opacity-100" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+</div>
+                <div role="option" data-slot="command-item" data-command-target="item" data-selected="false" data-disabled="false" aria-selected="false" aria-disabled="false" class="group/command-item relative flex cursor-default items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-hidden select-none in-data-[slot=dialog-content]:rounded-lg! data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 data-[selected=true]:bg-muted data-[selected=true]:text-foreground data-[selected=true]:*:[svg]:text-foreground [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4" data-action="pointermove->command#highlight"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><rect width="20" height="14" x="2" y="5" rx="2"></rect><path d="M2 10h20"></path></g></svg>
+                    <span>חיוב</span>
+                    <span data-slot="command-shortcut" class="ms-auto text-xs tracking-widest text-muted-foreground group-data-[selected=true]/command-item:text-foreground">⌘B</span>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="ms-auto opacity-0 group-has-data-[slot=command-shortcut]/command-item:hidden group-data-[checked=true]/command-item:opacity-100" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+</div>
+                <div role="option" data-slot="command-item" data-command-target="item" data-selected="false" data-disabled="false" aria-selected="false" aria-disabled="false" class="group/command-item relative flex cursor-default items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-hidden select-none in-data-[slot=dialog-content]:rounded-lg! data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 data-[selected=true]:bg-muted data-[selected=true]:text-foreground data-[selected=true]:*:[svg]:text-foreground [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4" data-action="pointermove->command#highlight"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0a2.34 2.34 0 0 0 3.319 1.915a2.34 2.34 0 0 1 2.33 4.033a2.34 2.34 0 0 0 0 3.831a2.34 2.34 0 0 1-2.33 4.033a2.34 2.34 0 0 0-3.319 1.915a2.34 2.34 0 0 1-4.659 0a2.34 2.34 0 0 0-3.32-1.915a2.34 2.34 0 0 1-2.33-4.033a2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"></path><circle cx="12" cy="12" r="3"></circle></g></svg>
+                    <span>הגדרות</span>
+                    <span data-slot="command-shortcut" class="ms-auto text-xs tracking-widest text-muted-foreground group-data-[selected=true]/command-item:text-foreground">⌘S</span>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="ms-auto opacity-0 group-has-data-[slot=command-shortcut]/command-item:hidden group-data-[checked=true]/command-item:opacity-100" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+</div>
+            </div>
+</div>
+        </div>
+    </div>
+</div>
