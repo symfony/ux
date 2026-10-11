@@ -31,6 +31,14 @@ $ curl 'https://go.split.sh/api/projects/symfonyux/branches/3.x/tag-prediction?v
 {"branch":"3.x","tagged":["ux-map","ux-pagination"],"skipped":[...],"version":"3.5.1"}
 ```
 
+### The first release of a new package
+
+The Release on NPM workflow publishes through npm trusted publishing. This only works for a package that npm already has, so you must publish the first version of a new package by hand.
+
+When a release bumps a package that npm does not have yet, `release.sh` ends with the steps to follow before you push: one `pnpm publish` command per package, then the npm page where you add the trusted publisher. After you push, the workflow skips these packages, because npm already has their version, and publishes the others.
+
+`release.sh` stops before it changes anything if a package that npm does not have yet is not part of the release. This happens when split.sh does not split the package yet. The workflow would fail to publish it.
+
 ## Splitting packages into read-only repositories
 
 Each `symfony/ux-*` package lives in its own read-only repository split from this monorepo, managed on the [split.sh dashboard](https://go.split.sh/dashboard#project-symfonyux).

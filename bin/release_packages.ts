@@ -9,7 +9,11 @@
  * It prints nothing when a release only moves subtrees that ship no npm package, which is a legitimate release, and
  * refuses one that would tag no repository at all.
  *
+ * The Release on NPM workflow cannot publish a package npm does not have yet, so the first version of a new package is published by hand.
+ * The script refuses a release that leaves such a package out, and `--first-publish` prints how to publish them by hand.
+ *
  * Usage: node bin/release_packages.ts --branch 3.x --version 3.5.1
+ *        node bin/release_packages.ts --first-publish
  */
 
 import * as fs from 'node:fs';
@@ -18,6 +22,8 @@ import { parseArgs } from 'node:util';
 
 const SPLIT_PROJECT = 'https://go.split.sh/api/projects/symfonyux';
 const PREDICTION_TIMEOUT_MS = 30_000;
+const NPM_REGISTRY = 'https://registry.npmjs.org';
+const REGISTRY_TIMEOUT_MS = 30_000;
 
 /**
  * The parts of `splitsh.json` this script reads. A subtree is declared either as a bare prefix or as an object, the
@@ -163,14 +169,146 @@ export async function fetchPrediction(branch: string, version: string): Promise<
     return prediction;
 }
 
+/**
+ * A package `pnpm publish --recursive` publishes, with the workspace directory it lives in.
+ */
+export type NpmPackage = { directory: string; name: string };
+
+/**
+ * Lists the packages `pnpm publish --recursive` publishes: every versioned manifest that is not private.
+ *
+ * @param config Parsed `splitsh.json`, which declares every published package.
+ *
+ * @example
+ * publishablePackages(config);
+ * // [{ directory: 'src/Autocomplete/assets', name: '@symfony/ux-autocomplete' }, ...], without the private ux-map
+ */
+export function publishablePackages(config: SplitshConfig): NpmPackage[] {
+    const packages: NpmPackage[] = [];
+
+    for (const split of Object.keys(config.subtrees)) {
+        const directory = `${prefixOf(config, split)}/assets`;
+
+        if (!hasVersionToBump(directory)) {
+            continue;
+        }
+
+        const manifest = JSON.parse(fs.readFileSync(path.join(directory, 'package.json'), 'utf8'));
+
+        if (true !== manifest.private) {
+            packages.push({ directory, name: manifest.name });
+        }
+    }
+
+    return packages;
+}
+
+/**
+ * Tells whether npm serves a package, whatever its versions.
+ *
+ * @throws If the registry is unreachable, times out after 30 seconds, or answers anything but 200 or 404.
+ *
+ * @example
+ * await isOnNpm('@symfony/ux-vue'); // true
+ */
+export async function isOnNpm(name: string): Promise<boolean> {
+    const url = `${NPM_REGISTRY}/${encodeURIComponent(name)}`;
+    const response = await fetch(url, { method: 'HEAD', signal: AbortSignal.timeout(REGISTRY_TIMEOUT_MS) });
+
+    if (404 === response.status) {
+        return false;
+    }
+
+    if (!response.ok) {
+        throw new Error(`npm answered ${response.status} for ${name}.`);
+    }
+
+    return true;
+}
+
+/**
+ * Keeps the packages npm does not have yet.
+ *
+ * The Release on NPM workflow publishes through trusted publishing, which npm only allows on a package that already exists.
+ *
+ * @param isPublished Tells whether npm serves a package. Injected so the decision stays testable.
+ */
+export async function unpublishedPackages(
+    packages: NpmPackage[],
+    isPublished: (name: string) => Promise<boolean>
+): Promise<NpmPackage[]> {
+    const published = await Promise.all(packages.map((npmPackage) => isPublished(npmPackage.name)));
+
+    return packages.filter((_, index) => !published[index]);
+}
+
+/**
+ * Refuses a release that leaves out a package npm does not have yet.
+ *
+ * `pnpm publish --recursive` would still try to publish it at the version it carries, and fail.
+ * This happens when split.sh does not split the package yet.
+ *
+ * @param unpublished The packages npm does not have yet.
+ * @param directories The directories the release bumps.
+ * @throws If one of the packages is not bumped.
+ */
+export function assertBumped(unpublished: NpmPackage[], directories: string[]): void {
+    const forgotten = unpublished.filter(({ directory }) => !directories.includes(directory));
+
+    if (forgotten.length > 0) {
+        const names = forgotten.map(({ name }) => name).join(', ');
+
+        throw new Error(
+            `npm does not have ${names} yet, and this release does not bump it, so the Release on NPM workflow would fail to publish it. Check that split.sh splits it, or make it private until it does.`
+        );
+    }
+}
+
+/**
+ * Explains how to publish by hand the first version of the packages npm does not have yet.
+ *
+ * @param unpublished The packages npm does not have yet.
+ * @returns The steps, or an empty string when there is none.
+ */
+export function firstPublishSteps(unpublished: NpmPackage[]): string {
+    if (0 === unpublished.length) {
+        return '';
+    }
+
+    const publishes = unpublished.map(
+        ({ name }) => `    pnpm --filter ${name} publish --access public --no-git-checks`
+    );
+    const settings = unpublished.map(({ name }) => `    https://www.npmjs.com/package/${name}/access`);
+
+    return [
+        'npm does not have these packages yet, and the Release on NPM workflow cannot create them. Before you push, publish their first version by hand:',
+        '',
+        ...publishes,
+        '',
+        'Then set up OIDC on npm. On each page below, add a trusted publisher: GitHub Actions, organization "symfony", repository "ux", workflow "release-on-npm.yaml".',
+        '',
+        ...settings,
+        '',
+    ].join('\n');
+}
+
 if (process.argv[1] && import.meta.filename === path.resolve(process.argv[1])) {
     try {
-        const { values } = parseArgs({ options: { branch: { type: 'string' }, version: { type: 'string' } } });
+        const { values } = parseArgs({
+            options: { branch: { type: 'string' }, version: { type: 'string' }, 'first-publish': { type: 'boolean' } },
+        });
         const config = JSON.parse(fs.readFileSync('splitsh.json', 'utf8'));
-        const prediction = await fetchPrediction(values.branch ?? '', values.version ?? '');
-        const directories = bumpDirectories(prediction, config, hasVersionToBump);
+        const unpublished = await unpublishedPackages(publishablePackages(config), isOnNpm);
 
-        process.stdout.write(directories.map((directory) => `${directory}\n`).join(''));
+        if (values['first-publish']) {
+            process.stdout.write(firstPublishSteps(unpublished));
+        } else {
+            const prediction = await fetchPrediction(values.branch ?? '', values.version ?? '');
+            const directories = bumpDirectories(prediction, config, hasVersionToBump);
+
+            assertBumped(unpublished, directories);
+            process.stdout.write(directories.map((directory) => `${directory}\n`).join(''));
+        }
     } catch (error) {
         console.error(error instanceof Error ? error.message : error);
         process.exit(1);
