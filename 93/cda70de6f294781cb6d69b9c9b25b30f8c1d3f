@@ -1,0 +1,33 @@
+---------------------------------------------------------------------------
+
+by github-actions[bot] at 2026-09-26T16:33:59Z
+
+<h1>📊 Packages dist files size difference</h1>
+
+Thanks for the PR! Here is the difference in size of the packages dist files between the base branch and the PR.
+Please review the changes and make sure they are expected.
+
+<table>
+    <thead><tr><th>File</th><th>Before (Size / Gzip)</th><th>After (Size / Gzip)</th></tr></thead>
+    <tbody><tr><td colspan="3"><a href="https://github.com/Pechynho/ux/tree/fix-morph-form-id-shadowing/src/LiveComponent/assets/dist"><b>LiveComponent</b></a></td></tr><tr>
+                <td><a href="https://github.com/Pechynho/ux/blob/fix-morph-form-id-shadowing/src/LiveComponent/assets/dist/live_controller.js"><code>live_controller.js</code></a></td>
+            <td>
+                    <code>91.39 kB</code>
+                    / <code>20.75 kB</code>
+                </td><td>
+                    <code>91.51 kB</code><sup>0%</sup>
+                    / <code>20.77 kB</code><sup>0%</sup>
+                </td></tr></tbody>
+</table>
+
+<!-- Sticky Pull Request Comment -->
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-10-11T06:30:58Z
+
+I rebased this PR on 3.x, it had a conflict in `child.test.ts`.
+
+I added a Playwright test for a child component whose root is a form with a field named `id`. It covers the `data-live-preserve` changes in `morphdom.ts`, which no unit test reached. It fails on 3.x and passes with the fix, in Chrome and Firefox.
+
+I also updated the description with this case.
