@@ -1,0 +1,363 @@
+<!--
+- Kit: Shadcn UI
+- Component: Dropdown Menu
+- Code:
+```twig
+<div class="flex items-start justify-center pt-6" style="min-height: 640px">
+    <twig:DropdownMenu id="complex">
+        <twig:DropdownMenu:Trigger>
+            <twig:Button variant="outline" {{ ...dropdown_menu_trigger_attrs }}>Complex Menu</twig:Button>
+        </twig:DropdownMenu:Trigger>
+        <twig:DropdownMenu:Content class="w-44">
+            <twig:DropdownMenu:Group>
+                <twig:DropdownMenu:Label>File</twig:DropdownMenu:Label>
+                <twig:DropdownMenu:Item>
+                    <twig:ux:icon name="lucide:file" class="size-4" />
+                    New File
+                    <twig:DropdownMenu:Shortcut>⌘N</twig:DropdownMenu:Shortcut>
+                </twig:DropdownMenu:Item>
+                <twig:DropdownMenu:Item>
+                    <twig:ux:icon name="lucide:folder" class="size-4" />
+                    New Folder
+                    <twig:DropdownMenu:Shortcut>⇧⌘N</twig:DropdownMenu:Shortcut>
+                </twig:DropdownMenu:Item>
+                <twig:DropdownMenu:Sub>
+                    <twig:DropdownMenu:SubTrigger>
+                        <twig:ux:icon name="lucide:folder-open" class="size-4" />
+                        Open Recent
+                    </twig:DropdownMenu:SubTrigger>
+                    <twig:DropdownMenu:SubContent>
+                        <twig:DropdownMenu:Group>
+                            <twig:DropdownMenu:Label>Recent Projects</twig:DropdownMenu:Label>
+                            <twig:DropdownMenu:Item>
+                                <twig:ux:icon name="lucide:file-code" class="size-4" />
+                                Project Alpha
+                            </twig:DropdownMenu:Item>
+                            <twig:DropdownMenu:Item>
+                                <twig:ux:icon name="lucide:file-code" class="size-4" />
+                                Project Beta
+                            </twig:DropdownMenu:Item>
+                            <twig:DropdownMenu:Sub>
+                                <twig:DropdownMenu:SubTrigger>
+                                    <twig:ux:icon name="lucide:ellipsis" class="size-4" />
+                                    More Projects
+                                </twig:DropdownMenu:SubTrigger>
+                                <twig:DropdownMenu:SubContent>
+                                    <twig:DropdownMenu:Item>
+                                        <twig:ux:icon name="lucide:file-code" class="size-4" />
+                                        Project Gamma
+                                    </twig:DropdownMenu:Item>
+                                    <twig:DropdownMenu:Item>
+                                        <twig:ux:icon name="lucide:file-code" class="size-4" />
+                                        Project Delta
+                                    </twig:DropdownMenu:Item>
+                                </twig:DropdownMenu:SubContent>
+                            </twig:DropdownMenu:Sub>
+                        </twig:DropdownMenu:Group>
+                        <twig:DropdownMenu:Separator />
+                        <twig:DropdownMenu:Group>
+                            <twig:DropdownMenu:Item>
+                                <twig:ux:icon name="lucide:folder-search" class="size-4" />
+                                Browse...
+                            </twig:DropdownMenu:Item>
+                        </twig:DropdownMenu:Group>
+                    </twig:DropdownMenu:SubContent>
+                </twig:DropdownMenu:Sub>
+                <twig:DropdownMenu:Separator />
+                <twig:DropdownMenu:Item>
+                    <twig:ux:icon name="lucide:save" class="size-4" />
+                    Save
+                    <twig:DropdownMenu:Shortcut>⌘S</twig:DropdownMenu:Shortcut>
+                </twig:DropdownMenu:Item>
+                <twig:DropdownMenu:Item>
+                    <twig:ux:icon name="lucide:download" class="size-4" />
+                    Export
+                    <twig:DropdownMenu:Shortcut>⇧⌘E</twig:DropdownMenu:Shortcut>
+                </twig:DropdownMenu:Item>
+            </twig:DropdownMenu:Group>
+            <twig:DropdownMenu:Separator />
+            <twig:DropdownMenu:Group>
+                <twig:DropdownMenu:Label>View</twig:DropdownMenu:Label>
+                <twig:DropdownMenu:CheckboxItem checked>
+                    <twig:ux:icon name="lucide:eye" class="size-4" />
+                    Show Sidebar
+                </twig:DropdownMenu:CheckboxItem>
+                <twig:DropdownMenu:CheckboxItem>
+                    <twig:ux:icon name="lucide:panels-top-left" class="size-4" />
+                    Show Status Bar
+                </twig:DropdownMenu:CheckboxItem>
+                <twig:DropdownMenu:Sub>
+                    <twig:DropdownMenu:SubTrigger>
+                        <twig:ux:icon name="lucide:palette" class="size-4" />
+                        Theme
+                    </twig:DropdownMenu:SubTrigger>
+                    <twig:DropdownMenu:SubContent>
+                        <twig:DropdownMenu:Group>
+                            <twig:DropdownMenu:Label>Appearance</twig:DropdownMenu:Label>
+                            <twig:DropdownMenu:RadioGroup value="light">
+                                <twig:DropdownMenu:RadioItem value="light" checked>
+                                    <twig:ux:icon name="lucide:sun" class="size-4" />
+                                    Light
+                                </twig:DropdownMenu:RadioItem>
+                                <twig:DropdownMenu:RadioItem value="dark">
+                                    <twig:ux:icon name="lucide:moon" class="size-4" />
+                                    Dark
+                                </twig:DropdownMenu:RadioItem>
+                                <twig:DropdownMenu:RadioItem value="system">
+                                    <twig:ux:icon name="lucide:monitor" class="size-4" />
+                                    System
+                                </twig:DropdownMenu:RadioItem>
+                            </twig:DropdownMenu:RadioGroup>
+                        </twig:DropdownMenu:Group>
+                    </twig:DropdownMenu:SubContent>
+                </twig:DropdownMenu:Sub>
+            </twig:DropdownMenu:Group>
+            <twig:DropdownMenu:Separator />
+            <twig:DropdownMenu:Group>
+                <twig:DropdownMenu:Label>Account</twig:DropdownMenu:Label>
+                <twig:DropdownMenu:Item>
+                    <twig:ux:icon name="lucide:user" class="size-4" />
+                    Profile
+                    <twig:DropdownMenu:Shortcut>⇧⌘P</twig:DropdownMenu:Shortcut>
+                </twig:DropdownMenu:Item>
+                <twig:DropdownMenu:Item>
+                    <twig:ux:icon name="lucide:credit-card" class="size-4" />
+                    Billing
+                </twig:DropdownMenu:Item>
+                <twig:DropdownMenu:Sub>
+                    <twig:DropdownMenu:SubTrigger>
+                        <twig:ux:icon name="lucide:settings" class="size-4" />
+                        Settings
+                    </twig:DropdownMenu:SubTrigger>
+                    <twig:DropdownMenu:SubContent>
+                        <twig:DropdownMenu:Group>
+                            <twig:DropdownMenu:Label>Preferences</twig:DropdownMenu:Label>
+                            <twig:DropdownMenu:Item>
+                                <twig:ux:icon name="lucide:keyboard" class="size-4" />
+                                Keyboard Shortcuts
+                            </twig:DropdownMenu:Item>
+                            <twig:DropdownMenu:Item>
+                                <twig:ux:icon name="lucide:languages" class="size-4" />
+                                Language
+                            </twig:DropdownMenu:Item>
+                            <twig:DropdownMenu:Sub>
+                                <twig:DropdownMenu:SubTrigger>
+                                    <twig:ux:icon name="lucide:bell" class="size-4" />
+                                    Notifications
+                                </twig:DropdownMenu:SubTrigger>
+                                <twig:DropdownMenu:SubContent>
+                                    <twig:DropdownMenu:Group>
+                                        <twig:DropdownMenu:Label>Notification Types</twig:DropdownMenu:Label>
+                                        <twig:DropdownMenu:CheckboxItem checked>
+                                            <twig:ux:icon name="lucide:bell" class="size-4" />
+                                            Push Notifications
+                                        </twig:DropdownMenu:CheckboxItem>
+                                        <twig:DropdownMenu:CheckboxItem checked>
+                                            <twig:ux:icon name="lucide:mail" class="size-4" />
+                                            Email Notifications
+                                        </twig:DropdownMenu:CheckboxItem>
+                                    </twig:DropdownMenu:Group>
+                                </twig:DropdownMenu:SubContent>
+                            </twig:DropdownMenu:Sub>
+                        </twig:DropdownMenu:Group>
+                        <twig:DropdownMenu:Separator />
+                        <twig:DropdownMenu:Group>
+                            <twig:DropdownMenu:Item>
+                                <twig:ux:icon name="lucide:shield" class="size-4" />
+                                Privacy & Security
+                            </twig:DropdownMenu:Item>
+                        </twig:DropdownMenu:Group>
+                    </twig:DropdownMenu:SubContent>
+                </twig:DropdownMenu:Sub>
+            </twig:DropdownMenu:Group>
+            <twig:DropdownMenu:Separator />
+            <twig:DropdownMenu:Group>
+                <twig:DropdownMenu:Item>
+                    <twig:ux:icon name="lucide:circle-help" class="size-4" />
+                    Help & Support
+                </twig:DropdownMenu:Item>
+                <twig:DropdownMenu:Item>
+                    <twig:ux:icon name="lucide:file-text" class="size-4" />
+                    Documentation
+                </twig:DropdownMenu:Item>
+            </twig:DropdownMenu:Group>
+            <twig:DropdownMenu:Separator />
+            <twig:DropdownMenu:Group>
+                <twig:DropdownMenu:Item variant="destructive">
+                    <twig:ux:icon name="lucide:log-out" class="size-4" />
+                    Sign Out
+                    <twig:DropdownMenu:Shortcut>⇧⌘Q</twig:DropdownMenu:Shortcut>
+                </twig:DropdownMenu:Item>
+            </twig:DropdownMenu:Group>
+        </twig:DropdownMenu:Content>
+    </twig:DropdownMenu>
+</div>
+```
+- Rendered code (run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="flex items-start justify-center pt-6" style="min-height: 640px">
+    <div data-slot="dropdown-menu" data-state="closed" data-dropdown-menu-open-value="false" class="group/dropdown-menu relative inline-block" data-controller="dropdown-menu"><button data-slot="dropdown-menu-trigger" data-variant="outline" data-size="default" class="group/button inline-flex shrink-0 items-center justify-center rounded-lg border bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 border-border bg-background hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50 h-8 gap-1.5 px-2.5 has-data-[icon=inline-end]:pe-2 has-data-[icon=inline-start]:ps-2" type="button" id="dropdown-menu-complex-trigger" data-dropdown-menu-target="trigger" aria-haspopup="menu" aria-controls="dropdown-menu-complex-content" aria-expanded="false" data-state="closed" data-action="click->dropdown-menu#toggle keydown->dropdown-menu#onTriggerKeydown">Complex Menu</button>
+                <div id="dropdown-menu-complex-content" role="menu" tabindex="-1" aria-labelledby="dropdown-menu-complex-trigger" data-slot="dropdown-menu-content" data-dropdown-menu-target="content" data-state="closed" data-side="bottom" data-align="start" data-action="keydown->dropdown-menu#onContentKeydown" class="invisible scale-95 opacity-0 transition-[opacity,scale,visibility] duration-100 ease-out group-data-[state=open]/dropdown-menu:visible group-data-[state=open]/dropdown-menu:scale-100 group-data-[state=open]/dropdown-menu:opacity-100 absolute z-50 min-w-32 rounded-lg bg-popover p-1 text-popover-foreground shadow-md ring-1 ring-foreground/10 outline-hidden top-full mt-2 start-0 ltr:origin-top-left rtl:origin-top-right w-44"><div role="group" data-slot="dropdown-menu-group"><div data-slot="dropdown-menu-label" class="px-1.5 py-1 text-xs font-medium text-muted-foreground">File</div>
+                <button role="menuitem" tabindex="-1" data-slot="dropdown-menu-item" data-variant="default" data-dropdown-menu-target="item" data-close-on-select="true" data-disabled="false" aria-disabled="false" type="button" class="group/dropdown-menu-item relative flex w-full cursor-default select-none items-center gap-1.5 rounded-md px-1.5 py-1 text-sm outline-hidden transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 hover:**:text-accent-foreground focus:**:text-accent-foreground" data-action="click->dropdown-menu#closeFromItem"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"></path><path d="M14 2v5a1 1 0 0 0 1 1h5"></path></g></svg>
+                    New File
+                    <span data-slot="dropdown-menu-shortcut" class="ms-auto text-xs tracking-widest text-muted-foreground group-focus/dropdown-menu-item:text-accent-foreground">⌘N</span>
+                </button>
+                <button role="menuitem" tabindex="-1" data-slot="dropdown-menu-item" data-variant="default" data-dropdown-menu-target="item" data-close-on-select="true" data-disabled="false" aria-disabled="false" type="button" class="group/dropdown-menu-item relative flex w-full cursor-default select-none items-center gap-1.5 rounded-md px-1.5 py-1 text-sm outline-hidden transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 hover:**:text-accent-foreground focus:**:text-accent-foreground" data-action="click->dropdown-menu#closeFromItem"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"></path></svg>
+                    New Folder
+                    <span data-slot="dropdown-menu-shortcut" class="ms-auto text-xs tracking-widest text-muted-foreground group-focus/dropdown-menu-item:text-accent-foreground">⇧⌘N</span>
+                </button>
+                <div data-slot="dropdown-menu-sub" data-dropdown-menu-sub-open-delay-value="0" data-dropdown-menu-sub-close-delay-value="0" class="relative" data-controller="dropdown-menu-sub" data-action="mouseenter->dropdown-menu-sub#show mouseleave->dropdown-menu-sub#hide"><button type="button" role="menuitem" tabindex="-1" aria-haspopup="menu" data-slot="dropdown-menu-sub-trigger" data-dropdown-menu-target="item" data-dropdown-menu-sub-target="trigger" data-state="closed" class="relative flex w-full cursor-default select-none items-center gap-1.5 rounded-md px-1.5 py-1 text-sm outline-hidden transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[state=open]:bg-accent data-[state=open]:text-accent-foreground [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0" data-action="mouseenter->dropdown-menu-sub#show focus->dropdown-menu-sub#show blur->dropdown-menu-sub#hide"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m6 14l1.5-2.9A2 2 0 0 1 9.24 10H20a2 2 0 0 1 1.94 2.5l-1.54 6a2 2 0 0 1-1.95 1.5H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3.9a2 2 0 0 1 1.69.9l.81 1.2a2 2 0 0 0 1.67.9H18a2 2 0 0 1 2 2v2"></path></svg>
+                        Open Recent
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="ms-auto size-4 rtl:rotate-180" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 18l6-6l-6-6"></path></svg>
+</button>
+                    <div role="menu" data-slot="dropdown-menu-sub-content" data-dropdown-menu-sub-target="content" data-state="closed" class="invisible opacity-0 transition-[opacity,translate,visibility] duration-100 ease-out data-[state=open]:visible data-[state=open]:opacity-100 data-[state=open]:translate-x-0 data-[state=closed]:ltr:-translate-x-2 data-[state=closed]:rtl:translate-x-2 absolute start-full top-0 z-50 ms-1 w-max min-w-[96px] rounded-lg bg-popover p-1 text-popover-foreground shadow-lg ring-1 ring-foreground/10 outline-none"><div role="group" data-slot="dropdown-menu-group"><div data-slot="dropdown-menu-label" class="px-1.5 py-1 text-xs font-medium text-muted-foreground">Recent Projects</div>
+                            <button role="menuitem" tabindex="-1" data-slot="dropdown-menu-item" data-variant="default" data-dropdown-menu-target="item" data-close-on-select="true" data-disabled="false" aria-disabled="false" type="button" class="group/dropdown-menu-item relative flex w-full cursor-default select-none items-center gap-1.5 rounded-md px-1.5 py-1 text-sm outline-hidden transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 hover:**:text-accent-foreground focus:**:text-accent-foreground" data-action="click->dropdown-menu#closeFromItem"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"></path><path d="M14 2v5a1 1 0 0 0 1 1h5m-10 4.5L8 15l2 2.5m4-5l2 2.5l-2 2.5"></path></g></svg>
+                                Project Alpha
+                            </button>
+                            <button role="menuitem" tabindex="-1" data-slot="dropdown-menu-item" data-variant="default" data-dropdown-menu-target="item" data-close-on-select="true" data-disabled="false" aria-disabled="false" type="button" class="group/dropdown-menu-item relative flex w-full cursor-default select-none items-center gap-1.5 rounded-md px-1.5 py-1 text-sm outline-hidden transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 hover:**:text-accent-foreground focus:**:text-accent-foreground" data-action="click->dropdown-menu#closeFromItem"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"></path><path d="M14 2v5a1 1 0 0 0 1 1h5m-10 4.5L8 15l2 2.5m4-5l2 2.5l-2 2.5"></path></g></svg>
+                                Project Beta
+                            </button>
+                            <div data-slot="dropdown-menu-sub" data-dropdown-menu-sub-open-delay-value="0" data-dropdown-menu-sub-close-delay-value="0" class="relative" data-controller="dropdown-menu-sub" data-action="mouseenter->dropdown-menu-sub#show mouseleave->dropdown-menu-sub#hide"><button type="button" role="menuitem" tabindex="-1" aria-haspopup="menu" data-slot="dropdown-menu-sub-trigger" data-dropdown-menu-target="item" data-dropdown-menu-sub-target="trigger" data-state="closed" class="relative flex w-full cursor-default select-none items-center gap-1.5 rounded-md px-1.5 py-1 text-sm outline-hidden transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[state=open]:bg-accent data-[state=open]:text-accent-foreground [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0" data-action="mouseenter->dropdown-menu-sub#show focus->dropdown-menu-sub#show blur->dropdown-menu-sub#hide"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></g></svg>
+                                    More Projects
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="ms-auto size-4 rtl:rotate-180" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 18l6-6l-6-6"></path></svg>
+</button>
+                                <div role="menu" data-slot="dropdown-menu-sub-content" data-dropdown-menu-sub-target="content" data-state="closed" class="invisible opacity-0 transition-[opacity,translate,visibility] duration-100 ease-out data-[state=open]:visible data-[state=open]:opacity-100 data-[state=open]:translate-x-0 data-[state=closed]:ltr:-translate-x-2 data-[state=closed]:rtl:translate-x-2 absolute start-full top-0 z-50 ms-1 w-max min-w-[96px] rounded-lg bg-popover p-1 text-popover-foreground shadow-lg ring-1 ring-foreground/10 outline-none"><button role="menuitem" tabindex="-1" data-slot="dropdown-menu-item" data-variant="default" data-dropdown-menu-target="item" data-close-on-select="true" data-disabled="false" aria-disabled="false" type="button" class="group/dropdown-menu-item relative flex w-full cursor-default select-none items-center gap-1.5 rounded-md px-1.5 py-1 text-sm outline-hidden transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 hover:**:text-accent-foreground focus:**:text-accent-foreground" data-action="click->dropdown-menu#closeFromItem"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"></path><path d="M14 2v5a1 1 0 0 0 1 1h5m-10 4.5L8 15l2 2.5m4-5l2 2.5l-2 2.5"></path></g></svg>
+                                        Project Gamma
+                                    </button>
+                                    <button role="menuitem" tabindex="-1" data-slot="dropdown-menu-item" data-variant="default" data-dropdown-menu-target="item" data-close-on-select="true" data-disabled="false" aria-disabled="false" type="button" class="group/dropdown-menu-item relative flex w-full cursor-default select-none items-center gap-1.5 rounded-md px-1.5 py-1 text-sm outline-hidden transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 hover:**:text-accent-foreground focus:**:text-accent-foreground" data-action="click->dropdown-menu#closeFromItem"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"></path><path d="M14 2v5a1 1 0 0 0 1 1h5m-10 4.5L8 15l2 2.5m4-5l2 2.5l-2 2.5"></path></g></svg>
+                                        Project Delta
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div role="separator" aria-orientation="horizontal" data-slot="dropdown-menu-separator" class="-mx-1 my-1 h-px bg-border"></div>
+
+                        <div role="group" data-slot="dropdown-menu-group"><button role="menuitem" tabindex="-1" data-slot="dropdown-menu-item" data-variant="default" data-dropdown-menu-target="item" data-close-on-select="true" data-disabled="false" aria-disabled="false" type="button" class="group/dropdown-menu-item relative flex w-full cursor-default select-none items-center gap-1.5 rounded-md px-1.5 py-1 text-sm outline-hidden transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 hover:**:text-accent-foreground focus:**:text-accent-foreground" data-action="click->dropdown-menu#closeFromItem"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10.7 20H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3.9a2 2 0 0 1 1.69.9l.81 1.2a2 2 0 0 0 1.67.9H20a2 2 0 0 1 2 2v4.1M21 21l-1.9-1.9"></path><circle cx="17" cy="17" r="3"></circle></g></svg>
+                                Browse...
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div role="separator" aria-orientation="horizontal" data-slot="dropdown-menu-separator" class="-mx-1 my-1 h-px bg-border"></div>
+
+                <button role="menuitem" tabindex="-1" data-slot="dropdown-menu-item" data-variant="default" data-dropdown-menu-target="item" data-close-on-select="true" data-disabled="false" aria-disabled="false" type="button" class="group/dropdown-menu-item relative flex w-full cursor-default select-none items-center gap-1.5 rounded-md px-1.5 py-1 text-sm outline-hidden transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 hover:**:text-accent-foreground focus:**:text-accent-foreground" data-action="click->dropdown-menu#closeFromItem"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M15.2 3a2 2 0 0 1 1.4.6l3.8 3.8a2 2 0 0 1 .6 1.4V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"></path><path d="M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7M7 3v4a1 1 0 0 0 1 1h7"></path></g></svg>
+                    Save
+                    <span data-slot="dropdown-menu-shortcut" class="ms-auto text-xs tracking-widest text-muted-foreground group-focus/dropdown-menu-item:text-accent-foreground">⌘S</span>
+                </button>
+                <button role="menuitem" tabindex="-1" data-slot="dropdown-menu-item" data-variant="default" data-dropdown-menu-target="item" data-close-on-select="true" data-disabled="false" aria-disabled="false" type="button" class="group/dropdown-menu-item relative flex w-full cursor-default select-none items-center gap-1.5 rounded-md px-1.5 py-1 text-sm outline-hidden transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 hover:**:text-accent-foreground focus:**:text-accent-foreground" data-action="click->dropdown-menu#closeFromItem"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M12 15V3m9 12v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><path d="m7 10l5 5l5-5"></path></g></svg>
+                    Export
+                    <span data-slot="dropdown-menu-shortcut" class="ms-auto text-xs tracking-widest text-muted-foreground group-focus/dropdown-menu-item:text-accent-foreground">⇧⌘E</span>
+                </button>
+            </div>
+            <div role="separator" aria-orientation="horizontal" data-slot="dropdown-menu-separator" class="-mx-1 my-1 h-px bg-border"></div>
+
+            <div role="group" data-slot="dropdown-menu-group"><div data-slot="dropdown-menu-label" class="px-1.5 py-1 text-xs font-medium text-muted-foreground">View</div>
+                <button type="button" role="menuitemcheckbox" tabindex="-1" data-slot="dropdown-menu-checkbox-item" data-dropdown-menu-target="item" data-close-on-select="false" data-disabled="false" aria-checked="true" aria-disabled="false" class="relative flex w-full cursor-default select-none items-center gap-1.5 rounded-md py-1 ps-1.5 pe-8 text-sm outline-hidden transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0" data-action="click->dropdown-menu#toggleCheckbox">
+    <span class="pointer-events-none absolute end-2 flex items-center justify-center" data-checkbox-indicator="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+    </span><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M2.062 12.348a1 1 0 0 1 0-.696a10.75 10.75 0 0 1 19.876 0a1 1 0 0 1 0 .696a10.75 10.75 0 0 1-19.876 0"></path><circle cx="12" cy="12" r="3"></circle></g></svg>
+                    Show Sidebar
+                </button>
+                <button type="button" role="menuitemcheckbox" tabindex="-1" data-slot="dropdown-menu-checkbox-item" data-dropdown-menu-target="item" data-close-on-select="false" data-disabled="false" aria-checked="false" aria-disabled="false" class="relative flex w-full cursor-default select-none items-center gap-1.5 rounded-md py-1 ps-1.5 pe-8 text-sm outline-hidden transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0" data-action="click->dropdown-menu#toggleCheckbox">
+    <span class="pointer-events-none absolute end-2 flex items-center justify-center" data-checkbox-indicator="" hidden="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+    </span><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><rect width="18" height="18" x="3" y="3" rx="2"></rect><path d="M3 9h18M9 21V9"></path></g></svg>
+                    Show Status Bar
+                </button>
+                <div data-slot="dropdown-menu-sub" data-dropdown-menu-sub-open-delay-value="0" data-dropdown-menu-sub-close-delay-value="0" class="relative" data-controller="dropdown-menu-sub" data-action="mouseenter->dropdown-menu-sub#show mouseleave->dropdown-menu-sub#hide"><button type="button" role="menuitem" tabindex="-1" aria-haspopup="menu" data-slot="dropdown-menu-sub-trigger" data-dropdown-menu-target="item" data-dropdown-menu-sub-target="trigger" data-state="closed" class="relative flex w-full cursor-default select-none items-center gap-1.5 rounded-md px-1.5 py-1 text-sm outline-hidden transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[state=open]:bg-accent data-[state=open]:text-accent-foreground [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0" data-action="mouseenter->dropdown-menu-sub#show focus->dropdown-menu-sub#show blur->dropdown-menu-sub#hide"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M12 22a1 1 0 0 1 0-20a10 9 0 0 1 10 9a5 5 0 0 1-5 5h-2.25a1.75 1.75 0 0 0-1.4 2.8l.3.4a1.75 1.75 0 0 1-1.4 2.8z"></path><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"></circle><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"></circle><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"></circle><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"></circle></g></svg>
+                        Theme
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="ms-auto size-4 rtl:rotate-180" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 18l6-6l-6-6"></path></svg>
+</button>
+                    <div role="menu" data-slot="dropdown-menu-sub-content" data-dropdown-menu-sub-target="content" data-state="closed" class="invisible opacity-0 transition-[opacity,translate,visibility] duration-100 ease-out data-[state=open]:visible data-[state=open]:opacity-100 data-[state=open]:translate-x-0 data-[state=closed]:ltr:-translate-x-2 data-[state=closed]:rtl:translate-x-2 absolute start-full top-0 z-50 ms-1 w-max min-w-[96px] rounded-lg bg-popover p-1 text-popover-foreground shadow-lg ring-1 ring-foreground/10 outline-none"><div role="group" data-slot="dropdown-menu-group"><div data-slot="dropdown-menu-label" class="px-1.5 py-1 text-xs font-medium text-muted-foreground">Appearance</div>
+                            <div role="group" data-slot="dropdown-menu-radio-group" data-value="light"><button type="button" role="menuitemradio" tabindex="-1" data-slot="dropdown-menu-radio-item" data-dropdown-menu-target="item" data-value="light" data-close-on-select="false" data-disabled="false" aria-checked="true" aria-disabled="false" class="relative flex w-full cursor-default select-none items-center gap-1.5 rounded-md py-1 ps-1.5 pe-8 text-sm outline-hidden transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0" data-action="click->dropdown-menu#selectRadio">
+    <span class="pointer-events-none absolute end-2 flex items-center justify-center" data-radio-indicator="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+    </span><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path></g></svg>
+                                    Light
+                                </button>
+                                <button type="button" role="menuitemradio" tabindex="-1" data-slot="dropdown-menu-radio-item" data-dropdown-menu-target="item" data-value="dark" data-close-on-select="false" data-disabled="false" aria-checked="false" aria-disabled="false" class="relative flex w-full cursor-default select-none items-center gap-1.5 rounded-md py-1 ps-1.5 pe-8 text-sm outline-hidden transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0" data-action="click->dropdown-menu#selectRadio">
+    <span class="pointer-events-none absolute end-2 flex items-center justify-center" data-radio-indicator="" hidden="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+    </span><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"></path></svg>
+                                    Dark
+                                </button>
+                                <button type="button" role="menuitemradio" tabindex="-1" data-slot="dropdown-menu-radio-item" data-dropdown-menu-target="item" data-value="system" data-close-on-select="false" data-disabled="false" aria-checked="false" aria-disabled="false" class="relative flex w-full cursor-default select-none items-center gap-1.5 rounded-md py-1 ps-1.5 pe-8 text-sm outline-hidden transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0" data-action="click->dropdown-menu#selectRadio">
+    <span class="pointer-events-none absolute end-2 flex items-center justify-center" data-radio-indicator="" hidden="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+    </span><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><rect width="20" height="14" x="2" y="3" rx="2"></rect><path d="M8 21h8m-4-4v4"></path></g></svg>
+                                    System
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div role="separator" aria-orientation="horizontal" data-slot="dropdown-menu-separator" class="-mx-1 my-1 h-px bg-border"></div>
+
+            <div role="group" data-slot="dropdown-menu-group"><div data-slot="dropdown-menu-label" class="px-1.5 py-1 text-xs font-medium text-muted-foreground">Account</div>
+                <button role="menuitem" tabindex="-1" data-slot="dropdown-menu-item" data-variant="default" data-dropdown-menu-target="item" data-close-on-select="true" data-disabled="false" aria-disabled="false" type="button" class="group/dropdown-menu-item relative flex w-full cursor-default select-none items-center gap-1.5 rounded-md px-1.5 py-1 text-sm outline-hidden transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 hover:**:text-accent-foreground focus:**:text-accent-foreground" data-action="click->dropdown-menu#closeFromItem"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></g></svg>
+                    Profile
+                    <span data-slot="dropdown-menu-shortcut" class="ms-auto text-xs tracking-widest text-muted-foreground group-focus/dropdown-menu-item:text-accent-foreground">⇧⌘P</span>
+                </button>
+                <button role="menuitem" tabindex="-1" data-slot="dropdown-menu-item" data-variant="default" data-dropdown-menu-target="item" data-close-on-select="true" data-disabled="false" aria-disabled="false" type="button" class="group/dropdown-menu-item relative flex w-full cursor-default select-none items-center gap-1.5 rounded-md px-1.5 py-1 text-sm outline-hidden transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 hover:**:text-accent-foreground focus:**:text-accent-foreground" data-action="click->dropdown-menu#closeFromItem"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><rect width="20" height="14" x="2" y="5" rx="2"></rect><path d="M2 10h20"></path></g></svg>
+                    Billing
+                </button>
+                <div data-slot="dropdown-menu-sub" data-dropdown-menu-sub-open-delay-value="0" data-dropdown-menu-sub-close-delay-value="0" class="relative" data-controller="dropdown-menu-sub" data-action="mouseenter->dropdown-menu-sub#show mouseleave->dropdown-menu-sub#hide"><button type="button" role="menuitem" tabindex="-1" aria-haspopup="menu" data-slot="dropdown-menu-sub-trigger" data-dropdown-menu-target="item" data-dropdown-menu-sub-target="trigger" data-state="closed" class="relative flex w-full cursor-default select-none items-center gap-1.5 rounded-md px-1.5 py-1 text-sm outline-hidden transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[state=open]:bg-accent data-[state=open]:text-accent-foreground [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0" data-action="mouseenter->dropdown-menu-sub#show focus->dropdown-menu-sub#show blur->dropdown-menu-sub#hide"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0a2.34 2.34 0 0 0 3.319 1.915a2.34 2.34 0 0 1 2.33 4.033a2.34 2.34 0 0 0 0 3.831a2.34 2.34 0 0 1-2.33 4.033a2.34 2.34 0 0 0-3.319 1.915a2.34 2.34 0 0 1-4.659 0a2.34 2.34 0 0 0-3.32-1.915a2.34 2.34 0 0 1-2.33-4.033a2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"></path><circle cx="12" cy="12" r="3"></circle></g></svg>
+                        Settings
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="ms-auto size-4 rtl:rotate-180" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 18l6-6l-6-6"></path></svg>
+</button>
+                    <div role="menu" data-slot="dropdown-menu-sub-content" data-dropdown-menu-sub-target="content" data-state="closed" class="invisible opacity-0 transition-[opacity,translate,visibility] duration-100 ease-out data-[state=open]:visible data-[state=open]:opacity-100 data-[state=open]:translate-x-0 data-[state=closed]:ltr:-translate-x-2 data-[state=closed]:rtl:translate-x-2 absolute start-full top-0 z-50 ms-1 w-max min-w-[96px] rounded-lg bg-popover p-1 text-popover-foreground shadow-lg ring-1 ring-foreground/10 outline-none"><div role="group" data-slot="dropdown-menu-group"><div data-slot="dropdown-menu-label" class="px-1.5 py-1 text-xs font-medium text-muted-foreground">Preferences</div>
+                            <button role="menuitem" tabindex="-1" data-slot="dropdown-menu-item" data-variant="default" data-dropdown-menu-target="item" data-close-on-select="true" data-disabled="false" aria-disabled="false" type="button" class="group/dropdown-menu-item relative flex w-full cursor-default select-none items-center gap-1.5 rounded-md px-1.5 py-1 text-sm outline-hidden transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 hover:**:text-accent-foreground focus:**:text-accent-foreground" data-action="click->dropdown-menu#closeFromItem"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 8h.01M12 12h.01M14 8h.01M16 12h.01M18 8h.01M6 8h.01M7 16h10m-9-4h.01"></path><rect width="20" height="16" x="2" y="4" rx="2"></rect></g></svg>
+                                Keyboard Shortcuts
+                            </button>
+                            <button role="menuitem" tabindex="-1" data-slot="dropdown-menu-item" data-variant="default" data-dropdown-menu-target="item" data-close-on-select="true" data-disabled="false" aria-disabled="false" type="button" class="group/dropdown-menu-item relative flex w-full cursor-default select-none items-center gap-1.5 rounded-md px-1.5 py-1 text-sm outline-hidden transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 hover:**:text-accent-foreground focus:**:text-accent-foreground" data-action="click->dropdown-menu#closeFromItem"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m5 8l6 6m-7 0l6-6l2-3M2 5h12M7 2h1m14 20l-5-10l-5 10m2-4h6"></path></svg>
+                                Language
+                            </button>
+                            <div data-slot="dropdown-menu-sub" data-dropdown-menu-sub-open-delay-value="0" data-dropdown-menu-sub-close-delay-value="0" class="relative" data-controller="dropdown-menu-sub" data-action="mouseenter->dropdown-menu-sub#show mouseleave->dropdown-menu-sub#hide"><button type="button" role="menuitem" tabindex="-1" aria-haspopup="menu" data-slot="dropdown-menu-sub-trigger" data-dropdown-menu-target="item" data-dropdown-menu-sub-target="trigger" data-state="closed" class="relative flex w-full cursor-default select-none items-center gap-1.5 rounded-md px-1.5 py-1 text-sm outline-hidden transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[state=open]:bg-accent data-[state=open]:text-accent-foreground [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0" data-action="mouseenter->dropdown-menu-sub#show focus->dropdown-menu-sub#show blur->dropdown-menu-sub#hide"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.268 21a2 2 0 0 0 3.464 0m-10.47-5.674A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"></path></svg>
+                                    Notifications
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="ms-auto size-4 rtl:rotate-180" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 18l6-6l-6-6"></path></svg>
+</button>
+                                <div role="menu" data-slot="dropdown-menu-sub-content" data-dropdown-menu-sub-target="content" data-state="closed" class="invisible opacity-0 transition-[opacity,translate,visibility] duration-100 ease-out data-[state=open]:visible data-[state=open]:opacity-100 data-[state=open]:translate-x-0 data-[state=closed]:ltr:-translate-x-2 data-[state=closed]:rtl:translate-x-2 absolute start-full top-0 z-50 ms-1 w-max min-w-[96px] rounded-lg bg-popover p-1 text-popover-foreground shadow-lg ring-1 ring-foreground/10 outline-none"><div role="group" data-slot="dropdown-menu-group"><div data-slot="dropdown-menu-label" class="px-1.5 py-1 text-xs font-medium text-muted-foreground">Notification Types</div>
+                                        <button type="button" role="menuitemcheckbox" tabindex="-1" data-slot="dropdown-menu-checkbox-item" data-dropdown-menu-target="item" data-close-on-select="false" data-disabled="false" aria-checked="true" aria-disabled="false" class="relative flex w-full cursor-default select-none items-center gap-1.5 rounded-md py-1 ps-1.5 pe-8 text-sm outline-hidden transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0" data-action="click->dropdown-menu#toggleCheckbox">
+    <span class="pointer-events-none absolute end-2 flex items-center justify-center" data-checkbox-indicator="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+    </span><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.268 21a2 2 0 0 0 3.464 0m-10.47-5.674A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"></path></svg>
+                                            Push Notifications
+                                        </button>
+                                        <button type="button" role="menuitemcheckbox" tabindex="-1" data-slot="dropdown-menu-checkbox-item" data-dropdown-menu-target="item" data-close-on-select="false" data-disabled="false" aria-checked="true" aria-disabled="false" class="relative flex w-full cursor-default select-none items-center gap-1.5 rounded-md py-1 ps-1.5 pe-8 text-sm outline-hidden transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0" data-action="click->dropdown-menu#toggleCheckbox">
+    <span class="pointer-events-none absolute end-2 flex items-center justify-center" data-checkbox-indicator="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+    </span><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="m22 7l-8.991 5.727a2 2 0 0 1-2.009 0L2 7"></path><rect width="20" height="16" x="2" y="4" rx="2"></rect></g></svg>
+                                            Email Notifications
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div role="separator" aria-orientation="horizontal" data-slot="dropdown-menu-separator" class="-mx-1 my-1 h-px bg-border"></div>
+
+                        <div role="group" data-slot="dropdown-menu-group"><button role="menuitem" tabindex="-1" data-slot="dropdown-menu-item" data-variant="default" data-dropdown-menu-target="item" data-close-on-select="true" data-disabled="false" aria-disabled="false" type="button" class="group/dropdown-menu-item relative flex w-full cursor-default select-none items-center gap-1.5 rounded-md px-1.5 py-1 text-sm outline-hidden transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 hover:**:text-accent-foreground focus:**:text-accent-foreground" data-action="click->dropdown-menu#closeFromItem"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"></path></svg>
+                                Privacy &amp; Security
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div role="separator" aria-orientation="horizontal" data-slot="dropdown-menu-separator" class="-mx-1 my-1 h-px bg-border"></div>
+
+            <div role="group" data-slot="dropdown-menu-group"><button role="menuitem" tabindex="-1" data-slot="dropdown-menu-item" data-variant="default" data-dropdown-menu-target="item" data-close-on-select="true" data-disabled="false" aria-disabled="false" type="button" class="group/dropdown-menu-item relative flex w-full cursor-default select-none items-center gap-1.5 rounded-md px-1.5 py-1 text-sm outline-hidden transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 hover:**:text-accent-foreground focus:**:text-accent-foreground" data-action="click->dropdown-menu#closeFromItem"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3m.08 4h.01"></path></g></svg>
+                    Help &amp; Support
+                </button>
+                <button role="menuitem" tabindex="-1" data-slot="dropdown-menu-item" data-variant="default" data-dropdown-menu-target="item" data-close-on-select="true" data-disabled="false" aria-disabled="false" type="button" class="group/dropdown-menu-item relative flex w-full cursor-default select-none items-center gap-1.5 rounded-md px-1.5 py-1 text-sm outline-hidden transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 hover:**:text-accent-foreground focus:**:text-accent-foreground" data-action="click->dropdown-menu#closeFromItem"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"></path><path d="M14 2v5a1 1 0 0 0 1 1h5M10 9H8m8 4H8m8 4H8"></path></g></svg>
+                    Documentation
+                </button>
+            </div>
+            <div role="separator" aria-orientation="horizontal" data-slot="dropdown-menu-separator" class="-mx-1 my-1 h-px bg-border"></div>
+
+            <div role="group" data-slot="dropdown-menu-group"><button role="menuitem" tabindex="-1" data-slot="dropdown-menu-item" data-variant="destructive" data-dropdown-menu-target="item" data-close-on-select="true" data-disabled="false" aria-disabled="false" type="button" class="group/dropdown-menu-item relative flex w-full cursor-default select-none items-center gap-1.5 rounded-md px-1.5 py-1 text-sm outline-hidden transition-colors data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 text-destructive hover:bg-destructive/10 hover:text-destructive focus:bg-destructive/10 focus:text-destructive dark:hover:bg-destructive/20 dark:focus:bg-destructive/20 *:[svg]:text-destructive" data-action="click->dropdown-menu#closeFromItem"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m16 17l5-5l-5-5m5 5H9m0 9H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path></svg>
+                    Sign Out
+                    <span data-slot="dropdown-menu-shortcut" class="ms-auto text-xs tracking-widest text-muted-foreground group-focus/dropdown-menu-item:text-accent-foreground">⇧⌘Q</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

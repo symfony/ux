@@ -73,7 +73,7 @@
         >
             <div
                 class="{{ 'flex h-full w-full flex-col bg-sidebar group-data-[collapsible=icon]:not-has-[[data-slot=dropdown-menu][data-state=open]]:overflow-hidden'
-                    ~ ('floating' == variant ? ' rounded-lg border border-sidebar-border shadow-sm' : '') }}"
+                    ~ ('floating' == variant ? ' rounded-lg shadow-sm ring-1 ring-sidebar-border' : '') }}"
                 data-slot="sidebar-inner"
             >
                 {{ _sidebar_content|raw }}

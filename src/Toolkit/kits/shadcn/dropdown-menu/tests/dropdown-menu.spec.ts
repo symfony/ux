@@ -1,4 +1,4 @@
-import { describeRecipe, expect, test, testState } from '../../../../assets/test/browser/fixtures';
+import { describeRecipe, expect, isUnderPointer, test, testState } from '../../../../assets/test/browser/fixtures';
 
 describeRecipe('shadcn/dropdown-menu', () => {
     testState('opens on click and focuses the first item', {
@@ -168,6 +168,58 @@ describeRecipe('shadcn/dropdown-menu', () => {
         },
     });
 
+    testState('shows icons, shortcuts and a destructive item', {
+        example: 'complex',
+        state: 'open',
+        act: async (page) => {
+            await page.getByRole('button', { name: 'Complex Menu' }).click();
+
+            await expect(page.getByRole('menuitem', { name: 'New File' })).toBeFocused();
+            await expect(page.getByRole('menuitem', { name: 'Sign Out' })).toBeVisible();
+            await expect(page.getByRole('menuitem', { name: 'Sign Out' })).toHaveAttribute(
+                'data-variant',
+                'destructive'
+            );
+        },
+    });
+
+    testState('opens a nested radio group in a submenu', {
+        example: 'complex',
+        state: 'theme-open',
+        act: async (page) => {
+            await page.getByRole('button', { name: 'Complex Menu' }).click();
+            await expect(page.getByRole('menuitem', { name: 'New File' })).toBeFocused();
+            const theme = page.getByRole('menuitem', { name: 'Theme' });
+
+            await theme.hover();
+
+            const light = page.getByRole('menuitemradio', { name: 'Light' });
+            await expect(theme).toHaveAttribute('data-state', 'open');
+            await expect.poll(() => isUnderPointer(light)).toBe(true);
+            await expect(light).toBeChecked();
+        },
+    });
+
+    testState('opens the destructive example', {
+        example: 'destructive',
+        state: 'open',
+        act: async (page) => {
+            await page.getByRole('button', { name: 'Actions' }).click();
+
+            await expect(page.getByRole('menuitem', { name: 'Delete' })).toBeVisible();
+        },
+    });
+
+    testState('opens the menu aligned to the end of an avatar trigger', {
+        example: 'avatar',
+        state: 'open',
+        act: async (page) => {
+            await page.getByRole('button', { name: 'shadcn' }).click();
+
+            await expect(page.getByRole('menuitem', { name: 'Sign Out' })).toBeVisible();
+        },
+    });
+
     testState('opens a submenu on hover', {
         example: 'submenus',
         state: 'submenu-open',
@@ -178,8 +230,10 @@ describeRecipe('shadcn/dropdown-menu', () => {
 
             await share.hover();
 
-            await expect(page.getByRole('menuitem', { name: 'Copy link' })).toBeVisible();
+            const copyLink = page.getByRole('menuitem', { name: 'Copy link' });
+            await expect(copyLink).toBeVisible();
             await expect(share).toHaveAttribute('data-state', 'open');
+            await expect.poll(() => isUnderPointer(copyLink)).toBe(true);
         },
     });
 

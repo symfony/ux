@@ -4,7 +4,7 @@
 {%- set _dropdownMenu_contentId = inject('dropdownMenu.contentId', null) -%}
 {%- set _dropdownMenu_triggerId = inject('dropdownMenu.triggerId', null) -%}
 {%- set style = html_cva(
-    base: 'invisible scale-95 opacity-0 transition-[opacity,scale,visibility] duration-150 ease-out group-data-[state=open]/dropdown-menu:visible group-data-[state=open]/dropdown-menu:scale-100 group-data-[state=open]/dropdown-menu:opacity-100 absolute z-50 min-w-[8rem] rounded-md border bg-popover p-1 text-popover-foreground shadow-md outline-none',
+    base: 'invisible scale-95 opacity-0 transition-[opacity,scale,visibility] duration-100 ease-out group-data-[state=open]/dropdown-menu:visible group-data-[state=open]/dropdown-menu:scale-100 group-data-[state=open]/dropdown-menu:opacity-100 absolute z-50 min-w-32 rounded-lg bg-popover p-1 text-popover-foreground shadow-md ring-1 ring-foreground/10 outline-hidden',
     variants: {
         side: {
             top: 'bottom-full mb-2',

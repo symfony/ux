@@ -14,7 +14,7 @@
     data-slot="carousel-previous"
     data-carousel-target="previous"
     {{ ...attributes.defaults({
-        class: ('absolute touch-manipulation ' ~ (_carousel_orientation == 'vertical' ? '-top-12 start-1/2 -translate-x-1/2 rtl:translate-x-1/2 rotate-90' : 'inset-y-0 -start-12 my-auto'))|tailwind_classes,
+        class: ('absolute touch-manipulation rounded-full ' ~ (_carousel_orientation == 'vertical' ? '-top-12 start-1/2 -translate-x-1/2 rtl:translate-x-1/2 rotate-90' : 'inset-y-0 -start-12 my-auto'))|tailwind_classes,
         'data-action': 'click->carousel#scrollPrev'|html_attr_type('sst'),
         disabled: not _carousel_loop,
     }) }}

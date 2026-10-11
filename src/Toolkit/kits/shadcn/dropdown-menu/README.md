@@ -99,42 +99,27 @@ A menu triggered by a button, providing a list of actions or links.
 
 ## Examples
 
-### Checkboxes
+### Basic
+
+A basic dropdown menu with labels and separators.
 
 ```twig {"preview":true}
-<div class="flex items-start justify-center pt-6" style="min-height: 280px">
-    <twig:DropdownMenu id="checkboxes">
+<div class="flex items-start justify-center pt-6" style="min-height: 300px">
+    <twig:DropdownMenu id="basic">
         <twig:DropdownMenu:Trigger>
             <twig:Button variant="outline" {{ ...dropdown_menu_trigger_attrs }}>Open</twig:Button>
         </twig:DropdownMenu:Trigger>
-        <twig:DropdownMenu:Content class="w-56">
-            <twig:DropdownMenu:Label>Appearance</twig:DropdownMenu:Label>
+        <twig:DropdownMenu:Content>
+            <twig:DropdownMenu:Group>
+                <twig:DropdownMenu:Label>My Account</twig:DropdownMenu:Label>
+                <twig:DropdownMenu:Item>Profile</twig:DropdownMenu:Item>
+                <twig:DropdownMenu:Item>Billing</twig:DropdownMenu:Item>
+                <twig:DropdownMenu:Item>Settings</twig:DropdownMenu:Item>
+            </twig:DropdownMenu:Group>
             <twig:DropdownMenu:Separator />
-            <twig:DropdownMenu:CheckboxItem checked>Status Bar</twig:DropdownMenu:CheckboxItem>
-            <twig:DropdownMenu:CheckboxItem checked>Activity Bar</twig:DropdownMenu:CheckboxItem>
-            <twig:DropdownMenu:CheckboxItem>Panel</twig:DropdownMenu:CheckboxItem>
-            <twig:DropdownMenu:CheckboxItem disabled>Full Screen</twig:DropdownMenu:CheckboxItem>
-        </twig:DropdownMenu:Content>
-    </twig:DropdownMenu>
-</div>
-```
-
-### Radio Group
-
-```twig {"preview":true}
-<div class="flex items-start justify-center pt-6" style="min-height: 240px">
-    <twig:DropdownMenu id="radio">
-        <twig:DropdownMenu:Trigger>
-            <twig:Button variant="outline" {{ ...dropdown_menu_trigger_attrs }}>Open</twig:Button>
-        </twig:DropdownMenu:Trigger>
-        <twig:DropdownMenu:Content class="w-56">
-            <twig:DropdownMenu:Label>Panel Position</twig:DropdownMenu:Label>
-            <twig:DropdownMenu:Separator />
-            <twig:DropdownMenu:RadioGroup value="bottom">
-                <twig:DropdownMenu:RadioItem value="top">Top</twig:DropdownMenu:RadioItem>
-                <twig:DropdownMenu:RadioItem value="bottom" checked>Bottom</twig:DropdownMenu:RadioItem>
-                <twig:DropdownMenu:RadioItem value="right">Right</twig:DropdownMenu:RadioItem>
-            </twig:DropdownMenu:RadioGroup>
+            <twig:DropdownMenu:Item>GitHub</twig:DropdownMenu:Item>
+            <twig:DropdownMenu:Item>Support</twig:DropdownMenu:Item>
+            <twig:DropdownMenu:Item disabled>API</twig:DropdownMenu:Item>
         </twig:DropdownMenu:Content>
     </twig:DropdownMenu>
 </div>
@@ -170,6 +155,449 @@ A `DropdownMenu:Item` can open a nested `DropdownMenu:SubContent` on hover or fo
             </twig:DropdownMenu:Sub>
             <twig:DropdownMenu:Separator />
             <twig:DropdownMenu:Item>Print</twig:DropdownMenu:Item>
+        </twig:DropdownMenu:Content>
+    </twig:DropdownMenu>
+</div>
+```
+
+### Shortcuts
+
+Add `DropdownMenu:Shortcut` to show keyboard hints.
+
+```twig {"preview":true}
+<div class="flex items-start justify-center pt-6" style="min-height: 240px">
+    <twig:DropdownMenu id="shortcuts">
+        <twig:DropdownMenu:Trigger>
+            <twig:Button variant="outline" {{ ...dropdown_menu_trigger_attrs }}>Open</twig:Button>
+        </twig:DropdownMenu:Trigger>
+        <twig:DropdownMenu:Content>
+            <twig:DropdownMenu:Group>
+                <twig:DropdownMenu:Label>My Account</twig:DropdownMenu:Label>
+                <twig:DropdownMenu:Item>
+                    Profile
+                    <twig:DropdownMenu:Shortcut>⇧⌘P</twig:DropdownMenu:Shortcut>
+                </twig:DropdownMenu:Item>
+                <twig:DropdownMenu:Item>
+                    Billing
+                    <twig:DropdownMenu:Shortcut>⌘B</twig:DropdownMenu:Shortcut>
+                </twig:DropdownMenu:Item>
+                <twig:DropdownMenu:Item>
+                    Settings
+                    <twig:DropdownMenu:Shortcut>⌘S</twig:DropdownMenu:Shortcut>
+                </twig:DropdownMenu:Item>
+            </twig:DropdownMenu:Group>
+            <twig:DropdownMenu:Separator />
+            <twig:DropdownMenu:Item>
+                Log out
+                <twig:DropdownMenu:Shortcut>⇧⌘Q</twig:DropdownMenu:Shortcut>
+            </twig:DropdownMenu:Item>
+        </twig:DropdownMenu:Content>
+    </twig:DropdownMenu>
+</div>
+```
+
+### Icons
+
+Combine icons with labels for quick scanning.
+
+```twig {"preview":true}
+<div class="flex items-start justify-center pt-6" style="min-height: 220px">
+    <twig:DropdownMenu id="icons">
+        <twig:DropdownMenu:Trigger>
+            <twig:Button variant="outline" {{ ...dropdown_menu_trigger_attrs }}>Open</twig:Button>
+        </twig:DropdownMenu:Trigger>
+        <twig:DropdownMenu:Content>
+            <twig:DropdownMenu:Item>
+                <twig:ux:icon name="lucide:user" class="size-4" />
+                Profile
+            </twig:DropdownMenu:Item>
+            <twig:DropdownMenu:Item>
+                <twig:ux:icon name="lucide:credit-card" class="size-4" />
+                Billing
+            </twig:DropdownMenu:Item>
+            <twig:DropdownMenu:Item>
+                <twig:ux:icon name="lucide:settings" class="size-4" />
+                Settings
+            </twig:DropdownMenu:Item>
+            <twig:DropdownMenu:Separator />
+            <twig:DropdownMenu:Item variant="destructive">
+                <twig:ux:icon name="lucide:log-out" class="size-4" />
+                Log out
+            </twig:DropdownMenu:Item>
+        </twig:DropdownMenu:Content>
+    </twig:DropdownMenu>
+</div>
+```
+
+### Checkboxes
+
+```twig {"preview":true}
+<div class="flex items-start justify-center pt-6" style="min-height: 280px">
+    <twig:DropdownMenu id="checkboxes">
+        <twig:DropdownMenu:Trigger>
+            <twig:Button variant="outline" {{ ...dropdown_menu_trigger_attrs }}>Open</twig:Button>
+        </twig:DropdownMenu:Trigger>
+        <twig:DropdownMenu:Content class="w-56">
+            <twig:DropdownMenu:Label>Appearance</twig:DropdownMenu:Label>
+            <twig:DropdownMenu:Separator />
+            <twig:DropdownMenu:CheckboxItem checked>Status Bar</twig:DropdownMenu:CheckboxItem>
+            <twig:DropdownMenu:CheckboxItem checked>Activity Bar</twig:DropdownMenu:CheckboxItem>
+            <twig:DropdownMenu:CheckboxItem>Panel</twig:DropdownMenu:CheckboxItem>
+            <twig:DropdownMenu:CheckboxItem disabled>Full Screen</twig:DropdownMenu:CheckboxItem>
+        </twig:DropdownMenu:Content>
+    </twig:DropdownMenu>
+</div>
+```
+
+### Checkboxes Icons
+
+Add icons to checkbox items.
+
+```twig {"preview":true}
+<div class="flex items-start justify-center pt-6" style="min-height: 220px">
+    <twig:DropdownMenu id="checkboxes_icons">
+        <twig:DropdownMenu:Trigger>
+            <twig:Button variant="outline" {{ ...dropdown_menu_trigger_attrs }}>Notifications</twig:Button>
+        </twig:DropdownMenu:Trigger>
+        <twig:DropdownMenu:Content class="w-48">
+            <twig:DropdownMenu:Group>
+                <twig:DropdownMenu:Label>Notification Preferences</twig:DropdownMenu:Label>
+                <twig:DropdownMenu:CheckboxItem checked>
+                    <twig:ux:icon name="lucide:mail" class="size-4" />
+                    Email notifications
+                </twig:DropdownMenu:CheckboxItem>
+                <twig:DropdownMenu:CheckboxItem>
+                    <twig:ux:icon name="lucide:message-square" class="size-4" />
+                    SMS notifications
+                </twig:DropdownMenu:CheckboxItem>
+                <twig:DropdownMenu:CheckboxItem checked>
+                    <twig:ux:icon name="lucide:bell" class="size-4" />
+                    Push notifications
+                </twig:DropdownMenu:CheckboxItem>
+            </twig:DropdownMenu:Group>
+        </twig:DropdownMenu:Content>
+    </twig:DropdownMenu>
+</div>
+```
+
+### Radio Group
+
+```twig {"preview":true}
+<div class="flex items-start justify-center pt-6" style="min-height: 240px">
+    <twig:DropdownMenu id="radio">
+        <twig:DropdownMenu:Trigger>
+            <twig:Button variant="outline" {{ ...dropdown_menu_trigger_attrs }}>Open</twig:Button>
+        </twig:DropdownMenu:Trigger>
+        <twig:DropdownMenu:Content class="w-56">
+            <twig:DropdownMenu:Label>Panel Position</twig:DropdownMenu:Label>
+            <twig:DropdownMenu:Separator />
+            <twig:DropdownMenu:RadioGroup value="bottom">
+                <twig:DropdownMenu:RadioItem value="top">Top</twig:DropdownMenu:RadioItem>
+                <twig:DropdownMenu:RadioItem value="bottom" checked>Bottom</twig:DropdownMenu:RadioItem>
+                <twig:DropdownMenu:RadioItem value="right">Right</twig:DropdownMenu:RadioItem>
+            </twig:DropdownMenu:RadioGroup>
+        </twig:DropdownMenu:Content>
+    </twig:DropdownMenu>
+</div>
+```
+
+### Radio Icons
+
+Show radio options with icons.
+
+```twig {"preview":true}
+<div class="flex items-start justify-center pt-6" style="min-height: 220px">
+    <twig:DropdownMenu id="radio_icons">
+        <twig:DropdownMenu:Trigger>
+            <twig:Button variant="outline" {{ ...dropdown_menu_trigger_attrs }}>Payment Method</twig:Button>
+        </twig:DropdownMenu:Trigger>
+        <twig:DropdownMenu:Content class="min-w-56">
+            <twig:DropdownMenu:Group>
+                <twig:DropdownMenu:Label>Select Payment Method</twig:DropdownMenu:Label>
+                <twig:DropdownMenu:RadioGroup value="card">
+                    <twig:DropdownMenu:RadioItem value="card" checked>
+                        <twig:ux:icon name="lucide:credit-card" class="size-4" />
+                        Credit Card
+                    </twig:DropdownMenu:RadioItem>
+                    <twig:DropdownMenu:RadioItem value="paypal">
+                        <twig:ux:icon name="lucide:wallet" class="size-4" />
+                        PayPal
+                    </twig:DropdownMenu:RadioItem>
+                    <twig:DropdownMenu:RadioItem value="bank">
+                        <twig:ux:icon name="lucide:building-2" class="size-4" />
+                        Bank Transfer
+                    </twig:DropdownMenu:RadioItem>
+                </twig:DropdownMenu:RadioGroup>
+            </twig:DropdownMenu:Group>
+        </twig:DropdownMenu:Content>
+    </twig:DropdownMenu>
+</div>
+```
+
+### Destructive
+
+Use `variant="destructive"` for irreversible actions.
+
+```twig {"preview":true}
+<div class="flex items-start justify-center pt-6" style="min-height: 220px">
+    <twig:DropdownMenu id="destructive">
+        <twig:DropdownMenu:Trigger>
+            <twig:Button variant="outline" {{ ...dropdown_menu_trigger_attrs }}>Actions</twig:Button>
+        </twig:DropdownMenu:Trigger>
+        <twig:DropdownMenu:Content>
+            <twig:DropdownMenu:Group>
+                <twig:DropdownMenu:Item>
+                    <twig:ux:icon name="lucide:pencil" class="size-4" />
+                    Edit
+                </twig:DropdownMenu:Item>
+                <twig:DropdownMenu:Item>
+                    <twig:ux:icon name="lucide:share" class="size-4" />
+                    Share
+                </twig:DropdownMenu:Item>
+            </twig:DropdownMenu:Group>
+            <twig:DropdownMenu:Separator />
+            <twig:DropdownMenu:Group>
+                <twig:DropdownMenu:Item variant="destructive">
+                    <twig:ux:icon name="lucide:trash" class="size-4" />
+                    Delete
+                </twig:DropdownMenu:Item>
+            </twig:DropdownMenu:Group>
+        </twig:DropdownMenu:Content>
+    </twig:DropdownMenu>
+</div>
+```
+
+### Avatar
+
+An account switcher dropdown triggered by an avatar.
+
+```twig {"preview":true}
+<div class="flex items-start justify-center pt-6" style="min-height: 240px">
+    <twig:DropdownMenu id="avatar" align="end">
+        <twig:DropdownMenu:Trigger>
+            <twig:Button variant="ghost" size="icon" class="rounded-full" {{ ...dropdown_menu_trigger_attrs }}>
+                <twig:Avatar>
+                    <twig:Avatar:Image src="https://github.com/shadcn.png" alt="shadcn" />
+                    <twig:Avatar:Fallback>LR</twig:Avatar:Fallback>
+                </twig:Avatar>
+            </twig:Button>
+        </twig:DropdownMenu:Trigger>
+        <twig:DropdownMenu:Content>
+            <twig:DropdownMenu:Group>
+                <twig:DropdownMenu:Item>
+                    <twig:ux:icon name="lucide:badge-check" class="size-4" />
+                    Account
+                </twig:DropdownMenu:Item>
+                <twig:DropdownMenu:Item>
+                    <twig:ux:icon name="lucide:credit-card" class="size-4" />
+                    Billing
+                </twig:DropdownMenu:Item>
+                <twig:DropdownMenu:Item>
+                    <twig:ux:icon name="lucide:bell" class="size-4" />
+                    Notifications
+                </twig:DropdownMenu:Item>
+            </twig:DropdownMenu:Group>
+            <twig:DropdownMenu:Separator />
+            <twig:DropdownMenu:Item>
+                <twig:ux:icon name="lucide:log-out" class="size-4" />
+                Sign Out
+            </twig:DropdownMenu:Item>
+        </twig:DropdownMenu:Content>
+    </twig:DropdownMenu>
+</div>
+```
+
+### Complex
+
+A richer example combining groups, icons, and submenus.
+
+```twig {"preview":true}
+<div class="flex items-start justify-center pt-6" style="min-height: 640px">
+    <twig:DropdownMenu id="complex">
+        <twig:DropdownMenu:Trigger>
+            <twig:Button variant="outline" {{ ...dropdown_menu_trigger_attrs }}>Complex Menu</twig:Button>
+        </twig:DropdownMenu:Trigger>
+        <twig:DropdownMenu:Content class="w-44">
+            <twig:DropdownMenu:Group>
+                <twig:DropdownMenu:Label>File</twig:DropdownMenu:Label>
+                <twig:DropdownMenu:Item>
+                    <twig:ux:icon name="lucide:file" class="size-4" />
+                    New File
+                    <twig:DropdownMenu:Shortcut>⌘N</twig:DropdownMenu:Shortcut>
+                </twig:DropdownMenu:Item>
+                <twig:DropdownMenu:Item>
+                    <twig:ux:icon name="lucide:folder" class="size-4" />
+                    New Folder
+                    <twig:DropdownMenu:Shortcut>⇧⌘N</twig:DropdownMenu:Shortcut>
+                </twig:DropdownMenu:Item>
+                <twig:DropdownMenu:Sub>
+                    <twig:DropdownMenu:SubTrigger>
+                        <twig:ux:icon name="lucide:folder-open" class="size-4" />
+                        Open Recent
+                    </twig:DropdownMenu:SubTrigger>
+                    <twig:DropdownMenu:SubContent>
+                        <twig:DropdownMenu:Group>
+                            <twig:DropdownMenu:Label>Recent Projects</twig:DropdownMenu:Label>
+                            <twig:DropdownMenu:Item>
+                                <twig:ux:icon name="lucide:file-code" class="size-4" />
+                                Project Alpha
+                            </twig:DropdownMenu:Item>
+                            <twig:DropdownMenu:Item>
+                                <twig:ux:icon name="lucide:file-code" class="size-4" />
+                                Project Beta
+                            </twig:DropdownMenu:Item>
+                            <twig:DropdownMenu:Sub>
+                                <twig:DropdownMenu:SubTrigger>
+                                    <twig:ux:icon name="lucide:ellipsis" class="size-4" />
+                                    More Projects
+                                </twig:DropdownMenu:SubTrigger>
+                                <twig:DropdownMenu:SubContent>
+                                    <twig:DropdownMenu:Item>
+                                        <twig:ux:icon name="lucide:file-code" class="size-4" />
+                                        Project Gamma
+                                    </twig:DropdownMenu:Item>
+                                    <twig:DropdownMenu:Item>
+                                        <twig:ux:icon name="lucide:file-code" class="size-4" />
+                                        Project Delta
+                                    </twig:DropdownMenu:Item>
+                                </twig:DropdownMenu:SubContent>
+                            </twig:DropdownMenu:Sub>
+                        </twig:DropdownMenu:Group>
+                        <twig:DropdownMenu:Separator />
+                        <twig:DropdownMenu:Group>
+                            <twig:DropdownMenu:Item>
+                                <twig:ux:icon name="lucide:folder-search" class="size-4" />
+                                Browse...
+                            </twig:DropdownMenu:Item>
+                        </twig:DropdownMenu:Group>
+                    </twig:DropdownMenu:SubContent>
+                </twig:DropdownMenu:Sub>
+                <twig:DropdownMenu:Separator />
+                <twig:DropdownMenu:Item>
+                    <twig:ux:icon name="lucide:save" class="size-4" />
+                    Save
+                    <twig:DropdownMenu:Shortcut>⌘S</twig:DropdownMenu:Shortcut>
+                </twig:DropdownMenu:Item>
+                <twig:DropdownMenu:Item>
+                    <twig:ux:icon name="lucide:download" class="size-4" />
+                    Export
+                    <twig:DropdownMenu:Shortcut>⇧⌘E</twig:DropdownMenu:Shortcut>
+                </twig:DropdownMenu:Item>
+            </twig:DropdownMenu:Group>
+            <twig:DropdownMenu:Separator />
+            <twig:DropdownMenu:Group>
+                <twig:DropdownMenu:Label>View</twig:DropdownMenu:Label>
+                <twig:DropdownMenu:CheckboxItem checked>
+                    <twig:ux:icon name="lucide:eye" class="size-4" />
+                    Show Sidebar
+                </twig:DropdownMenu:CheckboxItem>
+                <twig:DropdownMenu:CheckboxItem>
+                    <twig:ux:icon name="lucide:panels-top-left" class="size-4" />
+                    Show Status Bar
+                </twig:DropdownMenu:CheckboxItem>
+                <twig:DropdownMenu:Sub>
+                    <twig:DropdownMenu:SubTrigger>
+                        <twig:ux:icon name="lucide:palette" class="size-4" />
+                        Theme
+                    </twig:DropdownMenu:SubTrigger>
+                    <twig:DropdownMenu:SubContent>
+                        <twig:DropdownMenu:Group>
+                            <twig:DropdownMenu:Label>Appearance</twig:DropdownMenu:Label>
+                            <twig:DropdownMenu:RadioGroup value="light">
+                                <twig:DropdownMenu:RadioItem value="light" checked>
+                                    <twig:ux:icon name="lucide:sun" class="size-4" />
+                                    Light
+                                </twig:DropdownMenu:RadioItem>
+                                <twig:DropdownMenu:RadioItem value="dark">
+                                    <twig:ux:icon name="lucide:moon" class="size-4" />
+                                    Dark
+                                </twig:DropdownMenu:RadioItem>
+                                <twig:DropdownMenu:RadioItem value="system">
+                                    <twig:ux:icon name="lucide:monitor" class="size-4" />
+                                    System
+                                </twig:DropdownMenu:RadioItem>
+                            </twig:DropdownMenu:RadioGroup>
+                        </twig:DropdownMenu:Group>
+                    </twig:DropdownMenu:SubContent>
+                </twig:DropdownMenu:Sub>
+            </twig:DropdownMenu:Group>
+            <twig:DropdownMenu:Separator />
+            <twig:DropdownMenu:Group>
+                <twig:DropdownMenu:Label>Account</twig:DropdownMenu:Label>
+                <twig:DropdownMenu:Item>
+                    <twig:ux:icon name="lucide:user" class="size-4" />
+                    Profile
+                    <twig:DropdownMenu:Shortcut>⇧⌘P</twig:DropdownMenu:Shortcut>
+                </twig:DropdownMenu:Item>
+                <twig:DropdownMenu:Item>
+                    <twig:ux:icon name="lucide:credit-card" class="size-4" />
+                    Billing
+                </twig:DropdownMenu:Item>
+                <twig:DropdownMenu:Sub>
+                    <twig:DropdownMenu:SubTrigger>
+                        <twig:ux:icon name="lucide:settings" class="size-4" />
+                        Settings
+                    </twig:DropdownMenu:SubTrigger>
+                    <twig:DropdownMenu:SubContent>
+                        <twig:DropdownMenu:Group>
+                            <twig:DropdownMenu:Label>Preferences</twig:DropdownMenu:Label>
+                            <twig:DropdownMenu:Item>
+                                <twig:ux:icon name="lucide:keyboard" class="size-4" />
+                                Keyboard Shortcuts
+                            </twig:DropdownMenu:Item>
+                            <twig:DropdownMenu:Item>
+                                <twig:ux:icon name="lucide:languages" class="size-4" />
+                                Language
+                            </twig:DropdownMenu:Item>
+                            <twig:DropdownMenu:Sub>
+                                <twig:DropdownMenu:SubTrigger>
+                                    <twig:ux:icon name="lucide:bell" class="size-4" />
+                                    Notifications
+                                </twig:DropdownMenu:SubTrigger>
+                                <twig:DropdownMenu:SubContent>
+                                    <twig:DropdownMenu:Group>
+                                        <twig:DropdownMenu:Label>Notification Types</twig:DropdownMenu:Label>
+                                        <twig:DropdownMenu:CheckboxItem checked>
+                                            <twig:ux:icon name="lucide:bell" class="size-4" />
+                                            Push Notifications
+                                        </twig:DropdownMenu:CheckboxItem>
+                                        <twig:DropdownMenu:CheckboxItem checked>
+                                            <twig:ux:icon name="lucide:mail" class="size-4" />
+                                            Email Notifications
+                                        </twig:DropdownMenu:CheckboxItem>
+                                    </twig:DropdownMenu:Group>
+                                </twig:DropdownMenu:SubContent>
+                            </twig:DropdownMenu:Sub>
+                        </twig:DropdownMenu:Group>
+                        <twig:DropdownMenu:Separator />
+                        <twig:DropdownMenu:Group>
+                            <twig:DropdownMenu:Item>
+                                <twig:ux:icon name="lucide:shield" class="size-4" />
+                                Privacy & Security
+                            </twig:DropdownMenu:Item>
+                        </twig:DropdownMenu:Group>
+                    </twig:DropdownMenu:SubContent>
+                </twig:DropdownMenu:Sub>
+            </twig:DropdownMenu:Group>
+            <twig:DropdownMenu:Separator />
+            <twig:DropdownMenu:Group>
+                <twig:DropdownMenu:Item>
+                    <twig:ux:icon name="lucide:circle-help" class="size-4" />
+                    Help & Support
+                </twig:DropdownMenu:Item>
+                <twig:DropdownMenu:Item>
+                    <twig:ux:icon name="lucide:file-text" class="size-4" />
+                    Documentation
+                </twig:DropdownMenu:Item>
+            </twig:DropdownMenu:Group>
+            <twig:DropdownMenu:Separator />
+            <twig:DropdownMenu:Group>
+                <twig:DropdownMenu:Item variant="destructive">
+                    <twig:ux:icon name="lucide:log-out" class="size-4" />
+                    Sign Out
+                    <twig:DropdownMenu:Shortcut>⇧⌘Q</twig:DropdownMenu:Shortcut>
+                </twig:DropdownMenu:Item>
+            </twig:DropdownMenu:Group>
         </twig:DropdownMenu:Content>
     </twig:DropdownMenu>
 </div>

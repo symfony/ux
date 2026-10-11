@@ -39,7 +39,7 @@
     {%- set _labels = labels|split(',') -%}
 {%- endif -%}
 {%- set _classes = 'group/slider relative flex touch-none select-none items-center '
-    ~ (_is_vertical ? 'h-40 w-1.5 flex-col justify-center ' : 'w-full h-4 ')
+    ~ (_is_vertical ? 'h-40 min-h-40 w-auto flex-col justify-center ' : 'w-full h-4 ')
     ~ (disabled ? 'opacity-50 pointer-events-none ' : '') -%}
 <div
     data-slot="slider"
@@ -54,12 +54,12 @@
     }) }}
 >
     <div
-        class="relative {{ _is_vertical ? 'h-full w-1.5' : 'h-1.5 w-full' }} grow overflow-hidden rounded-full bg-muted"
+        class="relative {{ _is_vertical ? 'h-full w-1' : 'h-1 w-full' }} grow overflow-hidden rounded-full bg-muted"
         data-slot="slider-track"
         data-slider-target="track"
     >
         <div
-            class="absolute {{ _is_vertical ? 'left-0 right-0' : 'top-0 bottom-0' }} bg-primary"
+            class="absolute select-none {{ _is_vertical ? 'left-0 right-0' : 'top-0 bottom-0' }} bg-primary"
             style="{% if _is_vertical %}bottom: {{ _lo }}%; top: {{ 100 - _hi }}%{% else %}inset-inline-start: {{ _lo }}%; inset-inline-end: {{ 100 - _hi }}%{% endif %};"
             data-slot="slider-range"
             data-slider-target="range"
@@ -80,7 +80,7 @@
             aria-orientation="{{ orientation }}"
             aria-label="{{ _label }}"
             {% if disabled %}aria-disabled="true"{% endif %}
-            class="absolute block size-3.5 shrink-0 rounded-full border border-primary bg-background shadow-sm ring-ring/50 transition-[color,box-shadow] outline-none hover:ring-4 focus-visible:ring-4 {{ _is_vertical ? '-translate-x-1/2 translate-y-1/2 left-1/2' : '-translate-x-1/2 rtl:translate-x-1/2 -translate-y-1/2 top-1/2' }}"
+            class="absolute block size-3 shrink-0 select-none rounded-full border border-ring bg-white ring-ring/50 transition-[color,box-shadow] outline-none after:absolute after:-inset-2 hover:ring-3 focus-visible:ring-3 focus-visible:outline-hidden active:ring-3 {{ _is_vertical ? '-translate-x-1/2 translate-y-1/2 left-1/2' : '-translate-x-1/2 rtl:translate-x-1/2 -translate-y-1/2 top-1/2' }}"
             style="{% if _is_vertical %}bottom: {{ _percent }}%{% else %}inset-inline-start: {{ _percent }}%{% endif %};"
             data-slot="slider-thumb"
             data-slider-target="thumb"

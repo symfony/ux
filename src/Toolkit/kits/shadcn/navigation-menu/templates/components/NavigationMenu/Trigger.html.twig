@@ -5,10 +5,10 @@
     aria-haspopup="menu"
     aria-expanded="false"
     {{ attributes.defaults({
-        class: 'inline-flex h-9 w-max items-center justify-center gap-1 rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50'|tailwind_classes,
+        class: 'inline-flex h-9 w-max items-center justify-center gap-1 rounded-lg outline-none px-2.5 py-1.5 text-sm font-medium transition-all hover:bg-muted focus:bg-muted focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-1 aria-expanded:bg-muted/50 aria-expanded:hover:bg-muted disabled:pointer-events-none disabled:opacity-50'|tailwind_classes,
     }) }}
 >
     {##- The trigger label. -#}
     {%- block content %}{% endblock -%}
-    <twig:ux:icon name="lucide:chevron-down" class="relative top-px size-3 transition-transform duration-200 group-data-[state=open]/navigation-menu-item:rotate-180" aria-hidden="true" />
+    <twig:ux:icon name="lucide:chevron-down" class="relative top-px size-3 transition duration-300 group-data-[state=open]/navigation-menu-item:rotate-180" aria-hidden="true" />
 </button>

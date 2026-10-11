@@ -2,7 +2,7 @@
     role="menu"
     data-slot="menubar-content"
     {{ attributes.defaults({
-        class: 'invisible opacity-0 group-data-[state=open]/menubar-menu:visible group-data-[state=open]/menubar-menu:opacity-100 transition-opacity absolute start-0 top-full z-50 min-w-[12rem] rounded-md border bg-popover p-1 text-popover-foreground shadow-md'|tailwind_classes,
+        class: 'invisible opacity-0 group-data-[state=open]/menubar-menu:visible group-data-[state=open]/menubar-menu:opacity-100 transition-opacity duration-100 absolute start-0 top-full z-50 min-w-36 rounded-lg bg-popover p-1 text-popover-foreground shadow-md ring-1 ring-foreground/10'|tailwind_classes,
     }) }}
 >
     {##- The menu items revealed on hover or focus. -#}

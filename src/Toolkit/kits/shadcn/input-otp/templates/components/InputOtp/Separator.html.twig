@@ -3,7 +3,7 @@
     aria-hidden="true"
     data-slot="input-otp-separator"
     {{ attributes.defaults({
-        class: 'text-muted-foreground [&>svg]:size-4'|tailwind_classes,
+        class: 'flex items-center [&_svg:not([class*=size-])]:size-4'|tailwind_classes,
     }) }}
 >
     <twig:ux:icon name="lucide:minus" />

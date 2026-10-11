@@ -1,9 +1,23 @@
+{%- props
+    ## 'default'|'destructive' The visual style variant.
+    variant = 'default'
+-%}
+{%- set style = html_cva(
+    base: 'group/menubar-item relative flex w-full cursor-default select-none items-center gap-1.5 rounded-md px-1.5 py-1 text-sm outline-hidden hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground disabled:pointer-events-none disabled:opacity-50 [&_svg:not([class*=size-])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0',
+    variants: {
+        variant: {
+            default: 'hover:**:text-accent-foreground focus:**:text-accent-foreground',
+            destructive: 'text-destructive hover:bg-destructive/10 hover:text-destructive focus:bg-destructive/10 focus:text-destructive dark:hover:bg-destructive/20 dark:focus:bg-destructive/20 *:[svg]:text-destructive!',
+        },
+    },
+) -%}
 <button
     type="button"
     role="menuitem"
     data-slot="menubar-item"
+    data-variant="{{ variant }}"
     {{ attributes.defaults({
-        class: 'relative flex w-full cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground disabled:pointer-events-none disabled:opacity-50'|tailwind_classes,
+        class: style.apply({variant: variant})|tailwind_classes,
     }) }}
 >
     {##- The menu item label. -#}

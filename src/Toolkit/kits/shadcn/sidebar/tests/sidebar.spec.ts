@@ -1,4 +1,4 @@
-import { describeRecipe, expect, test, testState } from '../../../../assets/test/browser/fixtures';
+import { describeRecipe, expect, isUnderPointer, test, testState } from '../../../../assets/test/browser/fixtures';
 
 describeRecipe('shadcn/sidebar', () => {
     testState('collapses to icons on a click on the trigger', {
@@ -107,6 +107,20 @@ describeRecipe('shadcn/sidebar', () => {
             .getByRole('link', { name: 'Sales & Marketing' });
 
         await expect(button).toHaveCSS('padding-inline-end', '32px');
+    });
+
+    test('does not clip the dropdown menu of a menu action', async ({ page, gotoExample }) => {
+        await gotoExample('shadcn/sidebar/default');
+
+        await page
+            .getByRole('complementary', { name: 'Sidebar' })
+            .getByRole('button', { name: 'More' })
+            .first()
+            .click();
+
+        const viewProject = page.getByRole('menuitem', { name: 'View project' });
+        await expect(viewProject).toBeVisible();
+        await expect.poll(() => isUnderPointer(viewProject)).toBe(true);
     });
 
     testState('hides the sidebar off-canvas on a click on the trigger', {

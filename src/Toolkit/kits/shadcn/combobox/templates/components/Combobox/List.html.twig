@@ -7,7 +7,7 @@
     data-combobox-target="list"
     aria-multiselectable="{{ _combobox_multiple ? 'true' : 'false' }}"
     {{ attributes.defaults({
-        class: 'no-scrollbar scroll-py-1 overflow-y-auto overscroll-contain p-1 data-empty:p-0'|tailwind_classes,
+        class: 'no-scrollbar max-h-[calc(--spacing(72)---spacing(9))] scroll-py-1 overflow-y-auto overscroll-contain p-1 data-empty:p-0'|tailwind_classes,
     }) }}
 >
     {##- The selectable items, e.g. `Combobox:Item` or `Combobox:Group`. -#}

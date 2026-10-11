@@ -11,15 +11,17 @@
 - [Shadcn] Fix the arrow keys of `accordion` getting stuck before a disabled item
 - [Shadcn] Fix `alert-dialog` opening on page load
 - [Shadcn] Fix an open `alert-dialog` no longer being modal once its element was moved in the DOM
+- [Shadcn] Fix `Avatar:Image` ignoring its `alt` attribute
 - [Shadcn] Fix a closed `drawer` staying reachable with the keyboard and exposed to screen readers
 - [Shadcn] Fix `tooltip` overflowing the viewport, and leaving an empty gap after the longest line of a wrapped text
 - [Shadcn] Align the text of `tooltip` toward its trigger: centered above or below it, toward it on the left or right
 - [Shadcn] Fix `tooltip` never opening again once its element was moved in the DOM, e.g. by a table redrawing its rows
-- [Shadcn] Fix the checked radio item of `dropdown-menu` showing a ring instead of a dot
+- [Shadcn] Fix the checked radio item of `dropdown-menu` showing a ring instead of a check mark
 - [Shadcn] Fix `dropdown-menu` submenus wrapping their labels
 - [Shadcn] Fix `date-picker` focusing "Previous month" instead of a day when it opens
-- [Shadcn] Fix the checked radio item of `menubar` showing a ring instead of a dot
+- [Shadcn] Fix the checked radio item of `menubar` showing a ring instead of a check mark
 - [Shadcn] Fix `menubar` submenus wrapping long labels
+- [Shadcn] Fix invisible keyboard focus on `Menubar:CheckboxItem` and `Menubar:RadioItem`
 - [Shadcn] Fix the `aria-expanded` of the `dialog` trigger getting out of sync on close and on a second opening
 - [Shadcn] Fix an open `dialog`, `drawer` or `sheet` no longer being modal once its element was moved in the DOM
 - [Shadcn] Fix Tab skipping the panels of `navigation-menu`
@@ -45,6 +47,7 @@
 - [Shadcn] Rename the `sonner` recipe's `Toast` component to `Sonner:Toast`, freeing the `Toast` component name for the new `toast` recipe
 - [Shadcn] Fix the `top` and `bottom` sides of `sheet` being only as wide as their content instead of the viewport
 - [Shadcn] Fix `dialog`, `sheet` and `drawer` closing without their exit transition outside Chromium
+- [Shadcn] Align the kit with the upstream Shadcn Nova reference, and add a `destructive` variant to `DropdownMenu:Item` and `Menubar:Item`
 
 ## 3.5.0
 

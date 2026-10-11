@@ -24,7 +24,7 @@
     {%- if id is not null %} data-toast-id="{{ id }}"{% endif %}
     {%- if duration is not null %} data-duration="{{ duration }}"{% endif %}
     {{ attributes.defaults({
-        class: 'group flex w-full items-start gap-3 rounded-lg border bg-background p-4 text-foreground shadow-lg transition-[transform,opacity] duration-300 pointer-events-auto absolute left-0 right-0'|tailwind_classes,
+        class: 'group flex w-full items-start gap-3 rounded-2xl border bg-background p-4 text-foreground shadow-lg transition-[transform,opacity] duration-300 pointer-events-auto absolute left-0 right-0'|tailwind_classes,
     }) }}
 >
     <div data-slot="toast-content" class="flex-1 space-y-1">

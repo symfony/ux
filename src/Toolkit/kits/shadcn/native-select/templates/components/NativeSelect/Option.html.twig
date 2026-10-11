@@ -1,4 +1,4 @@
-<option data-slot="native-select-option" {{ attributes }}>
+<option data-slot="native-select-option" {{ attributes.defaults({class: 'bg-[Canvas] text-[CanvasText]'|tailwind_classes}) }}>
     {##- The option label. -#}
     {%- block content %}{% endblock -%}
 </option>

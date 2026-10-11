@@ -15,7 +15,7 @@
     data-input-otp-target="slot"
     {{ attributes.defaults({
         'aria-label': label,
-        class: 'relative flex h-10 w-10 items-center justify-center border-y border-e border-input bg-transparent text-center text-sm shadow-xs transition-all outline-none focus-visible:z-10 focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/40 dark:aria-invalid:border-destructive/60 first:rounded-s-md first:border-s last:rounded-e-md'|tailwind_classes,
+        class: 'relative flex size-8 items-center justify-center border-y border-e border-input text-center text-sm transition-all outline-none first:rounded-s-lg first:border-s last:rounded-e-lg focus-visible:z-10 focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-not-allowed aria-invalid:border-destructive focus-visible:aria-invalid:border-destructive focus-visible:aria-invalid:ring-destructive/20 dark:bg-input/30 dark:focus-visible:aria-invalid:ring-destructive/40'|tailwind_classes,
         'data-action': 'input->input-otp#onInput keydown->input-otp#onKeyDown paste->input-otp#onPaste',
         type: 'text',
         inputmode: 'numeric',

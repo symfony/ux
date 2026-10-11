@@ -7,7 +7,7 @@
 {%- set _sheet_descriptionId = inject('sheet.descriptionId') -%}
 {%- set _sheet_side = inject('sheet.side', 'right') -%}
 {%- set style = html_cva(
-    base: 'fixed z-50 m-0 open:flex max-h-none max-w-none flex-col gap-4 bg-background p-0 shadow-lg outline-none transition duration-300 ease-in-out backdrop:bg-black/50 backdrop:opacity-0 backdrop:transition-opacity backdrop:duration-300 backdrop:ease-in-out open:backdrop:opacity-100 starting:open:backdrop:opacity-0 data-closing:backdrop:opacity-0',
+    base: 'fixed z-50 m-0 open:flex max-h-none max-w-none flex-col gap-4 bg-popover bg-clip-padding p-0 text-sm text-popover-foreground shadow-lg outline-none transition duration-200 ease-in-out backdrop:bg-black/10 supports-backdrop-filter:backdrop:backdrop-blur-xs backdrop:opacity-0 backdrop:transition-opacity backdrop:duration-200 backdrop:ease-in-out open:backdrop:opacity-100 starting:open:backdrop:opacity-0 data-closing:backdrop:opacity-0',
     variants: {
         side: {
             right: 'inset-y-0 right-0 left-auto h-full w-3/4 border-l translate-x-full open:translate-x-0 starting:open:translate-x-full data-closing:translate-x-full sm:max-w-sm',
@@ -36,7 +36,7 @@
             type="button"
             variant="ghost"
             size="icon-sm"
-            class="absolute top-4 end-4"
+            class="absolute top-3 end-3"
             data-slot="sheet-close"
             data-action="click->dialog#close"
         >

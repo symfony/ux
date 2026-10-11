@@ -1,5 +1,5 @@
 import { fileURLToPath } from 'node:url';
-import { expect, test as base, type Page } from '@playwright/test';
+import { expect, test as base, type Locator, type Page } from '@playwright/test';
 
 export type Theme = 'light' | 'dark';
 
@@ -136,6 +136,18 @@ export function testState(title: string, { example, state, act }: StateOptions):
             await expect(page).toHaveScreenshot(name, { fullPage: true });
         });
     }
+}
+
+/**
+ * Whether the center of the element receives the pointer. Unlike `toBeVisible()`, this fails
+ * for an element clipped by the overflow of an ancestor, such as a submenu nested in its menu.
+ */
+export async function isUnderPointer(locator: Locator): Promise<boolean> {
+    return locator.evaluate((element) => {
+        const box = element.getBoundingClientRect();
+
+        return element.contains(document.elementFromPoint(box.x + box.width / 2, box.y + box.height / 2));
+    });
 }
 
 export { expect };
