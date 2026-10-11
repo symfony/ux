@@ -12,6 +12,7 @@
 namespace Symfony\UX\Translator\CacheWarmer;
 
 use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
+use Symfony\Component\HttpKernel\CacheWarmer\WarmableInterface;
 use Symfony\Component\Translation\TranslatorBagInterface;
 use Symfony\UX\Translator\TranslationsDumper;
 
@@ -45,6 +46,11 @@ class TranslationsCacheWarmer implements CacheWarmerInterface
 
     public function warmUp(string $cacheDir, ?string $buildDir = null): array
     {
+        // getCatalogues() only returns the catalogues already loaded
+        if ($this->translatorBag instanceof WarmableInterface) {
+            $this->translatorBag->warmUp($cacheDir, $buildDir);
+        }
+
         $this->translationsDumper->dump(
             $this->translatorBag->getCatalogues(),
             $this->dumpDir,
