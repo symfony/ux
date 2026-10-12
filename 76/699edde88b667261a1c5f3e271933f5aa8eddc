@@ -1,0 +1,47 @@
+---------------------------------------------------------------------------
+
+by github-actions[bot] at 2026-10-12T13:49:15Z
+
+<h1>📊 Packages dist files size difference</h1>
+
+Thanks for the PR! Here is the difference in size of the packages dist files between the base branch and the PR.
+Please review the changes and make sure they are expected.
+
+<table>
+    <thead><tr><th>File</th><th>Before (Size / Gzip)</th><th>After (Size / Gzip)</th></tr></thead>
+    <tbody><tr><td colspan="3"><a href="https://github.com/feymo/ux/tree/feat/router-default-locale/src/Router/assets/dist"><b>Router</b></a></td></tr><tr>
+                <td><a href="https://github.com/feymo/ux/blob/feat/router-default-locale/src/Router/assets/dist/router_controller.d.ts"><code>router_controller.d.ts</code></a></td>
+            <td>
+                    <code>3.32 kB</code>
+                    / <code>963 B</code>
+                </td><td>
+                    <code>3.36 kB</code><sup>+1% 📈</sup>
+                    / <code>975 B</code><sup>+1% 📈</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/feymo/ux/blob/feat/router-default-locale/src/Router/assets/dist/router_controller.js"><code>router_controller.js</code></a></td>
+            <td>
+                    <code>12.43 kB</code>
+                    / <code>3.73 kB</code>
+                </td><td>
+                    <code>12.55 kB</code><sup>+1% 📈</sup>
+                    / <code>3.74 kB</code><sup>0%</sup>
+                </td></tr></tbody>
+</table>
+
+<!-- Sticky Pull Request Comment -->
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-10-12T20:46:32Z
+
+It may be worth to modify UX Translator as well, see https://github.com/symfony/ux-translator/blob/3.x/assets/src/translator_controller.ts#L20
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-10-12T21:06:56Z
+
+I rebased the branch on 3.x and pushed the changes below into the single commit.
+
+An empty or null `_locale` (passed to `path()`/`url()` or in the `context`) now also falls back to `defaultLocale`, like PHP's `UrlGenerator` does with `?: $this->defaultLocale`. Before, the JS threw `RouteNotFoundError` in that case. The parity test now passes a `fr` default locale to both the PHP `UrlGenerator` and `createRouter()`, with two new cases for this.
+
+I also removed two tests that repeated other tests: the default-locale test in `router_controller.test.ts` and `testDumpsTheDefaultLocaleWithoutTypeScript`.
