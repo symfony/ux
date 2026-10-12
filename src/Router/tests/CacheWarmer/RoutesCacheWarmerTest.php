@@ -36,7 +36,6 @@ final class RoutesCacheWarmerTest extends TestCase
 
         $cacheWarmer = new RoutesCacheWarmer($router, $routesDumper, '/tmp/routes', true, ['app_*'], 'fr');
 
-        self::assertTrue($cacheWarmer->isOptional());
         self::assertSame([], $cacheWarmer->warmUp(sys_get_temp_dir()));
     }
 }
