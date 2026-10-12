@@ -25,9 +25,9 @@ file:
 
     // assets/router.js
     import { createRouter } from '@symfony/ux-router';
-    import { routes } from '../var/routes/index.js';
+    import { routes, defaultLocale } from '../var/routes/index.js';
 
-    export const { path, url } = createRouter({ routes });
+    export const { path, url } = createRouter({ routes, defaultLocale });
 
 If you use TypeScript, rename it to ``router.ts`` to type-check route names
 and parameters.
@@ -180,8 +180,16 @@ variant:
     path('app_about');                    // '/about' when <html lang="en">
     path('app_about', { _locale: 'fr' }); // '/a-propos'
 
-The current locale is read from the ``lang`` attribute of ``<html>``
-(``fr-FR`` becomes ``fr_FR``), and falls back to ``en``.
+The current locale is the first one found in:
+
+#. the ``_locale`` parameter given to ``path()`` or ``url()``;
+#. the ``_locale`` parameter of the ``context`` given to ``createRouter()``;
+#. the ``lang`` attribute of ``<html>`` (``fr-FR`` becomes ``fr_FR``);
+#. the ``defaultLocale`` option of ``createRouter()``;
+#. ``en``.
+
+The dumped ``var/routes/index.js`` file exports the
+``framework.default_locale`` of your application as ``defaultLocale``.
 
 Configuring the request context
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

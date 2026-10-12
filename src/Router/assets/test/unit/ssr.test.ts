@@ -9,6 +9,12 @@ const routes: Routes = {
         hostTokens: [],
         schemes: [],
     },
+    'about.fr': {
+        tokens: [['text', '/a-propos']],
+        defaults: { _locale: 'fr', _canonical_route: 'about' },
+        hostTokens: [],
+        schemes: [],
+    },
 };
 
 it('generates without window nor document', () => {
@@ -16,4 +22,8 @@ it('generates without window nor document', () => {
 
     expect(path('about')).toBe('/about');
     expect(url('about')).toBe('/about');
+});
+
+it('falls back to the default locale without document', () => {
+    expect(createRouter({ routes, defaultLocale: 'fr' }).path('about')).toBe('/a-propos');
 });

@@ -1,8 +1,8 @@
 import { expectTypeOf, test } from 'vitest';
 import { createRouter, type RouteDefinition } from '../../src/router_controller';
-import { routes } from '../fixtures/routes/index.js';
+import { defaultLocale, routes } from '../fixtures/routes/index.js';
 
-const { path, url } = createRouter({ routes });
+const { path, url } = createRouter({ routes, defaultLocale });
 
 test('exposes non-localized names and canonical names only', () => {
     expectTypeOf(path)
@@ -60,6 +60,14 @@ test('literal requirements and locales', () => {
     path('app_host', { subdomain: 'm' });
     // @ts-expect-error not in the requirement
     path('app_host', { subdomain: 'api' });
+});
+
+test('default locale', () => {
+    expectTypeOf(defaultLocale).toEqualTypeOf<string>();
+    createRouter({ routes });
+    createRouter({ routes, defaultLocale: 'fr_FR' });
+    // @ts-expect-error a locale is a string
+    createRouter({ routes, defaultLocale: 1 });
 });
 
 test('untyped routes accept anything', () => {

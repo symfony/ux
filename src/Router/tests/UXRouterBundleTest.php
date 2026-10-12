@@ -77,7 +77,7 @@ class UXRouterBundleTest extends TestCase
         new UXRouterBundle()->getContainerExtension()->load([['routes' => ['app_*'], 'dump_typescript' => false]], $container);
 
         $arguments = $container->getDefinition('ux.router.event_listener.refresh_routes')->getArguments();
-        self::assertSame(['%kernel.project_dir%/var/routes', false, ['app_*']], \array_slice($arguments, 4));
+        self::assertSame(['%kernel.project_dir%/var/routes', false, ['app_*'], '%kernel.default_locale%'], \array_slice($arguments, 4));
     }
 
     /**

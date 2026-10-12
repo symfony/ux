@@ -31,4 +31,9 @@ final class WarmupTest extends TestCase
         self::assertArrayNotHasKey('app_private', $routes);
         self::assertArrayNotHasKey('internal_hidden', $routes);
     }
+
+    public function testCacheClearDumpsTheDefaultLocale(): void
+    {
+        self::assertStringEndsWith("export const defaultLocale = \"fr\";\n", file_get_contents(__DIR__.'/../../var/routes/index.js'));
+    }
 }

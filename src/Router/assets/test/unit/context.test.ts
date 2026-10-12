@@ -42,6 +42,30 @@ describe('default context', () => {
         expect(createRouter({ routes }).path('about')).toBe('/about');
     });
 
+    it('falls back to the default locale without <html lang>', () => {
+        expect(createRouter({ routes, defaultLocale: 'fr' }).path('about')).toBe('/a-propos');
+    });
+
+    it('prefers <html lang> over the default locale', () => {
+        document.documentElement.lang = 'en';
+
+        expect(createRouter({ routes, defaultLocale: 'fr' }).path('about')).toBe('/about');
+    });
+
+    it('prefers the context locale over <html lang> and the default locale', () => {
+        document.documentElement.lang = 'en';
+        const { path } = createRouter({ routes, context: { parameters: { _locale: 'fr' } }, defaultLocale: 'en' });
+
+        expect(path('about')).toBe('/a-propos');
+    });
+
+    it('prefers the locale parameter over every other source', () => {
+        document.documentElement.lang = 'fr';
+        const { path } = createRouter({ routes, context: { parameters: { _locale: 'fr' } }, defaultLocale: 'fr' });
+
+        expect(path('about', { _locale: 'en' })).toBe('/about');
+    });
+
     it('picks up changes between two calls', () => {
         const { path } = createRouter({ routes });
         expect(path('about')).toBe('/about');

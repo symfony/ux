@@ -28,6 +28,7 @@ final class UrlGeneratorParityTest extends TestCase
     private const FIXTURE = __DIR__.'/../assets/test/fixtures/parity.json';
     // The JavaScript context always carries a locale (from <html lang>, "en" by default), so the PHP one does too
     private const DEFAULT_CONTEXT = ['baseUrl' => '', 'pathInfo' => '/', 'host' => 'localhost', 'scheme' => 'http', 'httpPort' => 80, 'httpsPort' => 443, 'parameters' => ['_locale' => 'en']];
+    private const DEFAULT_LOCALE = 'fr';
     private const REFERENCE_TYPES = [
         'path' => UrlGeneratorInterface::ABSOLUTE_PATH,
         'relative' => UrlGeneratorInterface::RELATIVE_PATH,
@@ -39,7 +40,7 @@ final class UrlGeneratorParityTest extends TestCase
     {
         $routes = self::createRoutes();
         $normalizer = new RouteNormalizer();
-        $fixture = ['routes' => [], 'cases' => []];
+        $fixture = ['defaultLocale' => self::DEFAULT_LOCALE, 'routes' => [], 'cases' => []];
 
         foreach ($routes->all() as $name => $route) {
             $fixture['routes'][$name] = $normalizer->normalize($route);
@@ -100,6 +101,8 @@ final class UrlGeneratorParityTest extends TestCase
         yield 'localized route with region fallback' => ['about', [], 'path', ['parameters' => ['_locale' => 'fr_CA']]];
         yield 'localized variant called directly' => ['about.fr', [], 'path', []];
         yield 'localized route without matching locale' => ['about', ['_locale' => 'de'], 'path', []];
+        yield 'localized route from the default locale with an empty locale parameter' => ['about', ['_locale' => ''], 'path', []];
+        yield 'localized route from the default locale with an empty context locale' => ['about', [], 'path', ['parameters' => ['_locale' => '']]];
         yield 'locale variable from context' => ['locale_home', [], 'path', ['parameters' => ['_locale' => 'fr']]];
         yield 'locale variable from parameter' => ['locale_home', ['_locale' => 'en'], 'path', ['parameters' => ['_locale' => 'fr']]];
         yield 'locale variable not met' => ['locale_home', ['_locale' => 'de'], 'path', []];
@@ -169,7 +172,7 @@ final class UrlGeneratorParityTest extends TestCase
         $requestContext->setParameters($context['parameters']);
 
         try {
-            return ['expected' => new UrlGenerator($routes, $requestContext)->generate($name, $parameters, self::REFERENCE_TYPES[$referenceType])];
+            return ['expected' => new UrlGenerator($routes, $requestContext, null, self::DEFAULT_LOCALE)->generate($name, $parameters, self::REFERENCE_TYPES[$referenceType])];
         } catch (RouteNotFoundException $e) {
             return ['error' => ['name' => 'RouteNotFoundError', 'message' => $e->getMessage()]];
         } catch (MissingMandatoryParametersException $e) {

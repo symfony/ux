@@ -13,3 +13,4 @@ export declare const routes: {
     "app_controller": Route;
     "legacy_search": Route;
 };
+export declare const defaultLocale: string;

@@ -29,6 +29,7 @@ return static function (ContainerConfigurator $container): void {
                 abstract_arg('dump_directory'),
                 abstract_arg('dump_typescript'),
                 abstract_arg('routes_patterns'),
+                param('kernel.default_locale'),
             ])
             ->tag('kernel.cache_warmer')
 
