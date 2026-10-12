@@ -89,8 +89,16 @@ final class RoutesDumperTest extends TestCase
 
         $this->createDumper()->dump($routes, $this->dumpDir);
 
-        self::assertStringEqualsFile($this->dumpDir.'/index.js', self::HEADER."\nexport const routes = {\n};\n");
-        self::assertStringEqualsFile($this->dumpDir.'/index.d.ts', self::HEADER."import type { Route } from '@symfony/ux-router';\n\nexport declare const routes: {\n};\n");
+        self::assertStringEqualsFile($this->dumpDir.'/index.js', self::HEADER."\nexport const routes = {\n};\nexport const defaultLocale = \"en\";\n");
+        self::assertStringEqualsFile($this->dumpDir.'/index.d.ts', self::HEADER."import type { Route } from '@symfony/ux-router';\n\nexport declare const routes: {\n};\nexport declare const defaultLocale: string;\n");
+    }
+
+    public function testDumpsTheDefaultLocale(): void
+    {
+        $this->createDumper()->dump(self::loadFixtureRoutes(), $this->dumpDir, true, ['app_*'], 'fr_FR');
+
+        self::assertStringEndsWith("};\nexport const defaultLocale = \"fr_FR\";\n", file_get_contents($this->dumpDir.'/index.js'));
+        self::assertStringEndsWith("};\nexport declare const defaultLocale: string;\n", file_get_contents($this->dumpDir.'/index.d.ts'));
     }
 
     public function testEscapesRouteNames(): void

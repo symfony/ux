@@ -36,7 +36,7 @@ class RoutesDumper
     /**
      * @param list<string> $routesPatterns
      */
-    public function dump(RouteCollection $routes, string $dumpDir, bool $dumpTypeScript = true, array $routesPatterns = []): void
+    public function dump(RouteCollection $routes, string $dumpDir, bool $dumpTypeScript = true, array $routesPatterns = [], string $defaultLocale = 'en'): void
     {
         $routeFilter = new RouteFilter($routesPatterns);
         $definitions = [];
@@ -62,13 +62,15 @@ class RoutesDumper
 
         $this->filesystem->dumpFile(
             $dumpDir.'/index.js',
-            self::HEADER."\nexport const routes = {\n".($definitions ? implode(",\n", $definitions)."\n" : '')."};\n",
+            self::HEADER."\nexport const routes = {\n".($definitions ? implode(",\n", $definitions)."\n" : '')."};\n"
+            .'export const defaultLocale = '.json_encode($defaultLocale, self::JSON_FLAGS).";\n",
         );
 
         if ($dumpTypeScript) {
             $this->filesystem->dumpFile(
                 $dumpDir.'/index.d.ts',
-                self::HEADER."import type { Route } from '@symfony/ux-router';\n\nexport declare const routes: {\n".implode('', $declarations)."};\n",
+                self::HEADER."import type { Route } from '@symfony/ux-router';\n\nexport declare const routes: {\n".implode('', $declarations)."};\n"
+                ."export declare const defaultLocale: string;\n",
             );
         } else {
             $this->filesystem->remove($dumpDir.'/index.d.ts');

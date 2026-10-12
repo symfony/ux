@@ -39,8 +39,9 @@ final class RefreshRoutesListener
         private string $dumpDir,
         private bool $dumpTypeScript,
         private array $routesPatterns,
+        private string $defaultLocale,
     ) {
-        $this->cachePath = $cacheDir.'/ux_router/routes.'.hash('xxh128', serialize([$dumpDir, $dumpTypeScript, $routesPatterns]));
+        $this->cachePath = $cacheDir.'/ux_router/routes.'.hash('xxh128', serialize([$dumpDir, $dumpTypeScript, $routesPatterns, $defaultLocale]));
     }
 
     public function __invoke(RequestEvent $event): void
@@ -65,7 +66,7 @@ final class RefreshRoutesListener
     private function dump(ConfigCacheInterface $cache): void
     {
         $routes = $this->router->getRouteCollection();
-        $this->routesDumper->dump($routes, $this->dumpDir, $this->dumpTypeScript, $this->routesPatterns);
+        $this->routesDumper->dump($routes, $this->dumpDir, $this->dumpTypeScript, $this->routesPatterns, $this->defaultLocale);
 
         $cache->write($this->hashDumpedFiles(), $routes->getResources());
     }

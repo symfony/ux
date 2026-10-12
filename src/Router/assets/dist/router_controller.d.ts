@@ -57,9 +57,11 @@ declare class InvalidParameterError extends Error {
 }
 declare function createRouter<TRoutes extends Routes>({
   routes,
-  context
+  context,
+  defaultLocale
 }: {
   routes: TRoutes;
   context?: Partial<RequestContext>;
+  defaultLocale?: string;
 }): Router<TRoutes>;
 export { InvalidParameterError, MissingMandatoryParametersError, ParametersOf, PathArguments, QueryValue, RequestContext, Route, RouteDefinition, RouteName, RouteNotFoundError, Router, Routes, SpecialParameters, TextToken, Token, UrlArguments, VariableToken, createRouter };

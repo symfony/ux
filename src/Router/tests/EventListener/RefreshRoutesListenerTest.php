@@ -105,6 +105,14 @@ final class RefreshRoutesListenerTest extends TestCase
         self::assertStringContainsString('"app_home"', file_get_contents($this->dir.'/routes/index.js'));
     }
 
+    public function testDumpsAgainWhenTheDefaultLocaleChanges(): void
+    {
+        ($this->createListener(['app_*']))($this->createEvent());
+        ($this->createListener(['app_*'], 'fr'))($this->createEvent());
+
+        self::assertStringContainsString('export const defaultLocale = "fr";', file_get_contents($this->dir.'/routes/index.js'));
+    }
+
     public function testDumpsAgainWhenTheDumpedFileWasModified(): void
     {
         $listener = $this->createListener(['app_*']);
@@ -126,7 +134,7 @@ final class RefreshRoutesListenerTest extends TestCase
     /**
      * @param list<string> $patterns
      */
-    private function createListener(array $patterns): RefreshRoutesListener
+    private function createListener(array $patterns, string $defaultLocale = 'en'): RefreshRoutesListener
     {
         $router = $this->createStub(RouterInterface::class);
         $router->method('getRouteCollection')->willReturnCallback(fn () => $this->routes);
@@ -139,6 +147,7 @@ final class RefreshRoutesListenerTest extends TestCase
             $this->dir.'/routes',
             true,
             $patterns,
+            $defaultLocale,
         );
     }
 

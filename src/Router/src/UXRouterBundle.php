@@ -104,6 +104,7 @@ class UXRouterBundle extends AbstractBundle
                         $config['dump_directory'],
                         $config['dump_typescript'],
                         $config['routes'],
+                        '%kernel.default_locale%',
                     ])
                     // After the AssetMapper dev server (35), which serves assets on its own, and before the router (32)
                     ->tag('kernel.event_listener', ['event' => KernelEvents::REQUEST, 'priority' => 33])

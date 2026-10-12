@@ -31,6 +31,7 @@ class RoutesCacheWarmer implements CacheWarmerInterface
         private string $dumpDir,
         private bool $dumpTypeScript,
         private array $routesPatterns,
+        private string $defaultLocale,
     ) {
     }
 
@@ -46,6 +47,7 @@ class RoutesCacheWarmer implements CacheWarmerInterface
             $this->dumpDir,
             $this->dumpTypeScript,
             $this->routesPatterns,
+            $this->defaultLocale,
         );
 
         return [];

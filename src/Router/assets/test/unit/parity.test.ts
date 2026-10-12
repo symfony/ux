@@ -16,7 +16,7 @@ const routes = fixture.routes as unknown as Routes;
 
 describe('parity with Symfony UrlGenerator', () => {
     it.each(fixture.cases as ParityCase[])('$description', (testCase) => {
-        const { path, url } = createRouter({ routes, context: testCase.context });
+        const { path, url } = createRouter({ routes, context: testCase.context, defaultLocale: fixture.defaultLocale });
         const name = testCase.name as never;
         const generate = (): string => {
             switch (testCase.referenceType) {
