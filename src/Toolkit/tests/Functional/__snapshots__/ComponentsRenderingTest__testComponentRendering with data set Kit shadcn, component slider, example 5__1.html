@@ -15,6 +15,7 @@
 <div class="mx-auto grid w-full max-w-xs gap-3" data-controller="slider-display">
     <div class="flex items-center justify-between gap-2">
         <label data-slot="label" class="flex items-center gap-2 text-sm leading-none font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50" for="slider-controlled-temperature">Temperature</label>
+
         <span class="text-sm text-muted-foreground" data-slider-display-target="output">0.3, 0.7</span>
     </div>
     <div data-slot="slider" data-orientation="horizontal" data-slider-min-value="0" data-slider-max-value="1" data-slider-step-value="0.1" data-slider-orientation-value="horizontal" class="group/slider relative flex touch-none select-none items-center w-full h-4" data-controller="slider" id="slider-controlled-temperature" data-action="input->slider-display#update">

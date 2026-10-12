@@ -142,130 +142,196 @@
         <div data-slot="context-menu" class="contents" data-controller="context-menu"><div data-slot="context-menu-trigger" data-context-menu-target="trigger" class="select-none [-webkit-touch-callout:none] flex aspect-video w-full max-w-xs items-center justify-center rounded-xl border border-dashed text-sm" data-action="contextmenu->context-menu#open pointerdown->context-menu#startLongPress pointermove->context-menu#moveLongPress pointerup->context-menu#cancelLongPress pointercancel->context-menu#cancelLongPress"><span class="hidden pointer-fine:inline-block">انقر بزر الماوس الأيمن هنا</span>
                 <span class="hidden pointer-coarse:inline-block">اضغط مطولاً هنا</span>
             </div>
+
             <div role="menu" tabindex="-1" aria-orientation="vertical" data-slot="context-menu-content" data-context-menu-target="content" data-state="closed" data-side="bottom" class="invisible fixed left-0 top-0 z-50 min-w-36 scale-95 rounded-lg bg-popover p-1 text-popover-foreground opacity-0 shadow-md ring-1 ring-foreground/10 outline-hidden transition-[opacity,scale,visibility] duration-100 ease-out data-[state=open]:transition-[opacity,scale] data-[state=open]:visible data-[state=open]:scale-100 data-[state=open]:opacity-100 w-48" data-action="keydown->context-menu#onContentKeydown contextmenu->context-menu#preventContextMenu"><div role="group" data-slot="context-menu-group"><div data-slot="context-menu-sub" data-context-menu-sub-open-delay-value="0" data-context-menu-sub-close-delay-value="0" class="relative" data-controller="context-menu-sub" data-action="mouseenter->context-menu-sub#show mouseleave->context-menu-sub#hide focusout->context-menu-sub#focusOut keydown->context-menu-sub#onKeydown context-menu:close@window->context-menu-sub#close"><button type="button" role="menuitem" tabindex="-1" aria-haspopup="menu" data-slot="context-menu-sub-trigger" data-context-menu-target="item" data-context-menu-sub-target="trigger" data-state="closed" class="relative flex w-full cursor-default select-none items-center gap-1.5 rounded-md px-1.5 py-1 text-sm outline-hidden transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[state=open]:bg-accent data-[state=open]:text-accent-foreground [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0" data-action="mouseenter->context-menu-sub#show focus->context-menu-sub#show">التنقل<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="ms-auto size-4 rtl:rotate-180" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 18l6-6l-6-6"></path></svg>
 </button>
+
                         <div role="menu" data-slot="context-menu-sub-content" data-context-menu-sub-target="content" data-state="closed" data-side="inline-end" class="invisible opacity-0 transition-[opacity,translate,visibility] duration-100 ease-out data-[state=open]:transition-[opacity,translate] data-[state=open]:visible data-[state=open]:opacity-100 data-[state=open]:translate-x-0 data-[state=closed]:ltr:-translate-x-2 data-[state=closed]:rtl:translate-x-2 data-[side=inline-start]:data-[state=closed]:ltr:translate-x-2 data-[side=inline-start]:data-[state=closed]:rtl:-translate-x-2 absolute data-[side=inline-end]:start-full data-[side=inline-start]:end-full top-0 z-50 mx-1 min-w-32 rounded-lg border bg-popover p-1 text-popover-foreground shadow-lg outline-hidden w-44"><div role="group" data-slot="context-menu-group"><button type="button" role="menuitem" tabindex="-1" data-slot="context-menu-item" data-context-menu-target="item" data-variant="default" data-close-on-select="true" data-disabled="false" aria-disabled="false" class="group/context-menu-item relative flex w-full cursor-default select-none items-center gap-1.5 rounded-md px-1.5 py-1 text-sm outline-hidden transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 hover:**:text-accent-foreground focus:**:text-accent-foreground" data-action="click->context-menu#closeFromItem"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m12 19l-7-7l7-7m7 7H5"></path></svg>
                                     رجوع
                                     <span data-slot="context-menu-shortcut" class="ms-auto text-xs tracking-widest text-muted-foreground group-focus/context-menu-item:text-accent-foreground">⌘[</span>
+
                                 </button>
+
                                 <button type="button" role="menuitem" tabindex="-1" data-slot="context-menu-item" data-context-menu-target="item" data-variant="default" data-close-on-select="true" data-disabled="true" aria-disabled="true" disabled="" class="group/context-menu-item relative flex w-full cursor-default select-none items-center gap-1.5 rounded-md px-1.5 py-1 text-sm outline-hidden transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 hover:**:text-accent-foreground focus:**:text-accent-foreground" data-action="click->context-menu#closeFromItem"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14m-7-7l7 7l-7 7"></path></svg>
                                     تقدم
                                     <span data-slot="context-menu-shortcut" class="ms-auto text-xs tracking-widest text-muted-foreground group-focus/context-menu-item:text-accent-foreground">⌘]</span>
+
                                 </button>
+
                                 <button type="button" role="menuitem" tabindex="-1" data-slot="context-menu-item" data-context-menu-target="item" data-variant="default" data-close-on-select="true" data-disabled="false" aria-disabled="false" class="group/context-menu-item relative flex w-full cursor-default select-none items-center gap-1.5 rounded-md px-1.5 py-1 text-sm outline-hidden transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 hover:**:text-accent-foreground focus:**:text-accent-foreground" data-action="click->context-menu#closeFromItem"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"></path><path d="M21 3v5h-5"></path></g></svg>
                                     إعادة تحميل
                                     <span data-slot="context-menu-shortcut" class="ms-auto text-xs tracking-widest text-muted-foreground group-focus/context-menu-item:text-accent-foreground">⌘R</span>
+
                                 </button>
+
                             </div>
+
                         </div>
+
                     </div>
+
                     <div data-slot="context-menu-sub" data-context-menu-sub-open-delay-value="0" data-context-menu-sub-close-delay-value="0" class="relative" data-controller="context-menu-sub" data-action="mouseenter->context-menu-sub#show mouseleave->context-menu-sub#hide focusout->context-menu-sub#focusOut keydown->context-menu-sub#onKeydown context-menu:close@window->context-menu-sub#close"><button type="button" role="menuitem" tabindex="-1" aria-haspopup="menu" data-slot="context-menu-sub-trigger" data-context-menu-target="item" data-context-menu-sub-target="trigger" data-state="closed" class="relative flex w-full cursor-default select-none items-center gap-1.5 rounded-md px-1.5 py-1 text-sm outline-hidden transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[state=open]:bg-accent data-[state=open]:text-accent-foreground [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0" data-action="mouseenter->context-menu-sub#show focus->context-menu-sub#show">المزيد من الأدوات<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="ms-auto size-4 rtl:rotate-180" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 18l6-6l-6-6"></path></svg>
 </button>
+
                         <div role="menu" data-slot="context-menu-sub-content" data-context-menu-sub-target="content" data-state="closed" data-side="inline-end" class="invisible opacity-0 transition-[opacity,translate,visibility] duration-100 ease-out data-[state=open]:transition-[opacity,translate] data-[state=open]:visible data-[state=open]:opacity-100 data-[state=open]:translate-x-0 data-[state=closed]:ltr:-translate-x-2 data-[state=closed]:rtl:translate-x-2 data-[side=inline-start]:data-[state=closed]:ltr:translate-x-2 data-[side=inline-start]:data-[state=closed]:rtl:-translate-x-2 absolute data-[side=inline-end]:start-full data-[side=inline-start]:end-full top-0 z-50 mx-1 min-w-32 rounded-lg border bg-popover p-1 text-popover-foreground shadow-lg outline-hidden w-44"><div role="group" data-slot="context-menu-group"><button type="button" role="menuitem" tabindex="-1" data-slot="context-menu-item" data-context-menu-target="item" data-variant="default" data-close-on-select="true" data-disabled="false" aria-disabled="false" class="group/context-menu-item relative flex w-full cursor-default select-none items-center gap-1.5 rounded-md px-1.5 py-1 text-sm outline-hidden transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 hover:**:text-accent-foreground focus:**:text-accent-foreground" data-action="click->context-menu#closeFromItem">حفظ الصفحة...</button>
+
                                 <button type="button" role="menuitem" tabindex="-1" data-slot="context-menu-item" data-context-menu-target="item" data-variant="default" data-close-on-select="true" data-disabled="false" aria-disabled="false" class="group/context-menu-item relative flex w-full cursor-default select-none items-center gap-1.5 rounded-md px-1.5 py-1 text-sm outline-hidden transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 hover:**:text-accent-foreground focus:**:text-accent-foreground" data-action="click->context-menu#closeFromItem">إنشاء اختصار...</button>
+
                                 <button type="button" role="menuitem" tabindex="-1" data-slot="context-menu-item" data-context-menu-target="item" data-variant="default" data-close-on-select="true" data-disabled="false" aria-disabled="false" class="group/context-menu-item relative flex w-full cursor-default select-none items-center gap-1.5 rounded-md px-1.5 py-1 text-sm outline-hidden transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 hover:**:text-accent-foreground focus:**:text-accent-foreground" data-action="click->context-menu#closeFromItem">تسمية النافذة...</button>
+
                             </div>
+
                             <div role="separator" aria-orientation="horizontal" data-slot="context-menu-separator" class="-mx-1 my-1 h-px bg-border"></div>
 
                             <div role="group" data-slot="context-menu-group"><button type="button" role="menuitem" tabindex="-1" data-slot="context-menu-item" data-context-menu-target="item" data-variant="default" data-close-on-select="true" data-disabled="false" aria-disabled="false" class="group/context-menu-item relative flex w-full cursor-default select-none items-center gap-1.5 rounded-md px-1.5 py-1 text-sm outline-hidden transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 hover:**:text-accent-foreground focus:**:text-accent-foreground" data-action="click->context-menu#closeFromItem">أدوات المطور</button>
+
                             </div>
+
                             <div role="separator" aria-orientation="horizontal" data-slot="context-menu-separator" class="-mx-1 my-1 h-px bg-border"></div>
 
                             <div role="group" data-slot="context-menu-group"><button type="button" role="menuitem" tabindex="-1" data-slot="context-menu-item" data-context-menu-target="item" data-variant="destructive" data-close-on-select="true" data-disabled="false" aria-disabled="false" class="group/context-menu-item relative flex w-full cursor-default select-none items-center gap-1.5 rounded-md px-1.5 py-1 text-sm outline-hidden transition-colors data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 text-destructive hover:bg-destructive/10 hover:text-destructive focus:bg-destructive/10 focus:text-destructive dark:hover:bg-destructive/20 dark:focus:bg-destructive/20 *:[svg]:text-destructive" data-action="click->context-menu#closeFromItem">حذف</button>
+
                             </div>
+
                         </div>
+
                     </div>
+
                 </div>
+
                 <div role="separator" aria-orientation="horizontal" data-slot="context-menu-separator" class="-mx-1 my-1 h-px bg-border"></div>
 
                 <div role="group" data-slot="context-menu-group"><button type="button" role="menuitemcheckbox" tabindex="-1" data-slot="context-menu-checkbox-item" data-context-menu-target="item" data-close-on-select="false" data-disabled="false" aria-checked="true" aria-disabled="false" class="relative flex w-full cursor-default select-none items-center gap-1.5 rounded-md py-1 ps-1.5 pe-8 text-sm outline-hidden transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0" data-action="click->context-menu#toggleCheckbox">
     <span class="pointer-events-none absolute end-2 flex items-center justify-center" data-checkbox-indicator="">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
     </span>إظهار الإشارات المرجعية</button>
+
                     <button type="button" role="menuitemcheckbox" tabindex="-1" data-slot="context-menu-checkbox-item" data-context-menu-target="item" data-close-on-select="false" data-disabled="false" aria-checked="false" aria-disabled="false" class="relative flex w-full cursor-default select-none items-center gap-1.5 rounded-md py-1 ps-1.5 pe-8 text-sm outline-hidden transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0" data-action="click->context-menu#toggleCheckbox">
     <span class="pointer-events-none absolute end-2 flex items-center justify-center" data-checkbox-indicator="" hidden="">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
     </span>إظهار عناوين URL الكاملة</button>
+
                 </div>
+
                 <div role="separator" aria-orientation="horizontal" data-slot="context-menu-separator" class="-mx-1 my-1 h-px bg-border"></div>
 
                 <div role="group" data-slot="context-menu-group"><div role="group" data-slot="context-menu-radio-group" data-value="pedro"><div data-slot="context-menu-label" class="px-1.5 py-1 text-xs font-medium text-muted-foreground">الأشخاص</div>
+
                         <button type="button" role="menuitemradio" tabindex="-1" data-slot="context-menu-radio-item" data-context-menu-target="item" data-value="pedro" data-close-on-select="false" data-disabled="false" aria-checked="true" aria-disabled="false" class="relative flex w-full cursor-default select-none items-center gap-1.5 rounded-md py-1 ps-1.5 pe-8 text-sm outline-hidden transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0" data-action="click->context-menu#selectRadio">
     <span class="pointer-events-none absolute end-2 flex items-center justify-center" data-radio-indicator="">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
     </span>Pedro Duarte</button>
+
                         <button type="button" role="menuitemradio" tabindex="-1" data-slot="context-menu-radio-item" data-context-menu-target="item" data-value="colm" data-close-on-select="false" data-disabled="false" aria-checked="false" aria-disabled="false" class="relative flex w-full cursor-default select-none items-center gap-1.5 rounded-md py-1 ps-1.5 pe-8 text-sm outline-hidden transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0" data-action="click->context-menu#selectRadio">
     <span class="pointer-events-none absolute end-2 flex items-center justify-center" data-radio-indicator="" hidden="">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
     </span>Colm Tuite</button>
+
                     </div>
+
                 </div>
+
             </div>
+
         </div>
+
     </div>
     <div dir="rtl">
         <div data-slot="context-menu" class="contents" data-controller="context-menu"><div data-slot="context-menu-trigger" data-context-menu-target="trigger" class="select-none [-webkit-touch-callout:none] flex aspect-video w-full max-w-xs items-center justify-center rounded-xl border border-dashed text-sm" data-action="contextmenu->context-menu#open pointerdown->context-menu#startLongPress pointermove->context-menu#moveLongPress pointerup->context-menu#cancelLongPress pointercancel->context-menu#cancelLongPress"><span class="hidden pointer-fine:inline-block">לחץ לחיצה ימנית כאן</span>
                 <span class="hidden pointer-coarse:inline-block">לחץ לחיצה ארוכה כאן</span>
             </div>
+
             <div role="menu" tabindex="-1" aria-orientation="vertical" data-slot="context-menu-content" data-context-menu-target="content" data-state="closed" data-side="bottom" class="invisible fixed left-0 top-0 z-50 min-w-36 scale-95 rounded-lg bg-popover p-1 text-popover-foreground opacity-0 shadow-md ring-1 ring-foreground/10 outline-hidden transition-[opacity,scale,visibility] duration-100 ease-out data-[state=open]:transition-[opacity,scale] data-[state=open]:visible data-[state=open]:scale-100 data-[state=open]:opacity-100 w-48" data-action="keydown->context-menu#onContentKeydown contextmenu->context-menu#preventContextMenu"><div role="group" data-slot="context-menu-group"><div data-slot="context-menu-sub" data-context-menu-sub-open-delay-value="0" data-context-menu-sub-close-delay-value="0" class="relative" data-controller="context-menu-sub" data-action="mouseenter->context-menu-sub#show mouseleave->context-menu-sub#hide focusout->context-menu-sub#focusOut keydown->context-menu-sub#onKeydown context-menu:close@window->context-menu-sub#close"><button type="button" role="menuitem" tabindex="-1" aria-haspopup="menu" data-slot="context-menu-sub-trigger" data-context-menu-target="item" data-context-menu-sub-target="trigger" data-state="closed" class="relative flex w-full cursor-default select-none items-center gap-1.5 rounded-md px-1.5 py-1 text-sm outline-hidden transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[state=open]:bg-accent data-[state=open]:text-accent-foreground [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0" data-action="mouseenter->context-menu-sub#show focus->context-menu-sub#show">ניווט<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="ms-auto size-4 rtl:rotate-180" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 18l6-6l-6-6"></path></svg>
 </button>
+
                         <div role="menu" data-slot="context-menu-sub-content" data-context-menu-sub-target="content" data-state="closed" data-side="inline-end" class="invisible opacity-0 transition-[opacity,translate,visibility] duration-100 ease-out data-[state=open]:transition-[opacity,translate] data-[state=open]:visible data-[state=open]:opacity-100 data-[state=open]:translate-x-0 data-[state=closed]:ltr:-translate-x-2 data-[state=closed]:rtl:translate-x-2 data-[side=inline-start]:data-[state=closed]:ltr:translate-x-2 data-[side=inline-start]:data-[state=closed]:rtl:-translate-x-2 absolute data-[side=inline-end]:start-full data-[side=inline-start]:end-full top-0 z-50 mx-1 min-w-32 rounded-lg border bg-popover p-1 text-popover-foreground shadow-lg outline-hidden w-44"><div role="group" data-slot="context-menu-group"><button type="button" role="menuitem" tabindex="-1" data-slot="context-menu-item" data-context-menu-target="item" data-variant="default" data-close-on-select="true" data-disabled="false" aria-disabled="false" class="group/context-menu-item relative flex w-full cursor-default select-none items-center gap-1.5 rounded-md px-1.5 py-1 text-sm outline-hidden transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 hover:**:text-accent-foreground focus:**:text-accent-foreground" data-action="click->context-menu#closeFromItem"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m12 19l-7-7l7-7m7 7H5"></path></svg>
                                     חזור
                                     <span data-slot="context-menu-shortcut" class="ms-auto text-xs tracking-widest text-muted-foreground group-focus/context-menu-item:text-accent-foreground">⌘[</span>
+
                                 </button>
+
                                 <button type="button" role="menuitem" tabindex="-1" data-slot="context-menu-item" data-context-menu-target="item" data-variant="default" data-close-on-select="true" data-disabled="true" aria-disabled="true" disabled="" class="group/context-menu-item relative flex w-full cursor-default select-none items-center gap-1.5 rounded-md px-1.5 py-1 text-sm outline-hidden transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 hover:**:text-accent-foreground focus:**:text-accent-foreground" data-action="click->context-menu#closeFromItem"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14m-7-7l7 7l-7 7"></path></svg>
                                     קדימה
                                     <span data-slot="context-menu-shortcut" class="ms-auto text-xs tracking-widest text-muted-foreground group-focus/context-menu-item:text-accent-foreground">⌘]</span>
+
                                 </button>
+
                                 <button type="button" role="menuitem" tabindex="-1" data-slot="context-menu-item" data-context-menu-target="item" data-variant="default" data-close-on-select="true" data-disabled="false" aria-disabled="false" class="group/context-menu-item relative flex w-full cursor-default select-none items-center gap-1.5 rounded-md px-1.5 py-1 text-sm outline-hidden transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 hover:**:text-accent-foreground focus:**:text-accent-foreground" data-action="click->context-menu#closeFromItem"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"></path><path d="M21 3v5h-5"></path></g></svg>
                                     רענן
                                     <span data-slot="context-menu-shortcut" class="ms-auto text-xs tracking-widest text-muted-foreground group-focus/context-menu-item:text-accent-foreground">⌘R</span>
+
                                 </button>
+
                             </div>
+
                         </div>
+
                     </div>
+
                     <div data-slot="context-menu-sub" data-context-menu-sub-open-delay-value="0" data-context-menu-sub-close-delay-value="0" class="relative" data-controller="context-menu-sub" data-action="mouseenter->context-menu-sub#show mouseleave->context-menu-sub#hide focusout->context-menu-sub#focusOut keydown->context-menu-sub#onKeydown context-menu:close@window->context-menu-sub#close"><button type="button" role="menuitem" tabindex="-1" aria-haspopup="menu" data-slot="context-menu-sub-trigger" data-context-menu-target="item" data-context-menu-sub-target="trigger" data-state="closed" class="relative flex w-full cursor-default select-none items-center gap-1.5 rounded-md px-1.5 py-1 text-sm outline-hidden transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[state=open]:bg-accent data-[state=open]:text-accent-foreground [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0" data-action="mouseenter->context-menu-sub#show focus->context-menu-sub#show">כלים נוספים<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="ms-auto size-4 rtl:rotate-180" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 18l6-6l-6-6"></path></svg>
 </button>
+
                         <div role="menu" data-slot="context-menu-sub-content" data-context-menu-sub-target="content" data-state="closed" data-side="inline-end" class="invisible opacity-0 transition-[opacity,translate,visibility] duration-100 ease-out data-[state=open]:transition-[opacity,translate] data-[state=open]:visible data-[state=open]:opacity-100 data-[state=open]:translate-x-0 data-[state=closed]:ltr:-translate-x-2 data-[state=closed]:rtl:translate-x-2 data-[side=inline-start]:data-[state=closed]:ltr:translate-x-2 data-[side=inline-start]:data-[state=closed]:rtl:-translate-x-2 absolute data-[side=inline-end]:start-full data-[side=inline-start]:end-full top-0 z-50 mx-1 min-w-32 rounded-lg border bg-popover p-1 text-popover-foreground shadow-lg outline-hidden w-44"><div role="group" data-slot="context-menu-group"><button type="button" role="menuitem" tabindex="-1" data-slot="context-menu-item" data-context-menu-target="item" data-variant="default" data-close-on-select="true" data-disabled="false" aria-disabled="false" class="group/context-menu-item relative flex w-full cursor-default select-none items-center gap-1.5 rounded-md px-1.5 py-1 text-sm outline-hidden transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 hover:**:text-accent-foreground focus:**:text-accent-foreground" data-action="click->context-menu#closeFromItem">שמור עמוד...</button>
+
                                 <button type="button" role="menuitem" tabindex="-1" data-slot="context-menu-item" data-context-menu-target="item" data-variant="default" data-close-on-select="true" data-disabled="false" aria-disabled="false" class="group/context-menu-item relative flex w-full cursor-default select-none items-center gap-1.5 rounded-md px-1.5 py-1 text-sm outline-hidden transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 hover:**:text-accent-foreground focus:**:text-accent-foreground" data-action="click->context-menu#closeFromItem">צור קיצור דרך...</button>
+
                                 <button type="button" role="menuitem" tabindex="-1" data-slot="context-menu-item" data-context-menu-target="item" data-variant="default" data-close-on-select="true" data-disabled="false" aria-disabled="false" class="group/context-menu-item relative flex w-full cursor-default select-none items-center gap-1.5 rounded-md px-1.5 py-1 text-sm outline-hidden transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 hover:**:text-accent-foreground focus:**:text-accent-foreground" data-action="click->context-menu#closeFromItem">שם חלון...</button>
+
                             </div>
+
                             <div role="separator" aria-orientation="horizontal" data-slot="context-menu-separator" class="-mx-1 my-1 h-px bg-border"></div>
 
                             <div role="group" data-slot="context-menu-group"><button type="button" role="menuitem" tabindex="-1" data-slot="context-menu-item" data-context-menu-target="item" data-variant="default" data-close-on-select="true" data-disabled="false" aria-disabled="false" class="group/context-menu-item relative flex w-full cursor-default select-none items-center gap-1.5 rounded-md px-1.5 py-1 text-sm outline-hidden transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 hover:**:text-accent-foreground focus:**:text-accent-foreground" data-action="click->context-menu#closeFromItem">כלי מפתח</button>
+
                             </div>
+
                             <div role="separator" aria-orientation="horizontal" data-slot="context-menu-separator" class="-mx-1 my-1 h-px bg-border"></div>
 
                             <div role="group" data-slot="context-menu-group"><button type="button" role="menuitem" tabindex="-1" data-slot="context-menu-item" data-context-menu-target="item" data-variant="destructive" data-close-on-select="true" data-disabled="false" aria-disabled="false" class="group/context-menu-item relative flex w-full cursor-default select-none items-center gap-1.5 rounded-md px-1.5 py-1 text-sm outline-hidden transition-colors data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 text-destructive hover:bg-destructive/10 hover:text-destructive focus:bg-destructive/10 focus:text-destructive dark:hover:bg-destructive/20 dark:focus:bg-destructive/20 *:[svg]:text-destructive" data-action="click->context-menu#closeFromItem">מחק</button>
+
                             </div>
+
                         </div>
+
                     </div>
+
                 </div>
+
                 <div role="separator" aria-orientation="horizontal" data-slot="context-menu-separator" class="-mx-1 my-1 h-px bg-border"></div>
 
                 <div role="group" data-slot="context-menu-group"><button type="button" role="menuitemcheckbox" tabindex="-1" data-slot="context-menu-checkbox-item" data-context-menu-target="item" data-close-on-select="false" data-disabled="false" aria-checked="true" aria-disabled="false" class="relative flex w-full cursor-default select-none items-center gap-1.5 rounded-md py-1 ps-1.5 pe-8 text-sm outline-hidden transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0" data-action="click->context-menu#toggleCheckbox">
     <span class="pointer-events-none absolute end-2 flex items-center justify-center" data-checkbox-indicator="">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
     </span>הצג סימניות</button>
+
                     <button type="button" role="menuitemcheckbox" tabindex="-1" data-slot="context-menu-checkbox-item" data-context-menu-target="item" data-close-on-select="false" data-disabled="false" aria-checked="false" aria-disabled="false" class="relative flex w-full cursor-default select-none items-center gap-1.5 rounded-md py-1 ps-1.5 pe-8 text-sm outline-hidden transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0" data-action="click->context-menu#toggleCheckbox">
     <span class="pointer-events-none absolute end-2 flex items-center justify-center" data-checkbox-indicator="" hidden="">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
     </span>הצג כתובות URL מלאות</button>
+
                 </div>
+
                 <div role="separator" aria-orientation="horizontal" data-slot="context-menu-separator" class="-mx-1 my-1 h-px bg-border"></div>
 
                 <div role="group" data-slot="context-menu-group"><div role="group" data-slot="context-menu-radio-group" data-value="pedro"><div data-slot="context-menu-label" class="px-1.5 py-1 text-xs font-medium text-muted-foreground">אנשים</div>
+
                         <button type="button" role="menuitemradio" tabindex="-1" data-slot="context-menu-radio-item" data-context-menu-target="item" data-value="pedro" data-close-on-select="false" data-disabled="false" aria-checked="true" aria-disabled="false" class="relative flex w-full cursor-default select-none items-center gap-1.5 rounded-md py-1 ps-1.5 pe-8 text-sm outline-hidden transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0" data-action="click->context-menu#selectRadio">
     <span class="pointer-events-none absolute end-2 flex items-center justify-center" data-radio-indicator="">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
     </span>Pedro Duarte</button>
+
                         <button type="button" role="menuitemradio" tabindex="-1" data-slot="context-menu-radio-item" data-context-menu-target="item" data-value="colm" data-close-on-select="false" data-disabled="false" aria-checked="false" aria-disabled="false" class="relative flex w-full cursor-default select-none items-center gap-1.5 rounded-md py-1 ps-1.5 pe-8 text-sm outline-hidden transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0" data-action="click->context-menu#selectRadio">
     <span class="pointer-events-none absolute end-2 flex items-center justify-center" data-radio-indicator="" hidden="">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
     </span>Colm Tuite</button>
+
                     </div>
+
                 </div>
+
             </div>
+
         </div>
+
     </div>
 </div>
