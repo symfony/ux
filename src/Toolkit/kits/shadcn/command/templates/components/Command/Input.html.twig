@@ -1,0 +1,23 @@
+{%- set _command_input_attrs = attributes.defaults({
+    class: 'w-full text-sm outline-hidden disabled:cursor-not-allowed disabled:opacity-50'|tailwind_classes,
+    'data-action': 'input->command#filter',
+}) -%}
+<div data-slot="command-input-wrapper" class="p-1 pb-0">
+    <twig:InputGroup class="h-8! rounded-lg! border-input/30 bg-input/30 shadow-none! *:data-[slot=input-group-addon]:ps-2!">
+        <input
+            type="text"
+            role="combobox"
+            autocomplete="off"
+            autocorrect="off"
+            spellcheck="false"
+            aria-autocomplete="list"
+            aria-expanded="true"
+            data-slot="command-input"
+            data-command-target="input"
+            {{ _command_input_attrs }}
+        >
+        <twig:InputGroup:Addon>
+            <twig:ux:icon name="lucide:search" class="size-4 shrink-0 opacity-50" />
+        </twig:InputGroup:Addon>
+    </twig:InputGroup>
+</div>

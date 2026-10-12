@@ -1,0 +1,75 @@
+<!--
+- Kit: Shadcn UI
+- Component: Command
+- Code:
+```twig
+<div class="flex flex-col gap-4" style="min-height: 300px">
+    <twig:Dialog id="command-shortcuts">
+        <twig:Dialog:Trigger>
+            <twig:Button variant="outline" class="w-fit" {{ ...dialog_trigger_attrs }}>Open Menu</twig:Button>
+        </twig:Dialog:Trigger>
+        <twig:Command:Dialog>
+            <twig:Command>
+                <twig:Command:Input placeholder="Type a command or search..." />
+                <twig:Command:List>
+                    <twig:Command:Empty>No results found.</twig:Command:Empty>
+                    <twig:Command:Group heading="Settings">
+                        <twig:Command:Item>
+                            <twig:ux:icon name="lucide:user" />
+                            <span>Profile</span>
+                            <twig:Command:Shortcut>⌘P</twig:Command:Shortcut>
+                        </twig:Command:Item>
+                        <twig:Command:Item>
+                            <twig:ux:icon name="lucide:credit-card" />
+                            <span>Billing</span>
+                            <twig:Command:Shortcut>⌘B</twig:Command:Shortcut>
+                        </twig:Command:Item>
+                        <twig:Command:Item>
+                            <twig:ux:icon name="lucide:settings" />
+                            <span>Settings</span>
+                            <twig:Command:Shortcut>⌘S</twig:Command:Shortcut>
+                        </twig:Command:Item>
+                    </twig:Command:Group>
+                </twig:Command:List>
+            </twig:Command>
+        </twig:Command:Dialog>
+    </twig:Dialog>
+</div>
+```
+- Rendered code (run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="flex flex-col gap-4" style="min-height: 300px">
+    <div data-slot="dialog" data-dialog-open-value="false" data-controller="dialog">
+    <button data-slot="dialog-trigger" data-variant="outline" data-size="default" class="group/button inline-flex shrink-0 items-center justify-center rounded-lg border bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 border-border bg-background hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50 h-8 gap-1.5 px-2.5 has-data-[icon=inline-end]:pe-2 has-data-[icon=inline-start]:ps-2 w-fit" type="button" data-action="click->dialog#open" data-dialog-target="trigger" aria-haspopup="dialog">Open Menu</button>
+                <dialog id="dialog-command-shortcuts" aria-labelledby="dialog-command-shortcuts-title" aria-describedby="dialog-command-shortcuts-description" data-slot="dialog-content" data-dialog-target="dialog" class="fixed left-1/2 z-50 w-full max-w-[calc(100%-2rem)] -translate-x-1/2 gap-4 rounded-xl bg-popover text-sm text-popover-foreground ring-1 ring-foreground/10 outline-none sm:max-w-sm opacity-0 scale-95 transition-all duration-100 backdrop:duration-100 open:grid open:scale-100 open:opacity-100 open:backdrop:bg-black/10 supports-backdrop-filter:open:backdrop:backdrop-blur-xs starting:open:scale-95 starting:open:opacity-0 data-closing:scale-95 data-closing:opacity-0 data-closing:backdrop:bg-transparent supports-backdrop-filter:data-closing:backdrop:backdrop-blur-none top-1/3 translate-y-0 overflow-hidden rounded-xl! p-0" data-action="keydown.esc->dialog#close:prevent click->dialog#closeOnClickOutside"><header data-slot="dialog-header" class="flex flex-col gap-2 sr-only"><h2 id="dialog-command-shortcuts-title" data-slot="dialog-title" class="cn-font-heading text-base leading-none font-medium">Command Palette</h2>
+        <p id="dialog-command-shortcuts-description" data-slot="dialog-description" class="text-muted-foreground text-sm *:[a]:underline *:[a]:underline-offset-3 *:[a]:hover:text-foreground">Search for a command to run...</p>
+    </header>
+<div data-slot="command" tabindex="-1" class="flex size-full flex-col overflow-hidden rounded-xl! bg-popover p-1 text-popover-foreground" data-controller="command" data-action="keydown->command#navigate"><div data-slot="command-input-wrapper" class="p-1 pb-0">
+    <div data-slot="input-group" role="group" class="group/input-group relative flex h-8 w-full min-w-0 items-center rounded-lg border transition-colors outline-none in-data-[slot=combobox-content]:focus-within:border-inherit in-data-[slot=combobox-content]:focus-within:ring-0 has-disabled:bg-input/50 has-disabled:opacity-50 has-[[data-slot=input-group-control]:focus-visible]:border-ring has-[[data-slot=input-group-control]:focus-visible]:ring-3 has-[[data-slot=input-group-control]:focus-visible]:ring-ring/50 has-[[data-slot][aria-invalid=true]]:border-destructive has-[[data-slot][aria-invalid=true]]:ring-3 has-[[data-slot][aria-invalid=true]]:ring-destructive/20 has-[>[data-align=block-end]]:h-auto has-[>[data-align=block-end]]:flex-col has-[>[data-align=block-start]]:h-auto has-[>[data-align=block-start]]:flex-col has-[>textarea]:h-auto dark:bg-input/30 dark:has-disabled:bg-input/80 dark:has-[[data-slot][aria-invalid=true]]:ring-destructive/40 has-[>[data-align=block-end]]:[&amp;>input]:pt-3 has-[>[data-align=block-start]]:[&amp;>input]:pb-3 has-[>[data-align=inline-end]]:[&amp;>input]:pe-1.5 has-[>[data-align=inline-start]]:[&amp;>input]:ps-1.5 h-8! rounded-lg! border-input/30 bg-input/30 shadow-none! *:data-[slot=input-group-addon]:ps-2!" data-controller="input-group"><input type="text" role="combobox" autocomplete="off" autocorrect="off" spellcheck="false" aria-autocomplete="list" aria-expanded="true" data-slot="command-input" data-command-target="input" class="w-full text-sm outline-hidden disabled:cursor-not-allowed disabled:opacity-50" data-action="input->command#filter" placeholder="Type a command or search...">
+        <div data-slot="input-group-addon" data-align="inline-start" role="group" class="flex h-auto cursor-text items-center justify-center gap-2 py-1.5 text-sm font-medium text-muted-foreground select-none group-data-[disabled=true]/input-group:opacity-50 [&amp;>kbd]:rounded-[calc(var(--radius)-5px)] [&amp;>svg:not([class*='size-'])]:size-4 order-first ps-2 has-[>button]:ms-[-0.3rem] has-[>kbd]:ms-[-0.15rem]" data-action="click->input-group#focusInput"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4 shrink-0 opacity-50" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="m21 21l-4.34-4.34"></path><circle cx="11" cy="11" r="8"></circle></g></svg>
+        </div>
+    </div>
+</div>
+
+                <div role="listbox" tabindex="-1" data-slot="command-list" data-command-target="list" class="no-scrollbar max-h-72 scroll-py-1 overflow-x-hidden overflow-y-auto outline-none"><div role="presentation" hidden="" data-slot="command-empty" data-command-target="empty" class="py-6 text-center text-sm">No results found.</div>
+                    <div role="presentation" data-slot="command-group" data-command-target="group" class="overflow-hidden p-1 text-foreground"><div data-slot="command-group-heading" aria-hidden="true" class="px-2 py-1.5 text-xs font-medium text-muted-foreground">Settings</div><div role="group" data-slot="command-group-items" aria-label="Settings"><div role="option" data-slot="command-item" data-command-target="item" data-selected="false" data-disabled="false" aria-selected="false" aria-disabled="false" class="group/command-item relative flex cursor-default items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-hidden select-none in-data-[slot=dialog-content]:rounded-lg! data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 data-[selected=true]:bg-muted data-[selected=true]:text-foreground data-[selected=true]:*:[svg]:text-foreground [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4" data-action="pointermove->command#highlight"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></g></svg>
+                            <span>Profile</span>
+                            <span data-slot="command-shortcut" class="ms-auto text-xs tracking-widest text-muted-foreground group-data-[selected=true]/command-item:text-foreground">⌘P</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="ms-auto opacity-0 group-has-data-[slot=command-shortcut]/command-item:hidden group-data-[checked=true]/command-item:opacity-100" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+</div>
+                        <div role="option" data-slot="command-item" data-command-target="item" data-selected="false" data-disabled="false" aria-selected="false" aria-disabled="false" class="group/command-item relative flex cursor-default items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-hidden select-none in-data-[slot=dialog-content]:rounded-lg! data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 data-[selected=true]:bg-muted data-[selected=true]:text-foreground data-[selected=true]:*:[svg]:text-foreground [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4" data-action="pointermove->command#highlight"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><rect width="20" height="14" x="2" y="5" rx="2"></rect><path d="M2 10h20"></path></g></svg>
+                            <span>Billing</span>
+                            <span data-slot="command-shortcut" class="ms-auto text-xs tracking-widest text-muted-foreground group-data-[selected=true]/command-item:text-foreground">⌘B</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="ms-auto opacity-0 group-has-data-[slot=command-shortcut]/command-item:hidden group-data-[checked=true]/command-item:opacity-100" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+</div>
+                        <div role="option" data-slot="command-item" data-command-target="item" data-selected="false" data-disabled="false" aria-selected="false" aria-disabled="false" class="group/command-item relative flex cursor-default items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-hidden select-none in-data-[slot=dialog-content]:rounded-lg! data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 data-[selected=true]:bg-muted data-[selected=true]:text-foreground data-[selected=true]:*:[svg]:text-foreground [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4" data-action="pointermove->command#highlight"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0a2.34 2.34 0 0 0 3.319 1.915a2.34 2.34 0 0 1 2.33 4.033a2.34 2.34 0 0 0 0 3.831a2.34 2.34 0 0 1-2.33 4.033a2.34 2.34 0 0 0-3.319 1.915a2.34 2.34 0 0 1-4.659 0a2.34 2.34 0 0 0-3.32-1.915a2.34 2.34 0 0 1-2.33-4.033a2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"></path><circle cx="12" cy="12" r="3"></circle></g></svg>
+                            <span>Settings</span>
+                            <span data-slot="command-shortcut" class="ms-auto text-xs tracking-widest text-muted-foreground group-data-[selected=true]/command-item:text-foreground">⌘S</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="ms-auto opacity-0 group-has-data-[slot=command-shortcut]/command-item:hidden group-data-[checked=true]/command-item:opacity-100" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+</div>
+                    </div>
+</div>
+                </div>
+            </div>
+        </dialog>
+    </div>
+</div>

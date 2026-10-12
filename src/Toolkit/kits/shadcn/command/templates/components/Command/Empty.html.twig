@@ -1,0 +1,12 @@
+<div
+    role="presentation"
+    hidden
+    data-slot="command-empty"
+    data-command-target="empty"
+    {{ attributes.defaults({
+        class: 'py-6 text-center text-sm'|tailwind_classes,
+    }) }}
+>
+    {##- The message shown when the search matches no item. -#}
+    {%- block content %}{% endblock -%}
+</div>

@@ -49,6 +49,7 @@
 - [Shadcn] Fix the `top` and `bottom` sides of `sheet` being only as wide as their content instead of the viewport
 - [Shadcn] Fix `dialog`, `sheet` and `drawer` closing without their exit transition outside Chromium
 - [Shadcn] Align the kit with the upstream Shadcn Nova reference, and add a `destructive` variant to `DropdownMenu:Item` and `Menubar:Item`
+- [Shadcn] Add `command` recipe
 
 ## 3.5.0
 
