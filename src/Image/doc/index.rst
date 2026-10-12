@@ -6,7 +6,7 @@ to change, or even change drastically.
 
 Symfony UX Image renders responsive images in Symfony applications by
 delegating every transformation to a URL-based image provider, such as
-`Cloudflare`_, `Cloudinary`_ or `KeyCDN`_. It is part of
+`Cloudflare`_, `Cloudinary`_, `imgix`_ or `KeyCDN`_. It is part of
 `the Symfony UX initiative`_.
 
 The package never decodes, resizes or encodes an image itself. Every
@@ -49,8 +49,8 @@ The ``<twig:ux:image>`` component renders a single image:
     <twig:ux:image src="/uploads/hero.jpg" alt="Hero" width="800" height="450" />
 
 ``src`` is the public URL path of the original image, as your application
-serves it. Every provider reads it the same way: Cloudflare, Cloudinary and
-KeyCDN fetch it from your origin, and ``null://`` renders it as is.
+serves it. Every provider reads it the same way: Cloudflare, Cloudinary, imgix
+and KeyCDN fetch it from your origin, and ``null://`` renders it as is.
 Switching providers therefore never changes your templates.
 
 For example, with ``UX_IMAGE_DSN=cloudflare://cdn.example.com``, this template:
@@ -288,6 +288,7 @@ Scheme         Install                                          DSN example
 ``keycdn``     ``composer require symfony/ux-keycdn-image``     ``keycdn://myzone.kxcdn.com``
 ``cloudflare`` ``composer require symfony/ux-cloudflare-image`` ``cloudflare://cdn.example.com``
 ``cloudinary`` ``composer require symfony/ux-cloudinary-image`` ``cloudinary://my-cloud?origin=https://example.com``
+``imgix``      ``composer require symfony/ux-imgix-image``      ``imgix://my-source.imgix.net``
 ============== ================================================ ===========================================================
 
 See :ref:`Providers <image_providers>` for what each DSN option means and how
@@ -548,16 +549,17 @@ Parameter mapping
 Every ``ImageTransformation`` property maps to a provider-specific query
 parameter:
 
-=========================== ================== ================== ==============
-``ImageTransformation``     `Cloudflare`_      `Cloudinary`_      `KeyCDN`_
-=========================== ================== ================== ==============
-``width``                   ``width``          ``w``              ``width``
-``height``                  ``height``         ``h``              ``height``
-``format``                  ``format``         ``f``              ``format``
-``quality``                 ``quality``        ``q``              ``quality``
-``fit``: ``Fit::Cover``     ``fit=cover``      ``c_fill``         ``fit=cover``
-``fit``: ``Fit::Contain``   ``fit=contain``    ``c_fit``          ``fit=contain``
-=========================== ================== ================== ==============
+========================= =============== =============== =============== ===============
+``ImageTransformation``   `Cloudflare`_   `Cloudinary`_   `imgix`_        `KeyCDN`_
+========================= =============== =============== =============== ===============
+``width``                 ``width``       ``w``           ``w``           ``width``
+``height``                ``height``      ``h``           ``h``           ``height``
+``format``                ``format``      ``f``           ``fm``          ``format``
+``format``: ``auto``      ``format=auto`` ``f_auto``      ``auto=format``
+``quality``               ``quality``     ``q``           ``q``           ``quality``
+``fit``: ``Fit::Cover``   ``fit=cover``   ``c_fill``      ``fit=crop``    ``fit=cover``
+``fit``: ``Fit::Contain`` ``fit=contain`` ``c_fit``       ``fit=clip``    ``fit=contain``
+========================= =============== =============== =============== ===============
 
 ``operations`` (see
 :ref:`Provider-specific operations <image_provider_operations>`) is merged
@@ -571,14 +573,16 @@ Provider      Supported formats                     Negotiates automatically?
 ============= ===================================== =========================
 `Cloudflare`_ ``avif``, ``webp``, ``jpeg``, ``png`` **Yes**
 `Cloudinary`_ ``avif``, ``webp``, ``jpeg``, ``png`` **Yes**
+`imgix`_      ``avif``, ``webp``, ``jpeg``, ``png`` **Yes**
 `KeyCDN`_     ``webp``, ``jpeg``, ``png``           **No**
 ============= ===================================== =========================
 
-Cloudflare and Cloudinary negotiate natively, through their own ``format=auto``
-and ``f_auto``. KeyCDN has no automatic format negotiation at all, and no AVIF
-support either: with it, ``ux_image()`` serves the last configured format
-KeyCDN supports, and ``ux_picture()`` is the way to offer WebP to the browsers
-that accept it (see :ref:`<img> or <picture> <image_img_or_picture>`).
+Cloudflare, Cloudinary and imgix negotiate natively, through their own
+``format=auto``, ``f_auto`` and ``auto=format``. KeyCDN has no automatic format
+negotiation at all, and no AVIF support either: with it, ``ux_image()`` serves
+the last configured format KeyCDN supports, and ``ux_picture()`` is the way to
+offer WebP to the browsers that accept it (see
+:ref:`<img> or <picture> <image_img_or_picture>`).
 
 Cloudflare
 ~~~~~~~~~~
@@ -669,6 +673,56 @@ image), ``dpr``, ``e`` (effect), ``fl`` (flags), ``g`` (gravity), ``o``
 ``/`` or a ``,``. See `Cloudinary's own transformation reference`_ for what
 each one does.
 
+imgix
+~~~~~
+
+`imgix`_ transforms images from a source you configure in its dashboard,
+through query string parameters appended to the source's URL.
+
+.. code-block:: terminal
+
+    $ composer require symfony/ux-imgix-image
+
+.. code-block:: bash
+
+    # .env.prod
+    UX_IMAGE_DSN=imgix://my-source.imgix.net
+
+The host is the domain of your imgix source, either its ``imgix.net``
+subdomain or a custom domain. With a `Web Folder source`_ pointing at your
+origin, ``src`` stays the path your application serves the image from. With a
+storage source, like Amazon S3, ``src`` is the path of the image in the
+bucket.
+
+When the source has `secure URLs`_ enabled, give its token as the ``sign_key``
+option, and every generated URL then carries the matching ``s`` parameter.
+Keep the token out of the files you commit, for example with a placeholder
+that a ``.env.prod.local`` file overrides:
+
+.. code-block:: bash
+
+    # .env.prod
+    IMGIX_SIGN_KEY="<override me>"
+    UX_IMAGE_DSN=imgix://my-source.imgix.net?sign_key=${IMGIX_SIGN_KEY}
+
+    # .env.prod.local
+    IMGIX_SIGN_KEY=the-token
+
+.. warning::
+
+    The token signs every URL: anyone holding it can request any
+    transformation of any image of the source. Store it the way you store
+    your other secrets.
+
+Extra operations, forwarded as-is: ``auto``, ``bg``, ``blur``, ``border``,
+``bri``, ``con``, ``crop``, ``dpr``, ``exp``, ``fill``, ``fill-color``,
+``flip``, ``fp-x``, ``fp-y``, ``fp-z``, ``gam``, ``high``, ``invert``,
+``monochrome``, ``orient``, ``pad``, ``rect``, ``rot``, ``sat``, ``sepia``,
+``shad``, ``sharp``, ``trim``, ``usm``, ``vib``. An ``auto`` operation, like
+``compress``, is joined to the ``auto=format`` of automatic format
+negotiation. See `imgix's own rendering API reference`_ for what each one
+does.
+
 KeyCDN
 ~~~~~~
 
@@ -727,6 +781,9 @@ distinct URL is one more image the provider generates and caches:
 * With fetch delivery, anyone can also ask your Cloudinary account to fetch
   an image from any other domain. Restrict the `allowed fetch domains`_ to
   your origin.
+* imgix can require signed URLs on a source, with `secure URLs`_. Turn it on,
+  and give the source's token to the provider with the ``sign_key`` DSN
+  option: the source then serves only the URLs your application generated.
 * KeyCDN can require a signed token on the zone, with `Secure Token`_. Turn
   it on, and give the key to the provider with the ``secure_token`` DSN
   option: the zone then serves only the URLs your application generated.
@@ -775,4 +832,8 @@ The package supports PHP 8.4 or later and Symfony 7.4 or 8.x.
 .. _`KeyCDN Image Processing`: https://www.keycdn.com/support/image-processing
 .. _`KeyCDN's own parameter reference`: https://www.keycdn.com/support/image-processing
 .. _`Secure Token`: https://www.keycdn.com/support/secure-token#secure-token-for-image-processing
+.. _`imgix`: https://github.com/symfony/ux/blob/3.x/src/Image/src/Bridge/Imgix/README.md
+.. _`Web Folder source`: https://docs.imgix.com/en-US/getting-started/setup/creating-sources/web-folder
+.. _`secure URLs`: https://docs.imgix.com/en-US/getting-started/setup/securing-assets#enabling-secure-urls
+.. _`imgix's own rendering API reference`: https://docs.imgix.com/en-US/apis/rendering
 .. _`OptionsResolver component`: https://symfony.com/doc/current/components/options_resolver.html

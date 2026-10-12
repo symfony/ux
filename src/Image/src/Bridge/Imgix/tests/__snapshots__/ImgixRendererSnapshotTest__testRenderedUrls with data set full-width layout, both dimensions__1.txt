@@ -1,0 +1,19 @@
+src:
+https://demo.imgix.net/hero.jpg?w=800&h=450&fit=crop&auto=format
+
+srcset:
+https://demo.imgix.net/hero.jpg?w=640&h=360&fit=crop&auto=format 640w
+https://demo.imgix.net/hero.jpg?w=750&h=422&fit=crop&auto=format 750w
+https://demo.imgix.net/hero.jpg?w=828&h=466&fit=crop&auto=format 828w
+https://demo.imgix.net/hero.jpg?w=960&h=540&fit=crop&auto=format 960w
+https://demo.imgix.net/hero.jpg?w=1080&h=608&fit=crop&auto=format 1080w
+https://demo.imgix.net/hero.jpg?w=1280&h=720&fit=crop&auto=format 1280w
+https://demo.imgix.net/hero.jpg?w=1668&h=938&fit=crop&auto=format 1668w
+https://demo.imgix.net/hero.jpg?w=1920&h=1080&fit=crop&auto=format 1920w
+https://demo.imgix.net/hero.jpg?w=2048&h=1152&fit=crop&auto=format 2048w
+https://demo.imgix.net/hero.jpg?w=2560&h=1440&fit=crop&auto=format 2560w
+https://demo.imgix.net/hero.jpg?w=3200&h=1800&fit=crop&auto=format 3200w
+https://demo.imgix.net/hero.jpg?w=3840&h=2160&fit=crop&auto=format 3840w
+https://demo.imgix.net/hero.jpg?w=4480&h=2520&fit=crop&auto=format 4480w
+https://demo.imgix.net/hero.jpg?w=5120&h=2880&fit=crop&auto=format 5120w
+https://demo.imgix.net/hero.jpg?w=6016&h=3384&fit=crop&auto=format 6016w
