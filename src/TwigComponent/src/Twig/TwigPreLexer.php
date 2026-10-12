@@ -103,7 +103,7 @@ class TwigPreLexer
 
                 $this->consume('{{');
                 $output .= '{{';
-                $output .= $this->consumeTwigExpressionContent();
+                $output .= $this->consumeTwigExpressionContent('}}');
                 if ($this->consume('}}')) {
                     $output .= '}}';
                 }
@@ -230,6 +230,27 @@ class TwigPreLexer
                 }
 
                 $output .= '{% endcomponent %}';
+
+                continue;
+            }
+
+            // copy any other Twig tag as is, so that a `<twig:` inside one of its strings or `#` comments
+            // (e.g. the `## ...` documentation of a prop) is not mistaken for a component
+            if ($this->check('{%')) {
+                // a Twig tag is content: open the default block if we're inside a component
+                if (!empty($this->currentComponents)
+                    && !$this->currentComponents[\count($this->currentComponents) - 1]['hasDefaultBlock']
+                ) {
+                    $output .= '{% block content %}';
+                    $this->currentComponents[\count($this->currentComponents) - 1]['hasDefaultBlock'] = true;
+                }
+
+                $this->consume('{%');
+                $output .= '{%';
+                $output .= $this->consumeTwigExpressionContent('%}');
+                if ($this->consume('%}')) {
+                    $output .= '%}';
+                }
 
                 continue;
             }
@@ -605,16 +626,17 @@ class TwigPreLexer
     }
 
     /**
-     * Consumes the body of a Twig output expression (between `{{` and `}}`),
-     * respecting string literals so that `}}` appearing inside a string does
-     * not end the expression early.
+     * Consumes the body of a Twig output expression or tag (between `{{` and `}}`, or `{%` and `%}`).
+     *
+     * String literals and `#` inline comments are skipped, so a closing delimiter inside them does not end the expression early.
      */
-    private function consumeTwigExpressionContent(): string
+    private function consumeTwigExpressionContent(string $closingDelimiter): string
     {
         $start = $this->position;
+        $stopChars = "\"'#\n".$closingDelimiter[0];
 
-        while ($this->position < $this->length) {
-            if ($this->check('}}')) {
+        while (($this->position += strcspn($this->input, $stopChars, $this->position)) < $this->length) {
+            if ($this->check($closingDelimiter)) {
                 return substr($this->input, $start, $this->position - $start);
             }
 
@@ -622,6 +644,11 @@ class TwigPreLexer
 
             if ("'" === $char || '"' === $char) {
                 $this->skipStringLiteral($char);
+                continue;
+            }
+
+            if ('#' === $char) {
+                $this->consumeUntil("\n");
                 continue;
             }
 
