@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 3.6.0
+
+- Fix the pre-lexer mistaking a `<twig:` written inside a `{% %}` tag for a component (for example in the `## ...` documentation of a prop, in a `#` inline comment or in a string)
+
 ## 3.5.0
 
 - Render component attributes through twig/html-extra's `html_attr()`, so a component and a plain Twig template render attributes identically.
