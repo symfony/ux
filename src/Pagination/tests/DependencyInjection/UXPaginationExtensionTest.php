@@ -14,7 +14,7 @@ namespace Symfony\UX\Pagination\Tests\DependencyInjection;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\TwigBundle\TwigBundle;
-use Symfony\Component\DependencyInjection\Argument\TaggedIteratorArgument;
+use Symfony\Component\DependencyInjection\Attribute\AsTaggedItem;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 use Symfony\UX\Pagination\Adapter\OffsetAdapterInterface;
@@ -194,18 +194,25 @@ final class UXPaginationExtensionTest extends TestCase
         self::assertSame([1, 2], array_column($cursor->getItems(), 'id'));
     }
 
-    public function testAdapterIteratorUsesTheSymfonyDefaultPriorityConvention(): void
+    public function testBuildingTheContainerTriggersNoDeprecation(): void
     {
-        $container = $this->createContainer();
+        $deprecations = [];
+        set_error_handler(static function (int $type, string $message) use (&$deprecations): bool {
+            $deprecations[] = $message;
 
-        $this->getExtension()->load([], $container);
+            return true;
+        }, \E_USER_DEPRECATED);
 
-        $adapters = $container->getDefinition('ux_pagination.paginator')->getArgument('$adapters');
-        self::assertInstanceOf(TaggedIteratorArgument::class, $adapters);
-        self::assertSame('getDefaultPriority', $adapters->getDefaultPriorityMethod());
+        try {
+            $this->createContainerWithAdapters([]);
+        } finally {
+            restore_error_handler();
+        }
+
+        self::assertSame([], $deprecations);
     }
 
-    public function testAdapterDefaultPriorityMethodControlsResolutionOrder(): void
+    public function testAdapterAsTaggedItemPriorityControlsResolutionOrder(): void
     {
         $container = $this->createContainerWithAdapters([
             'app.adapter.explicit' => [TaggedTestPaginationAdapter::class, ['explicit'], 10],
@@ -357,10 +364,14 @@ final class UXPaginationExtensionTest extends TestCase
         $this->getExtension()->load([], $container);
 
         foreach ($adapters as $id => [$class, $arguments, $priority]) {
-            $attributes = null === $priority ? [] : ['priority' => $priority];
-            $container->register($id, $class)
-                ->setArguments($arguments)
-                ->addTag('ux_pagination.adapter', $attributes);
+            $definition = $container->register($id, $class)
+                ->setArguments($arguments);
+
+            if (null === $priority) {
+                $definition->setAutoconfigured(true);
+            } else {
+                $definition->addTag('ux_pagination.adapter', ['priority' => $priority]);
+            }
         }
 
         $container->getAlias(PaginatorInterface::class)->setPublic(true);
@@ -423,13 +434,9 @@ final class TaggedTestPaginationAdapter implements OffsetAdapterInterface
     }
 }
 
+#[AsTaggedItem(priority: 50)]
 final class DefaultPriorityTestPaginationAdapter implements OffsetAdapterInterface
 {
-    public static function getDefaultPriority(): int
-    {
-        return 50;
-    }
-
     public function supports(mixed $source): bool
     {
         return $source instanceof PriorityTestSource;
