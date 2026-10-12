@@ -229,9 +229,13 @@ final class TwigPreLexerTest extends TestCase
                 EOF,
             <<<EOF
                 {% component 'foo' %}
-                    {% block content %}{% component 'bar' %}{% block content %}bar content{% endblock %}{% endcomponent %}
+                    {% block content %}{% component 'bar' %}{% block content %}bar content{% endblock %}{% endcomponent ~%}
                 {% endblock %}{% endcomponent %}
                 EOF,
+        ];
+        yield 'component_with_closing_tag_followed_by_a_newline' => [
+            "<twig:foo>a</twig:foo>\n<twig:foo>b</twig:foo> <twig:foo>c</twig:foo>\n",
+            "{% component 'foo' %}{% block content %}a{% endblock %}{% endcomponent ~%}\n{% component 'foo' %}{% block content %}b{% endblock %}{% endcomponent %} {% component 'foo' %}{% block content %}c{% endblock %}{% endcomponent ~%}\n",
         ];
         yield 'component_where_entire_default_block_is_embedded_component_self_closing' => [
             <<<EOF

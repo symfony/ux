@@ -229,7 +229,9 @@ class TwigPreLexer
                     $output .= '{% endblock %}';
                 }
 
-                $output .= '{% endcomponent %}';
+                // Twig drops the first newline after "%}", but not after "~%}" (which
+                // only trims spaces and tabs): keep it, as the self-closing syntax does
+                $output .= $this->check("\n") ? '{% endcomponent ~%}' : '{% endcomponent %}';
 
                 continue;
             }

@@ -354,6 +354,16 @@ final class ComponentExtensionTest extends KernelTestCase
         $this->assertStringContainsString('class="primary"', $output);
     }
 
+    public function testClosingTagKeepsTheNewlineAfterItLikeTheSelfClosingSyntax(): void
+    {
+        $environment = self::getContainer()->get(Environment::class);
+
+        $this->assertSame(
+            $environment->createTemplate("<twig:Icon />\n<twig:Icon />\n")->render(),
+            $environment->createTemplate("<twig:Icon></twig:Icon>\n<twig:Icon></twig:Icon>\n")->render(),
+        );
+    }
+
     public function testRenderAnonymousComponentOverwriteProps(): void
     {
         $output = self::getContainer()->get(Environment::class)->render('anonymous_component_overwrite_props.html.twig');
