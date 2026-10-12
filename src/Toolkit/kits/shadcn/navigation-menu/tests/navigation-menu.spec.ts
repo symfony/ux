@@ -63,6 +63,7 @@ describeRecipe('shadcn/navigation-menu', () => {
 
     test('waits for the open delay before opening on hover', async ({ page, gotoExample }) => {
         await gotoExample('shadcn/navigation-menu/default', { timers: 'fake' });
+        await page.clock.pauseAt(Date.now() + 60_000);
         const trigger = page.getByRole('button', { name: 'Getting started' });
 
         await trigger.hover();
@@ -105,6 +106,7 @@ describeRecipe('shadcn/navigation-menu', () => {
 
     test('closes after the close delay once the pointer leaves the menu', async ({ page, gotoExample }) => {
         await gotoExample('shadcn/navigation-menu/default', { timers: 'fake' });
+        await page.clock.pauseAt(Date.now() + 60_000);
         const trigger = page.getByRole('button', { name: 'Getting started' });
         await trigger.hover();
         await page.clock.runFor(300);

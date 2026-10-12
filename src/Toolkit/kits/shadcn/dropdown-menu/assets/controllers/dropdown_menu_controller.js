@@ -32,12 +32,10 @@ export default class extends Controller {
         this._setState(true);
         document.addEventListener('click', this._onOutsideClick, true);
 
-        if (focus) {
-            // Wait two frames: `visibility` is transitioned, so the content is
-            // `visibility: hidden` (its items not focusable) on the first frame.
-            requestAnimationFrame(() =>
-                requestAnimationFrame(() => (focus === 'last' ? this._focusLastItem() : this._focusFirstItem()))
-            );
+        if (focus === 'last') {
+            this._focusLastItem();
+        } else if (focus) {
+            this._focusFirstItem();
         }
     }
 

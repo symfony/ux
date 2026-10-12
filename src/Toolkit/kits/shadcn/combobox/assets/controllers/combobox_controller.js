@@ -87,9 +87,9 @@ export default class extends Controller {
         this.openValue = true;
 
         if (this.#inputInContent) {
-            // Wait two frames: `visibility` is transitioned, so the content is
-            // `visibility: hidden` (its input not focusable) on the first frame.
-            requestAnimationFrame(() => requestAnimationFrame(() => this.focusInput()));
+            // Stimulus calls `openValueChanged()` only once it observes the change: until then the content is hidden and its input cannot take the focus.
+            this.#reflectState();
+            this.focusInput();
         }
     }
 
