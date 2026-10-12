@@ -1,0 +1,9 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2026-10-12T21:43:11Z
+
+Thanks for the PR. The fix works: I reproduced the AssetMapper exception on the base branch, and it is gone with this PR.
+
+I made one small change. The docblock on `isOptional()` now says "The default dump directory is an AssetMapper path".
+
+The reason: the bundle registers `var/translations` with AssetMapper whatever `dump_directory` is set to, so only the default dump directory is an AssetMapper path.
