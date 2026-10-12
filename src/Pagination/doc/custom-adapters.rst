@@ -168,13 +168,17 @@ Adapter design
 Adapter priority
 ----------------
 
-Adapters use the standard Symfony tagged-service priority rules. Return
-a default priority from the adapter when it should normally run before
-another adapter supporting the same source::
+Adapters use the standard Symfony tagged-service priority rules. Set a
+default priority on the adapter with the ``#[AsTaggedItem]`` attribute
+when it should normally run before another adapter supporting the same
+source::
 
-    public static function getDefaultPriority(): int
+    use Symfony\Component\DependencyInjection\Attribute\AsTaggedItem;
+
+    #[AsTaggedItem(priority: 100)]
+    final class SearchQueryAdapter implements OffsetAdapterInterface
     {
-        return 100;
+        // ...
     }
 
 An explicit ``priority`` attribute on the ``ux_pagination.adapter``

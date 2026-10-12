@@ -38,7 +38,7 @@ return static function (ContainerConfigurator $container): void {
     ;
 
     $services->set('ux_pagination.paginator', Paginator::class)
-        ->arg('$adapters', tagged_iterator('ux_pagination.adapter', defaultPriorityMethod: 'getDefaultPriority'))
+        ->arg('$adapters', tagged_iterator('ux_pagination.adapter'))
         ->arg('$requestStack', service('request_stack')->nullOnInvalid())
         ->arg('$urlGenerator', service('router')->nullOnInvalid())
         ->arg('$infoFormatter', service('ux_pagination.info_formatter'))
