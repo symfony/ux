@@ -1,0 +1,11 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2026-10-12T20:16:55Z
+
+Thanks Javier, nicely done. I pushed a few changes to the branch during review:
+
+- I tightened one test. The "`%}` inside an inline comment" case passed even without the fix, so a `<twig:` now follows the in-comment `%}`.
+- I added two tests with an apostrophe in a `#` comment. In `{{ label # it's the label }}` (multi-line), 3.x read the apostrophe as the start of a string, so the next component was not converted. This PR fixes that too.
+- I moved the new `{%` branch just before the character-by-character fallback. Its condition is now only `check('{%')`, and the embed exclusions are gone.
+
+The new branch walked every tag one character at a time. The pre-lexer went from about 5.2 to 7.7 ms on 318 Toolkit templates. Jumping with `strcspn()` brings it back to about 5.1 ms, with the same output.
