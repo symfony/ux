@@ -1,0 +1,11 @@
+---------------------------------------------------------------------------
+
+by kbond at 2026-10-03T15:21:25Z
+
+FYI I was **not** able to *test this in the wild*.
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-10-12T05:02:59Z
+
+PR rebased and conflicts fixed, I was able to test it and it works pretty well too!
