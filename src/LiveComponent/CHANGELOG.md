@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 3.6
+
+- Add `LiveResponse::data()` to send data from a `LiveAction` to the JavaScript that called it, along with the re-rendered component
+
 ## 3.5
 
 - Add support for Symfony 8.2's standalone `AssetMapperBundle`

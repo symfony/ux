@@ -50,6 +50,7 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
     private const DOWNLOAD_FILENAME_HEADER = 'X-Live-Download-Filename';
     private const DOWNLOAD_TYPE_HEADER = 'X-Live-Download-Type';
     private const DOWNLOAD_URL_HEADER = 'X-Live-Download-Url';
+    private const DATA_TYPE_HEADER = 'X-Live-Data-Type';
     private const REMOVE_HEADER = 'X-Live-Remove';
 
     public function __construct(
@@ -284,12 +285,12 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
     }
 
     /**
-     * A download answers a user intent, so it is restricted to what can only come from one.
+     * A LiveResponse answers a user intent, so it is restricted to what can only come from one.
      */
     private function assertLiveResponseIsAllowed(Request $request): void
     {
         if (!$request->isMethod('post')) {
-            throw new \LogicException('A LiveResponse can only be returned from a POST request. A GET is replayable (prefetch, crawlers), which downloading a file or removing a component is not.');
+            throw new \LogicException('A LiveResponse can only be returned from a POST request. A GET is replayable (prefetch, crawlers), while a LiveResponse answers one user action.');
         }
 
         if ($request->attributes->get('_component_default_action', false)) {
@@ -389,6 +390,18 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
             return new Response($html, 200, [
                 'Content-Type' => self::HTML_CONTENT_TYPE,
                 self::DOWNLOAD_URL_HEADER => $liveResponse->url,
+            ]);
+        }
+
+        if ($liveResponse->isData()) {
+            // the data is split from the HTML the same way as a file, but handed to the caller
+            $htmlLength = \strlen($html);
+
+            return new Response($html.$liveResponse->content, 200, [
+                'Content-Type' => self::HTML_CONTENT_TYPE,
+                'Content-Length' => (string) ($htmlLength + \strlen($liveResponse->content)),
+                self::HTML_LENGTH_HEADER => (string) $htmlLength,
+                self::DATA_TYPE_HEADER => $liveResponse->contentType,
             ]);
         }
 

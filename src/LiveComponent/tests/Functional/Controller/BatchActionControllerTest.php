@@ -257,6 +257,36 @@ final class BatchActionControllerTest extends KernelTestCase
         ;
     }
 
+    public function testLastLiveResponseWinsBetweenADownloadAndData(): void
+    {
+        $dehydrated = $this->dehydrateComponent($this->mountComponent('live_data'));
+
+        $this->browser()
+            ->throwExceptions()
+            ->post('/_components/live_data/_batch', [
+                'body' => [
+                    'data' => json_encode([
+                        'props' => $dehydrated->getProps(),
+                        'actions' => [
+                            ['name' => 'download'],
+                            ['name' => 'searchAsXml'],
+                        ],
+                    ]),
+                ],
+            ])
+            ->assertStatus(200)
+            ->assertSeeIn('#count', '1')
+            ->use(static function (KernelBrowser $browser) {
+                $headers = $browser->client()->getResponse()->headers;
+                $body = $browser->client()->getInternalResponse()->getContent();
+
+                self::assertSame('application/xml', $headers->get('X-Live-Data-Type'));
+                self::assertFalse($headers->has('X-Live-Download-Filename'));
+                self::assertSame('<results><result>foo</result></results>', substr($body, (int) $headers->get('X-Live-Html-Length')));
+            })
+        ;
+    }
+
     public function testException(): void
     {
         $dehydrated = $this->dehydrateComponent($this->mountComponent('with_actions'));

@@ -38,6 +38,9 @@ namespace Symfony\UX\LiveComponent;
 final class LiveResponse
 {
     private const DEFAULT_CONTENT_TYPE = 'application/octet-stream';
+    private const JSON_CONTENT_TYPE = 'application/json';
+    // the same as JsonResponse, so the JSON is the one you would get from it
+    private const JSON_ENCODING_OPTIONS = \JSON_HEX_TAG | \JSON_HEX_APOS | \JSON_HEX_AMP | \JSON_HEX_QUOT | \JSON_THROW_ON_ERROR;
 
     /**
      * @param string|\SplFileInfo|resource|\Closure|null $content
@@ -49,6 +52,7 @@ final class LiveResponse
         public readonly ?int $size = null,
         public readonly ?string $url = null,
         private readonly bool $remove = false,
+        private readonly bool $data = false,
     ) {
     }
 
@@ -161,6 +165,48 @@ final class LiveResponse
     }
 
     /**
+     * Sends data along with the re-rendered component, for the JavaScript that called the action.
+     *
+     * The component re-renders as usual.
+     * The promise returned by component.action() in JavaScript resolves with the data, read through its getData() method.
+     *
+     *     #[LiveAction]
+     *     public function search(#[LiveArg] string $query): LiveResponse
+     *     {
+     *         $this->query = $query; // still applied on the page
+     *
+     *         return LiveResponse::data(['total' => $this->countResults()]);
+     *     }
+     *
+     * @param mixed       $data        A string is sent as is, anything else is JSON-encoded
+     * @param string|null $contentType Required for a string; defaults to "application/json" otherwise
+     *
+     * @throws \InvalidArgumentException if $data is a string and $contentType is missing, if $contentType is blank or if it contains a line break
+     * @throws \JsonException            if $data cannot be JSON-encoded
+     */
+    public static function data(mixed $data, ?string $contentType = null): self
+    {
+        if (\is_string($data)) {
+            if (null === $contentType || '' === trim($contentType)) {
+                throw new \InvalidArgumentException('A content type is required when the data is a string.');
+            }
+        } else {
+            $data = json_encode($data, self::JSON_ENCODING_OPTIONS);
+            $contentType ??= self::JSON_CONTENT_TYPE;
+
+            if ('' === trim($contentType)) {
+                throw new \InvalidArgumentException('The content type cannot be blank.');
+            }
+        }
+
+        if (preg_match('/[\r\n]/', $contentType)) {
+            throw new \InvalidArgumentException('The content type cannot contain a line break.');
+        }
+
+        return new self($data, contentType: $contentType, data: true);
+    }
+
+    /**
      * Whether the browser fetches the file itself, rather than receiving it with the render.
      *
      * @internal
@@ -178,5 +224,15 @@ final class LiveResponse
     public function isRemove(): bool
     {
         return $this->remove;
+    }
+
+    /**
+     * Whether data for the JavaScript caller rides along with the render.
+     *
+     * @internal
+     */
+    public function isData(): bool
+    {
+        return $this->data;
     }
 }
