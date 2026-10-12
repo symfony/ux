@@ -36,6 +36,8 @@ final class WarmCacheCommandTest extends TestCase
         new StableCacheDirAppKernel($this->tmpDir)->boot();
 
         $kernel = new StableCacheDirAppKernel($this->tmpDir);
+        // Building the container dumped the translations, the command must dump them again
+        new Filesystem()->remove($kernel->getDumpDir());
         $application = new Application($kernel);
         $tester = new CommandTester($application->find('ux:translator:warm-cache'));
 

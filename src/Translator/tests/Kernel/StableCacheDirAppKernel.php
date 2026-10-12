@@ -23,8 +23,9 @@ final class StableCacheDirAppKernel extends FrameworkAppKernel
 {
     public function __construct(
         private string $tmpDir,
+        string $environment = 'test',
     ) {
-        parent::__construct('test', true);
+        parent::__construct($environment, true);
     }
 
     public function registerContainerConfiguration(LoaderInterface $loader): void
