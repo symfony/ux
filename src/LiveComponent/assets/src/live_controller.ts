@@ -32,6 +32,11 @@ export interface LiveEvent extends CustomEvent {
     };
 }
 
+export interface LiveConfirmEventDetail {
+    message: string;
+    promise: Promise<boolean> | null;
+}
+
 export interface LiveController {
     element: HTMLElement;
     component: Component;
@@ -195,6 +200,84 @@ export default class LiveControllerDefault extends Controller<HTMLElement> imple
                 this.pendingActionTriggerModelElement = event.currentTarget;
             }
         });
+    }
+
+    async confirmAction(event: any) {
+        event.preventDefault();
+
+        const target = event.currentTarget as HTMLElement;
+        const params = { ...event.params };
+
+        // Read the message from Stimulus params or data attributes
+        const confirmMessage =
+            params.confirmMessage || target.dataset.confirmMessageParam || target.getAttribute('data-turbo-confirm');
+
+        if (!confirmMessage) {
+            console.warn('LiveComponent: live#confirmAction requires a confirm message.');
+            return;
+        }
+
+        // Read the action name to execute after confirmation
+        const actionName = params.action || target.dataset.confirmActionParam;
+
+        if (!actionName) {
+            throw new Error('LiveComponent: No action provided. Please use data-live-action-param.');
+        }
+
+        let isConfirmed = false;
+
+        // 1. Dispatch custom event for userland override (e.g., SweetAlert)
+        const liveConfirmEvent = new CustomEvent('live:confirmAction', {
+            bubbles: true,
+            cancelable: true,
+            detail: { message: confirmMessage, promise: null },
+        });
+
+        target.dispatchEvent(liveConfirmEvent);
+
+        if (liveConfirmEvent.defaultPrevented) {
+            // Wait for the user-provided promise if available
+            if (liveConfirmEvent.detail.promise) {
+                try {
+                    isConfirmed = await liveConfirmEvent.detail.promise;
+                } catch {
+                    isConfirmed = false;
+                }
+            }
+        } else {
+            // 2. Automatic Turbo Integration
+            const turbo = (window as any).Turbo;
+            const turboConfirm = turbo?.config?.forms?.confirm || turbo?.navigator?.confirmMethod;
+
+            if (typeof turboConfirm === 'function') {
+                const form = target.closest('form');
+                isConfirmed = await turboConfirm(confirmMessage, form, target);
+            } else {
+                // 3. Fallback to native window.confirm
+                isConfirmed = window.confirm(confirmMessage);
+            }
+        }
+
+        if (!isConfirmed) {
+            return;
+        }
+
+        // 3. Trigger the original action method safely with a mock event
+        params.action = actionName;
+        delete params.confirmMessage;
+        delete params.confirmAction;
+
+        const fakeEvent = {
+            type: event.type,
+            preventDefault: () => {},
+            stopPropagation: () => {},
+            currentTarget: target,
+            target: event.target,
+            params: params,
+            defaultPrevented: false,
+        };
+
+        this.action(fakeEvent);
     }
 
     $render() {
