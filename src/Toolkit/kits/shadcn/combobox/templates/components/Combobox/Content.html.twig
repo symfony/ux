@@ -7,7 +7,7 @@
 {%- set _combobox_open = inject('combobox.open', false) -%}
 {%- set _combobox_contentId = inject('combobox.contentId', null) -%}
 {%- set style = html_cva(
-    base: 'group/combobox-content invisible absolute z-50 flex max-h-72 w-full min-w-36 scale-95 flex-col overflow-hidden rounded-lg bg-popover text-popover-foreground opacity-0 shadow-md ring-1 ring-foreground/10 transition-[opacity,scale,visibility] duration-150 ease-out group-data-[state=open]/combobox:visible group-data-[state=open]/combobox:scale-100 group-data-[state=open]/combobox:opacity-100 *:data-[slot=input-group]:m-1 *:data-[slot=input-group]:mb-0 *:data-[slot=input-group]:h-8 *:data-[slot=input-group]:border-input/30 *:data-[slot=input-group]:bg-input/30 *:data-[slot=input-group]:shadow-none',
+    base: 'group/combobox-content invisible absolute z-50 flex max-h-72 w-full min-w-36 scale-95 flex-col overflow-hidden rounded-lg bg-popover text-popover-foreground opacity-0 shadow-md ring-1 ring-foreground/10 transition-[opacity,scale,visibility] duration-150 ease-out group-data-[state=open]/combobox:transition-[opacity,scale] group-data-[state=open]/combobox:visible group-data-[state=open]/combobox:scale-100 group-data-[state=open]/combobox:opacity-100 *:data-[slot=input-group]:m-1 *:data-[slot=input-group]:mb-0 *:data-[slot=input-group]:h-8 *:data-[slot=input-group]:border-input/30 *:data-[slot=input-group]:bg-input/30 *:data-[slot=input-group]:shadow-none',
     variants: {
         side: {
             top: 'bottom-full mb-1.5',
