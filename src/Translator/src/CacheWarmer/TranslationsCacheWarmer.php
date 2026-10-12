@@ -42,7 +42,7 @@ class TranslationsCacheWarmer implements CacheWarmerInterface
     /**
      * Optional once the translations are dumped.
      *
-     * The default dump directory is an AssetMapper path, which must exist as soon as the container is built.
+     * The dump directory is an AssetMapper path, which must exist as soon as the container is built.
      */
     public function isOptional(): bool
     {
