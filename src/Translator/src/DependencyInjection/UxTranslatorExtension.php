@@ -12,6 +12,7 @@
 namespace Symfony\UX\Translator\DependencyInjection;
 
 use Symfony\Component\AssetMapper\AssetMapperInterface;
+use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
@@ -58,11 +59,13 @@ class UxTranslatorExtension extends Extension implements PrependExtensionInterfa
             return;
         }
 
+        $config = new Processor()->processConfiguration(new Configuration(), $container->getExtensionConfig($this->getAlias()));
+
         $container->prependExtensionConfig('framework', [
             'asset_mapper' => [
                 'paths' => [
                     __DIR__.'/../../assets/dist' => '@symfony/ux-translator',
-                    '%kernel.project_dir%/var/translations' => 'var/translations',
+                    $config['dump_directory'] => 'var/translations',
                 ],
             ],
         ]);
