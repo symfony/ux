@@ -5103,11 +5103,13 @@ var UXInspector = class extends HTMLElement {
 		this.scan();
 		this.setAttribute("open", "");
 		this.#layout.sync();
+		this.#runtime?.refreshVisual();
 	}
 	close() {
 		this.removeAttribute("open");
 		this.#layout.sync();
 		this.#runtime?.close();
+		this.#runtime?.refreshVisual();
 	}
 	toggle() {
 		if (this.isOpen) this.close();
