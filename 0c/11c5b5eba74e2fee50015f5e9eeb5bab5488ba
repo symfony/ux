@@ -1,0 +1,9 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2026-10-12T19:19:09Z
+
+Thanks for the fix. While reviewing, I changed `doc/custom-adapters.rst` and the test fixture to use `#[AsTaggedItem(priority: ...)]` instead of a `getDefaultPriority()` method. Symfony 8.1 deprecates that method on the service class too, so the doc would have taught a deprecated pattern. The attribute works on Symfony 7.4+ for autoconfigured adapters.
+
+I also added `testBuildingTheContainerTriggersNoDeprecation`. The test suite ignores deprecations triggered inside vendor code, so CI never showed this one.
+
+The test fails on the base branch with the 8.1 message and passes with your change.
