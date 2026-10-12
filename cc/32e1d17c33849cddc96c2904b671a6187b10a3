@@ -1,0 +1,13 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2026-10-12T21:54:33Z
+
+Thanks for the solid work. I amended your commit with a few fixes:
+
+- `Enter` on an item that wraps a link did not follow the link. The controller calls `click()` on the item `<div>`, and the `<a>` inside it never receives that click. `Command:Item` now takes `as="a"`, like `Item` and `DropdownMenu:Item` already do, so the whole item is the link. Link items get `tabindex="-1"`, so Tab does not walk through every item. The README has a new "Links" example.
+
+- Items added after the controller connected (for example by a Turbo Stream) had no id, so `aria-activedescendant` was empty. Ids are now given in `itemTargetConnected()`.
+
+- Hovering the half-visible item at the bottom of the list scrolled the list. `cmdk` does not scroll on pointer selection, so `highlight()` no longer scrolls either.
+
+Each of these changes has a spec that failed before the fix.
