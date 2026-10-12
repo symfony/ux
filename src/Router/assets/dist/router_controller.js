@@ -99,13 +99,13 @@ function appendQueryPairs(pairs, data, prefix) {
 		pairs.push(`${encodedKey}=${rawUrlEncode(typeof value === "boolean" ? value ? "1" : "0" : String(value))}`);
 	}
 }
-function getDefaultLocale() {
+function getLocale(defaultLocale) {
 	const lang = typeof document !== "undefined" ? document.documentElement.lang : "";
-	return lang ? lang.replaceAll("-", "_") : "en";
+	return lang ? lang.replaceAll("-", "_") : defaultLocale;
 }
-function getParameters(context) {
+function getParameters(context, defaultLocale) {
 	return context.parameters !== void 0 && "_locale" in context.parameters ? context.parameters : {
-		_locale: getDefaultLocale(),
+		_locale: getLocale(defaultLocale),
 		...context.parameters
 	};
 }
@@ -142,11 +142,11 @@ function getLocationPort(scheme, defaultPort) {
 }
 const UNRESERVED_CHARS_AND_SLASH = /^[A-Za-z0-9\-._~/]*$/;
 const compiledRoutes = /* @__PURE__ */ new WeakMap();
-function generate(routes, name, parameters, referenceType, context) {
-	const contextParameters = getParameters(context);
+function generate(routes, name, parameters, referenceType, context, defaultLocale) {
+	const contextParameters = getParameters(context, defaultLocale);
 	let route;
 	const requestedLocale = parameters._locale ?? contextParameters._locale;
-	let locale = isPhpTruthy(requestedLocale) ? toPhpString(requestedLocale) : false;
+	let locale = isPhpTruthy(requestedLocale) ? toPhpString(requestedLocale) : defaultLocale;
 	while (locale !== false) {
 		route = getOwnRoute(routes, `${name}.${locale}`);
 		if (route !== void 0 && route.defaults._canonical_route === name) break;
@@ -326,13 +326,13 @@ function createRequirementRegex(source, utf8) {
 		return null;
 	}
 }
-function createRouter({ routes, context = {} }) {
+function createRouter({ routes, context = {}, defaultLocale = "en" }) {
 	return {
 		path(name, parameters = {}, relative = false) {
-			return generate(routes, name, parameters, relative ? 2 : 1, context);
+			return generate(routes, name, parameters, relative ? 2 : 1, context, defaultLocale);
 		},
 		url(name, parameters = {}, schemeRelative = false) {
-			return generate(routes, name, parameters, schemeRelative ? 3 : 0, context);
+			return generate(routes, name, parameters, schemeRelative ? 3 : 0, context, defaultLocale);
 		}
 	};
 }

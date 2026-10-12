@@ -95,11 +95,13 @@ export class UXInspector extends HTMLElement {
         this.scan();
         this.setAttribute('open', '');
         this.#layout.sync();
+        this.#runtime?.refreshVisual();
     }
     close(): void {
         this.removeAttribute('open');
         this.#layout.sync();
         this.#runtime?.close();
+        this.#runtime?.refreshVisual();
     }
     toggle(): void {
         if (this.isOpen) this.close();

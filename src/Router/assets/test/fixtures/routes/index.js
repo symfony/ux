@@ -12,3 +12,4 @@ export const routes = {
     "app_controller": {"tokens":[["text","/controller"]],"defaults":{},"hostTokens":[],"schemes":[]},
     "legacy_search": {"tokens":[["text","/search"]],"defaults":{},"hostTokens":[],"schemes":[]}
 };
+export const defaultLocale = "en";

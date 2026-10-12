@@ -483,6 +483,51 @@ final class TwigPreLexerTest extends TestCase
             "{% component 'Foo' %}{% block content %}{{ bar }}{% endblock %}{% endcomponent %}",
         ];
 
+        yield 'ignore_component_tag_inside_props_doc_comment' => [
+            "{% props\n    ## string Rendered inside <twig:Tabs:Item> as the label.\n    label = null,\n%}\n<twig:Alert/>",
+            "{% props\n    ## string Rendered inside <twig:Tabs:Item> as the label.\n    label = null,\n%}\n{{ component('Alert') }}",
+        ];
+
+        yield 'ignore_quote_inside_props_doc_comment' => [
+            "{% props\n    ## string It's the label.\n    label = null,\n%}\n<twig:Alert/>",
+            "{% props\n    ## string It's the label.\n    label = null,\n%}\n{{ component('Alert') }}",
+        ];
+
+        yield 'ignore_component_tag_inside_inline_comment_in_tag' => [
+            "{% set label = null # see <twig:Tabs:Item>\n%}<twig:Alert/>",
+            "{% set label = null # see <twig:Tabs:Item>\n%}{{ component('Alert') }}",
+        ];
+
+        yield 'ignore_tag_close_inside_inline_comment_in_tag' => [
+            "{% set label = null # not the end %} <twig:Tabs:Item>\n%}<twig:Alert/>",
+            "{% set label = null # not the end %} <twig:Tabs:Item>\n%}{{ component('Alert') }}",
+        ];
+
+        yield 'ignore_component_tag_inside_string_in_tag' => [
+            "{% set html = '<twig:Alert>' %}<twig:Alert/>",
+            "{% set html = '<twig:Alert>' %}{{ component('Alert') }}",
+        ];
+
+        yield 'ignore_component_tag_inside_inline_comment_in_output_expression' => [
+            "{{ label # see <twig:Tabs:Item>\n}}<twig:Alert/>",
+            "{{ label # see <twig:Tabs:Item>\n}}{{ component('Alert') }}",
+        ];
+
+        yield 'ignore_quote_inside_inline_comment_in_output_expression' => [
+            "{{ label # it's the label\n}}<twig:Alert/>",
+            "{{ label # it's the label\n}}{{ component('Alert') }}",
+        ];
+
+        yield 'tag_inside_component_opens_default_block' => [
+            '<twig:Foo>{% set bar = 1 %}{{ bar }}</twig:Foo>',
+            "{% component 'Foo' %}{% block content %}{% set bar = 1 %}{{ bar }}{% endblock %}{% endcomponent %}",
+        ];
+
+        yield 'named_block_after_tag_inside_component' => [
+            '<twig:Foo>{% set bar = 1 %}{% block baz %}{{ bar }}{% endblock %}</twig:Foo>',
+            "{% component 'Foo' %}{% block content %}{% set bar = 1 %}{% endblock %}{% block baz %}{{ bar }}{% endblock %}{% endcomponent %}",
+        ];
+
         yield 'component_attr_spreading_self_closing' => [
             '<twig:foobar bar="baz"{{...attr}}/>',
             '{{ component(\'foobar\', { bar: \'baz\', ...attr }) }}',

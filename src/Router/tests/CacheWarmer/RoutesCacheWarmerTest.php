@@ -32,11 +32,10 @@ final class RoutesCacheWarmerTest extends TestCase
         $routesDumper
             ->expects($this->once())
             ->method('dump')
-            ->with($routes, '/tmp/routes', true, ['app_*']);
+            ->with($routes, '/tmp/routes', true, ['app_*'], 'fr');
 
-        $cacheWarmer = new RoutesCacheWarmer($router, $routesDumper, '/tmp/routes', true, ['app_*']);
+        $cacheWarmer = new RoutesCacheWarmer($router, $routesDumper, '/tmp/routes', true, ['app_*'], 'fr');
 
-        self::assertTrue($cacheWarmer->isOptional());
         self::assertSame([], $cacheWarmer->warmUp(sys_get_temp_dir()));
     }
 }

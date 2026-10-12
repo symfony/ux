@@ -1,16 +1,16 @@
 import type { RequestContext } from './types';
 
 // Each value missing from the given context is read from the page only when the generator needs it
-export function getDefaultLocale(): string {
+export function getLocale(defaultLocale: string): string {
     const lang = typeof document !== 'undefined' ? document.documentElement.lang : '';
 
-    return lang ? lang.replaceAll('-', '_') : 'en';
+    return lang ? lang.replaceAll('-', '_') : defaultLocale;
 }
 
-export function getParameters(context: Partial<RequestContext>): Record<string, unknown> {
+export function getParameters(context: Partial<RequestContext>, defaultLocale: string): Record<string, unknown> {
     return context.parameters !== undefined && '_locale' in context.parameters
         ? context.parameters
-        : { _locale: getDefaultLocale(), ...context.parameters };
+        : { _locale: getLocale(defaultLocale), ...context.parameters };
 }
 
 export function getBaseUrl(context: Partial<RequestContext>): string {

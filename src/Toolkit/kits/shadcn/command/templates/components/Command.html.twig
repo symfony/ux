@@ -1,0 +1,12 @@
+<div
+    data-slot="command"
+    tabindex="-1"
+    {{ attributes.defaults({
+        class: 'flex size-full flex-col overflow-hidden rounded-xl! bg-popover p-1 text-popover-foreground'|tailwind_classes,
+        'data-controller': 'command',
+        'data-action': 'keydown->command#navigate',
+    }) }}
+>
+    {##- The command structure, typically includes `Command:Input` and `Command:List`. -#}
+    {%- block content %}{% endblock -%}
+</div>

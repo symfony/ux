@@ -1,5 +1,5 @@
 import { createRouter } from '@symfony/ux-router';
-import { routes } from '../var/routes/index.js';
+import { defaultLocale, routes } from '../var/routes/index.js';
 
 /*
  * This file is part of the Symfony UX Router package.
@@ -10,4 +10,4 @@ import { routes } from '../var/routes/index.js';
  * If you use TypeScript, you can rename this file to "router.ts" to take advantage of types checking.
  */
 
-export const { path, url } = createRouter({ routes });
+export const { path, url } = createRouter({ routes, defaultLocale });

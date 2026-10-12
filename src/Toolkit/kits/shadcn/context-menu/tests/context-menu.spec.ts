@@ -301,6 +301,9 @@ describeRecipe('shadcn/context-menu', () => {
             const subContent = page.locator('[data-slot="context-menu-sub-content"]');
             await expect(subContent).toBeVisible();
             await expect(subContent).toHaveAttribute('data-side', 'inline-start');
+            await subContent.evaluate((element) =>
+                Promise.all(element.getAnimations().map((animation) => animation.finished))
+            );
             const box = (await subContent.boundingBox())!;
             const toolsBox = (await tools.boundingBox())!;
             expect(box.x).toBeGreaterThanOrEqual(0);

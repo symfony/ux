@@ -38,6 +38,7 @@ class FrameworkAppKernel extends Kernel
                 'secret' => '$ecret',
                 'test' => true,
                 'http_method_override' => false,
+                'default_locale' => 'fr',
                 'router' => [
                     'resource' => '%kernel.project_dir%/tests/Fixtures/routes.php',
                     'utf8' => true,

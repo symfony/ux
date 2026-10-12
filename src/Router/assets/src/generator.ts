@@ -39,12 +39,13 @@ export function generate(
     name: string,
     parameters: Record<string, unknown>,
     referenceType: ReferenceType,
-    context: Partial<RequestContext>
+    context: Partial<RequestContext>,
+    defaultLocale: string
 ): string {
-    const contextParameters = getParameters(context);
+    const contextParameters = getParameters(context, defaultLocale);
     let route: RouteDefinition | undefined;
     const requestedLocale = parameters._locale ?? contextParameters._locale;
-    let locale: string | false = isPhpTruthy(requestedLocale) ? toPhpString(requestedLocale) : false;
+    let locale: string | false = isPhpTruthy(requestedLocale) ? toPhpString(requestedLocale) : defaultLocale;
 
     // Same loop as UrlGenerator::generate(): the last looked-up variant is kept even when its canonical name differs
     while (locale !== false) {

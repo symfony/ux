@@ -80,6 +80,28 @@ describe('UXInspector', () => {
         }
     });
 
+    it('repositions overlays when opening or closing the panel moves the page', async () => {
+        const target = document.createElement('div');
+        target.dataset.controller = 'cart';
+        document.body.append(target);
+        let left = 100;
+        target.getBoundingClientRect = () => ({ left, top: 20, width: 50, height: 40 });
+        inspector.scan();
+        inspector.open();
+        await vi.waitFor(() => expect(inspector.hasAttribute('ready')).toBe(true));
+        inspector.toggleOverlay();
+        const box = inspector.shadowRoot.querySelector('.box[data-mode="all"]');
+        expect(box.style.getPropertyValue('translate')).toBe('98px 18px');
+
+        left = 400;
+        inspector.close();
+        await vi.waitFor(() => expect(box.style.getPropertyValue('translate')).toBe('398px 18px'));
+
+        left = 100;
+        inspector.open();
+        await vi.waitFor(() => expect(box.style.getPropertyValue('translate')).toBe('98px 18px'));
+    });
+
     it('does not intercept Shift-click or continue ux into navigation commands', () => {
         const target = document.createElement('button');
         target.dataset.controller = 'sample';

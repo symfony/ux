@@ -33,6 +33,28 @@ final class UxTranslatorExtensionAssetMapperTest extends TestCase
         self::assertSame('@symfony/ux-translator', array_values($config[0]['asset_mapper']['paths'])[0]);
     }
 
+    public function testPrependsDumpDirectory(): void
+    {
+        $config = $this->prepend([
+            'FrameworkBundle' => ['path' => __DIR__],
+            'AssetMapperBundle' => ['path' => __DIR__],
+        ]);
+
+        self::assertSame('var/translations', $config[0]['asset_mapper']['paths']['%kernel.project_dir%/var/translations']);
+    }
+
+    public function testPrependsTheConfiguredDumpDirectory(): void
+    {
+        $config = $this->prepend([
+            'FrameworkBundle' => ['path' => __DIR__],
+            'AssetMapperBundle' => ['path' => __DIR__],
+        ], ['dump_directory' => '%kernel.project_dir%/assets/translations']);
+        $paths = $config[0]['asset_mapper']['paths'];
+
+        self::assertSame('var/translations', $paths['%kernel.project_dir%/assets/translations']);
+        self::assertArrayNotHasKey('%kernel.project_dir%/var/translations', $paths);
+    }
+
     public function testPrependsPathsWithLegacyFrameworkBundle(): void
     {
         $filesystem = new Filesystem();
@@ -68,13 +90,15 @@ final class UxTranslatorExtensionAssetMapperTest extends TestCase
 
     /**
      * @param array<string, array{path: string}> $bundles
+     * @param array<string, mixed>               $uxTranslatorConfig
      *
      * @return array<array<string, mixed>>
      */
-    private function prepend(array $bundles): array
+    private function prepend(array $bundles, array $uxTranslatorConfig = []): array
     {
         $container = new ContainerBuilder();
         $container->setParameter('kernel.bundles_metadata', $bundles);
+        $container->prependExtensionConfig('ux_translator', $uxTranslatorConfig);
         new UxTranslatorExtension()->prepend($container);
 
         return $container->getExtensionConfig('framework');

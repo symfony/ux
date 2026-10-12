@@ -1,0 +1,20 @@
+{%- props
+    ## string|null The heading displayed above the items of the group.
+    heading = null
+-%}
+<div
+    role="presentation"
+    data-slot="command-group"
+    data-command-target="group"
+    {{ attributes.defaults({
+        class: 'overflow-hidden p-1 text-foreground'|tailwind_classes,
+    }) }}
+>
+    {%- if heading is not null -%}
+        <div data-slot="command-group-heading" aria-hidden="true" class="px-2 py-1.5 text-xs font-medium text-muted-foreground">{{ heading }}</div>
+    {%- endif -%}
+    <div role="group" data-slot="command-group-items"{% if heading is not null %} aria-label="{{ heading }}"{% endif %}>
+        {##- The items of the group, typically `Command:Item` elements. -#}
+        {%- block content %}{% endblock -%}
+    </div>
+</div>

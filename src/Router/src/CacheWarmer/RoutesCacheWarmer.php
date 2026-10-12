@@ -31,12 +31,18 @@ class RoutesCacheWarmer implements CacheWarmerInterface
         private string $dumpDir,
         private bool $dumpTypeScript,
         private array $routesPatterns,
+        private string $defaultLocale,
     ) {
     }
 
+    /**
+     * Optional once the routes are dumped.
+     *
+     * The dump directory is an AssetMapper path, which must exist as soon as the container is built.
+     */
     public function isOptional(): bool
     {
-        return true;
+        return is_dir($this->dumpDir);
     }
 
     public function warmUp(string $cacheDir, ?string $buildDir = null): array
@@ -46,6 +52,7 @@ class RoutesCacheWarmer implements CacheWarmerInterface
             $this->dumpDir,
             $this->dumpTypeScript,
             $this->routesPatterns,
+            $this->defaultLocale,
         );
 
         return [];

@@ -1,4 +1,5 @@
 {
+    "defaultLocale": "fr",
     "routes": {
         "static": {
             "tokens": [
@@ -918,6 +919,44 @@
                 "name": "RouteNotFoundError",
                 "message": "Unable to generate a URL for the named route \"about\" as such route does not exist."
             }
+        },
+        {
+            "description": "localized route from the default locale with an empty locale parameter",
+            "name": "about",
+            "parameters": {
+                "_locale": ""
+            },
+            "referenceType": "path",
+            "context": {
+                "parameters": {
+                    "_locale": "en"
+                },
+                "baseUrl": "",
+                "pathInfo": "/",
+                "host": "localhost",
+                "scheme": "http",
+                "httpPort": 80,
+                "httpsPort": 443
+            },
+            "expected": "/a-propos"
+        },
+        {
+            "description": "localized route from the default locale with an empty context locale",
+            "name": "about",
+            "parameters": {},
+            "referenceType": "path",
+            "context": {
+                "parameters": {
+                    "_locale": ""
+                },
+                "baseUrl": "",
+                "pathInfo": "/",
+                "host": "localhost",
+                "scheme": "http",
+                "httpPort": 80,
+                "httpsPort": 443
+            },
+            "expected": "/a-propos"
         },
         {
             "description": "locale variable from context",

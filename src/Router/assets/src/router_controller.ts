@@ -16,16 +16,25 @@ export type * from './types';
 export function createRouter<TRoutes extends Routes>({
     routes,
     context = {},
+    defaultLocale = 'en',
 }: {
     routes: TRoutes;
     context?: Partial<RequestContext>;
+    defaultLocale?: string;
 }): Router<TRoutes> {
     const router = {
         path(name: string, parameters: Record<string, unknown> = {}, relative = false): string {
-            return generate(routes, name, parameters, relative ? RELATIVE_PATH : ABSOLUTE_PATH, context);
+            return generate(routes, name, parameters, relative ? RELATIVE_PATH : ABSOLUTE_PATH, context, defaultLocale);
         },
         url(name: string, parameters: Record<string, unknown> = {}, schemeRelative = false): string {
-            return generate(routes, name, parameters, schemeRelative ? NETWORK_PATH : ABSOLUTE_URL, context);
+            return generate(
+                routes,
+                name,
+                parameters,
+                schemeRelative ? NETWORK_PATH : ABSOLUTE_URL,
+                context,
+                defaultLocale
+            );
         },
     };
 
