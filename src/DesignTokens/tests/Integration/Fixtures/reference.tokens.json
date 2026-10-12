@@ -1,0 +1,6 @@
+{
+    "semantic": {
+        "$type": "color",
+        "$ref": "./primitive.tokens.json#/base/$value"
+    }
+}

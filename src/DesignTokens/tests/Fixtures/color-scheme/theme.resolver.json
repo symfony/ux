@@ -1,0 +1,61 @@
+{
+    "version": "2025.10",
+    "sets": {
+        "foundation": {
+            "sources": [
+                { "$ref": "foundation.tokens.json" }
+            ]
+        }
+    },
+    "modifiers": {
+        "scheme": {
+            "contexts": {
+                "light": [
+                    { "$ref": "light.tokens.json" }
+                ],
+                "dark": [
+                    { "$ref": "dark.tokens.json" }
+                ]
+            },
+            "default": "light"
+        },
+        "package": {
+            "contexts": {
+                "default": [{ "$ref": "foundation.tokens.json" }],
+                "map": [{
+                    "color": {
+                        "action": {
+                            "primary": {
+                                "$type": "color",
+                                "$value": { "colorSpace": "srgb", "components": [0.1, 0.7, 0.5] }
+                            }
+                        }
+                    }
+                }]
+            },
+            "default": "default"
+        },
+        "surface": {
+            "contexts": {
+                "showcase": [{ "$ref": "foundation.tokens.json" }],
+                "docs": [{
+                    "font": {
+                        "size": {
+                            "body": {
+                                "$type": "dimension",
+                                "$value": { "value": 1.125, "unit": "rem" }
+                            }
+                        }
+                    }
+                }]
+            },
+            "default": "showcase"
+        }
+    },
+    "resolutionOrder": [
+        { "$ref": "#/sets/foundation" },
+        { "$ref": "#/modifiers/scheme" },
+        { "$ref": "#/modifiers/package" },
+        { "$ref": "#/modifiers/surface" }
+    ]
+}
