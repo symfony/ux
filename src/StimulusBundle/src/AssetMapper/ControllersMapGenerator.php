@@ -34,6 +34,8 @@ class ControllersMapGenerator
         private array $controllerPaths,
         private string $controllersJsonPath,
         private ?AutoImportLocator $autoImportLocator = null,
+        private array $applicationControllerPaths = [],
+        private ?string $baseControllersJsonPath = null,
     ) {
     }
 
@@ -44,27 +46,35 @@ class ControllersMapGenerator
     {
         return array_merge(
             $this->loadUxControllers(),
-            $this->loadCustomControllers(),
+            $this->loadCustomControllers($this->controllerPaths),
+            $this->loadCustomControllers($this->applicationControllerPaths),
         );
     }
 
-    public function getControllersJsonPath(): string
+    /**
+     * @return list<string>
+     */
+    public function getControllersJsonPaths(): array
     {
-        return $this->controllersJsonPath;
+        return null === $this->baseControllersJsonPath ? [$this->controllersJsonPath] : [$this->baseControllersJsonPath, $this->controllersJsonPath];
     }
 
     public function getControllerPaths(): array
     {
-        return $this->controllerPaths;
+        return [...$this->controllerPaths, ...$this->applicationControllerPaths];
     }
 
     /**
      * @return array<string, MappedControllerAsset>
      */
-    private function loadCustomControllers(): array
+    private function loadCustomControllers(array $paths): array
     {
+        if ([] === $paths) {
+            return [];
+        }
+
         $finder = new Finder();
-        $finder->in($this->controllerPaths)
+        $finder->in($paths)
             ->files()
             ->name(self::FILENAME_REGEX)
             // the filesystem iteration order is not stable, sort to keep the
@@ -103,24 +113,20 @@ class ControllersMapGenerator
      */
     private function loadUxControllers(): array
     {
-        if (!is_file($this->controllersJsonPath)) {
-            return [];
-        }
-
-        $jsonData = json_decode(file_get_contents($this->controllersJsonPath), true, 512, \JSON_THROW_ON_ERROR);
-
-        $controllersList = $jsonData['controllers'] ?? [];
-
         $controllersMap = [];
-        foreach ($controllersList as $packageName => $packageControllers) {
-            foreach ($packageControllers as $controllerName => $localControllerConfig) {
-                $packageMetadata = $this->uxPackageReader->readPackageMetadata($packageName);
+        foreach ($this->readControllersJson() as $packageName => $packageControllers) {
+            foreach ($packageControllers as $controllerName => [$localControllerConfig, $controllersJsonPath]) {
+                try {
+                    $packageMetadata = $this->uxPackageReader->readPackageMetadata($packageName);
+                } catch (\RuntimeException $e) {
+                    throw new \RuntimeException(rtrim($e->getMessage(), '.').\sprintf(' (read from "%s").', $controllersJsonPath), 0, $e);
+                }
 
                 $controllerReference = $packageName.'/'.$controllerName;
                 $packageControllerConfig = $packageMetadata->symfonyConfig['controllers'][$controllerName] ?? null;
 
                 if (null === $packageControllerConfig) {
-                    throw new \RuntimeException(\sprintf('Controller "%s" does not exist in the "%s" package.', $controllerReference, $packageMetadata->packageName));
+                    throw new \RuntimeException(\sprintf('Controller "%s" does not exist in the "%s" package (read from "%s").', $controllerReference, $packageMetadata->packageName, $controllersJsonPath));
                 }
 
                 if (!$localControllerConfig['enabled']) {
@@ -154,6 +160,37 @@ class ControllersMapGenerator
         }
 
         return $controllersMap;
+    }
+
+    /**
+     * Reads the controllers.json file, merged over the base file when there is one.
+     *
+     * @return array<string, array<string, array{array<string, mixed>, string}>> the config of each controller and the file it is read from
+     */
+    private function readControllersJson(): array
+    {
+        $controllers = [];
+        foreach ($this->getControllersJsonPaths() as $controllersJsonPath) {
+            if (!is_file($controllersJsonPath)) {
+                continue;
+            }
+
+            $jsonData = json_decode(file_get_contents($controllersJsonPath), true, 512, \JSON_THROW_ON_ERROR);
+
+            foreach ($jsonData['controllers'] ?? [] as $packageName => $packageControllers) {
+                foreach ($packageControllers as $controllerName => $controllerConfig) {
+                    $baseControllerConfig = $controllers[$packageName][$controllerName][0] ?? [];
+                    $mergedControllerConfig = array_replace($baseControllerConfig, $controllerConfig);
+                    if (isset($baseControllerConfig['autoimport'], $controllerConfig['autoimport'])) {
+                        $mergedControllerConfig['autoimport'] = array_replace($baseControllerConfig['autoimport'], $controllerConfig['autoimport']);
+                    }
+
+                    $controllers[$packageName][$controllerName] = [$mergedControllerConfig, $controllersJsonPath];
+                }
+            }
+        }
+
+        return $controllers;
     }
 
     /**

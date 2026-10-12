@@ -5,6 +5,7 @@ import { describe, expect, it, vi } from 'vitest';
 // which does not actually exist in the source code
 import { loadControllers } from '../../dist/loader';
 import type { EagerControllersCollection, LazyControllersCollection } from '../../src/controllers';
+import { startApplication } from '../../src/core';
 
 let isController1Initialized = false;
 let isController2Initialized = false;
@@ -74,6 +75,41 @@ describe('loader', () => {
         expect(disconnect).toHaveBeenCalled();
 
         disconnect.mockRestore();
+        application.stop();
+    });
+
+    it('starts an application with the given controllers', async () => {
+        document.body.innerHTML = '<div data-controller="eager-controller"></div>';
+
+        let isEagerControllerInitialized = false;
+        let isLazyControllerInitialized = false;
+        const eagerControllers: EagerControllersCollection = {
+            'eager-controller': class extends Controller {
+                initialize() {
+                    isEagerControllerInitialized = true;
+                }
+            },
+        };
+        const lazyControllers: LazyControllersCollection = {
+            'lazy-controller': () =>
+                Promise.resolve({
+                    default: class extends Controller {
+                        initialize() {
+                            isLazyControllerInitialized = true;
+                        }
+                    },
+                }),
+        };
+
+        const application = startApplication(eagerControllers, lazyControllers, true);
+
+        expect(application.debug).toBe(true);
+        await waitFor(() => expect(isEagerControllerInitialized).toBe(true));
+        expect(isLazyControllerInitialized).toBe(false);
+
+        document.body.innerHTML = '<div data-controller="lazy-controller"></div>';
+        await waitFor(() => expect(isLazyControllerInitialized).toBe(true));
+
         application.stop();
     });
 });
