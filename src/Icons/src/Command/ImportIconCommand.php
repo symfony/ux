@@ -19,6 +19,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\UX\Icons\Iconify;
+use Symfony\UX\Icons\JavaScript\IconsDumper;
 use Symfony\UX\Icons\Registry\LocalSvgIconRegistry;
 
 /**
@@ -32,8 +33,11 @@ use Symfony\UX\Icons\Registry\LocalSvgIconRegistry;
 )]
 final class ImportIconCommand extends Command
 {
-    public function __construct(private Iconify $iconify, private LocalSvgIconRegistry $registry)
-    {
+    public function __construct(
+        private Iconify $iconify,
+        private LocalSvgIconRegistry $registry,
+        private ?IconsDumper $dumper = null,
+    ) {
         parent::__construct();
     }
 
@@ -105,9 +109,13 @@ final class ImportIconCommand extends Command
 
                     ++$importedIcons;
                     $this->registry->add(\sprintf('%s/%s', $prefix, $name), (string) $icon);
-                    $io->writeln(\sprintf(' <fg=bright-green;options=bold>✓</> Imported <fg=bright-white;bg=black>%s:</><fg=bright-magenta;bg=black;options>%s</>', $prefix, $name));
+                    $io->writeln(\sprintf(' <fg=bright-green;options=bold>✓</> Imported <fg=bright-white;bg=black>%s:</><fg=bright-magenta;bg=black;options>%s</>%s', $prefix, $name, $this->javaScriptHint($prefix, $name)));
                 }
             }
+        }
+
+        if ($this->dumper && $importedIcons > 0) {
+            $io->comment(\sprintf('Dumped %d icons for JavaScript.', \count($this->dumper->dump())));
         }
 
         if ($importedIcons === $totalIcons = \count($names)) {
@@ -120,5 +128,13 @@ final class ImportIconCommand extends Command
         }
 
         return $result;
+    }
+
+    /**
+     * The name the icon is exported with by the JavaScript dump, empty when the dump is disabled.
+     */
+    private function javaScriptHint(string $prefix, string $name): string
+    {
+        return $this->dumper ? \sprintf('. JavaScript: <comment>import { %s }</comment>', IconsDumper::exportName($prefix.':'.$name)) : '';
     }
 }

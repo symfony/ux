@@ -51,6 +51,17 @@ final class ImportIconCommandTest extends KernelTestCase
         $this->assertFileExists($expectedFile);
     }
 
+    public function testImportDumpsIconsForJavaScript(): void
+    {
+        $this->executeConsoleCommand('ux:icons:import uiw:dashboard')
+            ->assertSuccessful()
+            ->assertOutputContains('JavaScript: import { UiwDashboardIcon }')
+            ->assertOutputContains('Dumped')
+        ;
+
+        $this->assertStringContainsString('export const UiwDashboardIcon = ', file_get_contents(self::$kernel->getCacheDir().'/ux_icons_js/index.js'));
+    }
+
     public function testImportInvalidIconName(): void
     {
         $this->executeConsoleCommand('ux:icons:import something')
@@ -73,6 +84,7 @@ final class ImportIconCommandTest extends KernelTestCase
             ->assertStatusCode(1)
             ->assertOutputContains('Not Found lucide:not-existing-icon')
             ->assertOutputContains('[ERROR] Imported 0/1 icons.')
+            ->assertOutputNotContains('Dumped')
         ;
 
         $this->assertFileDoesNotExist(self::ICON_DIR.'/not-existing-icon.svg');

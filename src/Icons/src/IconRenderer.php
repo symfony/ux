@@ -12,6 +12,7 @@
 namespace Symfony\UX\Icons;
 
 use Symfony\Contracts\Service\ResetInterface;
+use Symfony\UX\Icons\Exception\IconNotFoundException;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
@@ -72,6 +73,33 @@ final class IconRenderer implements IconRendererInterface, ResetInterface
     }
 
     /**
+     * Resolves an icon with its configured attributes (default, icon set, and suffix).
+     *
+     * Invocation attributes and the automatic `aria-hidden` are not applied.
+     *
+     * @throws IconNotFoundException
+     */
+    public function resolveIcon(string $name): Icon
+    {
+        $iconName = $this->iconAliases[$name] ?? $name;
+
+        $icon = $this->registry->get($iconName);
+
+        $setAttributes = $suffixAttributes = [];
+        if (0 < (int) $pos = strpos($name, ':')) {
+            [$setAttributes, $suffixAttributes] = $this->resolveAttributes($name, $pos);
+        } elseif ($iconName !== $name && $pos = strpos($iconName, ':')) {
+            [$setAttributes, $suffixAttributes] = $this->resolveAttributes($iconName, $pos);
+        }
+
+        return $icon->withAttributes([
+            ...$this->defaultIconAttributes,
+            ...$setAttributes,
+            ...$suffixAttributes,
+        ]);
+    }
+
+    /**
      * Pages render the same few icons over and over, and the HTML only depends on the name and the attributes.
      *
      * Returns null when an attribute value is not a scalar: Icon::withAttributes() rejects it anyway.
@@ -89,25 +117,7 @@ final class IconRenderer implements IconRendererInterface, ResetInterface
 
     private function doRenderIcon(string $name, array $attributes): string
     {
-        $iconName = $this->iconAliases[$name] ?? $name;
-
-        $icon = $this->registry->get($iconName);
-
-        $setAttributes = $suffixAttributes = [];
-        if (0 < (int) $pos = strpos($name, ':')) {
-            [$setAttributes, $suffixAttributes] = $this->resolveAttributes($name, $pos);
-        } elseif ($iconName !== $name && $pos = strpos($iconName, ':')) {
-            [$setAttributes, $suffixAttributes] = $this->resolveAttributes($iconName, $pos);
-        }
-
-        $icon = $icon->withAttributes([
-            ...$this->defaultIconAttributes,
-            ...$setAttributes,
-            ...$suffixAttributes,
-            ...$attributes,
-        ]);
-
-        return self::setAriaHidden($icon)->toHtml();
+        return self::setAriaHidden($this->resolveIcon($name)->withAttributes($attributes))->toHtml();
     }
 
     /**

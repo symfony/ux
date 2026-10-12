@@ -3,6 +3,8 @@
 ## 3.6.0
 
 - Warm local icons on `cache:warmup`
+- Add the `javascript` option and the `ux:icons:dump` command, to render local icons in JavaScript with the new `@symfony/ux-icons` package
+- Make `ux:icons:lock` and `ux:icons:import` dump the icons for JavaScript when the `javascript` option is enabled, and `ux:icons:lock` import the icons imported in JavaScript files
 
 ## 3.5.0
 
