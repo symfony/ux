@@ -13,6 +13,7 @@ namespace Symfony\UX\Toolkit\Registry;
 
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
+use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\UX\Toolkit\Kit\Kit;
@@ -74,10 +75,7 @@ final class GitHubRegistry implements RegistryInterface
         );
 
         $tmpDir = $this->createTmpDir();
-        $archiveExtractedName = \sprintf('%s-%s', $identity->repositoryName, $identity->version);
-        $archiveName = \sprintf('%s.zip', $archiveExtractedName);
-        $archivePath = Path::join($tmpDir, $archiveName);
-        $archiveExtractedDir = Path::join($tmpDir, $archiveExtractedName);
+        $archivePath = Path::join($tmpDir, 'archive.zip');
 
         // Download and stream the archive
         $response = $this->httpClient->request('GET', $zipUrl);
@@ -97,11 +95,14 @@ final class GitHubRegistry implements RegistryInterface
         $zip->extractTo($tmpDir);
         $zip->close();
 
-        if (!$this->filesystem->exists($archiveExtractedDir)) {
+        // GitHub picks the root directory name: tag "v1.0.0" -> "repo-1.0.0", short SHA -> full SHA
+        $rootDirsFinder = new Finder()->directories()->in($tmpDir)->depth(0);
+        $rootDirs = iterator_to_array($rootDirsFinder, false);
+        if (1 !== \count($rootDirs)) {
             throw new \RuntimeException(\sprintf('Unable to extract the archive from "%s", ensure the repository exists and the version is valid.', $zipUrl));
         }
 
-        return $archiveExtractedDir;
+        return $rootDirs[0]->getPathname();
     }
 
     private function createTmpDir(): string

@@ -43,6 +43,7 @@
 - [Shadcn] Fix `breadcrumb`, `calendar`, `carousel`, `input-otp`, `navigation-menu`, `pagination`, `questionnaire` and `sidebar` ignoring a caller's `aria-label`, keeping the hard-coded English default
 - [Shadcn] Rewrite `select` to match the upstream Shadcn Select, as `Select:*` sub-components; use `native-select` for a native `<select>`
 - Show a diff before `ux:install` asks to overwrite an existing file, and skip the question when the file already matches the recipe
+- Fix installing a recipe from a GitHub kit pinned to a tag prefixed with `v`, e.g. `--kit=github.com/user/repo:v1.0.0`
 - [Shadcn] Add `toast` recipe
 - [Shadcn] Add `context-menu` recipe
 - [Shadcn] Rename the `sonner` recipe's `Toast` component to `Sonner:Toast`, freeing the `Toast` component name for the new `toast` recipe

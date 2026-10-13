@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\Toolkit\Tests\Registry;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
@@ -34,17 +35,18 @@ final class GitHubRegistryTest extends KernelTestCase
         $this->filesystem->mkdir($this->tmpDir);
     }
 
-    public function testCanGetKitFromGithub(): void
+    #[DataProvider('provideKitsFromGithub')]
+    public function testCanGetKitFromGithub(string $kitName, string $archiveUrl, string $archiveRootVersion): void
     {
         $isHttpClientCalled = false;
-        $zipShadcnMain = $this->createZip('repo', 'shadcn', 'main');
+        $zipShadcn = $this->createZip('repo', 'shadcn', $archiveRootVersion);
 
-        $httpClient = new MockHttpClient(static function (string $method, string $url) use ($zipShadcnMain, &$isHttpClientCalled) {
-            if ('GET' === $method && 'https://github.com/user/repo/archive/main.zip' === $url) {
+        $httpClient = new MockHttpClient(static function (string $method, string $url) use ($archiveUrl, $zipShadcn, &$isHttpClientCalled) {
+            if ('GET' === $method && $archiveUrl === $url) {
                 $isHttpClientCalled = true;
 
                 return new MockResponse(
-                    file_get_contents($zipShadcnMain),
+                    file_get_contents($zipShadcn),
                     [
                         'http_code' => 200,
                         'response_headers' => [
@@ -61,13 +63,28 @@ final class GitHubRegistryTest extends KernelTestCase
             $httpClient,
         );
 
-        $kit = $githubRegistry->getKit('github.com/user/repo');
+        $kit = $githubRegistry->getKit($kitName);
 
         $this->assertTrue($isHttpClientCalled);
         $this->assertSame('Shadcn UI', $kit->manifest->name);
         $this->assertNotEmpty($kit->getRecipes());
         $this->assertFileExists($kit->absolutePath);
         $this->assertFileExists(Path::join($kit->absolutePath, 'button/templates/components/Button.html.twig'));
+    }
+
+    public static function provideKitsFromGithub(): iterable
+    {
+        yield 'default branch' => [
+            'github.com/user/repo',
+            'https://github.com/user/repo/archive/main.zip',
+            'main',
+        ];
+
+        yield 'tag prefixed with "v"' => [
+            'github.com/user/repo:v1.0.0',
+            'https://github.com/user/repo/archive/v1.0.0.zip',
+            '1.0.0',
+        ];
     }
 
     public function testShouldThrowExceptionIfKitNotFound(): void
