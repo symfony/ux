@@ -1220,6 +1220,17 @@ You can also use the ``live_action`` twig helper function to render the attribut
 
     <button {{ live_action('save', {}, {'debounce': 300}) }}>Save</button>
 
+To pass the attributes to a Twig component, spread them into its tag:
+
+.. code-block:: html+twig
+
+    <twig:Button {{ ...live_action('save') }}>Save</twig:Button>
+
+.. versionadded:: 3.6
+
+    Spreading ``live_action()`` into a Twig component tag was added in
+    LiveComponent 3.6.
+
 
 Actions & Services
 ~~~~~~~~~~~~~~~~~~

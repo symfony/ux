@@ -14,6 +14,7 @@ namespace Symfony\UX\LiveComponent\Twig;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\UX\LiveComponent\LiveComponentHydrator;
 use Symfony\UX\LiveComponent\Metadata\LiveComponentMetadataFactory;
+use Symfony\UX\StimulusBundle\Dto\StimulusAttributes;
 use Symfony\UX\StimulusBundle\Helper\StimulusHelper;
 use Symfony\UX\TwigComponent\ComponentFactory;
 
@@ -48,7 +49,7 @@ final class LiveComponentRuntime
         return $this->urlGenerator->generate($metadata->get('route'), $params, $metadata->get('url_reference_type'));
     }
 
-    public function liveAction(string $actionName, array $parameters = [], array $modifiers = [], ?string $event = null): string
+    public function liveAction(string $actionName, array $parameters = [], array $modifiers = [], ?string $event = null): StimulusAttributes
     {
         $attributes = $this->stimulusHelper->createStimulusAttributes();
 
@@ -70,6 +71,6 @@ final class LiveComponentRuntime
 
         $attributes->addAction('live', $name, $event, $parameters);
 
-        return (string) $attributes;
+        return $attributes;
     }
 }
