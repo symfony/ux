@@ -54,6 +54,10 @@ fi
 bump_dirs="$(node bin/release_packages.ts --branch "$branch" --version "$version")"
 first_publish_steps="$(node bin/release_packages.ts --first-publish)"
 
+if [ -n "$first_publish_steps" ] && ! npm whoami >/dev/null 2>&1; then
+    npm login
+fi
+
 directories=()
 while IFS= read -r directory; do
     if [ -n "$directory" ]; then
