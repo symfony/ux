@@ -14,7 +14,7 @@ updates:
       cooldown:
           default-days: 7
 
-    # npm, but only for UX's internal dependencies (devDependencies not listed in peerDependencies).
+    # npm, but only for the tooling (build, lint, tests). bin/update_tooling_dependencies.ts updates the same list locally.
     - package-ecosystem: 'npm'
       directories:
           - '/'
@@ -27,20 +27,27 @@ updates:
           - dependency-name: '@puppeteer/browsers'
           - dependency-name: '@testing-library/*'
           - dependency-name: '@tsdown/css'
-          - dependency-name: '@types/*'
+          - dependency-name: '@types/node'
+          - dependency-name: '@types/node-fetch'
+          - dependency-name: '@types/webpack-env'
           - dependency-name: '@vitejs/*'
-          - dependency-name: 'idiomorph'
+          - dependency-name: 'browserslist'
           - dependency-name: 'jsdom'
+          - dependency-name: 'lightningcss'
           - dependency-name: 'node-fetch'
+          - dependency-name: 'oxc-parser'
           - dependency-name: 'oxfmt'
           - dependency-name: 'oxlint'
           - dependency-name: 'pkg-types'
+          - dependency-name: 'proxy-agent'
           - dependency-name: 'resize-observer-polyfill'
           - dependency-name: 'tinyglobby'
           - dependency-name: 'tsdown'
           - dependency-name: 'tslib'
           - dependency-name: 'typescript'
           - dependency-name: 'vitest*'
+          - dependency-name: 'web-features'
+          - dependency-name: 'yaml'
       groups:
           npm-dev-dependencies:
               patterns:
