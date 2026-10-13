@@ -10,5 +10,5 @@ declare global {
     resolveReactComponent(name: string): Component;
   }
 }
-declare function registerReactControllerComponents(context: __WebpackModuleApi.RequireContext | GlobResult): void;
-export { registerReactControllerComponents };
+export declare function registerReactControllerComponents(context: __WebpackModuleApi.RequireContext | GlobResult): void;
+export {};

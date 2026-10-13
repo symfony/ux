@@ -153,18 +153,18 @@ declare class Component {
   private getCurrentHistoryEntryKey;
   private isOnSamePage;
 }
-declare const getComponent: (element: HTMLElement) => Promise<Component>;
-interface LiveEvent extends CustomEvent {
+export declare const getComponent: (element: HTMLElement) => Promise<Component>;
+export interface LiveEvent extends CustomEvent {
   detail: {
     controller: LiveController;
     component: Component;
   };
 }
-interface LiveController {
+export interface LiveController {
   element: HTMLElement;
   component: Component;
 }
-declare class LiveControllerDefault extends Controller<HTMLElement> implements LiveController {
+export default class LiveControllerDefault extends Controller<HTMLElement> implements LiveController {
   static values: {
     name: StringConstructor;
     url: StringConstructor;
@@ -257,4 +257,4 @@ declare class LiveControllerDefault extends Controller<HTMLElement> implements L
   private dispatchEvent;
   private onMutations;
 }
-export { Component, type ComponentHooks, LiveController, LiveEvent, LiveControllerDefault as default, getComponent };
+export { Component, type ComponentHooks };

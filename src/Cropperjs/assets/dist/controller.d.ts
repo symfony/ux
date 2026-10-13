@@ -1,5 +1,5 @@
 import { Controller } from "@hotwired/stimulus";
-declare class CropperController extends Controller {
+export default class CropperController extends Controller {
   readonly publicUrlValue: string;
   readonly optionsValue: object;
   static values: {
@@ -9,4 +9,3 @@ declare class CropperController extends Controller {
   connect(): void;
   private dispatchEvent;
 }
-export { CropperController as default };

@@ -1,4 +1,5 @@
 import { Controller } from "@hotwired/stimulus";
+import "leaflet/dist/leaflet.min.css";
 import * as L from "leaflet";
 import { CircleOptions, ControlPosition, MapOptions, MarkerOptions, PolylineOptions, PopupOptions } from "leaflet";
 type Point = {
@@ -136,10 +137,7 @@ declare abstract class export_default$1<MapOptions, BridgeMapOptions, BridgeMap,
   private createRectangle;
   protected abstract dispatchEvent(name: string, payload: Record<string, unknown>): void;
   connect(): void;
-  createInfoWindow({
-    definition,
-    element
-  }: {
+  createInfoWindow({ definition, element }: {
     definition: Omit<InfoWindowDefinition<BridgeInfoWindowOptions>, 'position'>;
     element: BridgeMarker | BridgePolygon | BridgePolyline | BridgeCircle | BridgeRectangle;
   }): BridgeInfoWindow;
@@ -152,53 +150,35 @@ declare abstract class export_default$1<MapOptions, BridgeMapOptions, BridgeMap,
   polylinesValueChanged(): void;
   circlesValueChanged(): void;
   rectanglesValueChanged(): void;
-  protected abstract doCreateMap({
-    definition
-  }: {
+  protected abstract doCreateMap({ definition }: {
     definition: MapDefinition<MapOptions, BridgeMapOptions>;
   }): BridgeMap;
   protected abstract doFitBoundsToMarkers(): void;
-  protected abstract doCreateMarker({
-    definition
-  }: {
+  protected abstract doCreateMarker({ definition }: {
     definition: MarkerDefinition<BridgeMarkerOptions, BridgeInfoWindowOptions>;
   }): BridgeMarker;
   protected abstract doRemoveMarker(marker: BridgeMarker): void;
-  protected abstract doCreatePolygon({
-    definition
-  }: {
+  protected abstract doCreatePolygon({ definition }: {
     definition: PolygonDefinition<BridgePolygonOptions, BridgeInfoWindowOptions>;
   }): BridgePolygon;
   protected abstract doRemovePolygon(polygon: BridgePolygon): void;
-  protected abstract doCreatePolyline({
-    definition
-  }: {
+  protected abstract doCreatePolyline({ definition }: {
     definition: PolylineDefinition<BridgePolylineOptions, BridgeInfoWindowOptions>;
   }): BridgePolyline;
   protected abstract doRemovePolyline(polyline: BridgePolyline): void;
-  protected abstract doCreateCircle({
-    definition
-  }: {
+  protected abstract doCreateCircle({ definition }: {
     definition: CircleDefinition<BridgeCircleOptions, BridgeInfoWindowOptions>;
   }): BridgeCircle;
   protected abstract doRemoveCircle(circle: BridgeCircle): void;
-  protected abstract doCreateRectangle({
-    definition
-  }: {
+  protected abstract doCreateRectangle({ definition }: {
     definition: RectangleDefinition<BridgeRectangleOptions, BridgeInfoWindowOptions>;
   }): BridgeRectangle;
   protected abstract doRemoveRectangle(rectangle: BridgeRectangle): void;
-  protected abstract doCreateInfoWindow({
-    definition,
-    element
-  }: {
+  protected abstract doCreateInfoWindow({ definition, element }: {
     definition: Omit<InfoWindowDefinition<BridgeInfoWindowOptions>, 'position'>;
     element: BridgeMarker | BridgePolygon | BridgePolyline | BridgeCircle | BridgeRectangle;
   }): BridgeInfoWindow;
-  protected abstract doCreateIcon({
-    definition,
-    element
-  }: {
+  protected abstract doCreateIcon({ definition, element }: {
     definition: Icon;
     element: BridgeMarker;
   }): void;
@@ -223,7 +203,7 @@ type MapOptions$1 = Pick<MapOptions, 'attributionControl' | 'zoomControl'> & {
     options: Record<string, unknown>;
   } | false;
 };
-declare class export_default extends export_default$1<MapOptions$1, MapOptions, L.Map, MarkerOptions, L.Marker, PopupOptions, L.Popup, PolylineOptions, L.Polygon, PolylineOptions, L.Polyline, CircleOptions, L.Circle, PolylineOptions, L.Rectangle> {
+export default class export_default extends export_default$1<MapOptions$1, MapOptions, L.Map, MarkerOptions, L.Marker, PopupOptions, L.Popup, PolylineOptions, L.Polygon, PolylineOptions, L.Polyline, CircleOptions, L.Circle, PolylineOptions, L.Rectangle> {
   map: L.Map;
   connect(): void;
   centerValueChanged(): void;
@@ -231,56 +211,38 @@ declare class export_default extends export_default$1<MapOptions$1, MapOptions, 
   minZoomValueChanged(): void;
   maxZoomValueChanged(): void;
   protected dispatchEvent(name: string, payload?: Record<string, unknown>): void;
-  protected doCreateMap({
-    definition
-  }: {
+  protected doCreateMap({ definition }: {
     definition: MapDefinition<MapOptions$1, MapOptions>;
   }): L.Map;
-  protected doCreateMarker({
-    definition
-  }: {
+  protected doCreateMarker({ definition }: {
     definition: MarkerDefinition<MarkerOptions, PopupOptions>;
   }): L.Marker;
   protected doRemoveMarker(marker: L.Marker): void;
-  protected doCreatePolygon({
-    definition
-  }: {
+  protected doCreatePolygon({ definition }: {
     definition: PolygonDefinition<PolylineOptions, PopupOptions>;
   }): L.Polygon;
   protected doRemovePolygon(polygon: L.Polygon): void;
-  protected doCreatePolyline({
-    definition
-  }: {
+  protected doCreatePolyline({ definition }: {
     definition: PolylineDefinition<PolylineOptions, PopupOptions>;
   }): L.Polyline;
   protected doRemovePolyline(polyline: L.Polyline): void;
-  protected doCreateCircle({
-    definition
-  }: {
+  protected doCreateCircle({ definition }: {
     definition: CircleDefinition<CircleOptions, PopupOptions>;
   }): L.Circle;
   protected doRemoveCircle(circle: L.Circle): void;
-  protected doCreateRectangle({
-    definition
-  }: {
+  protected doCreateRectangle({ definition }: {
     definition: RectangleDefinition<PolylineOptions, PopupOptions>;
   }): L.Rectangle;
   protected doRemoveRectangle(rectangle: L.Rectangle): void;
-  protected doCreateInfoWindow({
-    definition,
-    element
-  }: {
+  protected doCreateInfoWindow({ definition, element }: {
     definition: Omit<InfoWindowDefinition<PopupOptions>, 'position'>;
     element: L.Marker | L.Polygon | L.Polyline | L.Circle | L.Rectangle;
   }): L.Popup;
-  protected doCreateIcon({
-    definition,
-    element
-  }: {
+  protected doCreateIcon({ definition, element }: {
     definition: Icon;
     element: L.Marker;
   }): void;
   protected doFitBoundsToMarkers(): void;
   private closePopups;
 }
-export { export_default as default };
+export {};

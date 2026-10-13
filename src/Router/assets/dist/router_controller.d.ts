@@ -37,8 +37,8 @@ type CanonicalNameOf<TRoute> = TRoute extends {
 type OwnParametersOf<TRoute> = TRoute extends {
   readonly [parametersType]?: infer TParameters;
 } ? unknown extends TParameters ? Record<string, unknown> : TParameters : Record<string, unknown>;
-type RouteName<TRoutes extends Routes> = { [TKey in keyof TRoutes & string]: [CanonicalNameOf<TRoutes[TKey]>] extends [never] ? TKey : CanonicalNameOf<TRoutes[TKey]> }[keyof TRoutes & string];
-type ParametersOf<TRoutes extends Routes, TName extends string> = { [TKey in keyof TRoutes & string]: [CanonicalNameOf<TRoutes[TKey]>] extends [never] ? TName extends TKey ? OwnParametersOf<TRoutes[TKey]> : never : CanonicalNameOf<TRoutes[TKey]> extends TName ? OwnParametersOf<TRoutes[TKey]> : never }[keyof TRoutes & string] & SpecialParameters;
+type RouteName<TRoutes extends Routes> = { [TKey in keyof TRoutes & string]: [CanonicalNameOf<TRoutes[TKey]>] extends [never] ? TKey : CanonicalNameOf<TRoutes[TKey]>; }[keyof TRoutes & string];
+type ParametersOf<TRoutes extends Routes, TName extends string> = { [TKey in keyof TRoutes & string]: [CanonicalNameOf<TRoutes[TKey]>] extends [never] ? TName extends TKey ? OwnParametersOf<TRoutes[TKey]> : never : CanonicalNameOf<TRoutes[TKey]> extends TName ? OwnParametersOf<TRoutes[TKey]> : never; }[keyof TRoutes & string] & SpecialParameters;
 type RequiresParameters<TParameters> = Record<never, never> extends TParameters ? false : true;
 type PathArguments<TParameters> = RequiresParameters<TParameters> extends true ? [parameters: TParameters, relative?: boolean] : [parameters?: TParameters, relative?: boolean];
 type UrlArguments<TParameters> = RequiresParameters<TParameters> extends true ? [parameters: TParameters, schemeRelative?: boolean] : [parameters?: TParameters, schemeRelative?: boolean];
@@ -46,22 +46,18 @@ interface Router<TRoutes extends Routes> {
   path<TName extends RouteName<TRoutes>>(name: TName, ...args: PathArguments<ParametersOf<TRoutes, TName>>): string;
   url<TName extends RouteName<TRoutes>>(name: TName, ...args: UrlArguments<ParametersOf<TRoutes, TName>>): string;
 }
-declare class RouteNotFoundError extends Error {
+export declare class RouteNotFoundError extends Error {
   constructor(message: string);
 }
-declare class MissingMandatoryParametersError extends Error {
+export declare class MissingMandatoryParametersError extends Error {
   constructor(message: string);
 }
-declare class InvalidParameterError extends Error {
+export declare class InvalidParameterError extends Error {
   constructor(message: string);
 }
-declare function createRouter<TRoutes extends Routes>({
-  routes,
-  context,
-  defaultLocale
-}: {
+export declare function createRouter<TRoutes extends Routes>({ routes, context, defaultLocale }: {
   routes: TRoutes;
   context?: Partial<RequestContext>;
   defaultLocale?: string;
 }): Router<TRoutes>;
-export { InvalidParameterError, MissingMandatoryParametersError, ParametersOf, PathArguments, QueryValue, RequestContext, Route, RouteDefinition, RouteName, RouteNotFoundError, Router, Routes, SpecialParameters, TextToken, Token, UrlArguments, VariableToken, createRouter };
+export type { ParametersOf, PathArguments, QueryValue, RequestContext, Route, RouteDefinition, RouteName, Router, Routes, SpecialParameters, TextToken, Token, UrlArguments, VariableToken };

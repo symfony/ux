@@ -9,5 +9,5 @@ declare global {
     resolveVueComponent(name: string): Component;
   }
 }
-declare function registerVueControllerComponents(context: __WebpackModuleApi.RequireContext | GlobResult): void;
-export { registerVueControllerComponents };
+export declare function registerVueControllerComponents(context: __WebpackModuleApi.RequireContext | GlobResult): void;
+export {};

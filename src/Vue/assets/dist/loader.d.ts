@@ -6,5 +6,4 @@ declare global {
     resolveVueComponent(name: string): Component;
   }
 }
-declare function registerVueControllerComponents(vueControllers?: ComponentCollection): void;
-export { registerVueControllerComponents };
+export declare function registerVueControllerComponents(vueControllers?: ComponentCollection): void;

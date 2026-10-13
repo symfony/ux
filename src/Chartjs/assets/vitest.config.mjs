@@ -7,7 +7,7 @@ export default mergeConfig(configShared, {
         setupFiles: [path.join(__dirname, 'test', 'setup.js')],
         deps: {
             optimizer: {
-                web: {
+                client: {
                     include: ['vitest-canvas-mock'],
                 },
             },

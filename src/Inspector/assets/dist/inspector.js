@@ -25,7 +25,7 @@ function ancestors(element, selector) {
 function scopedChildren(element, selector) {
 	return [...element.querySelectorAll(selector)].filter((child) => child.parentElement?.closest(selector) === element);
 }
-const BASE_ATTRIBUTES = new Set([
+const BASE_ATTRIBUTES = /* @__PURE__ */ new Set([
 	"data-controller",
 	"data-action",
 	"data-model",
@@ -1675,7 +1675,7 @@ var StimulusPlugin = class {
 		for (const controller of controllers) {
 			const current = configured[controller] || {};
 			const definitions = this.#staticDefinition(instances[controller], "values", {}) ?? {};
-			result[controller] = [...new Set([...Object.keys(definitions), ...Object.keys(current)])].map((name) => {
+			result[controller] = [.../* @__PURE__ */ new Set([...Object.keys(definitions), ...Object.keys(current)])].map((name) => {
 				const attribute = `data-${controller}-${name.replace(/[A-Z]/g, (letter) => `-${letter.toLowerCase()}`)}-value`;
 				const present = element.hasAttribute(attribute);
 				let value = current[name];
@@ -1709,7 +1709,7 @@ var StimulusPlugin = class {
 		for (const controller of controllers) {
 			const current = configured[controller] || {};
 			const declared = this.#staticDefinition(instances[controller], "classes", []);
-			result[controller] = [...new Set([...Array.isArray(declared) ? declared : [], ...Object.keys(current)])].map((name) => ({
+			result[controller] = [.../* @__PURE__ */ new Set([...Array.isArray(declared) ? declared : [], ...Object.keys(current)])].map((name) => ({
 				name,
 				value: current[name] || "not configured",
 				status: current[name] ? instances[controller] ? CONNECTED$1 : CONFIGURED : MISSING
@@ -1753,7 +1753,7 @@ var StimulusPlugin = class {
 				});
 			}
 			const declared = this.#staticDefinition(instances[controller], "targets", []);
-			const names = new Set([...Array.isArray(declared) ? declared : [], ...elements.map((item) => item.name)]);
+			const names = /* @__PURE__ */ new Set([...Array.isArray(declared) ? declared : [], ...elements.map((item) => item.name)]);
 			if (!names.size) continue;
 			result[controller] = {
 				elements,
@@ -1827,7 +1827,7 @@ var StimulusPlugin = class {
 				}
 			}
 			const declared = this.#staticDefinition(instances[controller], "outlets", []);
-			const names = new Set([...Array.isArray(declared) ? declared : [], ...configured.keys()]);
+			const names = /* @__PURE__ */ new Set([...Array.isArray(declared) ? declared : [], ...configured.keys()]);
 			if (!names.size) continue;
 			result[controller] = [...names].map((name) => {
 				const item = configured.get(name) || {
@@ -2352,22 +2352,23 @@ var ComponentList = class {
 		if (!target) return;
 		const related = event.relatedTarget;
 		if (related instanceof Node && row.contains(related)) return;
-		if (event.type === "click") if (row.matches(".component")) this.element.dispatchEvent(new CustomEvent("drill-into", { detail: target }));
-		else {
-			const rule = this.#pageRuleRows.get(row);
-			if (this.#isSelectedRule(rule)) {
-				this.clearPageRuleSelection();
-				return;
+		if (event.type === "click") {
+			if (row.matches(".component")) this.element.dispatchEvent(new CustomEvent("drill-into", { detail: target }));
+			else {
+				const rule = this.#pageRuleRows.get(row);
+				if (this.#isSelectedRule(rule)) {
+					this.clearPageRuleSelection();
+					return;
+				}
+				this.#selectedPageRule = rule;
+				this.#syncPageRuleSelection();
+				target.element.scrollIntoView({
+					block: "center",
+					behavior: "smooth"
+				});
+				this.#visual.onSelect?.(target);
 			}
-			this.#selectedPageRule = rule;
-			this.#syncPageRuleSelection();
-			target.element.scrollIntoView({
-				block: "center",
-				behavior: "smooth"
-			});
-			this.#visual.onSelect?.(target);
-		}
-		else if (event.type === "pointerover" || event.type === "focusin") this.#visual.onPreview?.(target);
+		} else if (event.type === "pointerover" || event.type === "focusin") this.#visual.onPreview?.(target);
 		else this.#visual.onClearPreview?.();
 	}
 	updateActivity(component) {
@@ -3185,7 +3186,7 @@ var ComponentDetail = class {
 		const compare = (before, after, path, nested = false) => {
 			const a = before || {};
 			const b = after || {};
-			for (const key of new Set([...Object.keys(a), ...Object.keys(b)])) {
+			for (const key of /* @__PURE__ */ new Set([...Object.keys(a), ...Object.keys(b)])) {
 				const field = `${path}.${key}`;
 				if (nested) compare(a[key], b[key], field);
 				else if (!sameSnapshot(a[key], b[key])) {
@@ -4067,7 +4068,6 @@ var Panel = class {
 		this.#switchTab("log");
 	}
 };
-const MAX_ENTRIES = 100;
 var Timeline = class {
 	#monitor;
 	#element;
@@ -4123,9 +4123,10 @@ var Timeline = class {
 			this.#selectedEntry = null;
 			this.#rows.clear();
 		}
-		if (render) if (this.#paused) this.#renderEntries();
-		else this.#renderSnapshot();
-		else this.#applyFilter();
+		if (render) {
+			if (this.#paused) this.#renderEntries();
+			else this.#renderSnapshot();
+		} else this.#applyFilter();
 	}
 	async copySelected() {
 		const clipboard = navigator.clipboard;
@@ -4210,7 +4211,7 @@ var Timeline = class {
 		const focusedAnchor = focusedItem?._inspectorEntry && this.#anchor(focusedItem._inspectorEntry);
 		const focusedControl = focused?.dataset.control;
 		this.#onHighlight?.(null);
-		const entries = (this.#paused ? projectActivity(this.#elementFilter ? this.#entries.filter((entry) => this.#matchesElement(entry, this.#elementFilter)) : this.#entries, !this.#contextual) : this.#monitor.project(this.#elementFilter, !this.#contextual)).filter((entry) => !this.#frameworks || this.#frameworks.has(entry.type)).slice(-MAX_ENTRIES).map((entry) => {
+		const entries = (this.#paused ? projectActivity(this.#elementFilter ? this.#entries.filter((entry) => this.#matchesElement(entry, this.#elementFilter)) : this.#entries, !this.#contextual) : this.#monitor.project(this.#elementFilter, !this.#contextual)).filter((entry) => !this.#frameworks || this.#frameworks.has(entry.type)).slice(-100).map((entry) => {
 			const previous = this.#rows.get(this.#anchor(entry))?._inspectorEntry;
 			return previous && this.#sameEntries(previous, entry) ? previous : entry;
 		});

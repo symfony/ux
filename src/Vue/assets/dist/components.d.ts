@@ -1,6 +1,5 @@
 import { Component } from "vue";
-interface ComponentCollection {
+export interface ComponentCollection {
   [key: string]: Component;
 }
-declare const components: ComponentCollection;
-export { ComponentCollection, components };
+export declare const components: ComponentCollection;
