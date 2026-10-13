@@ -6,7 +6,7 @@ to change, or even change drastically.
 
 Symfony UX Image renders responsive images in Symfony applications by
 delegating every transformation to a URL-based image provider, such as
-`Cloudflare`_, `Cloudinary`_, `imgix`_ or `KeyCDN`_. It is part of
+`Cloudflare`_, `Cloudinary`_, `Glide`_, `imgix`_ or `KeyCDN`_. It is part of
 `the Symfony UX initiative`_.
 
 The package never decodes, resizes or encodes an image itself. Every
@@ -50,7 +50,8 @@ The ``<twig:ux:image>`` component renders a single image:
 
 ``src`` is the public URL path of the original image, as your application
 serves it. Every provider reads it the same way: Cloudflare, Cloudinary, imgix
-and KeyCDN fetch it from your origin, and ``null://`` renders it as is.
+and KeyCDN fetch it from your origin, Glide reads it from the folder your
+application serves it from, and ``null://`` renders it as is.
 Switching providers therefore never changes your templates.
 
 For example, with ``UX_IMAGE_DSN=cloudflare://cdn.example.com``, this template:
@@ -288,6 +289,7 @@ Scheme         Install                                          DSN example
 ``keycdn``     ``composer require symfony/ux-keycdn-image``     ``keycdn://myzone.kxcdn.com``
 ``cloudflare`` ``composer require symfony/ux-cloudflare-image`` ``cloudflare://cdn.example.com``
 ``cloudinary`` ``composer require symfony/ux-cloudinary-image`` ``cloudinary://my-cloud?origin=https://example.com``
+``glide``      ``composer require symfony/ux-glide-image``      ``glide://default/img``
 ``imgix``      ``composer require symfony/ux-imgix-image``      ``imgix://my-source.imgix.net``
 ============== ================================================ ===========================================================
 
@@ -549,17 +551,17 @@ Parameter mapping
 Every ``ImageTransformation`` property maps to a provider-specific query
 parameter:
 
-========================= =============== =============== =============== ===============
-``ImageTransformation``   `Cloudflare`_   `Cloudinary`_   `imgix`_        `KeyCDN`_
-========================= =============== =============== =============== ===============
-``width``                 ``width``       ``w``           ``w``           ``width``
-``height``                ``height``      ``h``           ``h``           ``height``
-``format``                ``format``      ``f``           ``fm``          ``format``
-``format``: ``auto``      ``format=auto`` ``f_auto``      ``auto=format``
-``quality``               ``quality``     ``q``           ``q``           ``quality``
-``fit``: ``Fit::Cover``   ``fit=cover``   ``c_fill``      ``fit=crop``    ``fit=cover``
-``fit``: ``Fit::Contain`` ``fit=contain`` ``c_fit``       ``fit=clip``    ``fit=contain``
-========================= =============== =============== =============== ===============
+========================= =============== =============== =============== =============== ===============
+``ImageTransformation``   `Cloudflare`_   `Cloudinary`_   `Glide`_        `imgix`_        `KeyCDN`_
+========================= =============== =============== =============== =============== ===============
+``width``                 ``width``       ``w``           ``w``           ``w``           ``width``
+``height``                ``height``      ``h``           ``h``           ``h``           ``height``
+``format``                ``format``      ``f``           ``fm``          ``fm``          ``format``
+``format``: ``auto``      ``format=auto`` ``f_auto``                      ``auto=format``
+``quality``               ``quality``     ``q``           ``q``           ``q``           ``quality``
+``fit``: ``Fit::Cover``   ``fit=cover``   ``c_fill``      ``fit=crop``    ``fit=crop``    ``fit=cover``
+``fit``: ``Fit::Contain`` ``fit=contain`` ``c_fit``       ``fit=contain`` ``fit=clip``    ``fit=contain``
+========================= =============== =============== =============== =============== ===============
 
 ``operations`` (see
 :ref:`Provider-specific operations <image_provider_operations>`) is merged
@@ -568,21 +570,22 @@ into the generated URL verbatim, once resolved for the active provider.
 Supported formats and negotiation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-============= ===================================== =========================
-Provider      Supported formats                     Negotiates automatically?
-============= ===================================== =========================
-`Cloudflare`_ ``avif``, ``webp``, ``jpeg``, ``png`` **Yes**
-`Cloudinary`_ ``avif``, ``webp``, ``jpeg``, ``png`` **Yes**
-`imgix`_      ``avif``, ``webp``, ``jpeg``, ``png`` **Yes**
-`KeyCDN`_     ``webp``, ``jpeg``, ``png``           **No**
-============= ===================================== =========================
+============= =============================================== =========================
+Provider      Supported formats                               Negotiates automatically?
+============= =============================================== =========================
+`Cloudflare`_ ``avif``, ``webp``, ``jpeg``, ``png``           **Yes**
+`Cloudinary`_ ``avif``, ``webp``, ``jpeg``, ``png``           **Yes**
+`Glide`_      ``avif``, ``webp``, ``jpeg``, ``png``, ``gif``  **No**
+`imgix`_      ``avif``, ``webp``, ``jpeg``, ``png``           **Yes**
+`KeyCDN`_     ``webp``, ``jpeg``, ``png``                     **No**
+============= =============================================== =========================
 
 Cloudflare, Cloudinary and imgix negotiate natively, through their own
-``format=auto``, ``f_auto`` and ``auto=format``. KeyCDN has no automatic format
-negotiation at all, and no AVIF support either: with it, ``ux_image()`` serves
-the last configured format KeyCDN supports, and ``ux_picture()`` is the way to
-offer WebP to the browsers that accept it (see
-:ref:`<img> or <picture> <image_img_or_picture>`).
+``format=auto``, ``f_auto`` and ``auto=format``. Glide and KeyCDN have no
+automatic format negotiation, and KeyCDN has no AVIF support either: with them,
+``ux_image()`` serves the last configured format the provider supports, and
+``ux_picture()`` is the way to offer AVIF or WebP to the browsers that accept
+it (see :ref:`<img> or <picture> <image_img_or_picture>`).
 
 Cloudflare
 ~~~~~~~~~~
@@ -672,6 +675,119 @@ image), ``dpr``, ``e`` (effect), ``fl`` (flags), ``g`` (gravity), ``o``
 (zoom). A value can contain a ``:``, like ``{e: 'sharpen:100'}``, but not a
 ``/`` or a ``,``. See `Cloudinary's own transformation reference`_ for what
 each one does.
+
+Glide
+~~~~~
+
+`Glide`_ is an image server written in PHP that runs in your own
+infrastructure: no third-party service is needed. The bridge only generates
+the URLs. Your application, or another one, serves them with Glide.
+
+.. code-block:: terminal
+
+    $ composer require symfony/ux-glide-image
+
+.. code-block:: bash
+
+    # .env
+    UX_IMAGE_DSN=glide://default/img
+
+The host is the domain that serves Glide. ``default`` generates URLs relative
+to your application, like ``/img/uploads/hero.jpg?w=800``. Any other host, like
+``glide://images.example.com/img``, generates absolute ``https://`` URLs. The
+path, ``/img`` here, is the path Glide is served under. It is optional.
+
+Sign every URL, so that Glide serves only the URLs your application
+generated. Give the sign key as the ``sign_key`` option, and every generated
+URL then carries the matching ``s`` parameter. Keep the key out of the files
+you commit, for example with a placeholder that a ``.env.local`` file
+overrides:
+
+.. code-block:: bash
+
+    # .env
+    GLIDE_SIGN_KEY="<override me>"
+    UX_IMAGE_DSN=glide://default/img?sign_key=${GLIDE_SIGN_KEY}
+
+    # .env.local
+    GLIDE_SIGN_KEY=the-sign-key
+
+.. warning::
+
+    The sign key signs every URL: anyone holding it can request any
+    transformation of any image. Store it the way you store your other
+    secrets.
+
+To serve the images from your application, install Glide and its
+`Symfony adapter`_, then add a controller for the path of the DSN:
+
+.. code-block:: terminal
+
+    $ composer require league/glide:^3.0 league/glide-symfony
+
+.. code-block:: php
+
+    // src/Controller/GlideController.php
+    namespace App\Controller;
+
+    use League\Glide\Filesystem\FileNotFoundException;
+    use League\Glide\Responses\SymfonyResponseFactory;
+    use League\Glide\ServerFactory;
+    use League\Glide\Signatures\SignatureException;
+    use League\Glide\Signatures\SignatureFactory;
+    use Symfony\Component\DependencyInjection\Attribute\Autowire;
+    use Symfony\Component\HttpFoundation\Request;
+    use Symfony\Component\HttpFoundation\Response;
+    use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+    use Symfony\Component\Routing\Attribute\Route;
+
+    final class GlideController
+    {
+        #[Route('/img/{path}', name: 'glide', requirements: ['path' => '.+'], methods: ['GET'])]
+        public function __invoke(
+            Request $request,
+            string $path,
+            #[Autowire('%kernel.project_dir%')] string $projectDir,
+            #[Autowire('%env(GLIDE_SIGN_KEY)%')] string $signKey,
+        ): Response {
+            try {
+                SignatureFactory::create($signKey)->validateRequest($request->getPathInfo(), $request->query->all());
+            } catch (SignatureException) {
+                throw new NotFoundHttpException();
+            }
+
+            $server = ServerFactory::create([
+                'source' => $projectDir.'/public',
+                'cache' => $projectDir.'/var/glide',
+                'max_image_size' => 4000 * 4000,
+                'response' => new SymfonyResponseFactory($request),
+            ]);
+
+            try {
+                return $server->getImageResponse($path, $request->query->all());
+            } catch (FileNotFoundException) {
+                throw new NotFoundHttpException();
+            }
+        }
+    }
+
+The ``source`` is the ``public/`` folder, so ``src`` stays the path your
+application serves the image from. The signature covers the path as it
+appears in the URL, which is what ``Request::getPathInfo()`` returns.
+
+The Symfony adapter does not support Glide 4 yet. With Glide 4, read the image
+generated by ``$server->makeImage()`` from ``$server->getCache()`` and return
+it in a ``StreamedResponse`` instead. The generated URLs work with Glide 3 and
+4.
+
+Glide encodes AVIF only when the image library of PHP, GD or Imagick, supports
+it. Otherwise, remove ``avif`` from the ``formats`` option.
+
+Extra operations, forwarded as-is: ``or``, ``flip``, ``crop``, ``bri``,
+``con``, ``gam``, ``sharp``, ``blur``, ``pixel``, ``filt``, ``bg``,
+``border``, ``dpr``, ``mark``, ``markw``, ``markh``, ``markx``, ``marky``,
+``markpad``, ``markfit``, ``markpos``, ``markalpha``. See
+`Glide's own API reference`_ for what each one does.
 
 imgix
 ~~~~~
@@ -781,6 +897,9 @@ distinct URL is one more image the provider generates and caches:
 * With fetch delivery, anyone can also ask your Cloudinary account to fetch
   an image from any other domain. Restrict the `allowed fetch domains`_ to
   your origin.
+* Glide checks the signature in the controller that serves it. Give the
+  ``sign_key`` DSN option, and set ``max_image_size`` on the Glide server to
+  limit the size of the images it generates.
 * imgix can require signed URLs on a source, with `secure URLs`_. Turn it on,
   and give the source's token to the provider with the ``sign_key`` DSN
   option: the source then serves only the URLs your application generated.
@@ -832,6 +951,9 @@ The package supports PHP 8.4 or later and Symfony 7.4 or 8.x.
 .. _`KeyCDN Image Processing`: https://www.keycdn.com/support/image-processing
 .. _`KeyCDN's own parameter reference`: https://www.keycdn.com/support/image-processing
 .. _`Secure Token`: https://www.keycdn.com/support/secure-token#secure-token-for-image-processing
+.. _`Glide`: https://github.com/symfony/ux/blob/3.x/src/Image/src/Bridge/Glide/README.md
+.. _`Symfony adapter`: https://github.com/thephpleague/glide-symfony
+.. _`Glide's own API reference`: https://glide.thephpleague.com/3.0/api/quick-reference/
 .. _`imgix`: https://github.com/symfony/ux/blob/3.x/src/Image/src/Bridge/Imgix/README.md
 .. _`Web Folder source`: https://docs.imgix.com/en-US/getting-started/setup/creating-sources/web-folder
 .. _`secure URLs`: https://docs.imgix.com/en-US/getting-started/setup/securing-assets#enabling-secure-urls

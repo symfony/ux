@@ -1,0 +1,18 @@
+src:
+https://images.example.com/img/hero.jpg?w=400&fm=jpg&s=93f3a59ea7311dfbdf3c2839a51c40ed
+
+srcset:
+https://images.example.com/img/hero.jpg?w=400&fm=jpg&s=93f3a59ea7311dfbdf3c2839a51c40ed 400w
+https://images.example.com/img/hero.jpg?w=800&fm=jpg&s=341d182917242beabc1bb75717c7cd11 800w
+
+source (image/avif):
+https://images.example.com/img/hero.jpg?w=400&fm=avif&s=4366fdaedaf35dc928be6ebf6541333d 400w
+https://images.example.com/img/hero.jpg?w=800&fm=avif&s=38dd0fba9e523fe608c726058a25fc16 800w
+
+source (image/webp):
+https://images.example.com/img/hero.jpg?w=400&fm=webp&s=503c601b036f0277c3a5e3bbacfccdf1 400w
+https://images.example.com/img/hero.jpg?w=800&fm=webp&s=ac0bbf33afc530d1258415a87856c045 800w
+
+source (image/jpeg):
+https://images.example.com/img/hero.jpg?w=400&fm=jpg&s=93f3a59ea7311dfbdf3c2839a51c40ed 400w
+https://images.example.com/img/hero.jpg?w=800&fm=jpg&s=341d182917242beabc1bb75717c7cd11 800w

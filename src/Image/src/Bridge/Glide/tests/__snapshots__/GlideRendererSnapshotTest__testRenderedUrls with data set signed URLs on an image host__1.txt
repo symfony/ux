@@ -1,0 +1,6 @@
+src:
+https://images.example.com/img/hero.jpg?w=400&fm=jpg&s=93f3a59ea7311dfbdf3c2839a51c40ed
+
+srcset:
+https://images.example.com/img/hero.jpg?w=400&fm=jpg&s=93f3a59ea7311dfbdf3c2839a51c40ed 400w
+https://images.example.com/img/hero.jpg?w=800&fm=jpg&s=341d182917242beabc1bb75717c7cd11 800w
