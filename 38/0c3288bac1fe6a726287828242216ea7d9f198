@@ -1,0 +1,239 @@
+---------------------------------------------------------------------------
+
+by github-actions[bot] at 2026-10-13T06:49:16Z
+
+<h1>📊 Packages dist files size difference</h1>
+
+Thanks for the PR! Here is the difference in size of the packages dist files between the base branch and the PR.
+Please review the changes and make sure they are expected.
+
+<table>
+    <thead><tr><th>File</th><th>Before (Size / Gzip)</th><th>After (Size / Gzip)</th></tr></thead>
+    <tbody><tr><td colspan="3"><a href="https://github.com/Kocal/symfony-ux/tree/bump-tooling-dependencies/src/Autocomplete/assets/dist"><b>Autocomplete</b></a></td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/bump-tooling-dependencies/src/Autocomplete/assets/dist/controller.d.ts"><code>controller.d.ts</code></a></td>
+            <td>
+                    <code>2.02 kB</code>
+                    / <code>684 B</code>
+                </td><td>
+                    <code>1.94 kB</code><sup>-4% 📉</sup>
+                    / <code>661 B</code><sup>-3% 📉</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/bump-tooling-dependencies/src/Autocomplete/assets/dist/controller.js"><code>controller.js</code></a></td>
+            <td>
+                    <code>12.14 kB</code>
+                    / <code>3.28 kB</code>
+                </td><td>
+                    <code>12.15 kB</code><sup>0%</sup>
+                    / <code>3.28 kB</code><sup>0%</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/Kocal/symfony-ux/tree/bump-tooling-dependencies/src/Chartjs/assets/dist"><b>Chartjs</b></a></td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/bump-tooling-dependencies/src/Chartjs/assets/dist/controller.d.ts"><code>controller.d.ts</code></a></td>
+            <td>
+                    <code>329 B</code>
+                    / <code>232 B</code>
+                </td><td>
+                    <code>299 B</code><sup>-9% 📉</sup>
+                    / <code>221 B</code><sup>-5% 📉</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/Kocal/symfony-ux/tree/bump-tooling-dependencies/src/Cropperjs/assets/dist"><b>Cropperjs</b></a></td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/bump-tooling-dependencies/src/Cropperjs/assets/dist/controller.d.ts"><code>controller.d.ts</code></a></td>
+            <td>
+                    <code>346 B</code>
+                    / <code>239 B</code>
+                </td><td>
+                    <code>313 B</code><sup>-10% 📉</sup>
+                    / <code>228 B</code><sup>-5% 📉</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/Kocal/symfony-ux/tree/bump-tooling-dependencies/src/Dropzone/assets/dist"><b>Dropzone</b></a></td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/bump-tooling-dependencies/src/Dropzone/assets/dist/controller.d.ts"><code>controller.d.ts</code></a></td>
+            <td>
+                    <code>1.2 kB</code>
+                    / <code>496 B</code>
+                </td><td>
+                    <code>1.17 kB</code><sup>-2% 📉</sup>
+                    / <code>482 B</code><sup>-3% 📉</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/Kocal/symfony-ux/tree/bump-tooling-dependencies/src/Inspector/assets/dist"><b>Inspector</b></a></td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/bump-tooling-dependencies/src/Inspector/assets/dist/inspector.d.ts"><code>inspector.d.ts</code></a></td>
+            <td>
+                    <code>741 B</code>
+                    / <code>376 B</code>
+                </td><td>
+                    <code>725 B</code><sup>-2% 📉</sup>
+                    / <code>371 B</code><sup>-1% 📉</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/bump-tooling-dependencies/src/Inspector/assets/dist/inspector.js"><code>inspector.js</code></a></td>
+            <td>
+                    <code>209.85 kB</code>
+                    / <code>48.64 kB</code>
+                </td><td>
+                    <code>209.94 kB</code><sup>0%</sup>
+                    / <code>48.63 kB</code><sup>0%</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/Kocal/symfony-ux/tree/bump-tooling-dependencies/src/LiveComponent/assets/dist"><b>LiveComponent</b></a></td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/bump-tooling-dependencies/src/LiveComponent/assets/dist/live_controller.d.ts"><code>live_controller.d.ts</code></a></td>
+            <td>
+                    <code>8.03 kB</code>
+                    / <code>2.08 kB</code>
+                </td><td>
+                    <code>7.99 kB</code><sup>-1% 📉</sup>
+                    / <code>2.07 kB</code><sup>-1% 📉</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/bump-tooling-dependencies/src/LiveComponent/assets/dist/live_controller.js"><code>live_controller.js</code></a></td>
+            <td>
+                    <code>91.51 kB</code>
+                    / <code>20.77 kB</code>
+                </td><td>
+                    <code>91.54 kB</code><sup>0%</sup>
+                    / <code>20.76 kB</code><sup>0%</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/Kocal/symfony-ux/tree/bump-tooling-dependencies/src/Map/assets/dist"><b>Map</b></a></td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/bump-tooling-dependencies/src/Map/assets/dist/abstract_map_controller.d.ts"><code>abstract_map_controller.d.ts</code></a></td>
+            <td>
+                    <code>7.29 kB</code>
+                    / <code>1.46 kB</code>
+                </td><td>
+                    <code>7.1 kB</code><sup>-3% 📉</sup>
+                    / <code>1.41 kB</code><sup>-3% 📉</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/Kocal/symfony-ux/tree/bump-tooling-dependencies/src/Map/src/Bridge/Google/assets/dist"><b>Map (Bridge Google)</b></a></td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/bump-tooling-dependencies/src/Map/src/Bridge/Google/assets/dist/map_controller.d.ts"><code>map_controller.d.ts</code></a></td>
+            <td>
+                    <code>10.26 kB</code>
+                    / <code>1.9 kB</code>
+                </td><td>
+                    <code>10.12 kB</code><sup>-1% 📉</sup>
+                    / <code>1.89 kB</code><sup>0%</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/Kocal/symfony-ux/tree/bump-tooling-dependencies/src/Map/src/Bridge/Leaflet/assets/dist"><b>Map (Bridge Leaflet)</b></a></td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/bump-tooling-dependencies/src/Map/src/Bridge/Leaflet/assets/dist/map_controller.d.ts"><code>map_controller.d.ts</code></a></td>
+            <td>
+                    <code>9.61 kB</code>
+                    / <code>1.81 kB</code>
+                </td><td>
+                    <code>9.51 kB</code><sup>-1% 📉</sup>
+                    / <code>1.82 kB</code><sup>+1% 📈</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/Kocal/symfony-ux/tree/bump-tooling-dependencies/src/Notify/assets/dist"><b>Notify</b></a></td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/bump-tooling-dependencies/src/Notify/assets/dist/controller.d.ts"><code>controller.d.ts</code></a></td>
+            <td>
+                    <code>731 B</code>
+                    / <code>382 B</code>
+                </td><td>
+                    <code>701 B</code><sup>-4% 📉</sup>
+                    / <code>368 B</code><sup>-4% 📉</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/Kocal/symfony-ux/tree/bump-tooling-dependencies/src/React/assets/dist"><b>React</b></a></td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/bump-tooling-dependencies/src/React/assets/dist/components.d.ts"><code>components.d.ts</code></a></td>
+            <td>
+                    <code>294 B</code>
+                    / <code>187 B</code>
+                </td><td>
+                    <code>275 B</code><sup>-6% 📉</sup>
+                    / <code>185 B</code><sup>-1% 📉</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/bump-tooling-dependencies/src/React/assets/dist/loader.d.ts"><code>loader.d.ts</code></a></td>
+            <td>
+                    <code>494 B</code>
+                    / <code>247 B</code>
+                </td><td>
+                    <code>466 B</code><sup>-6% 📉</sup>
+                    / <code>246 B</code><sup>0%</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/bump-tooling-dependencies/src/React/assets/dist/register_controller.d.ts"><code>register_controller.d.ts</code></a></td>
+            <td>
+                    <code>578 B</code>
+                    / <code>318 B</code>
+                </td><td>
+                    <code>550 B</code><sup>-5% 📉</sup>
+                    / <code>317 B</code><sup>0%</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/bump-tooling-dependencies/src/React/assets/dist/render_controller.d.ts"><code>render_controller.d.ts</code></a></td>
+            <td>
+                    <code>571 B</code>
+                    / <code>315 B</code>
+                </td><td>
+                    <code>541 B</code><sup>-5% 📉</sup>
+                    / <code>302 B</code><sup>-4% 📉</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/Kocal/symfony-ux/tree/bump-tooling-dependencies/src/Router/assets/dist"><b>Router</b></a></td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/bump-tooling-dependencies/src/Router/assets/dist/router_controller.d.ts"><code>router_controller.d.ts</code></a></td>
+            <td>
+                    <code>3.36 kB</code>
+                    / <code>975 B</code>
+                </td><td>
+                    <code>3.3 kB</code><sup>-2% 📉</sup>
+                    / <code>969 B</code><sup>-1% 📉</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/Kocal/symfony-ux/tree/bump-tooling-dependencies/src/StimulusBundle/assets/dist"><b>StimulusBundle</b></a></td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/bump-tooling-dependencies/src/StimulusBundle/assets/dist/controllers.d.ts"><code>controllers.d.ts</code></a></td>
+            <td>
+                    <code>536 B</code>
+                    / <code>247 B</code>
+                </td><td>
+                    <code>451 B</code><sup>-16% 📉</sup>
+                    / <code>229 B</code><sup>-7% 📉</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/bump-tooling-dependencies/src/StimulusBundle/assets/dist/loader.d.ts"><code>loader.d.ts</code></a></td>
+            <td>
+                    <code>393 B</code>
+                    / <code>204 B</code>
+                </td><td>
+                    <code>362 B</code><sup>-8% 📉</sup>
+                    / <code>196 B</code><sup>-4% 📉</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/Kocal/symfony-ux/tree/bump-tooling-dependencies/src/Translator/assets/dist"><b>Translator</b></a></td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/bump-tooling-dependencies/src/Translator/assets/dist/translator_controller.d.ts"><code>translator_controller.d.ts</code></a></td>
+            <td>
+                    <code>1.89 kB</code>
+                    / <code>669 B</code>
+                </td><td>
+                    <code>1.87 kB</code><sup>-1% 📉</sup>
+                    / <code>669 B</code><sup>0%</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/Kocal/symfony-ux/tree/bump-tooling-dependencies/src/Turbo/assets/dist"><b>Turbo</b></a></td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/bump-tooling-dependencies/src/Turbo/assets/dist/mercure_stream_source_element.d.ts"><code>mercure_stream_source_element.d.ts</code></a></td>
+            <td>
+                    <code>11 B</code>
+                    / <code>66 B</code>
+                </td><td>
+                    <code>9 B</code><sup>-18% 📉</sup>
+                    / <code>64 B</code><sup>-3% 📉</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/bump-tooling-dependencies/src/Turbo/assets/dist/turbo_controller.d.ts"><code>turbo_controller.d.ts</code></a></td>
+            <td>
+                    <code>137 B</code>
+                    / <code>139 B</code>
+                </td><td>
+                    <code>133 B</code><sup>-3% 📉</sup>
+                    / <code>135 B</code><sup>-3% 📉</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/bump-tooling-dependencies/src/Turbo/assets/dist/turbo_stream_controller.d.ts"><code>turbo_stream_controller.d.ts</code></a></td>
+            <td>
+                    <code>652 B</code>
+                    / <code>318 B</code>
+                </td><td>
+                    <code>622 B</code><sup>-5% 📉</sup>
+                    / <code>305 B</code><sup>-4% 📉</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/Kocal/symfony-ux/tree/bump-tooling-dependencies/src/Vue/assets/dist"><b>Vue</b></a></td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/bump-tooling-dependencies/src/Vue/assets/dist/components.d.ts"><code>components.d.ts</code></a></td>
+            <td>
+                    <code>185 B</code>
+                    / <code>146 B</code>
+                </td><td>
+                    <code>156 B</code><sup>-16% 📉</sup>
+                    / <code>139 B</code><sup>-5% 📉</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/bump-tooling-dependencies/src/Vue/assets/dist/loader.d.ts"><code>loader.d.ts</code></a></td>
+            <td>
+                    <code>376 B</code>
+                    / <code>203 B</code>
+                </td><td>
+                    <code>340 B</code><sup>-10% 📉</sup>
+                    / <code>196 B</code><sup>-3% 📉</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/bump-tooling-dependencies/src/Vue/assets/dist/register_controller.d.ts"><code>register_controller.d.ts</code></a></td>
+            <td>
+                    <code>461 B</code>
+                    / <code>281 B</code>
+                </td><td>
+                    <code>435 B</code><sup>-6% 📉</sup>
+                    / <code>282 B</code><sup>0%</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/bump-tooling-dependencies/src/Vue/assets/dist/render_controller.d.ts"><code>render_controller.d.ts</code></a></td>
+            <td>
+                    <code>498 B</code>
+                    / <code>318 B</code>
+                </td><td>
+                    <code>468 B</code><sup>-6% 📉</sup>
+                    / <code>305 B</code><sup>-4% 📉</sup>
+                </td></tr></tbody>
+</table>
+
+<!-- Sticky Pull Request Comment -->
