@@ -36,6 +36,7 @@ class TranslationsCacheWarmer implements CacheWarmerInterface
         private array $includedDomains,
         private array $excludedDomains,
         private array $keysPatterns,
+        private string $defaultLocale,
     ) {
     }
 
@@ -63,6 +64,7 @@ class TranslationsCacheWarmer implements CacheWarmerInterface
             $this->includedDomains,
             $this->excludedDomains,
             $this->keysPatterns,
+            $this->defaultLocale,
         );
 
         // No need to preload anything

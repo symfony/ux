@@ -14,20 +14,29 @@ import type { DomainsOf, LocaleOf, LocaleType, MessageId, Messages, ParametersOf
 export type * from './types.d';
 
 export function getDefaultLocale(): LocaleType {
+    return getPageLocale() ?? 'en';
+}
+
+function getPageLocale(): LocaleType | null {
+    if (typeof document === 'undefined') {
+        return null;
+    }
+
     return (
         document.documentElement.getAttribute('data-symfony-ux-translator-locale') || // <html data-symfony-ux-translator-locale="en_US">
-        (document.documentElement.lang ? document.documentElement.lang.replace('-', '_') : null) || // <html lang="en-US">
-        'en'
+        (document.documentElement.lang ? document.documentElement.lang.replaceAll('-', '_') : null) // <html lang="en-US">
     );
 }
 
 export function createTranslator<TMessages extends Messages>({
     messages,
-    locale = getDefaultLocale(),
+    defaultLocale = 'en',
+    locale = getPageLocale() ?? defaultLocale,
     localeFallbacks = {},
     throwWhenNotFound = false,
 }: {
     messages: TMessages;
+    defaultLocale?: LocaleType;
     locale?: LocaleType;
     localeFallbacks?: Record<LocaleType, LocaleType>;
     throwWhenNotFound?: boolean;
