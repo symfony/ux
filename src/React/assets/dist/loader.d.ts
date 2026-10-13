@@ -7,5 +7,5 @@ declare global {
     resolveReactComponent(name: string): Component;
   }
 }
-declare function registerReactControllerComponents(reactComponents?: ComponentCollection): void;
-export { registerReactControllerComponents };
+export declare function registerReactControllerComponents(reactComponents?: ComponentCollection): void;
+export {};

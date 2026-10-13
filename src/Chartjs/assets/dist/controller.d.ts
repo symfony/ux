@@ -1,5 +1,5 @@
 import { Controller } from "@hotwired/stimulus";
-declare class export_default extends Controller {
+export default class export_default extends Controller {
   readonly viewValue: any;
   static values: {
     view: ObjectConstructor;
@@ -10,4 +10,3 @@ declare class export_default extends Controller {
   viewValueChanged(): void;
   private dispatchEvent;
 }
-export { export_default as default };

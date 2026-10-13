@@ -3,7 +3,7 @@
     "compilerOptions": {
         "lib": ["dom", "dom.iterable", "es2023"],
         "module": "es2022",
-        "moduleResolution": "node",
+        "moduleResolution": "bundler",
         "noUnusedLocals": true,
         "rootDir": "src",
         "skipLibCheck": true,
@@ -12,7 +12,6 @@
         "target": "es2023",
         "removeComments": true,
         "outDir": "types",
-        "baseUrl": ".",
         "noEmit": false,
         "declaration": false,
         "esModuleInterop": true,

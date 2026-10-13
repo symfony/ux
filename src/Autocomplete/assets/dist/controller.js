@@ -45,14 +45,18 @@ var controller_default = class extends Controller {
 		this.stopMutationObserver();
 		if (!this.tomSelect) return;
 		let currentSelectedValues = [];
-		if (this.selectElement) if (this.selectElement.multiple) currentSelectedValues = Array.from(this.selectElement.options).filter((option) => option.selected).map((option) => option.value);
-		else currentSelectedValues = [this.selectElement.value];
+		if (this.selectElement) {
+			if (this.selectElement.multiple) currentSelectedValues = Array.from(this.selectElement.options).filter((option) => option.selected).map((option) => option.value);
+			else currentSelectedValues = [this.selectElement.value];
+		}
 		this.tomSelect.destroy();
 		this.tomSelect = void 0;
-		if (this.selectElement) if (this.selectElement.multiple) Array.from(this.selectElement.options).forEach((option) => {
-			option.selected = currentSelectedValues.includes(option.value);
-		});
-		else this.selectElement.value = currentSelectedValues[0];
+		if (this.selectElement) {
+			if (this.selectElement.multiple) Array.from(this.selectElement.options).forEach((option) => {
+				option.selected = currentSelectedValues.includes(option.value);
+			});
+			else this.selectElement.value = currentSelectedValues[0];
+		}
 	}
 	urlValueChanged() {
 		this.resetTomSelect();
@@ -298,7 +302,6 @@ var controller_default = class extends Controller {
 						if (this.element.hasAttribute("multiple") !== (mutation.oldValue === "multiple")) requireReset = true;
 						break;
 					}
-					break;
 			}
 		});
 		const newOptions = this.selectElement ? this.createOptionsDataStructure(this.selectElement) : [];

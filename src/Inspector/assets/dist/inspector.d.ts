@@ -1,7 +1,7 @@
 interface StimulusApplicationLike {
   getControllerForElementAndIdentifier(element: Element, identifier: string): object | null;
 }
-declare class UXInspector extends HTMLElement {
+export declare class UXInspector extends HTMLElement {
   #private;
   connectedCallback(): void;
   disconnectedCallback(): void;
@@ -19,5 +19,5 @@ declare class UXInspector extends HTMLElement {
   toggleTargetMode(): boolean;
   toggleOverlay(): boolean;
 }
-declare function connectStimulus(application: StimulusApplicationLike | null): boolean;
-export { UXInspector, connectStimulus };
+export declare function connectStimulus(application: StimulusApplicationLike | null): boolean;
+export {};

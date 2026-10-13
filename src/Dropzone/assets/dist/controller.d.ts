@@ -1,5 +1,5 @@
 import { Controller } from "@hotwired/stimulus";
-declare class export_default extends Controller {
+export default class export_default extends Controller {
   readonly inputTarget: HTMLInputElement;
   readonly placeholderTarget: HTMLDivElement;
   readonly previewTarget: HTMLDivElement;
@@ -37,4 +37,3 @@ declare class export_default extends Controller {
   private buildListItem;
   private dispatchEvent;
 }
-export { export_default as default };

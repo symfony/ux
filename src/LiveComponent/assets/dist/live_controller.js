@@ -57,12 +57,14 @@ var RequestBuilder_default = class {
 			};
 			if (Object.keys(updatedPropsFromParent).length > 0) requestData.propsFromParent = updatedPropsFromParent;
 			if (hasFingerprints) requestData.children = children;
-			if (actions.length > 0) if (actions.length === 1) {
-				requestData.args = actions[0].args;
-				url += `/${encodeURIComponent(actions[0].name)}`;
-			} else {
-				url += "/_batch";
-				requestData.actions = actions;
+			if (actions.length > 0) {
+				if (actions.length === 1) {
+					requestData.args = actions[0].args;
+					url += `/${encodeURIComponent(actions[0].name)}`;
+				} else {
+					url += "/_batch";
+					requestData.actions = actions;
+				}
 			}
 			const formData = new FormData();
 			formData.append("data", JSON.stringify(requestData));
@@ -283,7 +285,6 @@ function parseDirectives(content) {
 				}
 				if (char !== " ") throw new Error(`Missing space after ${getLastActionName()}()`);
 				pushInstruction();
-				break;
 		}
 	}
 	switch (state) {
@@ -745,12 +746,13 @@ var Idiomorph = (function() {
 			let inNewContent = srcToNewHeadNodes.has(currentHeadElt.outerHTML);
 			let isReAppended = ctx.head.shouldReAppend(currentHeadElt);
 			let isPreserved = ctx.head.shouldPreserve(currentHeadElt);
-			if (inNewContent || isPreserved) if (isReAppended) removed.push(currentHeadElt);
-			else {
-				srcToNewHeadNodes.delete(currentHeadElt.outerHTML);
-				preserved.push(currentHeadElt);
-			}
-			else if (ctx.head.style === "append") {
+			if (inNewContent || isPreserved) {
+				if (isReAppended) removed.push(currentHeadElt);
+				else {
+					srcToNewHeadNodes.delete(currentHeadElt.outerHTML);
+					preserved.push(currentHeadElt);
+				}
+			} else if (ctx.head.style === "append") {
 				if (isReAppended) {
 					removed.push(currentHeadElt);
 					nodesToAppend.push(currentHeadElt);
@@ -891,13 +893,14 @@ var Idiomorph = (function() {
 			if (newContent == null) return document.createElement("div");
 			else if (typeof newContent === "string") return normalizeParent(parseContent(newContent));
 			else if (generatedByIdiomorph.has(newContent)) return newContent;
-			else if (newContent instanceof Node) if (newContent.parentNode) return new SlicedParentNode(newContent);
-			else {
-				const dummyParent = document.createElement("div");
-				dummyParent.append(newContent);
-				return dummyParent;
-			}
-			else {
+			else if (newContent instanceof Node) {
+				if (newContent.parentNode) return new SlicedParentNode(newContent);
+				else {
+					const dummyParent = document.createElement("div");
+					dummyParent.append(newContent);
+					return dummyParent;
+				}
+			} else {
 				const dummyParent = document.createElement("div");
 				for (const elt of [...newContent]) dummyParent.append(elt);
 				return dummyParent;
@@ -1265,7 +1268,6 @@ var ExternalMutationTracker_default = class {
 						this.handleAttributeMutation(mutation);
 						handledAttributeMutations.set(element, [...handledAttributeMutations.get(element), mutation.attributeName]);
 					}
-					break;
 			}
 		}
 	}
@@ -2532,8 +2534,10 @@ var LiveControllerDefault = class LiveControllerDefault extends Controller {
 		if (this.pendingActionTriggerModelElement === element) modelBinding.shouldRender = false;
 		if (eventName === "change" && modelBinding.targetEventName === "input") modelBinding.targetEventName = "change";
 		if (eventName && modelBinding.targetEventName !== eventName) return;
-		if (false === modelBinding.debounce) if (modelBinding.targetEventName === "input") modelBinding.debounce = true;
-		else modelBinding.debounce = 0;
+		if (false === modelBinding.debounce) {
+			if (modelBinding.targetEventName === "input") modelBinding.debounce = true;
+			else modelBinding.debounce = 0;
+		}
 		const finalValue = getValueFromElement(element, this.component.valueStore);
 		const finalValueIsEmpty = finalValue === "" || finalValue === null || finalValue === void 0;
 		if (isTextualInputElement(element) || isTextareaElement(element)) {

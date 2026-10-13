@@ -134,8 +134,8 @@ describe('AutocompleteController', () => {
         });
 
         expect(fetchMock.requests().length).toEqual(2);
-        expect(fetchMock.requests()[0].url).toEqual('/path/to/autocomplete?query=');
-        expect(fetchMock.requests()[1].url).toEqual('/path/to/autocomplete?query=foo');
+        expect(fetchMock.requests()[0].url).toEqual('http://localhost:3000/path/to/autocomplete?query=');
+        expect(fetchMock.requests()[1].url).toEqual('http://localhost:3000/path/to/autocomplete?query=foo');
     });
 
     it('connect with ajax URL on a select element, even when the user define custom TomSelect plugins', async () => {
@@ -195,8 +195,8 @@ describe('AutocompleteController', () => {
         });
 
         expect(fetchMock.requests().length).toEqual(2);
-        expect(fetchMock.requests()[0].url).toEqual('/path/to/autocomplete?query=');
-        expect(fetchMock.requests()[1].url).toEqual('/path/to/autocomplete?query=foo');
+        expect(fetchMock.requests()[0].url).toEqual('http://localhost:3000/path/to/autocomplete?query=');
+        expect(fetchMock.requests()[1].url).toEqual('http://localhost:3000/path/to/autocomplete?query=foo');
     });
 
     it('resets when ajax URL attribute on a select element changes', async () => {
@@ -329,8 +329,8 @@ describe('AutocompleteController', () => {
         });
 
         expect(fetchMock.requests().length).toEqual(2);
-        expect(fetchMock.requests()[0].url).toEqual('/path/to/autocomplete?query=');
-        expect(fetchMock.requests()[1].url).toEqual('/path/to/autocomplete?query=foo');
+        expect(fetchMock.requests()[0].url).toEqual('http://localhost:3000/path/to/autocomplete?query=');
+        expect(fetchMock.requests()[1].url).toEqual('http://localhost:3000/path/to/autocomplete?query=foo');
     });
 
     it('limits updates when min-characters', async () => {
@@ -457,9 +457,9 @@ describe('AutocompleteController', () => {
         });
 
         expect(fetchMock.requests().length).toEqual(3);
-        expect(fetchMock.requests()[0].url).toEqual('/path/to/autocomplete?query=');
-        expect(fetchMock.requests()[1].url).toEqual('/path/to/autocomplete?query=foo');
-        expect(fetchMock.requests()[2].url).toEqual('/path/to/autocomplete?query=fo');
+        expect(fetchMock.requests()[0].url).toEqual('http://localhost:3000/path/to/autocomplete?query=');
+        expect(fetchMock.requests()[1].url).toEqual('http://localhost:3000/path/to/autocomplete?query=foo');
+        expect(fetchMock.requests()[2].url).toEqual('http://localhost:3000/path/to/autocomplete?query=fo');
     });
 
     it('loads new pages on scroll', async () => {
@@ -529,8 +529,8 @@ describe('AutocompleteController', () => {
         });
 
         expect(fetchMock.requests().length).toEqual(2);
-        expect(fetchMock.requests()[0].url).toEqual('/path/to/autocomplete?query=');
-        expect(fetchMock.requests()[1].url).toEqual('/path/to/autocomplete?query=&page=2');
+        expect(fetchMock.requests()[0].url).toEqual('http://localhost:3000/path/to/autocomplete?query=');
+        expect(fetchMock.requests()[1].url).toEqual('http://localhost:3000/path/to/autocomplete?query=&page=2');
     });
 
     it('continues working even if options html rearranges', async () => {
@@ -898,8 +898,8 @@ describe('AutocompleteController', () => {
         });
 
         expect(fetchMock.requests().length).toEqual(2);
-        expect(fetchMock.requests()[0].url).toEqual('/path/to/autocomplete?query=');
-        expect(fetchMock.requests()[1].url).toEqual('/path/to/autocomplete?query=foo');
+        expect(fetchMock.requests()[0].url).toEqual('http://localhost:3000/path/to/autocomplete?query=');
+        expect(fetchMock.requests()[1].url).toEqual('http://localhost:3000/path/to/autocomplete?query=foo');
     });
 
     it('preserves the selected value and HTML with disconnect on single select', async () => {
@@ -1237,7 +1237,7 @@ describe('AutocompleteController', () => {
         });
 
         expect(fetchMock.requests().length).toEqual(1);
-        expect(fetchMock.requests()[0].url).toEqual('/path/to/autocomplete?query=');
+        expect(fetchMock.requests()[0].url).toEqual('http://localhost:3000/path/to/autocomplete?query=');
 
         // simulate blur then re-focus: should reload
         fetchMock.mockResponseOnce(
@@ -1256,7 +1256,7 @@ describe('AutocompleteController', () => {
             expect(fetchMock.requests().length).toEqual(2);
         });
 
-        expect(fetchMock.requests()[1].url).toEqual('/path/to/autocomplete?query=');
+        expect(fetchMock.requests()[1].url).toEqual('http://localhost:3000/path/to/autocomplete?query=');
 
         // open the dropdown to render the new options
         tomSelect.open();

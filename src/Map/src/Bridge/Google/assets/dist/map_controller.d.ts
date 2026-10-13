@@ -135,10 +135,7 @@ declare abstract class export_default$1<MapOptions, BridgeMapOptions, BridgeMap,
   private createRectangle;
   protected abstract dispatchEvent(name: string, payload: Record<string, unknown>): void;
   connect(): void;
-  createInfoWindow({
-    definition,
-    element
-  }: {
+  createInfoWindow({ definition, element }: {
     definition: Omit<InfoWindowDefinition<BridgeInfoWindowOptions>, 'position'>;
     element: BridgeMarker | BridgePolygon | BridgePolyline | BridgeCircle | BridgeRectangle;
   }): BridgeInfoWindow;
@@ -151,53 +148,35 @@ declare abstract class export_default$1<MapOptions, BridgeMapOptions, BridgeMap,
   polylinesValueChanged(): void;
   circlesValueChanged(): void;
   rectanglesValueChanged(): void;
-  protected abstract doCreateMap({
-    definition
-  }: {
+  protected abstract doCreateMap({ definition }: {
     definition: MapDefinition<MapOptions, BridgeMapOptions>;
   }): BridgeMap;
   protected abstract doFitBoundsToMarkers(): void;
-  protected abstract doCreateMarker({
-    definition
-  }: {
+  protected abstract doCreateMarker({ definition }: {
     definition: MarkerDefinition<BridgeMarkerOptions, BridgeInfoWindowOptions>;
   }): BridgeMarker;
   protected abstract doRemoveMarker(marker: BridgeMarker): void;
-  protected abstract doCreatePolygon({
-    definition
-  }: {
+  protected abstract doCreatePolygon({ definition }: {
     definition: PolygonDefinition<BridgePolygonOptions, BridgeInfoWindowOptions>;
   }): BridgePolygon;
   protected abstract doRemovePolygon(polygon: BridgePolygon): void;
-  protected abstract doCreatePolyline({
-    definition
-  }: {
+  protected abstract doCreatePolyline({ definition }: {
     definition: PolylineDefinition<BridgePolylineOptions, BridgeInfoWindowOptions>;
   }): BridgePolyline;
   protected abstract doRemovePolyline(polyline: BridgePolyline): void;
-  protected abstract doCreateCircle({
-    definition
-  }: {
+  protected abstract doCreateCircle({ definition }: {
     definition: CircleDefinition<BridgeCircleOptions, BridgeInfoWindowOptions>;
   }): BridgeCircle;
   protected abstract doRemoveCircle(circle: BridgeCircle): void;
-  protected abstract doCreateRectangle({
-    definition
-  }: {
+  protected abstract doCreateRectangle({ definition }: {
     definition: RectangleDefinition<BridgeRectangleOptions, BridgeInfoWindowOptions>;
   }): BridgeRectangle;
   protected abstract doRemoveRectangle(rectangle: BridgeRectangle): void;
-  protected abstract doCreateInfoWindow({
-    definition,
-    element
-  }: {
+  protected abstract doCreateInfoWindow({ definition, element }: {
     definition: Omit<InfoWindowDefinition<BridgeInfoWindowOptions>, 'position'>;
     element: BridgeMarker | BridgePolygon | BridgePolyline | BridgeCircle | BridgeRectangle;
   }): BridgeInfoWindow;
-  protected abstract doCreateIcon({
-    definition,
-    element
-  }: {
+  protected abstract doCreateIcon({ definition, element }: {
     definition: Icon;
     element: BridgeMarker;
   }): void;
@@ -205,7 +184,7 @@ declare abstract class export_default$1<MapOptions, BridgeMapOptions, BridgeMap,
   private onDrawChanged;
 }
 type MapOptions = Pick<google.maps.MapOptions, 'mapId' | 'gestureHandling' | 'backgroundColor' | 'disableDoubleClickZoom' | 'zoomControl' | 'zoomControlOptions' | 'mapTypeControl' | 'mapTypeControlOptions' | 'streetViewControl' | 'streetViewControlOptions' | 'fullscreenControl' | 'fullscreenControlOptions'>;
-declare class export_default extends export_default$1<MapOptions, google.maps.MapOptions, google.maps.Map, google.maps.marker.AdvancedMarkerElementOptions, google.maps.marker.AdvancedMarkerElement, google.maps.InfoWindowOptions, google.maps.InfoWindow, google.maps.PolygonOptions, google.maps.Polygon, google.maps.PolylineOptions, google.maps.Polyline, google.maps.CircleOptions, google.maps.Circle, google.maps.RectangleOptions, google.maps.Rectangle> {
+export default class export_default extends export_default$1<MapOptions, google.maps.MapOptions, google.maps.Map, google.maps.marker.AdvancedMarkerElementOptions, google.maps.marker.AdvancedMarkerElement, google.maps.InfoWindowOptions, google.maps.InfoWindow, google.maps.PolygonOptions, google.maps.Polygon, google.maps.PolylineOptions, google.maps.Polyline, google.maps.CircleOptions, google.maps.Circle, google.maps.RectangleOptions, google.maps.Rectangle> {
   providerOptionsValue: Pick<APIOptions, 'key' | 'v' | 'language' | 'region' | 'libraries' | 'authReferrerPolicy' | 'mapIds' | 'channel' | 'solutionChannel'>;
   map: google.maps.Map;
   connect(): Promise<void>;
@@ -214,57 +193,39 @@ declare class export_default extends export_default$1<MapOptions, google.maps.Ma
   minZoomValueChanged(): void;
   maxZoomValueChanged(): void;
   protected dispatchEvent(name: string, payload?: Record<string, unknown>): void;
-  protected doCreateMap({
-    definition
-  }: {
+  protected doCreateMap({ definition }: {
     definition: MapDefinition<MapOptions, google.maps.MapOptions>;
   }): google.maps.Map;
-  protected doCreateMarker({
-    definition
-  }: {
+  protected doCreateMarker({ definition }: {
     definition: MarkerDefinition<google.maps.marker.AdvancedMarkerElementOptions, google.maps.InfoWindowOptions>;
   }): google.maps.marker.AdvancedMarkerElement;
   protected doRemoveMarker(marker: google.maps.marker.AdvancedMarkerElement): void;
-  protected doCreatePolygon({
-    definition
-  }: {
+  protected doCreatePolygon({ definition }: {
     definition: PolygonDefinition<google.maps.PolygonOptions, google.maps.InfoWindowOptions>;
   }): google.maps.Polygon;
   protected doRemovePolygon(polygon: google.maps.Polygon): void;
-  protected doCreatePolyline({
-    definition
-  }: {
+  protected doCreatePolyline({ definition }: {
     definition: PolylineDefinition<google.maps.PolylineOptions, google.maps.InfoWindowOptions>;
   }): google.maps.Polyline;
   protected doRemovePolyline(polyline: google.maps.Polyline): void;
-  protected doCreateCircle({
-    definition
-  }: {
+  protected doCreateCircle({ definition }: {
     definition: CircleDefinition<google.maps.CircleOptions, google.maps.InfoWindowOptions>;
   }): google.maps.Circle;
   protected doRemoveCircle(circle: google.maps.Circle): void;
-  protected doCreateRectangle({
-    definition
-  }: {
+  protected doCreateRectangle({ definition }: {
     definition: RectangleDefinition<google.maps.RectangleOptions, google.maps.InfoWindowOptions>;
   }): google.maps.Rectangle;
   protected doRemoveRectangle(rectangle: google.maps.Rectangle): void;
-  protected doCreateInfoWindow({
-    definition,
-    element
-  }: {
+  protected doCreateInfoWindow({ definition, element }: {
     definition: Omit<InfoWindowDefinition<google.maps.InfoWindowOptions>, 'position'>;
     element: google.maps.marker.AdvancedMarkerElement | google.maps.Polygon | google.maps.Polyline | google.maps.Circle | google.maps.Rectangle;
   }): google.maps.InfoWindow;
   protected doFitBoundsToMarkers(): void;
   private createTextOrElement;
-  protected doCreateIcon({
-    definition,
-    element
-  }: {
+  protected doCreateIcon({ definition, element }: {
     definition: Icon;
     element: google.maps.marker.AdvancedMarkerElement;
   }): void;
   private closeInfoWindowsExcept;
 }
-export { export_default as default };
+export {};

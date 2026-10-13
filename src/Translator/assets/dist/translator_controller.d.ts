@@ -13,16 +13,11 @@ type ParametersOf<M, D extends DomainType> = M extends Message<infer Translation
   parameters: infer Parameters;
 } ? Parameters : never : never;
 interface Message<Translations extends TranslationsType, Locale extends LocaleType> {
-  translations: { [domain in DomainType]: { [locale in Locale]: string } };
+  translations: { [domain in DomainType]: { [locale in Locale]: string; }; };
 }
 type Messages = Record<MessageId, Message<TranslationsType, LocaleType>>;
-declare function getDefaultLocale(): LocaleType;
-declare function createTranslator<TMessages extends Messages>({
-  messages,
-  locale,
-  localeFallbacks,
-  throwWhenNotFound
-}: {
+export declare function getDefaultLocale(): LocaleType;
+export declare function createTranslator<TMessages extends Messages>({ messages, locale, localeFallbacks, throwWhenNotFound }: {
   messages: TMessages;
   locale?: LocaleType;
   localeFallbacks?: Record<LocaleType, LocaleType>;
@@ -33,4 +28,4 @@ declare function createTranslator<TMessages extends Messages>({
   setThrowWhenNotFound(throwWhenNotFound: boolean): void;
   trans<TMessageId extends keyof TMessages & MessageId, TMessage extends TMessages[TMessageId], TDomain extends DomainsOf<TMessage>, TParameters extends ParametersOf<TMessage, TDomain>>(id: TMessageId, parameters?: TParameters, domain?: RemoveIntlIcuSuffix<TDomain> | undefined, locale?: LocaleOf<TMessage>): string;
 };
-export { DomainType, DomainsOf, LocaleOf, LocaleType, Message, MessageId, Messages, NoParametersType, ParametersOf, ParametersType, RemoveIntlIcuSuffix, TranslationsType, createTranslator, getDefaultLocale };
+export type { DomainType, DomainsOf, LocaleOf, LocaleType, Message, MessageId, Messages, NoParametersType, ParametersOf, ParametersType, RemoveIntlIcuSuffix, TranslationsType };

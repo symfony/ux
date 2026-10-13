@@ -69,7 +69,7 @@ describe('ExternalMutationTracker', () => {
 
     it('can track style changes', async () => {
         const { element, tracker } = createTracker(`
-            <div id="original-id" style="display: none; margin: 10px; flex-basis: auto">Text inside!</div>
+            <div id="original-id" style="display: none; width: 10px; flex-basis: auto">Text inside!</div>
         `);
 
         // change x2
@@ -80,10 +80,10 @@ describe('ExternalMutationTracker', () => {
         // add new with a ":" in it
         element.style.backgroundImage = 'url(https://example.com/image.png)';
         // remove
-        element.style.removeProperty('margin');
+        element.style.removeProperty('width');
         // add then remove
-        element.style.setProperty('padding', '10px');
-        element.style.removeProperty('padding');
+        element.style.setProperty('height', '10px');
+        element.style.removeProperty('height');
         // change, then change back
         element.style.flexBasis = 'length';
         element.style.flexBasis = 'auto';
@@ -103,7 +103,7 @@ describe('ExternalMutationTracker', () => {
             { name: 'color', value: 'red' },
             { name: 'background-image', value: 'url("https://example.com/image.png")' },
         ]);
-        expect(changes.getRemovedStyles()).toEqual(['margin']);
+        expect(changes.getRemovedStyles()).toEqual(['width']);
     });
 
     it('can track class changes', async () => {
