@@ -23,6 +23,7 @@ import {
 import getElementAsTagText from './Util/getElementAsTagText';
 
 export { Component };
+export type { ComponentHooks } from './Component';
 export { getComponent } from './ComponentRegistry';
 
 export interface LiveEvent extends CustomEvent {
