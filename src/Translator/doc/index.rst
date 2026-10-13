@@ -39,11 +39,12 @@ After installing the bundle, the following file should be created, thanks to the
      */
 
     import { createTranslator } from '@symfony/ux-translator';
-    import { messages, localeFallbacks } from '../var/translations/index.js';
+    import { messages, localeFallbacks, defaultLocale } from '../var/translations/index.js';
 
     const translator = createTranslator({
         messages,
         localeFallbacks,
+        defaultLocale,
     });
 
     // Allow you to use `import { trans } from './translator';` in your assets
@@ -143,12 +144,17 @@ You can disable the TypeScript types dump by adding the following configuration:
 Configuring the default locale
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-By default, the default locale is ``en`` (English) that you can configure through many ways (in order of priority):
+The locale of the translator is the first one found in:
 
-#. By passing the locale directly to the ``createTranslator()`` function
-#. With ``setLocale('de')`` or ``setLocale('de_AT')`` from your ``assets/translator.js`` file
-#. Or with ``<html data-symfony-ux-translator-locale="{{ app.request.locale }}">`` attribute (e.g., ``de_AT`` or ``de`` using Symfony locale format)
-#. Or with ``<html lang="{{ app.request.locale|replace({ '_': '-' }) }}">`` attribute (e.g., ``de-AT`` or ``de`` following the `W3C specification on language codes`_)
+#. the ``locale`` option of the ``createTranslator()`` function;
+#. the ``<html data-symfony-ux-translator-locale="{{ app.request.locale }}">`` attribute (e.g., ``de_AT`` or ``de`` using Symfony locale format);
+#. the ``<html lang="{{ app.request.locale|replace({ '_': '-' }) }}">`` attribute (e.g., ``de-AT`` or ``de`` following the `W3C specification on language codes`_);
+#. the ``defaultLocale`` option of the ``createTranslator()`` function;
+#. ``en`` (English).
+
+The dumped ``var/translations/index.js`` file exports the ``framework.default_locale`` of your application as ``defaultLocale``.
+
+You can also change the locale later with ``setLocale('de')`` or ``setLocale('de_AT')`` from your ``assets/translator.js`` file.
 
 Detecting missing translations
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -162,11 +168,12 @@ You can change this behavior by calling ``setThrowWhenNotFound(true)``:
       // assets/translator.js
 
       import { createTranslator } from '@symfony/ux-translator';
-      import { messages, localeFallbacks } from '../var/translations/index.js';
+      import { messages, localeFallbacks, defaultLocale } from '../var/translations/index.js';
 
       const translator = createTranslator({
           messages,
           localeFallbacks,
+          defaultLocale,
     +     throwWhenNotFound: true, // either when creating the translator
       });
 

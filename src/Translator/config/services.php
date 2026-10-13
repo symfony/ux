@@ -32,6 +32,7 @@ return static function (ContainerConfigurator $container): void {
                 abstract_arg('included_domains'),
                 abstract_arg('excluded_domains'),
                 abstract_arg('keys_patterns'),
+                param('kernel.default_locale'),
             ])
             ->tag('kernel.cache_warmer')
 

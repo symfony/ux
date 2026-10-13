@@ -26,6 +26,34 @@ describe('Translator', () => {
             expect(translator.getLocale()).toEqual('it');
         });
 
+        test('falls back to the default locale without <html lang>', () => {
+            const translator = createTranslator({ messages: {}, defaultLocale: 'fr' });
+            expect(translator.getLocale()).toEqual('fr');
+        });
+
+        test('prefers <html lang> over the default locale', () => {
+            document.documentElement.lang = 'de';
+
+            const translator = createTranslator({ messages: {}, defaultLocale: 'fr' });
+            expect(translator.getLocale()).toEqual('de');
+        });
+
+        test('prefers <html data-symfony-ux-translator-locale> over <html lang> and the default locale', () => {
+            document.documentElement.lang = 'de';
+            document.documentElement.setAttribute('data-symfony-ux-translator-locale', 'it');
+
+            const translator = createTranslator({ messages: {}, defaultLocale: 'fr' });
+            expect(translator.getLocale()).toEqual('it');
+        });
+
+        test('prefers the locale option over every other source', () => {
+            document.documentElement.lang = 'de';
+            document.documentElement.setAttribute('data-symfony-ux-translator-locale', 'it');
+
+            const translator = createTranslator({ messages: {}, locale: 'es', defaultLocale: 'fr' });
+            expect(translator.getLocale()).toEqual('es');
+        });
+
         test('custom locale', () => {
             document.documentElement.lang = 'fr';
             document.documentElement.setAttribute('data-symfony-ux-translator-locale', 'it');
@@ -43,6 +71,12 @@ describe('Translator', () => {
             // or "incorrect" Symfony locale format
             document.documentElement.lang = 'de_AT';
             expect(translator.getLocale()).toEqual('de_AT');
+        });
+
+        test('with script and region subcodes', () => {
+            document.documentElement.lang = 'zh-Hant-TW';
+            const translator = createTranslator({ messages: {} });
+            expect(translator.getLocale()).toEqual('zh_Hant_TW');
         });
     });
 
