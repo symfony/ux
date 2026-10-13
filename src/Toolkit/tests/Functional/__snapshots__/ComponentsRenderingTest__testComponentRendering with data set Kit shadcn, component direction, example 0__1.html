@@ -1,0 +1,231 @@
+<!--
+- Kit: Shadcn UI
+- Component: Direction
+- Code:
+```twig
+<twig:Tabs defaultValue="ar" class="w-full max-w-sm">
+    <twig:Tabs:List>
+        <twig:Tabs:Trigger value="en">English</twig:Tabs:Trigger>
+        <twig:Tabs:Trigger value="ar">Arabic (العربية)</twig:Tabs:Trigger>
+        <twig:Tabs:Trigger value="he">Hebrew (עברית)</twig:Tabs:Trigger>
+    </twig:Tabs:List>
+    <twig:Tabs:Content value="en">
+        <twig:Direction direction="ltr" lang="en">
+            <twig:Card>
+                <twig:Card:Header>
+                    <twig:Card:Title>Login to your account</twig:Card:Title>
+                    <twig:Card:Description>
+                        Enter your email below to login to your account
+                    </twig:Card:Description>
+                    <twig:Card:Action>
+                        <twig:Button variant="link">Sign Up</twig:Button>
+                    </twig:Card:Action>
+                </twig:Card:Header>
+                <twig:Card:Content>
+                    <form>
+                        <div class="flex flex-col gap-6">
+                            <div class="grid gap-2">
+                                <twig:Label for="email-en">Email</twig:Label>
+                                <twig:Input id="email-en" type="email" placeholder="m@example.com" required />
+                            </div>
+                            <div class="grid gap-2">
+                                <div class="flex items-center">
+                                    <twig:Label for="password-en">Password</twig:Label>
+                                    <a href="#" class="ms-auto inline-block text-sm underline-offset-4 hover:underline">
+                                        Forgot your password?
+                                    </a>
+                                </div>
+                                <twig:Input id="password-en" type="password" required />
+                            </div>
+                        </div>
+                    </form>
+                </twig:Card:Content>
+                <twig:Card:Footer class="flex-col gap-2">
+                    <twig:Button type="submit" class="w-full">Login</twig:Button>
+                    <twig:Button variant="outline" class="w-full">Login with Google</twig:Button>
+                </twig:Card:Footer>
+            </twig:Card>
+        </twig:Direction>
+    </twig:Tabs:Content>
+    <twig:Tabs:Content value="ar">
+        <twig:Direction direction="rtl" lang="ar">
+            <twig:Card>
+                <twig:Card:Header>
+                    <twig:Card:Title>تسجيل الدخول إلى حسابك</twig:Card:Title>
+                    <twig:Card:Description>
+                        أدخل بريدك الإلكتروني أدناه لتسجيل الدخول إلى حسابك
+                    </twig:Card:Description>
+                    <twig:Card:Action>
+                        <twig:Button variant="link">إنشاء حساب</twig:Button>
+                    </twig:Card:Action>
+                </twig:Card:Header>
+                <twig:Card:Content>
+                    <form>
+                        <div class="flex flex-col gap-6">
+                            <div class="grid gap-2">
+                                <twig:Label for="email-ar">البريد الإلكتروني</twig:Label>
+                                <twig:Input id="email-ar" type="email" placeholder="m@example.com" required />
+                            </div>
+                            <div class="grid gap-2">
+                                <div class="flex items-center">
+                                    <twig:Label for="password-ar">كلمة المرور</twig:Label>
+                                    <a href="#" class="ms-auto inline-block text-sm underline-offset-4 hover:underline">
+                                        نسيت كلمة المرور؟
+                                    </a>
+                                </div>
+                                <twig:Input id="password-ar" type="password" required />
+                            </div>
+                        </div>
+                    </form>
+                </twig:Card:Content>
+                <twig:Card:Footer class="flex-col gap-2">
+                    <twig:Button type="submit" class="w-full">تسجيل الدخول</twig:Button>
+                    <twig:Button variant="outline" class="w-full">تسجيل الدخول باستخدام Google</twig:Button>
+                </twig:Card:Footer>
+            </twig:Card>
+        </twig:Direction>
+    </twig:Tabs:Content>
+    <twig:Tabs:Content value="he">
+        <twig:Direction direction="rtl" lang="he">
+            <twig:Card>
+                <twig:Card:Header>
+                    <twig:Card:Title>התחברות לחשבון שלך</twig:Card:Title>
+                    <twig:Card:Description>
+                        הזן את כתובת האימייל שלך למטה כדי להתחבר לחשבון שלך
+                    </twig:Card:Description>
+                    <twig:Card:Action>
+                        <twig:Button variant="link">הרשמה</twig:Button>
+                    </twig:Card:Action>
+                </twig:Card:Header>
+                <twig:Card:Content>
+                    <form>
+                        <div class="flex flex-col gap-6">
+                            <div class="grid gap-2">
+                                <twig:Label for="email-he">כתובת אימייל</twig:Label>
+                                <twig:Input id="email-he" type="email" placeholder="m@example.com" required />
+                            </div>
+                            <div class="grid gap-2">
+                                <div class="flex items-center">
+                                    <twig:Label for="password-he">סיסמה</twig:Label>
+                                    <a href="#" class="ms-auto inline-block text-sm underline-offset-4 hover:underline">
+                                        שכחת את הסיסמה?
+                                    </a>
+                                </div>
+                                <twig:Input id="password-he" type="password" required />
+                            </div>
+                        </div>
+                    </form>
+                </twig:Card:Content>
+                <twig:Card:Footer class="flex-col gap-2">
+                    <twig:Button type="submit" class="w-full">התחברות</twig:Button>
+                    <twig:Button variant="outline" class="w-full">התחברות עם Google</twig:Button>
+                </twig:Card:Footer>
+            </twig:Card>
+        </twig:Direction>
+    </twig:Tabs:Content>
+</twig:Tabs>
+```
+- Rendered code (run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div data-slot="tabs" data-tabs-active-tab-value="ar" data-orientation="horizontal" class="gap-2 group/tabs flex data-[orientation=horizontal]:flex-col w-full max-w-sm" data-controller="tabs">
+    <nav data-slot="tabs-list" role="tablist" data-variant="default" class="group/tabs-list inline-flex w-fit items-center justify-center rounded-lg p-[3px] text-muted-foreground group-data-[orientation=horizontal]/tabs:h-8 group-data-[orientation=vertical]/tabs:h-fit group-data-[orientation=vertical]/tabs:flex-col data-[variant=line]:rounded-none bg-muted">
+    <button id="tab-en" data-slot="tabs-trigger" data-tabs-target="trigger" data-tab-id="en" role="tab" aria-controls="tab-en-description" aria-selected="false" data-active="false" class="relative inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center gap-1.5 rounded-md border border-transparent px-1.5 py-0.5 text-sm font-medium whitespace-nowrap text-foreground/60 transition-all group-data-[orientation=vertical]/tabs:w-full group-data-[orientation=vertical]/tabs:justify-start hover:text-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-1 focus-visible:outline-ring disabled:pointer-events-none disabled:opacity-50 has-data-[icon=inline-end]:pe-1 has-data-[icon=inline-start]:ps-1 dark:text-muted-foreground dark:hover:text-foreground group-data-[variant=default]/tabs-list:data-active:shadow-sm group-data-[variant=line]/tabs-list:data-active:shadow-none [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 group-data-[variant=line]/tabs-list:bg-transparent group-data-[variant=line]/tabs-list:data-active:bg-transparent dark:group-data-[variant=line]/tabs-list:data-active:border-transparent dark:group-data-[variant=line]/tabs-list:data-active:bg-transparent data-active:bg-background data-active:text-foreground dark:data-active:border-input dark:data-active:bg-input/30 dark:data-active:text-foreground after:absolute after:bg-foreground after:opacity-0 after:transition-opacity group-data-[orientation=horizontal]/tabs:after:inset-x-0 group-data-[orientation=horizontal]/tabs:after:bottom-[-5px] group-data-[orientation=horizontal]/tabs:after:h-0.5 group-data-[orientation=vertical]/tabs:after:inset-y-0 group-data-[orientation=vertical]/tabs:after:-end-1 group-data-[orientation=vertical]/tabs:after:w-0.5 group-data-[variant=line]/tabs-list:data-active:after:opacity-100" data-action="click->tabs#open">English</button>
+        <button id="tab-ar" data-slot="tabs-trigger" data-tabs-target="trigger" data-tab-id="ar" role="tab" aria-controls="tab-ar-description" aria-selected="true" data-active="true" class="relative inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center gap-1.5 rounded-md border border-transparent px-1.5 py-0.5 text-sm font-medium whitespace-nowrap text-foreground/60 transition-all group-data-[orientation=vertical]/tabs:w-full group-data-[orientation=vertical]/tabs:justify-start hover:text-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-1 focus-visible:outline-ring disabled:pointer-events-none disabled:opacity-50 has-data-[icon=inline-end]:pe-1 has-data-[icon=inline-start]:ps-1 dark:text-muted-foreground dark:hover:text-foreground group-data-[variant=default]/tabs-list:data-active:shadow-sm group-data-[variant=line]/tabs-list:data-active:shadow-none [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 group-data-[variant=line]/tabs-list:bg-transparent group-data-[variant=line]/tabs-list:data-active:bg-transparent dark:group-data-[variant=line]/tabs-list:data-active:border-transparent dark:group-data-[variant=line]/tabs-list:data-active:bg-transparent data-active:bg-background data-active:text-foreground dark:data-active:border-input dark:data-active:bg-input/30 dark:data-active:text-foreground after:absolute after:bg-foreground after:opacity-0 after:transition-opacity group-data-[orientation=horizontal]/tabs:after:inset-x-0 group-data-[orientation=horizontal]/tabs:after:bottom-[-5px] group-data-[orientation=horizontal]/tabs:after:h-0.5 group-data-[orientation=vertical]/tabs:after:inset-y-0 group-data-[orientation=vertical]/tabs:after:-end-1 group-data-[orientation=vertical]/tabs:after:w-0.5 group-data-[variant=line]/tabs-list:data-active:after:opacity-100" data-action="click->tabs#open">Arabic (العربية)</button>
+        <button id="tab-he" data-slot="tabs-trigger" data-tabs-target="trigger" data-tab-id="he" role="tab" aria-controls="tab-he-description" aria-selected="false" data-active="false" class="relative inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center gap-1.5 rounded-md border border-transparent px-1.5 py-0.5 text-sm font-medium whitespace-nowrap text-foreground/60 transition-all group-data-[orientation=vertical]/tabs:w-full group-data-[orientation=vertical]/tabs:justify-start hover:text-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-1 focus-visible:outline-ring disabled:pointer-events-none disabled:opacity-50 has-data-[icon=inline-end]:pe-1 has-data-[icon=inline-start]:ps-1 dark:text-muted-foreground dark:hover:text-foreground group-data-[variant=default]/tabs-list:data-active:shadow-sm group-data-[variant=line]/tabs-list:data-active:shadow-none [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 group-data-[variant=line]/tabs-list:bg-transparent group-data-[variant=line]/tabs-list:data-active:bg-transparent dark:group-data-[variant=line]/tabs-list:data-active:border-transparent dark:group-data-[variant=line]/tabs-list:data-active:bg-transparent data-active:bg-background data-active:text-foreground dark:data-active:border-input dark:data-active:bg-input/30 dark:data-active:text-foreground after:absolute after:bg-foreground after:opacity-0 after:transition-opacity group-data-[orientation=horizontal]/tabs:after:inset-x-0 group-data-[orientation=horizontal]/tabs:after:bottom-[-5px] group-data-[orientation=horizontal]/tabs:after:h-0.5 group-data-[orientation=vertical]/tabs:after:inset-y-0 group-data-[orientation=vertical]/tabs:after:-end-1 group-data-[orientation=vertical]/tabs:after:w-0.5 group-data-[variant=line]/tabs-list:data-active:after:opacity-100" data-action="click->tabs#open">Hebrew (עברית)</button>
+    </nav>
+    <div id="tab-en-description" data-slot="tabs-content" data-tabs-target="tab" data-tab-id="en" role="tabpanel" aria-labelledby="tab-en" data-active="false" data-state="inactive" class="flex-1 text-sm outline-none data-[state=inactive]:hidden"><div data-slot="direction" dir="ltr" lang="en"><div data-slot="card" data-size="default" class="group/card flex flex-col gap-(--card-spacing) overflow-hidden rounded-xl bg-card py-(--card-spacing) text-sm text-card-foreground ring-1 ring-foreground/10 [--card-spacing:--spacing(4)] has-data-[slot=card-footer]:pb-0 has-[>img:first-child]:pt-0 data-[size=sm]:[--card-spacing:--spacing(3)] data-[size=sm]:has-data-[slot=card-footer]:pb-0 *:[img:first-child]:rounded-t-xl *:[img:last-child]:rounded-b-xl"><div data-slot="card-header" class="group/card-header @container/card-header grid auto-rows-min items-start gap-1 rounded-t-xl px-(--card-spacing) has-data-[slot=card-action]:grid-cols-[1fr_auto] has-data-[slot=card-description]:grid-rows-[auto_auto] [.border-b]:pb-(--card-spacing)"><div data-slot="card-title" class="cn-font-heading text-base leading-snug font-medium group-data-[size=sm]/card:text-sm">Login to your account</div>
+                    <div data-slot="card-description" class="text-sm text-muted-foreground">Enter your email below to login to your account
+                    </div>
+                    <div data-slot="card-action" class="col-start-2 row-span-2 row-start-1 self-start justify-self-end"><button data-slot="button" data-variant="link" data-size="default" class="group/button inline-flex shrink-0 items-center justify-center rounded-lg border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 text-primary underline-offset-4 hover:underline h-8 gap-1.5 px-2.5 has-data-[icon=inline-end]:pe-2 has-data-[icon=inline-start]:ps-2" type="button">Sign Up</button>
+                    </div>
+                </div>
+                <div data-slot="card-content" class="px-(--card-spacing)"><form>
+                        <div class="flex flex-col gap-6">
+                            <div class="grid gap-2">
+                                <label data-slot="label" class="flex items-center gap-2 text-sm leading-none font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50" for="email-en">Email</label>
+                                <input data-slot="input" class="h-8 w-full min-w-0 rounded-lg border border-input bg-transparent px-2.5 py-1 text-base transition-colors outline-none file:inline-flex file:h-6 file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:cursor-not-allowed disabled:bg-input/50 disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 md:text-sm dark:bg-input/30 dark:disabled:bg-input/80 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40" id="email-en" type="email" placeholder="m@example.com" required="">
+
+                            </div>
+                            <div class="grid gap-2">
+                                <div class="flex items-center">
+                                    <label data-slot="label" class="flex items-center gap-2 text-sm leading-none font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50" for="password-en">Password</label>
+                                    <a href="#" class="ms-auto inline-block text-sm underline-offset-4 hover:underline">
+                                        Forgot your password?
+                                    </a>
+                                </div>
+                                <input data-slot="input" class="h-8 w-full min-w-0 rounded-lg border border-input bg-transparent px-2.5 py-1 text-base transition-colors outline-none file:inline-flex file:h-6 file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:cursor-not-allowed disabled:bg-input/50 disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 md:text-sm dark:bg-input/30 dark:disabled:bg-input/80 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40" id="password-en" type="password" required="">
+
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div data-slot="card-footer" class="flex items-center rounded-b-xl border-t bg-muted/50 p-(--card-spacing) flex-col gap-2"><button data-slot="button" data-variant="default" data-size="default" class="group/button inline-flex shrink-0 items-center justify-center rounded-lg border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 bg-primary text-primary-foreground hover:bg-primary/80 h-8 gap-1.5 px-2.5 has-data-[icon=inline-end]:pe-2 has-data-[icon=inline-start]:ps-2 w-full" type="submit">Login</button>
+                    <button data-slot="button" data-variant="outline" data-size="default" class="group/button inline-flex shrink-0 items-center justify-center rounded-lg border bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 border-border bg-background hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50 h-8 gap-1.5 px-2.5 has-data-[icon=inline-end]:pe-2 has-data-[icon=inline-start]:ps-2 w-full" type="button">Login with Google</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="tab-ar-description" data-slot="tabs-content" data-tabs-target="tab" data-tab-id="ar" role="tabpanel" aria-labelledby="tab-ar" data-active="true" data-state="active" class="flex-1 text-sm outline-none data-[state=inactive]:hidden"><div data-slot="direction" dir="rtl" lang="ar"><div data-slot="card" data-size="default" class="group/card flex flex-col gap-(--card-spacing) overflow-hidden rounded-xl bg-card py-(--card-spacing) text-sm text-card-foreground ring-1 ring-foreground/10 [--card-spacing:--spacing(4)] has-data-[slot=card-footer]:pb-0 has-[>img:first-child]:pt-0 data-[size=sm]:[--card-spacing:--spacing(3)] data-[size=sm]:has-data-[slot=card-footer]:pb-0 *:[img:first-child]:rounded-t-xl *:[img:last-child]:rounded-b-xl"><div data-slot="card-header" class="group/card-header @container/card-header grid auto-rows-min items-start gap-1 rounded-t-xl px-(--card-spacing) has-data-[slot=card-action]:grid-cols-[1fr_auto] has-data-[slot=card-description]:grid-rows-[auto_auto] [.border-b]:pb-(--card-spacing)"><div data-slot="card-title" class="cn-font-heading text-base leading-snug font-medium group-data-[size=sm]/card:text-sm">تسجيل الدخول إلى حسابك</div>
+                    <div data-slot="card-description" class="text-sm text-muted-foreground">أدخل بريدك الإلكتروني أدناه لتسجيل الدخول إلى حسابك
+                    </div>
+                    <div data-slot="card-action" class="col-start-2 row-span-2 row-start-1 self-start justify-self-end"><button data-slot="button" data-variant="link" data-size="default" class="group/button inline-flex shrink-0 items-center justify-center rounded-lg border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 text-primary underline-offset-4 hover:underline h-8 gap-1.5 px-2.5 has-data-[icon=inline-end]:pe-2 has-data-[icon=inline-start]:ps-2" type="button">إنشاء حساب</button>
+                    </div>
+                </div>
+                <div data-slot="card-content" class="px-(--card-spacing)"><form>
+                        <div class="flex flex-col gap-6">
+                            <div class="grid gap-2">
+                                <label data-slot="label" class="flex items-center gap-2 text-sm leading-none font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50" for="email-ar">البريد الإلكتروني</label>
+                                <input data-slot="input" class="h-8 w-full min-w-0 rounded-lg border border-input bg-transparent px-2.5 py-1 text-base transition-colors outline-none file:inline-flex file:h-6 file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:cursor-not-allowed disabled:bg-input/50 disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 md:text-sm dark:bg-input/30 dark:disabled:bg-input/80 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40" id="email-ar" type="email" placeholder="m@example.com" required="">
+
+                            </div>
+                            <div class="grid gap-2">
+                                <div class="flex items-center">
+                                    <label data-slot="label" class="flex items-center gap-2 text-sm leading-none font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50" for="password-ar">كلمة المرور</label>
+                                    <a href="#" class="ms-auto inline-block text-sm underline-offset-4 hover:underline">
+                                        نسيت كلمة المرور؟
+                                    </a>
+                                </div>
+                                <input data-slot="input" class="h-8 w-full min-w-0 rounded-lg border border-input bg-transparent px-2.5 py-1 text-base transition-colors outline-none file:inline-flex file:h-6 file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:cursor-not-allowed disabled:bg-input/50 disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 md:text-sm dark:bg-input/30 dark:disabled:bg-input/80 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40" id="password-ar" type="password" required="">
+
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div data-slot="card-footer" class="flex items-center rounded-b-xl border-t bg-muted/50 p-(--card-spacing) flex-col gap-2"><button data-slot="button" data-variant="default" data-size="default" class="group/button inline-flex shrink-0 items-center justify-center rounded-lg border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 bg-primary text-primary-foreground hover:bg-primary/80 h-8 gap-1.5 px-2.5 has-data-[icon=inline-end]:pe-2 has-data-[icon=inline-start]:ps-2 w-full" type="submit">تسجيل الدخول</button>
+                    <button data-slot="button" data-variant="outline" data-size="default" class="group/button inline-flex shrink-0 items-center justify-center rounded-lg border bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 border-border bg-background hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50 h-8 gap-1.5 px-2.5 has-data-[icon=inline-end]:pe-2 has-data-[icon=inline-start]:ps-2 w-full" type="button">تسجيل الدخول باستخدام Google</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="tab-he-description" data-slot="tabs-content" data-tabs-target="tab" data-tab-id="he" role="tabpanel" aria-labelledby="tab-he" data-active="false" data-state="inactive" class="flex-1 text-sm outline-none data-[state=inactive]:hidden"><div data-slot="direction" dir="rtl" lang="he"><div data-slot="card" data-size="default" class="group/card flex flex-col gap-(--card-spacing) overflow-hidden rounded-xl bg-card py-(--card-spacing) text-sm text-card-foreground ring-1 ring-foreground/10 [--card-spacing:--spacing(4)] has-data-[slot=card-footer]:pb-0 has-[>img:first-child]:pt-0 data-[size=sm]:[--card-spacing:--spacing(3)] data-[size=sm]:has-data-[slot=card-footer]:pb-0 *:[img:first-child]:rounded-t-xl *:[img:last-child]:rounded-b-xl"><div data-slot="card-header" class="group/card-header @container/card-header grid auto-rows-min items-start gap-1 rounded-t-xl px-(--card-spacing) has-data-[slot=card-action]:grid-cols-[1fr_auto] has-data-[slot=card-description]:grid-rows-[auto_auto] [.border-b]:pb-(--card-spacing)"><div data-slot="card-title" class="cn-font-heading text-base leading-snug font-medium group-data-[size=sm]/card:text-sm">התחברות לחשבון שלך</div>
+                    <div data-slot="card-description" class="text-sm text-muted-foreground">הזן את כתובת האימייל שלך למטה כדי להתחבר לחשבון שלך
+                    </div>
+                    <div data-slot="card-action" class="col-start-2 row-span-2 row-start-1 self-start justify-self-end"><button data-slot="button" data-variant="link" data-size="default" class="group/button inline-flex shrink-0 items-center justify-center rounded-lg border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 text-primary underline-offset-4 hover:underline h-8 gap-1.5 px-2.5 has-data-[icon=inline-end]:pe-2 has-data-[icon=inline-start]:ps-2" type="button">הרשמה</button>
+                    </div>
+                </div>
+                <div data-slot="card-content" class="px-(--card-spacing)"><form>
+                        <div class="flex flex-col gap-6">
+                            <div class="grid gap-2">
+                                <label data-slot="label" class="flex items-center gap-2 text-sm leading-none font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50" for="email-he">כתובת אימייל</label>
+                                <input data-slot="input" class="h-8 w-full min-w-0 rounded-lg border border-input bg-transparent px-2.5 py-1 text-base transition-colors outline-none file:inline-flex file:h-6 file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:cursor-not-allowed disabled:bg-input/50 disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 md:text-sm dark:bg-input/30 dark:disabled:bg-input/80 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40" id="email-he" type="email" placeholder="m@example.com" required="">
+
+                            </div>
+                            <div class="grid gap-2">
+                                <div class="flex items-center">
+                                    <label data-slot="label" class="flex items-center gap-2 text-sm leading-none font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50" for="password-he">סיסמה</label>
+                                    <a href="#" class="ms-auto inline-block text-sm underline-offset-4 hover:underline">
+                                        שכחת את הסיסמה?
+                                    </a>
+                                </div>
+                                <input data-slot="input" class="h-8 w-full min-w-0 rounded-lg border border-input bg-transparent px-2.5 py-1 text-base transition-colors outline-none file:inline-flex file:h-6 file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:cursor-not-allowed disabled:bg-input/50 disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 md:text-sm dark:bg-input/30 dark:disabled:bg-input/80 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40" id="password-he" type="password" required="">
+
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div data-slot="card-footer" class="flex items-center rounded-b-xl border-t bg-muted/50 p-(--card-spacing) flex-col gap-2"><button data-slot="button" data-variant="default" data-size="default" class="group/button inline-flex shrink-0 items-center justify-center rounded-lg border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 bg-primary text-primary-foreground hover:bg-primary/80 h-8 gap-1.5 px-2.5 has-data-[icon=inline-end]:pe-2 has-data-[icon=inline-start]:ps-2 w-full" type="submit">התחברות</button>
+                    <button data-slot="button" data-variant="outline" data-size="default" class="group/button inline-flex shrink-0 items-center justify-center rounded-lg border bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 border-border bg-background hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50 h-8 gap-1.5 px-2.5 has-data-[icon=inline-end]:pe-2 has-data-[icon=inline-start]:ps-2 w-full" type="button">התחברות עם Google</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
