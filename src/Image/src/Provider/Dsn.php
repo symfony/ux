@@ -20,6 +20,7 @@ final class Dsn
 {
     private readonly string $scheme;
     private readonly ?string $host;
+    private readonly ?int $port;
     private readonly ?string $path;
     private readonly array $options;
     private readonly string $originalDsn;
@@ -37,6 +38,7 @@ final class Dsn
 
         $this->scheme = $params['scheme'];
         $this->host = '' !== ($params['host'] ?? '') ? $params['host'] : null;
+        $this->port = $params['port'] ?? null;
         $this->path = '' !== ($params['path'] ?? '') ? $params['path'] : null;
 
         $options = [];
@@ -52,6 +54,11 @@ final class Dsn
     public function getHost(): ?string
     {
         return $this->host;
+    }
+
+    public function getPort(): ?int
+    {
+        return $this->port;
     }
 
     public function getPath(): ?string

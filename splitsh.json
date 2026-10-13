@@ -11,6 +11,7 @@
         "ux-cloudflare-image": "src/Image/src/Bridge/Cloudflare",
         "ux-cloudinary-image": "src/Image/src/Bridge/Cloudinary",
         "ux-imgix-image": "src/Image/src/Bridge/Imgix",
+        "ux-ipx-image": "src/Image/src/Bridge/Ipx",
         "ux-keycdn-image": "src/Image/src/Bridge/KeyCdn",
         "ux-inspector": "src/Inspector",
         "ux-live-component": "src/LiveComponent",
