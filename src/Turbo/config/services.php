@@ -74,6 +74,7 @@ return static function (ContainerConfigurator $container): void {
             ])
             ->tag('doctrine.event_listener', ['event' => 'onFlush'])
             ->tag('doctrine.event_listener', ['event' => 'postFlush'])
+            ->tag('kernel.reset', ['method' => 'reset'])
 
         ->set('turbo.kernel.request_listener', RequestListener::class)
             ->tag('kernel.event_listener', ['event' => KernelEvents::REQUEST, 'priority' => 256])

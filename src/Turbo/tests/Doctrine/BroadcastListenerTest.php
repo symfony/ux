@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\Turbo\Tests\Doctrine;
 
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Events;
 use PHPUnit\Framework\TestCase;
@@ -56,6 +57,40 @@ class BroadcastListenerTest extends TestCase
         $entityManager->flush();
 
         $this->assertSame([['update', ['id' => ['player' => '1', 'team' => '2']]]], $broadcaster->broadcasts);
+    }
+
+    public function testResetForgetsTheEntitiesOfAFailedFlush(): void
+    {
+        $broadcaster = new CollectingBroadcaster();
+        $listener = new BroadcastListener($broadcaster);
+
+        $entityManager = EntityManagerFactory::create();
+        $entityManager->persist($player = new Player(1));
+        $entityManager->persist($team = new Team(2));
+        $entityManager->flush();
+        $entityManager->getConnection()->insert('Membership', ['player_id' => 1, 'team_id' => 2, 'role' => 'member']);
+
+        $entityManager->getEventManager()->addEventListener([Events::onFlush, Events::postFlush], $listener);
+        $entityManager->persist(new Membership($player, $team));
+
+        try {
+            $entityManager->flush();
+            $this->fail('The flush should have failed.');
+        } catch (UniqueConstraintViolationException) {
+            // postFlush is not dispatched, so the membership is still collected
+        }
+
+        // what the "services_resetter" does between two requests of a long-running process
+        $listener->reset();
+
+        $entityManager = EntityManagerFactory::create();
+        $entityManager->getEventManager()->addEventListener([Events::onFlush, Events::postFlush], $listener);
+        $entityManager->persist($player = new Player(3));
+        $entityManager->persist($team = new Team(4));
+        $entityManager->persist(new Membership($player, $team));
+        $entityManager->flush();
+
+        $this->assertSame([['create', ['id' => ['player' => '3', 'team' => '4']]]], $broadcaster->broadcasts);
     }
 
     private function listenTo(EntityManager $entityManager): CollectingBroadcaster
