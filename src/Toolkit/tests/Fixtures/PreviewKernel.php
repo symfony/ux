@@ -64,7 +64,7 @@ final class PreviewKernel extends BaseKernel
             'secret' => 'S3CRET',
             'test' => true,
             'http_method_override' => false,
-            'asset_mapper' => ['paths' => ['assets/']],
+            'asset_mapper' => ['paths' => ['assets/'], 'missing_import_mode' => 'warn'],
         ]);
 
         $container->extension('twig_component', [
