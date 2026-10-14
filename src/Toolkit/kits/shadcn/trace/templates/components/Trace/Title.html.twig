@@ -1,0 +1,9 @@
+<span
+    data-slot="trace-title"
+    {{ attributes.defaults({
+        class: 'min-w-0 truncate motion-reduce:shimmer-none'|tailwind_classes,
+    }) }}
+>
+    {##- One sentence that says what happened. -#}
+    {%- block content %}{% endblock -%}
+</span>

@@ -1,0 +1,18 @@
+{%- set _collapsible_open = inject('collapsible.open', false) -%}
+<button
+    type="button"
+    data-slot="trace-collapsible-trigger"
+    data-collapsible-target="trigger"
+    aria-expanded="{{ _collapsible_open ? 'true' : 'false' }}"
+    data-state="{{ _collapsible_open ? 'open' : 'closed' }}"
+    {{ attributes.defaults({
+        class: 'group/trace-collapsible-trigger flex w-fit max-w-full min-w-0 cursor-pointer items-center gap-1 rounded-md text-start text-muted-foreground transition-colors outline-none hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50 has-[[data-status=error]]:text-destructive'|tailwind_classes,
+        'data-action': 'click->collapsible#toggle'|html_attr_type('sst'),
+    }) }}
+>
+    {##- The `Trace:Line` that opens and closes the row. -#}
+    {%- block content %}{% endblock -%}
+    <twig:Trace:Icon class="transition-transform rtl:rotate-180 group-aria-expanded/trace-collapsible-trigger:rotate-90">
+        <twig:ux:icon name="lucide:chevron-right" />
+    </twig:Trace:Icon>
+</button>

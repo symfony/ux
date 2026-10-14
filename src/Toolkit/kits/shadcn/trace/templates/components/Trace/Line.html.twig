@@ -1,0 +1,14 @@
+{%- props
+    ## 'running'|'error'|'pending'|null The state of the work the line reports.
+    status = null
+-%}
+<span
+    data-slot="trace-line"
+    {% if status %}data-status="{{ status }}"{% endif %}
+    {{ attributes.defaults({
+        class: 'flex w-fit max-w-full min-w-0 items-center gap-2 text-sm text-muted-foreground transition-colors in-[a,button]:cursor-pointer in-[a:hover,button:hover]:text-foreground data-[status=error]:text-destructive data-[status=error]:in-[a:hover,button:hover]:text-destructive data-[status=pending]:opacity-60 data-[status=running]:*:data-[slot=trace-title]:shimmer'|tailwind_classes,
+    }) }}
+>
+    {##- The line content, typically includes `Trace:Icon`, `Trace:Title` and optionally `Trace:Description`. -#}
+    {%- block content %}{% endblock -%}
+</span>

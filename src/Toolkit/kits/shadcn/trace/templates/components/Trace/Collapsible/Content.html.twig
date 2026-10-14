@@ -1,0 +1,18 @@
+{%- set _collapsible_open = inject('collapsible.open', false) -%}
+<div
+    data-slot="trace-collapsible-content"
+    data-collapsible-target="content"
+    aria-hidden="{{ not _collapsible_open ? 'true' : 'false' }}"
+    data-state="{{ _collapsible_open ? 'open' : 'closed' }}"
+    class="min-w-0 overflow-hidden"
+    {{ not _collapsible_open ? 'hidden' }}
+    {{ attributes.without('class') }}
+>
+    <div
+        data-slot="trace-collapsible-content-inner"
+        class="{{ ('mt-2 mb-1 ms-[calc(--spacing(2)-1px)] min-w-0 border-s pe-1 ps-4 leading-relaxed wrap-break-word text-muted-foreground ' ~ attributes.render('class'))|tailwind_merge }}"
+    >
+        {##- The detail revealed when the row is open. -#}
+        {%- block content %}{% endblock -%}
+    </div>
+</div>
