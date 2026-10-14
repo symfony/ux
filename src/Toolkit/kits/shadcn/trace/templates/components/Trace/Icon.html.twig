@@ -1,0 +1,10 @@
+<span
+    data-slot="trace-icon"
+    aria-hidden="true"
+    {{ attributes.defaults({
+        class: "flex size-4 shrink-0 items-center justify-center [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 [[data-slot=trace-title]~&]:-ms-1"|tailwind_classes,
+    }) }}
+>
+    {##- The decorative icon. Before the title it names the action, after it is the indicator. -#}
+    {%- block content %}{% endblock -%}
+</span>

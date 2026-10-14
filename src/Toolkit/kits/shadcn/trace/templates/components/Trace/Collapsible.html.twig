@@ -1,0 +1,17 @@
+{%- props
+    ## boolean Whether the row is open on initial render.
+    open = false
+-%}
+{%- do provide('collapsible.open', open) -%}
+<div
+    data-slot="trace-collapsible"
+    data-collapsible-open-value="{{ open ? 'true' : 'false' }}"
+    data-state="{{ open ? 'open' : 'closed' }}"
+    {{ attributes.defaults({
+        class: 'flex w-full min-w-0 flex-col'|tailwind_classes,
+        'data-controller': 'collapsible',
+    }) }}
+>
+    {##- The row, typically includes `Trace:Collapsible:Trigger` and `Trace:Collapsible:Content`. -#}
+    {%- block content %}{% endblock -%}
+</div>
