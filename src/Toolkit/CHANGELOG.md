@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 3.6.1
+
+- [Shadcn] Fix the empty toast list of `sonner` catching clicks when a Content Security Policy blocks inline styles
+
 ## 3.6.0
 
 - [Shadcn] Declare the `shadcn` and `tw-animate-css` packages as dependencies of the kit, so `ux:install` suggests installing them
