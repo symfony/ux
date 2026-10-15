@@ -1,0 +1,98 @@
+<!--
+- Kit: Shadcn UI
+- Component: Message Scroller
+- Code:
+```twig
+<twig:MessageScroller:Provider autoScroll>
+    <twig:Card class="mx-auto h-140 w-full max-w-sm gap-0">
+        <twig:Card:Header class="gap-1 border-b">
+            <twig:Card:Title>Streaming Messages</twig:Card:Title>
+            <twig:Card:Description>Auto-scroll follows the live edge of the conversation.</twig:Card:Description>
+        </twig:Card:Header>
+        <twig:Card:Content class="min-h-0 flex-1 overflow-hidden p-0">
+            <twig:MessageScroller>
+                <twig:MessageScroller:Viewport>
+                    <twig:MessageScroller:Content class="p-(--card-spacing)" aria-busy="true">
+                        <twig:MessageScroller:Item messageId="stream-1" scrollAnchor>
+                            <twig:Message align="end">
+                                <twig:Message:Content>
+                                    <twig:Bubble variant="muted">
+                                        <twig:Bubble:Content>I'm building a chat for our app and the scroll behavior is driving me nuts. Every time the AI streams a reply, the whole thread jumps around.</twig:Bubble:Content>
+                                    </twig:Bubble>
+                                </twig:Message:Content>
+                            </twig:Message>
+                        </twig:MessageScroller:Item>
+                        <twig:MessageScroller:Item messageId="stream-2">
+                            <twig:Message>
+                                <twig:Message:Content>
+                                    <twig:Bubble variant="ghost">
+                                        <twig:Bubble:Content class="space-y-2">
+                                            <p class="whitespace-pre-line">That's the classic streaming scroll problem. Wrap your message list in `MessageScroller` and turn on `autoScroll`: the viewport pins to the bottom as tokens arrive, so users always see the latest text land in place.</p>
+                                            <p class="whitespace-pre-line">The important part: it only auto-scrolls while the reader is already at the bottom. The moment they scroll up to read something earlier, auto-scroll backs off and their position is preserved. You get smooth streaming without fighting the user's intent.</p>
+                                        </twig:Bubble:Content>
+                                    </twig:Bubble>
+                                </twig:Message:Content>
+                            </twig:Message>
+                        </twig:MessageScroller:Item>
+                        <twig:MessageScroller:Item messageId="stream-3" scrollAnchor>
+                            <twig:Message align="end">
+                                <twig:Message:Content>
+                                    <twig:Bubble variant="muted">
+                                        <twig:Bubble:Content>Okay, but when someone sends a new message the view still feels jarring, like the whole conversation reloads from the top.</twig:Bubble:Content>
+                                    </twig:Bubble>
+                                </twig:Message:Content>
+                            </twig:Message>
+                        </twig:MessageScroller:Item>
+                        <twig:MessageScroller:Item messageId="stream-4">
+                            <twig:Message>
+                                <twig:Message:Content>
+                                    <twig:Bubble variant="ghost">
+                                        <twig:Bubble:Content>`MessageScroller:Item` fixes that with turn anchoring. Set `scrollAnchor` on the turn that should settle near the top instead of blindly snapping to the document bottom.</twig:Bubble:Content>
+                                    </twig:Bubble>
+                                </twig:Message:Content>
+                            </twig:Message>
+                        </twig:MessageScroller:Item>
+                    </twig:MessageScroller:Content>
+                </twig:MessageScroller:Viewport>
+                <twig:MessageScroller:Button />
+            </twig:MessageScroller>
+        </twig:Card:Content>
+    </twig:Card>
+</twig:MessageScroller:Provider>
+```
+- Rendered code (run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div data-slot="message-scroller-provider" data-message-scroller-auto-scroll-value="true" data-message-scroller-default-scroll-position-value="end" data-message-scroller-scroll-edge-threshold-value="8" data-message-scroller-scroll-previous-item-peek-value="64" data-message-scroller-scroll-margin-value="0" class="group/message-scroller-provider contents" data-controller="message-scroller"><div data-slot="card" data-size="default" class="group/card flex flex-col overflow-hidden rounded-xl bg-card py-(--card-spacing) text-sm text-card-foreground ring-1 ring-foreground/10 [--card-spacing:--spacing(4)] has-data-[slot=card-footer]:pb-0 has-[>img:first-child]:pt-0 data-[size=sm]:[--card-spacing:--spacing(3)] data-[size=sm]:has-data-[slot=card-footer]:pb-0 *:[img:first-child]:rounded-t-xl *:[img:last-child]:rounded-b-xl mx-auto h-140 w-full max-w-sm gap-0"><div data-slot="card-header" class="group/card-header @container/card-header grid auto-rows-min items-start rounded-t-xl px-(--card-spacing) has-data-[slot=card-action]:grid-cols-[1fr_auto] has-data-[slot=card-description]:grid-rows-[auto_auto] [.border-b]:pb-(--card-spacing) gap-1 border-b"><div data-slot="card-title" class="cn-font-heading text-base leading-snug font-medium group-data-[size=sm]/card:text-sm">Streaming Messages</div>
+            <div data-slot="card-description" class="text-sm text-muted-foreground">Auto-scroll follows the live edge of the conversation.</div>
+        </div>
+        <div data-slot="card-content" class="min-h-0 flex-1 overflow-hidden p-0"><div data-slot="message-scroller" data-message-scroller-target="root" data-pending-scroll="" class="group/message-scroller relative flex size-full min-h-0 flex-col overflow-hidden"><div data-slot="message-scroller-viewport" data-message-scroller-target="viewport" data-preserve-scroll-on-prepend="true" role="region" data-pending-scroll="" class="size-full min-h-0 min-w-0 scroll-fade-b overflow-y-auto overscroll-contain contain-content [scrollbar-gutter:stable] [scrollbar-width:thin] data-autoscrolling:[scrollbar-color:transparent_transparent] data-pending-scroll:invisible" aria-label="Messages" tabindex="0" data-action="scroll->message-scroller#handleScroll wheel->message-scroller#handleUserScroll:passive touchmove->message-scroller#handleUserScroll:passive keydown.up->message-scroller#handleUserScroll keydown.down->message-scroller#handleUserScroll keydown.page_up->message-scroller#handleUserScroll keydown.page_down->message-scroller#handleUserScroll keydown.home->message-scroller#handleUserScroll keydown.end->message-scroller#handleUserScroll keydown.space->message-scroller#handleUserScroll"><div data-slot="message-scroller-content" data-message-scroller-target="content" role="log" aria-relevant="additions" class="flex h-max min-h-full flex-col gap-6 p-(--card-spacing)" aria-busy="true"><div data-slot="message-scroller-item" data-message-id="stream-1" data-scroll-anchor="true" class="min-w-0 shrink-0"><div data-slot="message" data-align="end" class="group/message relative flex w-full min-w-0 gap-2 text-sm data-[align=end]:flex-row-reverse"><div data-slot="message-content" class="flex w-full min-w-0 flex-col gap-2.5 wrap-break-word group-data-[align=end]/message:*:data-slot:self-end"><div data-slot="bubble" data-variant="muted" data-align="start" class="group/bubble relative flex w-fit max-w-[80%] min-w-0 flex-col gap-1 group-data-[align=end]/message:self-end *:data-[slot=bubble-content]:bg-muted [&amp;>[data-slot=bubble-content]:is(button,a):hover]:bg-[color-mix(in_oklch,var(--muted),var(--foreground)_5%)]"><div data-slot="bubble-content" class="w-fit max-w-full min-w-0 overflow-hidden rounded-xl border border-transparent px-3 py-2 text-sm leading-relaxed wrap-break-word group-data-[align=end]/bubble:self-end [button]:text-start [button,a]:transition-colors [button,a]:outline-none [button,a]:focus-visible:border-ring [button,a]:focus-visible:ring-3 [button,a]:focus-visible:ring-ring/50">I'm building a chat for our app and the scroll behavior is driving me nuts. Every time the AI streams a reply, the whole thread jumps around.</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div data-slot="message-scroller-item" data-message-id="stream-2" data-scroll-anchor="false" class="min-w-0 shrink-0"><div data-slot="message" data-align="start" class="group/message relative flex w-full min-w-0 gap-2 text-sm data-[align=end]:flex-row-reverse"><div data-slot="message-content" class="flex w-full min-w-0 flex-col gap-2.5 wrap-break-word group-data-[align=end]/message:*:data-slot:self-end"><div data-slot="bubble" data-variant="ghost" data-align="start" class="group/bubble relative flex w-fit min-w-0 flex-col gap-1 group-data-[align=end]/message:self-end max-w-full *:data-[slot=bubble-content]:rounded-none *:data-[slot=bubble-content]:bg-transparent *:data-[slot=bubble-content]:p-0 [&amp;>[data-slot=bubble-content]:is(button,a):hover]:bg-muted [&amp;>[data-slot=bubble-content]:is(button,a):hover]:text-foreground dark:[&amp;>[data-slot=bubble-content]:is(button,a):hover]:bg-muted/50"><div data-slot="bubble-content" class="w-fit max-w-full min-w-0 overflow-hidden rounded-xl border border-transparent px-3 py-2 text-sm leading-relaxed wrap-break-word group-data-[align=end]/bubble:self-end [button]:text-start [button,a]:transition-colors [button,a]:outline-none [button,a]:focus-visible:border-ring [button,a]:focus-visible:ring-3 [button,a]:focus-visible:ring-ring/50 space-y-2"><p class="whitespace-pre-line">That's the classic streaming scroll problem. Wrap your message list in `MessageScroller` and turn on `autoScroll`: the viewport pins to the bottom as tokens arrive, so users always see the latest text land in place.</p>
+                                            <p class="whitespace-pre-line">The important part: it only auto-scrolls while the reader is already at the bottom. The moment they scroll up to read something earlier, auto-scroll backs off and their position is preserved. You get smooth streaming without fighting the user's intent.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div data-slot="message-scroller-item" data-message-id="stream-3" data-scroll-anchor="true" class="min-w-0 shrink-0"><div data-slot="message" data-align="end" class="group/message relative flex w-full min-w-0 gap-2 text-sm data-[align=end]:flex-row-reverse"><div data-slot="message-content" class="flex w-full min-w-0 flex-col gap-2.5 wrap-break-word group-data-[align=end]/message:*:data-slot:self-end"><div data-slot="bubble" data-variant="muted" data-align="start" class="group/bubble relative flex w-fit max-w-[80%] min-w-0 flex-col gap-1 group-data-[align=end]/message:self-end *:data-[slot=bubble-content]:bg-muted [&amp;>[data-slot=bubble-content]:is(button,a):hover]:bg-[color-mix(in_oklch,var(--muted),var(--foreground)_5%)]"><div data-slot="bubble-content" class="w-fit max-w-full min-w-0 overflow-hidden rounded-xl border border-transparent px-3 py-2 text-sm leading-relaxed wrap-break-word group-data-[align=end]/bubble:self-end [button]:text-start [button,a]:transition-colors [button,a]:outline-none [button,a]:focus-visible:border-ring [button,a]:focus-visible:ring-3 [button,a]:focus-visible:ring-ring/50">Okay, but when someone sends a new message the view still feels jarring, like the whole conversation reloads from the top.</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div data-slot="message-scroller-item" data-message-id="stream-4" data-scroll-anchor="false" class="min-w-0 shrink-0"><div data-slot="message" data-align="start" class="group/message relative flex w-full min-w-0 gap-2 text-sm data-[align=end]:flex-row-reverse"><div data-slot="message-content" class="flex w-full min-w-0 flex-col gap-2.5 wrap-break-word group-data-[align=end]/message:*:data-slot:self-end"><div data-slot="bubble" data-variant="ghost" data-align="start" class="group/bubble relative flex w-fit min-w-0 flex-col gap-1 group-data-[align=end]/message:self-end max-w-full *:data-[slot=bubble-content]:rounded-none *:data-[slot=bubble-content]:bg-transparent *:data-[slot=bubble-content]:p-0 [&amp;>[data-slot=bubble-content]:is(button,a):hover]:bg-muted [&amp;>[data-slot=bubble-content]:is(button,a):hover]:text-foreground dark:[&amp;>[data-slot=bubble-content]:is(button,a):hover]:bg-muted/50"><div data-slot="bubble-content" class="w-fit max-w-full min-w-0 overflow-hidden rounded-xl border border-transparent px-3 py-2 text-sm leading-relaxed wrap-break-word group-data-[align=end]/bubble:self-end [button]:text-start [button,a]:transition-colors [button,a]:outline-none [button,a]:focus-visible:border-ring [button,a]:focus-visible:ring-3 [button,a]:focus-visible:ring-ring/50">`MessageScroller:Item` fixes that with turn anchoring. Set `scrollAnchor` on the turn that should settle near the top instead of blindly snapping to the document bottom.</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    <div data-message-scroller-target="spacer" aria-hidden="true" hidden=""></div>
+</div>
+                </div>
+                <button data-slot="message-scroller-button" data-variant="secondary" data-size="icon-sm" class="group/button inline-flex shrink-0 items-center justify-center border bg-clip-padding text-sm font-medium whitespace-nowrap outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 aria-expanded:bg-secondary aria-expanded:text-secondary-foreground size-7 rounded-[min(var(--radius-md),12px)] in-data-[slot=button-group]:rounded-lg absolute inset-s-1/2 -translate-x-1/2 border-border bg-background text-foreground transition-[translate,scale,opacity] duration-200 hover:bg-muted hover:text-foreground data-[active=false]:pointer-events-none data-[active=false]:scale-95 data-[active=false]:opacity-0 data-[active=false]:duration-400 data-[active=false]:ease-[cubic-bezier(0.7,0,0.84,0)] data-[active=true]:translate-y-0 data-[active=true]:scale-100 data-[active=true]:opacity-100 data-[active=true]:ease-[cubic-bezier(0.23,1,0.32,1)] data-[direction=end]:bottom-4 data-[direction=end]:data-[active=false]:translate-y-full data-[direction=start]:top-4 data-[direction=start]:data-[active=false]:-translate-y-full rtl:translate-x-1/2 data-[direction=start]:[&amp;_svg]:rotate-180" type="button" data-message-scroller-target="button" data-message-scroller-behavior-param="smooth" data-direction="end" data-active="false" inert="" tabindex="-1" data-action="click->message-scroller#scrollToEnd"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v14m7-7l-7 7l-7-7"></path></svg>
+        <span class="sr-only">Scroll to end</span></button>
+
+            </div>
+        </div>
+    </div>
+</div>

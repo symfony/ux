@@ -1,0 +1,258 @@
+<!--
+- Kit: Shadcn UI
+- Component: Message Scroller
+- Code:
+```twig
+<twig:MessageScroller:Provider scrollMargin="12">
+    <div class="relative mx-auto w-full max-w-sm">
+        <twig:Card class="mx-auto h-140 w-full max-w-sm gap-0">
+            <twig:Card:Header class="gap-1 border-b">
+                <twig:Card:Title>Transcript Outline</twig:Card:Title>
+                <twig:Card:Description>Track the current anchored turn.</twig:Card:Description>
+            </twig:Card:Header>
+            <twig:Card:Content class="min-h-0 flex-1 overflow-hidden p-0">
+                <twig:MessageScroller>
+                    <twig:MessageScroller:Viewport>
+                        <twig:MessageScroller:Content class="p-(--card-spacing)">
+                            <twig:MessageScroller:Item messageId="command-activation" scrollAnchor>
+                                <twig:Message align="end">
+                                    <twig:Message:Content>
+                                        <twig:Bubble variant="muted">
+                                            <twig:Bubble:Content>We're seeing activation dip after workspace creation. Can you help me find the likely step?</twig:Bubble:Content>
+                                        </twig:Bubble>
+                                    </twig:Message:Content>
+                                </twig:Message>
+                            </twig:MessageScroller:Item>
+                            <twig:MessageScroller:Item messageId="command-reply-1">
+                                <twig:Message>
+                                    <twig:Message:Content>
+                                        <twig:Bubble variant="ghost">
+                                            <twig:Bubble:Content class="space-y-2">
+                                                <p class="whitespace-pre-line">The sharpest drop is between creating the workspace and inviting the first teammate.</p>
+                                                <p class="whitespace-pre-line">Workspace creation is still healthy, but the invite step is where users pause. That suggests the product is asking for collaboration before the user has enough confidence in the workspace.</p>
+                                            </twig:Bubble:Content>
+                                        </twig:Bubble>
+                                    </twig:Message:Content>
+                                </twig:Message>
+                            </twig:MessageScroller:Item>
+                            <twig:MessageScroller:Item messageId="command-compare" scrollAnchor>
+                                <twig:Message align="end">
+                                    <twig:Message:Content>
+                                        <twig:Bubble variant="muted">
+                                            <twig:Bubble:Content>What should I compare before we change the onboarding flow?</twig:Bubble:Content>
+                                        </twig:Bubble>
+                                    </twig:Message:Content>
+                                </twig:Message>
+                            </twig:MessageScroller:Item>
+                            <twig:MessageScroller:Item messageId="command-reply-3">
+                                <twig:Message>
+                                    <twig:Message:Content>
+                                        <twig:Bubble variant="ghost">
+                                            <twig:Bubble:Content class="space-y-2">
+                                                <p class="whitespace-pre-line">Compare three cohorts:</p>
+                                                <p class="whitespace-pre-line">1. Users who choose a template before inviting teammates.
+                                            2. Users who start from a blank workspace.
+                                            3. Users who skip invites and return within 24 hours.</p>
+                                                <p class="whitespace-pre-line">If template users invite faster, the fix is probably better first-run guidance rather than a louder invite prompt.</p>
+                                            </twig:Bubble:Content>
+                                        </twig:Bubble>
+                                    </twig:Message:Content>
+                                </twig:Message>
+                            </twig:MessageScroller:Item>
+                            <twig:MessageScroller:Item messageId="command-experiment" scrollAnchor>
+                                <twig:Message align="end">
+                                    <twig:Message:Content>
+                                        <twig:Bubble variant="muted">
+                                            <twig:Bubble:Content>Can you turn that into an experiment?</twig:Bubble:Content>
+                                        </twig:Bubble>
+                                    </twig:Message:Content>
+                                </twig:Message>
+                            </twig:MessageScroller:Item>
+                            <twig:MessageScroller:Item messageId="command-reply-5">
+                                <twig:Message>
+                                    <twig:Message:Content>
+                                        <twig:Bubble variant="ghost">
+                                            <twig:Bubble:Content class="space-y-2">
+                                                <p class="whitespace-pre-line">Yes. Create a variant that shows a short checklist after workspace creation:</p>
+                                                <p class="whitespace-pre-line">- Pick a template.
+                                            - Add one project detail.
+                                            - Invite a teammate when the workspace has context.</p>
+                                                <p class="whitespace-pre-line">Measure first invite completion, 24-hour return rate, and whether teams create a second project.</p>
+                                            </twig:Bubble:Content>
+                                        </twig:Bubble>
+                                    </twig:Message:Content>
+                                </twig:Message>
+                            </twig:MessageScroller:Item>
+                            <twig:MessageScroller:Item messageId="command-risk" scrollAnchor>
+                                <twig:Message align="end">
+                                    <twig:Message:Content>
+                                        <twig:Bubble variant="muted">
+                                            <twig:Bubble:Content>What's the risk if we delay the invite prompt?</twig:Bubble:Content>
+                                        </twig:Bubble>
+                                    </twig:Message:Content>
+                                </twig:Message>
+                            </twig:MessageScroller:Item>
+                            <twig:MessageScroller:Item messageId="command-reply-7">
+                                <twig:Message>
+                                    <twig:Message:Content>
+                                        <twig:Bubble variant="ghost">
+                                            <twig:Bubble:Content class="space-y-2">
+                                                <p class="whitespace-pre-line">The main risk is reducing team creation for accounts that already know who they want to invite.</p>
+                                                <p class="whitespace-pre-line">To protect that path, keep the invite action visible in the header and only change the primary empty-state guidance. That gives confident teams a direct route without forcing uncertain users through the invite step too early.</p>
+                                            </twig:Bubble:Content>
+                                        </twig:Bubble>
+                                    </twig:Message:Content>
+                                </twig:Message>
+                            </twig:MessageScroller:Item>
+                        </twig:MessageScroller:Content>
+                    </twig:MessageScroller:Viewport>
+                    <twig:MessageScroller:Button />
+                </twig:MessageScroller>
+            </twig:Card:Content>
+        </twig:Card>
+        <div class="absolute top-1/2 -end-12 -translate-y-1/2">
+            <twig:HoverCard openDelay="10" closeDelay="100">
+                <twig:HoverCard:Trigger>
+                    <twig:Button variant="ghost" size="icon" aria-label="Open transcript outline" {{ ...hover_card_trigger_attrs }}>
+                        <twig:ux:icon name="lucide:list" />
+                    </twig:Button>
+                </twig:HoverCard:Trigger>
+                <twig:HoverCard:Content side="left" class="flex w-64 flex-col gap-1 rounded-2xl p-1">
+                    <button
+                        type="button"
+                        class="flex min-h-7 items-center rounded-xl px-2 py-1.5 text-start text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:bg-accent focus-visible:text-accent-foreground aria-[current=location]:bg-accent aria-[current=location]:text-accent-foreground"
+                        aria-current="false"
+                        data-message-scroller-target="anchorLink"
+                        data-action="message-scroller#scrollToMessage"
+                        data-message-scroller-id-param="command-activation"
+                        data-message-scroller-behavior-param="smooth"
+                    >
+                        <span class="line-clamp-1 min-w-0">We're seeing activation dip after works...</span>
+                    </button>
+                    <button
+                        type="button"
+                        class="flex min-h-7 items-center rounded-xl px-2 py-1.5 text-start text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:bg-accent focus-visible:text-accent-foreground aria-[current=location]:bg-accent aria-[current=location]:text-accent-foreground"
+                        aria-current="false"
+                        data-message-scroller-target="anchorLink"
+                        data-action="message-scroller#scrollToMessage"
+                        data-message-scroller-id-param="command-compare"
+                        data-message-scroller-behavior-param="smooth"
+                    >
+                        <span class="line-clamp-1 min-w-0">What should I compare before we change ...</span>
+                    </button>
+                    <button
+                        type="button"
+                        class="flex min-h-7 items-center rounded-xl px-2 py-1.5 text-start text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:bg-accent focus-visible:text-accent-foreground aria-[current=location]:bg-accent aria-[current=location]:text-accent-foreground"
+                        aria-current="false"
+                        data-message-scroller-target="anchorLink"
+                        data-action="message-scroller#scrollToMessage"
+                        data-message-scroller-id-param="command-experiment"
+                        data-message-scroller-behavior-param="smooth"
+                    >
+                        <span class="line-clamp-1 min-w-0">Can you turn that into an experiment?</span>
+                    </button>
+                    <button
+                        type="button"
+                        class="flex min-h-7 items-center rounded-xl px-2 py-1.5 text-start text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:bg-accent focus-visible:text-accent-foreground aria-[current=location]:bg-accent aria-[current=location]:text-accent-foreground"
+                        aria-current="false"
+                        data-message-scroller-target="anchorLink"
+                        data-action="message-scroller#scrollToMessage"
+                        data-message-scroller-id-param="command-risk"
+                        data-message-scroller-behavior-param="smooth"
+                    >
+                        <span class="line-clamp-1 min-w-0">What's the risk if we delay the invite ...</span>
+                    </button>
+                </twig:HoverCard:Content>
+            </twig:HoverCard>
+        </div>
+    </div>
+</twig:MessageScroller:Provider>
+```
+- Rendered code (run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div data-slot="message-scroller-provider" data-message-scroller-auto-scroll-value="false" data-message-scroller-default-scroll-position-value="end" data-message-scroller-scroll-edge-threshold-value="8" data-message-scroller-scroll-previous-item-peek-value="64" data-message-scroller-scroll-margin-value="12" class="group/message-scroller-provider contents" data-controller="message-scroller"><div class="relative mx-auto w-full max-w-sm">
+        <div data-slot="card" data-size="default" class="group/card flex flex-col overflow-hidden rounded-xl bg-card py-(--card-spacing) text-sm text-card-foreground ring-1 ring-foreground/10 [--card-spacing:--spacing(4)] has-data-[slot=card-footer]:pb-0 has-[>img:first-child]:pt-0 data-[size=sm]:[--card-spacing:--spacing(3)] data-[size=sm]:has-data-[slot=card-footer]:pb-0 *:[img:first-child]:rounded-t-xl *:[img:last-child]:rounded-b-xl mx-auto h-140 w-full max-w-sm gap-0"><div data-slot="card-header" class="group/card-header @container/card-header grid auto-rows-min items-start rounded-t-xl px-(--card-spacing) has-data-[slot=card-action]:grid-cols-[1fr_auto] has-data-[slot=card-description]:grid-rows-[auto_auto] [.border-b]:pb-(--card-spacing) gap-1 border-b"><div data-slot="card-title" class="cn-font-heading text-base leading-snug font-medium group-data-[size=sm]/card:text-sm">Transcript Outline</div>
+                <div data-slot="card-description" class="text-sm text-muted-foreground">Track the current anchored turn.</div>
+            </div>
+            <div data-slot="card-content" class="min-h-0 flex-1 overflow-hidden p-0"><div data-slot="message-scroller" data-message-scroller-target="root" data-pending-scroll="" class="group/message-scroller relative flex size-full min-h-0 flex-col overflow-hidden"><div data-slot="message-scroller-viewport" data-message-scroller-target="viewport" data-preserve-scroll-on-prepend="true" role="region" data-pending-scroll="" class="size-full min-h-0 min-w-0 scroll-fade-b overflow-y-auto overscroll-contain contain-content [scrollbar-gutter:stable] [scrollbar-width:thin] data-autoscrolling:[scrollbar-color:transparent_transparent] data-pending-scroll:invisible" aria-label="Messages" tabindex="0" data-action="scroll->message-scroller#handleScroll wheel->message-scroller#handleUserScroll:passive touchmove->message-scroller#handleUserScroll:passive keydown.up->message-scroller#handleUserScroll keydown.down->message-scroller#handleUserScroll keydown.page_up->message-scroller#handleUserScroll keydown.page_down->message-scroller#handleUserScroll keydown.home->message-scroller#handleUserScroll keydown.end->message-scroller#handleUserScroll keydown.space->message-scroller#handleUserScroll"><div data-slot="message-scroller-content" data-message-scroller-target="content" role="log" aria-relevant="additions" class="flex h-max min-h-full flex-col gap-6 p-(--card-spacing)"><div data-slot="message-scroller-item" data-message-id="command-activation" data-scroll-anchor="true" class="min-w-0 shrink-0"><div data-slot="message" data-align="end" class="group/message relative flex w-full min-w-0 gap-2 text-sm data-[align=end]:flex-row-reverse"><div data-slot="message-content" class="flex w-full min-w-0 flex-col gap-2.5 wrap-break-word group-data-[align=end]/message:*:data-slot:self-end"><div data-slot="bubble" data-variant="muted" data-align="start" class="group/bubble relative flex w-fit max-w-[80%] min-w-0 flex-col gap-1 group-data-[align=end]/message:self-end *:data-[slot=bubble-content]:bg-muted [&amp;>[data-slot=bubble-content]:is(button,a):hover]:bg-[color-mix(in_oklch,var(--muted),var(--foreground)_5%)]"><div data-slot="bubble-content" class="w-fit max-w-full min-w-0 overflow-hidden rounded-xl border border-transparent px-3 py-2 text-sm leading-relaxed wrap-break-word group-data-[align=end]/bubble:self-end [button]:text-start [button,a]:transition-colors [button,a]:outline-none [button,a]:focus-visible:border-ring [button,a]:focus-visible:ring-3 [button,a]:focus-visible:ring-ring/50">We're seeing activation dip after workspace creation. Can you help me find the likely step?</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div data-slot="message-scroller-item" data-message-id="command-reply-1" data-scroll-anchor="false" class="min-w-0 shrink-0"><div data-slot="message" data-align="start" class="group/message relative flex w-full min-w-0 gap-2 text-sm data-[align=end]:flex-row-reverse"><div data-slot="message-content" class="flex w-full min-w-0 flex-col gap-2.5 wrap-break-word group-data-[align=end]/message:*:data-slot:self-end"><div data-slot="bubble" data-variant="ghost" data-align="start" class="group/bubble relative flex w-fit min-w-0 flex-col gap-1 group-data-[align=end]/message:self-end max-w-full *:data-[slot=bubble-content]:rounded-none *:data-[slot=bubble-content]:bg-transparent *:data-[slot=bubble-content]:p-0 [&amp;>[data-slot=bubble-content]:is(button,a):hover]:bg-muted [&amp;>[data-slot=bubble-content]:is(button,a):hover]:text-foreground dark:[&amp;>[data-slot=bubble-content]:is(button,a):hover]:bg-muted/50"><div data-slot="bubble-content" class="w-fit max-w-full min-w-0 overflow-hidden rounded-xl border border-transparent px-3 py-2 text-sm leading-relaxed wrap-break-word group-data-[align=end]/bubble:self-end [button]:text-start [button,a]:transition-colors [button,a]:outline-none [button,a]:focus-visible:border-ring [button,a]:focus-visible:ring-3 [button,a]:focus-visible:ring-ring/50 space-y-2"><p class="whitespace-pre-line">The sharpest drop is between creating the workspace and inviting the first teammate.</p>
+                                                <p class="whitespace-pre-line">Workspace creation is still healthy, but the invite step is where users pause. That suggests the product is asking for collaboration before the user has enough confidence in the workspace.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div data-slot="message-scroller-item" data-message-id="command-compare" data-scroll-anchor="true" class="min-w-0 shrink-0"><div data-slot="message" data-align="end" class="group/message relative flex w-full min-w-0 gap-2 text-sm data-[align=end]:flex-row-reverse"><div data-slot="message-content" class="flex w-full min-w-0 flex-col gap-2.5 wrap-break-word group-data-[align=end]/message:*:data-slot:self-end"><div data-slot="bubble" data-variant="muted" data-align="start" class="group/bubble relative flex w-fit max-w-[80%] min-w-0 flex-col gap-1 group-data-[align=end]/message:self-end *:data-[slot=bubble-content]:bg-muted [&amp;>[data-slot=bubble-content]:is(button,a):hover]:bg-[color-mix(in_oklch,var(--muted),var(--foreground)_5%)]"><div data-slot="bubble-content" class="w-fit max-w-full min-w-0 overflow-hidden rounded-xl border border-transparent px-3 py-2 text-sm leading-relaxed wrap-break-word group-data-[align=end]/bubble:self-end [button]:text-start [button,a]:transition-colors [button,a]:outline-none [button,a]:focus-visible:border-ring [button,a]:focus-visible:ring-3 [button,a]:focus-visible:ring-ring/50">What should I compare before we change the onboarding flow?</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div data-slot="message-scroller-item" data-message-id="command-reply-3" data-scroll-anchor="false" class="min-w-0 shrink-0"><div data-slot="message" data-align="start" class="group/message relative flex w-full min-w-0 gap-2 text-sm data-[align=end]:flex-row-reverse"><div data-slot="message-content" class="flex w-full min-w-0 flex-col gap-2.5 wrap-break-word group-data-[align=end]/message:*:data-slot:self-end"><div data-slot="bubble" data-variant="ghost" data-align="start" class="group/bubble relative flex w-fit min-w-0 flex-col gap-1 group-data-[align=end]/message:self-end max-w-full *:data-[slot=bubble-content]:rounded-none *:data-[slot=bubble-content]:bg-transparent *:data-[slot=bubble-content]:p-0 [&amp;>[data-slot=bubble-content]:is(button,a):hover]:bg-muted [&amp;>[data-slot=bubble-content]:is(button,a):hover]:text-foreground dark:[&amp;>[data-slot=bubble-content]:is(button,a):hover]:bg-muted/50"><div data-slot="bubble-content" class="w-fit max-w-full min-w-0 overflow-hidden rounded-xl border border-transparent px-3 py-2 text-sm leading-relaxed wrap-break-word group-data-[align=end]/bubble:self-end [button]:text-start [button,a]:transition-colors [button,a]:outline-none [button,a]:focus-visible:border-ring [button,a]:focus-visible:ring-3 [button,a]:focus-visible:ring-ring/50 space-y-2"><p class="whitespace-pre-line">Compare three cohorts:</p>
+                                                <p class="whitespace-pre-line">1. Users who choose a template before inviting teammates.
+                                            2. Users who start from a blank workspace.
+                                            3. Users who skip invites and return within 24 hours.</p>
+                                                <p class="whitespace-pre-line">If template users invite faster, the fix is probably better first-run guidance rather than a louder invite prompt.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div data-slot="message-scroller-item" data-message-id="command-experiment" data-scroll-anchor="true" class="min-w-0 shrink-0"><div data-slot="message" data-align="end" class="group/message relative flex w-full min-w-0 gap-2 text-sm data-[align=end]:flex-row-reverse"><div data-slot="message-content" class="flex w-full min-w-0 flex-col gap-2.5 wrap-break-word group-data-[align=end]/message:*:data-slot:self-end"><div data-slot="bubble" data-variant="muted" data-align="start" class="group/bubble relative flex w-fit max-w-[80%] min-w-0 flex-col gap-1 group-data-[align=end]/message:self-end *:data-[slot=bubble-content]:bg-muted [&amp;>[data-slot=bubble-content]:is(button,a):hover]:bg-[color-mix(in_oklch,var(--muted),var(--foreground)_5%)]"><div data-slot="bubble-content" class="w-fit max-w-full min-w-0 overflow-hidden rounded-xl border border-transparent px-3 py-2 text-sm leading-relaxed wrap-break-word group-data-[align=end]/bubble:self-end [button]:text-start [button,a]:transition-colors [button,a]:outline-none [button,a]:focus-visible:border-ring [button,a]:focus-visible:ring-3 [button,a]:focus-visible:ring-ring/50">Can you turn that into an experiment?</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div data-slot="message-scroller-item" data-message-id="command-reply-5" data-scroll-anchor="false" class="min-w-0 shrink-0"><div data-slot="message" data-align="start" class="group/message relative flex w-full min-w-0 gap-2 text-sm data-[align=end]:flex-row-reverse"><div data-slot="message-content" class="flex w-full min-w-0 flex-col gap-2.5 wrap-break-word group-data-[align=end]/message:*:data-slot:self-end"><div data-slot="bubble" data-variant="ghost" data-align="start" class="group/bubble relative flex w-fit min-w-0 flex-col gap-1 group-data-[align=end]/message:self-end max-w-full *:data-[slot=bubble-content]:rounded-none *:data-[slot=bubble-content]:bg-transparent *:data-[slot=bubble-content]:p-0 [&amp;>[data-slot=bubble-content]:is(button,a):hover]:bg-muted [&amp;>[data-slot=bubble-content]:is(button,a):hover]:text-foreground dark:[&amp;>[data-slot=bubble-content]:is(button,a):hover]:bg-muted/50"><div data-slot="bubble-content" class="w-fit max-w-full min-w-0 overflow-hidden rounded-xl border border-transparent px-3 py-2 text-sm leading-relaxed wrap-break-word group-data-[align=end]/bubble:self-end [button]:text-start [button,a]:transition-colors [button,a]:outline-none [button,a]:focus-visible:border-ring [button,a]:focus-visible:ring-3 [button,a]:focus-visible:ring-ring/50 space-y-2"><p class="whitespace-pre-line">Yes. Create a variant that shows a short checklist after workspace creation:</p>
+                                                <p class="whitespace-pre-line">- Pick a template.
+                                            - Add one project detail.
+                                            - Invite a teammate when the workspace has context.</p>
+                                                <p class="whitespace-pre-line">Measure first invite completion, 24-hour return rate, and whether teams create a second project.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div data-slot="message-scroller-item" data-message-id="command-risk" data-scroll-anchor="true" class="min-w-0 shrink-0"><div data-slot="message" data-align="end" class="group/message relative flex w-full min-w-0 gap-2 text-sm data-[align=end]:flex-row-reverse"><div data-slot="message-content" class="flex w-full min-w-0 flex-col gap-2.5 wrap-break-word group-data-[align=end]/message:*:data-slot:self-end"><div data-slot="bubble" data-variant="muted" data-align="start" class="group/bubble relative flex w-fit max-w-[80%] min-w-0 flex-col gap-1 group-data-[align=end]/message:self-end *:data-[slot=bubble-content]:bg-muted [&amp;>[data-slot=bubble-content]:is(button,a):hover]:bg-[color-mix(in_oklch,var(--muted),var(--foreground)_5%)]"><div data-slot="bubble-content" class="w-fit max-w-full min-w-0 overflow-hidden rounded-xl border border-transparent px-3 py-2 text-sm leading-relaxed wrap-break-word group-data-[align=end]/bubble:self-end [button]:text-start [button,a]:transition-colors [button,a]:outline-none [button,a]:focus-visible:border-ring [button,a]:focus-visible:ring-3 [button,a]:focus-visible:ring-ring/50">What's the risk if we delay the invite prompt?</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div data-slot="message-scroller-item" data-message-id="command-reply-7" data-scroll-anchor="false" class="min-w-0 shrink-0"><div data-slot="message" data-align="start" class="group/message relative flex w-full min-w-0 gap-2 text-sm data-[align=end]:flex-row-reverse"><div data-slot="message-content" class="flex w-full min-w-0 flex-col gap-2.5 wrap-break-word group-data-[align=end]/message:*:data-slot:self-end"><div data-slot="bubble" data-variant="ghost" data-align="start" class="group/bubble relative flex w-fit min-w-0 flex-col gap-1 group-data-[align=end]/message:self-end max-w-full *:data-[slot=bubble-content]:rounded-none *:data-[slot=bubble-content]:bg-transparent *:data-[slot=bubble-content]:p-0 [&amp;>[data-slot=bubble-content]:is(button,a):hover]:bg-muted [&amp;>[data-slot=bubble-content]:is(button,a):hover]:text-foreground dark:[&amp;>[data-slot=bubble-content]:is(button,a):hover]:bg-muted/50"><div data-slot="bubble-content" class="w-fit max-w-full min-w-0 overflow-hidden rounded-xl border border-transparent px-3 py-2 text-sm leading-relaxed wrap-break-word group-data-[align=end]/bubble:self-end [button]:text-start [button,a]:transition-colors [button,a]:outline-none [button,a]:focus-visible:border-ring [button,a]:focus-visible:ring-3 [button,a]:focus-visible:ring-ring/50 space-y-2"><p class="whitespace-pre-line">The main risk is reducing team creation for accounts that already know who they want to invite.</p>
+                                                <p class="whitespace-pre-line">To protect that path, keep the invite action visible in the header and only change the primary empty-state guidance. That gives confident teams a direct route without forcing uncertain users through the invite step too early.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        <div data-message-scroller-target="spacer" aria-hidden="true" hidden=""></div>
+</div>
+                    </div>
+                    <button data-slot="message-scroller-button" data-variant="secondary" data-size="icon-sm" class="group/button inline-flex shrink-0 items-center justify-center border bg-clip-padding text-sm font-medium whitespace-nowrap outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 aria-expanded:bg-secondary aria-expanded:text-secondary-foreground size-7 rounded-[min(var(--radius-md),12px)] in-data-[slot=button-group]:rounded-lg absolute inset-s-1/2 -translate-x-1/2 border-border bg-background text-foreground transition-[translate,scale,opacity] duration-200 hover:bg-muted hover:text-foreground data-[active=false]:pointer-events-none data-[active=false]:scale-95 data-[active=false]:opacity-0 data-[active=false]:duration-400 data-[active=false]:ease-[cubic-bezier(0.7,0,0.84,0)] data-[active=true]:translate-y-0 data-[active=true]:scale-100 data-[active=true]:opacity-100 data-[active=true]:ease-[cubic-bezier(0.23,1,0.32,1)] data-[direction=end]:bottom-4 data-[direction=end]:data-[active=false]:translate-y-full data-[direction=start]:top-4 data-[direction=start]:data-[active=false]:-translate-y-full rtl:translate-x-1/2 data-[direction=start]:[&amp;_svg]:rotate-180" type="button" data-message-scroller-target="button" data-message-scroller-behavior-param="smooth" data-direction="end" data-active="false" inert="" tabindex="-1" data-action="click->message-scroller#scrollToEnd"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v14m7-7l-7 7l-7-7"></path></svg>
+        <span class="sr-only">Scroll to end</span></button>
+
+                </div>
+            </div>
+        </div>
+        <div class="absolute top-1/2 -end-12 -translate-y-1/2">
+            <span data-slot="hover-card" data-hover-card-open-delay-value="10" data-hover-card-close-delay-value="100" class="relative inline-block" data-controller="hover-card" data-action="mouseenter->hover-card#show mouseleave->hover-card#hide"><button data-slot="hover-card-trigger" data-variant="ghost" data-size="icon" class="group/button inline-flex shrink-0 items-center justify-center rounded-lg border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50 size-8" type="button" aria-label="Open transcript outline" tabindex="0" data-action="focus->hover-card#show blur->hover-card#hide"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h.01M3 12h.01M3 19h.01M8 5h13M8 12h13M8 19h13"></path></svg>
+                    </button>
+                                <span role="tooltip" data-side="left" data-slot="hover-card-content" class="invisible opacity-0 in-data-[state=open]:visible in-data-[state=open]:opacity-100 transition-opacity duration-100 absolute z-50 bg-popover text-sm text-popover-foreground shadow-md ring-1 ring-foreground/10 outline-hidden top-1/2 left-auto right-full -translate-y-1/2 translate-x-0 mt-0 mr-2 flex w-64 flex-col gap-1 rounded-2xl p-1"><button type="button" class="flex min-h-7 items-center rounded-xl px-2 py-1.5 text-start text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:bg-accent focus-visible:text-accent-foreground aria-[current=location]:bg-accent aria-[current=location]:text-accent-foreground" aria-current="false" data-message-scroller-target="anchorLink" data-action="message-scroller#scrollToMessage" data-message-scroller-id-param="command-activation" data-message-scroller-behavior-param="smooth">
+                        <span class="line-clamp-1 min-w-0">We're seeing activation dip after works...</span>
+                    </button>
+                    <button type="button" class="flex min-h-7 items-center rounded-xl px-2 py-1.5 text-start text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:bg-accent focus-visible:text-accent-foreground aria-[current=location]:bg-accent aria-[current=location]:text-accent-foreground" aria-current="false" data-message-scroller-target="anchorLink" data-action="message-scroller#scrollToMessage" data-message-scroller-id-param="command-compare" data-message-scroller-behavior-param="smooth">
+                        <span class="line-clamp-1 min-w-0">What should I compare before we change ...</span>
+                    </button>
+                    <button type="button" class="flex min-h-7 items-center rounded-xl px-2 py-1.5 text-start text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:bg-accent focus-visible:text-accent-foreground aria-[current=location]:bg-accent aria-[current=location]:text-accent-foreground" aria-current="false" data-message-scroller-target="anchorLink" data-action="message-scroller#scrollToMessage" data-message-scroller-id-param="command-experiment" data-message-scroller-behavior-param="smooth">
+                        <span class="line-clamp-1 min-w-0">Can you turn that into an experiment?</span>
+                    </button>
+                    <button type="button" class="flex min-h-7 items-center rounded-xl px-2 py-1.5 text-start text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:bg-accent focus-visible:text-accent-foreground aria-[current=location]:bg-accent aria-[current=location]:text-accent-foreground" aria-current="false" data-message-scroller-target="anchorLink" data-action="message-scroller#scrollToMessage" data-message-scroller-id-param="command-risk" data-message-scroller-behavior-param="smooth">
+                        <span class="line-clamp-1 min-w-0">What's the risk if we delay the invite ...</span>
+                    </button>
+                </span>
+            </span>
+        </div>
+    </div>
+</div>

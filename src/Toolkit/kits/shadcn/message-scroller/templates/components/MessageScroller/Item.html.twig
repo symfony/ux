@@ -1,0 +1,17 @@
+{%- props
+    ## string|null Stable id of the row, used by `scrollToMessage`, the anchor links and the prepend preservation.
+    messageId = null,
+    ## boolean Whether the row starts a new turn, which settles near the top of the viewport when it is appended.
+    scrollAnchor = false
+-%}
+<div
+    data-slot="message-scroller-item"
+    {% if messageId is not null %}data-message-id="{{ messageId }}"{% endif %}
+    data-scroll-anchor="{{ scrollAnchor ? 'true' : 'false' }}"
+    {{ attributes.defaults({
+        class: 'min-w-0 shrink-0'|tailwind_classes,
+    }) }}
+>
+    {##- A message, a marker, a typing indicator or any other row of the transcript. -#}
+    {%- block content %}{% endblock -%}
+</div>
