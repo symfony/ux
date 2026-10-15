@@ -27,7 +27,7 @@
     'bottom-right': 'bottom-0 right-0',
 }[position] -%}
 {# Consume the consumer-supplied `class` here so it lands on the visible `<ol>` region, not the structural host, and is not re-emitted by `attributes.defaults()` below. #}
-{%- set _listClass = ('fixed z-[100] m-1 h-0 w-[360px] list-none overflow-visible p-4 ' ~ _positionClass ~ ' ' ~ attributes.render('class'))|tailwind_merge -%}
+{%- set _listClass = ('pointer-events-none fixed z-[100] m-1 h-0 w-[360px] list-none overflow-visible p-4 ' ~ _positionClass ~ ' ' ~ attributes.render('class'))|tailwind_merge -%}
 <div
     data-slot="sonner"
     dir="{{ dir }}"
@@ -48,7 +48,6 @@
     >
         <ol
             class="{{ _listClass }}"
-            style="pointer-events: none;"
             data-sonner-target="list"
             tabindex="-1"
         >
