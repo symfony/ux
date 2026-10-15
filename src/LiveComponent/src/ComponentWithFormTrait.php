@@ -265,9 +265,33 @@ trait ComponentWithFormTrait
                 continue;
             }
 
-            // <input type="checkbox">
+            // <input type="checkbox"> - Simulate browser behavior
+            // Browsers never submit disabled controls, so a checked but
+            // disabled checkbox is treated as unchecked.
             if (\array_key_exists('checked', $child->vars)) {
-                $values[$name] = $child->vars['checked'] ? $child->vars['value'] : null;
+                $values[$name] = $child->vars['checked'] && !self::isFieldDisabled($child) ? $child->vars['value'] : null;
+                continue;
+            }
+
+            // Expanded ChoiceType - Simulate browser behavior
+            // The "value" already aggregates the checked checkboxes/radios,
+            // but browsers never submit disabled controls, so the values of
+            // disabled choices are dropped.
+            if ($child->vars['expanded'] ?? false) {
+                $disabledValues = [];
+                foreach ($child->children as $expandedChild) {
+                    if (self::isFieldDisabled($expandedChild)) {
+                        $disabledValues[] = $expandedChild->vars['value'];
+                    }
+                }
+
+                $value = $child->vars['value'];
+                if ($disabledValues) {
+                    $value = \is_array($value)
+                        ? array_values(array_diff($value, $disabledValues))
+                        : (\in_array($value, $disabledValues, true) ? '' : $value);
+                }
+                $values[$name] = $value;
                 continue;
             }
 
@@ -306,6 +330,16 @@ trait ComponentWithFormTrait
         }
 
         return $values;
+    }
+
+    /**
+     * A field can be disabled at the form level (the "disabled" option) or
+     * only in HTML (a "disabled" attribute, e.g. set through "choice_attr"):
+     * browsers do not submit the control in either case.
+     */
+    private static function isFieldDisabled(FormView $view): bool
+    {
+        return ($view->vars['disabled'] ?? false) || ($view->vars['attr']['disabled'] ?? false);
     }
 
     private function clearErrorsForNonValidatedFields(FormInterface $form, string $currentPath = ''): void
