@@ -14,8 +14,10 @@
             </twig:Trace:Line>
         </twig:Trace:Collapsible:Trigger>
         <twig:Trace:Collapsible:Content>
-            <pre class="max-h-64 overflow-auto rounded-lg border border-input px-2.5 py-2.5 font-mono text-xs leading-relaxed whitespace-pre-wrap wrap-break-word text-foreground dark:bg-input/30">$ node --version
-v24.18.0</pre>
+            <twig:CodeBlock size="sm">
+                <twig:CodeBlock:Content wrap class="max-h-64">$ node --version
+v24.18.0</twig:CodeBlock:Content>
+            </twig:CodeBlock>
         </twig:Trace:Collapsible:Content>
     </twig:Trace:Collapsible>
     <twig:Trace:Collapsible>
@@ -28,8 +30,10 @@ v24.18.0</pre>
             </twig:Trace:Line>
         </twig:Trace:Collapsible:Trigger>
         <twig:Trace:Collapsible:Content>
-            <pre class="max-h-64 overflow-auto rounded-lg border border-input px-2.5 py-2.5 font-mono text-xs leading-relaxed whitespace-pre-wrap wrap-break-word text-foreground dark:bg-input/30">$ pnpm --version
-10.33.4</pre>
+            <twig:CodeBlock size="sm">
+                <twig:CodeBlock:Content wrap class="max-h-64">$ pnpm --version
+10.33.4</twig:CodeBlock:Content>
+            </twig:CodeBlock>
         </twig:Trace:Collapsible:Content>
         <twig:Collapsible:Trigger>
             <twig:Button variant="outline" size="sm" class="group/toggle mt-4 self-start" {{ ...collapsible_trigger_attrs }}>
@@ -51,8 +55,9 @@ v24.18.0</pre>
     </span>
 </button>
         <div data-slot="trace-collapsible-content" data-collapsible-target="content" aria-hidden="false" data-state="open" class="min-w-0 overflow-hidden">
-    <div data-slot="trace-collapsible-content-inner" class="mt-2 mb-1 ms-[calc(--spacing(2)-1px)] min-w-0 border-s pe-1 ps-4 leading-relaxed wrap-break-word text-muted-foreground"><pre class="max-h-64 overflow-auto rounded-lg border border-input px-2.5 py-2.5 font-mono text-xs leading-relaxed whitespace-pre-wrap wrap-break-word text-foreground dark:bg-input/30">$ node --version
-v24.18.0</pre>
+    <div data-slot="trace-collapsible-content-inner" class="mt-2 mb-1 ms-[calc(--spacing(2)-1px)] min-w-0 border-s pe-1 ps-4 leading-relaxed wrap-break-word text-muted-foreground"><div data-slot="code-block" data-variant="default" data-size="sm" class="group/code-block relative flex w-full min-w-0 flex-col overflow-hidden rounded-lg text-sm data-[size=sm]:text-xs has-[>[data-slot=code-block-content]:focus-visible]:ring-3 has-[>[data-slot=code-block-content]:focus-visible]:ring-ring/50 border border-input text-foreground dark:bg-input/30 has-[>[data-slot=code-block-content]:focus-visible]:border-ring" data-controller="code-block"><pre data-slot="code-block-content" data-wrap="" data-code-block-target="content" dir="ltr" class="min-h-0 min-w-0 scroll-fade-x overflow-auto px-3 py-3 text-start font-mono leading-relaxed outline-none [scrollbar-width:thin] data-wrap:scroll-fade-y data-wrap:wrap-break-word data-wrap:whitespace-pre-wrap group-has-data-[slot=code-block-header]/code-block:pt-2 group-has-data-[slot=code-block-footer]/code-block:pb-2 group-data-[size=sm]/code-block:px-2.5 group-data-[size=sm]/code-block:py-2.5 group-data-[size=sm]/code-block:group-has-data-[slot=code-block-header]/code-block:pt-1.5 max-h-64" tabindex="0"><code data-slot="code-block-code" class="grid min-h-lh min-w-max content-start in-data-numbered:grid-cols-[auto_1fr] in-data-wrap:min-w-0">$ node --version
+v24.18.0</code></pre>
+            </div>
         </div>
 </div>
     </div>
@@ -64,8 +69,9 @@ v24.18.0</pre>
     </span>
 </button>
         <div data-slot="trace-collapsible-content" data-collapsible-target="content" aria-hidden="true" data-state="closed" class="min-w-0 overflow-hidden" hidden="">
-    <div data-slot="trace-collapsible-content-inner" class="mt-2 mb-1 ms-[calc(--spacing(2)-1px)] min-w-0 border-s pe-1 ps-4 leading-relaxed wrap-break-word text-muted-foreground"><pre class="max-h-64 overflow-auto rounded-lg border border-input px-2.5 py-2.5 font-mono text-xs leading-relaxed whitespace-pre-wrap wrap-break-word text-foreground dark:bg-input/30">$ pnpm --version
-10.33.4</pre>
+    <div data-slot="trace-collapsible-content-inner" class="mt-2 mb-1 ms-[calc(--spacing(2)-1px)] min-w-0 border-s pe-1 ps-4 leading-relaxed wrap-break-word text-muted-foreground"><div data-slot="code-block" data-variant="default" data-size="sm" class="group/code-block relative flex w-full min-w-0 flex-col overflow-hidden rounded-lg text-sm data-[size=sm]:text-xs has-[>[data-slot=code-block-content]:focus-visible]:ring-3 has-[>[data-slot=code-block-content]:focus-visible]:ring-ring/50 border border-input text-foreground dark:bg-input/30 has-[>[data-slot=code-block-content]:focus-visible]:border-ring" data-controller="code-block"><pre data-slot="code-block-content" data-wrap="" data-code-block-target="content" dir="ltr" class="min-h-0 min-w-0 scroll-fade-x overflow-auto px-3 py-3 text-start font-mono leading-relaxed outline-none [scrollbar-width:thin] data-wrap:scroll-fade-y data-wrap:wrap-break-word data-wrap:whitespace-pre-wrap group-has-data-[slot=code-block-header]/code-block:pt-2 group-has-data-[slot=code-block-footer]/code-block:pb-2 group-data-[size=sm]/code-block:px-2.5 group-data-[size=sm]/code-block:py-2.5 group-data-[size=sm]/code-block:group-has-data-[slot=code-block-header]/code-block:pt-1.5 max-h-64" tabindex="0"><code data-slot="code-block-code" class="grid min-h-lh min-w-max content-start in-data-numbered:grid-cols-[auto_1fr] in-data-wrap:min-w-0">$ pnpm --version
+10.33.4</code></pre>
+            </div>
         </div>
 </div>
         <button data-slot="collapsible-trigger" data-variant="outline" data-size="sm" class="group/button inline-flex shrink-0 items-center justify-center border bg-clip-padding font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 border-border bg-background hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50 h-7 gap-1 rounded-[min(var(--radius-md),12px)] px-2.5 text-[0.8rem] in-data-[slot=button-group]:rounded-lg has-data-[icon=inline-end]:pe-1.5 has-data-[icon=inline-start]:ps-1.5 [&amp;_svg:not([class*='size-'])]:size-3.5 group/toggle mt-4 self-start" type="button" data-collapsible-target="trigger" data-action="click->collapsible#toggle" aria-expanded="false" data-state="closed"><span class="group-data-[state=open]/toggle:hidden">Show</span>
