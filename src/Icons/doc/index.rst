@@ -614,6 +614,77 @@ more specific suffixes like ``16-solid`` or ``20-solid`` take precedence over
     match any other suffix. This is different from ``icon_attributes``, which
     applies to **all** icons in the set regardless of suffix matching.
 
+Rendering Icons in JavaScript
+-----------------------------
+
+.. versionadded:: 3.6
+
+    Rendering icons in JavaScript was introduced in Symfony UX Icons 3.6.
+
+Local icons can be dumped as a JavaScript module and rendered with the
+``@symfony/ux-icons`` package, using the same attributes and configuration
+(``default_icon_attributes``, icon set ``icon_attributes``, ``suffixes`` and
+``aliases``) as the ``ux_icon()`` Twig function:
+
+.. code-block:: yaml
+
+    # config/packages/ux_icons.yaml
+    ux_icons:
+        javascript: true # dumped into "%kernel.project_dir%/var/icons" by default
+
+Icons are dumped on cache warmup, or with the ``ux:icons:dump`` command. Each
+icon is a named export (``lucide:trash-2`` becomes ``LucideTrash2Icon``), so
+unused icons are tree-shaken by your bundler:
+
+.. code-block:: javascript
+
+    import { renderIcon, createIconElement } from '@symfony/ux-icons';
+    import { LucideTrash2Icon } from '../var/icons/index.js';
+
+    element.innerHTML = renderIcon(LucideTrash2Icon, { class: 'text-danger', 'aria-label': 'Delete' });
+    element.append(createIconElement(LucideTrash2Icon, { width: '2em' }));
+
+Attributes accept the same values as the ``ux_icon()`` Twig function, including
+arrays for token lists (e.g. ``{ class: ['icon', isActive && 'active'] }``) and
+objects for inline styles (e.g. ``{ style: { color: 'red' } }``).
+
+React and Vue components are also available. They use the framework semantics
+for ``class`` and ``style`` objects (e.g. Vue
+``:class="{ active: isActive }"``):
+
+.. code-block:: jsx
+
+    import { UXIcon } from '@symfony/ux-icons/react'; // or '@symfony/ux-icons/vue'
+    import { LucideTrash2Icon } from '../var/icons/index.js';
+
+    <UXIcon icon={LucideTrash2Icon} className="text-danger" aria-label="Delete" />
+
+For another framework, ``resolveIcon()`` returns the final attributes of an
+icon. The ``children`` property of the icon holds the SVG body as a tree of
+``[tag, attributes, children]`` elements and text strings.
+
+Only local icons are dumped: import remote icons first with ``ux:icons:import``
+or ``ux:icons:lock``. Both commands dump the icons again, and print the name
+each new icon is exported with (e.g. ``Fa7BrandsXTwitterIcon``). The
+``ux:icons:lock`` command also finds the icons imported in the JavaScript files
+of the ``javascript.scan_directories`` option (default:
+``%kernel.project_dir%/assets``), so you can write the import first, then run
+``ux:icons:lock``.
+
+TypeScript types are dumped alongside the icons. They are useless in production
+if you use AssetMapper, so you can disable them there:
+
+.. code-block:: yaml
+
+    when@prod:
+        ux_icons:
+            javascript:
+                dump_typescript: false
+
+With AssetMapper, the components are mapped as ``@symfony/ux-icons/react`` and
+``@symfony/ux-icons/vue``; require the framework itself in your importmap
+(e.g. ``php bin/console importmap:require react``).
+
 Errors
 ------
 

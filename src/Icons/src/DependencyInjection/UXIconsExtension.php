@@ -11,13 +11,16 @@
 
 namespace Symfony\UX\Icons\DependencyInjection;
 
+use Symfony\Component\AssetMapper\AssetMapperInterface;
 use Symfony\Component\AssetMapper\Event\PreAssetsCompileEvent;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
+use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\ConfigurableExtension;
 use Symfony\UX\Icons\IconFinderInterface;
 use Symfony\UX\Icons\Iconify;
@@ -27,8 +30,29 @@ use Symfony\UX\Icons\Iconify;
  *
  * @internal
  */
-final class UXIconsExtension extends ConfigurableExtension implements ConfigurationInterface
+final class UXIconsExtension extends ConfigurableExtension implements ConfigurationInterface, PrependExtensionInterface
 {
+    public function prepend(ContainerBuilder $container): void
+    {
+        if (!$this->isAssetMapperAvailable($container)) {
+            return;
+        }
+
+        // The dist path must be mapped even without the "javascript" option: Flex requires the package's importmap entries on install
+        $paths = [__DIR__.'/../../assets/dist' => '@symfony/ux-icons'];
+
+        $config = $this->processConfiguration($this, $container->getExtensionConfig($this->getAlias()));
+        if ($config['javascript']['enabled']) {
+            $paths[$config['javascript']['dump_directory']] = 'var/icons';
+        }
+
+        $container->prependExtensionConfig('framework', [
+            'asset_mapper' => [
+                'paths' => $paths,
+            ],
+        ]);
+    }
+
     public function getConfigTreeBuilder(): TreeBuilder
     {
         $builder = new TreeBuilder('ux_icons');
@@ -131,6 +155,26 @@ final class UXIconsExtension extends ConfigurableExtension implements Configurat
                         ->end()
                     ->end()
                 ->end()
+                ->arrayNode('javascript')
+                    ->info('Dump local icons as a JavaScript module, to render them with "@symfony/ux-icons".')
+                    ->canBeEnabled()
+                    ->children()
+                        ->scalarNode('dump_directory')
+                            ->info('The directory where the JavaScript module is dumped.')
+                            ->defaultValue('%kernel.project_dir%/var/icons')
+                            ->cannotBeEmpty()
+                        ->end()
+                        ->booleanNode('dump_typescript')
+                            ->info('Whether TypeScript types are dumped alongside the icons. Disable this if you do not use TypeScript (e.g. in production when using AssetMapper).')
+                            ->defaultTrue()
+                        ->end()
+                        ->arrayNode('scan_directories')
+                            ->info('The directories scanned for icons imported in JavaScript files (see "ux:icons:lock").')
+                            ->defaultValue(['%kernel.project_dir%/assets'])
+                            ->scalarPrototype()->end()
+                        ->end()
+                    ->end()
+                ->end()
                 ->booleanNode('ignore_not_found')
                     ->info("Ignore error when an icon is not found.\nSet to 'true' to fail silently.")
                     ->defaultFalse()
@@ -199,6 +243,33 @@ final class UXIconsExtension extends ConfigurableExtension implements Configurat
             ->setArgument(4, $iconSuffixAttributes)
         ;
 
+        if ($mergedConfig['javascript']['enabled']) {
+            $loader->load('javascript.php');
+
+            $container->getDefinition('.ux_icons.javascript.icon_renderer')
+                ->setArgument(1, $mergedConfig['default_icon_attributes'])
+                ->setArgument(2, $mergedConfig['aliases'])
+                ->setArgument(3, $iconSetAttributes)
+                ->setArgument(4, $iconSuffixAttributes)
+            ;
+
+            $container->getDefinition('.ux_icons.javascript.dumper')
+                ->setArgument(1, $mergedConfig['icon_dir'])
+                ->setArgument(2, $iconSetPaths)
+                ->setArgument(3, $mergedConfig['aliases'])
+                ->setArgument(4, $mergedConfig['javascript']['dump_directory'])
+                ->setArgument(5, $mergedConfig['javascript']['dump_typescript'])
+            ;
+
+            $container->getDefinition('.ux_icons.command.import')
+                ->setArgument(2, new Reference('.ux_icons.javascript.dumper'))
+            ;
+
+            $container->getDefinition('.ux_icons.javascript.icon_finder')
+                ->setArgument(0, $mergedConfig['javascript']['scan_directories'])
+            ;
+        }
+
         $container->getDefinition('.ux_icons.twig_icon_runtime')
             ->setArgument(1, $mergedConfig['ignore_not_found'])
         ;
@@ -213,6 +284,11 @@ final class UXIconsExtension extends ConfigurableExtension implements Configurat
             ->setArgument(3, $mergedConfig['aliases'])
             ->setArgument(4, $iconSetAliases);
 
+        if ($mergedConfig['javascript']['enabled']) {
+            $container->getDefinition('.ux_icons.command.lock')
+                ->setArgument(5, new Reference('.ux_icons.javascript.dumper'));
+        }
+
         if (!$mergedConfig['iconify']['on_demand'] || !$mergedConfig['iconify']['enabled']) {
             $container->removeDefinition('.ux_icons.iconify_on_demand_registry');
             $container->removeDefinition('.ux_icons.auto_lock_icon_registry');
@@ -223,5 +299,21 @@ final class UXIconsExtension extends ConfigurableExtension implements Configurat
         } else {
             $container->removeDefinition('.ux_icons.auto_lock_icon_registry');
         }
+    }
+
+    private function isAssetMapperAvailable(ContainerBuilder $container): bool
+    {
+        if (!interface_exists(AssetMapperInterface::class)) {
+            return false;
+        }
+
+        // Before Symfony 8.2, FrameworkBundle provided the AssetMapper configuration.
+        $bundlesMetadata = $container->getParameter('kernel.bundles_metadata');
+        if (!isset($bundlesMetadata['FrameworkBundle'])) {
+            return false;
+        }
+
+        return isset($bundlesMetadata['AssetMapperBundle'])
+            || is_file($bundlesMetadata['FrameworkBundle']['path'].'/Resources/config/asset_mapper.php');
     }
 }

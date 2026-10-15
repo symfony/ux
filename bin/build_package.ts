@@ -40,12 +40,14 @@ async function main() {
     const isReactOrVue = ['@symfony/ux-react', '@symfony/ux-vue'].some((name) => packageData.name.startsWith(name));
     const isTurbo = '@symfony/ux-turbo' === packageData.name;
     const isInspector = '@symfony/ux-inspector' === packageData.name;
+    const isIcons = '@symfony/ux-icons' === packageData.name;
 
     const inputCssFile = packageData?.config?.css_source;
     const inputFiles = [
         ...globSync('src/*controller.ts'),
         ...(isTurbo ? ['src/mercure_stream_source_element.ts'] : []),
         ...(isInspector ? ['src/inspector.ts'] : []),
+        ...(isIcons ? ['src/index.ts', 'src/react.ts', 'src/vue.ts'] : []),
         ...(isStimulusBundle ? ['src/loader.ts', 'src/controllers.ts'] : []),
         ...(isReactOrVue ? ['src/loader.ts', 'src/components.ts'] : []),
         ...(inputCssFile ? [inputCssFile] : []),

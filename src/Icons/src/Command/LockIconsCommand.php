@@ -20,6 +20,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\UX\Icons\Exception\IconNotFoundException;
 use Symfony\UX\Icons\IconFinderInterface;
 use Symfony\UX\Icons\Iconify;
+use Symfony\UX\Icons\JavaScript\IconsDumper;
 use Symfony\UX\Icons\Registry\LocalSvgIconRegistry;
 
 /**
@@ -39,6 +40,7 @@ final class LockIconsCommand extends Command
         private IconFinderInterface $iconFinder,
         private readonly array $iconAliases = [],
         private readonly array $iconSetAliases = [],
+        private readonly ?IconsDumper $dumper = null,
     ) {
         parent::__construct();
     }
@@ -104,17 +106,30 @@ final class LockIconsCommand extends Command
             ++$count;
 
             $io->writeln(\sprintf(
-                " <fg=bright-green;options=bold>✓</> Imported <fg=bright-white;bg=black>%s:</><fg=bright-magenta;bg=black;options>%s</> (License: <href=%s>%s</>). Render with: <comment>{{ ux_icon('%s') }}</comment>",
+                " <fg=bright-green;options=bold>✓</> Imported <fg=bright-white;bg=black>%s:</><fg=bright-magenta;bg=black;options>%s</> (License: <href=%s>%s</>). Render with: <comment>{{ ux_icon('%s') }}</comment>%s",
                 $prefix,
                 $name,
                 $license['url'] ?? '#',
                 $license['title'],
                 $icon,
+                $this->javaScriptHint($prefix, $name),
             ));
+        }
+
+        if ($this->dumper) {
+            $io->comment(\sprintf('Dumped %d icons for JavaScript.', \count($this->dumper->dump())));
         }
 
         $io->success(\sprintf('Imported %d icons.', $count));
 
         return Command::SUCCESS;
+    }
+
+    /**
+     * The name the icon is exported with by the JavaScript dump, empty when the dump is disabled.
+     */
+    private function javaScriptHint(string $prefix, string $name): string
+    {
+        return $this->dumper ? \sprintf('. JavaScript: <comment>import { %s }</comment>', IconsDumper::exportName($prefix.':'.$name)) : '';
     }
 }

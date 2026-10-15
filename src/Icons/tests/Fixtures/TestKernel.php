@@ -70,6 +70,10 @@ final class TestKernel extends Kernel
                 'foo' => 'lucide:circle',
                 'bar' => 'lu:circle-off',
             ],
+            'javascript' => [
+                'dump_directory' => '%kernel.cache_dir%/ux_icons_js',
+                'scan_directories' => ['%kernel.project_dir%/tests/Fixtures/assets'],
+            ],
             'icon_sets' => [
                 'fla' => [
                     'path' => '%kernel.project_dir%/tests/Fixtures/images/flags',

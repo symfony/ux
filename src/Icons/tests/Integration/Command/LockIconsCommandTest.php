@@ -69,6 +69,20 @@ final class LockIconsCommandTest extends KernelTestCase
         $this->assertAllIconsImported($this->executeConsoleCommand('ux:icons:lock --force'));
     }
 
+    public function testLockDumpsIconsForJavaScript(): void
+    {
+        $this->executeConsoleCommand('ux:icons:lock')
+            ->assertSuccessful()
+            ->assertOutputContains("{{ ux_icon('lucide:mail') }}. JavaScript: import { LucideMailIcon }")
+            ->assertOutputContains("{{ ux_icon('lu:circle-off') }}. JavaScript: import { LucideCircleOffIcon }")
+            ->assertOutputContains('Dumped')
+        ;
+
+        $js = file_get_contents(self::$kernel->getCacheDir().'/ux_icons_js/index.js');
+        $this->assertStringContainsString('export const LucideMailIcon = ', $js);
+        $this->assertStringContainsString('export const LucideCircleOffIcon = ', $js);
+    }
+
     private function assertAllIconsImported(CommandResult $result): void
     {
         $result
