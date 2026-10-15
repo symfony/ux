@@ -32,6 +32,21 @@ Import its asset route:
 
 The bundle loads its assets automatically.
 
+The script is served by a stateless route, ``/_ux/inspector.js``. If a security
+firewall reads the session on this path, for instance a firewall that is not
+``lazy`` or an ``access_control`` rule that matches every URL, the script fails
+with "Session was used while the request was declared stateless". Exclude the
+path from security, like the profiler and the web debug toolbar:
+
+.. code-block:: yaml
+
+    # config/packages/security.yaml
+    security:
+        firewalls:
+            dev:
+                pattern: ^/(_profiler|_wdt|_ux|assets|build)/
+                security: false
+
 .. _ux-inspector-stimulus-runtime:
 
 Connect Stimulus (Optional)
