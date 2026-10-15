@@ -1,0 +1,13 @@
+{%- props
+    ## 'ltr'|'rtl'|null The text direction of the content. Falls back to the `dir` attribute, then to `ltr`.
+    direction = null
+-%}
+{%- set _direction_dir = attributes.render('dir')|default('ltr') -%}
+<div
+    data-slot="direction"
+    dir="{{ direction ?? _direction_dir }}"
+    {{ attributes }}
+>
+    {##- The content that follows the text direction. -#}
+    {%- block content %}{% endblock -%}
+</div>
