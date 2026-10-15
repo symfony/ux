@@ -1,0 +1,8 @@
+<div{{ attributes }}>
+    <ul>
+    {% for item in items %}
+        {# both components on one line: they share the template line the deterministic ids are built from #}
+        {{ component('simple_twig') }}{{ component('todo_item', {text: item.text, textLength: item.text|length}) }}
+    {% endfor %}
+    </ul>
+</div>

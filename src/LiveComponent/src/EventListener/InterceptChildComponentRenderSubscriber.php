@@ -18,6 +18,7 @@ use Symfony\UX\LiveComponent\Twig\DeterministicTwigIdCalculator;
 use Symfony\UX\LiveComponent\Util\ChildComponentPartialRenderer;
 use Symfony\UX\LiveComponent\Util\LiveComponentStack;
 use Symfony\UX\LiveComponent\Util\LiveControllerAttributesCreator;
+use Symfony\UX\TwigComponent\ComponentFactory;
 use Symfony\UX\TwigComponent\Event\PreCreateForRenderEvent;
 
 /**
@@ -39,6 +40,11 @@ class InterceptChildComponentRenderSubscriber implements EventSubscriberInterfac
 
     public function preComponentCreated(PreCreateForRenderEvent $event): void
     {
+        // only live components have a fingerprint to compare
+        if (!$this->container->get(ComponentFactory::class)->metadataFor($event->getName())->get('live', false)) {
+            return;
+        }
+
         // if there is already a component, that's a parent. Else, this is not a child.
         if (null === $parentComponent = $this->componentStack->getCurrentLiveComponent()) {
             return;
@@ -85,6 +91,7 @@ class InterceptChildComponentRenderSubscriber implements EventSubscriberInterfac
     public static function getSubscribedServices(): array
     {
         return [
+            ComponentFactory::class,
             DeterministicTwigIdCalculator::class,
             ChildComponentPartialRenderer::class,
         ];
