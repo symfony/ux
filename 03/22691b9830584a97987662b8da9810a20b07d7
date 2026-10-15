@@ -1,0 +1,13 @@
+---------------------------------------------------------------------------
+
+by Enz000 at 2026-10-14T10:25:39Z
+
+"[App Toolkit / browser (8/8) (pull_request)](https://github.com/symfony/ux/actions/runs/38547448618/job/115796901474?pr=4095)" fail also, here's the fix https://github.com/symfony/ux/pull/4096
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-10-15T07:23:28Z
+
+Thanks Enzo! I replaced the fake Tailwind build with `missing_import_mode: warn` in the test kernel (`PreviewKernel`). This was the default before AssetMapper 8.2.
+
+Writing into `getInternalOutputCssPath()` ties our tests to the internals of tailwind-bundle, which is still 0.x. The kernel option also covers every future test that compiles a preview asset, not only these two.
