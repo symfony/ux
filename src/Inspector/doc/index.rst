@@ -32,6 +32,23 @@ Import its asset route:
 
 The bundle loads its assets automatically.
 
+The Inspector script is served at ``/_ux/inspector.js``. If an
+``access_control`` rule matches this path, the script does not load: logged-in
+users see the error "Session was used while the request was declared
+stateless", and anonymous users are denied access. Add the path to the ``dev``
+firewall pattern, which already skips security for the profiler and the web
+debug toolbar:
+
+.. code-block:: diff
+
+     # config/packages/security.yaml
+     security:
+         firewalls:
+             dev:
+    -            pattern: ^/(_profiler|_wdt|assets|build)/
+    +            pattern: ^/(_profiler|_wdt|assets|build)/|^/_ux/inspector\.js$
+                 security: false
+
 .. _ux-inspector-stimulus-runtime:
 
 Connect Stimulus (Optional)
