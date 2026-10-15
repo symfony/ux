@@ -38,6 +38,7 @@ use Symfony\UX\TwigComponent\ComponentRenderer;
 use Symfony\UX\TwigComponent\ComponentRendererInterface;
 use Symfony\UX\TwigComponent\ComponentStack;
 use Symfony\UX\TwigComponent\ComponentTemplateFinder;
+use Symfony\UX\TwigComponent\DependencyInjection\Compiler\ComponentListenerScopesPass;
 use Symfony\UX\TwigComponent\DependencyInjection\Compiler\TwigComponentPass;
 use Symfony\UX\TwigComponent\Twig\ComponentExtension;
 use Symfony\UX\TwigComponent\Twig\ComponentLexer;
@@ -87,6 +88,7 @@ final class TwigComponentExtension extends Extension implements ConfigurationInt
                 new AbstractArgument(\sprintf('Added in %s.', TwigComponentPass::class)),
                 new AbstractArgument(\sprintf('Added in %s.', TwigComponentPass::class)),
                 new Reference('twig'),
+                new AbstractArgument(\sprintf('Added in %s.', ComponentListenerScopesPass::class)),
             ])
             ->addTag('kernel.reset', ['method' => 'reset'])
         ;

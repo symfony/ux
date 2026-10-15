@@ -126,6 +126,7 @@ final class LiveComponentExtension extends Extension implements PrependExtension
 
         $container->register('ux.live_component.event_listener.data_model_props_subscriber', DataModelPropsSubscriber::class)
             ->addTag('kernel.event_subscriber')
+            ->addTag('ux.twig_component.scoped_listener', ['props' => ['data-model', 'dataModel']])
             ->setArguments([
                 new Reference('ux.twig_component.live_component_stack'),
                 new Reference('property_accessor'),
@@ -163,7 +164,8 @@ final class LiveComponentExtension extends Extension implements PrependExtension
             ->addTag('container.service_subscriber', ['key' => ComponentFactory::class, 'id' => 'ux.twig_component.component_factory'])
             ->addTag('container.service_subscriber', ['key' => DeterministicTwigIdCalculator::class, 'id' => 'ux.live_component.deterministic_id_calculator'])
             ->addTag('container.service_subscriber', ['key' => ChildComponentPartialRenderer::class, 'id' => 'ux.live_component.child_component_partial_renderer'])
-            ->addTag('kernel.event_subscriber');
+            ->addTag('kernel.event_subscriber')
+            ->addTag('ux.twig_component.scoped_listener', ['metadata' => 'live']);
 
         $container->register('ux.live_component.child_component_partial_renderer', ChildComponentPartialRenderer::class)
             ->setArguments([
@@ -228,6 +230,7 @@ final class LiveComponentExtension extends Extension implements PrependExtension
                 new Reference('twig'),
             ])
             ->addTag('kernel.event_subscriber')
+            ->addTag('ux.twig_component.scoped_listener', ['metadata' => 'live'])
             ->addTag('container.service_subscriber', ['key' => LiveControllerAttributesCreator::class, 'id' => 'ux.live_component.live_controller_attributes_creator'])
         ;
 
@@ -243,10 +246,12 @@ final class LiveComponentExtension extends Extension implements PrependExtension
                 new Reference('ux.live_component.query_string_props_extractor'),
                 new Reference('property_accessor'),
             ])
-            ->addTag('kernel.event_subscriber');
+            ->addTag('kernel.event_subscriber')
+            ->addTag('ux.twig_component.scoped_listener', ['metadata' => 'live']);
 
         $container->register('ux.live_component.defer_live_component_subscriber', DeferLiveComponentSubscriber::class)
             ->addTag('kernel.event_subscriber')
+            ->addTag('ux.twig_component.scoped_listener', ['metadata' => 'live'])
         ;
 
         $container->register('ux.live_component.deterministic_id_calculator', DeterministicTwigIdCalculator::class)

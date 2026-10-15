@@ -13,6 +13,7 @@ namespace Symfony\UX\TwigComponent;
 
 use Psr\Container\ContainerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\EventDispatcher\CompiledEventDispatcher;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface as IntrospectableEventDispatcherInterface;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\Contracts\Service\ResetInterface;
@@ -42,8 +43,17 @@ final class ComponentFactory implements ResetInterface
     private readonly ?IntrospectableEventDispatcherInterface $introspectableDispatcher;
 
     /**
-     * @param array<string, array>        $config
-     * @param array<class-string, string> $classMap
+     * Whether to count the listeners of an event, to find the ones added at runtime.
+     *
+     * Adding listeners to a compiled dispatcher is deprecated since Symfony 8.2, and reading them would thaw it.
+     */
+    private readonly bool $countsRuntimeListeners;
+
+    /**
+     * @param array<string, array>                                                       $config
+     * @param array<class-string, string>                                                $classMap
+     * @param array<class-string, array{0: string|null, 1: array<string, true>, 2: int}> $listenerScopes For the events whose listeners all only act on some components:
+     *                                                                                                   the metadata key and the props of those components, and the number of listeners
      */
     public function __construct(
         private ComponentTemplateFinderInterface $componentTemplateFinder,
@@ -53,8 +63,10 @@ final class ComponentFactory implements ResetInterface
         private array $config,
         private readonly array $classMap,
         private readonly Environment $twig,
+        private readonly array $listenerScopes = [],
     ) {
         $this->introspectableDispatcher = $eventDispatcher instanceof IntrospectableEventDispatcherInterface ? $eventDispatcher : null;
+        $this->countsRuntimeListeners = !$eventDispatcher instanceof CompiledEventDispatcher;
     }
 
     public function metadataFor(string $name): ComponentMetadata
@@ -107,10 +119,11 @@ final class ComponentFactory implements ResetInterface
     public function mountFromObject(object $component, array $data, ComponentMetadata $componentMetadata): MountedComponent
     {
         $originalData = $data;
-        $dispatchPreMount = null === $this->introspectableDispatcher || $this->introspectableDispatcher->hasListeners(PreMountEvent::class);
+        $dispatchPreMount = $this->hasListenersFor(PreMountEvent::class, $componentMetadata, $data);
+        $dispatchPostMount = $this->hasListenersFor(PostMountEvent::class, $componentMetadata, $data);
 
         // Without mount listeners, nothing can change the data of an anonymous component: it has no hooks and no properties
-        if (!$dispatchPreMount && $component instanceof AnonymousComponent && !$this->introspectableDispatcher->hasListeners(PostMountEvent::class)) {
+        if (!$dispatchPreMount && !$dispatchPostMount && $component instanceof AnonymousComponent) {
             $component->mount($data);
             $extraMetadata = [];
         } else {
@@ -128,7 +141,7 @@ final class ComponentFactory implements ResetInterface
                 }
             }
 
-            $extraMetadata = $this->postMount($component, $data, $componentMetadata);
+            $extraMetadata = $this->postMount($component, $data, $componentMetadata, $dispatchPostMount);
         }
 
         // create attributes from "attributes" key if exists
@@ -165,6 +178,38 @@ final class ComponentFactory implements ResetInterface
         }
 
         return $this->components->get($metadata->getName());
+    }
+
+    /**
+     * Whether the given event has a listener that may act on the given component.
+     *
+     * @internal
+     *
+     * @param class-string         $eventClass
+     * @param array<string, mixed> $props      The props the component is rendered with
+     */
+    public function hasListenersFor(string $eventClass, string|ComponentMetadata $component, array $props): bool
+    {
+        if (null === $this->introspectableDispatcher) {
+            return true;
+        }
+
+        if ($scope = $this->listenerScopes[$eventClass] ?? null) {
+            [$scopedMetadataKey, $scopedProps, $listenerCount] = $scope;
+            $inScope = $scopedProps && array_intersect_key($props, $scopedProps);
+
+            if (!$inScope && null !== $scopedMetadataKey) {
+                $metadata = $component instanceof ComponentMetadata ? $component : $this->metadataFor($component);
+                $inScope = $metadata->get($scopedMetadataKey, false);
+            }
+
+            if (!$inScope) {
+                // Listeners registered at compile time are out of scope, but those added at runtime may not be.
+                return $this->countsRuntimeListeners && \count($this->introspectableDispatcher->getListeners($eventClass)) > $listenerCount;
+            }
+        }
+
+        return $this->introspectableDispatcher->hasListeners($eventClass);
     }
 
     private function mount(object $component, array &$data, ComponentMetadata $componentMetadata): void
@@ -215,10 +260,10 @@ final class ComponentFactory implements ResetInterface
     /**
      * @return array The extra metadata collected by the listeners
      */
-    private function postMount(object $component, array &$data, ComponentMetadata $componentMetadata): array
+    private function postMount(object $component, array &$data, ComponentMetadata $componentMetadata, bool $dispatch): array
     {
         $extraMetadata = [];
-        if (null === $this->introspectableDispatcher || $this->introspectableDispatcher->hasListeners(PostMountEvent::class)) {
+        if ($dispatch) {
             $event = new PostMountEvent($component, $data, $componentMetadata);
             $this->eventDispatcher->dispatch($event);
             $data = $event->getData();

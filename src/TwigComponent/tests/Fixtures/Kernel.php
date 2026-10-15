@@ -17,8 +17,14 @@ use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Bundle\TwigBundle\TwigBundle;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
+use Symfony\UX\TwigComponent\Event\PostMountEvent;
+use Symfony\UX\TwigComponent\Event\PostRenderEvent;
+use Symfony\UX\TwigComponent\Event\PreCreateForRenderEvent;
+use Symfony\UX\TwigComponent\Event\PreMountEvent;
+use Symfony\UX\TwigComponent\Event\PreRenderEvent;
 use Symfony\UX\TwigComponent\Tests\Fixtures\Bundle\AcmeBundle\AcmeBundle;
 use Symfony\UX\TwigComponent\Tests\Fixtures\Component\ComponentB;
+use Symfony\UX\TwigComponent\Tests\Fixtures\EventListener\ComponentEventRecorder;
 use Symfony\UX\TwigComponent\TwigComponentBundle;
 use Twig\Extra\TwigExtraBundle\TwigExtraBundle;
 
@@ -91,6 +97,28 @@ final class Kernel extends BaseKernel
                 'template' => 'components/custom2.html.twig',
             ])
         ;
+
+        if ('scoped_listener' === $this->environment) {
+            $services->set('scoped_component', ComponentB::class)
+                ->tag('twig.component', [
+                    'key' => 'scoped_component',
+                    'template' => 'components/custom2.html.twig',
+                    'scoped' => true,
+                ])
+            ;
+            $scopes = [
+                'scoped_listener' => ['metadata' => 'scoped'],
+                'props_scoped_listener' => ['props' => ['data-scoped', 'dataScoped']],
+            ];
+            foreach ($scopes as $id => $scope) {
+                $recorder = $services->set($id, ComponentEventRecorder::class)
+                    ->tag('ux.twig_component.scoped_listener', $scope)
+                ;
+                foreach ([PreCreateForRenderEvent::class, PreMountEvent::class, PostMountEvent::class, PreRenderEvent::class, PostRenderEvent::class] as $eventClass) {
+                    $recorder->tag('kernel.event_listener', ['event' => $eventClass]);
+                }
+            }
+        }
 
         if ('missing_key' === $this->environment) {
             $services->set('missing_key', ComponentB::class)
