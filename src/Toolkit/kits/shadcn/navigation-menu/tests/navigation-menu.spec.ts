@@ -88,6 +88,27 @@ describeRecipe('shadcn/navigation-menu', () => {
         await expect(page.getByRole('link', { name: /Introduction/ })).toBeVisible();
     });
 
+    for (const { example, trigger, edge } of [
+        { example: 'default', trigger: 'Getting started', edge: 'left' },
+        { example: 'rtl', trigger: 'ابدأ', edge: 'right' },
+    ] as const) {
+        test(`aligns the ${edge} edge of the panel on a whole pixel in the ${example} example`, async ({
+            page,
+            gotoExample,
+        }) => {
+            await gotoExample(`shadcn/navigation-menu/${example}`);
+            const viewport = page.locator('[data-slot="navigation-menu-viewport"][data-state="open"]');
+
+            await page.getByRole('button', { name: trigger }).click();
+            await expect(viewport).toBeVisible();
+            await page.evaluate(() => Promise.all(document.getAnimations().map((animation) => animation.finished)));
+
+            const box = (await viewport.boundingBox())!;
+            const position = 'left' === edge ? box.x : box.x + box.width;
+            expect(position).toBe(Math.round(position));
+        });
+    }
+
     test('switches to another item at once while one is open', async ({ page, gotoExample }) => {
         await gotoExample('shadcn/navigation-menu/default', { timers: 'fake' });
         const gettingStarted = page.getByRole('button', { name: 'Getting started' });
