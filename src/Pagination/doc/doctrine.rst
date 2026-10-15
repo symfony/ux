@@ -86,7 +86,7 @@ Cursor fields must be non-nullable mapped scalar fields on the root
 entity. Associations, unmapped aliases, nullable fields and invalid field
 names are rejected against ORM metadata. Supported Doctrine types include
 small, regular and big integers, string, GUID, float, decimal, boolean,
-``datetime`` and ``datetimetz`` fields.
+``date``, ``datetime`` and ``datetimetz`` fields.
 
 The adapter appends every missing entity identifier field to make the
 effective order deterministic. The direction passed to ``orderBy()``

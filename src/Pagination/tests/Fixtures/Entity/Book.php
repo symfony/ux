@@ -39,6 +39,12 @@ class Book
     #[ORM\Column(type: 'datetimetz')]
     private \DateTime $updatedAt;
 
+    #[ORM\Column(type: 'date_immutable')]
+    private \DateTimeImmutable $releasedOn;
+
+    #[ORM\Column(type: 'date')]
+    private \DateTime $printedOn;
+
     /** @var array<string, mixed> */
     #[ORM\Column(type: 'json')]
     private array $metadata = [];
@@ -59,6 +65,8 @@ class Book
         $this->categories = new ArrayCollection();
         $this->publishedAt = new \DateTimeImmutable('2000-01-01T00:00:00+00:00');
         $this->updatedAt = new \DateTime('2000-01-01T00:00:00+00:00');
+        $this->releasedOn = new \DateTimeImmutable('2000-01-01');
+        $this->printedOn = new \DateTime('2000-01-01');
     }
 
     public function getId(): ?int
@@ -115,6 +123,30 @@ class Book
     public function setUpdatedAt(\DateTime $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function getReleasedOn(): \DateTimeImmutable
+    {
+        return $this->releasedOn;
+    }
+
+    public function setReleasedOn(\DateTimeImmutable $releasedOn): self
+    {
+        $this->releasedOn = $releasedOn;
+
+        return $this;
+    }
+
+    public function getPrintedOn(): \DateTime
+    {
+        return $this->printedOn;
+    }
+
+    public function setPrintedOn(\DateTime $printedOn): self
+    {
+        $this->printedOn = $printedOn;
 
         return $this;
     }

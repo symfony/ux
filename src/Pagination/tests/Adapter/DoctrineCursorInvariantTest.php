@@ -188,6 +188,45 @@ final class DoctrineCursorInvariantTest extends TestCase
         }
     }
 
+    public function testDateCursorBoundariesAreStableInNonUtcDefaultTimezone(): void
+    {
+        $previousTimezone = date_default_timezone_get();
+        date_default_timezone_set('Europe/Paris');
+
+        try {
+            $schemaTool = new SchemaTool($this->entityManager);
+            $schemaTool->createSchema([
+                $this->entityManager->getClassMetadata(Book::class),
+                $this->entityManager->getClassMetadata(Category::class),
+            ]);
+
+            // Three books per day, so that page boundaries fall inside a day
+            for ($i = 1; $i <= 23; ++$i) {
+                $book = new Book();
+                $book->setTitle('Book '.$i);
+                $book->setReleasedOn(new \DateTimeImmutable(\sprintf('2024-06-%02d', intdiv($i - 1, 3) + 1)));
+                $this->entityManager->persist($book);
+            }
+            $this->entityManager->flush();
+            $this->entityManager->clear();
+
+            $order = CursorOrder::byFields(['releasedOn', 'id'], 'ASC');
+
+            $ids = [];
+            $cursor = null;
+            $guard = 0;
+            do {
+                $page = $this->adapter->sliceWithCursor($this->bookQueryBuilder(), $cursor, 5, $order);
+                $ids = [...$ids, ...array_map(static fn (Book $book) => $book->getId(), $page->items)];
+                $cursor = $page->next;
+            } while (null !== $cursor && ++$guard < 50);
+
+            self::assertSame(range(1, 23), $ids);
+        } finally {
+            date_default_timezone_set($previousTimezone);
+        }
+    }
+
     public function testExistingOrderIsRejectedEvenWhenCompatible(): void
     {
         $this->createAuthors(8);
