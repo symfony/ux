@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 3.7.0
+
+- Add a `defaultLocale` option to `createTranslator()`, and export the application default locale as `defaultLocale` in the dumped translations
+
 ## 3.5.0
 
 - Add support for Symfony 8.2's standalone `AssetMapperBundle`

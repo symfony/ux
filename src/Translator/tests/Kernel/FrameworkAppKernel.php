@@ -37,6 +37,7 @@ class FrameworkAppKernel extends Kernel
             $container->loadFromExtension('framework', [
                 'secret' => '$ecret',
                 'test' => true,
+                'default_locale' => 'fr',
                 'translator' => [
                     'fallbacks' => ['en'],
                     'default_path' => '%kernel.project_dir%/tests/Fixtures/translations',

@@ -140,7 +140,7 @@ function getPluralizationRule(number, locale) {
 }
 function formatIntl(id, parameters, locale) {
 	if (id === "") return "";
-	const intlMessage = new IntlMessageFormat(id, [locale.replace("_", "-")], void 0, { ignoreTag: true });
+	const intlMessage = new IntlMessageFormat(id, [locale.replaceAll("_", "-")], void 0, { ignoreTag: true });
 	parameters = { ...parameters };
 	Object.entries(parameters).forEach(([key, value]) => {
 		if (key.includes("%") || key.includes("{")) {
@@ -151,9 +151,13 @@ function formatIntl(id, parameters, locale) {
 	return intlMessage.format(parameters);
 }
 function getDefaultLocale() {
-	return document.documentElement.getAttribute("data-symfony-ux-translator-locale") || (document.documentElement.lang ? document.documentElement.lang.replace("-", "_") : null) || "en";
+	return getPageLocale() ?? "en";
 }
-function createTranslator({ messages, locale = getDefaultLocale(), localeFallbacks = {}, throwWhenNotFound = false }) {
+function getPageLocale() {
+	if (typeof document === "undefined") return null;
+	return document.documentElement.getAttribute("data-symfony-ux-translator-locale") || (document.documentElement.lang ? document.documentElement.lang.replaceAll("-", "_") : null);
+}
+function createTranslator({ messages, defaultLocale = "en", locale = getPageLocale() ?? defaultLocale, localeFallbacks = {}, throwWhenNotFound = false }) {
 	const _messages = messages;
 	const _localeFallbacks = localeFallbacks;
 	let _locale = locale;

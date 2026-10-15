@@ -64,4 +64,8 @@ describe('Intl Formatter', () => {
         expect(formatIntl('Hello {name}', { name: 'Fab' }, 'en_US')).toEqual('Hello Fab');
         expect(formatIntl('Bonjour {name}', { name: 'Fab' }, 'fr_FR')).toEqual('Bonjour Fab');
     });
+
+    test('format with a locale with script and region subcodes', () => {
+        expect(formatIntl('{count, plural, other {# 則留言}}', { count: 2 }, 'zh_Hant_TW')).toEqual('2 則留言');
+    });
 });

@@ -12,7 +12,7 @@ export function formatIntl(id: string, parameters: Record<string, string | numbe
         return '';
     }
 
-    const intlMessage = new IntlMessageFormat(id, [locale.replace('_', '-')], undefined, { ignoreTag: true });
+    const intlMessage = new IntlMessageFormat(id, [locale.replaceAll('_', '-')], undefined, { ignoreTag: true });
 
     parameters = { ...parameters };
 
