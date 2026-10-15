@@ -660,6 +660,36 @@ describe('LiveController data-model Tests', () => {
         await waitFor(() => expect(test.element).toHaveTextContent('Food: carrot'));
     });
 
+    it('notices the "real" value of a select without an empty value inside a form', async () => {
+        // https://github.com/symfony/ux/issues/767
+        const test = await createTest(
+            { form: { food: null } },
+            (data: any) => `
+            <div ${initComponent(data)}>
+                <form data-model="*">
+                    <label>
+                        Food:
+                        <select name="form[food]">
+                            <option value="carrot">🥕</option>
+                            <option value="brocolli">🥦</option>
+                        </select>
+                    </label>
+                </form>
+
+                Food: ${data.form.food}
+
+                <button data-action="live#$render">Reload</button>
+            </div>
+        `
+        );
+
+        // "carrot" is sent because, in practice, that's what's selected
+        test.expectsAjaxCall().expectUpdatedData({ 'form.food': 'carrot' });
+
+        getByText(test.element, 'Reload').click();
+        await waitFor(() => expect(test.element).toHaveTextContent('Food: carrot'));
+    });
+
     it('allows model fields to be set manually and rolled into a single request', async () => {
         const test = await createTest(
             { food: '', dessert: '' },
