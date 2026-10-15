@@ -3,6 +3,7 @@
 ## 3.7.0
 
 - [Shadcn] Add `trace` recipe
+- [Shadcn] Add `code-block` recipe
 
 ## 3.6.0
 

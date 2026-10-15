@@ -1,0 +1,27 @@
+{%- props
+    ## 'default'|'destructive' The tone of the block.
+    variant = 'default',
+    ## 'default'|'sm' The size of the block; `sm` has tighter padding and `text-xs` code, for tool output.
+    size = 'default'
+-%}
+{%- set style = html_cva(
+    base: 'group/code-block relative flex w-full min-w-0 flex-col overflow-hidden rounded-lg text-sm data-[size=sm]:text-xs has-[>[data-slot=code-block-content]:focus-visible]:ring-3 has-[>[data-slot=code-block-content]:focus-visible]:ring-ring/50',
+    variants: {
+        variant: {
+            default: 'border border-input text-foreground dark:bg-input/30 has-[>[data-slot=code-block-content]:focus-visible]:border-ring',
+            destructive: 'border border-destructive/30 text-destructive dark:border-destructive/40',
+        },
+    },
+) -%}
+<div
+    data-slot="code-block"
+    data-variant="{{ variant }}"
+    data-size="{{ size }}"
+    {{ attributes.defaults({
+        class: style.apply({variant: variant})|tailwind_classes,
+        'data-controller': 'code-block',
+    }) }}
+>
+    {##- The block structure, typically includes `CodeBlock:Header`, `CodeBlock:Content` and optionally `CodeBlock:Footer`. -#}
+    {%- block content %}{% endblock -%}
+</div>

@@ -1,0 +1,37 @@
+{%- props
+    ## string|null The code to render as plain text. Without it, the content block is rendered.
+    code = null,
+    ## boolean Whether long lines wrap instead of scrolling.
+    wrap = false,
+    ## boolean Whether each line is numbered. A `code` string is split into lines.
+    lineNumbers = false,
+    ## number The number of the first line, when `lineNumbers` is set.
+    startLine = 1
+-%}
+<pre
+    data-slot="code-block-content"
+    {% if wrap %}data-wrap{% endif %}
+    {% if lineNumbers %}data-numbered{% endif %}
+    data-code-block-target="content"
+    dir="ltr"
+    {% if lineNumbers %}style="counter-reset: line {{ startLine - 1 }};{{ attributes.render('style') }}"{% endif %}
+    {{ attributes.defaults({
+        class: 'min-h-0 min-w-0 scroll-fade-x overflow-auto px-3 py-3 text-start font-mono leading-relaxed outline-none [scrollbar-width:thin] data-wrap:scroll-fade-y data-wrap:wrap-break-word data-wrap:whitespace-pre-wrap group-has-data-[slot=code-block-header]/code-block:pt-2 group-has-data-[slot=code-block-footer]/code-block:pb-2 group-data-[size=sm]/code-block:px-2.5 group-data-[size=sm]/code-block:py-2.5 group-data-[size=sm]/code-block:group-has-data-[slot=code-block-header]/code-block:pt-1.5'|tailwind_classes,
+        tabindex: '0',
+    }) }}
+><code data-slot="code-block-code" class="grid min-h-lh min-w-max content-start in-data-numbered:grid-cols-[auto_1fr] in-data-wrap:min-w-0">
+    {%- if code is not null -%}
+        {#- Concatenated to a plain string, so the code is escaped even when it comes from a captured `set`. -#}
+        {%- set _code = ('' ~ code)|replace({'\r\n': '\n'}) -%}
+        {%- if lineNumbers -%}
+            {%- for _line in (_code|trim('\n', 'right'))|split('\n') -%}
+                <twig:CodeBlock:Line>{{ _line }}</twig:CodeBlock:Line>
+            {%- endfor -%}
+        {%- else -%}
+            {{- _code -}}
+        {%- endif -%}
+    {%- else -%}
+        {##- The code lines, as a list of `CodeBlock:Line`, when no `code` is given. -#}
+        {%- block content %}{% endblock -%}
+    {%- endif -%}
+</code></pre>

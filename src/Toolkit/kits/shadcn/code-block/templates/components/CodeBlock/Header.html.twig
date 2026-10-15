@@ -1,0 +1,9 @@
+<div
+    data-slot="code-block-header"
+    {{ attributes.defaults({
+        class: 'flex min-w-0 shrink-0 items-center gap-2 px-3 pt-3 text-muted-foreground *:has-[>[data-slot=code-block-title]]:min-w-0 group-data-[variant=destructive]/code-block:text-destructive group-data-[size=sm]/code-block:px-2.5 group-data-[size=sm]/code-block:pt-2.5'|tailwind_classes,
+    }) }}
+>
+    {##- The header content, typically includes `CodeBlock:Title` and `CodeBlock:Actions`. -#}
+    {%- block content %}{% endblock -%}
+</div>

@@ -1,0 +1,23 @@
+{%- props
+    ## string The text to copy.
+    value,
+    ## 'default'|'secondary'|'destructive'|'outline'|'ghost'|'link' The visual style variant.
+    variant = 'ghost',
+    ## 'default'|'xs'|'sm'|'lg'|'icon'|'icon-xs'|'icon-sm'|'icon-lg' The button size.
+    size = 'icon-xs'
+-%}
+<twig:Button
+    variant="{{ variant }}"
+    size="{{ size }}"
+    data-slot="code-block-copy-button"
+    data-copied="false"
+    data-code-block-text="{{ value }}"
+    {{ ...attributes.defaults({
+        'aria-label': 'Copy',
+        'data-action': 'click->code-block#copy'|html_attr_type('sst'),
+    }) }}
+>
+    <twig:ux:icon name="lucide:copy" class="group-data-[copied=true]/button:hidden" />
+    <twig:ux:icon name="lucide:check" class="hidden group-data-[copied=true]/button:inline" />
+</twig:Button>
+<span aria-live="polite" class="sr-only" data-code-block-target="status"></span>

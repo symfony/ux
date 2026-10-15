@@ -1,0 +1,38 @@
+<!--
+- Kit: Shadcn UI
+- Component: Code Block
+- Code:
+```twig
+{% set output = [
+    '$ pnpm build',
+    '> next build',
+    '',
+    ' ✓ Compiled successfully in 4.2s',
+    ' ✓ Generating static pages (12/12)',
+    '',
+    'Route (app)                Size  First Load JS',
+    '┌ ○ /                    1.9 kB         112 kB',
+    '├ ○ /_not-found           993 B         103 kB',
+    '└ ƒ /api/chat             141 B         102 kB',
+]|join('\n') %}
+<div class="w-full max-w-md">
+    <twig:CodeBlock>
+        <twig:CodeBlock:Content :code="output" />
+    </twig:CodeBlock>
+</div>
+```
+- Rendered code (run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="w-full max-w-md">
+    <div data-slot="code-block" data-variant="default" data-size="default" class="group/code-block relative flex w-full min-w-0 flex-col overflow-hidden rounded-lg text-sm data-[size=sm]:text-xs has-[>[data-slot=code-block-content]:focus-visible]:ring-3 has-[>[data-slot=code-block-content]:focus-visible]:ring-ring/50 border border-input text-foreground dark:bg-input/30 has-[>[data-slot=code-block-content]:focus-visible]:border-ring" data-controller="code-block"><pre data-slot="code-block-content" data-code-block-target="content" dir="ltr" class="min-h-0 min-w-0 scroll-fade-x overflow-auto px-3 py-3 text-start font-mono leading-relaxed outline-none [scrollbar-width:thin] data-wrap:scroll-fade-y data-wrap:wrap-break-word data-wrap:whitespace-pre-wrap group-has-data-[slot=code-block-header]/code-block:pt-2 group-has-data-[slot=code-block-footer]/code-block:pb-2 group-data-[size=sm]/code-block:px-2.5 group-data-[size=sm]/code-block:py-2.5 group-data-[size=sm]/code-block:group-has-data-[slot=code-block-header]/code-block:pt-1.5" tabindex="0"><code data-slot="code-block-code" class="grid min-h-lh min-w-max content-start in-data-numbered:grid-cols-[auto_1fr] in-data-wrap:min-w-0">$ pnpm build
+&gt; next build
+
+ ✓ Compiled successfully in 4.2s
+ ✓ Generating static pages (12/12)
+
+Route (app)                Size  First Load JS
+┌ ○ /                    1.9 kB         112 kB
+├ ○ /_not-found           993 B         103 kB
+└ ƒ /api/chat             141 B         102 kB</code></pre>
+
+    </div>
+</div>

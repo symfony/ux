@@ -37,7 +37,9 @@ The building block for reasoning, tool calls, sources and more.
                         </twig:Trace:Line>
                     </twig:Trace:Collapsible:Trigger>
                     <twig:Trace:Collapsible:Content>
-                        <pre class="max-h-64 overflow-auto rounded-lg border border-input px-2.5 py-2.5 font-mono text-xs leading-relaxed whitespace-pre-wrap wrap-break-word text-foreground dark:bg-input/30">10.18.0</pre>
+                        <twig:CodeBlock size="sm">
+                            <twig:CodeBlock:Content wrap class="max-h-64">10.18.0</twig:CodeBlock:Content>
+                        </twig:CodeBlock>
                     </twig:Trace:Collapsible:Content>
                 </twig:Trace:Collapsible>
                 <twig:Trace:Collapsible>
@@ -50,8 +52,10 @@ The building block for reasoning, tool calls, sources and more.
                         </twig:Trace:Line>
                     </twig:Trace:Collapsible:Trigger>
                     <twig:Trace:Collapsible:Content>
-                        <pre class="max-h-64 overflow-auto rounded-lg border border-input px-2.5 py-2.5 font-mono text-xs leading-relaxed whitespace-pre-wrap wrap-break-word text-foreground dark:bg-input/30"> package.json | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)</pre>
+                        <twig:CodeBlock size="sm">
+                            <twig:CodeBlock:Content wrap class="max-h-64"> package.json | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)</twig:CodeBlock:Content>
+                        </twig:CodeBlock>
                     </twig:Trace:Collapsible:Content>
                 </twig:Trace:Collapsible>
                 <twig:Trace:Collapsible open>
@@ -64,7 +68,9 @@ The building block for reasoning, tool calls, sources and more.
                         </twig:Trace:Line>
                     </twig:Trace:Collapsible:Trigger>
                     <twig:Trace:Collapsible:Content>
-                        <pre class="max-h-64 overflow-auto rounded-lg border border-destructive/30 px-2.5 py-2.5 font-mono text-xs leading-relaxed whitespace-pre-wrap wrap-break-word text-destructive dark:border-destructive/40">ERR_PNPM_OUTDATED_LOCKFILE  Cannot install with "frozen-lockfile" because pnpm-lock.yaml is not up to date with package.json</pre>
+                        <twig:CodeBlock size="sm" variant="destructive">
+                            <twig:CodeBlock:Content wrap class="max-h-64">ERR_PNPM_OUTDATED_LOCKFILE  Cannot install with "frozen-lockfile" because pnpm-lock.yaml is not up to date with package.json</twig:CodeBlock:Content>
+                        </twig:CodeBlock>
                     </twig:Trace:Collapsible:Content>
                 </twig:Trace:Collapsible>
                 <twig:Trace:Collapsible>
@@ -240,8 +246,10 @@ Wrap the line in a `Trace:Collapsible` to show more detail when it expands. Put 
             </twig:Trace:Line>
         </twig:Trace:Collapsible:Trigger>
         <twig:Trace:Collapsible:Content>
-            <pre class="max-h-64 overflow-auto rounded-lg border border-input px-2.5 py-2.5 font-mono text-xs leading-relaxed whitespace-pre-wrap wrap-break-word text-foreground dark:bg-input/30">$ node --version
-v24.18.0</pre>
+            <twig:CodeBlock size="sm">
+                <twig:CodeBlock:Content wrap class="max-h-64">$ node --version
+v24.18.0</twig:CodeBlock:Content>
+            </twig:CodeBlock>
         </twig:Trace:Collapsible:Content>
     </twig:Trace:Collapsible>
 </div>
@@ -263,8 +271,10 @@ Rows start closed. Set `open` on `Trace:Collapsible` to start open. Any element 
             </twig:Trace:Line>
         </twig:Trace:Collapsible:Trigger>
         <twig:Trace:Collapsible:Content>
-            <pre class="max-h-64 overflow-auto rounded-lg border border-input px-2.5 py-2.5 font-mono text-xs leading-relaxed whitespace-pre-wrap wrap-break-word text-foreground dark:bg-input/30">$ node --version
-v24.18.0</pre>
+            <twig:CodeBlock size="sm">
+                <twig:CodeBlock:Content wrap class="max-h-64">$ node --version
+v24.18.0</twig:CodeBlock:Content>
+            </twig:CodeBlock>
         </twig:Trace:Collapsible:Content>
     </twig:Trace:Collapsible>
     <twig:Trace:Collapsible>
@@ -277,8 +287,10 @@ v24.18.0</pre>
             </twig:Trace:Line>
         </twig:Trace:Collapsible:Trigger>
         <twig:Trace:Collapsible:Content>
-            <pre class="max-h-64 overflow-auto rounded-lg border border-input px-2.5 py-2.5 font-mono text-xs leading-relaxed whitespace-pre-wrap wrap-break-word text-foreground dark:bg-input/30">$ pnpm --version
-10.33.4</pre>
+            <twig:CodeBlock size="sm">
+                <twig:CodeBlock:Content wrap class="max-h-64">$ pnpm --version
+10.33.4</twig:CodeBlock:Content>
+            </twig:CodeBlock>
         </twig:Trace:Collapsible:Content>
         <twig:Button
             variant="outline"
@@ -540,7 +552,9 @@ A chain of thought is a collapsible row with step rows inside. Set the parent's 
                         </twig:Trace:Line>
                     </twig:Trace:Collapsible:Trigger>
                     <twig:Trace:Collapsible:Content>
-                        <pre class="max-h-64 overflow-auto rounded-lg border border-input px-2.5 py-2.5 font-mono text-xs leading-relaxed whitespace-pre-wrap wrap-break-word text-foreground dark:bg-input/30">cache key image optimization</pre>
+                        <twig:CodeBlock size="sm">
+                            <twig:CodeBlock:Content wrap class="max-h-64">cache key image optimization</twig:CodeBlock:Content>
+                        </twig:CodeBlock>
                     </twig:Trace:Collapsible:Content>
                 </twig:Trace:Collapsible>
             </twig:Trace>
@@ -625,15 +639,13 @@ A commit is a collapsible row with a line for each changed file. Say what change
                                     <twig:Sheet:Title class="font-mono">{{ file.path }}</twig:Sheet:Title>
                                     <twig:Sheet:Description>{{ file.additions }} additions, {{ file.deletions }} deletions</twig:Sheet:Description>
                                 </twig:Sheet:Header>
-                                <pre class="mx-6 mb-6 overflow-auto rounded-lg border border-input py-3 font-mono text-sm leading-relaxed text-foreground dark:bg-input/30"><code class="grid min-w-max">
-                                    {%- for line in file.lines -%}
-                                        <span class="{{ html_classes('relative block min-h-lh px-3 after:absolute after:top-0 after:start-1 after:select-none', {
-                                            'text-muted-foreground': line.variant == 'hunk',
-                                            "bg-muted after:text-muted-foreground after:content-['+']": line.variant == 'added',
-                                            "bg-destructive/10 after:text-destructive after:content-['−']": line.variant == 'removed',
-                                        }) }}">{{ line.text }}</span>
-                                    {%- endfor -%}
-                                </code></pre>
+                                <twig:CodeBlock class="mx-6 mb-6 w-auto">
+                                    <twig:CodeBlock:Content>
+                                        {%- for line in file.lines -%}
+                                            <twig:CodeBlock:Line variant="{{ line.variant == 'hunk' ? 'default' : line.variant }}" class="{{ line.variant == 'hunk' ? 'text-muted-foreground' : '' }}">{{ line.text }}</twig:CodeBlock:Line>
+                                        {%- endfor -%}
+                                    </twig:CodeBlock:Content>
+                                </twig:CodeBlock>
                             </twig:Sheet:Content>
                         </twig:Sheet>
                     {% endfor %}
@@ -699,7 +711,9 @@ Three levels: the turn, a summary, and the rows. Text between steps sits between
                                     </twig:Trace:Line>
                                 </twig:Trace:Collapsible:Trigger>
                                 <twig:Trace:Collapsible:Content>
-                                    <pre class="max-h-64 overflow-auto rounded-lg border border-destructive/30 px-2.5 py-2.5 font-mono text-xs leading-relaxed whitespace-pre-wrap wrap-break-word text-destructive dark:border-destructive/40">command not found: pnpm</pre>
+                                    <twig:CodeBlock size="sm" variant="destructive">
+                                        <twig:CodeBlock:Content wrap class="max-h-64">command not found: pnpm</twig:CodeBlock:Content>
+                                    </twig:CodeBlock>
                                 </twig:Trace:Collapsible:Content>
                             </twig:Trace:Collapsible>
                         </twig:Trace>
@@ -792,7 +806,9 @@ Render the tool calls of an assistant turn. A finished call is a collapsible row
                             </twig:Trace:Line>
                         </twig:Trace:Collapsible:Trigger>
                         <twig:Trace:Collapsible:Content>
-                            <pre class="max-h-64 overflow-auto rounded-lg border border-input px-2.5 py-2.5 font-mono text-xs leading-relaxed whitespace-pre-wrap wrap-break-word text-foreground dark:bg-input/30">{{ call.output }}</pre>
+                            <twig:CodeBlock size="sm">
+                                <twig:CodeBlock:Content wrap class="max-h-64">{{ call.output }}</twig:CodeBlock:Content>
+                            </twig:CodeBlock>
                         </twig:Trace:Collapsible:Content>
                     </twig:Trace:Collapsible>
                 {% endfor %}
