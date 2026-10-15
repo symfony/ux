@@ -239,6 +239,29 @@ final class InterceptChildComponentRenderSubscriberTest extends KernelTestCase
         yield 'unicode non-breaking space' => ["di\xc2\xa0v"];
     }
 
+    public function testItRendersNonLiveComponentsSharingALineWithALiveChild(): void
+    {
+        $component = $this->mountComponent('todo_list_with_sibling', [
+            'items' => [['text' => 'wake up'], ['text' => 'take a nap']],
+        ]);
+        $url = '/_components/todo_list_with_sibling?'.http_build_query(['props' => json_encode($this->dehydrateComponent($component)->getProps())]);
+
+        $children = [];
+        foreach ($this->browser()->visit($url)->crawler()->filter('[data-live-name-value="todo_item"]') as $child) {
+            $children[$child->getAttribute('id')] = [
+                'fingerprint' => $child->getAttribute('data-live-fingerprint-value'),
+                'tag' => 'li',
+            ];
+        }
+
+        $this->browser()
+            ->visit($url.'&'.http_build_query(['children' => json_encode($children)]))
+            ->assertSuccessful()
+            ->assertElementCount('ul > div', 2)
+            ->assertElementCount('ul > li[data-live-preserve]', 2)
+        ;
+    }
+
     private function buildUrlForTodoListComponent(array $childrenFingerprints, bool $includeLiveId = false): string
     {
         return $this->doBuildUrlForComponent('todo_list', $childrenFingerprints, [
