@@ -15,6 +15,7 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\SchemaTool;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\UX\Pagination\Adapter\DoctrineOrmAdapter;
 use Symfony\UX\Pagination\Cursor\CursorCodec;
@@ -150,7 +151,8 @@ final class DoctrineCursorInvariantTest extends TestCase
         self::assertSame(range(1, 16), $seen, 'Every row, including the inserted one, is seen exactly once');
     }
 
-    public function testDatetimeCursorBoundariesAreStableInNonUtcDefaultTimezone(): void
+    #[DataProvider('provideDateCursorFields')]
+    public function testDateCursorBoundariesAreStableInNonUtcDefaultTimezone(string $field): void
     {
         $previousTimezone = date_default_timezone_get();
         date_default_timezone_set('Europe/Paris');
@@ -162,16 +164,20 @@ final class DoctrineCursorInvariantTest extends TestCase
                 $this->entityManager->getClassMetadata(Category::class),
             ]);
 
+            // Three books per day for the date fields, so that page boundaries fall inside a day
             for ($i = 1; $i <= 23; ++$i) {
                 $book = new Book();
                 $book->setTitle('Book '.$i);
                 $book->setPublishedAt(new \DateTimeImmutable(\sprintf('2024-06-01 12:%02d:00', $i)));
+                $day = \sprintf('2024-06-%02d', intdiv($i - 1, 3) + 1);
+                $book->setReleasedOn(new \DateTimeImmutable($day));
+                $book->setPrintedOn(new \DateTime($day));
                 $this->entityManager->persist($book);
             }
             $this->entityManager->flush();
             $this->entityManager->clear();
 
-            $order = CursorOrder::byFields(['publishedAt', 'id'], 'ASC');
+            $order = CursorOrder::byFields([$field, 'id'], 'ASC');
 
             $ids = [];
             $cursor = null;
@@ -186,6 +192,13 @@ final class DoctrineCursorInvariantTest extends TestCase
         } finally {
             date_default_timezone_set($previousTimezone);
         }
+    }
+
+    public static function provideDateCursorFields(): iterable
+    {
+        yield 'datetime_immutable' => ['publishedAt'];
+        yield 'date_immutable' => ['releasedOn'];
+        yield 'date' => ['printedOn'];
     }
 
     public function testExistingOrderIsRejectedEvenWhenCompatible(): void
