@@ -1,0 +1,130 @@
+<!--
+- Kit: Shadcn UI
+- Component: Message Scroller
+- Code:
+```twig
+<twig:MessageScroller:Provider>
+    <twig:Card class="mx-auto h-140 w-full max-w-sm gap-0">
+        <twig:Card:Header class="gap-1 border-b">
+            <twig:Card:Title>Load History</twig:Card:Title>
+            <twig:Card:Description>Older messages load above without moving the reader.</twig:Card:Description>
+        </twig:Card:Header>
+        <twig:Card:Content class="min-h-0 flex-1 overflow-hidden p-0">
+            <twig:MessageScroller>
+                <twig:MessageScroller:Viewport>
+                    <twig:MessageScroller:Content class="p-(--card-spacing)">
+                        <twig:MessageScroller:Item>
+                            <div class="flex justify-center">
+                                <twig:Button variant="outline" size="sm">Load earlier messages</twig:Button>
+                            </div>
+                        </twig:MessageScroller:Item>
+                        <twig:MessageScroller:Item messageId="history-1" scrollAnchor>
+                            <twig:Message align="end">
+                                <twig:Message:Content>
+                                    <twig:Bubble variant="muted">
+                                        <twig:Bubble:Content>Can you summarize where the launch checklist stands?</twig:Bubble:Content>
+                                    </twig:Bubble>
+                                </twig:Message:Content>
+                            </twig:Message>
+                        </twig:MessageScroller:Item>
+                        <twig:MessageScroller:Item messageId="history-2">
+                            <twig:Message>
+                                <twig:Message:Content>
+                                    <twig:Bubble variant="ghost">
+                                        <twig:Bubble:Content>Design review is done, the pricing page is in copy review, and the migration guide still needs an owner.</twig:Bubble:Content>
+                                    </twig:Bubble>
+                                </twig:Message:Content>
+                            </twig:Message>
+                        </twig:MessageScroller:Item>
+                        <twig:MessageScroller:Item messageId="history-3" scrollAnchor>
+                            <twig:Message align="end">
+                                <twig:Message:Content>
+                                    <twig:Bubble variant="muted">
+                                        <twig:Bubble:Content>Who should own the migration guide?</twig:Bubble:Content>
+                                    </twig:Bubble>
+                                </twig:Message:Content>
+                            </twig:Message>
+                        </twig:MessageScroller:Item>
+                        <twig:MessageScroller:Item messageId="history-4">
+                            <twig:Message>
+                                <twig:Message:Content>
+                                    <twig:Bubble variant="ghost">
+                                        <twig:Bubble:Content>Jordan wrote the previous one and knows the edge cases. If Jordan is busy, Priya has reviewed every migration this quarter.</twig:Bubble:Content>
+                                    </twig:Bubble>
+                                </twig:Message:Content>
+                            </twig:Message>
+                        </twig:MessageScroller:Item>
+                        <twig:MessageScroller:Item messageId="history-5" scrollAnchor>
+                            <twig:Message align="end">
+                                <twig:Message:Content>
+                                    <twig:Bubble variant="muted">
+                                        <twig:Bubble:Content>Let's ask Jordan first. What's left after that?</twig:Bubble:Content>
+                                    </twig:Bubble>
+                                </twig:Message:Content>
+                            </twig:Message>
+                        </twig:MessageScroller:Item>
+                        <twig:MessageScroller:Item messageId="history-6">
+                            <twig:Message>
+                                <twig:Message:Content>
+                                    <twig:Bubble variant="ghost">
+                                        <twig:Bubble:Content>Only the announcement email. It depends on the final pricing copy, so it can start as soon as copy review signs off.</twig:Bubble:Content>
+                                    </twig:Bubble>
+                                </twig:Message:Content>
+                            </twig:Message>
+                        </twig:MessageScroller:Item>
+                    </twig:MessageScroller:Content>
+                </twig:MessageScroller:Viewport>
+                <twig:MessageScroller:Button />
+            </twig:MessageScroller>
+        </twig:Card:Content>
+    </twig:Card>
+</twig:MessageScroller:Provider>
+```
+- Rendered code (run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div data-slot="message-scroller-provider" data-message-scroller-auto-scroll-value="false" data-message-scroller-default-scroll-position-value="end" data-message-scroller-scroll-edge-threshold-value="8" data-message-scroller-scroll-previous-item-peek-value="64" data-message-scroller-scroll-margin-value="0" class="group/message-scroller-provider contents" data-controller="message-scroller"><div data-slot="card" data-size="default" class="group/card flex flex-col overflow-hidden rounded-xl bg-card py-(--card-spacing) text-sm text-card-foreground ring-1 ring-foreground/10 [--card-spacing:--spacing(4)] has-data-[slot=card-footer]:pb-0 has-[>img:first-child]:pt-0 data-[size=sm]:[--card-spacing:--spacing(3)] data-[size=sm]:has-data-[slot=card-footer]:pb-0 *:[img:first-child]:rounded-t-xl *:[img:last-child]:rounded-b-xl mx-auto h-140 w-full max-w-sm gap-0"><div data-slot="card-header" class="group/card-header @container/card-header grid auto-rows-min items-start rounded-t-xl px-(--card-spacing) has-data-[slot=card-action]:grid-cols-[1fr_auto] has-data-[slot=card-description]:grid-rows-[auto_auto] [.border-b]:pb-(--card-spacing) gap-1 border-b"><div data-slot="card-title" class="cn-font-heading text-base leading-snug font-medium group-data-[size=sm]/card:text-sm">Load History</div>
+            <div data-slot="card-description" class="text-sm text-muted-foreground">Older messages load above without moving the reader.</div>
+        </div>
+        <div data-slot="card-content" class="min-h-0 flex-1 overflow-hidden p-0"><div data-slot="message-scroller" data-message-scroller-target="root" data-pending-scroll="" class="group/message-scroller relative flex size-full min-h-0 flex-col overflow-hidden"><div data-slot="message-scroller-viewport" data-message-scroller-target="viewport" data-preserve-scroll-on-prepend="true" role="region" data-pending-scroll="" class="size-full min-h-0 min-w-0 scroll-fade-b overflow-y-auto overscroll-contain contain-content [scrollbar-gutter:stable] [scrollbar-width:thin] data-autoscrolling:[scrollbar-color:transparent_transparent] data-pending-scroll:invisible" aria-label="Messages" tabindex="0" data-action="scroll->message-scroller#handleScroll wheel->message-scroller#handleUserScroll:passive touchmove->message-scroller#handleUserScroll:passive keydown.up->message-scroller#handleUserScroll keydown.down->message-scroller#handleUserScroll keydown.page_up->message-scroller#handleUserScroll keydown.page_down->message-scroller#handleUserScroll keydown.home->message-scroller#handleUserScroll keydown.end->message-scroller#handleUserScroll keydown.space->message-scroller#handleUserScroll"><div data-slot="message-scroller-content" data-message-scroller-target="content" role="log" aria-relevant="additions" class="flex h-max min-h-full flex-col gap-6 p-(--card-spacing)"><div data-slot="message-scroller-item" data-scroll-anchor="false" class="min-w-0 shrink-0"><div class="flex justify-center">
+                                <button data-slot="button" data-variant="outline" data-size="sm" class="group/button inline-flex shrink-0 items-center justify-center border bg-clip-padding font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 border-border bg-background hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50 h-7 gap-1 rounded-[min(var(--radius-md),12px)] px-2.5 text-[0.8rem] in-data-[slot=button-group]:rounded-lg has-data-[icon=inline-end]:pe-1.5 has-data-[icon=inline-start]:ps-1.5 [&amp;_svg:not([class*='size-'])]:size-3.5" type="button">Load earlier messages</button>
+                            </div>
+                        </div>
+                        <div data-slot="message-scroller-item" data-message-id="history-1" data-scroll-anchor="true" class="min-w-0 shrink-0"><div data-slot="message" data-align="end" class="group/message relative flex w-full min-w-0 gap-2 text-sm data-[align=end]:flex-row-reverse"><div data-slot="message-content" class="flex w-full min-w-0 flex-col gap-2.5 wrap-break-word group-data-[align=end]/message:*:data-slot:self-end"><div data-slot="bubble" data-variant="muted" data-align="start" class="group/bubble relative flex w-fit max-w-[80%] min-w-0 flex-col gap-1 group-data-[align=end]/message:self-end *:data-[slot=bubble-content]:bg-muted [&amp;>[data-slot=bubble-content]:is(button,a):hover]:bg-[color-mix(in_oklch,var(--muted),var(--foreground)_5%)]"><div data-slot="bubble-content" class="w-fit max-w-full min-w-0 overflow-hidden rounded-xl border border-transparent px-3 py-2 text-sm leading-relaxed wrap-break-word group-data-[align=end]/bubble:self-end [button]:text-start [button,a]:transition-colors [button,a]:outline-none [button,a]:focus-visible:border-ring [button,a]:focus-visible:ring-3 [button,a]:focus-visible:ring-ring/50">Can you summarize where the launch checklist stands?</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div data-slot="message-scroller-item" data-message-id="history-2" data-scroll-anchor="false" class="min-w-0 shrink-0"><div data-slot="message" data-align="start" class="group/message relative flex w-full min-w-0 gap-2 text-sm data-[align=end]:flex-row-reverse"><div data-slot="message-content" class="flex w-full min-w-0 flex-col gap-2.5 wrap-break-word group-data-[align=end]/message:*:data-slot:self-end"><div data-slot="bubble" data-variant="ghost" data-align="start" class="group/bubble relative flex w-fit min-w-0 flex-col gap-1 group-data-[align=end]/message:self-end max-w-full *:data-[slot=bubble-content]:rounded-none *:data-[slot=bubble-content]:bg-transparent *:data-[slot=bubble-content]:p-0 [&amp;>[data-slot=bubble-content]:is(button,a):hover]:bg-muted [&amp;>[data-slot=bubble-content]:is(button,a):hover]:text-foreground dark:[&amp;>[data-slot=bubble-content]:is(button,a):hover]:bg-muted/50"><div data-slot="bubble-content" class="w-fit max-w-full min-w-0 overflow-hidden rounded-xl border border-transparent px-3 py-2 text-sm leading-relaxed wrap-break-word group-data-[align=end]/bubble:self-end [button]:text-start [button,a]:transition-colors [button,a]:outline-none [button,a]:focus-visible:border-ring [button,a]:focus-visible:ring-3 [button,a]:focus-visible:ring-ring/50">Design review is done, the pricing page is in copy review, and the migration guide still needs an owner.</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div data-slot="message-scroller-item" data-message-id="history-3" data-scroll-anchor="true" class="min-w-0 shrink-0"><div data-slot="message" data-align="end" class="group/message relative flex w-full min-w-0 gap-2 text-sm data-[align=end]:flex-row-reverse"><div data-slot="message-content" class="flex w-full min-w-0 flex-col gap-2.5 wrap-break-word group-data-[align=end]/message:*:data-slot:self-end"><div data-slot="bubble" data-variant="muted" data-align="start" class="group/bubble relative flex w-fit max-w-[80%] min-w-0 flex-col gap-1 group-data-[align=end]/message:self-end *:data-[slot=bubble-content]:bg-muted [&amp;>[data-slot=bubble-content]:is(button,a):hover]:bg-[color-mix(in_oklch,var(--muted),var(--foreground)_5%)]"><div data-slot="bubble-content" class="w-fit max-w-full min-w-0 overflow-hidden rounded-xl border border-transparent px-3 py-2 text-sm leading-relaxed wrap-break-word group-data-[align=end]/bubble:self-end [button]:text-start [button,a]:transition-colors [button,a]:outline-none [button,a]:focus-visible:border-ring [button,a]:focus-visible:ring-3 [button,a]:focus-visible:ring-ring/50">Who should own the migration guide?</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div data-slot="message-scroller-item" data-message-id="history-4" data-scroll-anchor="false" class="min-w-0 shrink-0"><div data-slot="message" data-align="start" class="group/message relative flex w-full min-w-0 gap-2 text-sm data-[align=end]:flex-row-reverse"><div data-slot="message-content" class="flex w-full min-w-0 flex-col gap-2.5 wrap-break-word group-data-[align=end]/message:*:data-slot:self-end"><div data-slot="bubble" data-variant="ghost" data-align="start" class="group/bubble relative flex w-fit min-w-0 flex-col gap-1 group-data-[align=end]/message:self-end max-w-full *:data-[slot=bubble-content]:rounded-none *:data-[slot=bubble-content]:bg-transparent *:data-[slot=bubble-content]:p-0 [&amp;>[data-slot=bubble-content]:is(button,a):hover]:bg-muted [&amp;>[data-slot=bubble-content]:is(button,a):hover]:text-foreground dark:[&amp;>[data-slot=bubble-content]:is(button,a):hover]:bg-muted/50"><div data-slot="bubble-content" class="w-fit max-w-full min-w-0 overflow-hidden rounded-xl border border-transparent px-3 py-2 text-sm leading-relaxed wrap-break-word group-data-[align=end]/bubble:self-end [button]:text-start [button,a]:transition-colors [button,a]:outline-none [button,a]:focus-visible:border-ring [button,a]:focus-visible:ring-3 [button,a]:focus-visible:ring-ring/50">Jordan wrote the previous one and knows the edge cases. If Jordan is busy, Priya has reviewed every migration this quarter.</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div data-slot="message-scroller-item" data-message-id="history-5" data-scroll-anchor="true" class="min-w-0 shrink-0"><div data-slot="message" data-align="end" class="group/message relative flex w-full min-w-0 gap-2 text-sm data-[align=end]:flex-row-reverse"><div data-slot="message-content" class="flex w-full min-w-0 flex-col gap-2.5 wrap-break-word group-data-[align=end]/message:*:data-slot:self-end"><div data-slot="bubble" data-variant="muted" data-align="start" class="group/bubble relative flex w-fit max-w-[80%] min-w-0 flex-col gap-1 group-data-[align=end]/message:self-end *:data-[slot=bubble-content]:bg-muted [&amp;>[data-slot=bubble-content]:is(button,a):hover]:bg-[color-mix(in_oklch,var(--muted),var(--foreground)_5%)]"><div data-slot="bubble-content" class="w-fit max-w-full min-w-0 overflow-hidden rounded-xl border border-transparent px-3 py-2 text-sm leading-relaxed wrap-break-word group-data-[align=end]/bubble:self-end [button]:text-start [button,a]:transition-colors [button,a]:outline-none [button,a]:focus-visible:border-ring [button,a]:focus-visible:ring-3 [button,a]:focus-visible:ring-ring/50">Let's ask Jordan first. What's left after that?</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div data-slot="message-scroller-item" data-message-id="history-6" data-scroll-anchor="false" class="min-w-0 shrink-0"><div data-slot="message" data-align="start" class="group/message relative flex w-full min-w-0 gap-2 text-sm data-[align=end]:flex-row-reverse"><div data-slot="message-content" class="flex w-full min-w-0 flex-col gap-2.5 wrap-break-word group-data-[align=end]/message:*:data-slot:self-end"><div data-slot="bubble" data-variant="ghost" data-align="start" class="group/bubble relative flex w-fit min-w-0 flex-col gap-1 group-data-[align=end]/message:self-end max-w-full *:data-[slot=bubble-content]:rounded-none *:data-[slot=bubble-content]:bg-transparent *:data-[slot=bubble-content]:p-0 [&amp;>[data-slot=bubble-content]:is(button,a):hover]:bg-muted [&amp;>[data-slot=bubble-content]:is(button,a):hover]:text-foreground dark:[&amp;>[data-slot=bubble-content]:is(button,a):hover]:bg-muted/50"><div data-slot="bubble-content" class="w-fit max-w-full min-w-0 overflow-hidden rounded-xl border border-transparent px-3 py-2 text-sm leading-relaxed wrap-break-word group-data-[align=end]/bubble:self-end [button]:text-start [button,a]:transition-colors [button,a]:outline-none [button,a]:focus-visible:border-ring [button,a]:focus-visible:ring-3 [button,a]:focus-visible:ring-ring/50">Only the announcement email. It depends on the final pricing copy, so it can start as soon as copy review signs off.</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    <div data-message-scroller-target="spacer" aria-hidden="true" hidden=""></div>
+</div>
+                </div>
+                <button data-slot="message-scroller-button" data-variant="secondary" data-size="icon-sm" class="group/button inline-flex shrink-0 items-center justify-center border bg-clip-padding text-sm font-medium whitespace-nowrap outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 aria-expanded:bg-secondary aria-expanded:text-secondary-foreground size-7 rounded-[min(var(--radius-md),12px)] in-data-[slot=button-group]:rounded-lg absolute inset-s-1/2 -translate-x-1/2 border-border bg-background text-foreground transition-[translate,scale,opacity] duration-200 hover:bg-muted hover:text-foreground data-[active=false]:pointer-events-none data-[active=false]:scale-95 data-[active=false]:opacity-0 data-[active=false]:duration-400 data-[active=false]:ease-[cubic-bezier(0.7,0,0.84,0)] data-[active=true]:translate-y-0 data-[active=true]:scale-100 data-[active=true]:opacity-100 data-[active=true]:ease-[cubic-bezier(0.23,1,0.32,1)] data-[direction=end]:bottom-4 data-[direction=end]:data-[active=false]:translate-y-full data-[direction=start]:top-4 data-[direction=start]:data-[active=false]:-translate-y-full rtl:translate-x-1/2 data-[direction=start]:[&amp;_svg]:rotate-180" type="button" data-message-scroller-target="button" data-message-scroller-behavior-param="smooth" data-direction="end" data-active="false" inert="" tabindex="-1" data-action="click->message-scroller#scrollToEnd"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v14m7-7l-7 7l-7-7"></path></svg>
+        <span class="sr-only">Scroll to end</span></button>
+
+            </div>
+        </div>
+    </div>
+</div>

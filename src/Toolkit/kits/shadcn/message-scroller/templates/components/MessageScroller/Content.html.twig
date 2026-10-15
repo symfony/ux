@@ -1,0 +1,13 @@
+<div
+    data-slot="message-scroller-content"
+    data-message-scroller-target="content"
+    role="{{ attributes.render('role')|default('log') }}"
+    aria-relevant="{{ attributes.render('aria-relevant')|default('additions') }}"
+    {{ attributes.defaults({
+        class: 'flex h-max min-h-full flex-col gap-6'|tailwind_classes,
+    }) }}
+>
+    {##- The `MessageScroller:Item` rows of the transcript. -#}
+    {%- block content %}{% endblock -%}
+    <div data-message-scroller-target="spacer" aria-hidden="true" hidden></div>
+</div>

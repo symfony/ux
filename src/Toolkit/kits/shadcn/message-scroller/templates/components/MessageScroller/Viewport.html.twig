@@ -1,0 +1,21 @@
+{%- props
+    ## boolean Whether the first visible item keeps its place when older items are added above it.
+    preserveScrollOnPrepend = true
+-%}
+{%- set _messageScroller_pendingScroll = inject('messageScroller.pendingScroll', false) -%}
+<div
+    data-slot="message-scroller-viewport"
+    data-message-scroller-target="viewport"
+    data-preserve-scroll-on-prepend="{{ preserveScrollOnPrepend ? 'true' : 'false' }}"
+    role="{{ attributes.render('role')|default('region') }}"
+    {% if _messageScroller_pendingScroll %}data-pending-scroll{% endif %}
+    {{ attributes.defaults({
+        class: 'size-full min-h-0 min-w-0 scroll-fade-b overflow-y-auto overscroll-contain contain-content [scrollbar-gutter:stable] [scrollbar-width:thin] data-autoscrolling:[scrollbar-color:transparent_transparent] data-pending-scroll:invisible'|tailwind_classes,
+        'aria-label': 'Messages',
+        tabindex: '0',
+        'data-action': 'scroll->message-scroller#handleScroll wheel->message-scroller#handleUserScroll:passive touchmove->message-scroller#handleUserScroll:passive keydown.up->message-scroller#handleUserScroll keydown.down->message-scroller#handleUserScroll keydown.page_up->message-scroller#handleUserScroll keydown.page_down->message-scroller#handleUserScroll keydown.home->message-scroller#handleUserScroll keydown.end->message-scroller#handleUserScroll keydown.space->message-scroller#handleUserScroll'|html_attr_type('sst'),
+    }) }}
+>
+    {##- A `MessageScroller:Content`. -#}
+    {%- block content %}{% endblock -%}
+</div>
