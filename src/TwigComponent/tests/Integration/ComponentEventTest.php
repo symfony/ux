@@ -68,6 +68,45 @@ final class ComponentEventTest extends KernelTestCase
         ], $dispatched);
     }
 
+    public function testScopedListenersOnlyReceiveTheEventsOfTheComponentsInTheirScope(): void
+    {
+        self::bootKernel(['environment' => 'scoped_listener']);
+
+        self::getContainer()->get(Environment::class)
+            ->createTemplate('{{ component("scoped_component") }}{{ component("BasicComponent") }}')
+            ->render();
+
+        // PreRender and PostRender have listeners outside the scope in this kernel, so every component still gets them
+        self::assertSame([
+            [PreCreateForRenderEvent::class, 'scoped_component'],
+            [PreMountEvent::class, 'scoped_component'],
+            [PostMountEvent::class, 'scoped_component'],
+            [PreRenderEvent::class, 'scoped_component'],
+            [PostRenderEvent::class, 'scoped_component'],
+            [PreRenderEvent::class, 'BasicComponent'],
+            [PostRenderEvent::class, 'BasicComponent'],
+        ], self::getContainer()->get('scoped_listener')->events);
+    }
+
+    public function testPropsScopedListenersOnlyReceiveTheEventsOfTheComponentsRenderedWithOneOfTheirProps(): void
+    {
+        self::bootKernel(['environment' => 'scoped_listener']);
+
+        self::getContainer()->get(Environment::class)
+            ->createTemplate('{{ component("BasicComponent") }}{{ component("BasicComponent", {dataScoped: true}) }}')
+            ->render();
+
+        self::assertSame([
+            [PreRenderEvent::class, 'BasicComponent'],
+            [PostRenderEvent::class, 'BasicComponent'],
+            [PreCreateForRenderEvent::class, 'BasicComponent'],
+            [PreMountEvent::class, 'BasicComponent'],
+            [PostMountEvent::class, 'BasicComponent'],
+            [PreRenderEvent::class, 'BasicComponent'],
+            [PostRenderEvent::class, 'BasicComponent'],
+        ], self::getContainer()->get('props_scoped_listener')->events);
+    }
+
     public static function provideFooBarSyntaxes(): iterable
     {
         yield 'TWIG component tag' => ['{% component "FooBar:Baz" %}{% endcomponent %}'];
