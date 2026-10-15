@@ -74,6 +74,8 @@ class TwigComponentDataCollectorTest extends TestCase
         $mounted = new MountedComponent('foo', new \stdClass(), new ComponentAttributes([], new EscaperRuntime()));
         $eventA = new PreRenderEvent($mounted, new ComponentMetadata(['key' => 'foo', 'template' => 'bar']), []);
         $logger->onPreRender($eventA);
+        // without it, both events often get the same microtime() and the render time is 0.0
+        usleep(1);
         $eventB = new PostRenderEvent($mounted);
         $logger->onPostRender($eventB);
 
