@@ -63,9 +63,36 @@ final class DataModelPropsSubscriber implements EventSubscriberInterface
 
         foreach ($bindings as $binding) {
             $childModel = $binding['child'];
-            $parentModel = $binding['parent'];
+            // strip the "[]" array notation (a JS-only convention, e.g. "selected[]")
+            // before resolving the property path, otherwise PropertyAccessor would throw
+            $parentModel = rtrim($binding['parent'], '[]');
 
-            $data[$childModel] = $this->propertyAccessor->getValue($parentMountedComponent->getComponent(), $parentModel);
+            $propValue = $this->propertyAccessor->getValue($parentMountedComponent->getComponent(), $parentModel);
+
+            // For radio/checkbox inputs the "value" attribute is per-input and must be preserved;
+            // the bound property only decides which input(s) are "checked". We cannot rely on a
+            // "type" prop to detect them (it may be hardcoded in the child template, see #3412),
+            // so we infer the case from the property value and the presence of an explicit "value".
+            if ('value' === $childModel) {
+                if (\is_bool($propValue)) {
+                    // boolean checkbox: no explicit value, the property drives "checked"
+                    $data['checked'] = $propValue;
+
+                    continue;
+                }
+
+                if (\array_key_exists('value', $data)) {
+                    // radio or checkbox group: keep the explicit per-input value and compute
+                    // "checked" (loose comparison, to mirror the JS "setValueOnElement" behavior)
+                    $data['checked'] = \is_array($propValue)
+                        ? \in_array($data['value'], $propValue, false)
+                        : $data['value'] == $propValue;
+
+                    continue;
+                }
+            }
+
+            $data[$childModel] = $propValue;
         }
 
         $event->setData($data);
