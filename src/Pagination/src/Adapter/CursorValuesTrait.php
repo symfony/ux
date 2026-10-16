@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\Pagination\Adapter;
 
+use Symfony\Component\Uid\AbstractUid;
 use Symfony\UX\Pagination\Exception\InvalidArgumentException;
 use Symfony\UX\Pagination\Exception\RuntimeException;
 
@@ -87,11 +88,15 @@ trait CursorValuesTrait
                 ->format('Y-m-d\TH:i:s.u\Z');
         }
 
+        if ($value instanceof AbstractUid) {
+            return $value->toString();
+        }
+
         if (\is_int($value) || \is_string($value) || \is_float($value)) {
             return $value;
         }
 
-        throw new RuntimeException(\sprintf('Cursor values must be scalar or \DateTimeInterface, got "%s".', get_debug_type($value)));
+        throw new RuntimeException(\sprintf('Cursor values must be scalar, \DateTimeInterface or a Symfony UID, got "%s".', get_debug_type($value)));
     }
 
     /**

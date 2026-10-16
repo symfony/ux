@@ -11,10 +11,13 @@
 
 namespace Symfony\UX\Pagination\Adapter;
 
+use Doctrine\DBAL\Types\Type;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator as DoctrinePaginator;
+use Symfony\Bridge\Doctrine\Types\AbstractUidType;
+use Symfony\Component\Uid\AbstractUid;
 use Symfony\UX\Pagination\Cursor\CursorBoundary;
 use Symfony\UX\Pagination\Cursor\CursorOrder;
 use Symfony\UX\Pagination\Cursor\CursorSlice;
@@ -302,6 +305,19 @@ final class DoctrineOrmAdapter implements OffsetAdapterInterface, LookaheadAdapt
     {
         $entity = $queryBuilder->getRootEntities()[0];
         $type = $queryBuilder->getEntityManager()->getClassMetadata($entity)->getTypeOfField($field);
+
+        // Symfony UID types (uuid, ulid): the cursor carries the string form, bound back as a UID
+        // so the database compares it in its own storage format.
+        if (null !== $type && Type::hasType($type) && Type::getType($type) instanceof AbstractUidType) {
+            try {
+                $value = Type::getType($type)->convertToPHPValue((string) $value, $queryBuilder->getEntityManager()->getConnection()->getDatabasePlatform());
+            } catch (\Exception $exception) {
+                throw new InvalidArgumentException(\sprintf('Invalid UID cursor value for field "%s".', $field), 0, $exception);
+            }
+
+            return [$value, $type];
+        }
+
         if (!\in_array($type, [Types::INTEGER, Types::BIGINT, Types::SMALLINT, Types::STRING, Types::GUID, Types::FLOAT, Types::DECIMAL, Types::BOOLEAN, Types::DATETIME_MUTABLE, Types::DATETIME_IMMUTABLE, Types::DATETIMETZ_MUTABLE, Types::DATETIMETZ_IMMUTABLE], true)) {
             throw new InvalidArgumentException(\sprintf('Doctrine type "%s" of cursor field "%s" is not supported.', $type, $field));
         }
@@ -342,6 +358,10 @@ final class DoctrineOrmAdapter implements OffsetAdapterInterface, LookaheadAdapt
         if ($value instanceof \UnitEnum) {
             return ['class' => $value::class, 'name' => $value->name];
         }
+        if ($value instanceof AbstractUid) {
+            return ['class' => $value::class, 'value' => $value->toString()];
+        }
+
         if (\is_object($value)) {
             $metadataFactory = $queryBuilder->getEntityManager()->getMetadataFactory();
             if (!$metadataFactory->isTransient($value::class)) {
