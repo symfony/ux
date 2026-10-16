@@ -1215,6 +1215,36 @@ final class DoctrineOrmAdapterTest extends TestCase
         self::assertEmpty(array_intersect($firstTitles, $secondTitles), 'Pages should not have overlapping items');
     }
 
+    /**
+     * Doctrine's built-in DateType only accepts \DateTime instances, so the
+     * cursor value must be normalized to \DateTime for this type.
+     */
+    public function testCursorPaginationWithMutableDateField(): void
+    {
+        for ($i = 1; $i <= 6; ++$i) {
+            $book = new Book();
+            $book->setTitle('Book '.$i);
+            $book->setPrice(10.0);
+            $book->setPrintedOn(new \DateTime(\sprintf('2020-01-0%d', $i)));
+            $this->entityManager->persist($book);
+        }
+        $this->entityManager->flush();
+
+        $qb = $this->entityManager->createQueryBuilder()
+            ->select('b')
+            ->from(Book::class, 'b');
+        $order = $this->adapter->resolveCursorOrder($qb, ['printedOn'], 'ASC');
+
+        $page1 = $this->adapter->sliceWithCursor($qb, null, 3, $order);
+
+        self::assertTrue($page1->hasNext);
+        self::assertNotNull($page1->next);
+
+        $page2 = $this->adapter->sliceWithCursor($qb, $page1->next, 3, $order);
+
+        self::assertSame(['Book 4', 'Book 5', 'Book 6'], array_map(static fn (Book $item) => $item->getTitle(), $page2->items));
+    }
+
     public function testCursorRejectsInvalidDateValues(): void
     {
         $queryBuilder = $this->entityManager->createQueryBuilder()
