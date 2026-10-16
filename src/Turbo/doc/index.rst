@@ -408,11 +408,109 @@ When a user submits a form or triggers an action, the controller can detect
 the Turbo Stream format and return a partial page update instead of a full
 redirect. There are two ways to do this:
 
-**Option 1 — dedicated template with** ``renderBlock``:
+**Option 1: inline with** ``TurboStreamResponse``
+
+Use ``TurboStreamResponse`` to build stream actions directly from the
+controller. It sets the ``text/vnd.turbo-stream.html`` content type itself, and
+it needs no template for simple actions like removing an element::
+
+    // src/Controller/TaskController.php
+    namespace App\Controller;
+
+    use App\Entity\Task;
+    use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+    use Symfony\Component\HttpFoundation\Request;
+    use Symfony\Component\HttpFoundation\Response;
+    use Symfony\Component\Routing\Attribute\Route;
+    use Symfony\UX\Turbo\TurboBundle;
+    use Symfony\UX\Turbo\TurboStreamResponse;
+
+    #[Route('/task')]
+    class TaskController extends AbstractController
+    {
+        #[Route('/{id}', name: 'app_task_delete', methods: ['POST'])]
+        public function delete(Request $request, Task $task): Response
+        {
+            // ... delete the task
+
+            if (TurboBundle::STREAM_FORMAT === $request->getPreferredFormat()) {
+                return (new TurboStreamResponse())
+                    ->remove('#task_'.$task->getId());
+            }
+
+            return $this->redirectToRoute('app_task_index', [], Response::HTTP_SEE_OTHER);
+        }
+    }
+
+Each method (``append()``, ``prepend()``, ``replace()``, ``update()``,
+``remove()``, ``before()``, ``after()``, ``refresh()`` and ``action()``) adds a
+``<turbo-stream>`` element to the response body and returns the same response.
+Chain the calls to send several actions at once. For example, after a form
+submit, append the new task to the list, update the task counter and replace
+the form with an empty one::
+
+    // src/Controller/TaskController.php
+    namespace App\Controller;
+
+    use App\Entity\Task;
+    use App\Form\TaskType;
+    use App\Repository\TaskRepository;
+    use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+    use Symfony\Component\HttpFoundation\Request;
+    use Symfony\Component\HttpFoundation\Response;
+    use Symfony\Component\Routing\Attribute\Route;
+    use Symfony\UX\Turbo\TurboBundle;
+    use Symfony\UX\Turbo\TurboStreamResponse;
+
+    #[Route('/task')]
+    class TaskController extends AbstractController
+    {
+        #[Route('/new', name: 'app_task_new', methods: ['GET', 'POST'])]
+        public function new(Request $request, TaskRepository $taskRepository): Response
+        {
+            $task = new Task();
+            $form = $this->createForm(TaskType::class, $task);
+            $form->handleRequest($request);
+
+            if ($form->isSubmitted() && $form->isValid()) {
+                // ... perform some action, such as saving the task to the database
+
+                if (TurboBundle::STREAM_FORMAT === $request->getPreferredFormat()) {
+                    $emptyForm = $this->createForm(TaskType::class, new Task());
+
+                    return (new TurboStreamResponse())
+                        ->append('#task_list', $this->renderView('task/_task.html.twig', ['task' => $task]))
+                        ->update('#task_count', (string) $taskRepository->count([]))
+                        ->replace('form[name=task]', $this->renderView('task/_form.html.twig', ['form' => $emptyForm]));
+                }
+
+                return $this->redirectToRoute('app_task_index', [], Response::HTTP_SEE_OTHER);
+            }
+
+            return $this->render('task/new.html.twig', [
+                'form' => $form,
+            ]);
+        }
+    }
+
+``replace()`` and ``update()`` also accept a third ``$morph`` argument. Pass
+``true`` to apply the change with morphing (``method="morph"``).
+
+.. caution::
+
+    The ``$html`` argument is inserted into the response as-is: it is **not**
+    escaped. Render it with ``renderView()``, so that Twig escapes the
+    variables, or escape any user-provided value yourself with
+    ``htmlspecialchars()``.
+
+**Option 2: dedicated template with** ``renderBlock()``
 
 Use ``renderBlock()`` to render a specific Twig block from a template as a
-Turbo Stream response. This keeps the stream markup close to the page template
-it updates::
+Turbo Stream response. This is the better fit when the stream markup belongs
+with the page template it updates, for example when it uses the
+``<twig:Turbo:Stream:*>`` components. Call
+``$request->setRequestFormat(TurboBundle::STREAM_FORMAT)`` so that the response
+gets the Turbo Stream content type::
 
     // src/Controller/TaskController.php
     namespace App\Controller;
@@ -461,40 +559,6 @@ it updates::
             <li id="task_{{ task.id }}">{{ task.title }}</li>
         </twig:Turbo:Stream:Append>
     {% endblock %}
-
-**Option 2 — inline with** ``TurboStreamResponse``:
-
-Use ``TurboStreamResponse`` to build stream actions directly from the
-controller, without a dedicated template. This is convenient for simple
-actions like removing an element::
-
-    // src/Controller/TaskController.php
-    namespace App\Controller;
-
-    use App\Entity\Task;
-    use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-    use Symfony\Component\HttpFoundation\Request;
-    use Symfony\Component\HttpFoundation\Response;
-    use Symfony\Component\Routing\Attribute\Route;
-    use Symfony\UX\Turbo\TurboBundle;
-    use Symfony\UX\Turbo\TurboStreamResponse;
-
-    #[Route('/task')]
-    class TaskController extends AbstractController
-    {
-        #[Route('/{id}', name: 'app_task_delete', methods: ['POST'])]
-        public function delete(Request $request, Task $task): Response
-        {
-            // ... delete the task
-
-            if (TurboBundle::STREAM_FORMAT === $request->getPreferredFormat()) {
-                return (new TurboStreamResponse())
-                    ->remove('#task_'.$task->getId());
-            }
-
-            return $this->redirectToRoute('app_task_index', [], Response::HTTP_SEE_OTHER);
-        }
-    }
 
 Stream Messages and Actions
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -687,15 +751,31 @@ or the ``TurboStreamResponse::action()`` method.
     {# output: #}
     <turbo-stream action="my_action"></turbo-stream>
 
-You can also use the ``TurboStreamResponse::action()`` method from a controller::
+You can also use the ``TurboStreamResponse::action()`` method from a controller.
+Its fourth argument adds attributes to the ``<turbo-stream>`` element. Set a
+value to ``null`` to add a boolean attribute::
 
     // src/Controller/TaskController.php
+    use Symfony\UX\Turbo\TurboBundle;
     use Symfony\UX\Turbo\TurboStreamResponse;
 
     if (TurboBundle::STREAM_FORMAT === $request->getPreferredFormat()) {
         return (new TurboStreamResponse())
-            ->action('my_action', '#task_'.$task->getId(), '<li>'.$task->getTitle().'</li>');
+            ->action(
+                'my_action',
+                '#task_'.$task->getId(),
+                $this->renderView('task/_task.html.twig', ['task' => $task]),
+                ['data-duration' => 300, 'data-highlight' => null],
+            );
     }
+
+    // output:
+    // <turbo-stream action="my_action" targets="#task_42" data-duration="300" data-highlight>
+    //     <template><li id="task_42">My task</li></template>
+    // </turbo-stream>
+
+As with the other methods, the HTML is not escaped: render it with
+``renderView()`` instead of concatenating user-provided values.
 
 .. seealso::
 
