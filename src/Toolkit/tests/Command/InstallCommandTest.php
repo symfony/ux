@@ -67,7 +67,6 @@ class InstallCommandTest extends KernelTestCase
             ->assertOutputContains('[OK] The recipe has been installed.')
         ;
 
-        // Files should be created
         foreach ($expectedFiles as $fileName => $expectedFile) {
             $testCommand->assertOutputContains($expectedFile);
             $this->assertFileExists($expectedFile);
@@ -92,6 +91,87 @@ class InstallCommandTest extends KernelTestCase
         $display = $tester->getDisplay();
         $this->assertStringContainsString(Path::normalize($this->tmpDir.'/templates/components/Notice.html.twig'), $display);
         $this->assertStringNotContainsString(Path::normalize($this->tmpDir.'/ui/Notice.html.twig'), $display);
+    }
+
+    public function testShouldInstallComponentsInTheGivenComponentDirectory(): void
+    {
+        $testCommand = $this->consoleCommand(\sprintf('ux:install dialog --kit=shadcn --component-dir=templates/components/ui --destination="%s"', str_replace('\\', '\\\\', $this->tmpDir)))
+            ->execute()
+            ->assertSuccessful()
+            ->assertOutputContains('[OK] The recipe has been installed.')
+        ;
+
+        // The reported paths must be the destinations, not the paths inside the kit.
+        $testCommand->assertOutputContains(Path::normalize($this->tmpDir.'/templates/components/ui/Dialog.html.twig'));
+        $testCommand->assertOutputNotContains(Path::normalize($this->tmpDir.'/templates/components/Dialog.html.twig'));
+
+        $this->assertFileExists($this->tmpDir.'/templates/components/ui/Dialog.html.twig');
+        $this->assertFileExists($this->tmpDir.'/templates/components/ui/Button.html.twig');
+        $this->assertFileExists($this->tmpDir.'/assets/controllers/dialog_controller.js');
+        $this->assertStringContainsString('<twig:ui:Button', file_get_contents($this->tmpDir.'/templates/components/ui/Dialog/Content.html.twig'));
+    }
+
+    public function testShouldTellHowToRegisterAComponentDirectoryTwigDoesNotKnowAbout(): void
+    {
+        $this->consoleCommand(\sprintf('ux:install button --kit=shadcn --component-dir=templates/ui --destination="%s"', str_replace('\\', '\\\\', $this->tmpDir)))
+            ->execute()
+            ->assertSuccessful()
+            ->assertOutputContains('anonymous_template_directory')
+            ->assertOutputContains('in a single directory')
+            ->assertOutputContains('will no longer be found')
+        ;
+
+        $this->assertFileExists($this->tmpDir.'/templates/ui/Button.html.twig');
+    }
+
+    public function testShouldInstallComponentsInACustomAnonymousTemplateDirectoryByDefault(): void
+    {
+        $tester = new CommandTester($this->createInstallCommand($this->getShadcnKit(), 'twig_components'));
+        $tester->execute(['recipe' => 'dialog', '--kit' => 'shadcn', '--destination' => $this->tmpDir], ['interactive' => false]);
+
+        $tester->assertCommandIsSuccessful();
+        $this->assertFileExists($this->tmpDir.'/templates/twig_components/Dialog.html.twig');
+        $this->assertStringContainsString('<twig:Button', file_get_contents($this->tmpDir.'/templates/twig_components/Dialog/Content.html.twig'));
+        $this->assertStringNotContainsString('anonymous_template_directory', $tester->getDisplay());
+    }
+
+    public function testShouldPrefixComponentsBelowACustomAnonymousTemplateDirectory(): void
+    {
+        $tester = new CommandTester($this->createInstallCommand($this->getShadcnKit(), 'twig_components'));
+        $tester->execute(['recipe' => 'dialog', '--kit' => 'shadcn', '--component-dir' => 'templates/twig_components/ui', '--destination' => $this->tmpDir], ['interactive' => false]);
+
+        $tester->assertCommandIsSuccessful();
+        $this->assertStringContainsString('<twig:ui:Button', file_get_contents($this->tmpDir.'/templates/twig_components/ui/Dialog/Content.html.twig'));
+        $this->assertStringNotContainsString('anonymous_template_directory', $tester->getDisplay());
+    }
+
+    public function testShouldNameTheCurrentAnonymousTemplateDirectoryWhenTellingHowToRegisterAnother(): void
+    {
+        $tester = new CommandTester($this->createInstallCommand($this->getShadcnKit(), 'twig_components'));
+        $tester->execute(['recipe' => 'button', '--kit' => 'shadcn', '--component-dir' => 'templates/components', '--destination' => $this->tmpDir], ['interactive' => false]);
+
+        $tester->assertCommandIsSuccessful();
+        $this->assertStringContainsString("anonymous_template_directory: 'components'", $tester->getDisplay());
+        $this->assertStringContainsString('"twig_components"', $tester->getDisplay());
+    }
+
+    public function testShouldFailOnAComponentDirectoryGivingAnInvalidComponentName(): void
+    {
+        $tester = new CommandTester($this->createInstallCommand($this->getShadcnKit()));
+        $tester->execute(['recipe' => 'button', '--kit' => 'shadcn', '--component-dir' => 'templates/components/my ui', '--destination' => $this->tmpDir], ['interactive' => false]);
+
+        $this->assertSame(1, $tester->getStatusCode());
+        $this->assertStringContainsString('cannot be used in a component name', preg_replace('/\s+/', ' ', $tester->getDisplay()));
+        $this->assertDirectoryDoesNotExist($this->tmpDir.'/templates');
+    }
+
+    public function testShouldFailOnAComponentDirectoryEscapingTheDestination(): void
+    {
+        $this->consoleCommand(\sprintf('ux:install button --kit=shadcn --component-dir=../PWNED --destination="%s"', str_replace('\\', '\\\\', $this->tmpDir)))
+            ->execute()
+            ->assertFaulty()
+            ->assertOutputContains('must not escape its target directory')
+        ;
     }
 
     public function testShouldSuggestFrontendInstallationCommands(): void
@@ -298,7 +378,12 @@ class InstallCommandTest extends KernelTestCase
         ;
     }
 
-    private function createInstallCommand(Kit $kit): InstallCommand
+    private function getShadcnKit(): Kit
+    {
+        return self::getContainer()->get('ux_toolkit.kit.kit_factory')->createKitFromAbsolutePath(__DIR__.'/../../kits/shadcn');
+    }
+
+    private function createInstallCommand(Kit $kit, string $anonymousTemplateDirectory = 'components'): InstallCommand
     {
         $registry = new class($kit) implements RegistryInterface {
             public function __construct(private readonly Kit $kit)
@@ -319,6 +404,8 @@ class InstallCommandTest extends KernelTestCase
         $command = new InstallCommand(
             new RegistryFactory(new ServiceLocator([Type::Local->value => static fn () => $registry])),
             self::getContainer()->get('filesystem'),
+            null,
+            $anonymousTemplateDirectory,
         );
         $command->setName('ux:install');
 
