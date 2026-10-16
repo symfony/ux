@@ -11,6 +11,8 @@
 
 namespace Symfony\UX\LiveComponent\Twig;
 
+use Symfony\UX\TwigComponent\ComponentStack;
+use Symfony\UX\TwigComponent\MountedComponent;
 use Twig\Error\Error;
 use Twig\Template;
 
@@ -22,6 +24,13 @@ use Twig\Template;
 class DeterministicTwigIdCalculator
 {
     private array $lineAndFileCounts = [];
+
+    private ?MountedComponent $rootComponent = null;
+
+    public function __construct(
+        private readonly ComponentStack $componentStack,
+    ) {
+    }
 
     /**
      * Attempts to return a unique + deterministic id/hash for the given Twig line.
@@ -41,6 +50,8 @@ class DeterministicTwigIdCalculator
      */
     public function calculateDeterministicId(bool $increment = true, ?string $key = null): string
     {
+        $this->resetWhenTheRootComponentChanges();
+
         $lineData = $this->guessTemplateInfo();
 
         $fileAndLine = \sprintf('%s-%d', $lineData['name'], $lineData['line']);
@@ -64,6 +75,7 @@ class DeterministicTwigIdCalculator
     public function reset(): void
     {
         $this->lineAndFileCounts = [];
+        $this->rootComponent = null;
     }
 
     /**
@@ -173,5 +185,21 @@ class DeterministicTwigIdCalculator
         }
 
         throw new \LogicException(\sprintf('Could not find line number in template "%s" while generating deterministic id.', $name));
+    }
+
+    /**
+     * Restarts the counters for each top-level component, so that rendering it again on its own gives the same ids.
+     */
+    private function resetWhenTheRootComponentChanges(): void
+    {
+        $rootComponent = null;
+        foreach ($this->componentStack as $component) {
+            $rootComponent = $component;
+        }
+
+        if ($rootComponent !== $this->rootComponent) {
+            $this->lineAndFileCounts = [];
+            $this->rootComponent = $rootComponent;
+        }
     }
 }
