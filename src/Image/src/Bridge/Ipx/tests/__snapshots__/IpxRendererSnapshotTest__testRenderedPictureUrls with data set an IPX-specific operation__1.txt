@@ -1,0 +1,42 @@
+src:
+https://images.example.com/s_800x450,fit_cover,f_jpeg,grayscale/hero.jpg
+
+srcset:
+https://images.example.com/s_640x360,fit_cover,f_jpeg,grayscale/hero.jpg 640w
+https://images.example.com/s_750x422,fit_cover,f_jpeg,grayscale/hero.jpg 750w
+https://images.example.com/s_800x450,fit_cover,f_jpeg,grayscale/hero.jpg 800w
+https://images.example.com/s_828x466,fit_cover,f_jpeg,grayscale/hero.jpg 828w
+https://images.example.com/s_960x540,fit_cover,f_jpeg,grayscale/hero.jpg 960w
+https://images.example.com/s_1080x608,fit_cover,f_jpeg,grayscale/hero.jpg 1080w
+https://images.example.com/s_1280x720,fit_cover,f_jpeg,grayscale/hero.jpg 1280w
+https://images.example.com/s_1600x900,fit_cover,f_jpeg,grayscale/hero.jpg 1600w
+
+source (image/avif):
+https://images.example.com/s_640x360,fit_cover,f_avif,grayscale/hero.jpg 640w
+https://images.example.com/s_750x422,fit_cover,f_avif,grayscale/hero.jpg 750w
+https://images.example.com/s_800x450,fit_cover,f_avif,grayscale/hero.jpg 800w
+https://images.example.com/s_828x466,fit_cover,f_avif,grayscale/hero.jpg 828w
+https://images.example.com/s_960x540,fit_cover,f_avif,grayscale/hero.jpg 960w
+https://images.example.com/s_1080x608,fit_cover,f_avif,grayscale/hero.jpg 1080w
+https://images.example.com/s_1280x720,fit_cover,f_avif,grayscale/hero.jpg 1280w
+https://images.example.com/s_1600x900,fit_cover,f_avif,grayscale/hero.jpg 1600w
+
+source (image/webp):
+https://images.example.com/s_640x360,fit_cover,f_webp,grayscale/hero.jpg 640w
+https://images.example.com/s_750x422,fit_cover,f_webp,grayscale/hero.jpg 750w
+https://images.example.com/s_800x450,fit_cover,f_webp,grayscale/hero.jpg 800w
+https://images.example.com/s_828x466,fit_cover,f_webp,grayscale/hero.jpg 828w
+https://images.example.com/s_960x540,fit_cover,f_webp,grayscale/hero.jpg 960w
+https://images.example.com/s_1080x608,fit_cover,f_webp,grayscale/hero.jpg 1080w
+https://images.example.com/s_1280x720,fit_cover,f_webp,grayscale/hero.jpg 1280w
+https://images.example.com/s_1600x900,fit_cover,f_webp,grayscale/hero.jpg 1600w
+
+source (image/jpeg):
+https://images.example.com/s_640x360,fit_cover,f_jpeg,grayscale/hero.jpg 640w
+https://images.example.com/s_750x422,fit_cover,f_jpeg,grayscale/hero.jpg 750w
+https://images.example.com/s_800x450,fit_cover,f_jpeg,grayscale/hero.jpg 800w
+https://images.example.com/s_828x466,fit_cover,f_jpeg,grayscale/hero.jpg 828w
+https://images.example.com/s_960x540,fit_cover,f_jpeg,grayscale/hero.jpg 960w
+https://images.example.com/s_1080x608,fit_cover,f_jpeg,grayscale/hero.jpg 1080w
+https://images.example.com/s_1280x720,fit_cover,f_jpeg,grayscale/hero.jpg 1280w
+https://images.example.com/s_1600x900,fit_cover,f_jpeg,grayscale/hero.jpg 1600w
