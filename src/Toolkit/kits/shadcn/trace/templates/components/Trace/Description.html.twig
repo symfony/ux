@@ -1,0 +1,9 @@
+<span
+    data-slot="trace-description"
+    {{ attributes.defaults({
+        class: 'shrink-0 text-muted-foreground/70 tabular-nums'|tailwind_classes,
+    }) }}
+>
+    {##- Secondary text, such as a count or a duration. -#}
+    {%- block content %}{% endblock -%}
+</span>

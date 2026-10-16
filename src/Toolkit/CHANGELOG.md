@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 3.7.0
+
+- [Shadcn] Add `trace` recipe
+- [Shadcn] Add `code-block` recipe
+
 ## 3.6.0
 
 - [Shadcn] Declare the `shadcn` and `tw-animate-css` packages as dependencies of the kit, so `ux:install` suggests installing them
