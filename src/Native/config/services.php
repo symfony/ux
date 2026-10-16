@@ -11,7 +11,9 @@
 
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
+use Symfony\UX\Native\Controller\HistoricalLocationController;
 use Symfony\UX\Native\EventListener\NativeListener;
+use Symfony\UX\Native\Navigation\NativeNavigator;
 use Symfony\UX\Native\Twig\NativeExtension;
 use Symfony\UX\Native\Command\BuildConfigurationsCommand;
 use Symfony\UX\Native\ConfigurationBuilder;
@@ -28,6 +30,15 @@ return static function (ContainerConfigurator $container): void {
         ->set('ux_native.twig.native_extension', NativeExtension::class)
         ->args([service('request_stack')])
         ->tag('twig.extension')
+    ;
+
+    $services->set('ux_native.navigator', NativeNavigator::class)
+        ->args([service('request_stack'), service('router')])
+    ;
+    $services->alias(NativeNavigator::class, 'ux_native.navigator');
+
+    $services->set('ux_native.controller.historical_location', HistoricalLocationController::class)
+        ->public()
     ;
 
     $services->set('.ux_native.configuration_builder', ConfigurationBuilder::class)

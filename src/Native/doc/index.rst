@@ -342,6 +342,86 @@ You can then use this controller in your Twig templates:
 For more information on how Bridge components work, refer to the
 `Hotwire Native Bridge documentation`_.
 
+Navigating the native stack
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In a Hotwire Native app, the app manages the stack of screens and modals.
+Consider a form opened in a modal, with the ``context: modal`` property of your path configuration.
+After the form is submitted, a regular redirection displays the target page inside the modal, on top of a list that is now outdated.
+
+Since version 1.2, Hotwire Native applications intercept three special paths.
+When a redirection leads to one of them, the app does not display the page: it performs a navigation action instead.
+
+==================================  ===================================================================================
+Path                                Action in the app
+==================================  ===================================================================================
+``/recede_historical_location``     Dismisses the modal if there is one, otherwise goes back to the previous screen
+``/refresh_historical_location``    Dismisses the modal if there is one, then reloads the visible screen
+``/resume_historical_location``     Dismisses the modal if there is one, and does nothing else
+==================================  ===================================================================================
+
+First, import the routes that answer these paths:
+
+.. code-block:: yaml
+
+    # config/routes/ux_native.yaml
+    ux_native:
+        resource: '@UXNativeBundle/config/routes.php'
+
+Then, in the controller that handles the form, use the ``NativeNavigator`` service.
+Its ``redirectOrToRoute()`` method sends the app to the historical location, and a browser to the given route::
+
+    use Symfony\UX\Native\Navigation\HistoricalLocation;
+    use Symfony\UX\Native\Navigation\NativeNavigator;
+
+    #[Route('/notes/new', name: 'app_note_new', methods: ['GET', 'POST'])]
+    public function new(Request $request, NativeNavigator $navigator): Response
+    {
+        // ... handle the form
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->addFlash('success', 'Note created!');
+
+            // In the app: dismisses the modal and reloads the list under it
+            // In a browser: redirects to the list
+            return $navigator->redirectOrToRoute(HistoricalLocation::Refresh, 'app_notes');
+        }
+
+        // ...
+    }
+
+The service provides three methods of this kind:
+
+* ``redirectOrToRoute(HistoricalLocation $location, string $route, array $parameters = [])`` redirects a browser to a route;
+* ``redirectOr(HistoricalLocation $location, string $url)`` redirects a browser to a URL;
+* ``redirectOrBackOr(HistoricalLocation $location, string $fallbackUrl)`` redirects a browser back to the page in the ``Referer`` header.
+  The browser only follows a ``Referer`` with the same origin (scheme, host and port) as the current request.
+  Otherwise, it goes to the fallback URL.
+
+They all redirect with the ``303 See Other`` status code, so the next request is a ``GET``, as Turbo expects after a form submission.
+Flash messages stay in the session, so they are displayed on the screen that the app reloads.
+
+When you need to decide yourself, use the ``isNative()`` and ``redirect()`` methods::
+
+    if ($navigator->isNative()) {
+        return $navigator->redirect(HistoricalLocation::Recede);
+    }
+
+    return $this->render('note/show.html.twig', [
+        // ...
+    ]);
+
+.. note::
+
+    A browser never receives a historical location.
+    The ``redirectOr*()`` methods only redirect to it when the current request comes from a Hotwire Native app (see `Detecting Native Requests`_), and ``redirect()`` throws a ``LogicException`` otherwise.
+    A browser that opens one of these paths anyway, from its history or a bookmark, gets a short page with the ``X-Robots-Tag: noindex`` header.
+
+.. note::
+
+    The applications look for these paths anywhere in the URL, so you can import the routes with a prefix: ``/app/refresh_historical_location`` works.
+    Do not change the paths themselves: the applications only recognize these exact names.
+
 Backward Compatibility promise
 ------------------------------
 

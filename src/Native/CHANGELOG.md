@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 3.7
+
+- Add the `NativeNavigator` service and the historical location routes, to dismiss modals and refresh screens in Hotwire Native apps after a redirection
+
 ## 3.2
 
 - **[BC BREAK]** Rename the `ux-native:dump` command to `ux:native:build-configs`
