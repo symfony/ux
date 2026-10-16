@@ -15,6 +15,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\UX\Native\Navigation\HistoricalLocation;
+use Symfony\UX\Native\Navigation\NativeNavigator;
 
 final class NoteController extends AbstractController
 {
@@ -92,19 +94,19 @@ final class NoteController extends AbstractController
     }
 
     #[Route('/notes/new', name: 'app_note_new', methods: ['GET', 'POST'])]
-    public function new(Request $request): Response
+    public function new(Request $request, NativeNavigator $navigator): Response
     {
         if ($request->isMethod('POST')) {
             $this->addFlash('success', 'Note created successfully!');
 
-            return $this->redirectToRoute('app_notes');
+            return $navigator->redirectOrToRoute(HistoricalLocation::Refresh, 'app_notes');
         }
 
         return $this->render('note/new.html.twig');
     }
 
     #[Route('/notes/{id}/edit', name: 'app_note_edit', requirements: ['id' => '\d+'], methods: ['GET', 'POST'])]
-    public function edit(Request $request, int $id): Response
+    public function edit(Request $request, int $id, NativeNavigator $navigator): Response
     {
         $note = self::NOTES[$id] ?? null;
 
@@ -115,7 +117,7 @@ final class NoteController extends AbstractController
         if ($request->isMethod('POST')) {
             $this->addFlash('success', 'Note updated successfully!');
 
-            return $this->redirectToRoute('app_note_show', ['id' => $id]);
+            return $navigator->redirectOrToRoute(HistoricalLocation::Refresh, 'app_note_show', ['id' => $id]);
         }
 
         return $this->render('note/edit.html.twig', [

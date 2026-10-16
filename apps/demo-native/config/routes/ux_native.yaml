@@ -1,0 +1,2 @@
+ux_native:
+    resource: '@UXNativeBundle/config/routes.php'
