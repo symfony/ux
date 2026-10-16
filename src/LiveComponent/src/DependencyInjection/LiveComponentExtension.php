@@ -148,7 +148,9 @@ final class LiveComponentExtension extends Extension implements PrependExtension
             ->addTag('container.service_subscriber', ['key' => RouterInterface::class, 'id' => 'router'])
         ;
 
-        $container->register('ux.live_component.live_responder', LiveResponder::class);
+        $container->register('ux.live_component.live_responder', LiveResponder::class)
+            ->addTag('kernel.reset', ['method' => 'reset'])
+        ;
         $container->setAlias(LiveResponder::class, 'ux.live_component.live_responder');
 
         $container->register('ux.twig_component.live_component_stack', LiveComponentStack::class)
