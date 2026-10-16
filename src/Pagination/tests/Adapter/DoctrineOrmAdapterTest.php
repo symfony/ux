@@ -17,6 +17,8 @@ use Doctrine\ORM\Query\QueryException;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\AbstractLogger;
+use Symfony\Component\Uid\Ulid;
+use Symfony\Component\Uid\Uuid;
 use Symfony\UX\Pagination\Adapter\DoctrineOrmAdapter;
 use Symfony\UX\Pagination\Cursor\CursorBoundary;
 use Symfony\UX\Pagination\Cursor\CursorOrder;
@@ -26,6 +28,7 @@ use Symfony\UX\Pagination\Exception\UnsupportedDoctrineQueryException;
 use Symfony\UX\Pagination\Tests\Fixtures\Entity\Author;
 use Symfony\UX\Pagination\Tests\Fixtures\Entity\Book;
 use Symfony\UX\Pagination\Tests\Fixtures\Entity\Category;
+use Symfony\UX\Pagination\Tests\Fixtures\Entity\Ticket;
 use Symfony\UX\Pagination\Tests\Fixtures\EntityManagerFactory;
 
 #[CoversClass(DoctrineOrmAdapter::class)]
@@ -44,7 +47,7 @@ final class DoctrineOrmAdapterTest extends TestCase
         try {
             $this->queryCollector = new QueryCollector();
             $this->entityManager = EntityManagerFactory::create(
-                [Author::class, Book::class, Category::class],
+                [Author::class, Book::class, Category::class, Ticket::class],
                 fn ($config) => $config->setMiddlewares([new Middleware($this->queryCollector)]),
             );
 
@@ -1226,6 +1229,112 @@ final class DoctrineOrmAdapterTest extends TestCase
         $this->expectExceptionMessage('Invalid date cursor value for field "publishedAt".');
 
         $this->adapter->sliceWithCursor($queryBuilder, new CursorBoundary(['not-a-date', 1]), 10, $order);
+    }
+
+    public function testCursorPaginationWithUuidIdentifier(): void
+    {
+        $ids = $this->persistTickets(7);
+        sort($ids);
+
+        $qb = $this->entityManager->createQueryBuilder()
+            ->select('t')
+            ->from(Ticket::class, 't');
+        $order = $this->adapter->resolveCursorOrder($qb, ['id'], 'ASC');
+
+        $page1 = $this->adapter->sliceWithCursor($qb, null, 3, $order);
+        $page2 = $this->adapter->sliceWithCursor($qb, $page1->next, 3, $order);
+        $page3 = $this->adapter->sliceWithCursor($qb, $page2->next, 3, $order);
+
+        self::assertSame(\array_slice($ids, 0, 3), self::ticketIds($page1->items));
+        self::assertSame(\array_slice($ids, 3, 3), self::ticketIds($page2->items));
+        self::assertSame(\array_slice($ids, 6), self::ticketIds($page3->items));
+        self::assertFalse($page3->hasNext);
+        self::assertIsString($page1->next?->values[0]);
+
+        $back = $this->adapter->sliceWithCursor($qb, $page2->previous, 3, $order);
+        self::assertSame(self::ticketIds($page1->items), self::ticketIds($back->items));
+    }
+
+    public function testCursorPaginationWithUlidField(): void
+    {
+        $this->persistTickets(5);
+
+        $qb = $this->entityManager->createQueryBuilder()
+            ->select('t')
+            ->from(Ticket::class, 't');
+        $order = $this->adapter->resolveCursorOrder($qb, ['reference'], 'DESC');
+
+        $page1 = $this->adapter->sliceWithCursor($qb, null, 2, $order);
+        $page2 = $this->adapter->sliceWithCursor($qb, $page1->next, 2, $order);
+        $page3 = $this->adapter->sliceWithCursor($qb, $page2->next, 2, $order);
+
+        $references = array_map(
+            static fn (Ticket $ticket): string => $ticket->getReference()->toString(),
+            [...$page1->items, ...$page2->items, ...$page3->items],
+        );
+        $expected = $references;
+        rsort($expected);
+
+        self::assertCount(5, array_unique($references));
+        self::assertSame($expected, $references);
+        self::assertFalse($page3->hasNext);
+    }
+
+    public function testCursorRejectsInvalidUidValues(): void
+    {
+        $queryBuilder = $this->entityManager->createQueryBuilder()
+            ->select('t')
+            ->from(Ticket::class, 't');
+        $order = $this->adapter->resolveCursorOrder($queryBuilder, ['id'], 'ASC');
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Invalid UID cursor value for field "id".');
+
+        $this->adapter->sliceWithCursor($queryBuilder, new CursorBoundary(['not-a-uuid']), 10, $order);
+    }
+
+    public function testCursorContextNormalizesUidParameters(): void
+    {
+        $uuid = Uuid::fromString('0192e4a5-7b6c-7d8e-9f01-23456789abcd');
+        $queryBuilder = $this->entityManager->createQueryBuilder()
+            ->select('t')
+            ->from(Ticket::class, 't')
+            ->where('t.id <> :id')
+            ->setParameter('id', $uuid, 'uuid');
+
+        $context = json_decode($this->adapter->getCursorContext($queryBuilder, null), true, flags: \JSON_THROW_ON_ERROR);
+
+        self::assertSame(
+            ['class' => $uuid::class, 'value' => '0192e4a5-7b6c-7d8e-9f01-23456789abcd'],
+            $context['parameters']['id']['value'],
+        );
+    }
+
+    /**
+     * @return list<string> the persisted ticket ids, in RFC 4122 form
+     */
+    private function persistTickets(int $count): array
+    {
+        $ids = [];
+        for ($i = 0; $i < $count; ++$i) {
+            $ticket = new Ticket(Uuid::v7(), new Ulid());
+            $this->entityManager->persist($ticket);
+            $ids[] = $ticket->getId()->toString();
+        }
+        $this->entityManager->flush();
+        $this->entityManager->clear();
+
+        return $ids;
+    }
+
+    /**
+     * @param list<mixed> $tickets
+     *
+     * @return list<string>
+     */
+    private static function ticketIds(array $tickets): array
+    {
+        return array_map(static fn (Ticket $ticket): string => $ticket->getId()->toString(), $tickets);
     }
 
     /**

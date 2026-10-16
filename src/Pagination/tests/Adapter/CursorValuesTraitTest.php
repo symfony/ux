@@ -13,6 +13,8 @@ namespace Symfony\UX\Pagination\Tests\Adapter;
 
 use PHPUnit\Framework\Attributes\CoversTrait;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Uid\Ulid;
+use Symfony\Component\Uid\Uuid;
 use Symfony\UX\Pagination\Adapter\CursorValuesTrait;
 
 #[CoversTrait(CursorValuesTrait::class)]
@@ -105,6 +107,17 @@ final class CursorValuesTraitTest extends TestCase
         self::assertSame(['2023-01-02T03:04:05.000000Z'], $this->encoder->extractCursorValues($item, ['createdAt']));
     }
 
+    public function testExtractNormalizesUids(): void
+    {
+        $uuid = Uuid::fromString('0192e4a5-7b6c-7d8e-9f01-23456789abcd');
+        $ulid = Ulid::fromString('01JB2AAYVC7Z4DMQ5W5DSJ1QGC');
+
+        self::assertSame(
+            ['0192e4a5-7b6c-7d8e-9f01-23456789abcd', '01JB2AAYVC7Z4DMQ5W5DSJ1QGC'],
+            $this->encoder->extractCursorValues(['id' => $uuid, 'reference' => $ulid], ['id', 'reference']),
+        );
+    }
+
     public function testExtractRejectsNull(): void
     {
         $this->expectException(\RuntimeException::class);
@@ -129,7 +142,7 @@ final class CursorValuesTraitTest extends TestCase
     public function testExtractThrowsForUnsupportedValueType(): void
     {
         $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage('must be scalar or \DateTimeInterface');
+        $this->expectExceptionMessage('must be scalar, \DateTimeInterface or a Symfony UID');
 
         $this->encoder->extractCursorValues(['field' => new \stdClass()], ['field']);
     }
