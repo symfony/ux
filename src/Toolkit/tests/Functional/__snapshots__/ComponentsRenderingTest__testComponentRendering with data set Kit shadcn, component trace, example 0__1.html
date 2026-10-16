@@ -1,0 +1,200 @@
+<!--
+- Kit: Shadcn UI
+- Component: Trace
+- Code:
+```twig
+<div class="flex w-full max-w-sm flex-col gap-4 py-6 text-sm">
+    <twig:Message align="end">
+        <twig:Message:Content>
+            <twig:Bubble align="end" variant="muted">
+                <twig:Bubble:Content>Why does pnpm install fail in CI?</twig:Bubble:Content>
+            </twig:Bubble>
+        </twig:Message:Content>
+    </twig:Message>
+    <twig:Message>
+        <twig:Message:Content class="gap-4">
+            <twig:Trace>
+                <twig:Trace:Collapsible>
+                    <twig:Trace:Collapsible:Trigger>
+                        <twig:Trace:Line>
+                            <twig:Trace:Icon>
+                                <twig:ux:icon name="lucide:circle-check" />
+                            </twig:Trace:Icon>
+                            <twig:Trace:Title>Thought for 5s</twig:Trace:Title>
+                        </twig:Trace:Line>
+                    </twig:Trace:Collapsible:Trigger>
+                    <twig:Trace:Collapsible:Content class="whitespace-pre-wrap">
+                        CI installs with a frozen lockfile, so the install stops when package.json and pnpm-lock.yaml disagree. I should check what the last commit changed, then reproduce the install.
+                    </twig:Trace:Collapsible:Content>
+                </twig:Trace:Collapsible>
+                <twig:Trace:Collapsible>
+                    <twig:Trace:Collapsible:Trigger>
+                        <twig:Trace:Line>
+                            <twig:Trace:Icon>
+                                <twig:ux:icon name="lucide:circle-check" />
+                            </twig:Trace:Icon>
+                            <twig:Trace:Title>Ran pnpm --version</twig:Trace:Title>
+                        </twig:Trace:Line>
+                    </twig:Trace:Collapsible:Trigger>
+                    <twig:Trace:Collapsible:Content>
+                        <pre class="max-h-64 overflow-auto rounded-lg border border-input px-2.5 py-2.5 font-mono text-xs leading-relaxed whitespace-pre-wrap wrap-break-word text-foreground dark:bg-input/30">10.18.0</pre>
+                    </twig:Trace:Collapsible:Content>
+                </twig:Trace:Collapsible>
+                <twig:Trace:Collapsible>
+                    <twig:Trace:Collapsible:Trigger>
+                        <twig:Trace:Line>
+                            <twig:Trace:Icon>
+                                <twig:ux:icon name="lucide:circle-check" />
+                            </twig:Trace:Icon>
+                            <twig:Trace:Title>Ran git diff --stat HEAD~1 -- package.json pnpm-lock.yaml</twig:Trace:Title>
+                        </twig:Trace:Line>
+                    </twig:Trace:Collapsible:Trigger>
+                    <twig:Trace:Collapsible:Content>
+                        <pre class="max-h-64 overflow-auto rounded-lg border border-input px-2.5 py-2.5 font-mono text-xs leading-relaxed whitespace-pre-wrap wrap-break-word text-foreground dark:bg-input/30"> package.json | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)</pre>
+                    </twig:Trace:Collapsible:Content>
+                </twig:Trace:Collapsible>
+                <twig:Trace:Collapsible open>
+                    <twig:Trace:Collapsible:Trigger>
+                        <twig:Trace:Line status="error">
+                            <twig:Trace:Icon>
+                                <twig:ux:icon name="lucide:circle-alert" />
+                            </twig:Trace:Icon>
+                            <twig:Trace:Title>Failed to run pnpm install --frozen-lockfile</twig:Trace:Title>
+                        </twig:Trace:Line>
+                    </twig:Trace:Collapsible:Trigger>
+                    <twig:Trace:Collapsible:Content>
+                        <pre class="max-h-64 overflow-auto rounded-lg border border-destructive/30 px-2.5 py-2.5 font-mono text-xs leading-relaxed whitespace-pre-wrap wrap-break-word text-destructive dark:border-destructive/40">ERR_PNPM_OUTDATED_LOCKFILE  Cannot install with "frozen-lockfile" because pnpm-lock.yaml is not up to date with package.json</pre>
+                    </twig:Trace:Collapsible:Content>
+                </twig:Trace:Collapsible>
+                <twig:Trace:Collapsible>
+                    <twig:Trace:Collapsible:Trigger>
+                        <twig:Trace:Line>
+                            <twig:Trace:Icon>
+                                <twig:ux:icon name="lucide:globe" />
+                            </twig:Trace:Icon>
+                            <twig:Trace:Title>Used 2 sources</twig:Trace:Title>
+                        </twig:Trace:Line>
+                    </twig:Trace:Collapsible:Trigger>
+                    <twig:Trace:Collapsible:Content>
+                        <twig:Trace>
+                            {% for source in [
+                                {title: 'pnpm install | pnpm.io', url: 'https://pnpm.io/cli/install#--frozen-lockfile'},
+                                {title: 'Continuous Integration | pnpm.io', url: 'https://pnpm.io/continuous-integration'},
+                            ] %}
+                                <a href="{{ source.url }}" target="_blank" rel="noreferrer">
+                                    <twig:Trace:Line>
+                                        <twig:Trace:Icon>
+                                            <twig:ux:icon name="lucide:globe" />
+                                        </twig:Trace:Icon>
+                                        <twig:Trace:Title>
+                                            {{ source.title }}
+                                            <span class="sr-only"> (opens in a new tab)</span>
+                                        </twig:Trace:Title>
+                                        <twig:Trace:Icon>
+                                            <twig:ux:icon name="lucide:arrow-up-right" />
+                                        </twig:Trace:Icon>
+                                    </twig:Trace:Line>
+                                </a>
+                            {% endfor %}
+                        </twig:Trace>
+                    </twig:Trace:Collapsible:Content>
+                </twig:Trace:Collapsible>
+            </twig:Trace>
+            <p>The last commit bumped a version in package.json without updating pnpm-lock.yaml, so the frozen install fails. Run pnpm install locally and commit the lockfile.</p>
+        </twig:Message:Content>
+    </twig:Message>
+</div>
+```
+- Rendered code (run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="flex w-full max-w-sm flex-col gap-4 py-6 text-sm">
+    <div data-slot="message" data-align="end" class="group/message relative flex w-full min-w-0 gap-2 text-sm data-[align=end]:flex-row-reverse"><div data-slot="message-content" class="flex w-full min-w-0 flex-col gap-2.5 wrap-break-word group-data-[align=end]/message:*:data-slot:self-end"><div data-slot="bubble" data-variant="muted" data-align="end" class="group/bubble relative flex w-fit max-w-[80%] min-w-0 flex-col gap-1 group-data-[align=end]/message:self-end *:data-[slot=bubble-content]:bg-muted [&amp;>[data-slot=bubble-content]:is(button,a):hover]:bg-[color-mix(in_oklch,var(--muted),var(--foreground)_5%)] self-end"><div data-slot="bubble-content" class="w-fit max-w-full min-w-0 overflow-hidden rounded-xl border border-transparent px-3 py-2 text-sm leading-relaxed wrap-break-word group-data-[align=end]/bubble:self-end [button]:text-start [button,a]:transition-colors [button,a]:outline-none [button,a]:focus-visible:border-ring [button,a]:focus-visible:ring-3 [button,a]:focus-visible:ring-ring/50">Why does pnpm install fail in CI?</div>
+            </div>
+        </div>
+    </div>
+    <div data-slot="message" data-align="start" class="group/message relative flex w-full min-w-0 gap-2 text-sm data-[align=end]:flex-row-reverse"><div data-slot="message-content" class="flex w-full min-w-0 flex-col wrap-break-word group-data-[align=end]/message:*:data-slot:self-end gap-4"><div data-slot="trace" class="flex w-full min-w-0 flex-col gap-2 *:has-[>[data-slot=trace-line]]:flex *:has-[>[data-slot=trace-line]]:w-fit *:has-[>[data-slot=trace-line]]:max-w-full *:has-[>[data-slot=trace-line]]:min-w-0 *:has-[>[data-slot=trace-line]]:rounded-md *:has-[>[data-slot=trace-line]]:text-start *:has-[>[data-slot=trace-line]]:outline-none *:has-[>[data-slot=trace-line]]:focus-visible:ring-3 *:has-[>[data-slot=trace-line]]:focus-visible:ring-ring/50 *:*:has-[>[data-slot=trace-line]]:flex *:*:has-[>[data-slot=trace-line]]:w-fit *:*:has-[>[data-slot=trace-line]]:max-w-full *:*:has-[>[data-slot=trace-line]]:min-w-0 *:*:has-[>[data-slot=trace-line]]:rounded-md *:*:has-[>[data-slot=trace-line]]:text-start *:*:has-[>[data-slot=trace-line]]:outline-none *:*:has-[>[data-slot=trace-line]]:focus-visible:ring-3 *:*:has-[>[data-slot=trace-line]]:focus-visible:ring-ring/50"><div data-slot="trace-collapsible" data-collapsible-open-value="false" data-state="closed" class="flex w-full min-w-0 flex-col" data-controller="collapsible"><button type="button" data-slot="trace-collapsible-trigger" data-collapsible-target="trigger" aria-expanded="false" data-state="closed" class="group/trace-collapsible-trigger flex w-fit max-w-full min-w-0 cursor-pointer items-center gap-1 rounded-md text-start text-muted-foreground transition-colors outline-none hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50 has-[[data-status=error]]:text-destructive" data-action="click->collapsible#toggle"><span data-slot="trace-line" class="flex w-fit max-w-full min-w-0 items-center gap-2 text-sm text-muted-foreground transition-colors in-[a,button]:cursor-pointer in-[a:hover,button:hover]:text-foreground data-[status=error]:text-destructive data-[status=error]:in-[a:hover,button:hover]:text-destructive data-[status=pending]:opacity-60 data-[status=running]:*:data-[slot=trace-title]:shimmer"><span data-slot="trace-icon" aria-hidden="true" class="flex size-4 shrink-0 items-center justify-center [&amp;_svg]:pointer-events-none [&amp;_svg:not([class*='size-'])]:size-4 [[data-slot=trace-title]~&amp;]:-ms-1"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="m9 12l2 2l4-4"></path></g></svg>
+                            </span>
+                            <span data-slot="trace-title" class="min-w-0 truncate">Thought for 5s</span>
+                        </span>
+                    <span data-slot="trace-icon" aria-hidden="true" class="flex size-4 shrink-0 items-center justify-center [&amp;_svg]:pointer-events-none [&amp;_svg:not([class*='size-'])]:size-4 [[data-slot=trace-title]~&amp;]:-ms-1 transition-transform rtl:rotate-180 group-aria-expanded/trace-collapsible-trigger:rotate-90 rtl:group-aria-expanded/trace-collapsible-trigger:rotate-90"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 18l6-6l-6-6"></path></svg>
+    </span>
+</button>
+                    <div data-slot="trace-collapsible-content" data-collapsible-target="content" aria-hidden="true" data-state="closed" class="min-w-0 overflow-hidden" hidden="">
+    <div data-slot="trace-collapsible-content-inner" class="mt-2 mb-1 ms-[calc(--spacing(2)-1px)] min-w-0 border-s pe-1 ps-4 leading-relaxed wrap-break-word text-muted-foreground whitespace-pre-wrap">CI installs with a frozen lockfile, so the install stops when package.json and pnpm-lock.yaml disagree. I should check what the last commit changed, then reproduce the install.
+                    </div>
+</div>
+                </div>
+                <div data-slot="trace-collapsible" data-collapsible-open-value="false" data-state="closed" class="flex w-full min-w-0 flex-col" data-controller="collapsible"><button type="button" data-slot="trace-collapsible-trigger" data-collapsible-target="trigger" aria-expanded="false" data-state="closed" class="group/trace-collapsible-trigger flex w-fit max-w-full min-w-0 cursor-pointer items-center gap-1 rounded-md text-start text-muted-foreground transition-colors outline-none hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50 has-[[data-status=error]]:text-destructive" data-action="click->collapsible#toggle"><span data-slot="trace-line" class="flex w-fit max-w-full min-w-0 items-center gap-2 text-sm text-muted-foreground transition-colors in-[a,button]:cursor-pointer in-[a:hover,button:hover]:text-foreground data-[status=error]:text-destructive data-[status=error]:in-[a:hover,button:hover]:text-destructive data-[status=pending]:opacity-60 data-[status=running]:*:data-[slot=trace-title]:shimmer"><span data-slot="trace-icon" aria-hidden="true" class="flex size-4 shrink-0 items-center justify-center [&amp;_svg]:pointer-events-none [&amp;_svg:not([class*='size-'])]:size-4 [[data-slot=trace-title]~&amp;]:-ms-1"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="m9 12l2 2l4-4"></path></g></svg>
+                            </span>
+                            <span data-slot="trace-title" class="min-w-0 truncate">Ran pnpm --version</span>
+                        </span>
+                    <span data-slot="trace-icon" aria-hidden="true" class="flex size-4 shrink-0 items-center justify-center [&amp;_svg]:pointer-events-none [&amp;_svg:not([class*='size-'])]:size-4 [[data-slot=trace-title]~&amp;]:-ms-1 transition-transform rtl:rotate-180 group-aria-expanded/trace-collapsible-trigger:rotate-90 rtl:group-aria-expanded/trace-collapsible-trigger:rotate-90"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 18l6-6l-6-6"></path></svg>
+    </span>
+</button>
+                    <div data-slot="trace-collapsible-content" data-collapsible-target="content" aria-hidden="true" data-state="closed" class="min-w-0 overflow-hidden" hidden="">
+    <div data-slot="trace-collapsible-content-inner" class="mt-2 mb-1 ms-[calc(--spacing(2)-1px)] min-w-0 border-s pe-1 ps-4 leading-relaxed wrap-break-word text-muted-foreground"><pre class="max-h-64 overflow-auto rounded-lg border border-input px-2.5 py-2.5 font-mono text-xs leading-relaxed whitespace-pre-wrap wrap-break-word text-foreground dark:bg-input/30">10.18.0</pre>
+                    </div>
+</div>
+                </div>
+                <div data-slot="trace-collapsible" data-collapsible-open-value="false" data-state="closed" class="flex w-full min-w-0 flex-col" data-controller="collapsible"><button type="button" data-slot="trace-collapsible-trigger" data-collapsible-target="trigger" aria-expanded="false" data-state="closed" class="group/trace-collapsible-trigger flex w-fit max-w-full min-w-0 cursor-pointer items-center gap-1 rounded-md text-start text-muted-foreground transition-colors outline-none hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50 has-[[data-status=error]]:text-destructive" data-action="click->collapsible#toggle"><span data-slot="trace-line" class="flex w-fit max-w-full min-w-0 items-center gap-2 text-sm text-muted-foreground transition-colors in-[a,button]:cursor-pointer in-[a:hover,button:hover]:text-foreground data-[status=error]:text-destructive data-[status=error]:in-[a:hover,button:hover]:text-destructive data-[status=pending]:opacity-60 data-[status=running]:*:data-[slot=trace-title]:shimmer"><span data-slot="trace-icon" aria-hidden="true" class="flex size-4 shrink-0 items-center justify-center [&amp;_svg]:pointer-events-none [&amp;_svg:not([class*='size-'])]:size-4 [[data-slot=trace-title]~&amp;]:-ms-1"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="m9 12l2 2l4-4"></path></g></svg>
+                            </span>
+                            <span data-slot="trace-title" class="min-w-0 truncate">Ran git diff --stat HEAD~1 -- package.json pnpm-lock.yaml</span>
+                        </span>
+                    <span data-slot="trace-icon" aria-hidden="true" class="flex size-4 shrink-0 items-center justify-center [&amp;_svg]:pointer-events-none [&amp;_svg:not([class*='size-'])]:size-4 [[data-slot=trace-title]~&amp;]:-ms-1 transition-transform rtl:rotate-180 group-aria-expanded/trace-collapsible-trigger:rotate-90 rtl:group-aria-expanded/trace-collapsible-trigger:rotate-90"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 18l6-6l-6-6"></path></svg>
+    </span>
+</button>
+                    <div data-slot="trace-collapsible-content" data-collapsible-target="content" aria-hidden="true" data-state="closed" class="min-w-0 overflow-hidden" hidden="">
+    <div data-slot="trace-collapsible-content-inner" class="mt-2 mb-1 ms-[calc(--spacing(2)-1px)] min-w-0 border-s pe-1 ps-4 leading-relaxed wrap-break-word text-muted-foreground"><pre class="max-h-64 overflow-auto rounded-lg border border-input px-2.5 py-2.5 font-mono text-xs leading-relaxed whitespace-pre-wrap wrap-break-word text-foreground dark:bg-input/30"> package.json | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)</pre>
+                    </div>
+</div>
+                </div>
+                <div data-slot="trace-collapsible" data-collapsible-open-value="true" data-state="open" class="flex w-full min-w-0 flex-col" data-controller="collapsible"><button type="button" data-slot="trace-collapsible-trigger" data-collapsible-target="trigger" aria-expanded="true" data-state="open" class="group/trace-collapsible-trigger flex w-fit max-w-full min-w-0 cursor-pointer items-center gap-1 rounded-md text-start text-muted-foreground transition-colors outline-none hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50 has-[[data-status=error]]:text-destructive" data-action="click->collapsible#toggle"><span data-slot="trace-line" data-status="error" class="flex w-fit max-w-full min-w-0 items-center gap-2 text-sm text-muted-foreground transition-colors in-[a,button]:cursor-pointer in-[a:hover,button:hover]:text-foreground data-[status=error]:text-destructive data-[status=error]:in-[a:hover,button:hover]:text-destructive data-[status=pending]:opacity-60 data-[status=running]:*:data-[slot=trace-title]:shimmer"><span data-slot="trace-icon" aria-hidden="true" class="flex size-4 shrink-0 items-center justify-center [&amp;_svg]:pointer-events-none [&amp;_svg:not([class*='size-'])]:size-4 [[data-slot=trace-title]~&amp;]:-ms-1"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M12 8v4m0 4h.01"></path></g></svg>
+                            </span>
+                            <span data-slot="trace-title" class="min-w-0 truncate">Failed to run pnpm install --frozen-lockfile</span>
+                        </span>
+                    <span data-slot="trace-icon" aria-hidden="true" class="flex size-4 shrink-0 items-center justify-center [&amp;_svg]:pointer-events-none [&amp;_svg:not([class*='size-'])]:size-4 [[data-slot=trace-title]~&amp;]:-ms-1 transition-transform rtl:rotate-180 group-aria-expanded/trace-collapsible-trigger:rotate-90 rtl:group-aria-expanded/trace-collapsible-trigger:rotate-90"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 18l6-6l-6-6"></path></svg>
+    </span>
+</button>
+                    <div data-slot="trace-collapsible-content" data-collapsible-target="content" aria-hidden="false" data-state="open" class="min-w-0 overflow-hidden">
+    <div data-slot="trace-collapsible-content-inner" class="mt-2 mb-1 ms-[calc(--spacing(2)-1px)] min-w-0 border-s pe-1 ps-4 leading-relaxed wrap-break-word text-muted-foreground"><pre class="max-h-64 overflow-auto rounded-lg border border-destructive/30 px-2.5 py-2.5 font-mono text-xs leading-relaxed whitespace-pre-wrap wrap-break-word text-destructive dark:border-destructive/40">ERR_PNPM_OUTDATED_LOCKFILE  Cannot install with "frozen-lockfile" because pnpm-lock.yaml is not up to date with package.json</pre>
+                    </div>
+</div>
+                </div>
+                <div data-slot="trace-collapsible" data-collapsible-open-value="false" data-state="closed" class="flex w-full min-w-0 flex-col" data-controller="collapsible"><button type="button" data-slot="trace-collapsible-trigger" data-collapsible-target="trigger" aria-expanded="false" data-state="closed" class="group/trace-collapsible-trigger flex w-fit max-w-full min-w-0 cursor-pointer items-center gap-1 rounded-md text-start text-muted-foreground transition-colors outline-none hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50 has-[[data-status=error]]:text-destructive" data-action="click->collapsible#toggle"><span data-slot="trace-line" class="flex w-fit max-w-full min-w-0 items-center gap-2 text-sm text-muted-foreground transition-colors in-[a,button]:cursor-pointer in-[a:hover,button:hover]:text-foreground data-[status=error]:text-destructive data-[status=error]:in-[a:hover,button:hover]:text-destructive data-[status=pending]:opacity-60 data-[status=running]:*:data-[slot=trace-title]:shimmer"><span data-slot="trace-icon" aria-hidden="true" class="flex size-4 shrink-0 items-center justify-center [&amp;_svg]:pointer-events-none [&amp;_svg:not([class*='size-'])]:size-4 [[data-slot=trace-title]~&amp;]:-ms-1"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a14.5 14.5 0 0 0 0 20a14.5 14.5 0 0 0 0-20M2 12h20"></path></g></svg>
+                            </span>
+                            <span data-slot="trace-title" class="min-w-0 truncate">Used 2 sources</span>
+                        </span>
+                    <span data-slot="trace-icon" aria-hidden="true" class="flex size-4 shrink-0 items-center justify-center [&amp;_svg]:pointer-events-none [&amp;_svg:not([class*='size-'])]:size-4 [[data-slot=trace-title]~&amp;]:-ms-1 transition-transform rtl:rotate-180 group-aria-expanded/trace-collapsible-trigger:rotate-90 rtl:group-aria-expanded/trace-collapsible-trigger:rotate-90"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 18l6-6l-6-6"></path></svg>
+    </span>
+</button>
+                    <div data-slot="trace-collapsible-content" data-collapsible-target="content" aria-hidden="true" data-state="closed" class="min-w-0 overflow-hidden" hidden="">
+    <div data-slot="trace-collapsible-content-inner" class="mt-2 mb-1 ms-[calc(--spacing(2)-1px)] min-w-0 border-s pe-1 ps-4 leading-relaxed wrap-break-word text-muted-foreground"><div data-slot="trace" class="flex w-full min-w-0 flex-col gap-2 *:has-[>[data-slot=trace-line]]:flex *:has-[>[data-slot=trace-line]]:w-fit *:has-[>[data-slot=trace-line]]:max-w-full *:has-[>[data-slot=trace-line]]:min-w-0 *:has-[>[data-slot=trace-line]]:rounded-md *:has-[>[data-slot=trace-line]]:text-start *:has-[>[data-slot=trace-line]]:outline-none *:has-[>[data-slot=trace-line]]:focus-visible:ring-3 *:has-[>[data-slot=trace-line]]:focus-visible:ring-ring/50 *:*:has-[>[data-slot=trace-line]]:flex *:*:has-[>[data-slot=trace-line]]:w-fit *:*:has-[>[data-slot=trace-line]]:max-w-full *:*:has-[>[data-slot=trace-line]]:min-w-0 *:*:has-[>[data-slot=trace-line]]:rounded-md *:*:has-[>[data-slot=trace-line]]:text-start *:*:has-[>[data-slot=trace-line]]:outline-none *:*:has-[>[data-slot=trace-line]]:focus-visible:ring-3 *:*:has-[>[data-slot=trace-line]]:focus-visible:ring-ring/50">                                <a href="https://pnpm.io/cli/install#--frozen-lockfile" target="_blank" rel="noreferrer">
+                                    <span data-slot="trace-line" class="flex w-fit max-w-full min-w-0 items-center gap-2 text-sm text-muted-foreground transition-colors in-[a,button]:cursor-pointer in-[a:hover,button:hover]:text-foreground data-[status=error]:text-destructive data-[status=error]:in-[a:hover,button:hover]:text-destructive data-[status=pending]:opacity-60 data-[status=running]:*:data-[slot=trace-title]:shimmer"><span data-slot="trace-icon" aria-hidden="true" class="flex size-4 shrink-0 items-center justify-center [&amp;_svg]:pointer-events-none [&amp;_svg:not([class*='size-'])]:size-4 [[data-slot=trace-title]~&amp;]:-ms-1"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a14.5 14.5 0 0 0 0 20a14.5 14.5 0 0 0 0-20M2 12h20"></path></g></svg>
+                                        </span>
+                                        <span data-slot="trace-title" class="min-w-0 truncate">pnpm install | pnpm.io
+                                            <span class="sr-only"> (opens in a new tab)</span>
+                                        </span>
+                                        <span data-slot="trace-icon" aria-hidden="true" class="flex size-4 shrink-0 items-center justify-center [&amp;_svg]:pointer-events-none [&amp;_svg:not([class*='size-'])]:size-4 [[data-slot=trace-title]~&amp;]:-ms-1"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h10v10M7 17L17 7"></path></svg>
+                                        </span>
+                                    </span>
+                                </a>
+                                                            <a href="https://pnpm.io/continuous-integration" target="_blank" rel="noreferrer">
+                                    <span data-slot="trace-line" class="flex w-fit max-w-full min-w-0 items-center gap-2 text-sm text-muted-foreground transition-colors in-[a,button]:cursor-pointer in-[a:hover,button:hover]:text-foreground data-[status=error]:text-destructive data-[status=error]:in-[a:hover,button:hover]:text-destructive data-[status=pending]:opacity-60 data-[status=running]:*:data-[slot=trace-title]:shimmer"><span data-slot="trace-icon" aria-hidden="true" class="flex size-4 shrink-0 items-center justify-center [&amp;_svg]:pointer-events-none [&amp;_svg:not([class*='size-'])]:size-4 [[data-slot=trace-title]~&amp;]:-ms-1"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a14.5 14.5 0 0 0 0 20a14.5 14.5 0 0 0 0-20M2 12h20"></path></g></svg>
+                                        </span>
+                                        <span data-slot="trace-title" class="min-w-0 truncate">Continuous Integration | pnpm.io
+                                            <span class="sr-only"> (opens in a new tab)</span>
+                                        </span>
+                                        <span data-slot="trace-icon" aria-hidden="true" class="flex size-4 shrink-0 items-center justify-center [&amp;_svg]:pointer-events-none [&amp;_svg:not([class*='size-'])]:size-4 [[data-slot=trace-title]~&amp;]:-ms-1"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h10v10M7 17L17 7"></path></svg>
+                                        </span>
+                                    </span>
+                                </a>
+                                                    </div>
+                    </div>
+</div>
+                </div>
+            </div>
+            <p>The last commit bumped a version in package.json without updating pnpm-lock.yaml, so the frozen install fails. Run pnpm install locally and commit the lockfile.</p>
+        </div>
+    </div>
+</div>

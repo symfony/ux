@@ -1,0 +1,38 @@
+<!--
+- Kit: Shadcn UI
+- Component: Trace
+- Code:
+```twig
+<div class="w-full max-w-sm">
+    <twig:Trace:Collapsible>
+        <twig:Trace:Collapsible:Trigger>
+            <twig:Trace:Line>
+                <twig:Trace:Icon>
+                    <twig:ux:icon name="lucide:terminal" />
+                </twig:Trace:Icon>
+                <twig:Trace:Title>Ran node --version</twig:Trace:Title>
+            </twig:Trace:Line>
+        </twig:Trace:Collapsible:Trigger>
+        <twig:Trace:Collapsible:Content>
+            <pre class="max-h-64 overflow-auto rounded-lg border border-input px-2.5 py-2.5 font-mono text-xs leading-relaxed whitespace-pre-wrap wrap-break-word text-foreground dark:bg-input/30">$ node --version
+v24.18.0</pre>
+        </twig:Trace:Collapsible:Content>
+    </twig:Trace:Collapsible>
+</div>
+```
+- Rendered code (run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="w-full max-w-sm">
+    <div data-slot="trace-collapsible" data-collapsible-open-value="false" data-state="closed" class="flex w-full min-w-0 flex-col" data-controller="collapsible"><button type="button" data-slot="trace-collapsible-trigger" data-collapsible-target="trigger" aria-expanded="false" data-state="closed" class="group/trace-collapsible-trigger flex w-fit max-w-full min-w-0 cursor-pointer items-center gap-1 rounded-md text-start text-muted-foreground transition-colors outline-none hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50 has-[[data-status=error]]:text-destructive" data-action="click->collapsible#toggle"><span data-slot="trace-line" class="flex w-fit max-w-full min-w-0 items-center gap-2 text-sm text-muted-foreground transition-colors in-[a,button]:cursor-pointer in-[a:hover,button:hover]:text-foreground data-[status=error]:text-destructive data-[status=error]:in-[a:hover,button:hover]:text-destructive data-[status=pending]:opacity-60 data-[status=running]:*:data-[slot=trace-title]:shimmer"><span data-slot="trace-icon" aria-hidden="true" class="flex size-4 shrink-0 items-center justify-center [&amp;_svg]:pointer-events-none [&amp;_svg:not([class*='size-'])]:size-4 [[data-slot=trace-title]~&amp;]:-ms-1"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19h8M4 17l6-6l-6-6"></path></svg>
+                </span>
+                <span data-slot="trace-title" class="min-w-0 truncate">Ran node --version</span>
+            </span>
+        <span data-slot="trace-icon" aria-hidden="true" class="flex size-4 shrink-0 items-center justify-center [&amp;_svg]:pointer-events-none [&amp;_svg:not([class*='size-'])]:size-4 [[data-slot=trace-title]~&amp;]:-ms-1 transition-transform rtl:rotate-180 group-aria-expanded/trace-collapsible-trigger:rotate-90 rtl:group-aria-expanded/trace-collapsible-trigger:rotate-90"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 18l6-6l-6-6"></path></svg>
+    </span>
+</button>
+        <div data-slot="trace-collapsible-content" data-collapsible-target="content" aria-hidden="true" data-state="closed" class="min-w-0 overflow-hidden" hidden="">
+    <div data-slot="trace-collapsible-content-inner" class="mt-2 mb-1 ms-[calc(--spacing(2)-1px)] min-w-0 border-s pe-1 ps-4 leading-relaxed wrap-break-word text-muted-foreground"><pre class="max-h-64 overflow-auto rounded-lg border border-input px-2.5 py-2.5 font-mono text-xs leading-relaxed whitespace-pre-wrap wrap-break-word text-foreground dark:bg-input/30">$ node --version
+v24.18.0</pre>
+        </div>
+</div>
+    </div>
+</div>
