@@ -660,6 +660,41 @@ describe('LiveController data-model Tests', () => {
         await waitFor(() => expect(test.element).toHaveTextContent('Food: carrot'));
     });
 
+    it('notices when the selected option of a select mapped via a form is removed on re-render', async () => {
+        const test = await createTest(
+            { food: 'carrot', diet: '' },
+            (data: any) => `
+            <div ${initComponent(data)}>
+                <form data-model="*">
+                    <select name="food">
+                        <option value="">choose a food</option>
+                        ${data.diet === 'no-carrot' ? '' : `<option value="carrot" ${data.food === 'carrot' ? 'selected' : ''}>🥕</option>`}
+                        <option value="brocolli" ${data.food === 'brocolli' ? 'selected' : ''}>🥦</option>
+                    </select>
+                </form>
+
+                Diet: ${data.diet}
+
+                <button data-action="live#$render">Reload</button>
+            </div>
+        `
+        );
+
+        // the server removes the selected option from the list
+        test.expectsAjaxCall().serverWillChangeProps((data: any) => {
+            data.diet = 'no-carrot';
+        });
+
+        getByText(test.element, 'Reload').click();
+        await waitFor(() => expect(test.element).toHaveTextContent('Diet: no-carrot'));
+
+        // nothing is selected anymore, so the next request must not send "carrot" again
+        test.expectsAjaxCall().expectUpdatedData({ food: '' });
+
+        getByText(test.element, 'Reload').click();
+        await waitFor(() => expect(test.component.valueStore.get('food')).toEqual(''));
+    });
+
     it('allows model fields to be set manually and rolled into a single request', async () => {
         const test = await createTest(
             { food: '', dessert: '' },
