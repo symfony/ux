@@ -32,6 +32,7 @@ enum UxPackage: string
     // case Toolkit; // not subject to E2E
     case Translator = 'UX Translator';
     case Turbo = 'UX Turbo';
+    case Upload = 'UX Upload';
     // case Typed; // deprecated
     case Vue = 'UX Vue';
 
@@ -52,6 +53,7 @@ enum UxPackage: string
             self::StimulusBundle => 'https://ux.symfony.com/stimulus',
             self::Translator => 'https://ux.symfony.com/translator',
             self::Turbo => 'https://ux.symfony.com/turbo',
+            self::Upload => 'https://ux.symfony.com/upload',
             self::Vue => 'https://ux.symfony.com/vue',
         };
     }

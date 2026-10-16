@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+    <file source-language="en" target-language="nl" datatype="plaintext" original="file.ext">
+        <body>
+            <trans-unit id="drop_files" resname="ux_upload.drop_files">
+                <source>ux_upload.drop_files</source>
+                <target>Sleep bestanden hierheen of klik om te bladeren</target>
+            </trans-unit>
+            <trans-unit id="upload" resname="ux_upload.upload">
+                <source>ux_upload.upload</source>
+                <target>Uploaden</target>
+            </trans-unit>
+            <trans-unit id="cancel" resname="ux_upload.cancel">
+                <source>ux_upload.cancel</source>
+                <target>Annuleren</target>
+            </trans-unit>
+            <trans-unit id="remove" resname="ux_upload.remove">
+                <source>ux_upload.remove</source>
+                <target>Verwijderen</target>
+            </trans-unit>
+            <trans-unit id="retry" resname="ux_upload.retry">
+                <source>ux_upload.retry</source>
+                <target>Opnieuw proberen</target>
+            </trans-unit>
+            <trans-unit id="pending" resname="ux_upload.pending">
+                <source>ux_upload.pending</source>
+                <target>Wachtend</target>
+            </trans-unit>
+            <trans-unit id="complete" resname="ux_upload.complete">
+                <source>ux_upload.complete</source>
+                <target>Voltooid</target>
+            </trans-unit>
+            <trans-unit id="cancelled" resname="ux_upload.cancelled">
+                <source>ux_upload.cancelled</source>
+                <target>Geannuleerd</target>
+            </trans-unit>
+            <trans-unit id="upload_failed" resname="ux_upload.upload_failed">
+                <source>ux_upload.upload_failed</source>
+                <target>Upload mislukt</target>
+            </trans-unit>
+            <trans-unit id="max_files_reached" resname="ux_upload.max_files_reached">
+                <source>ux_upload.max_files_reached</source>
+                <target>Maximaal aantal bestanden bereikt</target>
+            </trans-unit>
+            <trans-unit id="file_too_large" resname="ux_upload.file_too_large">
+                <source>ux_upload.file_too_large</source>
+                <target>Bestand te groot (max. %max_size%)</target>
+            </trans-unit>
+            <trans-unit id="file_type_not_allowed" resname="ux_upload.file_type_not_allowed">
+                <source>ux_upload.file_type_not_allowed</source>
+                <target>Bestandstype niet toegestaan</target>
+            </trans-unit>
+            <trans-unit id="summary_all_complete" resname="ux_upload.summary_all_complete">
+                <source>ux_upload.summary_all_complete</source>
+                <target>%count% bestanden geüpload</target>
+            </trans-unit>
+            <trans-unit id="summary_uploading" resname="ux_upload.summary_uploading">
+                <source>ux_upload.summary_uploading</source>
+                <target>Uploaden... %completed% van %total% voltooid</target>
+            </trans-unit>
+            <trans-unit id="summary_partial" resname="ux_upload.summary_partial">
+                <source>ux_upload.summary_partial</source>
+                <target>%completed% van %total% geüpload, %failed% mislukt</target>
+            </trans-unit>
+            <trans-unit id="summary_uploading_with_errors" resname="ux_upload.summary_uploading_with_errors">
+                <source>ux_upload.summary_uploading_with_errors</source>
+                <target>Uploaden... %completed% van %total% voltooid, %failed% mislukt</target>
+            </trans-unit>
+            <trans-unit id="summary_default" resname="ux_upload.summary_default">
+                <source>ux_upload.summary_default</source>
+                <target>%completed% van %total% bestanden geüpload</target>
+            </trans-unit>
+            <trans-unit id="dropzone_label" resname="ux_upload.dropzone_label">
+                <source>ux_upload.dropzone_label</source>
+                <target>Bestand uploadgebied. Sleep bestanden of druk om te bladeren.</target>
+            </trans-unit>
+            <trans-unit id="announce_started" resname="ux_upload.announce_started">
+                <source>ux_upload.announce_started</source>
+                <target>%filename%: upload gestart</target>
+            </trans-unit>
+            <trans-unit id="announce_complete" resname="ux_upload.announce_complete">
+                <source>ux_upload.announce_complete</source>
+                <target>%filename%: upload voltooid</target>
+            </trans-unit>
+            <trans-unit id="announce_failed" resname="ux_upload.announce_failed">
+                <source>ux_upload.announce_failed</source>
+                <target>%filename%: upload mislukt</target>
+            </trans-unit>
+            <trans-unit id="announce_cancelled" resname="ux_upload.announce_cancelled">
+                <source>ux_upload.announce_cancelled</source>
+                <target>%filename%: upload geannuleerd</target>
+            </trans-unit>
+            <trans-unit id="pause" resname="ux_upload.pause">
+                <source>ux_upload.pause</source>
+                <target>Pauzeren</target>
+            </trans-unit>
+            <trans-unit id="resume" resname="ux_upload.resume">
+                <source>ux_upload.resume</source>
+                <target>Hervatten</target>
+            </trans-unit>
+            <trans-unit id="paused" resname="ux_upload.paused">
+                <source>ux_upload.paused</source>
+                <target>Gepauzeerd</target>
+            </trans-unit>
+            <trans-unit id="announce_paused" resname="ux_upload.announce_paused">
+                <source>ux_upload.announce_paused</source>
+                <target>%filename%: upload gepauzeerd</target>
+            </trans-unit>
+            <trans-unit id="announce_resumed" resname="ux_upload.announce_resumed">
+                <source>ux_upload.announce_resumed</source>
+                <target>%filename%: upload hervat</target>
+            </trans-unit>
+            <trans-unit id="help.max_size" resname="ux_upload.help.max_size">
+                <source>ux_upload.help.max_size</source>
+                <target>Tot %size%</target>
+            </trans-unit>
+            <trans-unit id="help.max_files" resname="ux_upload.help.max_files">
+                <source>ux_upload.help.max_files</source>
+                <target>Tot %count% bestanden</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

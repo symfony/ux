@@ -41,15 +41,32 @@ async function main() {
     const isTurbo = '@symfony/ux-turbo' === packageData.name;
     const isInspector = '@symfony/ux-inspector' === packageData.name;
 
-    const inputCssFile = packageData?.config?.css_source;
-    const inputFiles = [
-        ...globSync('src/*controller.ts'),
-        ...(isTurbo ? ['src/mercure_stream_source_element.ts'] : []),
-        ...(isInspector ? ['src/inspector.ts'] : []),
-        ...(isStimulusBundle ? ['src/loader.ts', 'src/controllers.ts'] : []),
-        ...(isReactOrVue ? ['src/loader.ts', 'src/components.ts'] : []),
-        ...(inputCssFile ? [inputCssFile] : []),
-    ];
+    const configuredCssSources = packageData?.config?.css_source;
+    const inputCssFiles = (Array.isArray(configuredCssSources) ? configuredCssSources : [configuredCssSources]).filter(
+        (source): source is string => typeof source === 'string'
+    );
+    const configuredEntryPoints = Array.isArray(packageData?.config?.entrypoints)
+        ? packageData.config.entrypoints.filter((entryPoint): entryPoint is string => typeof entryPoint === 'string')
+        : [];
+    const inputFiles = Array.from(
+        new Set([
+            ...globSync('src/*controller.ts'),
+            ...configuredEntryPoints,
+            ...(isTurbo ? ['src/mercure_stream_source_element.ts'] : []),
+            ...(isInspector ? ['src/inspector.ts'] : []),
+            ...(isStimulusBundle ? ['src/loader.ts', 'src/controllers.ts'] : []),
+            ...(isReactOrVue ? ['src/loader.ts', 'src/components.ts'] : []),
+            ...inputCssFiles,
+        ])
+    );
+    const inputEntries = Object.fromEntries(
+        inputFiles.map((inputFile) => {
+            const extension = path.extname(inputFile);
+            const name = path.basename(inputFile, extension);
+
+            return [inputFile.endsWith('.css') ? `${name}.min` : name, inputFile];
+        })
+    );
 
     const external = new Set([
         // We force "dependencies" and "peerDependencies" to be external to avoid bundling them.
@@ -64,7 +81,7 @@ async function main() {
     const outDir = path.join(packageRoot, 'dist');
 
     await build({
-        entry: inputFiles,
+        entry: inputEntries,
         outDir,
         clean: true,
         watch: isWatch,
@@ -75,14 +92,11 @@ async function main() {
         dts: {
             entry: inputFiles.filter((inputFile) => !inputFile.endsWith('.css')),
         },
-        ...(inputCssFile
+        ...(inputCssFiles.length > 0
             ? {
                   css: {
                       minify: true,
-                      fileName: inputCssFile
-                          .split('/')
-                          .pop()
-                          .replace(/\.css$/, '.min.css'),
+                      splitting: true,
                   },
               }
             : {}),
@@ -90,7 +104,8 @@ async function main() {
         unbundle: isStimulusBundle || isReactOrVue,
         deps: {
             neverBundle: Array.from(external),
-            onlyBundle: ['idiomorph'],
+            onlyBundle:
+                packageData.dependencies?.idiomorph || packageData.devDependencies?.idiomorph ? ['idiomorph'] : [],
         },
         plugins: [
             {
