@@ -41,7 +41,7 @@ jobs:
               with:
                   persist-credentials: false
 
-            - uses: pnpm/setup@fbda4c85fc2e1e08721cd8763afea8f48d60f024 # v3.0.0
+            - uses: pnpm/setup@a0881977cd8ea73b1ed212236c99ca10dcc80cf4 # v3.1.1
               with:
                   cache: true
 
@@ -57,7 +57,7 @@ jobs:
             - name: Install browsers with Playwright
               run: pnpm exec playwright install firefox ffmpeg
 
-            - uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # 2.37.2
+            - uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
               with:
                   php-version: ${{ matrix.symfony >= '8.0' && '8.5' || '8.4' }}
                   tools: symfony-cli, flex
@@ -108,7 +108,7 @@ jobs:
               run: pnpm run test:browser --project ${{ matrix.browser }}
               id: browser-tests
 
-            - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+            - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
               if: ${{ always() && steps.browser-tests.conclusion == 'failure' }}
               with:
                   name: Playwright report and output (${{ matrix.symfony }}, ${{ matrix.browser }})
@@ -118,7 +118,7 @@ jobs:
                   retention-days: 7
                   include-hidden-files: true
 
-            - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+            - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
               if: ${{ always() && steps.browser-tests.conclusion == 'failure' }}
               with:
                   name: Symfony logs (${{ matrix.symfony }}, ${{ matrix.browser }})
