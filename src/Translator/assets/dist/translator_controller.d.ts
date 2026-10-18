@@ -17,8 +17,9 @@ interface Message<Translations extends TranslationsType, Locale extends LocaleTy
 }
 type Messages = Record<MessageId, Message<TranslationsType, LocaleType>>;
 export declare function getDefaultLocale(): LocaleType;
-export declare function createTranslator<TMessages extends Messages>({ messages, locale, localeFallbacks, throwWhenNotFound }: {
+export declare function createTranslator<TMessages extends Messages>({ messages, defaultLocale, locale, localeFallbacks, throwWhenNotFound }: {
   messages: TMessages;
+  defaultLocale?: LocaleType;
   locale?: LocaleType;
   localeFallbacks?: Record<LocaleType, LocaleType>;
   throwWhenNotFound?: boolean;
