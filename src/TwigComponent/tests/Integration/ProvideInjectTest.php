@@ -13,6 +13,7 @@ namespace Symfony\UX\TwigComponent\Tests\Integration;
 
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Twig\Environment;
+use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
 
 final class ProvideInjectTest extends KernelTestCase
@@ -117,6 +118,21 @@ final class ProvideInjectTest extends KernelTestCase
         $this->assertStringContainsString('name="second-render[0]" maxlength="1" data-index="1" data-max-length="2"', $second);
         $this->assertStringNotContainsString('first-render', $second);
         $this->assertStringNotContainsString('data-max-length="6"', $second);
+    }
+
+    public function testFailedRenderDoesNotLeakProvidedValuesIntoTheNextRequest(): void
+    {
+        $twig = self::getContainer()->get(Environment::class);
+        try {
+            $twig->render('provide_inject_failing_content.html.twig');
+            $this->fail('Expected LoaderError to be thrown.');
+        } catch (LoaderError) {
+        }
+        self::getContainer()->get('services_resetter')->reset();
+
+        $output = $twig->render('provide_inject_default.html.twig');
+
+        $this->assertStringContainsString('name="otp[0]" maxlength="1" data-index="1" data-max-length="4"', $output);
     }
 
     public function testDeepDescendantCannotReachSiblingTreeContext(): void

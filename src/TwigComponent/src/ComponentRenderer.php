@@ -70,9 +70,7 @@ final class ComponentRenderer implements ComponentRendererInterface, ResetInterf
 
     public function render(MountedComponent $mounted): string
     {
-        $this->componentStack->push($mounted);
-
-        $event = $this->preRender($mounted);
+        $event = $this->pushAndPreRender($mounted);
 
         $variables = $event->getVariables();
         // see ComponentNode. When rendering an individual embedded component,
@@ -104,9 +102,7 @@ final class ComponentRenderer implements ComponentRendererInterface, ResetInterf
         $mounted->addExtraMetadata('hostTemplate', $hostTemplateName);
         $mounted->addExtraMetadata('embeddedTemplateIndex', $index);
 
-        $this->componentStack->push($mounted);
-
-        return $this->preRender($mounted, $context);
+        return $this->pushAndPreRender($mounted, $context);
     }
 
     public function finishEmbeddedComponentRender(): void
@@ -115,6 +111,19 @@ final class ComponentRenderer implements ComponentRendererInterface, ResetInterf
 
         if (null === $this->introspectableDispatcher || $this->introspectableDispatcher->hasListeners(PostRenderEvent::class)) {
             $this->dispatcher->dispatch(new PostRenderEvent($mounted));
+        }
+    }
+
+    private function pushAndPreRender(MountedComponent $mounted, array $context = []): PreRenderEvent
+    {
+        $this->componentStack->push($mounted);
+
+        try {
+            return $this->preRender($mounted, $context);
+        } catch (\Throwable $e) {
+            $this->componentStack->pop();
+
+            throw $e;
         }
     }
 
@@ -160,5 +169,6 @@ final class ComponentRenderer implements ComponentRendererInterface, ResetInterf
     public function reset(): void
     {
         $this->templateClasses = [];
+        $this->componentStack->reset();
     }
 }
