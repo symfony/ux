@@ -1,10 +1,11 @@
 /assets/node_modules/
+/assets/.vitest/
 /config/reference.php
 /config/schema.json
 /vendor/
 /composer.lock
 /phpunit.xml
 /.phpunit.cache
-
+/.php-cs-fixer.cache
+/var
 /tests/fixtures/var
-/config/reference.php
