@@ -38,4 +38,5 @@ return [
     '@floating-ui/utils' => ['version' => '0.2.12'],
     '@floating-ui/utils/dom' => ['version' => '0.2.12'],
     'flowbite/dist/flowbite.min.css' => ['version' => '4.0.2', 'type' => 'css'],
+    'sortablejs' => ['version' => '1.15.7'],
 ];

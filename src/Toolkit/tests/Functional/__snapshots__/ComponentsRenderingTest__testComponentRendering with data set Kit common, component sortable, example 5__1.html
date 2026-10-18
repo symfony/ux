@@ -1,0 +1,17 @@
+<!--
+- Kit: Common
+- Component: Sortable
+- Code:
+```twig
+<ul data-controller="sortable" data-sortable-csrf-token-value="{{ csrf_token('reorder-tasks') }}" class="flex w-72 flex-col gap-2">
+    <li data-sortable-update-url="/link/tasks/1/position" class="cursor-grab rounded-md border border-violet-200 bg-violet-50 px-4 py-2 text-sm text-violet-900 dark:border-violet-900 dark:bg-violet-950 dark:text-violet-100">Write the release notes</li>
+    <li data-sortable-update-url="/link/tasks/2/position" class="cursor-grab rounded-md border border-violet-200 bg-violet-50 px-4 py-2 text-sm text-violet-900 dark:border-violet-900 dark:bg-violet-950 dark:text-violet-100">Review the pull requests</li>
+    <li data-sortable-update-url="/link/tasks/3/position" class="cursor-grab rounded-md border border-violet-200 bg-violet-50 px-4 py-2 text-sm text-violet-900 dark:border-violet-900 dark:bg-violet-950 dark:text-violet-100">Tag the new version</li>
+</ul>
+```
+- Rendered code (run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<ul data-controller="sortable" data-sortable-csrf-token-value="csrf-token-for-reorder-tasks" class="flex w-72 flex-col gap-2">
+    <li data-sortable-update-url="/link/tasks/1/position" class="cursor-grab rounded-md border border-violet-200 bg-violet-50 px-4 py-2 text-sm text-violet-900 dark:border-violet-900 dark:bg-violet-950 dark:text-violet-100">Write the release notes</li>
+    <li data-sortable-update-url="/link/tasks/2/position" class="cursor-grab rounded-md border border-violet-200 bg-violet-50 px-4 py-2 text-sm text-violet-900 dark:border-violet-900 dark:bg-violet-950 dark:text-violet-100">Review the pull requests</li>
+    <li data-sortable-update-url="/link/tasks/3/position" class="cursor-grab rounded-md border border-violet-200 bg-violet-50 px-4 py-2 text-sm text-violet-900 dark:border-violet-900 dark:bg-violet-950 dark:text-violet-100">Tag the new version</li>
+</ul>

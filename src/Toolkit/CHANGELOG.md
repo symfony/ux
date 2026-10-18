@@ -14,6 +14,7 @@
 - [Shadcn] Fix `dropdown-menu` ignoring `align` when it opens on the left or the right of its trigger, which always centered the menu
 - Add the `components` and `controllers` options (`dir`, `subdirectory`) to choose where `ux:install` writes recipe files
 - Add the `%COMPONENTS_DIR%` and `%CONTROLLERS_DIR%` placeholders in recipe `copy-files` destinations
+- [Common] Add `sortable` recipe
 
 ## 3.6.0
 

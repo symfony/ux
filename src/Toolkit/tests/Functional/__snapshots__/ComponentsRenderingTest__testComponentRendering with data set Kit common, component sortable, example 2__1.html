@@ -1,0 +1,31 @@
+<!--
+- Kit: Common
+- Component: Sortable
+- Code:
+```twig
+<div data-controller="sortable" data-sortable-draggable-value=">:not([data-upload])" class="grid w-72 grid-cols-3 gap-2">
+    <div class="flex aspect-square cursor-grab items-center justify-center rounded-md bg-violet-100 text-lg font-semibold text-violet-900 dark:bg-violet-900 dark:text-violet-100">A</div>
+    <div class="flex aspect-square cursor-grab items-center justify-center rounded-md bg-violet-100 text-lg font-semibold text-violet-900 dark:bg-violet-900 dark:text-violet-100">B</div>
+    <div class="flex aspect-square cursor-grab items-center justify-center rounded-md bg-violet-100 text-lg font-semibold text-violet-900 dark:bg-violet-900 dark:text-violet-100">C</div>
+    <div class="flex aspect-square cursor-grab items-center justify-center rounded-md bg-violet-100 text-lg font-semibold text-violet-900 dark:bg-violet-900 dark:text-violet-100">D</div>
+    <div class="flex aspect-square cursor-grab items-center justify-center rounded-md bg-violet-100 text-lg font-semibold text-violet-900 dark:bg-violet-900 dark:text-violet-100">E</div>
+    <div data-upload class="relative flex aspect-square flex-col items-center justify-center gap-1 rounded-md border-2 border-dashed border-violet-300 text-xs font-medium text-violet-600 hover:border-violet-500 dark:border-violet-800 dark:text-violet-300 dark:hover:border-violet-600">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" class="size-5"><path d="M12 5v14M5 12h14"/></svg>
+        Add a photo
+        <input type="file" accept="image/*" aria-label="Add a photo" class="absolute inset-0 cursor-pointer opacity-0">
+    </div>
+</div>
+```
+- Rendered code (run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div data-controller="sortable" data-sortable-draggable-value=">:not([data-upload])" class="grid w-72 grid-cols-3 gap-2">
+    <div class="flex aspect-square cursor-grab items-center justify-center rounded-md bg-violet-100 text-lg font-semibold text-violet-900 dark:bg-violet-900 dark:text-violet-100">A</div>
+    <div class="flex aspect-square cursor-grab items-center justify-center rounded-md bg-violet-100 text-lg font-semibold text-violet-900 dark:bg-violet-900 dark:text-violet-100">B</div>
+    <div class="flex aspect-square cursor-grab items-center justify-center rounded-md bg-violet-100 text-lg font-semibold text-violet-900 dark:bg-violet-900 dark:text-violet-100">C</div>
+    <div class="flex aspect-square cursor-grab items-center justify-center rounded-md bg-violet-100 text-lg font-semibold text-violet-900 dark:bg-violet-900 dark:text-violet-100">D</div>
+    <div class="flex aspect-square cursor-grab items-center justify-center rounded-md bg-violet-100 text-lg font-semibold text-violet-900 dark:bg-violet-900 dark:text-violet-100">E</div>
+    <div data-upload="" class="relative flex aspect-square flex-col items-center justify-center gap-1 rounded-md border-2 border-dashed border-violet-300 text-xs font-medium text-violet-600 hover:border-violet-500 dark:border-violet-800 dark:text-violet-300 dark:hover:border-violet-600">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" class="size-5"><path d="M12 5v14M5 12h14"></path></svg>
+        Add a photo
+        <input type="file" accept="image/*" aria-label="Add a photo" class="absolute inset-0 cursor-pointer opacity-0">
+    </div>
+</div>
