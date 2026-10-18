@@ -1,11 +1,11 @@
 <?php
 
 /*
- * Synchronizes each Symfony UX package's `.gitattributes` file.
+ * Synchronizes each Symfony UX package's `.gitattributes` and `.gitignore` files.
  *
  * The content is fully regenerated from the filesystem: a rule only emits its
- * line when the matching file or directory exists in the package. This keeps
- * every `.gitattributes` deterministic and consistent across packages.
+ * line when its target file or directory exists in the package. This keeps
+ * every `.gitattributes` and `.gitignore` deterministic and consistent across packages.
  *
  * Usage: php .github/sync-packages.php
  */
@@ -25,7 +25,7 @@ $rootDir = dirname(__DIR__);
  * Ordered rule table. Each entry is [pattern, type]; the line is emitted only
  * when the target exists. The array order is the canonical file order.
  */
-$rules = [
+$gitattributesRules = [
     ['/.git*', 'always'],
     ['/.symfony.bundle.yaml', 'file'],
     ['/.php-cs-fixer.dist.php', 'file'],
@@ -44,25 +44,66 @@ $rules = [
     ['/tests', 'dir'],
 ];
 
-$generate = static function (string $packageDir) use ($rules): string {
+/**
+ * Ordered rule table. Each entry is [pattern, type, target]; the line is emitted
+ * only when the target exists, since the ignored path itself is generated.
+ */
+$gitignoreRules = [
+    ['/assets/node_modules/', 'file', '/assets/package.json'],
+    ['/assets/.vitest/', 'file', '/assets/vitest.config.mjs'],
+    ['/config/reference.php', 'always', null],
+    ['/config/schema.json', 'always', null],
+    ['/vendor/', 'always', null],
+    ['/composer.lock', 'always', null],
+    ['/phpunit.xml', 'always', null],
+    ['/.phpunit.cache', 'always', null],
+    ['/.php-cs-fixer.cache', 'always', null],
+    ['/.twig-cs-fixer.cache', 'file', '/.twig-cs-fixer.dist.php'],
+    ['/var', 'always', null],
+];
+
+/**
+ * Lines appended to the `.gitignore` of a single package, keyed by its path.
+ */
+$gitignoreExtras = [
+    'src/StimulusBundle' => ['/tests/fixtures/var'],
+    'src/Turbo' => ['/drivers/'],
+];
+
+$exists = static fn (string $target, string $type): bool => match ($type) {
+    'always' => true,
+    'file' => is_file($target),
+    'dir' => is_dir($target),
+    'glob' => [] !== (glob($target, \GLOB_ONLYDIR) ?: []),
+};
+
+$generateGitattributes = static function (string $packageDir) use ($gitattributesRules, $exists): string {
     $lines = [];
 
-    foreach ($rules as [$pattern, $type]) {
-        $target = $packageDir.$pattern;
-        $exists = match ($type) {
-            'always' => true,
-            'file' => is_file($target),
-            'dir' => is_dir($target),
-            'glob' => [] !== (glob($target, \GLOB_ONLYDIR) ?: []),
-        };
-
-        if ($exists) {
+    foreach ($gitattributesRules as [$pattern, $type]) {
+        if ($exists($packageDir.$pattern, $type)) {
             $lines[] = $pattern.' export-ignore';
         }
     }
 
     foreach (glob($packageDir.'/*.png') ?: [] as $png) {
         $lines[] = '/'.basename($png).' export-ignore';
+    }
+
+    return implode("\n", $lines)."\n";
+};
+
+$generateGitignore = static function (string $packageDir, string $relativeDir) use ($gitignoreRules, $gitignoreExtras, $exists): string {
+    $lines = [];
+
+    foreach ($gitignoreRules as [$pattern, $type, $target]) {
+        if ($exists($packageDir.$target, $type)) {
+            $lines[] = $pattern;
+        }
+    }
+
+    foreach ($gitignoreExtras[$relativeDir] ?? [] as $pattern) {
+        $lines[] = $pattern;
     }
 
     return implode("\n", $lines)."\n";
@@ -79,24 +120,31 @@ $written = [];
 
 foreach ($finder as $composerFile) {
     $packageDir = $composerFile->getPath();
-    $file = $packageDir.'/.gitattributes';
+    $relativeDir = substr(realpath($packageDir), strlen($rootDir) + 1);
 
-    $expected = $generate($packageDir);
-    $current = is_file($file) ? file_get_contents($file) : '';
+    $files = [
+        '.gitattributes' => $generateGitattributes($packageDir),
+        '.gitignore' => $generateGitignore($packageDir, $relativeDir),
+    ];
 
-    if ($current === $expected) {
-        continue;
+    foreach ($files as $name => $expected) {
+        $file = $packageDir.'/'.$name;
+        $current = is_file($file) ? file_get_contents($file) : '';
+
+        if ($current === $expected) {
+            continue;
+        }
+
+        file_put_contents($file, $expected);
+        $written[] = $relativeDir.'/'.$name;
     }
-
-    file_put_contents($file, $expected);
-    $written[] = substr(realpath($packageDir), strlen($rootDir) + 1);
 }
 
 if ($written) {
-    echo "Updated .gitattributes for:\n";
+    echo "Updated:\n";
     foreach ($written as $relative) {
         echo "  {$relative}\n";
     }
 } else {
-    echo "All .gitattributes are already in sync.\n";
+    echo "All .gitattributes and .gitignore are already in sync.\n";
 }

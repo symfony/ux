@@ -5,4 +5,5 @@
 /composer.lock
 /phpunit.xml
 /.phpunit.cache
-.DS_Store
+/.php-cs-fixer.cache
+/var

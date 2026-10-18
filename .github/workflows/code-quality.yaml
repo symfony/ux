@@ -169,13 +169,13 @@ jobs:
               with:
                   working-directory: ${{ github.workspace }}
 
-            - name: Check all .gitattributes are in sync
+            - name: Check all .gitattributes and .gitignore are in sync
               if: always()
               run: |
                   php .github/sync-packages.php
 
                   if ! git diff --quiet; then
-                      echo "Some .gitattributes are out of sync, run 'php .github/sync-packages.php' and commit the result:";
+                      echo "Some .gitattributes or .gitignore are out of sync, run 'php .github/sync-packages.php' and commit the result:";
                       git --no-pager diff;
                       exit 1;
                   fi
