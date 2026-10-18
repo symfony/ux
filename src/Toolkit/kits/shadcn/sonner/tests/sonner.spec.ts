@@ -1,4 +1,4 @@
-import { describeRecipe, expect, test, testState } from '../../../../assets/test/browser/fixtures';
+import { describeRecipe, expect, isUnderPointer, test, testState } from '../../../../assets/test/browser/fixtures';
 
 describeRecipe('shadcn/sonner', () => {
     testState('shows a toast on click', {
@@ -205,6 +205,19 @@ describeRecipe('shadcn/sonner', () => {
         await page.getByRole('status').getByRole('link', { name: 'Undo' }).click();
 
         await expect(page).toHaveURL(/#$/);
+    });
+
+    test('lets clicks through its empty list under a CSP blocking inline styles', async ({ page, gotoExample }) => {
+        await page.route('**/shadcn/sonner/default*', async (route) => {
+            const response = await route.fetch();
+            await route.fulfill({
+                response,
+                headers: { ...response.headers(), 'content-security-policy': "style-src-attr 'none'" },
+            });
+        });
+        await gotoExample('shadcn/sonner/default');
+
+        await expect.poll(() => isUnderPointer(page.locator('[data-sonner-target="list"]'))).toBe(false);
     });
 
     test('hydrates server-rendered toasts', async ({ page, gotoExample }) => {
