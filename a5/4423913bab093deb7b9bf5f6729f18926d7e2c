@@ -1,0 +1,31 @@
+---------------------------------------------------------------------------
+
+by github-actions[bot] at 2026-10-15T18:00:20Z
+
+<h1>📊 Packages dist files size difference</h1>
+
+Thanks for the PR! Here is the difference in size of the packages dist files between the base branch and the PR.
+Please review the changes and make sure they are expected.
+
+<table>
+    <thead><tr><th>File</th><th>Before (Size / Gzip)</th><th>After (Size / Gzip)</th></tr></thead>
+    <tbody><tr><td colspan="3"><a href="https://github.com/feymo/ux/tree/feat/translator-default-locale/src/Translator/assets/dist"><b>Translator</b></a></td></tr><tr>
+                <td><a href="https://github.com/feymo/ux/blob/feat/translator-default-locale/src/Translator/assets/dist/translator_controller.d.ts"><code>translator_controller.d.ts</code></a></td>
+            <td>
+                    <code>1.87 kB</code>
+                    / <code>669 B</code>
+                </td><td>
+                    <code>1.91 kB</code><sup>+2% 📈</sup>
+                    / <code>678 B</code><sup>+1% 📈</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/feymo/ux/blob/feat/translator-default-locale/src/Translator/assets/dist/translator_controller.js"><code>translator_controller.js</code></a></td>
+            <td>
+                    <code>7.39 kB</code>
+                    / <code>2.29 kB</code>
+                </td><td>
+                    <code>7.54 kB</code><sup>+2% 📈</sup>
+                    / <code>2.33 kB</code><sup>+2% 📈</sup>
+                </td></tr></tbody>
+</table>
+
+<!-- Sticky Pull Request Comment -->
