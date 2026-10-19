@@ -1,4 +1,4 @@
-import { describeRecipe, expect, testState } from '../../../../assets/test/browser/fixtures';
+import { describeRecipe, expect, test, testState } from '../../../../assets/test/browser/fixtures';
 
 describeRecipe('shadcn/sidebar-07', () => {
     testState('opens the team switcher', {
@@ -46,5 +46,14 @@ describeRecipe('shadcn/sidebar-07', () => {
             await expect(page.locator('[data-slot="sidebar"]')).toHaveAttribute('data-collapsible', 'icon');
             await expect(page.getByText('Projects', { exact: true })).toBeHidden();
         },
+    });
+
+    test('sizes the logo of the team switcher like the other menu icons', async ({ page, gotoExample }) => {
+        await gotoExample('shadcn/sidebar-07/default');
+
+        const logo = page.getByRole('button', { name: 'Acme Inc' }).locator('svg').first();
+
+        await expect(logo).toHaveCSS('width', '16px');
+        await expect(logo).toHaveCSS('height', '16px');
     });
 });

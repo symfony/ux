@@ -6,6 +6,7 @@
 - [Shadcn] Fix the rich color toasts of `sonner` being see-through in dark mode
 - [Shadcn] Add `trace` recipe
 - [Shadcn] Add `code-block` recipe
+- [Shadcn] Add an `as` prop to `Sidebar:GroupLabel`, to render it as the button that toggles a collapsible group
 - [Shadcn] Add the `login-03` to `login-05`, `signup-01` to `signup-05` and `sidebar-01` to `sidebar-16` blocks
 - [Shadcn] Align the `login-01` and `login-02` blocks with the upstream Shadcn Nova reference
 - [Shadcn] Fix the content of `sidebar` not scrolling when it is taller than the sidebar, which left its last entries out of reach
