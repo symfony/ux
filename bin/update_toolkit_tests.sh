@@ -52,7 +52,8 @@ fi
 echo "Updating the rendering snapshots of ${scope:-every kit}..."
 # PHPUnit data sets are named "Kit <kit>, component <recipe>, example #<index>".
 find src/Toolkit/tests/Functional/__snapshots__ -name "ComponentsRenderingTest__* Kit ${kit:-*}, component ${recipe:-*}, example *" -delete
-phpunit_args=(tests/Functional/ComponentsRenderingTest.php)
+# Blocks have no rendering snapshot, so the filter of a block matches no test.
+phpunit_args=(tests/Functional/ComponentsRenderingTest.php --do-not-fail-on-empty-test-suite)
 if [[ -n "$kit" ]]; then
     phpunit_args+=(--filter "Kit $kit, component ${recipe:-[^,]+}, example")
 fi
