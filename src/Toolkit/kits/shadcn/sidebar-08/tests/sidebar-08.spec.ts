@@ -1,4 +1,4 @@
-import { describeRecipe, expect, isUnderPointer, testState } from '../../../../assets/test/browser/fixtures';
+import { describeRecipe, expect, isUnderPointer, test, testState } from '../../../../assets/test/browser/fixtures';
 
 describeRecipe('shadcn/sidebar-08', () => {
     testState('expands a submenu on a click on its toggle', {
@@ -50,5 +50,14 @@ describeRecipe('shadcn/sidebar-08', () => {
             await expect(trigger).toHaveAttribute('aria-expanded', 'true');
             await expect(page.getByRole('menuitem', { name: 'Log out' })).toBeInViewport();
         },
+    });
+
+    test('starts the page content where the sidebar ends', async ({ page, gotoExample }) => {
+        await gotoExample('shadcn/sidebar-08/default');
+
+        const sidebar = (await page.locator('[data-slot="sidebar-container"]').boundingBox())!;
+        const content = (await page.getByRole('main').boundingBox())!;
+
+        expect(content.x).toBe(sidebar.x + sidebar.width);
     });
 });
