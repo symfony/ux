@@ -1,0 +1,5 @@
+---------------------------------------------------------------------------
+
+by Enz000 at 2026-10-14T10:23:07Z
+
+"[Unit Tests / php (dev, 8.5) (pull_request)](https://github.com/symfony/ux/actions/runs/38548047055/job/115799203842?pr=4096)" fail also, here's the fix https://github.com/symfony/ux/pull/4095
