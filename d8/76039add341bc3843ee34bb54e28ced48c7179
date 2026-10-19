@@ -1,0 +1,45 @@
+---------------------------------------------------------------------------
+
+by github-actions[bot] at 2026-09-26T15:49:38Z
+
+<h1>📊 Packages dist files size difference</h1>
+
+Thanks for the PR! Here is the difference in size of the packages dist files between the base branch and the PR.
+Please review the changes and make sure they are expected.
+
+<table>
+    <thead><tr><th>File</th><th>Before (Size / Gzip)</th><th>After (Size / Gzip)</th></tr></thead>
+    <tbody><tr><td colspan="3"><a href="https://github.com/Pechynho/ux/tree/fix-queued-request-after-error/src/LiveComponent/assets/dist"><b>LiveComponent</b></a></td></tr><tr>
+                <td><a href="https://github.com/Pechynho/ux/blob/fix-queued-request-after-error/src/LiveComponent/assets/dist/live_controller.js"><code>live_controller.js</code></a></td>
+            <td>
+                    <code>90.54 kB</code>
+                    / <code>20.53 kB</code>
+                </td><td>
+                    <code>90.65 kB</code><sup>0%</sup>
+                    / <code>20.53 kB</code><sup>0%</sup>
+                </td></tr></tbody>
+</table>
+
+<!-- Sticky Pull Request Comment -->
+
+---------------------------------------------------------------------------
+
+by smnandre at 2026-09-27T10:57:18Z
+
+Good catch: the queued request was left waiting until the next interaction.
+
+Note that it resends the same dirty props, so a data-related 500 will show the error modal a second time, right ?
+
+---------------------------------------------------------------------------
+
+by Pechynho at 2026-09-30T16:52:50Z
+
+Yes, right. If the 500 is caused by the data, the queued request fails the same way, so `response:error` is called a second time and the error page is rendered again.
+
+A few details:
+
+- It is still one modal: `renderError()` reuses the existing `#live-component-error` element and only replaces its content, so modals do not stack.
+- It happens only when the user triggered something while the failing request was running, and it is at most one extra request. Nothing is queued again after it, so there is no loop.
+- Without this change, the same dirty props are sent again anyway with the next request, for example on the next click. The only difference is that the queued action the user asked for is now sent right away, instead of waiting for an unrelated interaction, and its promise resolves.
+
+If you prefer, the queued request could be dropped after an error instead of sent, but then its actions would be lost silently, which felt worse to me.
