@@ -158,17 +158,18 @@ export default class extends Controller {
     }
 
     // Anchor to the trigger's inline-start, but shift so the content never overflows the viewport.
+    // The edge is rounded to a whole pixel: text on a fractional pixel is not always antialiased the same way.
     #viewportInlineStart(navRect, itemRect, width, rtl) {
         const margin = 8;
         if (rtl) {
             const right = Math.max(width + margin, Math.min(itemRect.right, window.innerWidth - margin));
 
-            return navRect.right - right;
+            return navRect.right - Math.round(right);
         }
 
         const left = Math.max(margin, Math.min(itemRect.left, window.innerWidth - margin - width));
 
-        return left - navRect.left;
+        return Math.round(left) - navRect.left;
     }
 
     #setOpen(open, activeItem = null) {
