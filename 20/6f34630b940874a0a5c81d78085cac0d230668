@@ -1,0 +1,55 @@
+---------------------------------------------------------------------------
+
+by github-actions[bot] at 2026-08-18T14:48:11Z
+
+<h1>📊 Packages dist files size difference</h1>
+
+Thanks for the PR! Here is the difference in size of the packages dist files between the base branch and the PR.
+Please review the changes and make sure they are expected.
+
+<table>
+    <thead><tr><th>File</th><th>Before (Size / Gzip)</th><th>After (Size / Gzip)</th></tr></thead>
+    <tbody><tr><td colspan="3"><a href="https://github.com/Amoifr/ux/tree/fix-2934-disabled-checkbox-values/src/LiveComponent/assets/dist"><b>LiveComponent</b></a></td></tr><tr>
+                <td><a href="https://github.com/Amoifr/ux/blob/fix-2934-disabled-checkbox-values/src/LiveComponent/assets/dist/live_controller.js"><code>live_controller.js</code></a></td>
+            <td>
+                    <code>82.9 kB</code>
+                    / <code>18.43 kB</code>
+                </td><td>
+                    <code>82.99 kB</code><sup>0%</sup>
+                    / <code>18.45 kB</code><sup>0%</sup>
+                </td></tr></tbody>
+</table>
+
+<!-- Sticky Pull Request Comment -->
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-08-20T07:10:01Z
+
+Please target 3.x branch
+
+---------------------------------------------------------------------------
+
+by Amoifr at 2026-08-20T13:37:26Z
+
+Done! Rebased onto 3.x, dist rebuilt from the 3.x sources, PHP suite green (391 tests) and JS tests too, base switched.
+
+---------------------------------------------------------------------------
+
+by Amoifr at 2026-08-22T06:50:57Z
+
+Thanks for the careful review! Applied: return types dropped from the test methods (Fabbot agrees with you), dist rebuilt on top of `3.x` so it only carries the one-line change, and the guard is now a single check for radios and checkboxes.
+
+On the backend sync question, I think the scenario works as expected, because the guard never competes with the server: when the backend disables a previously checked checkbox and clears its data, the re-rendered HTML no longer carries `checked`, and idiomorph syncs the `checked` property during the morph, so the DOM shows unchecked and disabled before `SetValueOntoModelFieldsPlugin` runs. That plugin is the only place the guard actually kicks in, and it is exactly where the bug was: Symfony keeps the submitted data of a disabled field, so the server renders the disabled choice checked, while the value store (built from what a browser would submit, which never includes disabled controls) does not contain its value and would uncheck it. The two `setValueOnElement()` calls in `morphdom.ts` only run for elements the user modified or focused, which a disabled control cannot be. So the server-rendered state stays the source of truth for disabled controls in every path, which is the intent of the guard. Happy to add a test for your scenario if you want it pinned.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2026-08-22T21:52:17Z
+
+@Amoifr to be honest I'd be happy with one :)
+
+---------------------------------------------------------------------------
+
+by Amoifr at 2026-08-23T06:42:44Z
+
+Here it is, and writing it was instructive: to make the test meaningful the checkbox has to carry `data-model` itself, because `SetValueOntoModelFieldsPlugin` only syncs `[data-model]` elements and Symfony forms only put `data-model` on the `<form>`. So for the #2934 case the plugin never touches the inputs, and the two `setValueOnElement()` calls in `morphdom.ts` only run for modified or focused elements, which a disabled control cannot be. In other words the guard was dead code for this bug and only covered a contrived markup, so I removed it altogether: the PR is now PHP-only (dist identical to `3.x`), plus the test for your scenario (server disables and clears: unchecked + disabled, synced by idiomorph). Rebased on current `3.x` as well.
