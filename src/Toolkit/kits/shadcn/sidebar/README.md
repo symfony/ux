@@ -385,6 +385,7 @@ Use `collapsible="offcanvas"` to fully hide the sidebar when collapsed. The `Sid
 ## Accessibility
 
 - `Sidebar` renders an `<aside>` and `Sidebar:Inset` a `<main>`, so the page keeps two distinct landmarks. On mobile the sidebar is rendered inside a `Sheet`, which is modal and traps focus.
+- A `Sidebar` placed inside another `Sidebar` renders a plain `<div>`, so nested sidebars stay part of one landmark. When a page shows two sidebars next to each other, give each one its own `label`, because two landmarks with the same name cannot be told apart.
 - `Sidebar:Trigger` carries an `aria-label`, an `aria-expanded` reflecting the state and an `aria-controls` pointing at the sidebar it toggles.
 - The sidebar toggles with `Ctrl`/`Cmd` plus the key set by `keyboardShortcut`, which defaults to `b`. Mention the shortcut in the interface, since a keyboard shortcut nobody is told about helps nobody.
 - Mark the active entry with `active` on `Sidebar:MenuButton` or `Sidebar:MenuSubButton`, which renders `aria-current="page"`. The active styling alone is not announced.

@@ -1,4 +1,4 @@
-import { describeRecipe, expect, testState } from '../../../../assets/test/browser/fixtures';
+import { describeRecipe, expect, test, testState } from '../../../../assets/test/browser/fixtures';
 
 describeRecipe('shadcn/sidebar-10', () => {
     testState('opens the team switcher', {
@@ -45,5 +45,12 @@ describeRecipe('shadcn/sidebar-10', () => {
                 'offcanvas'
             );
         },
+    });
+
+    test('names the sidebar of the page actions apart from the main sidebar', async ({ page, gotoExample }) => {
+        await gotoExample('shadcn/sidebar-10/default');
+
+        await expect(page.getByRole('complementary', { name: 'Sidebar', exact: true })).toHaveCount(1);
+        await expect(page.getByRole('complementary', { name: 'Page actions' })).toBeVisible();
     });
 });

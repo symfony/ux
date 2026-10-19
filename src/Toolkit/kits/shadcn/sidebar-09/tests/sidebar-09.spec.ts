@@ -45,4 +45,10 @@ describeRecipe('shadcn/sidebar-09', () => {
             await expect(page.getByPlaceholder('Type to search...')).toBeHidden();
         },
     });
+
+    test('exposes the nested sidebars as part of a single landmark', async ({ page, gotoExample }) => {
+        await gotoExample('shadcn/sidebar-09/default');
+
+        await expect(page.getByRole('complementary')).toHaveCount(1);
+    });
 });
