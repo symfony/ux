@@ -1,0 +1,12 @@
+{%- set _messageScroller_pendingScroll = inject('messageScroller.pendingScroll', false) -%}
+<div
+    data-slot="message-scroller"
+    data-message-scroller-target="root"
+    {% if _messageScroller_pendingScroll %}data-pending-scroll{% endif %}
+    {{ attributes.defaults({
+        class: 'group/message-scroller relative flex size-full min-h-0 flex-col overflow-hidden'|tailwind_classes,
+    }) }}
+>
+    {##- A `MessageScroller:Viewport` and a `MessageScroller:Button`. -#}
+    {%- block content %}{% endblock -%}
+</div>

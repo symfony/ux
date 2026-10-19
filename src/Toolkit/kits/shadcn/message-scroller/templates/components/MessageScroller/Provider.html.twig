@@ -1,0 +1,28 @@
+{%- props
+    ## boolean Whether the viewport follows new content while it is at the end of the transcript.
+    autoScroll = false,
+    ## 'start'|'end'|'last-anchor' Where the transcript opens on the first render.
+    defaultScrollPosition = 'end',
+    ## int Distance in pixels from an edge that still counts as being at that edge.
+    scrollEdgeThreshold = 8,
+    ## int Pixels of the previous item kept visible above a newly anchored item.
+    scrollPreviousItemPeek = 64,
+    ## int Margin in pixels kept on the aligned edge when scrolling to an item.
+    scrollMargin = 0
+-%}
+{%- do provide('messageScroller.pendingScroll', defaultScrollPosition in ['end', 'last-anchor']) -%}
+<div
+    data-slot="message-scroller-provider"
+    data-message-scroller-auto-scroll-value="{{ autoScroll ? 'true' : 'false' }}"
+    data-message-scroller-default-scroll-position-value="{{ defaultScrollPosition }}"
+    data-message-scroller-scroll-edge-threshold-value="{{ scrollEdgeThreshold }}"
+    data-message-scroller-scroll-previous-item-peek-value="{{ scrollPreviousItemPeek }}"
+    data-message-scroller-scroll-margin-value="{{ scrollMargin }}"
+    {{ attributes.defaults({
+        class: 'group/message-scroller-provider contents'|tailwind_classes,
+        'data-controller': 'message-scroller',
+    }) }}
+>
+    {##- A `MessageScroller`, and any control that drives it, such as a button calling `scrollToMessage`. -#}
+    {%- block content %}{% endblock -%}
+</div>

@@ -1,0 +1,36 @@
+{%- props
+    ## 'start'|'end' The edge of the transcript the button scrolls to.
+    direction = 'end',
+    ## 'auto'|'smooth' How the viewport scrolls to that edge.
+    behavior = 'smooth',
+    ## 'default'|'secondary'|'destructive'|'outline'|'ghost'|'link' The button style variant.
+    variant = 'secondary',
+    ## 'default'|'xs'|'sm'|'lg'|'icon'|'icon-xs'|'icon-sm'|'icon-lg' The button size.
+    size = 'icon-sm'
+-%}
+<twig:Button
+    variant="{{ variant }}"
+    size="{{ size }}"
+    data-slot="message-scroller-button"
+    data-message-scroller-target="button"
+    data-message-scroller-behavior-param="{{ behavior }}"
+    data-direction="{{ direction }}"
+    data-active="false"
+    inert
+    tabindex="-1"
+    {{ ...attributes.defaults({
+        class: 'absolute inset-s-1/2 -translate-x-1/2 border-border bg-background text-foreground transition-[translate,scale,opacity] duration-200 hover:bg-muted hover:text-foreground data-[active=false]:pointer-events-none data-[active=false]:scale-95 data-[active=false]:opacity-0 data-[active=false]:duration-400 data-[active=false]:ease-[cubic-bezier(0.7,0,0.84,0)] data-[active=true]:translate-y-0 data-[active=true]:scale-100 data-[active=true]:opacity-100 data-[active=true]:ease-[cubic-bezier(0.23,1,0.32,1)] data-[direction=end]:bottom-4 data-[direction=end]:data-[active=false]:translate-y-full data-[direction=start]:top-4 data-[direction=start]:data-[active=false]:-translate-y-full rtl:translate-x-1/2 data-[direction=start]:[&_svg]:rotate-180'|tailwind_classes,
+        'data-action': ('click->message-scroller#' ~ ('start' == direction ? 'scrollToStart' : 'scrollToEnd'))|html_attr_type('sst'),
+    }) }}
+>
+    {%- set _messageScroller_buttonContent -%}
+        {##- The button content, an arrow and a visually hidden label by default. -#}
+        {{- block(outerBlocks.content) -}}
+    {%- endset -%}
+    {%- if _messageScroller_buttonContent|trim is not empty -%}
+        {{ _messageScroller_buttonContent }}
+    {%- else -%}
+        <twig:ux:icon name="lucide:arrow-down" />
+        <span class="sr-only">{{ 'Scroll to ' ~ direction }}</span>
+    {%- endif -%}
+</twig:Button>

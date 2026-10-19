@@ -2,6 +2,7 @@
 
 ## 3.7.0
 
+- [Shadcn] Add `message-scroller` recipe
 - [Shadcn] Fix the empty toast list of `sonner` catching clicks when a Content Security Policy blocks inline styles
 - [Shadcn] Fix the rich color toasts of `sonner` being see-through in dark mode
 - [Shadcn] Add `trace` recipe
