@@ -18,7 +18,7 @@
                         </twig:Sidebar:MenuButton>
                     </twig:DropdownMenu:Trigger>
                     {%- if item.items|default([]) is not empty %}
-                        <twig:DropdownMenu:Content class="top-0 w-full min-w-56 translate-y-0 rounded-lg">
+                        <twig:DropdownMenu:Content class="w-full min-w-56 rounded-lg">
                             {%- for subItem in item.items %}
                                 <twig:DropdownMenu:Item as="a" href="{{ subItem.url }}">
                                     {{- subItem.title -}}
