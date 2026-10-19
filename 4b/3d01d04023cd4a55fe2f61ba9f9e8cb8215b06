@@ -1,0 +1,26 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2026-10-19T13:37:55Z
+
+Thanks for the recipe. I rebased the branch on 3.x, squashed the two commits into one, and pushed a few changes during review.
+
+Two fixes, each with a test:
+
+1. Replacing a row in place (for example with a Turbo Stream `replace`) scrolled the transcript to its first turn. The anchors rendered on the first read were never recorded as handled. Now every rendered anchor is recorded, so only a row added or replaced later starts a new turn.
+
+2. Shift+Space and the other scroll keys pressed with a modifier did not release an anchored turn, because Stimulus key filters require the exact modifiers. The viewport now uses a single `keydown` action, and the controller checks the key against a list, as upstream does.
+
+Performance: `#items()` read the `spacer` target once per row, and a Stimulus target getter queries the whole controller element each time. On a 1,000-row transcript, a scroll event took about 52 ms. It now takes about 2 ms.
+
+Smaller changes:
+
+- One state commit per scroll event instead of two.
+- `aria-current` is only written when the current turn changes.
+- The "Opening Saved Threads" and "Reading Scroll State" examples use loops (same rendered HTML).
+- Spec helpers and retrying assertions.
+- `TestHelperTrait` in the PHP test.
+
+Two things are not blocking, for a follow-up if you want:
+
+- Rendering the spacer next to `MessageScroller:Content` instead of inside it would remove the code that keeps it last after a Turbo Stream.
+- Restoring `content-visibility: auto` on rows, with the screenshot flakiness fixed in the shared test fixtures instead.
