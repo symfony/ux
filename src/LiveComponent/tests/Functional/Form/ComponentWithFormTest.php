@@ -192,10 +192,13 @@ class ComponentWithFormTest extends KernelTestCase
             'choice_required_with_empty_preferred_choices' => 'ok',
             'choice_expanded' => '',
             'choice_multiple' => ['2'],
+            'choice_multiple_disabled' => [],
+            'choice_expanded_disabled' => '',
             'select_multiple' => ['2'],
             'entity' => (string) $id,
             'checkbox' => null,
             'checkbox_checked' => '1',
+            'checkbox_checked_disabled' => null,
             'file' => '',
             'hidden' => '',
             'complexType' => [
