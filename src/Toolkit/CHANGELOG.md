@@ -9,6 +9,7 @@
 - [Shadcn] Add the `login-03` to `login-05`, `signup-01` to `signup-05` and `sidebar-01` to `sidebar-16` blocks
 - [Shadcn] Align the `login-01` and `login-02` blocks with the upstream Shadcn Nova reference
 - [Shadcn] Fix the content of `sidebar` not scrolling when it is taller than the sidebar, which left its last entries out of reach
+- [Shadcn] Fix `dropdown-menu` ignoring `align` when it opens on the left or the right of its trigger, which always centered the menu
 
 ## 3.6.0
 

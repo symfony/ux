@@ -1,4 +1,4 @@
-import { describeRecipe, expect, testState } from '../../../../assets/test/browser/fixtures';
+import { describeRecipe, expect, test, testState } from '../../../../assets/test/browser/fixtures';
 
 describeRecipe('shadcn/sidebar-16', () => {
     testState('hides the sidebar off-canvas on a click on the site header trigger', {
@@ -42,5 +42,23 @@ describeRecipe('shadcn/sidebar-16', () => {
             await expect(trigger).toHaveAttribute('aria-expanded', 'true');
             await expect(page.getByRole('menuitem', { name: 'Log out' })).toBeInViewport();
         },
+    });
+
+    test('aligns the user menu with the bottom of its trigger', async ({ page, gotoExample }) => {
+        await gotoExample('shadcn/sidebar-16/default');
+        const trigger = page.getByRole('button', { name: /shadcn/ });
+
+        await trigger.click();
+
+        const menu = page.getByRole('menu');
+        await expect(menu).toBeVisible();
+        const triggerBox = (await trigger.boundingBox())!;
+        await expect
+            .poll(async () => {
+                const menuBox = (await menu.boundingBox())!;
+
+                return menuBox.y + menuBox.height;
+            })
+            .toBe(triggerBox.y + triggerBox.height);
     });
 });

@@ -123,6 +123,21 @@ describeRecipe('shadcn/sidebar', () => {
         await expect.poll(() => isUnderPointer(viewProject)).toBe(true);
     });
 
+    test('aligns the dropdown menu of a menu action with the top of its trigger', async ({ page, gotoExample }) => {
+        await gotoExample('shadcn/sidebar/default');
+        const trigger = page
+            .getByRole('complementary', { name: 'Sidebar' })
+            .getByRole('button', { name: 'More' })
+            .first();
+
+        await trigger.click();
+
+        const menu = page.getByRole('menu');
+        await expect(menu).toBeVisible();
+        const triggerTop = (await trigger.boundingBox())!.y;
+        await expect.poll(async () => (await menu.boundingBox())!.y).toBe(triggerTop);
+    });
+
     testState('hides the sidebar off-canvas on a click on the trigger', {
         example: 'off-canvas-collapsing',
         state: 'collapsed',

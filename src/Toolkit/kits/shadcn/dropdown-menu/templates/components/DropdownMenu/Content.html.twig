@@ -9,8 +9,8 @@
         side: {
             top: 'bottom-full mb-2',
             bottom: 'top-full mt-2',
-            left: 'right-full top-1/2 -translate-y-1/2 mr-2 origin-right',
-            right: 'left-full top-1/2 -translate-y-1/2 ml-2 origin-left',
+            left: 'right-full mr-2',
+            right: 'left-full ml-2',
         },
     },
     compound_variants: [
@@ -20,6 +20,12 @@
         {side: ['bottom'], align: ['start'], class: 'start-0 ltr:origin-top-left rtl:origin-top-right'},
         {side: ['bottom'], align: ['center'], class: 'start-1/2 -translate-x-1/2 rtl:translate-x-1/2 origin-top'},
         {side: ['bottom'], align: ['end'], class: 'end-0 ltr:origin-top-right rtl:origin-top-left'},
+        {side: ['left'], align: ['start'], class: 'top-0 origin-top-right'},
+        {side: ['left'], align: ['center'], class: 'top-1/2 -translate-y-1/2 origin-right'},
+        {side: ['left'], align: ['end'], class: 'bottom-0 origin-bottom-right'},
+        {side: ['right'], align: ['start'], class: 'top-0 origin-top-left'},
+        {side: ['right'], align: ['center'], class: 'top-1/2 -translate-y-1/2 origin-left'},
+        {side: ['right'], align: ['end'], class: 'bottom-0 origin-bottom-left'},
     ],
 ) -%}
 <div
