@@ -1,0 +1,41 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2026-10-16T10:16:16Z
+
+Shouldn't we do what https://github.com/symfony/ux/issues/4110 suggest instead?
+
+---------------------------------------------------------------------------
+
+by lyrixx at 2026-10-16T15:13:04Z
+
+It's different 🤔 even if the route is stateless, it won't pass my security?
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-10-16T15:24:42Z
+
+Oh, yeah you're right 😫
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-10-16T15:31:26Z
+
+Obviously, it's working for now, but I'm worried that in the future, when we add a new route to one of our packages that starts with `/ux_`, we might forget that we recommended users exclude `/ux_/*` from the firewall... 🤔
+
+I think we should be more specific about `/_ux/inspector.js`, and/or simply add a recipe for UX Inspector to automatically include `/_ux/inspector.js` in the `security.firewalls.dev.pattern` array (https://symfony.com/doc/current/security.html#the-firewall)
+
+WDYT?
+
+---------------------------------------------------------------------------
+
+by lyrixx at 2026-10-16T15:33:22Z
+
+A recipes is good, but i think it won't work because it'll conflict with the security recipes ?
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-10-19T06:55:22Z
+
+> but i think it won't work because it'll conflict with the security recipes ?
+
+I was thinking about using `add-lines` and `requires` in the Inspector recipe, but the [latest `security.yaml`](https://github.com/symfony/recipes/blob/main/symfony/security-bundle/8.2/config/packages/security.yaml#L14) does not use an array for `security.firewalls.dev.pattern`, sooo yeah that's not possible ATM.
