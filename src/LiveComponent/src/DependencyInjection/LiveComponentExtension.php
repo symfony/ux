@@ -160,6 +160,7 @@ final class LiveComponentExtension extends Extension implements PrependExtension
             ->setArguments([
                 new Reference('ux.twig_component.live_component_stack'),
             ])
+            ->addTag('container.service_subscriber', ['key' => ComponentFactory::class, 'id' => 'ux.twig_component.component_factory'])
             ->addTag('container.service_subscriber', ['key' => DeterministicTwigIdCalculator::class, 'id' => 'ux.live_component.deterministic_id_calculator'])
             ->addTag('container.service_subscriber', ['key' => ChildComponentPartialRenderer::class, 'id' => 'ux.live_component.child_component_partial_renderer'])
             ->addTag('kernel.event_subscriber');
