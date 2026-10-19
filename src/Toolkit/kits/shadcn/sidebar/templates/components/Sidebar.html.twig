@@ -9,24 +9,26 @@
     label = 'Sidebar'
 -%}
 {%- set _sidebar_initial_open = inject('sidebar.defaultOpen', true) -%}
+{%- set _sidebar_nested = inject('sidebar.nested', false) -%}
+{%- do provide('sidebar.nested', true) -%}
 {%- set _sidebar_content -%}
     {## Typically a `Sidebar:Header`, `Sidebar:Content`, `Sidebar:Footer` and an optional `Sidebar:Rail`. -#}
     {% block content %}{% endblock %}
 {%- endset -%}
 {%- if 'none' == collapsible -%}
-    <aside
+    <{{ _sidebar_nested ? 'div' : 'aside' }}
         data-slot="sidebar"
         data-side="{{ side }}"
         data-variant="{{ variant }}"
         data-collapsible=""
         data-collapsible-mode="{{ collapsible }}"
         {{ attributes.defaults({
-            'aria-label': label,
+            'aria-label': _sidebar_nested ? null : label,
             class: 'flex h-full w-(--sidebar-width) flex-col bg-sidebar text-sidebar-foreground'|tailwind_classes,
         }) }}
     >
         {{ _sidebar_content|raw }}
-    </aside>
+    </{{ _sidebar_nested ? 'div' : 'aside' }}>
 {%- else -%}
     {%- set _sidebar_id = inject('sidebar.id', 'sidebar') -%}
     <twig:Sheet id="{{ _sidebar_id }}-mobile" :side="side" class="md:hidden">

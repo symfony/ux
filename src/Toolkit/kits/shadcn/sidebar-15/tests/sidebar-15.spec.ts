@@ -1,4 +1,4 @@
-import { describeRecipe, expect, testState } from '../../../../assets/test/browser/fixtures';
+import { describeRecipe, expect, test, testState } from '../../../../assets/test/browser/fixtures';
 
 describeRecipe('shadcn/sidebar-15', () => {
     testState('opens the team switcher', {
@@ -44,5 +44,13 @@ describeRecipe('shadcn/sidebar-15', () => {
             await expect(sidebars.first()).toHaveAttribute('data-collapsible', 'offcanvas');
             await expect(sidebars.last()).toHaveAttribute('data-collapsible', '');
         },
+    });
+
+    test('names the right sidebar apart from the left one', async ({ page, gotoExample }) => {
+        await page.setViewportSize({ width: 1280, height: 800 });
+        await gotoExample('shadcn/sidebar-15/default');
+
+        await expect(page.getByRole('complementary', { name: 'Sidebar', exact: true })).toHaveCount(1);
+        await expect(page.getByRole('complementary', { name: 'Calendars' })).toBeVisible();
     });
 });
