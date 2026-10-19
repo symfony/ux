@@ -11,7 +11,7 @@
 
 namespace Symfony\UX\Turbo\Request;
 
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\UX\Turbo\TurboBundle;
 
 /**
@@ -21,8 +21,8 @@ use Symfony\UX\Turbo\TurboBundle;
  */
 final class RequestListener
 {
-    public function __invoke(): void
+    public function __invoke(RequestEvent $event): void
     {
-        new Request()->setFormat(TurboBundle::STREAM_FORMAT, TurboBundle::STREAM_MEDIA_TYPE);
+        $event->getRequest()->setFormat(TurboBundle::STREAM_FORMAT, TurboBundle::STREAM_MEDIA_TYPE);
     }
 }
