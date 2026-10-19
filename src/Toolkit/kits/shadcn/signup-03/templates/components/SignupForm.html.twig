@@ -1,0 +1,63 @@
+<div
+    {{ attributes.defaults({
+        class: 'flex flex-col gap-6'|tailwind_classes,
+    }) }}
+>
+    {##- Optional content to override the entire form. -#}
+    {%- block content -%}
+        <twig:Card>
+            <twig:Card:Header class="text-center">
+                <twig:Card:Title class="text-xl">Create your account</twig:Card:Title>
+                <twig:Card:Description>
+                    Enter your email below to create your account
+                </twig:Card:Description>
+            </twig:Card:Header>
+            <twig:Card:Content>
+                <form>
+                    <twig:Field:Group>
+                        <twig:Field>
+                            <twig:Field:Label for="name">Full Name</twig:Field:Label>
+                            <twig:Input id="name" type="text" placeholder="John Doe" required />
+                        </twig:Field>
+                        <twig:Field>
+                            <twig:Field:Label for="email">Email</twig:Field:Label>
+                            <twig:Input
+                                id="email"
+                                type="email"
+                                placeholder="m@example.com"
+                                required
+                            />
+                        </twig:Field>
+                        <twig:Field>
+                            <twig:Field class="grid grid-cols-2 gap-4">
+                                <twig:Field>
+                                    <twig:Field:Label for="password">Password</twig:Field:Label>
+                                    <twig:Input id="password" type="password" required />
+                                </twig:Field>
+                                <twig:Field>
+                                    <twig:Field:Label for="confirm-password">
+                                        Confirm Password
+                                    </twig:Field:Label>
+                                    <twig:Input id="confirm-password" type="password" required />
+                                </twig:Field>
+                            </twig:Field>
+                            <twig:Field:Description>
+                                Must be at least 8 characters long.
+                            </twig:Field:Description>
+                        </twig:Field>
+                        <twig:Field>
+                            <twig:Button type="submit">Create Account</twig:Button>
+                            <twig:Field:Description class="text-center">
+                                Already have an account? <a href="#">Sign in</a>
+                            </twig:Field:Description>
+                        </twig:Field>
+                    </twig:Field:Group>
+                </form>
+            </twig:Card:Content>
+        </twig:Card>
+        <twig:Field:Description class="px-6 text-center">
+            By clicking continue, you agree to our <a href="#">Terms of Service</a>
+            and <a href="#">Privacy Policy</a>.
+        </twig:Field:Description>
+    {%- endblock -%}
+</div>

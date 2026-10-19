@@ -1,0 +1,33 @@
+{%- props
+    ## array<array{title:string,url:string,isActive?:bool,items?:array<array{title:string,url:string}>}> The menu entries, each opening its sub entries in a dropdown.
+    items
+-%}
+<twig:Sidebar:Group>
+    <twig:Sidebar:Menu>
+        {%- for item in items %}
+            {%- set dropdown_id = 'nav-main-' ~ loop.index %}
+            <twig:Sidebar:MenuItem>
+                <twig:DropdownMenu id="{{ dropdown_id }}" side="right" align="start" class="block w-full">
+                    <twig:DropdownMenu:Trigger>
+                        <twig:Sidebar:MenuButton
+                            {{ ...dropdown_menu_trigger_attrs }}
+                            class="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+                        >
+                            {{ item.title }}
+                            <twig:ux:icon name="lucide:more-horizontal" class="ms-auto" />
+                        </twig:Sidebar:MenuButton>
+                    </twig:DropdownMenu:Trigger>
+                    {%- if item.items|default([]) is not empty %}
+                        <twig:DropdownMenu:Content class="top-0 w-full min-w-56 translate-y-0 rounded-lg">
+                            {%- for subItem in item.items %}
+                                <twig:DropdownMenu:Item as="a" href="{{ subItem.url }}">
+                                    {{- subItem.title -}}
+                                </twig:DropdownMenu:Item>
+                            {%- endfor %}
+                        </twig:DropdownMenu:Content>
+                    {%- endif %}
+                </twig:DropdownMenu>
+            </twig:Sidebar:MenuItem>
+        {%- endfor %}
+    </twig:Sidebar:Menu>
+</twig:Sidebar:Group>

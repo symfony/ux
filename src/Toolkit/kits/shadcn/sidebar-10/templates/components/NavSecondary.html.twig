@@ -1,0 +1,21 @@
+{%- props
+    ## array<array{title:string,url:string,icon:string,badge?:string}> The menu entries.
+    items
+-%}
+<twig:Sidebar:Group {{ ...attributes }}>
+    <twig:Sidebar:GroupContent>
+        <twig:Sidebar:Menu>
+            {%- for item in items %}
+                <twig:Sidebar:MenuItem>
+                    <twig:Sidebar:MenuButton as="a" href="{{ item.url }}">
+                        <twig:ux:icon name="{{ item.icon }}" />
+                        <span>{{ item.title }}</span>
+                    </twig:Sidebar:MenuButton>
+                    {%- if item.badge ?? false %}
+                        <twig:Sidebar:MenuBadge>{{ item.badge }}</twig:Sidebar:MenuBadge>
+                    {%- endif %}
+                </twig:Sidebar:MenuItem>
+            {%- endfor %}
+        </twig:Sidebar:Menu>
+    </twig:Sidebar:GroupContent>
+</twig:Sidebar:Group>

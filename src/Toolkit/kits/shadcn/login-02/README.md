@@ -8,7 +8,7 @@ A two-column login page with a cover image.
         <div class="flex justify-center gap-2 md:justify-start">
             <a href="#" class="flex items-center gap-2 font-medium">
                 <div class="flex size-6 items-center justify-center rounded-md bg-primary text-primary-foreground">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2h18"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/><path d="M3 16h18"/></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4"><path d="M7 2h10"/><path d="M5 6h14"/><rect width="18" height="12" x="3" y="10" rx="2"/></svg>
                 </div>
                 Acme Inc.
             </a>

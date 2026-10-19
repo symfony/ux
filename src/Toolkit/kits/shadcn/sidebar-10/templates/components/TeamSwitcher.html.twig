@@ -1,0 +1,41 @@
+{%- props
+    ## array<array{name:string,logo:string,plan:string}> The teams listed in the menu, the first one being the active team.
+    teams
+-%}
+{%- set activeTeam = teams|first -%}
+<twig:Sidebar:Menu>
+    <twig:Sidebar:MenuItem>
+        <twig:DropdownMenu id="team-switcher" side="bottom" align="start">
+            <twig:DropdownMenu:Trigger>
+                <twig:Sidebar:MenuButton {{ ...dropdown_menu_trigger_attrs }} class="w-fit px-1.5">
+                    <div class="flex aspect-square size-5 items-center justify-center rounded-md bg-sidebar-primary text-sidebar-primary-foreground">
+                        <twig:ux:icon name="{{ activeTeam.logo }}" class="size-4" />
+                    </div>
+                    <span class="truncate font-medium">{{ activeTeam.name }}</span>
+                    <twig:ux:icon name="lucide:chevron-down" class="opacity-50" />
+                </twig:Sidebar:MenuButton>
+            </twig:DropdownMenu:Trigger>
+            <twig:DropdownMenu:Content class="w-64 rounded-lg">
+                <twig:DropdownMenu:Label class="text-xs text-muted-foreground">
+                    Teams
+                </twig:DropdownMenu:Label>
+                {%- for index, team in teams %}
+                    <twig:DropdownMenu:Item class="gap-2 p-2">
+                        <div class="flex size-6 items-center justify-center rounded-xs border">
+                            <twig:ux:icon name="{{ team.logo }}" />
+                        </div>
+                        {{ team.name }}
+                        <twig:DropdownMenu:Shortcut>⌘{{ index + 1 }}</twig:DropdownMenu:Shortcut>
+                    </twig:DropdownMenu:Item>
+                {%- endfor %}
+                <twig:DropdownMenu:Separator />
+                <twig:DropdownMenu:Item class="gap-2 p-2">
+                    <div class="flex size-6 items-center justify-center rounded-md border bg-background">
+                        <twig:ux:icon name="lucide:plus" class="size-4" />
+                    </div>
+                    <div class="font-medium text-muted-foreground">Add team</div>
+                </twig:DropdownMenu:Item>
+            </twig:DropdownMenu:Content>
+        </twig:DropdownMenu>
+    </twig:Sidebar:MenuItem>
+</twig:Sidebar:Menu>

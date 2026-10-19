@@ -1,0 +1,65 @@
+{%- set data = [
+    [
+        {label: 'Customize Page', icon: 'lucide:settings-2'},
+        {label: 'Turn into wiki', icon: 'lucide:file-text'},
+    ],
+    [
+        {label: 'Copy Link', icon: 'lucide:link'},
+        {label: 'Duplicate', icon: 'lucide:copy'},
+        {label: 'Move to', icon: 'lucide:corner-up-right'},
+        {label: 'Move to Trash', icon: 'lucide:trash-2'},
+    ],
+    [
+        {label: 'Undo', icon: 'lucide:corner-up-left'},
+        {label: 'View analytics', icon: 'lucide:chart-line'},
+        {label: 'Version History', icon: 'lucide:gallery-vertical-end'},
+        {label: 'Show delete pages', icon: 'lucide:trash'},
+        {label: 'Notifications', icon: 'lucide:bell'},
+    ],
+    [
+        {label: 'Import', icon: 'lucide:arrow-up'},
+        {label: 'Export', icon: 'lucide:arrow-down'},
+    ],
+] -%}
+<div class="flex items-center gap-2 text-sm">
+    <div class="hidden font-medium text-muted-foreground md:inline-block">
+        Edit Oct 08
+    </div>
+    <twig:Button variant="ghost" size="icon" class="h-7 w-7">
+        <twig:ux:icon name="lucide:star" />
+    </twig:Button>
+    <twig:Popover open>
+        <twig:Popover:Trigger>
+            <twig:Button
+                {{ ...popover_trigger_attrs }}
+                variant="ghost"
+                size="icon"
+                class="h-7 w-7 data-[state=open]:bg-accent"
+            >
+                <twig:ux:icon name="lucide:more-horizontal" />
+            </twig:Button>
+        </twig:Popover:Trigger>
+        <twig:Popover:Content align="end" class="w-56 overflow-hidden rounded-lg p-0">
+            <twig:Sidebar collapsible="none" class="w-auto bg-transparent">
+                <twig:Sidebar:Content>
+                    {%- for group in data %}
+                        <twig:Sidebar:Group class="border-b last:border-none">
+                            <twig:Sidebar:GroupContent class="gap-0">
+                                <twig:Sidebar:Menu>
+                                    {%- for item in group %}
+                                        <twig:Sidebar:MenuItem>
+                                            <twig:Sidebar:MenuButton>
+                                                <twig:ux:icon name="{{ item.icon }}" />
+                                                <span>{{ item.label }}</span>
+                                            </twig:Sidebar:MenuButton>
+                                        </twig:Sidebar:MenuItem>
+                                    {%- endfor %}
+                                </twig:Sidebar:Menu>
+                            </twig:Sidebar:GroupContent>
+                        </twig:Sidebar:Group>
+                    {%- endfor %}
+                </twig:Sidebar:Content>
+            </twig:Sidebar>
+        </twig:Popover:Content>
+    </twig:Popover>
+</div>

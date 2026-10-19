@@ -3,12 +3,11 @@
     "type": "block",
     "version-added": "3.5",
     "name": "LoginForm",
-    "description": "A simple login form centered in a card.",
     "copy-files": {
         "templates/": "templates/"
     },
     "dependencies": {
-        "recipe": ["button", "card", "input", "label"],
+        "recipe": ["button", "card", "field", "input"],
         "composer": [
             "twig/html-extra:^3.24.0",
             "symfony/ux-twig-component:^3.5",

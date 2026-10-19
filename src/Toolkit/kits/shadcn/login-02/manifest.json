@@ -3,7 +3,6 @@
     "type": "block",
     "version-added": "3.5",
     "name": "LoginForm",
-    "description": "A two-column login page with a cover image.",
     "copy-files": {
         "templates/": "templates/"
     },

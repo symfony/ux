@@ -1,0 +1,38 @@
+{%- props
+    ## array<string> The versions listed in the menu.
+    versions,
+    ## string The version currently selected.
+    defaultVersion
+-%}
+<twig:Sidebar:Menu>
+    <twig:Sidebar:MenuItem>
+        <twig:DropdownMenu id="version-switcher" class="block w-full">
+            <twig:DropdownMenu:Trigger>
+                <twig:Sidebar:MenuButton
+                    {{ ...dropdown_menu_trigger_attrs }}
+                    size="lg"
+                    class="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+                >
+                    <div class="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
+                        <twig:ux:icon name="lucide:gallery-vertical-end" class="size-4" />
+                    </div>
+                    <div class="flex flex-col gap-0.5 leading-none">
+                        <span class="font-medium">Documentation</span>
+                        <span>v{{ defaultVersion }}</span>
+                    </div>
+                    <twig:ux:icon name="lucide:chevrons-up-down" class="ms-auto" />
+                </twig:Sidebar:MenuButton>
+            </twig:DropdownMenu:Trigger>
+            <twig:DropdownMenu:Content class="w-full">
+                {%- for version in versions %}
+                    <twig:DropdownMenu:Item>
+                        v{{ version }}
+                        {%- if version == defaultVersion %}
+                            <twig:ux:icon name="lucide:check" class="ms-auto" />
+                        {%- endif %}
+                    </twig:DropdownMenu:Item>
+                {%- endfor %}
+            </twig:DropdownMenu:Content>
+        </twig:DropdownMenu>
+    </twig:Sidebar:MenuItem>
+</twig:Sidebar:Menu>

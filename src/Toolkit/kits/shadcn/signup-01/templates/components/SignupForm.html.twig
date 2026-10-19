@@ -1,0 +1,59 @@
+{##- Optional content to override the entire form. -#}
+{%- block content -%}
+    <twig:Card {{ ...attributes }}>
+        <twig:Card:Header>
+            <twig:Card:Title>Create an account</twig:Card:Title>
+            <twig:Card:Description>
+                Enter your information below to create your account
+            </twig:Card:Description>
+        </twig:Card:Header>
+        <twig:Card:Content>
+            <form>
+                <twig:Field:Group>
+                    <twig:Field>
+                        <twig:Field:Label for="name">Full Name</twig:Field:Label>
+                        <twig:Input id="name" type="text" placeholder="John Doe" required />
+                    </twig:Field>
+                    <twig:Field>
+                        <twig:Field:Label for="email">Email</twig:Field:Label>
+                        <twig:Input
+                            id="email"
+                            type="email"
+                            placeholder="m@example.com"
+                            required
+                        />
+                        <twig:Field:Description>
+                            We'll use this to contact you. We will not share your email
+                            with anyone else.
+                        </twig:Field:Description>
+                    </twig:Field>
+                    <twig:Field>
+                        <twig:Field:Label for="password">Password</twig:Field:Label>
+                        <twig:Input id="password" type="password" required />
+                        <twig:Field:Description>
+                            Must be at least 8 characters long.
+                        </twig:Field:Description>
+                    </twig:Field>
+                    <twig:Field>
+                        <twig:Field:Label for="confirm-password">
+                            Confirm Password
+                        </twig:Field:Label>
+                        <twig:Input id="confirm-password" type="password" required />
+                        <twig:Field:Description>Please confirm your password.</twig:Field:Description>
+                    </twig:Field>
+                    <twig:Field:Group>
+                        <twig:Field>
+                            <twig:Button type="submit">Create Account</twig:Button>
+                            <twig:Button variant="outline" type="button">
+                                Sign up with Google
+                            </twig:Button>
+                            <twig:Field:Description class="px-6 text-center">
+                                Already have an account? <a href="#">Sign in</a>
+                            </twig:Field:Description>
+                        </twig:Field>
+                    </twig:Field:Group>
+                </twig:Field:Group>
+            </form>
+        </twig:Card:Content>
+    </twig:Card>
+{%- endblock -%}

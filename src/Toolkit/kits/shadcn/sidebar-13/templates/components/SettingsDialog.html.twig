@@ -1,0 +1,69 @@
+{%- set data = {
+    nav: [
+        {name: 'Notifications', icon: 'lucide:bell'},
+        {name: 'Navigation', icon: 'lucide:menu'},
+        {name: 'Home', icon: 'lucide:house'},
+        {name: 'Appearance', icon: 'lucide:paintbrush'},
+        {name: 'Messages & media', icon: 'lucide:message-circle'},
+        {name: 'Language & region', icon: 'lucide:globe'},
+        {name: 'Accessibility', icon: 'lucide:keyboard'},
+        {name: 'Mark as read', icon: 'lucide:check'},
+        {name: 'Audio & video', icon: 'lucide:video'},
+        {name: 'Connected accounts', icon: 'lucide:link'},
+        {name: 'Privacy & visibility', icon: 'lucide:lock'},
+        {name: 'Advanced', icon: 'lucide:settings'},
+    ],
+} -%}
+<twig:Dialog id="settings">
+    <twig:Dialog:Trigger>
+        <twig:Button {{ ...dialog_trigger_attrs }} size="sm">Open Dialog</twig:Button>
+    </twig:Dialog:Trigger>
+    <twig:Dialog:Content class="overflow-hidden p-0 md:max-h-[500px] md:max-w-[700px] lg:max-w-[800px]">
+        <twig:Dialog:Title class="sr-only">Settings</twig:Dialog:Title>
+        <twig:Dialog:Description class="sr-only">
+            Customize your settings here.
+        </twig:Dialog:Description>
+        <twig:Sidebar:Provider class="items-start">
+            <twig:Sidebar collapsible="none" class="hidden md:flex">
+                <twig:Sidebar:Content>
+                    <twig:Sidebar:Group>
+                        <twig:Sidebar:GroupContent>
+                            <twig:Sidebar:Menu>
+                                {%- for item in data.nav %}
+                                    <twig:Sidebar:MenuItem>
+                                        <twig:Sidebar:MenuButton as="a" href="#" :active="item.name == 'Messages & media'">
+                                            <twig:ux:icon name="{{ item.icon }}" />
+                                            <span>{{ item.name }}</span>
+                                        </twig:Sidebar:MenuButton>
+                                    </twig:Sidebar:MenuItem>
+                                {%- endfor %}
+                            </twig:Sidebar:Menu>
+                        </twig:Sidebar:GroupContent>
+                    </twig:Sidebar:Group>
+                </twig:Sidebar:Content>
+            </twig:Sidebar>
+            <main class="flex h-[480px] flex-1 flex-col overflow-hidden">
+                <header class="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
+                    <div class="flex items-center gap-2 px-4">
+                        <twig:Breadcrumb>
+                            <twig:Breadcrumb:List>
+                                <twig:Breadcrumb:Item class="hidden md:block">
+                                    <twig:Breadcrumb:Link href="#">Settings</twig:Breadcrumb:Link>
+                                </twig:Breadcrumb:Item>
+                                <twig:Breadcrumb:Separator class="hidden md:block" />
+                                <twig:Breadcrumb:Item>
+                                    <twig:Breadcrumb:Page>Messages &amp; media</twig:Breadcrumb:Page>
+                                </twig:Breadcrumb:Item>
+                            </twig:Breadcrumb:List>
+                        </twig:Breadcrumb>
+                    </div>
+                </header>
+                <div class="flex flex-1 flex-col gap-4 overflow-y-auto p-4 pt-0">
+                    {%- for i in 1..10 %}
+                        <div class="aspect-video max-w-3xl rounded-xl bg-muted/50"></div>
+                    {%- endfor %}
+                </div>
+            </main>
+        </twig:Sidebar:Provider>
+    </twig:Dialog:Content>
+</twig:Dialog>

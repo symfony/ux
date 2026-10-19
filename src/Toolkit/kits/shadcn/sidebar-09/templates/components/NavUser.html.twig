@@ -1,0 +1,68 @@
+{%- props
+    ## array{name:string,email:string,avatar:string} The signed-in user.
+    user
+-%}
+<twig:Sidebar:Menu>
+    <twig:Sidebar:MenuItem>
+        <twig:DropdownMenu id="nav-user" side="right" align="end" class="block w-full">
+            <twig:DropdownMenu:Trigger>
+                <twig:Sidebar:MenuButton
+                    {{ ...dropdown_menu_trigger_attrs }}
+                    size="lg"
+                    class="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground md:h-8 md:p-0"
+                >
+                    <twig:Avatar class="h-8 w-8 rounded-lg">
+                        <twig:Avatar:Image src="{{ user.avatar }}" alt="{{ user.name }}" />
+                        <twig:Avatar:Fallback class="rounded-lg">CN</twig:Avatar:Fallback>
+                    </twig:Avatar>
+                    <div class="grid flex-1 text-start text-sm leading-tight">
+                        <span class="truncate font-medium">{{ user.name }}</span>
+                        <span class="truncate text-xs">{{ user.email }}</span>
+                    </div>
+                    <twig:ux:icon name="lucide:chevrons-up-down" class="ms-auto size-4" />
+                </twig:Sidebar:MenuButton>
+            </twig:DropdownMenu:Trigger>
+            <twig:DropdownMenu:Content class="w-full min-w-56 rounded-lg top-auto bottom-0 translate-y-0">
+                <twig:DropdownMenu:Label class="p-0 font-normal">
+                    <div class="flex items-center gap-2 px-1 py-1.5 text-start text-sm">
+                        <twig:Avatar class="h-8 w-8 rounded-lg">
+                            <twig:Avatar:Image src="{{ user.avatar }}" alt="{{ user.name }}" />
+                            <twig:Avatar:Fallback class="rounded-lg">CN</twig:Avatar:Fallback>
+                        </twig:Avatar>
+                        <div class="grid flex-1 text-start text-sm leading-tight">
+                            <span class="truncate font-medium">{{ user.name }}</span>
+                            <span class="truncate text-xs">{{ user.email }}</span>
+                        </div>
+                    </div>
+                </twig:DropdownMenu:Label>
+                <twig:DropdownMenu:Separator />
+                <twig:DropdownMenu:Group>
+                    <twig:DropdownMenu:Item>
+                        <twig:ux:icon name="lucide:sparkles" />
+                        Upgrade to Pro
+                    </twig:DropdownMenu:Item>
+                </twig:DropdownMenu:Group>
+                <twig:DropdownMenu:Separator />
+                <twig:DropdownMenu:Group>
+                    <twig:DropdownMenu:Item>
+                        <twig:ux:icon name="lucide:badge-check" />
+                        Account
+                    </twig:DropdownMenu:Item>
+                    <twig:DropdownMenu:Item>
+                        <twig:ux:icon name="lucide:credit-card" />
+                        Billing
+                    </twig:DropdownMenu:Item>
+                    <twig:DropdownMenu:Item>
+                        <twig:ux:icon name="lucide:bell" />
+                        Notifications
+                    </twig:DropdownMenu:Item>
+                </twig:DropdownMenu:Group>
+                <twig:DropdownMenu:Separator />
+                <twig:DropdownMenu:Item>
+                    <twig:ux:icon name="lucide:log-out" />
+                    Log out
+                </twig:DropdownMenu:Item>
+            </twig:DropdownMenu:Content>
+        </twig:DropdownMenu>
+    </twig:Sidebar:MenuItem>
+</twig:Sidebar:Menu>

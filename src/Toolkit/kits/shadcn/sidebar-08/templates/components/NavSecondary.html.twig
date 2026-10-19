@@ -1,0 +1,18 @@
+{%- props
+    ## array<mixed> The menu entries, each with a `title`, a `url` and an `icon`.
+    items
+-%}
+<twig:Sidebar:Group {{ ...attributes }}>
+    <twig:Sidebar:GroupContent>
+        <twig:Sidebar:Menu>
+            {%- for item in items %}
+                <twig:Sidebar:MenuItem>
+                    <twig:Sidebar:MenuButton as="a" href="{{ item.url }}" size="sm">
+                        <twig:ux:icon name="{{ item.icon }}" />
+                        <span>{{ item.title }}</span>
+                    </twig:Sidebar:MenuButton>
+                </twig:Sidebar:MenuItem>
+            {%- endfor %}
+        </twig:Sidebar:Menu>
+    </twig:Sidebar:GroupContent>
+</twig:Sidebar:Group>

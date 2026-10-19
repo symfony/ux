@@ -1,0 +1,38 @@
+{%- props
+    ## array<mixed> The menu entries, each with a `title`, a `url`, an `icon`, an optional `isActive` and optional sub `items`.
+    items
+-%}
+<twig:Sidebar:Group>
+    <twig:Sidebar:GroupLabel>Platform</twig:Sidebar:GroupLabel>
+    <twig:Sidebar:Menu>
+        {%- for item in items %}
+            <twig:Sidebar:MenuItem>
+                <twig:Collapsible :open="item.isActive ?? false">
+                    <twig:Sidebar:MenuButton as="a" href="{{ item.url }}" tooltip="{{ item.title }}">
+                        <twig:ux:icon name="{{ item.icon }}" />
+                        <span>{{ item.title }}</span>
+                    </twig:Sidebar:MenuButton>
+                    {%- if item.items|default([]) is not empty %}
+                        <twig:Collapsible:Trigger>
+                            <twig:Sidebar:MenuAction {{ ...collapsible_trigger_attrs }} class="data-[state=open]:rotate-90 rtl:rotate-180">
+                                <twig:ux:icon name="lucide:chevron-right" />
+                                <span class="sr-only">Toggle</span>
+                            </twig:Sidebar:MenuAction>
+                        </twig:Collapsible:Trigger>
+                        <twig:Collapsible:Content>
+                            <twig:Sidebar:MenuSub>
+                                {%- for subItem in item.items %}
+                                    <twig:Sidebar:MenuSubItem>
+                                        <twig:Sidebar:MenuSubButton href="{{ subItem.url }}">
+                                            <span>{{ subItem.title }}</span>
+                                        </twig:Sidebar:MenuSubButton>
+                                    </twig:Sidebar:MenuSubItem>
+                                {%- endfor %}
+                            </twig:Sidebar:MenuSub>
+                        </twig:Collapsible:Content>
+                    {%- endif %}
+                </twig:Collapsible>
+            </twig:Sidebar:MenuItem>
+        {%- endfor %}
+    </twig:Sidebar:Menu>
+</twig:Sidebar:Group>

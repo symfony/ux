@@ -20,6 +20,8 @@ type StateOptions = {
     example: string;
     state: string;
     act: (page: Page) => Promise<void>;
+    // A full-page capture briefly resizes the viewport, so a `sidebar` moves its content and resets its open menus.
+    fullPage?: boolean;
 };
 
 /**
@@ -120,7 +122,7 @@ export function describeRecipe(recipe: string, callback: () => void): void {
  * It opens `example` of the recipe, runs `act` (the interaction and its assertions),
  * then compares the page with `kits/<kit>/<recipe>/tests/screenshots/<example>-<state>-<theme>.png`.
  */
-export function testState(title: string, { example, state, act }: StateOptions): void {
+export function testState(title: string, { example, state, act, fullPage = true }: StateOptions): void {
     const recipe = currentRecipe;
     if (null === recipe) {
         throw new Error('testState() must be called inside describeRecipe().');
@@ -133,7 +135,7 @@ export function testState(title: string, { example, state, act }: StateOptions):
             await gotoExample(`${recipe}/${example}`, { theme });
             await act(page);
 
-            await expect(page).toHaveScreenshot(name, { fullPage: true });
+            await expect(page).toHaveScreenshot(name, { fullPage });
         });
     }
 }

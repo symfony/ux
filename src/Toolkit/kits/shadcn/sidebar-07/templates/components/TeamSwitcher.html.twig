@@ -1,0 +1,51 @@
+{%- props
+    ## array<array{name:string,logo:string,plan:string}> The teams listed in the menu, the first one being the active team.
+    teams
+-%}
+{%- set activeTeam = teams|first -%}
+{%- if activeTeam -%}
+    <twig:Sidebar:Menu>
+        <twig:Sidebar:MenuItem>
+            <twig:DropdownMenu id="team-switcher" side="right" align="start" class="block w-full">
+                <twig:DropdownMenu:Trigger>
+                    <twig:Sidebar:MenuButton
+                        {{ ...dropdown_menu_trigger_attrs }}
+                        size="lg"
+                        class="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+                    >
+                        <div class="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
+                            <twig:ux:icon name="{{ activeTeam.logo }}" class="size-4" />
+                        </div>
+                        <div class="grid flex-1 text-start text-sm leading-tight">
+                            <span class="truncate font-medium">{{ activeTeam.name }}</span>
+                            <span class="truncate text-xs">{{ activeTeam.plan }}</span>
+                        </div>
+                        <twig:ux:icon name="lucide:chevrons-up-down" class="ms-auto" />
+                    </twig:Sidebar:MenuButton>
+                </twig:DropdownMenu:Trigger>
+                <twig:DropdownMenu:Content class="top-0 w-max translate-y-0">
+                    <twig:DropdownMenu:Label class="text-xs text-muted-foreground">
+                        Teams
+                    </twig:DropdownMenu:Label>
+                    {%- for team in teams %}
+                        {%- set shortcut = '⌘' ~ loop.index %}
+                        <twig:DropdownMenu:Item class="gap-2 p-2">
+                            <div class="flex size-6 items-center justify-center rounded-md border">
+                                <twig:ux:icon name="{{ team.logo }}" />
+                            </div>
+                            {{ team.name }}
+                            <twig:DropdownMenu:Shortcut>{{ shortcut }}</twig:DropdownMenu:Shortcut>
+                        </twig:DropdownMenu:Item>
+                    {%- endfor %}
+                    <twig:DropdownMenu:Separator />
+                    <twig:DropdownMenu:Item class="gap-2 p-2">
+                        <div class="flex size-6 items-center justify-center rounded-md border bg-transparent">
+                            <twig:ux:icon name="lucide:plus" class="size-4" />
+                        </div>
+                        <div class="font-medium text-muted-foreground">Add team</div>
+                    </twig:DropdownMenu:Item>
+                </twig:DropdownMenu:Content>
+            </twig:DropdownMenu>
+        </twig:Sidebar:MenuItem>
+    </twig:Sidebar:Menu>
+{%- endif -%}

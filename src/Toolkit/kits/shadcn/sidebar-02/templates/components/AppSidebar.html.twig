@@ -1,0 +1,99 @@
+{%- set data = {
+    versions: ['1.0.1', '1.1.0-alpha', '2.0.0-beta1'],
+    navMain: [
+        {
+            title: 'Getting Started',
+            url: '#',
+            items: [
+                {title: 'Installation', url: '#'},
+                {title: 'Project Structure', url: '#'},
+            ],
+        },
+        {
+            title: 'Build Your Application',
+            url: '#',
+            items: [
+                {title: 'Routing', url: '#'},
+                {title: 'Data Fetching', url: '#', isActive: true},
+                {title: 'Rendering', url: '#'},
+                {title: 'Caching', url: '#'},
+                {title: 'Styling', url: '#'},
+                {title: 'Optimizing', url: '#'},
+                {title: 'Configuring', url: '#'},
+                {title: 'Testing', url: '#'},
+                {title: 'Authentication', url: '#'},
+                {title: 'Deploying', url: '#'},
+                {title: 'Upgrading', url: '#'},
+                {title: 'Examples', url: '#'},
+            ],
+        },
+        {
+            title: 'API Reference',
+            url: '#',
+            items: [
+                {title: 'Components', url: '#'},
+                {title: 'File Conventions', url: '#'},
+                {title: 'Functions', url: '#'},
+                {title: 'next.config.js Options', url: '#'},
+                {title: 'CLI', url: '#'},
+                {title: 'Edge Runtime', url: '#'},
+            ],
+        },
+        {
+            title: 'Architecture',
+            url: '#',
+            items: [
+                {title: 'Accessibility', url: '#'},
+                {title: 'Fast Refresh', url: '#'},
+                {title: 'Next.js Compiler', url: '#'},
+                {title: 'Supported Browsers', url: '#'},
+                {title: 'Turbopack', url: '#'},
+            ],
+        },
+        {
+            title: 'Community',
+            url: '#',
+            items: [
+                {title: 'Contribution Guide', url: '#'},
+            ],
+        },
+    ],
+} -%}
+<twig:Sidebar {{ ...attributes.defaults({collapsible: 'offcanvas'}) }}>
+    <twig:Sidebar:Header>
+        <twig:VersionSwitcher :versions="data.versions" :defaultVersion="data.versions[0]" />
+        <twig:SearchForm />
+    </twig:Sidebar:Header>
+    <twig:Sidebar:Content class="gap-0">
+        {%- for item in data.navMain %}
+            <twig:Collapsible open title="{{ item.title }}" class="group/collapsible">
+                <twig:Sidebar:Group>
+                    <twig:Collapsible:Trigger>
+                        <button
+                            type="button"
+                            class="group/label flex h-8 shrink-0 items-center rounded-md px-2 text-sm font-medium text-sidebar-foreground outline-hidden ring-sidebar-ring transition-[margin,opacity] duration-200 ease-linear group-data-[collapsible=icon]:-mt-8 group-data-[collapsible=icon]:opacity-0 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 [&>svg]:size-4 [&>svg]:shrink-0"
+                            {{ html_attr(collapsible_trigger_attrs, {'data-slot': 'sidebar-group-label'}) }}
+                        >
+                            {{ item.title }}
+                            <twig:ux:icon name="lucide:chevron-right" class="ms-auto transition-transform group-data-[state=open]/collapsible:rotate-90 rtl:rotate-180" />
+                        </button>
+                    </twig:Collapsible:Trigger>
+                    <twig:Collapsible:Content>
+                        <twig:Sidebar:GroupContent>
+                            <twig:Sidebar:Menu>
+                                {%- for subItem in item.items %}
+                                    <twig:Sidebar:MenuItem>
+                                        <twig:Sidebar:MenuButton as="a" href="{{ subItem.url }}" :active="subItem.isActive ?? false">
+                                            {{- subItem.title -}}
+                                        </twig:Sidebar:MenuButton>
+                                    </twig:Sidebar:MenuItem>
+                                {%- endfor %}
+                            </twig:Sidebar:Menu>
+                        </twig:Sidebar:GroupContent>
+                    </twig:Collapsible:Content>
+                </twig:Sidebar:Group>
+            </twig:Collapsible>
+        {%- endfor %}
+    </twig:Sidebar:Content>
+    <twig:Sidebar:Rail />
+</twig:Sidebar>

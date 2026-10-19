@@ -1,0 +1,14 @@
+{%- props
+    ## array<array{title:string,url:string,icon:string,isActive?:bool}> The menu entries.
+    items
+-%}
+<twig:Sidebar:Menu>
+    {%- for item in items %}
+        <twig:Sidebar:MenuItem>
+            <twig:Sidebar:MenuButton as="a" href="{{ item.url }}" :active="item.isActive ?? false">
+                <twig:ux:icon name="{{ item.icon }}" />
+                <span>{{ item.title }}</span>
+            </twig:Sidebar:MenuButton>
+        </twig:Sidebar:MenuItem>
+    {%- endfor %}
+</twig:Sidebar:Menu>

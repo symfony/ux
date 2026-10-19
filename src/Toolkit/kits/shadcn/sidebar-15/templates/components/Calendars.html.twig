@@ -1,0 +1,42 @@
+{%- props
+    ## array<array{name:string,items:array<string>}> The calendar groups, each one listing its calendars.
+    calendars
+-%}
+{%- for calendar in calendars %}
+    {%- set isOpen = loop.first %}
+    <twig:Sidebar:Group>
+        <twig:Collapsible :open="isOpen" class="group/collapsible">
+            <twig:Collapsible:Trigger>
+                <button
+                    type="button"
+                    class="group/label flex h-8 w-full shrink-0 items-center rounded-md px-2 text-sm font-medium text-sidebar-foreground outline-hidden ring-sidebar-ring transition-[margin,opacity] duration-200 ease-linear group-data-[collapsible=icon]:-mt-8 group-data-[collapsible=icon]:opacity-0 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 [&>svg]:size-4 [&>svg]:shrink-0"
+                    {{ html_attr(collapsible_trigger_attrs) }}
+                >
+                    {{ calendar.name }}
+                    <twig:ux:icon name="lucide:chevron-right" class="ms-auto transition-transform group-data-[state=open]/collapsible:rotate-90 rtl:rotate-180" />
+                </button>
+            </twig:Collapsible:Trigger>
+            <twig:Collapsible:Content>
+                <twig:Sidebar:GroupContent>
+                    <twig:Sidebar:Menu>
+                        {%- for item in calendar.items %}
+                            {%- set isActive = loop.index0 < 2 %}
+                            <twig:Sidebar:MenuItem>
+                                <twig:Sidebar:MenuButton>
+                                    <div
+                                        data-active="{{ isActive ? 'true' : 'false' }}"
+                                        class="group/calendar-item flex aspect-square size-4 shrink-0 items-center justify-center rounded-xs border border-sidebar-border text-sidebar-primary-foreground data-[active=true]:border-sidebar-primary data-[active=true]:bg-sidebar-primary"
+                                    >
+                                        <twig:ux:icon name="lucide:check" class="hidden size-4 group-data-[active=true]/calendar-item:block" />
+                                    </div>
+                                    {{ item }}
+                                </twig:Sidebar:MenuButton>
+                            </twig:Sidebar:MenuItem>
+                        {%- endfor %}
+                    </twig:Sidebar:Menu>
+                </twig:Sidebar:GroupContent>
+            </twig:Collapsible:Content>
+        </twig:Collapsible>
+    </twig:Sidebar:Group>
+    <twig:Sidebar:Separator class="mx-0" />
+{%- endfor %}
