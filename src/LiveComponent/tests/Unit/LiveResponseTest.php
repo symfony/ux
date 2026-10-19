@@ -164,4 +164,21 @@ final class LiveResponseTest extends TestCase
     {
         $this->assertFalse(LiveResponse::remove()->isDownloadUrl());
     }
+
+    public function testSkipRender(): void
+    {
+        $response = LiveResponse::skipRender();
+
+        $this->assertTrue($response->isSkipRender());
+        $this->assertFalse($response->isRemove());
+        $this->assertFalse($response->isDownloadUrl());
+        $this->assertNull($response->content);
+    }
+
+    public function testOtherResponsesDoNotSkipTheRender(): void
+    {
+        $this->assertFalse(LiveResponse::remove()->isSkipRender());
+        $this->assertFalse(LiveResponse::downloadFile('x', 'f.bin')->isSkipRender());
+        $this->assertFalse(LiveResponse::downloadUrl('/f.bin')->isSkipRender());
+    }
 }

@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 3.7
+
+- Add `LiveResponse::skipRender()` to update the state of a component from a `LiveAction` without rendering its template
+
 ## 3.6
 
 - Export the `ComponentHooks` TypeScript type, to type hook callbacks defined outside of `Component.on()`

@@ -49,6 +49,7 @@ final class LiveResponse
         public readonly ?int $size = null,
         public readonly ?string $url = null,
         private readonly bool $remove = false,
+        private readonly bool $skipRender = false,
     ) {
     }
 
@@ -72,6 +73,28 @@ final class LiveResponse
     public static function remove(): self
     {
         return new self(remove: true);
+    }
+
+    /**
+     * Updates the state of the component without rendering its template.
+     *
+     * Only an empty element is sent back, with the live attributes of the root element: the new props and the usual LiveComponent events.
+     * The HTML on the page is not updated until the next render, so the action should only change state that the template does not show.
+     * Fields bound with data-model are still updated by the browser.
+     * Child components do not get new props from the parent until the parent renders.
+     *
+     *     #[LiveAction]
+     *     public function markAsRead(): LiveResponse
+     *     {
+     *         $this->notification->markAsRead();
+     *         $this->unread = false;
+     *
+     *         return LiveResponse::skipRender();
+     *     }
+     */
+    public static function skipRender(): self
+    {
+        return new self(skipRender: true);
     }
 
     /**
@@ -178,5 +201,15 @@ final class LiveResponse
     public function isRemove(): bool
     {
         return $this->remove;
+    }
+
+    /**
+     * Whether only an empty element with the live attributes is sent back, instead of the rendered template.
+     *
+     * @internal
+     */
+    public function isSkipRender(): bool
+    {
+        return $this->skipRender;
     }
 }

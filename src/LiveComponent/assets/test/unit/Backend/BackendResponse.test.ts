@@ -193,4 +193,14 @@ describe('BackendResponse', () => {
             expect(makeResponse({ 'X-Live-Remove': '0' }).isRemoved()).toBe(true);
         });
     });
+
+    describe('isRenderSkipped()', () => {
+        it('is true when the X-Live-Skip-Render header is present', () => {
+            expect(makeResponse({ 'X-Live-Skip-Render': '1' }).isRenderSkipped()).toBe(true);
+        });
+
+        it('is false when absent', () => {
+            expect(makeResponse().isRenderSkipped()).toBe(false);
+        });
+    });
 });
