@@ -12,10 +12,13 @@
 namespace Symfony\UX\Pagination\Tests\Fixtures;
 
 use Doctrine\DBAL\DriverManager;
+use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMSetup;
 use Doctrine\ORM\Tools\SchemaTool;
+use Symfony\Bridge\Doctrine\Types\UlidType;
+use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\UX\Pagination\Tests\Fixtures\Entity\Author;
 
 /**
@@ -29,6 +32,12 @@ final class EntityManagerFactory
      */
     public static function create(array $entities = [Author::class], ?callable $configure = null): EntityManager
     {
+        foreach ([UuidType::NAME => UuidType::class, UlidType::NAME => UlidType::class] as $name => $class) {
+            if (!Type::hasType($name)) {
+                Type::addType($name, $class);
+            }
+        }
+
         $config = method_exists(ORMSetup::class, 'createAttributeMetadataConfig')
             ? ORMSetup::createAttributeMetadataConfig(
                 paths: [__DIR__.'/Entity'],

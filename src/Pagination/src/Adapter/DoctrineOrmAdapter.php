@@ -11,10 +11,14 @@
 
 namespace Symfony\UX\Pagination\Adapter;
 
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Types\Type;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator as DoctrinePaginator;
+use Symfony\Bridge\Doctrine\Types\AbstractUidType;
+use Symfony\Component\Uid\AbstractUid;
 use Symfony\UX\Pagination\Cursor\CursorBoundary;
 use Symfony\UX\Pagination\Cursor\CursorOrder;
 use Symfony\UX\Pagination\Cursor\CursorSlice;
@@ -301,7 +305,23 @@ final class DoctrineOrmAdapter implements OffsetAdapterInterface, LookaheadAdapt
     private function normalizeDoctrineCursorParameter(QueryBuilder $queryBuilder, string $field, int|string|float $value): array
     {
         $entity = $queryBuilder->getRootEntities()[0];
-        $type = $queryBuilder->getEntityManager()->getClassMetadata($entity)->getTypeOfField($field);
+        $entityManager = $queryBuilder->getEntityManager();
+        $type = $entityManager->getClassMetadata($entity)->getTypeOfField($field);
+
+        // Symfony UID types (uuid, ulid): the cursor carries the string form, bound back as a UID
+        // so the database compares it in its own storage format.
+        $connection = $entityManager->getConnection();
+        $uidType = $this->findUidType($connection, $type);
+        if (null !== $uidType) {
+            try {
+                $value = $uidType->convertToPHPValue((string) $value, $connection->getDatabasePlatform());
+            } catch (\Exception $exception) {
+                throw new InvalidArgumentException(\sprintf('Invalid UID cursor value for field "%s".', $field), 0, $exception);
+            }
+
+            return [$value, $type];
+        }
+
         if (!\in_array($type, [Types::INTEGER, Types::BIGINT, Types::SMALLINT, Types::STRING, Types::GUID, Types::FLOAT, Types::DECIMAL, Types::BOOLEAN, Types::DATETIME_MUTABLE, Types::DATETIME_IMMUTABLE, Types::DATETIMETZ_MUTABLE, Types::DATETIMETZ_IMMUTABLE], true)) {
             throw new InvalidArgumentException(\sprintf('Doctrine type "%s" of cursor field "%s" is not supported.', $type, $field));
         }
@@ -331,6 +351,24 @@ final class DoctrineOrmAdapter implements OffsetAdapterInterface, LookaheadAdapt
         return [$value, $type];
     }
 
+    private function findUidType(Connection $connection, ?string $name): ?Type
+    {
+        if (null === $name) {
+            return null;
+        }
+
+        $configuration = $connection->getConfiguration();
+        // Configuration::getTypeProvider() replaces the static type registry since DBAL 4.6
+        $types = method_exists($configuration, 'getTypeProvider') ? $configuration->getTypeProvider() : Type::getTypeRegistry();
+        if (!$types->has($name)) {
+            return null;
+        }
+
+        $type = $types->get($name);
+
+        return $type instanceof AbstractUidType ? $type : null;
+    }
+
     private function normalizeCursorContextValue(QueryBuilder $queryBuilder, mixed $value): mixed
     {
         if ($value instanceof \DateTimeInterface) {
@@ -341,6 +379,9 @@ final class DoctrineOrmAdapter implements OffsetAdapterInterface, LookaheadAdapt
         }
         if ($value instanceof \UnitEnum) {
             return ['class' => $value::class, 'name' => $value->name];
+        }
+        if ($value instanceof AbstractUid) {
+            return ['class' => $value::class, 'value' => (string) $value];
         }
         if (\is_object($value)) {
             $metadataFactory = $queryBuilder->getEntityManager()->getMetadataFactory();

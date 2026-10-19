@@ -50,9 +50,11 @@
         "symfony/asset-mapper": "^7.4|^8.0",
         "symfony/browser-kit": "^7.4|^8.0",
         "symfony/css-selector": "^7.4|^8.0",
+        "symfony/doctrine-bridge": "^7.4|^8.0",
         "symfony/dom-crawler": "^7.4|^8.0",
         "symfony/framework-bundle": "^7.4|^8.0",
         "symfony/translation": "^7.4|^8.0",
+        "symfony/uid": "^7.4|^8.0",
         "symfony/ux-live-component": "^3.0",
         "symfony/ux-twig-component": "^3.0"
     },
