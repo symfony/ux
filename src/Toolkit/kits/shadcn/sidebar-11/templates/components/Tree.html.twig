@@ -1,0 +1,34 @@
+{%- props
+    ## string|array<mixed> A file name, or a folder given as its name followed by its children.
+    item
+-%}
+{%- set name = item is iterable ? item|first : item -%}
+{%- set items = item is iterable ? item|slice(1) : [] -%}
+{%- if items is empty -%}
+    <twig:Sidebar:MenuButton :active="name == 'button.tsx'" class="data-[active=true]:bg-transparent">
+        <twig:ux:icon name="lucide:file" />
+        {{ name }}
+    </twig:Sidebar:MenuButton>
+{%- else -%}
+    <twig:Sidebar:MenuItem>
+        <twig:Collapsible
+            :open="name in ['components', 'ui']"
+            class="group/collapsible [&[data-state=open]>button>svg:first-child]:rotate-90"
+        >
+            <twig:Collapsible:Trigger>
+                <twig:Sidebar:MenuButton {{ ...collapsible_trigger_attrs }}>
+                    <twig:ux:icon name="lucide:chevron-right" class="transition-transform rtl:rotate-180" />
+                    <twig:ux:icon name="lucide:folder" />
+                    {{ name }}
+                </twig:Sidebar:MenuButton>
+            </twig:Collapsible:Trigger>
+            <twig:Collapsible:Content>
+                <twig:Sidebar:MenuSub>
+                    {%- for subItem in items %}
+                        <twig:Tree :item="subItem" />
+                    {%- endfor %}
+                </twig:Sidebar:MenuSub>
+            </twig:Collapsible:Content>
+        </twig:Collapsible>
+    </twig:Sidebar:MenuItem>
+{%- endif -%}

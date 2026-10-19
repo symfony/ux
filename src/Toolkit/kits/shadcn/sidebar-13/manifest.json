@@ -1,0 +1,13 @@
+{
+    "$schema": "../../../schema-kit-recipe-v1.json",
+    "type": "block",
+    "version-added": "3.7",
+    "name": "SettingsDialog",
+    "copy-files": {
+        "templates/": "templates/"
+    },
+    "dependencies": {
+        "recipe": ["breadcrumb", "button", "dialog", "sidebar"],
+        "composer": ["symfony/ux-icons"]
+    }
+}

@@ -1,0 +1,89 @@
+{%- set data = {
+    user: {
+        name: 'shadcn',
+        email: 'm@example.com',
+        avatar: 'https://github.com/shadcn.png',
+    },
+    navMain: [
+        {
+            title: 'Playground',
+            url: '#',
+            icon: 'lucide:square-terminal',
+            isActive: true,
+            items: [
+                {title: 'History', url: '#'},
+                {title: 'Starred', url: '#'},
+                {title: 'Settings', url: '#'},
+            ],
+        },
+        {
+            title: 'Models',
+            url: '#',
+            icon: 'lucide:bot',
+            items: [
+                {title: 'Genesis', url: '#'},
+                {title: 'Explorer', url: '#'},
+                {title: 'Quantum', url: '#'},
+            ],
+        },
+        {
+            title: 'Documentation',
+            url: '#',
+            icon: 'lucide:book-open',
+            items: [
+                {title: 'Introduction', url: '#'},
+                {title: 'Get Started', url: '#'},
+                {title: 'Tutorials', url: '#'},
+                {title: 'Changelog', url: '#'},
+            ],
+        },
+        {
+            title: 'Settings',
+            url: '#',
+            icon: 'lucide:settings-2',
+            items: [
+                {title: 'General', url: '#'},
+                {title: 'Team', url: '#'},
+                {title: 'Billing', url: '#'},
+                {title: 'Limits', url: '#'},
+            ],
+        },
+    ],
+    navSecondary: [
+        {title: 'Support', url: '#', icon: 'lucide:life-buoy'},
+        {title: 'Feedback', url: '#', icon: 'lucide:send'},
+    ],
+    projects: [
+        {name: 'Design Engineering', url: '#', icon: 'lucide:frame'},
+        {name: 'Sales & Marketing', url: '#', icon: 'lucide:chart-pie'},
+        {name: 'Travel', url: '#', icon: 'lucide:map'},
+    ],
+} -%}
+<twig:Sidebar
+    class="top-(--header-height) h-[calc(100svh-var(--header-height))]!"
+    {{ ...attributes.defaults({collapsible: 'offcanvas'}) }}
+>
+    <twig:Sidebar:Header>
+        <twig:Sidebar:Menu>
+            <twig:Sidebar:MenuItem>
+                <twig:Sidebar:MenuButton as="a" href="#" size="lg">
+                    <div class="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
+                        <twig:ux:icon name="lucide:terminal" class="size-4" />
+                    </div>
+                    <div class="grid flex-1 text-start text-sm leading-tight">
+                        <span class="truncate font-medium">Acme Inc</span>
+                        <span class="truncate text-xs">Enterprise</span>
+                    </div>
+                </twig:Sidebar:MenuButton>
+            </twig:Sidebar:MenuItem>
+        </twig:Sidebar:Menu>
+    </twig:Sidebar:Header>
+    <twig:Sidebar:Content>
+        <twig:NavMain :items="data.navMain" />
+        <twig:NavProjects :projects="data.projects" />
+        <twig:NavSecondary :items="data.navSecondary" class="mt-auto" />
+    </twig:Sidebar:Content>
+    <twig:Sidebar:Footer>
+        <twig:NavUser :user="data.user" />
+    </twig:Sidebar:Footer>
+</twig:Sidebar>

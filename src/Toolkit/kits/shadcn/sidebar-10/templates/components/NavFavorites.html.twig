@@ -1,0 +1,51 @@
+{%- props
+    ## array<array{name:string,url:string,emoji:string}> The favorite pages.
+    favorites
+-%}
+<twig:Sidebar:Group class="group-data-[collapsible=icon]:hidden">
+    <twig:Sidebar:GroupLabel>Favorites</twig:Sidebar:GroupLabel>
+    <twig:Sidebar:Menu>
+        {%- for index, item in favorites %}
+            <twig:Sidebar:MenuItem>
+                <twig:Sidebar:MenuButton as="a" href="{{ item.url }}" title="{{ item.name }}">
+                    <span>{{ item.emoji }}</span>
+                    <span>{{ item.name }}</span>
+                </twig:Sidebar:MenuButton>
+                <twig:DropdownMenu id="nav-favorites-{{ index }}" side="right" align="start" class="absolute! end-1 top-1.5">
+                    <twig:DropdownMenu:Trigger>
+                        <twig:Sidebar:MenuAction {{ ...dropdown_menu_trigger_attrs }} showOnHover class="static! aria-expanded:bg-muted">
+                            <twig:ux:icon name="lucide:more-horizontal" />
+                            <span class="sr-only">More</span>
+                        </twig:Sidebar:MenuAction>
+                    </twig:DropdownMenu:Trigger>
+                    <twig:DropdownMenu:Content class="w-56 rounded-lg">
+                        <twig:DropdownMenu:Item>
+                            <twig:ux:icon name="lucide:star-off" class="text-muted-foreground" />
+                            <span>Remove from Favorites</span>
+                        </twig:DropdownMenu:Item>
+                        <twig:DropdownMenu:Separator />
+                        <twig:DropdownMenu:Item>
+                            <twig:ux:icon name="lucide:link" class="text-muted-foreground" />
+                            <span>Copy Link</span>
+                        </twig:DropdownMenu:Item>
+                        <twig:DropdownMenu:Item>
+                            <twig:ux:icon name="lucide:arrow-up-right" class="text-muted-foreground" />
+                            <span>Open in New Tab</span>
+                        </twig:DropdownMenu:Item>
+                        <twig:DropdownMenu:Separator />
+                        <twig:DropdownMenu:Item>
+                            <twig:ux:icon name="lucide:trash-2" class="text-muted-foreground" />
+                            <span>Delete</span>
+                        </twig:DropdownMenu:Item>
+                    </twig:DropdownMenu:Content>
+                </twig:DropdownMenu>
+            </twig:Sidebar:MenuItem>
+        {%- endfor %}
+        <twig:Sidebar:MenuItem>
+            <twig:Sidebar:MenuButton class="text-sidebar-foreground/70">
+                <twig:ux:icon name="lucide:more-horizontal" />
+                <span>More</span>
+            </twig:Sidebar:MenuButton>
+        </twig:Sidebar:MenuItem>
+    </twig:Sidebar:Menu>
+</twig:Sidebar:Group>

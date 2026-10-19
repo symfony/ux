@@ -1,0 +1,79 @@
+{%- set data = {
+    versions: ['1.0.1', '1.1.0-alpha', '2.0.0-beta1'],
+    navMain: [
+        {
+            title: 'Getting Started',
+            url: '#',
+            items: [
+                {title: 'Installation', url: '#'},
+                {title: 'Project Structure', url: '#'},
+            ],
+        },
+        {
+            title: 'Build Your Application',
+            url: '#',
+            items: [
+                {title: 'Routing', url: '#'},
+                {title: 'Data Fetching', url: '#', isActive: true},
+                {title: 'Rendering', url: '#'},
+                {title: 'Caching', url: '#'},
+                {title: 'Styling', url: '#'},
+                {title: 'Optimizing', url: '#'},
+                {title: 'Configuring', url: '#'},
+                {title: 'Testing', url: '#'},
+                {title: 'Authentication', url: '#'},
+                {title: 'Deploying', url: '#'},
+                {title: 'Upgrading', url: '#'},
+                {title: 'Examples', url: '#'},
+            ],
+        },
+        {
+            title: 'API Reference',
+            url: '#',
+            items: [
+                {title: 'Components', url: '#'},
+                {title: 'File Conventions', url: '#'},
+                {title: 'Functions', url: '#'},
+                {title: 'next.config.js Options', url: '#'},
+                {title: 'CLI', url: '#'},
+                {title: 'Edge Runtime', url: '#'},
+            ],
+        },
+        {
+            title: 'Architecture',
+            url: '#',
+            items: [
+                {title: 'Accessibility', url: '#'},
+                {title: 'Fast Refresh', url: '#'},
+                {title: 'Next.js Compiler', url: '#'},
+                {title: 'Supported Browsers', url: '#'},
+                {title: 'Turbopack', url: '#'},
+            ],
+        },
+    ],
+} -%}
+<twig:Sidebar {{ ...attributes.defaults({collapsible: 'offcanvas'}) }}>
+    <twig:Sidebar:Header>
+        <twig:VersionSwitcher :versions="data.versions" :defaultVersion="data.versions[0]" />
+        <twig:SearchForm />
+    </twig:Sidebar:Header>
+    <twig:Sidebar:Content>
+        {%- for group in data.navMain %}
+            <twig:Sidebar:Group>
+                <twig:Sidebar:GroupLabel>{{ group.title }}</twig:Sidebar:GroupLabel>
+                <twig:Sidebar:GroupContent>
+                    <twig:Sidebar:Menu>
+                        {%- for item in group.items %}
+                            <twig:Sidebar:MenuItem>
+                                <twig:Sidebar:MenuButton as="a" href="{{ item.url }}" :active="item.isActive ?? false">
+                                    {{- item.title -}}
+                                </twig:Sidebar:MenuButton>
+                            </twig:Sidebar:MenuItem>
+                        {%- endfor %}
+                    </twig:Sidebar:Menu>
+                </twig:Sidebar:GroupContent>
+            </twig:Sidebar:Group>
+        {%- endfor %}
+    </twig:Sidebar:Content>
+    <twig:Sidebar:Rail />
+</twig:Sidebar>

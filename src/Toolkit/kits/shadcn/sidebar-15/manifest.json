@@ -1,0 +1,13 @@
+{
+    "$schema": "../../../schema-kit-recipe-v1.json",
+    "type": "block",
+    "version-added": "3.7",
+    "name": "SidebarLeft",
+    "copy-files": {
+        "templates/": "templates/"
+    },
+    "dependencies": {
+        "recipe": ["avatar", "breadcrumb", "calendar", "collapsible", "dropdown-menu", "separator", "sidebar"],
+        "composer": ["symfony/ux-icons"]
+    }
+}

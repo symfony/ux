@@ -1,0 +1,56 @@
+{%- props
+    ## array<array{name:string,url:string,icon:string}> The projects listed in the group.
+    projects
+-%}
+<twig:Sidebar:Group class="group-data-[collapsible=icon]:hidden">
+    <twig:Sidebar:GroupLabel>Projects</twig:Sidebar:GroupLabel>
+    <twig:Sidebar:Menu>
+        {%- for item in projects %}
+            {%- set dropdown_id = 'nav-projects-' ~ loop.index %}
+            <twig:Sidebar:MenuItem>
+                <twig:Sidebar:MenuButton as="a" href="{{ item.url }}">
+                    <twig:ux:icon name="{{ item.icon }}" />
+                    <span>{{ item.name }}</span>
+                </twig:Sidebar:MenuButton>
+                <twig:DropdownMenu
+                    id="{{ dropdown_id }}"
+                    side="right"
+                    align="start"
+                    class="absolute! end-1 top-1.5"
+                >
+                    <twig:DropdownMenu:Trigger>
+                        <twig:Sidebar:MenuAction
+                            {{ ...dropdown_menu_trigger_attrs }}
+                            showOnHover
+                            class="static! aria-expanded:bg-muted"
+                        >
+                            <twig:ux:icon name="lucide:more-horizontal" />
+                            <span class="sr-only">More</span>
+                        </twig:Sidebar:MenuAction>
+                    </twig:DropdownMenu:Trigger>
+                    <twig:DropdownMenu:Content class="top-0 w-max translate-y-0">
+                        <twig:DropdownMenu:Item>
+                            <twig:ux:icon name="lucide:folder" />
+                            <span>View Project</span>
+                        </twig:DropdownMenu:Item>
+                        <twig:DropdownMenu:Item>
+                            <twig:ux:icon name="lucide:arrow-right" />
+                            <span>Share Project</span>
+                        </twig:DropdownMenu:Item>
+                        <twig:DropdownMenu:Separator />
+                        <twig:DropdownMenu:Item variant="destructive">
+                            <twig:ux:icon name="lucide:trash-2" />
+                            <span>Delete Project</span>
+                        </twig:DropdownMenu:Item>
+                    </twig:DropdownMenu:Content>
+                </twig:DropdownMenu>
+            </twig:Sidebar:MenuItem>
+        {%- endfor %}
+        <twig:Sidebar:MenuItem>
+            <twig:Sidebar:MenuButton class="text-sidebar-foreground/70">
+                <twig:ux:icon name="lucide:more-horizontal" class="text-sidebar-foreground/70" />
+                <span>More</span>
+            </twig:Sidebar:MenuButton>
+        </twig:Sidebar:MenuItem>
+    </twig:Sidebar:Menu>
+</twig:Sidebar:Group>

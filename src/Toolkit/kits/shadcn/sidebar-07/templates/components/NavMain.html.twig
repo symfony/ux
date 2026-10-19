@@ -1,0 +1,35 @@
+{%- props
+    ## array<array{title:string,url:string,icon?:string,isActive?:bool,items?:array<array{title:string,url:string}>}> The menu entries, each expanding its sub entries.
+    items
+-%}
+<twig:Sidebar:Group>
+    <twig:Sidebar:GroupLabel>Platform</twig:Sidebar:GroupLabel>
+    <twig:Sidebar:Menu>
+        {%- for item in items %}
+            <twig:Sidebar:MenuItem>
+                <twig:Collapsible :open="item.isActive ?? false" class="group/collapsible">
+                    <twig:Collapsible:Trigger>
+                        <twig:Sidebar:MenuButton {{ ...collapsible_trigger_attrs }} tooltip="{{ item.title }}">
+                            {%- if item.icon is defined %}
+                                <twig:ux:icon name="{{ item.icon }}" />
+                            {%- endif %}
+                            <span>{{ item.title }}</span>
+                            <twig:ux:icon name="lucide:chevron-right" class="ms-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90 rtl:rotate-180" />
+                        </twig:Sidebar:MenuButton>
+                    </twig:Collapsible:Trigger>
+                    <twig:Collapsible:Content>
+                        <twig:Sidebar:MenuSub>
+                            {%- for subItem in item.items ?? [] %}
+                                <twig:Sidebar:MenuSubItem>
+                                    <twig:Sidebar:MenuSubButton href="{{ subItem.url }}">
+                                        <span>{{ subItem.title }}</span>
+                                    </twig:Sidebar:MenuSubButton>
+                                </twig:Sidebar:MenuSubItem>
+                            {%- endfor %}
+                        </twig:Sidebar:MenuSub>
+                    </twig:Collapsible:Content>
+                </twig:Collapsible>
+            </twig:Sidebar:MenuItem>
+        {%- endfor %}
+    </twig:Sidebar:Menu>
+</twig:Sidebar:Group>

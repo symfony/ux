@@ -1,0 +1,41 @@
+{%- set data = {
+    user: {
+        name: 'shadcn',
+        email: 'm@example.com',
+        avatar: 'https://github.com/shadcn.png',
+    },
+    calendars: [
+        {
+            name: 'My Calendars',
+            items: ['Personal', 'Work', 'Family'],
+        },
+        {
+            name: 'Favorites',
+            items: ['Holidays', 'Birthdays'],
+        },
+        {
+            name: 'Other',
+            items: ['Travel', 'Reminders', 'Deadlines'],
+        },
+    ],
+} -%}
+<twig:Sidebar {{ ...attributes.defaults({collapsible: 'none', class: 'sticky top-0 hidden h-svh border-s lg:flex'}) }}>
+    <twig:Sidebar:Header class="h-16 border-b border-sidebar-border">
+        <twig:NavUser :user="data.user" />
+    </twig:Sidebar:Header>
+    <twig:Sidebar:Content>
+        <twig:DatePicker />
+        <twig:Sidebar:Separator class="mx-0" />
+        <twig:Calendars :calendars="data.calendars" />
+    </twig:Sidebar:Content>
+    <twig:Sidebar:Footer>
+        <twig:Sidebar:Menu>
+            <twig:Sidebar:MenuItem>
+                <twig:Sidebar:MenuButton>
+                    <twig:ux:icon name="lucide:plus" />
+                    <span>New Calendar</span>
+                </twig:Sidebar:MenuButton>
+            </twig:Sidebar:MenuItem>
+        </twig:Sidebar:Menu>
+    </twig:Sidebar:Footer>
+</twig:Sidebar>

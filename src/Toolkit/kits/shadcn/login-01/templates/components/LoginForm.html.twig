@@ -7,26 +7,26 @@
     {%- block content -%}
         <twig:Card>
             <twig:Card:Header>
-                <twig:Card:Title class="text-2xl">Login</twig:Card:Title>
+                <twig:Card:Title>Login to your account</twig:Card:Title>
                 <twig:Card:Description>
                     Enter your email below to login to your account
                 </twig:Card:Description>
             </twig:Card:Header>
             <twig:Card:Content>
                 <form>
-                    <div class="flex flex-col gap-6">
-                        <div class="grid gap-2">
-                            <twig:Label for="email">Email</twig:Label>
+                    <twig:Field:Group>
+                        <twig:Field>
+                            <twig:Field:Label for="email">Email</twig:Field:Label>
                             <twig:Input
                                 id="email"
                                 type="email"
                                 placeholder="m@example.com"
                                 required
                             />
-                        </div>
-                        <div class="grid gap-2">
+                        </twig:Field>
+                        <twig:Field>
                             <div class="flex items-center">
-                                <twig:Label for="password">Password</twig:Label>
+                                <twig:Field:Label for="password">Password</twig:Field:Label>
                                 <a
                                     href="#"
                                     class="ms-auto inline-block text-sm underline-offset-4 hover:underline"
@@ -35,20 +35,17 @@
                                 </a>
                             </div>
                             <twig:Input id="password" type="password" required />
-                        </div>
-                        <twig:Button type="submit" class="w-full">
-                            Login
-                        </twig:Button>
-                        <twig:Button variant="outline" class="w-full">
-                            Login with Google
-                        </twig:Button>
-                    </div>
-                    <div class="mt-4 text-center text-sm">
-                        Don't have an account?
-                        <a href="#" class="underline underline-offset-4">
-                            Sign up
-                        </a>
-                    </div>
+                        </twig:Field>
+                        <twig:Field>
+                            <twig:Button type="submit">Login</twig:Button>
+                            <twig:Button variant="outline" type="button">
+                                Login with Google
+                            </twig:Button>
+                            <twig:Field:Description class="text-center">
+                                Don't have an account? <a href="#">Sign up</a>
+                            </twig:Field:Description>
+                        </twig:Field>
+                    </twig:Field:Group>
                 </form>
             </twig:Card:Content>
         </twig:Card>

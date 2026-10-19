@@ -1,0 +1,75 @@
+{%- set data = {
+    user: {
+        name: 'shadcn',
+        email: 'm@example.com',
+        avatar: 'https://github.com/shadcn.png',
+    },
+    teams: [
+        {name: 'Acme Inc', logo: 'lucide:gallery-vertical-end', plan: 'Enterprise'},
+        {name: 'Acme Corp.', logo: 'lucide:audio-lines', plan: 'Startup'},
+        {name: 'Evil Corp.', logo: 'lucide:terminal', plan: 'Free'},
+    ],
+    navMain: [
+        {
+            title: 'Playground',
+            url: '#',
+            icon: 'lucide:square-terminal',
+            isActive: true,
+            items: [
+                {title: 'History', url: '#'},
+                {title: 'Starred', url: '#'},
+                {title: 'Settings', url: '#'},
+            ],
+        },
+        {
+            title: 'Models',
+            url: '#',
+            icon: 'lucide:bot',
+            items: [
+                {title: 'Genesis', url: '#'},
+                {title: 'Explorer', url: '#'},
+                {title: 'Quantum', url: '#'},
+            ],
+        },
+        {
+            title: 'Documentation',
+            url: '#',
+            icon: 'lucide:book-open',
+            items: [
+                {title: 'Introduction', url: '#'},
+                {title: 'Get Started', url: '#'},
+                {title: 'Tutorials', url: '#'},
+                {title: 'Changelog', url: '#'},
+            ],
+        },
+        {
+            title: 'Settings',
+            url: '#',
+            icon: 'lucide:settings-2',
+            items: [
+                {title: 'General', url: '#'},
+                {title: 'Team', url: '#'},
+                {title: 'Billing', url: '#'},
+                {title: 'Limits', url: '#'},
+            ],
+        },
+    ],
+    projects: [
+        {name: 'Design Engineering', url: '#', icon: 'lucide:frame'},
+        {name: 'Sales & Marketing', url: '#', icon: 'lucide:chart-pie'},
+        {name: 'Travel', url: '#', icon: 'lucide:map'},
+    ],
+} -%}
+<twig:Sidebar {{ ...attributes.defaults({collapsible: 'icon'}) }}>
+    <twig:Sidebar:Header>
+        <twig:TeamSwitcher :teams="data.teams" />
+    </twig:Sidebar:Header>
+    <twig:Sidebar:Content>
+        <twig:NavMain :items="data.navMain" />
+        <twig:NavProjects :projects="data.projects" />
+    </twig:Sidebar:Content>
+    <twig:Sidebar:Footer>
+        <twig:NavUser :user="data.user" />
+    </twig:Sidebar:Footer>
+    <twig:Sidebar:Rail />
+</twig:Sidebar>
