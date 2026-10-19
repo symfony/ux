@@ -10,7 +10,7 @@
                 <twig:DropdownMenu:Trigger>
                     <twig:Sidebar:MenuButton {{ ...dropdown_menu_trigger_attrs }} class="w-fit px-1.5">
                         <div class="flex aspect-square size-5 items-center justify-center rounded-md bg-sidebar-primary text-sidebar-primary-foreground">
-                            <twig:ux:icon name="{{ activeTeam.logo }}" class="size-4" />
+                            <twig:ux:icon name="{{ activeTeam.logo }}" />
                         </div>
                         <span class="truncate font-medium">{{ activeTeam.name }}</span>
                         <twig:ux:icon name="lucide:chevron-down" class="opacity-50" />

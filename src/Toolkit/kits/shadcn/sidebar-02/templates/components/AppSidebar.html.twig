@@ -69,14 +69,14 @@
             <twig:Collapsible open title="{{ item.title }}" class="group/collapsible">
                 <twig:Sidebar:Group>
                     <twig:Collapsible:Trigger>
-                        <button
-                            type="button"
-                            class="group/label flex h-8 shrink-0 items-center rounded-md px-2 text-sm font-medium text-sidebar-foreground outline-hidden ring-sidebar-ring transition-[margin,opacity] duration-200 ease-linear group-data-[collapsible=icon]:-mt-8 group-data-[collapsible=icon]:opacity-0 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 [&>svg]:size-4 [&>svg]:shrink-0"
-                            {{ html_attr(collapsible_trigger_attrs, {'data-slot': 'sidebar-group-label'}) }}
+                        <twig:Sidebar:GroupLabel
+                            as="button"
+                            {{ ...collapsible_trigger_attrs }}
+                            class="group/label text-sm text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
                         >
                             {{ item.title }}
                             <twig:ux:icon name="lucide:chevron-right" class="ms-auto transition-transform group-data-[state=open]/collapsible:rotate-90 rtl:rotate-180" />
-                        </button>
+                        </twig:Sidebar:GroupLabel>
                     </twig:Collapsible:Trigger>
                     <twig:Collapsible:Content>
                         <twig:Sidebar:GroupContent>

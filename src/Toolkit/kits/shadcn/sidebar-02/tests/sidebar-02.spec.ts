@@ -1,4 +1,4 @@
-import { describeRecipe, expect, testState } from '../../../../assets/test/browser/fixtures';
+import { describeRecipe, expect, test, testState } from '../../../../assets/test/browser/fixtures';
 
 describeRecipe('shadcn/sidebar-02', () => {
     testState('opens the version switcher', {
@@ -40,5 +40,16 @@ describeRecipe('shadcn/sidebar-02', () => {
             await expect(trigger).toHaveAttribute('aria-expanded', 'false');
             await expect(page.locator('[data-slot="sidebar"]')).toHaveAttribute('data-collapsible', 'offcanvas');
         },
+    });
+
+    test('collapses a section from the keyboard', async ({ page, gotoExample }) => {
+        await gotoExample('shadcn/sidebar-02/default');
+        const label = page.getByRole('button', { name: 'Getting Started' });
+
+        await label.focus();
+        await page.keyboard.press('Enter');
+
+        await expect(label).toHaveAttribute('aria-expanded', 'false');
+        await expect(page.getByRole('link', { name: 'Installation' })).toBeHidden();
     });
 });

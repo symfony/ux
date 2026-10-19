@@ -272,6 +272,28 @@ Wrap your layout in a `Sidebar:Provider`, place the `Sidebar` itself next to a `
 {% endblock %}
 ```
 
+### Collapsible groups
+
+To make a `Sidebar:Group` collapsible, wrap it in a `Collapsible` and render its `Sidebar:GroupLabel` as the collapsible trigger with `as="button"`.
+
+```twig
+<twig:Collapsible open class="group/collapsible">
+    <twig:Sidebar:Group>
+        <twig:Collapsible:Trigger>
+            <twig:Sidebar:GroupLabel as="button" {{ ...collapsible_trigger_attrs }}>
+                Help
+                <twig:ux:icon name="lucide:chevron-down" class="ms-auto transition-transform group-data-[state=open]/collapsible:rotate-180" aria-hidden="true" />
+            </twig:Sidebar:GroupLabel>
+        </twig:Collapsible:Trigger>
+        <twig:Collapsible:Content>
+            <twig:Sidebar:GroupContent>
+                {# ... #}
+            </twig:Sidebar:GroupContent>
+        </twig:Collapsible:Content>
+    </twig:Sidebar:Group>
+</twig:Collapsible>
+```
+
 ## Examples
 
 ### Menu badges and actions

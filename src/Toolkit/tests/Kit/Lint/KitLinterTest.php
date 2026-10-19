@@ -176,6 +176,7 @@ class KitLinterTest extends TestCase
         yield 'cva-ok declared+used' => ['cva-ok', null, null];
         yield 'classes-ok declared+used' => ['classes-ok', null, null];
         yield 'merge-ok declared+used (filter)' => ['merge-ok', null, null];
+        yield 'attr-ok declared+used (fn)' => ['attr-ok', null, null];
         yield 'icon-fn-ok declared+used (fn)' => ['icon-fn-ok', null, null];
         yield 'icon-tag-ok declared+used (tag)' => ['icon-tag-ok', null, null];
         yield 'map-ok declared+used' => ['map-ok', null, null];
@@ -186,6 +187,7 @@ class KitLinterTest extends TestCase
         yield 'map declared but unused' => ['map-declared-unused', 'composer.declared-but-unused', 'symfony/ux-map'];
         yield 'html_cva used but undeclared' => ['cva-undeclared', 'composer.symbol-undeclared', 'html_cva'];
         yield 'tailwind_merge used but undeclared' => ['merge-undeclared', 'composer.symbol-undeclared', 'tailwind_merge'];
+        yield 'html_attr() used but undeclared' => ['attr-undeclared', 'composer.symbol-undeclared', 'html_attr('];
         yield '<twig:ux:icon used but undeclared' => ['icon-tag-undeclared', 'composer.symbol-undeclared', '<twig:ux:icon'];
         yield '<twig:ux:map used but undeclared' => ['map-undeclared', 'composer.symbol-undeclared', '<twig:ux:map'];
         yield 'provide() used but undeclared' => ['provide-undeclared', 'composer.symbol-undeclared', 'provide('];

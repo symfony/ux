@@ -1,0 +1,8 @@
+{
+    "$schema": "../../../../../schema-kit-recipe-v1.json",
+    "type": "component",
+    "name": "AttrOk",
+    "description": "html-extra declared + html_attr() used -> no warning.",
+    "copy-files": {"templates/": "templates/"},
+    "dependencies": {"composer": ["twig/extra-bundle", "twig/html-extra:^3.24.0"]}
+}
