@@ -86,6 +86,25 @@ describeRecipe('shadcn/sonner', () => {
         },
     });
 
+    for (const type of ['success', 'error', 'warning', 'info']) {
+        test(`paints a rich ${type} toast with an opaque background in dark mode`, async ({ page, gotoExample }) => {
+            await gotoExample('shadcn/sonner/rich-colors', { theme: 'dark', timers: 'fake' });
+            const toast = page.locator(`[data-slot="toast"][data-type="${type}"]`);
+
+            await page.getByRole('button', { name: type }).click();
+            await expect(toast).toBeVisible();
+
+            const alpha = await toast.evaluate((element) => {
+                const context = document.createElement('canvas').getContext('2d')!;
+                context.fillStyle = getComputedStyle(element).backgroundColor;
+                context.fillRect(0, 0, 1, 1);
+
+                return context.getImageData(0, 0, 1, 1).data[3];
+            });
+            expect(alpha).toBe(255);
+        });
+    }
+
     test('announces an error as an alert and other types as a status', async ({ page, gotoExample }) => {
         await gotoExample('shadcn/sonner/types', { timers: 'fake' });
 
