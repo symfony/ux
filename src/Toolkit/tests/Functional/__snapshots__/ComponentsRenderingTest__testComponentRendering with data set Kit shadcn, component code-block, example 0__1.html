@@ -1,0 +1,104 @@
+<!--
+- Kit: Shadcn UI
+- Component: Code Block
+- Code:
+```twig
+{% set lines = [
+    'import { streamText } from "ai"',
+    '',
+    'export async function POST(request: Request) {',
+    '  const { messages } = await request.json()',
+    '',
+    '  const result = streamText({',
+    '    model: "anthropic/claude-sonnet-4.5",',
+    '    system: "You are a helpful assistant. Answer in one short paragraph.",',
+    '    messages,',
+    '  })',
+    '',
+    '  return result.toUIMessageStreamResponse()',
+    '}',
+] %}
+<div class="w-full max-w-lg">
+    <twig:CodeBlock>
+        <twig:CodeBlock:Header>
+            <twig:CodeBlock:Title>
+                <twig:ux:icon name="lucide:file-code" />
+                app/api/chat/route.ts
+            </twig:CodeBlock:Title>
+            <twig:CodeBlock:Actions>
+                <twig:Button variant="ghost" size="icon-xs" aria-label="Wrap lines" aria-pressed="false" class="aria-pressed:text-foreground" data-action="code-block#toggleWrap">
+                    <twig:ux:icon name="lucide:wrap-text" />
+                </twig:Button>
+                <twig:Button variant="ghost" size="icon-xs" aria-label="Download" data-action="code-block#download" data-code-block-text="{{ lines|join('\n') }}" data-code-block-filename-param="route.ts">
+                    <twig:ux:icon name="lucide:download" />
+                </twig:Button>
+                <twig:CodeBlock:CopyButton :value="lines|join('\n')" />
+            </twig:CodeBlock:Actions>
+        </twig:CodeBlock:Header>
+        <twig:CodeBlock:Content lineNumbers>
+            {%- for line in lines -%}
+                <twig:CodeBlock:Line variant="{{ loop.index0 >= 5 and loop.index0 <= 9 ? 'highlighted' : 'default' }}">{{ line }}</twig:CodeBlock:Line>
+            {%- endfor -%}
+        </twig:CodeBlock:Content>
+    </twig:CodeBlock>
+</div>
+```
+- Rendered code (run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="w-full max-w-lg">
+    <div data-slot="code-block" data-variant="default" data-size="default" class="group/code-block relative flex w-full min-w-0 flex-col overflow-hidden rounded-lg text-sm data-[size=sm]:text-xs has-[>[data-slot=code-block-content]:focus-visible]:ring-3 has-[>[data-slot=code-block-content]:focus-visible]:ring-ring/50 border border-input text-foreground dark:bg-input/30 has-[>[data-slot=code-block-content]:focus-visible]:border-ring" data-controller="code-block"><div data-slot="code-block-header" class="flex min-w-0 shrink-0 items-center gap-2 px-3 pt-3 text-muted-foreground *:has-[>[data-slot=code-block-title]]:min-w-0 group-data-[variant=destructive]/code-block:text-destructive group-data-[size=sm]/code-block:px-2.5 group-data-[size=sm]/code-block:pt-2.5"><div data-slot="code-block-title" class="min-w-0 truncate font-sans text-sm font-medium text-foreground group-data-[variant=destructive]/code-block:text-destructive group-data-[size=sm]/code-block:text-xs [&amp;_svg]:pointer-events-none [&amp;_svg]:inline-block [&amp;_svg]:align-middle *:[svg]:me-1.5 [&amp;_svg:not([class*='size-'])]:size-3.5"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"></path><path d="M14 2v5a1 1 0 0 0 1 1h5m-10 4.5L8 15l2 2.5m4-5l2 2.5l-2 2.5"></path></g></svg>
+                app/api/chat/route.ts
+            </div>
+            <div data-slot="code-block-actions" class="ms-auto -my-1 -me-1.5 flex shrink-0 items-center gap-1 [[data-slot=code-block]>&amp;]:absolute [[data-slot=code-block]>&amp;]:end-2 [[data-slot=code-block]>&amp;]:top-2 [[data-slot=code-block]>&amp;]:z-10 [[data-slot=code-block]>&amp;]:m-0 [[data-slot=code-block]>&amp;]:opacity-0 [[data-slot=code-block]>&amp;]:transition-opacity [[data-slot=code-block]>&amp;]:group-focus-within/code-block:opacity-100 [[data-slot=code-block]>&amp;]:group-hover/code-block:opacity-100 [[data-slot=code-block]>&amp;]:pointer-coarse:opacity-100 group-data-[size=sm]/code-block:[[data-slot=code-block]>&amp;]:end-1.5 group-data-[size=sm]/code-block:[[data-slot=code-block]>&amp;]:top-1.5 [[data-slot=code-block]>&amp;]:*:[button]:bg-background [[data-slot=code-block]>&amp;]:*:[button]:ring-1 [[data-slot=code-block]>&amp;]:*:[button]:ring-foreground/10"><button data-slot="button" data-variant="ghost" data-size="icon-xs" class="group/button inline-flex shrink-0 items-center justify-center border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50 size-6 rounded-[min(var(--radius-md),10px)] in-data-[slot=button-group]:rounded-lg [&amp;_svg:not([class*='size-'])]:size-3 aria-pressed:text-foreground" type="button" aria-label="Wrap lines" aria-pressed="false" data-action="code-block#toggleWrap"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="m16 16l-2 2l2 2"></path><path d="M3 12h15a3 3 0 1 1 0 6h-4M3 18h7M3 6h18"></path></g></svg>
+                </button>
+                <button data-slot="button" data-variant="ghost" data-size="icon-xs" class="group/button inline-flex shrink-0 items-center justify-center border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50 size-6 rounded-[min(var(--radius-md),10px)] in-data-[slot=button-group]:rounded-lg [&amp;_svg:not([class*='size-'])]:size-3" type="button" aria-label="Download" data-action="code-block#download" data-code-block-text="import { streamText } from &quot;ai&quot;
+
+export async function POST(request: Request) {
+  const { messages } = await request.json()
+
+  const result = streamText({
+    model: &quot;anthropic/claude-sonnet-4.5&quot;,
+    system: &quot;You are a helpful assistant. Answer in one short paragraph.&quot;,
+    messages,
+  })
+
+  return result.toUIMessageStreamResponse()
+}" data-code-block-filename-param="route.ts"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M12 15V3m9 12v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><path d="m7 10l5 5l5-5"></path></g></svg>
+                </button>
+                <button data-slot="code-block-copy-button" data-variant="ghost" data-size="icon-xs" class="group/button inline-flex shrink-0 items-center justify-center border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50 size-6 rounded-[min(var(--radius-md),10px)] in-data-[slot=button-group]:rounded-lg [&amp;_svg:not([class*='size-'])]:size-3" type="button" data-copied="false" data-code-block-text="import { streamText } from &quot;ai&quot;
+
+export async function POST(request: Request) {
+  const { messages } = await request.json()
+
+  const result = streamText({
+    model: &quot;anthropic/claude-sonnet-4.5&quot;,
+    system: &quot;You are a helpful assistant. Answer in one short paragraph.&quot;,
+    messages,
+  })
+
+  return result.toUIMessageStreamResponse()
+}" aria-label="Copy" data-action="click->code-block#copy"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="group-data-[copied=true]/button:hidden" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></g></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="hidden group-data-[copied=true]/button:inline" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+</button>
+<span aria-live="polite" class="sr-only" data-code-block-target="status"></span>
+
+            </div>
+        </div>
+        <pre data-slot="code-block-content" data-numbered="" data-code-block-target="content" dir="ltr" class="min-h-0 min-w-0 scroll-fade-x overflow-auto px-3 py-3 text-start font-mono leading-relaxed outline-none [scrollbar-width:thin] data-wrap:scroll-fade-y data-wrap:wrap-break-word data-wrap:whitespace-pre-wrap group-has-data-[slot=code-block-header]/code-block:pt-2 group-has-data-[slot=code-block-footer]/code-block:pb-2 group-data-[size=sm]/code-block:px-2.5 group-data-[size=sm]/code-block:py-2.5 group-data-[size=sm]/code-block:group-has-data-[slot=code-block-header]/code-block:pt-1.5" tabindex="0"><code data-slot="code-block-code" class="grid min-h-lh min-w-max content-start in-data-numbered:grid-cols-[auto_1fr] in-data-wrap:min-w-0" style="counter-reset: line 0"><span data-slot="code-block-line" data-variant="default" class="relative -mx-3 block min-h-lh px-3 group-data-[size=sm]/code-block:-mx-2.5 group-data-[size=sm]/code-block:px-2.5 before:min-w-6 before:text-end before:text-muted-foreground after:absolute after:start-1 after:top-0 after:text-muted-foreground after:select-none in-data-numbered:col-span-2 in-data-numbered:grid in-data-numbered:grid-cols-subgrid in-data-numbered:gap-x-3 in-data-numbered:[counter-increment:line] in-data-numbered:before:content-[counter(line)] in-data-numbered:before:select-none in-data-numbered:supports-[content:counter(line)_/_'']:before:content-[counter(line)_/_'']"><span data-slot="code-block-line-content" class="min-w-0">import { streamText } from "ai"</span></span>
+<span data-slot="code-block-line" data-variant="default" class="relative -mx-3 block min-h-lh px-3 group-data-[size=sm]/code-block:-mx-2.5 group-data-[size=sm]/code-block:px-2.5 before:min-w-6 before:text-end before:text-muted-foreground after:absolute after:start-1 after:top-0 after:text-muted-foreground after:select-none in-data-numbered:col-span-2 in-data-numbered:grid in-data-numbered:grid-cols-subgrid in-data-numbered:gap-x-3 in-data-numbered:[counter-increment:line] in-data-numbered:before:content-[counter(line)] in-data-numbered:before:select-none in-data-numbered:supports-[content:counter(line)_/_'']:before:content-[counter(line)_/_'']"><span data-slot="code-block-line-content" class="min-w-0">
+</span></span>
+<span data-slot="code-block-line" data-variant="default" class="relative -mx-3 block min-h-lh px-3 group-data-[size=sm]/code-block:-mx-2.5 group-data-[size=sm]/code-block:px-2.5 before:min-w-6 before:text-end before:text-muted-foreground after:absolute after:start-1 after:top-0 after:text-muted-foreground after:select-none in-data-numbered:col-span-2 in-data-numbered:grid in-data-numbered:grid-cols-subgrid in-data-numbered:gap-x-3 in-data-numbered:[counter-increment:line] in-data-numbered:before:content-[counter(line)] in-data-numbered:before:select-none in-data-numbered:supports-[content:counter(line)_/_'']:before:content-[counter(line)_/_'']"><span data-slot="code-block-line-content" class="min-w-0">export async function POST(request: Request) {</span></span>
+<span data-slot="code-block-line" data-variant="default" class="relative -mx-3 block min-h-lh px-3 group-data-[size=sm]/code-block:-mx-2.5 group-data-[size=sm]/code-block:px-2.5 before:min-w-6 before:text-end before:text-muted-foreground after:absolute after:start-1 after:top-0 after:text-muted-foreground after:select-none in-data-numbered:col-span-2 in-data-numbered:grid in-data-numbered:grid-cols-subgrid in-data-numbered:gap-x-3 in-data-numbered:[counter-increment:line] in-data-numbered:before:content-[counter(line)] in-data-numbered:before:select-none in-data-numbered:supports-[content:counter(line)_/_'']:before:content-[counter(line)_/_'']"><span data-slot="code-block-line-content" class="min-w-0">  const { messages } = await request.json()</span></span>
+<span data-slot="code-block-line" data-variant="default" class="relative -mx-3 block min-h-lh px-3 group-data-[size=sm]/code-block:-mx-2.5 group-data-[size=sm]/code-block:px-2.5 before:min-w-6 before:text-end before:text-muted-foreground after:absolute after:start-1 after:top-0 after:text-muted-foreground after:select-none in-data-numbered:col-span-2 in-data-numbered:grid in-data-numbered:grid-cols-subgrid in-data-numbered:gap-x-3 in-data-numbered:[counter-increment:line] in-data-numbered:before:content-[counter(line)] in-data-numbered:before:select-none in-data-numbered:supports-[content:counter(line)_/_'']:before:content-[counter(line)_/_'']"><span data-slot="code-block-line-content" class="min-w-0">
+</span></span>
+<span data-slot="code-block-line" data-variant="highlighted" class="relative -mx-3 block min-h-lh px-3 group-data-[size=sm]/code-block:-mx-2.5 group-data-[size=sm]/code-block:px-2.5 before:min-w-6 before:text-end before:text-muted-foreground after:absolute after:start-1 after:top-0 after:text-muted-foreground after:select-none in-data-numbered:col-span-2 in-data-numbered:grid in-data-numbered:grid-cols-subgrid in-data-numbered:gap-x-3 in-data-numbered:[counter-increment:line] in-data-numbered:before:content-[counter(line)] in-data-numbered:before:select-none in-data-numbered:supports-[content:counter(line)_/_'']:before:content-[counter(line)_/_''] bg-muted"><span data-slot="code-block-line-content" class="min-w-0">  const result = streamText({</span></span>
+<span data-slot="code-block-line" data-variant="highlighted" class="relative -mx-3 block min-h-lh px-3 group-data-[size=sm]/code-block:-mx-2.5 group-data-[size=sm]/code-block:px-2.5 before:min-w-6 before:text-end before:text-muted-foreground after:absolute after:start-1 after:top-0 after:text-muted-foreground after:select-none in-data-numbered:col-span-2 in-data-numbered:grid in-data-numbered:grid-cols-subgrid in-data-numbered:gap-x-3 in-data-numbered:[counter-increment:line] in-data-numbered:before:content-[counter(line)] in-data-numbered:before:select-none in-data-numbered:supports-[content:counter(line)_/_'']:before:content-[counter(line)_/_''] bg-muted"><span data-slot="code-block-line-content" class="min-w-0">    model: "anthropic/claude-sonnet-4.5",</span></span>
+<span data-slot="code-block-line" data-variant="highlighted" class="relative -mx-3 block min-h-lh px-3 group-data-[size=sm]/code-block:-mx-2.5 group-data-[size=sm]/code-block:px-2.5 before:min-w-6 before:text-end before:text-muted-foreground after:absolute after:start-1 after:top-0 after:text-muted-foreground after:select-none in-data-numbered:col-span-2 in-data-numbered:grid in-data-numbered:grid-cols-subgrid in-data-numbered:gap-x-3 in-data-numbered:[counter-increment:line] in-data-numbered:before:content-[counter(line)] in-data-numbered:before:select-none in-data-numbered:supports-[content:counter(line)_/_'']:before:content-[counter(line)_/_''] bg-muted"><span data-slot="code-block-line-content" class="min-w-0">    system: "You are a helpful assistant. Answer in one short paragraph.",</span></span>
+<span data-slot="code-block-line" data-variant="highlighted" class="relative -mx-3 block min-h-lh px-3 group-data-[size=sm]/code-block:-mx-2.5 group-data-[size=sm]/code-block:px-2.5 before:min-w-6 before:text-end before:text-muted-foreground after:absolute after:start-1 after:top-0 after:text-muted-foreground after:select-none in-data-numbered:col-span-2 in-data-numbered:grid in-data-numbered:grid-cols-subgrid in-data-numbered:gap-x-3 in-data-numbered:[counter-increment:line] in-data-numbered:before:content-[counter(line)] in-data-numbered:before:select-none in-data-numbered:supports-[content:counter(line)_/_'']:before:content-[counter(line)_/_''] bg-muted"><span data-slot="code-block-line-content" class="min-w-0">    messages,</span></span>
+<span data-slot="code-block-line" data-variant="highlighted" class="relative -mx-3 block min-h-lh px-3 group-data-[size=sm]/code-block:-mx-2.5 group-data-[size=sm]/code-block:px-2.5 before:min-w-6 before:text-end before:text-muted-foreground after:absolute after:start-1 after:top-0 after:text-muted-foreground after:select-none in-data-numbered:col-span-2 in-data-numbered:grid in-data-numbered:grid-cols-subgrid in-data-numbered:gap-x-3 in-data-numbered:[counter-increment:line] in-data-numbered:before:content-[counter(line)] in-data-numbered:before:select-none in-data-numbered:supports-[content:counter(line)_/_'']:before:content-[counter(line)_/_''] bg-muted"><span data-slot="code-block-line-content" class="min-w-0">  })</span></span>
+<span data-slot="code-block-line" data-variant="default" class="relative -mx-3 block min-h-lh px-3 group-data-[size=sm]/code-block:-mx-2.5 group-data-[size=sm]/code-block:px-2.5 before:min-w-6 before:text-end before:text-muted-foreground after:absolute after:start-1 after:top-0 after:text-muted-foreground after:select-none in-data-numbered:col-span-2 in-data-numbered:grid in-data-numbered:grid-cols-subgrid in-data-numbered:gap-x-3 in-data-numbered:[counter-increment:line] in-data-numbered:before:content-[counter(line)] in-data-numbered:before:select-none in-data-numbered:supports-[content:counter(line)_/_'']:before:content-[counter(line)_/_'']"><span data-slot="code-block-line-content" class="min-w-0">
+</span></span>
+<span data-slot="code-block-line" data-variant="default" class="relative -mx-3 block min-h-lh px-3 group-data-[size=sm]/code-block:-mx-2.5 group-data-[size=sm]/code-block:px-2.5 before:min-w-6 before:text-end before:text-muted-foreground after:absolute after:start-1 after:top-0 after:text-muted-foreground after:select-none in-data-numbered:col-span-2 in-data-numbered:grid in-data-numbered:grid-cols-subgrid in-data-numbered:gap-x-3 in-data-numbered:[counter-increment:line] in-data-numbered:before:content-[counter(line)] in-data-numbered:before:select-none in-data-numbered:supports-[content:counter(line)_/_'']:before:content-[counter(line)_/_'']"><span data-slot="code-block-line-content" class="min-w-0">  return result.toUIMessageStreamResponse()</span></span>
+<span data-slot="code-block-line" data-variant="default" class="relative -mx-3 block min-h-lh px-3 group-data-[size=sm]/code-block:-mx-2.5 group-data-[size=sm]/code-block:px-2.5 before:min-w-6 before:text-end before:text-muted-foreground after:absolute after:start-1 after:top-0 after:text-muted-foreground after:select-none in-data-numbered:col-span-2 in-data-numbered:grid in-data-numbered:grid-cols-subgrid in-data-numbered:gap-x-3 in-data-numbered:[counter-increment:line] in-data-numbered:before:content-[counter(line)] in-data-numbered:before:select-none in-data-numbered:supports-[content:counter(line)_/_'']:before:content-[counter(line)_/_'']"><span data-slot="code-block-line-content" class="min-w-0">}</span></span>
+</code></pre>
+    </div>
+</div>
