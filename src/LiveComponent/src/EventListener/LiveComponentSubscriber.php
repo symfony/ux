@@ -30,10 +30,14 @@ use Symfony\UX\LiveComponent\Attribute\LiveArg;
 use Symfony\UX\LiveComponent\LiveComponentHydrator;
 use Symfony\UX\LiveComponent\LiveResponse;
 use Symfony\UX\LiveComponent\Metadata\LiveComponentMetadataFactory;
+use Symfony\UX\LiveComponent\Util\LiveControllerAttributesCreator;
+use Symfony\UX\TwigComponent\ComponentAttributes;
 use Symfony\UX\TwigComponent\ComponentFactory;
 use Symfony\UX\TwigComponent\ComponentMetadata;
 use Symfony\UX\TwigComponent\ComponentRenderer;
 use Symfony\UX\TwigComponent\MountedComponent;
+use Twig\Environment;
+use Twig\Runtime\EscaperRuntime;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
@@ -55,6 +59,7 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
     private const DOWNLOAD_TYPE_HEADER = 'X-Live-Download-Type';
     private const DOWNLOAD_URL_HEADER = 'X-Live-Download-Url';
     private const REMOVE_HEADER = 'X-Live-Remove';
+    private const NO_RENDER_HEADER = 'X-Live-No-Render';
 
     public function __construct(
         private ContainerInterface $container,
@@ -69,6 +74,8 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
             ComponentFactory::class,
             LiveComponentHydrator::class,
             LiveComponentMetadataFactory::class,
+            LiveControllerAttributesCreator::class,
+            Environment::class,
         ];
     }
 
@@ -295,7 +302,7 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
     private function assertLiveResponseIsAllowed(Request $request): void
     {
         if (!$request->isMethod('post')) {
-            throw new \LogicException('A LiveResponse can only be returned from a POST request. A GET is replayable (prefetch, crawlers), which downloading a file or removing a component is not.');
+            throw new \LogicException('A LiveResponse can only be returned from a POST request. A GET is replayable (prefetch, crawlers), so it cannot ask for a download, a removal or a skipped render.');
         }
 
         if ($request->attributes->get('_component_default_action', false)) {
@@ -371,6 +378,14 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
 
         foreach ($this->container->get(LiveComponentMetadataFactory::class)->preReRenderMethods($component) as $method) {
             $component->{$method}();
+        }
+
+        if ($liveResponse?->isNoRender()) {
+            // an empty element carries the live attributes, with the new props and the events, and the browser keeps its HTML
+            return new Response($this->renderRootElement($mounted), 200, [
+                'Content-Type' => self::HTML_CONTENT_TYPE,
+                self::NO_RENDER_HEADER => '1',
+            ]);
         }
 
         $html = $this->container->get(ComponentRenderer::class)->render($mounted);
@@ -504,5 +519,14 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
         } catch (\JsonException $exception) {
             throw new JsonException(\sprintf('Invalid JSON on query string "%s".', $key), 0, $exception);
         }
+    }
+
+    private function renderRootElement(MountedComponent $mounted): string
+    {
+        $metadata = $this->container->get(ComponentFactory::class)->metadataFor($mounted->getName());
+        $attributesCollection = $this->container->get(LiveControllerAttributesCreator::class)->attributesForRendering($mounted, $metadata, false);
+        $attributes = new ComponentAttributes($attributesCollection->toArray(), $this->container->get(Environment::class)->getRuntime(EscaperRuntime::class));
+
+        return \sprintf('<div%s></div>', $attributes);
     }
 }

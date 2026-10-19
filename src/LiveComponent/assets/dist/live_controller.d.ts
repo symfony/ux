@@ -15,6 +15,7 @@ declare class export_default$2 {
   getLiveUrl(): string | null;
   getDownloadUrl(): string | null;
   isRemoved(): boolean;
+  isRenderSkipped(): boolean;
   private parse;
 }
 declare class export_default$1 {
@@ -113,6 +114,7 @@ declare class Component {
   private pendingActions;
   private pendingFiles;
   private isRequestPending;
+  private isRenderRequested;
   private isRemoved;
   private requestDebounceTimeout;
   private nextRequestPromise;
@@ -144,6 +146,7 @@ declare class Component {
   private tryStartingRequest;
   private performRequest;
   private processRerender;
+  private applyValuesOfSkippedRender;
   private calculateDebounce;
   private clearRequestDebounceTimeout;
   private debouncedStartRequest;

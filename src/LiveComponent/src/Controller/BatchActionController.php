@@ -42,6 +42,7 @@ final class BatchActionController
 
         // sub-requests are not rendered, so a directive returned by one of them has to be
         // carried up to the final render. The last one wins.
+        // The render is only skipped when every action asks for it, otherwise the skip is ignored.
         $liveResponse = null;
         $routeParams = $request->attributes->get('_route_params', []);
         $routeAttributes = [
@@ -49,6 +50,8 @@ final class BatchActionController
             '_route' => $request->attributes->get('_route'),
             '_route_params' => $routeParams,
         ];
+        $noRenderResponse = null;
+        $everyActionReturnsNoRender = true;
 
         foreach ($actions as $action) {
             $name = $action['name'] ?? throw new BadRequestHttpException('Invalid JSON.');
@@ -63,8 +66,13 @@ final class BatchActionController
 
             $response = $this->kernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST, false);
 
-            if ($subRequest->attributes->has('_live_response')) {
-                $liveResponse = $subRequest->attributes->get('_live_response');
+            $actionResponse = $subRequest->attributes->get('_live_response');
+
+            if ($actionResponse?->isNoRender()) {
+                $noRenderResponse = $actionResponse;
+            } else {
+                $everyActionReturnsNoRender = false;
+                $liveResponse = $actionResponse ?? $liveResponse;
             }
 
             if ($response->isRedirection()) {
@@ -72,6 +80,6 @@ final class BatchActionController
             }
         }
 
-        return $liveResponse;
+        return $everyActionReturnsNoRender ? $noRenderResponse : $liveResponse;
     }
 }

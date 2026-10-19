@@ -73,6 +73,8 @@ export default class Component {
     private pendingFiles: { [key: string]: HTMLInputElement } = {};
     /** Is a request waiting to be made? */
     private isRequestPending = false;
+    /** Was a re-render asked for since the last request started? It is still owed when an action skips the render. */
+    private isRenderRequested = false;
     /** Once removed, the component is done: it must never talk to the server again. */
     private isRemoved = false;
     /** Current "timeout" before the pending request should be sent. */
@@ -184,6 +186,7 @@ export default class Component {
 
         // don't bother re-rendering if the value didn't change
         if (reRender && isChanged) {
+            this.isRenderRequested = true;
             this.debouncedStartRequest(debounce);
         }
 
@@ -217,6 +220,7 @@ export default class Component {
 
     render(): Promise<BackendResponse> {
         const promise = this.nextRequestPromise;
+        this.isRenderRequested = true;
         this.tryStartingRequest();
 
         return promise;
@@ -369,6 +373,8 @@ export default class Component {
         this.pendingActions = remainingActions;
         this.valueStore.flushDirtyPropsToPending();
         this.isRequestPending = remainingActions.length > 0;
+        const isRenderRequested = this.isRenderRequested;
+        this.isRenderRequested = false;
 
         this.backendRequest.promise.then(async (response) => {
             const backendResponse = new BackendResponse(response);
@@ -389,6 +395,8 @@ export default class Component {
             ) {
                 const controls = { displayError: true };
                 this.valueStore.pushPendingPropsBackToDirty();
+                // the props wait for the next request, and so does their re-render
+                this.isRenderRequested ||= isRenderRequested;
                 this.hooks.triggerHook('loading.state:finished', this.element);
                 this.hooks.triggerHook('response:error', backendResponse, controls);
 
@@ -433,6 +441,12 @@ export default class Component {
             }
 
             this.processRerender(html, backendResponse);
+
+            // an action skipped the render, but something sent with it still needs one
+            if (isRenderRequested && backendResponse.isRenderSkipped()) {
+                this.isRenderRequested = true;
+                this.isRequestPending = true;
+            }
 
             // finally resolve this promise
             this.backendRequest = null;
@@ -499,14 +513,18 @@ export default class Component {
         // make sure we've processed all external changes before morphing
         this.externalMutationTracker.handlePendingChanges();
         this.externalMutationTracker.stop();
-        executeMorphdom(
-            this.element,
-            newElement,
-            this.unsyncedInputsTracker.getUnsyncedInputs(),
-            (element: HTMLElement) => getValueFromElement(element, this.valueStore),
-            this.externalMutationTracker,
-            findChildren(this)
-        );
+        if (backendResponse.isRenderSkipped()) {
+            this.applyValuesOfSkippedRender(newElement);
+        } else {
+            executeMorphdom(
+                this.element,
+                newElement,
+                this.unsyncedInputsTracker.getUnsyncedInputs(),
+                (element: HTMLElement) => getValueFromElement(element, this.valueStore),
+                this.externalMutationTracker,
+                findChildren(this)
+            );
+        }
         this.externalMutationTracker.start();
 
         const newProps = this.elementDriver.getComponentProps();
@@ -563,6 +581,27 @@ export default class Component {
         this.hooks.triggerHook('render:finished', this);
     }
 
+    /**
+     * Takes the new props and events from the root element, and leaves the content alone.
+     *
+     * A value missing from the response is removed, or the events of the previous render would run again.
+     */
+    private applyValuesOfSkippedRender(newElement: HTMLElement): void {
+        for (const name of [
+            'data-live-props-value',
+            'data-live-events-to-emit-value',
+            'data-live-events-to-dispatch-value',
+        ]) {
+            const value = newElement.getAttribute(name);
+
+            if (null === value) {
+                this.element.removeAttribute(name);
+            } else {
+                this.element.setAttribute(name, value);
+            }
+        }
+    }
+
     private calculateDebounce(debounce: number | boolean): number {
         if (debounce === true) {
             return this.defaultDebounce;
@@ -584,8 +623,9 @@ export default class Component {
 
     private debouncedStartRequest(debounce: number | boolean) {
         this.clearRequestDebounceTimeout();
+        // not render(): an action alone does not ask for a re-render
         this.requestDebounceTimeout = window.setTimeout(() => {
-            this.render();
+            this.tryStartingRequest();
         }, this.calculateDebounce(debounce));
     }
 
