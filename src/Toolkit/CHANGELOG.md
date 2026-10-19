@@ -15,6 +15,7 @@
 - Add the `components` and `controllers` options (`dir`, `subdirectory`) to choose where `ux:install` writes recipe files
 - Add the `%COMPONENTS_DIR%` and `%CONTROLLERS_DIR%` placeholders in recipe `copy-files` destinations
 - [Common] Add `sortable` recipe
+- [Common] Add `password-visibility` recipe
 
 ## 3.6.0
 
