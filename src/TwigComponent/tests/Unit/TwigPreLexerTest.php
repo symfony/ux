@@ -82,6 +82,21 @@ final class TwigPreLexerTest extends TestCase
             '<twig:component is="{{ }}" />',
             'The "is" attribute of "<twig:component>" must not be empty',
         ];
+
+        yield 'mismatched_closing_tag_inside_slot_after_lines' => [
+            "<twig:foo>\n<twig:block name=\"s\">\n\n<twig:bar></twig:baz>\n</twig:block></twig:foo>",
+            "Expected closing tag '</twig:bar>' but found '</twig:baz>' at line 4.",
+        ];
+
+        yield 'unclosed_component_inside_slot' => [
+            "<twig:foo><twig:block name=\"s\">\n<twig:bar>\n</twig:block></twig:foo>",
+            "Expected closing tag '</twig:bar>' but found '</twig:block>' at line 3.",
+        ];
+
+        yield 'slot_without_name' => [
+            '<twig:foo><twig:block>x</twig:block></twig:foo>',
+            'Expected block name at line 1.',
+        ];
     }
 
     public static function getLexTests(): iterable
@@ -559,6 +574,22 @@ final class TwigPreLexerTest extends TestCase
             '{% component \'foo\' %}{% block content %}a{% embed "e.twig" %}{% block b %}y{% endblock %}{%endembed%}{% endblock %}{% block c %}z{% endblock %}{% endcomponent %}',
         ];
 
+        yield 'twig_embed_nested_in_embed' => [
+            '<twig:foo>a{% embed "o.twig" %}{% embed "i.twig" %}{% endembed %}{% block b %}y{% endblock %}{% endembed %}</twig:foo>',
+            '{% component \'foo\' %}{% block content %}a{% embed "o.twig" %}{% embed "i.twig" %}{% endembed %}{% block b %}y{% endblock %}{% endembed %}{% endblock %}{% endcomponent %}',
+        ];
+
+        yield 'component_inside_twig_embed_closes_its_default_block_before_a_block' => [
+            '<twig:foo>{% embed "e.twig" %}<twig:bar>x{% block b %}y{% endblock %}</twig:bar>{% endembed %}</twig:foo>',
+            '{% component \'foo\' %}{% block content %}{% embed "e.twig" %}{% component \'bar\' %}{% block content %}x{% endblock %}{% block b %}y{% endblock %}{% endcomponent %}{% endembed %}{% endblock %}{% endcomponent %}',
+        ];
+
+        // the pre-lexer has always closed a component even when an embed inside it was left open
+        yield 'closing_tag_after_unclosed_twig_embed' => [
+            '<twig:foo>{% embed "e.twig" %}</twig:foo>',
+            '{% component \'foo\' %}{% block content %}{% embed "e.twig" %}{% endblock %}{% endcomponent %}',
+        ];
+
         yield 'string_inside_of_twig_code_not_escaped' => [
             <<<EOF
                 <twig:TabbedCodeBlocks :files="[
@@ -709,6 +740,49 @@ final class TwigPreLexerTest extends TestCase
         yield 'block_after_verbatim_in_slot' => [
             '<twig:foo><twig:block name="foo_block">{% verbatim %}{% endblock %}{% endverbatim %}{% block bg %}x{% endblock bg %}tail</twig:block></twig:foo>',
             '{% component \'foo\' %}{% block foo_block %}{% verbatim %}{% endblock %}{% endverbatim %}{% block bg %}x{% endblock bg %}tail{% endblock %}{% endcomponent %}',
+        ];
+
+        // Delimiters written inside a string are text, so they must neither end a block
+        // or a slot, nor start a comment that would swallow the rest of the template.
+        yield 'endblock_in_output_expression_string_in_traditional_block' => [
+            '<twig:foo>{% block b %}{{ "{% endblock %}" }}x{% endblock %}</twig:foo>',
+            '{% component \'foo\' %}{% block b %}{{ "{% endblock %}" }}x{% endblock %}{% endcomponent %}',
+        ];
+
+        yield 'endblock_in_tag_string_in_traditional_block' => [
+            '<twig:foo>{% block b %}{% set s = "{% endblock %}" %}x{% endblock %}</twig:foo>',
+            '{% component \'foo\' %}{% block b %}{% set s = "{% endblock %}" %}x{% endblock %}{% endcomponent %}',
+        ];
+
+        yield 'comment_marker_in_string_in_traditional_block' => [
+            '<twig:foo>{% block b %}{{ "{count, plural, one {# item} other {# items}}"|trans }}{% endblock %}<twig:bar/></twig:foo>',
+            '{% component \'foo\' %}{% block b %}{{ "{count, plural, one {# item} other {# items}}"|trans }}{% endblock %}{% block content %}{{ component(\'bar\') }}{% endblock %}{% endcomponent %}',
+        ];
+
+        yield 'slot_closing_tag_in_output_expression_string' => [
+            '<twig:foo><twig:block name="s">{{ "</twig:block>" }}x</twig:block></twig:foo>',
+            '{% component \'foo\' %}{% block s %}{{ "</twig:block>" }}x{% endblock %}{% endcomponent %}',
+        ];
+
+        yield 'slot_closing_tag_in_tag_string' => [
+            '<twig:foo><twig:block name="s">{% set s = "</twig:block>" %}x</twig:block></twig:foo>',
+            '{% component \'foo\' %}{% block s %}{% set s = "</twig:block>" %}x{% endblock %}{% endcomponent %}',
+        ];
+
+        yield 'comment_marker_in_string_in_slot' => [
+            '<twig:foo><twig:block name="s">{{ "{#" }}<twig:bar/></twig:block></twig:foo>',
+            '{% component \'foo\' %}{% block s %}{{ "{#" }}{{ component(\'bar\') }}{% endblock %}{% endcomponent %}',
+        ];
+
+        // the pre-lexer has always closed what was left open at the end of the template
+        yield 'unclosed_comment_at_the_end' => [
+            '<twig:foo/>{# never closed',
+            '{{ component(\'foo\') }}{# never closed#}',
+        ];
+
+        yield 'unclosed_slot_at_the_end' => [
+            '<twig:block name="a"><twig:block name="b"></twig:block>',
+            '{% block a %}{% block b %}{% endblock %}{% endblock %}',
         ];
 
         yield 'ignore_comment_like_token_inside_output_expression' => [
