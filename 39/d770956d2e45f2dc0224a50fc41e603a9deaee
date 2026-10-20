@@ -1,0 +1,12 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2026-10-20T21:40:22Z
+
+Thanks @dbu for the PR, and for the many test cases.
+
+Here is what I changed during review:
+
+- `{% block x -%}` (whitespace control at the end of the opening tag) was still read as a shorthand block, so the content was rendered twice. The shorthand check now uses `matchTagEnd()`, which is what its docblock already described.
+- `{% embed %}` and `{% endembed %}` now go through the generic `{%` branch. That branch skips strings, so a `%}` inside an embed argument no longer cuts the tag.
+- I kept the performance commit: the lexer is about 12% faster than 3.x on an 826 KB template (96 ms vs 110 ms).
+- I squashed everything into one commit, rebased it on 3.x, and moved the CHANGELOG entry to 3.7.0 as a single line.
