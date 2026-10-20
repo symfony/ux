@@ -48,9 +48,30 @@ updates:
           - dependency-name: 'vitest*'
           - dependency-name: 'web-features'
           - dependency-name: 'yaml'
+      ignore:
+          # tsdown's dts build fails with TypeScript 7 (TS6059 rootDir errors)
+          - dependency-name: 'typescript'
+            update-types: ['version-update:semver-major']
+          # jsdom 30 needs Node ^22.22.2, devEngines allows ^22.18.0
+          - dependency-name: 'jsdom'
+            update-types: ['version-update:semver-major']
+          # Follows the Node version of .nvmrc
+          - dependency-name: '@types/node'
+            update-types: ['version-update:semver-major']
+          # The LiveComponent tests are not migrated to user-event 14 yet
+          - dependency-name: '@testing-library/user-event'
+            update-types: ['version-update:semver-major']
       groups:
           npm-dev-dependencies:
               patterns:
                   - '*'
+              update-types:
+                  - 'minor'
+                  - 'patch'
+          npm-dev-dependencies-major:
+              patterns:
+                  - '*'
+              update-types:
+                  - 'major'
       cooldown:
           default-days: 7

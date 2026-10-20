@@ -58,7 +58,7 @@
         "@hotwired/stimulus": "^3.0.0",
         "@hotwired/turbo": "^7.1.0 || ^8.0",
         "@testing-library/dom": "^10.4.2",
-        "@testing-library/jest-dom": "^6.10.0",
+        "@testing-library/jest-dom": "^7.0.1",
         "@testing-library/user-event": "^14.6.7",
         "@types/hotwired__turbo": "^8.0.4",
         "jsdom": "^29.1.1",

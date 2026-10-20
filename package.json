@@ -33,7 +33,7 @@
         "@playwright/test": "^1.64.0",
         "@puppeteer/browsers": "^3.2.4",
         "@testing-library/dom": "^10.4.2",
-        "@testing-library/jest-dom": "^6.10.0",
+        "@testing-library/jest-dom": "^7.0.1",
         "@tsdown/css": "^0.23.1",
         "@types/node": "^22.20.5",
         "browserslist": "^4.29.3",
