@@ -267,10 +267,16 @@ export default class extends Controller {
         const labelField = commonConfig.labelField ?? 'text';
 
         const config: RecursivePartial<TomSettings> = this.#mergeConfigs(commonConfig, {
-            firstUrl: (query: string) => {
+            // use 'function' to access the TomSelect instance, also available while it is
+            // being constructed (e.g. when preloading), unlike this.tomSelect
+            firstUrl: function (this: TomSelect, query: string) {
                 const separator = autocompleteEndpointUrl.includes('?') ? '&' : '?';
+                // TomSelect hides the selected options: exclude them server-side too, so that
+                // they are not paginated (the next pages URL keep the same excluded values)
+                const excludedValues = this.settings.hideSelected ? this.items : [];
+                const excluded = excludedValues.map((value) => `&excluded[]=${encodeURIComponent(value)}`).join('');
 
-                return `${autocompleteEndpointUrl}${separator}query=${encodeURIComponent(query)}`;
+                return `${autocompleteEndpointUrl}${separator}query=${encodeURIComponent(query)}${excluded}`;
             },
             // VERY IMPORTANT: use 'function (query, callback) { ... }' instead of the
             // '(query, callback) => { ... }' syntax because, otherwise,
@@ -334,20 +340,44 @@ export default class extends Controller {
                 if (this.resetOnFocusValue && this.tomSelect) {
                     const query = this.tomSelect.control_input.value.trim();
                     if (query === '') {
-                        this.tomSelect.clearOptions();
-                        this.tomSelect.loadedSearches = {};
-                        // Defined by the virtual_scroll plugin
-                        if (typeof this.tomSelect['clearPagination'] === 'function') {
-                            this.tomSelect['clearPagination']();
-                        }
-                        this.tomSelect.load('');
+                        this.#reloadRemoteOptions(this.tomSelect, '');
                     }
                 }
             },
             preload: this.preload,
         });
 
-        return this.#createTomSelect(config);
+        const tomSelect = this.#createTomSelect(config);
+
+        if (tomSelect.settings.hideSelected) {
+            // the loaded results were fetched with the previous selection excluded:
+            // reload them when the dropdown reopens, so that they exclude the current one
+            let hasSelectionChanged = false;
+            tomSelect.on('item_add', () => {
+                hasSelectionChanged = true;
+            });
+            tomSelect.on('item_remove', () => {
+                hasSelectionChanged = true;
+            });
+            tomSelect.on('dropdown_open', () => {
+                if (hasSelectionChanged) {
+                    hasSelectionChanged = false;
+                    this.#reloadRemoteOptions(tomSelect, tomSelect.inputValue());
+                }
+            });
+        }
+
+        return tomSelect;
+    }
+
+    #reloadRemoteOptions(tomSelect: TomSelect, query: string): void {
+        tomSelect.clearOptions();
+        tomSelect.loadedSearches = {};
+        // Defined by the virtual_scroll plugin
+        if (typeof tomSelect['clearPagination'] === 'function') {
+            tomSelect['clearPagination']();
+        }
+        tomSelect.load(query);
     }
 
     private getMaxOptions(): number {

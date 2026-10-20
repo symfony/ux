@@ -15,6 +15,7 @@ use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Contracts\Service\ResetInterface;
 use Symfony\UX\Autocomplete\AutocompleteResults;
+use Symfony\UX\Autocomplete\ExcludedValuesAwareAutocompleterInterface;
 use Symfony\UX\Autocomplete\OptionsAwareAutocompleterInterface;
 
 /**
@@ -22,12 +23,13 @@ use Symfony\UX\Autocomplete\OptionsAwareAutocompleterInterface;
  *
  * @internal
  */
-final class WrappedChoiceTypeAutocompleter implements OptionsAwareAutocompleterInterface, ResetInterface
+final class WrappedChoiceTypeAutocompleter implements OptionsAwareAutocompleterInterface, ExcludedValuesAwareAutocompleterInterface, ResetInterface
 {
     use WrappedAutocompleterTrait;
 
     private ?FormInterface $form = null;
     private array $options = [];
+    private array $excludedValues = [];
 
     public function __construct(
         private string $formType,
@@ -40,6 +42,10 @@ final class WrappedChoiceTypeAutocompleter implements OptionsAwareAutocompleterI
         $form = $this->getForm();
 
         $choices = $this->getChoicesFromForm($form);
+
+        if ($this->excludedValues) {
+            $choices = array_values(array_filter($choices, fn (array $choice) => !\in_array($choice['value'], $this->excludedValues, true)));
+        }
 
         // Filter choices by query (case-insensitive string matching on labels)
         if ('' !== $query) {

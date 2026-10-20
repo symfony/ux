@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 3.7
+
+- Exclude the already selected options from the AJAX results of a multiple autocomplete field, so that all the
+  other options remain reachable. Add `ExcludedValuesAwareAutocompleterInterface` to support it in custom autocompleters
+
 ## 3.5
 
 - Add support for Symfony 8.2's standalone `AssetMapperBundle`
