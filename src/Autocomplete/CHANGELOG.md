@@ -3,6 +3,7 @@
 ## 3.7.0
 
 - Support the `preferred_choices` option in Ajax-powered fields: the preferred choices are listed first
+- Exclude the already selected options from the AJAX results of a multiple autocomplete field, so that the other options remain reachable
 
 ## 3.5
 

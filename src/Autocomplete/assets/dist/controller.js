@@ -1,5 +1,6 @@
 import { Controller } from "@hotwired/stimulus";
 import TomSelect from "tom-select";
+const MAX_EXCLUDED_QUERY_LENGTH = 4e3;
 var controller_default = class extends Controller {
 	static values = {
 		url: String,
@@ -141,20 +142,27 @@ var controller_default = class extends Controller {
 		const commonConfig = this.#getCommonConfig();
 		const labelField = commonConfig.labelField ?? "text";
 		let loadedQuery = "";
+		let hasSelectionChanged = false;
+		let hasLoadedOptions = false;
 		const clearRemoteOptions = (tomSelect) => {
 			tomSelect.clearOptions();
 			if (typeof tomSelect["clearPagination"] === "function") tomSelect["clearPagination"]();
 			loadedQuery = "";
+			hasSelectionChanged = false;
+			hasLoadedOptions = false;
 		};
 		const config = this.#mergeConfigs(commonConfig, {
-			firstUrl: (query) => {
-				return `${autocompleteEndpointUrl}${autocompleteEndpointUrl.includes("?") ? "&" : "?"}query=${encodeURIComponent(query)}`;
+			firstUrl: function(query) {
+				const separator = autocompleteEndpointUrl.includes("?") ? "&" : "?";
+				const excluded = (this.settings.hideSelected ? this.items : []).map((value) => `&excluded[]=${encodeURIComponent(value)}`).join("");
+				return `${autocompleteEndpointUrl}${separator}query=${encodeURIComponent(query)}${excluded.length <= MAX_EXCLUDED_QUERY_LENGTH ? excluded : ""}`;
 			},
 			load: function(query, callback) {
 				const url = this.getUrl(query);
 				fetch(url).then((response) => response.json()).then((json) => {
 					this.setNextUrl(query, json.next_page);
 					loadedQuery = query;
+					hasLoadedOptions = true;
 					callback(json.results.options || json.results, json.results.optgroups || []);
 				}).catch(() => callback([], []));
 			},
@@ -192,13 +200,24 @@ var controller_default = class extends Controller {
 				}
 			},
 			onDropdownOpen: () => {
-				if (!this.tomSelect || loadedQuery === "" || this.tomSelect.inputValue() !== "") return;
+				if (!this.tomSelect) return;
+				const query = this.tomSelect.inputValue();
+				if (!(hasSelectionChanged && hasLoadedOptions) && !(loadedQuery !== "" && query === "")) return;
 				clearRemoteOptions(this.tomSelect);
-				if (this.tomSelect.settings.shouldLoad.call(this.tomSelect, "")) this.tomSelect.load("");
+				if (query === "" && null === minCharacterLength || this.tomSelect.settings.shouldLoad.call(this.tomSelect, query)) this.tomSelect.load(query);
 			},
 			preload: this.preload
 		});
-		return this.#createTomSelect(config);
+		const tomSelect = this.#createTomSelect(config);
+		if (tomSelect.settings.hideSelected) {
+			tomSelect.on("item_add", () => {
+				hasSelectionChanged = true;
+			});
+			tomSelect.on("item_remove", () => {
+				hasSelectionChanged = true;
+			});
+		}
+		return tomSelect;
 	}
 	getMaxOptions() {
 		if (this.hasMaxOptionsValue) return this.maxOptionsValue;
