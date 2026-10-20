@@ -96,7 +96,7 @@ jobs:
                   echo "PACKAGES=$PACKAGES" >> $GITHUB_ENV
 
             - name: Setup PHP
-              uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # 2.37.2
+              uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
               with:
                   php-version: ${{ matrix.php-version }}
                   extensions: ${{ matrix.os == 'windows-latest' && 'pdo_sqlite,sqlite3,fileinfo,gd,intl,zip' || '' }}
@@ -134,7 +134,7 @@ jobs:
               with:
                   persist-credentials: false
 
-            - uses: pnpm/setup@fbda4c85fc2e1e08721cd8763afea8f48d60f024 # v3.0.0
+            - uses: pnpm/setup@a0881977cd8ea73b1ed212236c99ca10dcc80cf4 # v3.1.1
               with:
                   cache: true
 
