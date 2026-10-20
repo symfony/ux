@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 3.7.0
+
+- Fix the pre-lexer only recognizing one spelling of `{% block %}`, `{% endblock %}` and `{% embed %}` inside a component (whitespace control, extra or missing spaces, named `{% endblock name %}`)
+
 ## 3.6.0
 
 - Fix the pre-lexer mistaking a `<twig:` written inside a `{% %}` tag for a component (for example in the `## ...` documentation of a prop, in a `#` inline comment or in a string)

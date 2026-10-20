@@ -12,7 +12,6 @@
 namespace Symfony\UX\TwigComponent\Twig;
 
 use Twig\Error\SyntaxError;
-use Twig\Lexer;
 
 /**
  * Rewrites <twig:component> syntaxes to {% component %} syntaxes.
@@ -21,6 +20,14 @@ class TwigPreLexer
 {
     private const VERBATIM_REGEX = '/\G\{%[-~]?\s*verbatim\s*[-~]?%\}/';
     private const ENDVERBATIM_REGEX = '/\{%[-~]?\s*endverbatim\s*[-~]?%\}/';
+    // Twig\Lexer::REGEX_NAME can not be reused for composing the pattern we need
+    private const NAME = '[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*';
+    // {%, {%- or {%~ followed by the tag name
+    private const TAG_START_REGEX = '/\{%[-~]?\s*('.self::NAME.')/A';
+    // the name a closing tag may repeat, then %}, -%} or ~%}
+    private const TAG_END_REGEX = '/(?:\s+'.self::NAME.')?\s*[-~]?%\}/A';
+    // a whole {% block %} or {% endblock %}, the tags that delimit a block body
+    private const SLOT_TAG_REGEX = '/\{%[-~]?\s*(endblock|block)(?:\s+'.self::NAME.')?\s*[-~]?%\}/A';
 
     private string $input;
     private int $length;
@@ -115,26 +122,20 @@ class TwigPreLexer
                 continue;
             }
 
-            if ($this->consume('{% embed')) {
-                $inTwigEmbed = true;
-                $output .= '{% embed';
-                $output .= $this->consumeUntil('%}');
-
-                continue;
-            }
-
-            if ($this->consume('{% endembed %}')) {
-                $inTwigEmbed = false;
-                $output .= '{% endembed %}';
-
-                continue;
-            }
+            $tag = '{' === $this->input[$this->position] ? $this->matchTagStart() : null;
+            $tagName = $tag['name'] ?? null;
 
             $isTwigHtmlOpening = $this->consume('<twig:');
-            $isTraditionalBlockOpening = false;
+            $blockOpening = null;
 
-            if ($isTwigHtmlOpening || (0 !== \count($this->currentComponents) && $isTraditionalBlockOpening = $this->consume('{% block'))) {
-                $componentName = $isTraditionalBlockOpening ? 'block' : $this->consumeComponentName();
+            if (!$isTwigHtmlOpening && 'block' === $tagName && 0 !== \count($this->currentComponents)) {
+                $blockOpening = $tag['source'];
+                $isBlockSelfClosing = null === $this->matchTagEnd($blockOpening);
+                $this->moveCursor($blockOpening);
+            }
+
+            if ($isTwigHtmlOpening || null !== $blockOpening) {
+                $componentName = null !== $blockOpening ? 'block' : $this->consumeComponentName();
 
                 if ('block' === $componentName) {
                     // if we're already inside the "default" block, let's close it
@@ -144,13 +145,10 @@ class TwigPreLexer
                         $this->currentComponents[\count($this->currentComponents) - 1]['hasDefaultBlock'] = false;
                     }
 
-                    if ($isTraditionalBlockOpening) {
+                    if (null !== $blockOpening) {
                         // add what we've consumed so far
-                        $output .= '{% block';
-                        $output .= $stringUntilClosingTag = $this->consumeUntil('%}');
-
-                        // If the last-consumed string does not match the Twig's block name regex, we assume the block is self-closing
-                        $isBlockSelfClosing = '' !== preg_replace(Lexer::REGEX_NAME, '', trim($stringUntilClosingTag));
+                        $output .= $blockOpening;
+                        $output .= $this->consumeUntil('%}');
 
                         if ($isBlockSelfClosing && $this->consume('%}')) {
                             $output .= '%}';
@@ -245,6 +243,12 @@ class TwigPreLexer
                     $this->currentComponents[\count($this->currentComponents) - 1]['hasDefaultBlock'] = true;
                 }
 
+                if ('embed' === $tagName) {
+                    $inTwigEmbed = true;
+                } elseif ('endembed' === $tagName && null !== $this->matchTagEnd($tag['source'])) {
+                    $inTwigEmbed = false;
+                }
+
                 $this->consume('{%');
                 $output .= '{%';
                 $output .= $this->consumeTwigExpressionContent('%}');
@@ -264,7 +268,6 @@ class TwigPreLexer
             if (!empty($this->currentComponents)
                 && !$this->currentComponents[\count($this->currentComponents) - 1]['hasDefaultBlock']
                 && !ctype_space($char)
-                && !$this->check('{% block')
             ) {
                 $this->currentComponents[\count($this->currentComponents) - 1]['hasDefaultBlock'] = true;
                 $output .= '{% block content %}';
@@ -520,6 +523,48 @@ class TwigPreLexer
         return '' !== $char && (ctype_alnum($char) || str_contains('_:@-.', $char));
     }
 
+    /**
+     * Advances past matched source, counting the newlines a tag may contain.
+     */
+    private function moveCursor(string $text): void
+    {
+        $this->position += \strlen($text);
+        $this->line += substr_count($text, "\n");
+    }
+
+    /**
+     * Reads the delimiter and the name of the tag at the current position, without consuming them.
+     *
+     * @return array{source: string, name: string}|null
+     */
+    private function matchTagStart(): ?array
+    {
+        if (!preg_match(self::TAG_START_REGEX, $this->input, $matches, 0, $this->position)) {
+            return null;
+        }
+
+        return ['source' => $matches[0], 'name' => $matches[1]];
+    }
+
+    /**
+     * Matches the end of the tag whose start is given, without consuming it.
+     *
+     * A tag carrying more than the name it may repeat does not match, which is what tells
+     * the shorthand `{% block title 'x' %}` from a block that opens a body.
+     *
+     * @return string|null the whole tag, or null if it carries anything else
+     */
+    private function matchTagEnd(string $tagStart): ?string
+    {
+        $endOffset = $this->position + \strlen($tagStart);
+
+        if (!preg_match(self::TAG_END_REGEX, $this->input, $matches, 0, $endOffset)) {
+            return null;
+        }
+
+        return $tagStart.$matches[0];
+    }
+
     private function consumeBlock(string $componentName): string
     {
         $attributes = $this->consumeAttributes($componentName);
@@ -582,16 +627,31 @@ class TwigPreLexer
                         break;
                     }
 
-                    if ('{% endblock %}' === substr($this->input, $this->position, 14)) {
+                    if ('{%' !== substr($this->input, $this->position, 2)) {
+                        break;
+                    }
+
+                    if (preg_match(self::VERBATIM_REGEX, $this->input, $matches, 0, $this->position)) {
+                        $this->consumeVerbatim($matches[0]);
+
+                        continue 2;
+                    }
+
+                    if (!preg_match(self::SLOT_TAG_REGEX, $this->input, $matches, 0, $this->position)) {
+                        break;
+                    }
+
+                    [$tagSource, $tagName] = $matches;
+
+                    if ('endblock' === $tagName) {
                         if (1 === $depth) {
                             // in this case, we want to advance ALL the way beyond the endblock
-                            // strlen('{% endblock %}') = 14
-                            $this->position += 14;
+                            $this->moveCursor($tagSource);
                             break 2;
                         }
 
                         --$depth;
-                    } elseif ('{% block' === substr($this->input, $this->position, 8)) {
+                    } else {
                         ++$depth;
                     }
                     break;

@@ -42,8 +42,29 @@ final class TwigPreLexerTest extends TestCase
             'Expected closing tag "</twig:foo>" not found at line 1.',
         ];
 
+        yield 'unclosed_block_inside_slot' => [
+            '<twig:foo><twig:block name="bar">{% block a %}</twig:block></twig:foo>',
+            'Expected closing tag "</twig:foo>" not found at line 1.',
+        ];
+
         yield 'mismatched_closing_tag_after_lines_of_text' => [
             "<p>\n    text\n</p>\n<twig:foo>\n    text\n</twig:bar>",
+            "Expected closing tag '</twig:foo>' but found '</twig:bar>' at line 6.",
+        ];
+
+        // a tag may span several lines, which still have to be counted
+        yield 'mismatched_closing_tag_after_multiline_block' => [
+            "<twig:foo>{%\nblock x\n%}y{% endblock %}\n</twig:bar>",
+            "Expected closing tag '</twig:foo>' but found '</twig:bar>' at line 4.",
+        ];
+
+        yield 'mismatched_closing_tag_after_multiline_endblock' => [
+            "<twig:foo>{% block x %}y{%\nendblock\n%}\n</twig:bar>",
+            "Expected closing tag '</twig:foo>' but found '</twig:bar>' at line 4.",
+        ];
+
+        yield 'mismatched_closing_tag_after_multiline_endembed' => [
+            "<twig:foo>a\n{% embed \"e\" %}\n{%\nendembed\n%}\n</twig:bar>",
             "Expected closing tag '</twig:foo>' but found '</twig:bar>' at line 6.",
         ];
 
@@ -98,6 +119,86 @@ final class TwigPreLexerTest extends TestCase
         yield 'traditional_blocks_around_component_do_not_confuse' => [
             'Hello {% block foo_block %}Foo{% endblock %}<twig:foo />{% block bar_block %}Bar{% endblock %}',
             'Hello {% block foo_block %}Foo{% endblock %}{{ component(\'foo\') }}{% block bar_block %}Bar{% endblock %}',
+        ];
+
+        // Every spelling Twig accepts for a block nested inside a <twig:block> slot has to
+        // balance the slot's depth counter, otherwise the slot swallows its own closing tag.
+        yield 'block_in_slot' => [
+            '<twig:foo><twig:block name="foo_block">{% block bg %}x{% endblock %}</twig:block></twig:foo>',
+            '{% component \'foo\' %}{% block foo_block %}{% block bg %}x{% endblock %}{% endblock %}{% endcomponent %}',
+        ];
+
+        yield 'block_in_slot_with_named_endblock' => [
+            '<twig:foo><twig:block name="foo_block">{% block bg %}x{% endblock bg %}</twig:block></twig:foo>',
+            '{% component \'foo\' %}{% block foo_block %}{% block bg %}x{% endblock bg %}{% endblock %}{% endcomponent %}',
+        ];
+
+        yield 'block_in_slot_with_extra_whitespace_in_endblock' => [
+            '<twig:foo><twig:block name="foo_block">{% block bg %}x{%  endblock  %}</twig:block></twig:foo>',
+            '{% component \'foo\' %}{% block foo_block %}{% block bg %}x{%  endblock  %}{% endblock %}{% endcomponent %}',
+        ];
+
+        yield 'block_in_slot_without_whitespace_in_endblock' => [
+            '<twig:foo><twig:block name="foo_block">{% block bg %}x{%endblock%}</twig:block></twig:foo>',
+            '{% component \'foo\' %}{% block foo_block %}{% block bg %}x{%endblock%}{% endblock %}{% endcomponent %}',
+        ];
+
+        yield 'block_in_slot_with_whitespace_control_before_endblock' => [
+            '<twig:foo><twig:block name="foo_block">{% block bg %}x{%- endblock %}</twig:block></twig:foo>',
+            '{% component \'foo\' %}{% block foo_block %}{% block bg %}x{%- endblock %}{% endblock %}{% endcomponent %}',
+        ];
+
+        yield 'block_in_slot_with_whitespace_control_after_endblock' => [
+            '<twig:foo><twig:block name="foo_block">{% block bg %}x{% endblock -%}</twig:block></twig:foo>',
+            '{% component \'foo\' %}{% block foo_block %}{% block bg %}x{% endblock -%}{% endblock %}{% endcomponent %}',
+        ];
+
+        yield 'block_in_slot_with_line_control_around_endblock' => [
+            '<twig:foo><twig:block name="foo_block">{% block bg %}x{%~ endblock ~%}</twig:block></twig:foo>',
+            '{% component \'foo\' %}{% block foo_block %}{% block bg %}x{%~ endblock ~%}{% endblock %}{% endcomponent %}',
+        ];
+
+        yield 'block_in_slot_with_whitespace_control_and_named_endblock' => [
+            '<twig:foo><twig:block name="foo_block">{% block bg %}x{%- endblock bg -%}</twig:block></twig:foo>',
+            '{% component \'foo\' %}{% block foo_block %}{% block bg %}x{%- endblock bg -%}{% endblock %}{% endcomponent %}',
+        ];
+
+        // The mirror case: an opening tag that is not counted truncates the slot at the
+        // first endblock, dropping everything after it.
+        yield 'block_in_slot_with_whitespace_control_on_block' => [
+            '<twig:foo><twig:block name="foo_block">{%- block bg %}x{% endblock %}tail</twig:block></twig:foo>',
+            '{% component \'foo\' %}{% block foo_block %}{%- block bg %}x{% endblock %}tail{% endblock %}{% endcomponent %}',
+        ];
+
+        yield 'block_in_slot_without_whitespace_in_block' => [
+            '<twig:foo><twig:block name="foo_block">{%block bg%}x{% endblock %}tail</twig:block></twig:foo>',
+            '{% component \'foo\' %}{% block foo_block %}{%block bg%}x{% endblock %}tail{% endblock %}{% endcomponent %}',
+        ];
+
+        // The shorthand block has no endblock to pair with, so it must not be counted at all.
+        yield 'shorthand_block_in_slot' => [
+            '<twig:foo><twig:block name="foo_block">{% block bg "x" %}tail</twig:block></twig:foo>',
+            '{% component \'foo\' %}{% block foo_block %}{% block bg "x" %}tail{% endblock %}{% endcomponent %}',
+        ];
+
+        yield 'shorthand_block_in_slot_with_expression' => [
+            '<twig:foo><twig:block name="foo_block">{% block bg bar|upper %}tail</twig:block></twig:foo>',
+            '{% component \'foo\' %}{% block foo_block %}{% block bg bar|upper %}tail{% endblock %}{% endcomponent %}',
+        ];
+
+        yield 'nested_blocks_in_slot_with_named_endblocks' => [
+            '<twig:foo><twig:block name="foo_block">{% block a %}{% block b %}x{% endblock b %}y{% endblock a %}</twig:block></twig:foo>',
+            '{% component \'foo\' %}{% block foo_block %}{% block a %}{% block b %}x{% endblock b %}y{% endblock a %}{% endblock %}{% endcomponent %}',
+        ];
+
+        yield 'nested_slot_next_to_named_endblock' => [
+            '<twig:foo><twig:block name="foo_block"><twig:bar><twig:block name="inner">{% block b %}x{% endblock b %}</twig:block></twig:bar>tail</twig:block></twig:foo>',
+            '{% component \'foo\' %}{% block foo_block %}{% component \'bar\' %}{% block inner %}{% block b %}x{% endblock b %}{% endblock %}{% endcomponent %}tail{% endblock %}{% endcomponent %}',
+        ];
+
+        yield 'block_in_slot_with_endblock_inside_comment' => [
+            '<twig:foo><twig:block name="foo_block">{% block bg %}{# {% endblock %} #}x{% endblock %}</twig:block></twig:foo>',
+            '{% component \'foo\' %}{% block foo_block %}{% block bg %}{# {% endblock %} #}x{% endblock %}{% endblock %}{% endcomponent %}',
         ];
 
         yield 'component_with_commented_block' => [
@@ -159,6 +260,53 @@ final class TwigPreLexerTest extends TestCase
         yield 'block_prefixed_component_name_around_a_real_nested_block' => [
             '<twig:foo><twig:block name="a"><twig:blockquote /><twig:bar><twig:block name="b">x</twig:block></twig:bar></twig:block></twig:foo>',
             '{% component \'foo\' %}{% block a %}{{ component(\'blockquote\') }}{% component \'bar\' %}{% block b %}x{% endblock %}{% endcomponent %}{% endblock %}{% endcomponent %}',
+        ];
+
+        // A traditional block directly inside a component overrides that component's block,
+        // whatever spelling opens it; it must not be wrapped in the default block instead.
+        yield 'traditional_block_with_whitespace_control' => [
+            '<twig:foo>{%- block b %}x{% endblock %}</twig:foo>',
+            '{% component \'foo\' %}{%- block b %}x{% endblock %}{% endcomponent %}',
+        ];
+
+        yield 'traditional_block_with_line_control' => [
+            '<twig:foo>{%~ block b %}x{% endblock %}</twig:foo>',
+            '{% component \'foo\' %}{%~ block b %}x{% endblock %}{% endcomponent %}',
+        ];
+
+        yield 'traditional_block_without_whitespace' => [
+            '<twig:foo>{%block b%}x{% endblock %}</twig:foo>',
+            '{% component \'foo\' %}{%block b%}x{% endblock %}{% endcomponent %}',
+        ];
+
+        yield 'traditional_block_with_extra_whitespace' => [
+            '<twig:foo>{%  block  b %}x{% endblock %}</twig:foo>',
+            '{% component \'foo\' %}{%  block  b %}x{% endblock %}{% endcomponent %}',
+        ];
+
+        yield 'traditional_block_with_whitespace_control_after_name' => [
+            '<twig:foo>{% block b -%}x{% endblock %}</twig:foo>',
+            '{% component \'foo\' %}{% block b -%}x{% endblock %}{% endcomponent %}',
+        ];
+
+        yield 'traditional_block_with_line_control_after_name' => [
+            '<twig:foo>{% block b ~%}x{% endblock %}</twig:foo>',
+            '{% component \'foo\' %}{% block b ~%}x{% endblock %}{% endcomponent %}',
+        ];
+
+        yield 'traditional_block_with_whitespace_control_on_both_sides' => [
+            '<twig:foo>{%- block b -%}x{%- endblock -%}</twig:foo>',
+            '{% component \'foo\' %}{%- block b -%}x{%- endblock -%}{% endcomponent %}',
+        ];
+
+        yield 'traditional_shorthand_block_with_whitespace_control' => [
+            '<twig:foo>{%- block b "x" %}</twig:foo>',
+            '{% component \'foo\' %}{%- block b "x" %}{% endcomponent %}',
+        ];
+
+        yield 'block_prefixed_tag_name' => [
+            '<twig:foo>a{% blockish %}</twig:foo>',
+            '{% component \'foo\' %}{% block content %}a{% blockish %}{% endblock %}{% endcomponent %}',
         ];
 
         yield 'component_with_embedded_component' => [
@@ -344,6 +492,73 @@ final class TwigPreLexerTest extends TestCase
                 EOF,
         ];
 
+        // A block belongs to the embed it sits in, whatever spelling opened or closed that
+        // embed, so the component's default block must stay open across the whole embed.
+        yield 'twig_embed_with_whitespace_control' => [
+            '<twig:foo>a{%- embed "e.twig" %}{% block b %}y{% endblock %}{% endembed %}</twig:foo>',
+            '{% component \'foo\' %}{% block content %}a{%- embed "e.twig" %}{% block b %}y{% endblock %}{% endembed %}{% endblock %}{% endcomponent %}',
+        ];
+
+        yield 'twig_embed_without_whitespace' => [
+            '<twig:foo>a{%embed "e.twig" %}{% block b %}y{% endblock %}{% endembed %}</twig:foo>',
+            '{% component \'foo\' %}{% block content %}a{%embed "e.twig" %}{% block b %}y{% endblock %}{% endembed %}{% endblock %}{% endcomponent %}',
+        ];
+
+        yield 'twig_embed_with_closing_delimiter_in_string' => [
+            '<twig:foo>a{% embed "e.twig" with { x: "%}<twig:bar />" } %}{% block b %}y{% endblock %}{% endembed %}{% block c %}z{% endblock %}</twig:foo>',
+            '{% component \'foo\' %}{% block content %}a{% embed "e.twig" with { x: "%}<twig:bar />" } %}{% block b %}y{% endblock %}{% endembed %}{% endblock %}{% block c %}z{% endblock %}{% endcomponent %}',
+        ];
+
+        // An embed opening a component's content is the first thing that opens the default
+        // block, so the block has to be opened before the embed tag rather than inside it.
+        yield 'twig_embed_as_first_component_content' => [
+            '<twig:foo>{% embed "e.twig" %}{% endembed %}</twig:foo>',
+            '{% component \'foo\' %}{% block content %}{% embed "e.twig" %}{% endembed %}{% endblock %}{% endcomponent %}',
+        ];
+
+        yield 'twig_embed_as_first_component_content_with_whitespace_control' => [
+            '<twig:foo>{%- embed "e.twig" %}{% endembed %}</twig:foo>',
+            '{% component \'foo\' %}{% block content %}{%- embed "e.twig" %}{% endembed %}{% endblock %}{% endcomponent %}',
+        ];
+
+        yield 'twig_embed_as_first_component_content_without_whitespace' => [
+            '<twig:foo>{%embed "e.twig" %}{% endembed %}</twig:foo>',
+            '{% component \'foo\' %}{% block content %}{%embed "e.twig" %}{% endembed %}{% endblock %}{% endcomponent %}',
+        ];
+
+        yield 'twig_embed_as_first_component_content_with_block' => [
+            '<twig:foo>{% embed "e.twig" %}{% block b %}y{% endblock %}{% endembed %}</twig:foo>',
+            '{% component \'foo\' %}{% block content %}{% embed "e.twig" %}{% block b %}y{% endblock %}{% endembed %}{% endblock %}{% endcomponent %}',
+        ];
+
+        // only non-whitespace content before the embed opens the default block early
+        yield 'twig_embed_as_first_component_content_after_newline' => [
+            "<twig:foo>\n{% embed \"e.twig\" %}{% endembed %}\n</twig:foo>",
+            "{% component 'foo' %}\n{% block content %}{% embed \"e.twig\" %}{% endembed %}\n{% endblock %}{% endcomponent %}",
+        ];
+
+        yield 'twig_embed_as_first_slot_content' => [
+            '<twig:foo><twig:block name="b">{% embed "e.twig" %}{% endembed %}</twig:block></twig:foo>',
+            '{% component \'foo\' %}{% block b %}{% embed "e.twig" %}{% endembed %}{% endblock %}{% endcomponent %}',
+        ];
+
+        // The block following the embed only overrides the component's block if the embed
+        // was recognised as closed, so each endembed spelling needs one.
+        yield 'twig_endembed_with_whitespace_control' => [
+            '<twig:foo>a{% embed "e.twig" %}{% block b %}y{% endblock %}{% endembed -%}{% block c %}z{% endblock %}</twig:foo>',
+            '{% component \'foo\' %}{% block content %}a{% embed "e.twig" %}{% block b %}y{% endblock %}{% endembed -%}{% endblock %}{% block c %}z{% endblock %}{% endcomponent %}',
+        ];
+
+        yield 'twig_endembed_with_whitespace_control_before' => [
+            '<twig:foo>a{% embed "e.twig" %}{% block b %}y{% endblock %}{%- endembed %}{% block c %}z{% endblock %}</twig:foo>',
+            '{% component \'foo\' %}{% block content %}a{% embed "e.twig" %}{% block b %}y{% endblock %}{%- endembed %}{% endblock %}{% block c %}z{% endblock %}{% endcomponent %}',
+        ];
+
+        yield 'twig_endembed_without_whitespace' => [
+            '<twig:foo>a{% embed "e.twig" %}{% block b %}y{% endblock %}{%endembed%}{% block c %}z{% endblock %}</twig:foo>',
+            '{% component \'foo\' %}{% block content %}a{% embed "e.twig" %}{% block b %}y{% endblock %}{%endembed%}{% endblock %}{% block c %}z{% endblock %}{% endcomponent %}',
+        ];
+
         yield 'string_inside_of_twig_code_not_escaped' => [
             <<<EOF
                 <twig:TabbedCodeBlocks :files="[
@@ -452,6 +667,48 @@ final class TwigPreLexerTest extends TestCase
         yield 'verbatim_block_after_text_in_a_component' => [
             '<twig:foo>a{% verbatim %}<twig:Alert/>{% endverbatim %}</twig:foo>',
             '{% component \'foo\' %}{% block content %}a{% verbatim %}<twig:Alert/>{% endverbatim %}{% endblock %}{% endcomponent %}',
+        ];
+
+        // Block delimiters written inside a verbatim tag are text, so they must not move
+        // the depth counter that looks for the end of a slot or of a traditional block.
+        yield 'verbatim_block_in_slot' => [
+            '<twig:foo><twig:block name="foo_block">{% verbatim %}{% block bg %}{% endverbatim %}tail</twig:block></twig:foo>',
+            '{% component \'foo\' %}{% block foo_block %}{% verbatim %}{% block bg %}{% endverbatim %}tail{% endblock %}{% endcomponent %}',
+        ];
+
+        yield 'verbatim_endblock_in_slot' => [
+            '<twig:foo><twig:block name="foo_block">{% verbatim %}{% endblock %}{% endverbatim %}tail</twig:block></twig:foo>',
+            '{% component \'foo\' %}{% block foo_block %}{% verbatim %}{% endblock %}{% endverbatim %}tail{% endblock %}{% endcomponent %}',
+        ];
+
+        yield 'verbatim_named_endblock_in_slot' => [
+            '<twig:foo><twig:block name="foo_block">{% verbatim %}{% endblock bg %}{% endverbatim %}tail</twig:block></twig:foo>',
+            '{% component \'foo\' %}{% block foo_block %}{% verbatim %}{% endblock bg %}{% endverbatim %}tail{% endblock %}{% endcomponent %}',
+        ];
+
+        yield 'verbatim_closing_slot_tag_in_slot' => [
+            '<twig:foo><twig:block name="foo_block">{% verbatim %}</twig:block>{% endverbatim %}tail</twig:block></twig:foo>',
+            '{% component \'foo\' %}{% block foo_block %}{% verbatim %}</twig:block>{% endverbatim %}tail{% endblock %}{% endcomponent %}',
+        ];
+
+        yield 'verbatim_block_in_traditional_block' => [
+            '<twig:foo>{% block bg %}{% verbatim %}{% block x %}{% endverbatim %}tail{% endblock %}</twig:foo>',
+            '{% component \'foo\' %}{% block bg %}{% verbatim %}{% block x %}{% endverbatim %}tail{% endblock %}{% endcomponent %}',
+        ];
+
+        yield 'verbatim_endblock_in_traditional_block' => [
+            '<twig:foo>{% block bg %}{% verbatim %}{% endblock %}{% endverbatim %}tail{% endblock %}</twig:foo>',
+            '{% component \'foo\' %}{% block bg %}{% verbatim %}{% endblock %}{% endverbatim %}tail{% endblock %}{% endcomponent %}',
+        ];
+
+        yield 'comment_marker_in_verbatim_in_slot' => [
+            '<twig:foo><twig:block name="foo_block">{% verbatim %}{# {% endverbatim %}tail</twig:block></twig:foo>',
+            '{% component \'foo\' %}{% block foo_block %}{% verbatim %}{# {% endverbatim %}tail{% endblock %}{% endcomponent %}',
+        ];
+
+        yield 'block_after_verbatim_in_slot' => [
+            '<twig:foo><twig:block name="foo_block">{% verbatim %}{% endblock %}{% endverbatim %}{% block bg %}x{% endblock bg %}tail</twig:block></twig:foo>',
+            '{% component \'foo\' %}{% block foo_block %}{% verbatim %}{% endblock %}{% endverbatim %}{% block bg %}x{% endblock bg %}tail{% endblock %}{% endcomponent %}',
         ];
 
         yield 'ignore_comment_like_token_inside_output_expression' => [
