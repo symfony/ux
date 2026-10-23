@@ -40,6 +40,8 @@ jobs:
             fail-fast: false
             matrix:
                 shard: [1, 2, 3, 4, 5, 6, 7, 8]
+        env:
+            APP_ENV: prod
         steps:
             - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
               with:
@@ -68,6 +70,10 @@ jobs:
               with:
                   working-directory: apps/toolkit
                   dependency-versions: highest
+
+            - name: Compile app assets
+              run: php bin/console asset-map:compile
+              working-directory: apps/toolkit
 
             - name: Run browser tests
               id: browser-tests
