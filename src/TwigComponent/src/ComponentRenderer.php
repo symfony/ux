@@ -11,7 +11,6 @@
 
 namespace Symfony\UX\TwigComponent;
 
-use Symfony\Component\EventDispatcher\EventDispatcherInterface as IntrospectableEventDispatcherInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Contracts\Service\ResetInterface;
 use Symfony\UX\TwigComponent\Event\PostRenderEvent;
@@ -28,12 +27,6 @@ final class ComponentRenderer implements ComponentRendererInterface, ResetInterf
 {
     private array $templateClasses = [];
 
-    /**
-     * Set when the dispatcher can be asked whether an event has listeners,
-     * allowing to skip creating and dispatching events nobody listens to.
-     */
-    private readonly ?IntrospectableEventDispatcherInterface $introspectableDispatcher;
-
     public function __construct(
         private Environment $twig,
         private EventDispatcherInterface $dispatcher,
@@ -41,7 +34,6 @@ final class ComponentRenderer implements ComponentRendererInterface, ResetInterf
         private ComponentProperties $componentProperties,
         private ComponentStack $componentStack,
     ) {
-        $this->introspectableDispatcher = $dispatcher instanceof IntrospectableEventDispatcherInterface ? $dispatcher : null;
     }
 
     /**
@@ -49,7 +41,7 @@ final class ComponentRenderer implements ComponentRendererInterface, ResetInterf
      */
     public function preCreateForRender(string $name, array $props = []): ?string
     {
-        if ($this->introspectableDispatcher && !$this->introspectableDispatcher->hasListeners(PreCreateForRenderEvent::class)) {
+        if (!$this->factory->hasListenersFor(PreCreateForRenderEvent::class, $name, $props)) {
             return null;
         }
 
@@ -88,7 +80,7 @@ final class ComponentRenderer implements ComponentRendererInterface, ResetInterf
         } finally {
             $mounted = $this->componentStack->pop();
 
-            if (null === $this->introspectableDispatcher || $this->introspectableDispatcher->hasListeners(PostRenderEvent::class)) {
+            if ($this->factory->hasListenersFor(PostRenderEvent::class, $mounted->getName(), $mounted->getInputProps())) {
                 $this->dispatcher->dispatch(new PostRenderEvent($mounted));
             }
         }
@@ -109,7 +101,7 @@ final class ComponentRenderer implements ComponentRendererInterface, ResetInterf
     {
         $mounted = $this->componentStack->pop();
 
-        if (null === $this->introspectableDispatcher || $this->introspectableDispatcher->hasListeners(PostRenderEvent::class)) {
+        if ($this->factory->hasListenersFor(PostRenderEvent::class, $mounted->getName(), $mounted->getInputProps())) {
             $this->dispatcher->dispatch(new PostRenderEvent($mounted));
         }
     }
@@ -145,7 +137,7 @@ final class ComponentRenderer implements ComponentRendererInterface, ResetInterf
             ...$classProps,
             $metadata->getAttributesVar() => $mounted->getAttributes(),
         ];
-        if (null === $this->introspectableDispatcher || $this->introspectableDispatcher->hasListeners(PreRenderEvent::class)) {
+        if ($this->factory->hasListenersFor(PreRenderEvent::class, $metadata, $inputProps)) {
             $event = new PreRenderEvent($mounted, $metadata, $variables);
             $this->dispatcher->dispatch($event);
             $variables = $event->getVariables();
