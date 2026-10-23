@@ -12,6 +12,7 @@
 - [Shadcn] Align the `login-01` and `login-02` blocks with the upstream Shadcn Nova reference
 - [Shadcn] Fix the content of `sidebar` not scrolling when it is taller than the sidebar, which left its last entries out of reach
 - [Shadcn] Fix `dropdown-menu` ignoring `align` when it opens on the left or the right of its trigger, which always centered the menu
+- [Common] Add `password-visibility` recipe
 
 ## 3.6.0
 
