@@ -23,7 +23,17 @@ final class DsnTest extends TestCase
 
         self::assertSame('cloudflare', $dsn->getScheme());
         self::assertSame('cdn.example.com', $dsn->getHost());
+        self::assertNull($dsn->getPort());
         self::assertNull($dsn->getPath());
+    }
+
+    public function testItParsesAPort(): void
+    {
+        $dsn = new Dsn('ipx://images.example.com:8443/_ipx');
+
+        self::assertSame('images.example.com', $dsn->getHost());
+        self::assertSame(8443, $dsn->getPort());
+        self::assertSame('/_ipx', $dsn->getPath());
     }
 
     public function testItParsesADsnWithAPlaceholderHostAPathAndOptions(): void

@@ -6,8 +6,8 @@ to change, or even change drastically.
 
 Symfony UX Image renders responsive images in Symfony applications by
 delegating every transformation to a URL-based image provider, such as
-`Cloudflare`_, `Cloudinary`_, `imgix`_ or `KeyCDN`_. It is part of
-`the Symfony UX initiative`_.
+`Cloudflare`_, `Cloudinary`_, `imgix`_, `IPX`_ or `KeyCDN`_. It is part
+of `the Symfony UX initiative`_.
 
 The package never decodes, resizes or encodes an image itself. Every
 transformation is expressed as a URL, built by whichever provider is
@@ -50,7 +50,8 @@ The ``<twig:ux:image>`` component renders a single image:
 
 ``src`` is the public URL path of the original image, as your application
 serves it. Every provider reads it the same way: Cloudflare, Cloudinary, imgix
-and KeyCDN fetch it from your origin, and ``null://`` renders it as is.
+and KeyCDN fetch it from your origin, IPX from your ``public/`` directory,
+and ``null://`` renders it as is.
 Switching providers therefore never changes your templates.
 
 For example, with ``UX_IMAGE_DSN=cloudflare://cdn.example.com``, this template:
@@ -289,6 +290,7 @@ Scheme         Install                                          DSN example
 ``cloudflare`` ``composer require symfony/ux-cloudflare-image`` ``cloudflare://cdn.example.com``
 ``cloudinary`` ``composer require symfony/ux-cloudinary-image`` ``cloudinary://my-cloud?origin=https://example.com``
 ``imgix``      ``composer require symfony/ux-imgix-image``      ``imgix://my-source.imgix.net``
+``ipx``        ``composer require symfony/ux-ipx-image``        ``ipx://images.example.com``
 ============== ================================================ ===========================================================
 
 See :ref:`Providers <image_providers>` for what each DSN option means and how
@@ -549,17 +551,20 @@ Parameter mapping
 Every ``ImageTransformation`` property maps to a provider-specific query
 parameter:
 
-========================= =============== =============== =============== ===============
-``ImageTransformation``   `Cloudflare`_   `Cloudinary`_   `imgix`_        `KeyCDN`_
-========================= =============== =============== =============== ===============
-``width``                 ``width``       ``w``           ``w``           ``width``
-``height``                ``height``      ``h``           ``h``           ``height``
-``format``                ``format``      ``f``           ``fm``          ``format``
-``format``: ``auto``      ``format=auto`` ``f_auto``      ``auto=format``
-``quality``               ``quality``     ``q``           ``q``           ``quality``
-``fit``: ``Fit::Cover``   ``fit=cover``   ``c_fill``      ``fit=crop``    ``fit=cover``
-``fit``: ``Fit::Contain`` ``fit=contain`` ``c_fit``       ``fit=clip``    ``fit=contain``
-========================= =============== =============== =============== ===============
+========================= =============== =============== =============== =============== ===============
+``ImageTransformation``   `Cloudflare`_   `Cloudinary`_   `imgix`_        `IPX`_          `KeyCDN`_
+========================= =============== =============== =============== =============== ===============
+``width``                 ``width``       ``w``           ``w``           ``w``           ``width``
+``height``                ``height``      ``h``           ``h``           ``h``           ``height``
+``format``                ``format``      ``f``           ``fm``          ``f``           ``format``
+``format``: ``auto``      ``format=auto`` ``f_auto``      ``auto=format`` ``f_auto``
+``quality``               ``quality``     ``q``           ``q``           ``q``           ``quality``
+``fit``: ``Fit::Cover``   ``fit=cover``   ``c_fill``      ``fit=crop``    ``fit_cover``   ``fit=cover``
+``fit``: ``Fit::Contain`` ``fit=contain`` ``c_fit``       ``fit=clip``    ``fit_inside``  ``fit=contain``
+========================= =============== =============== =============== =============== ===============
+
+IPX takes ``width`` and ``height`` together as one ``s`` modifier, like
+``s_800x450``.
 
 ``operations`` (see
 :ref:`Provider-specific operations <image_provider_operations>`) is merged
@@ -574,14 +579,17 @@ Provider      Supported formats                     Negotiates automatically?
 `Cloudflare`_ ``avif``, ``webp``, ``jpeg``, ``png`` **Yes**
 `Cloudinary`_ ``avif``, ``webp``, ``jpeg``, ``png`` **Yes**
 `imgix`_      ``avif``, ``webp``, ``jpeg``, ``png`` **Yes**
+`IPX`_        ``avif``, ``webp``, ``jpeg``, ``png`` **Yes**
 `KeyCDN`_     ``webp``, ``jpeg``, ``png``           **No**
 ============= ===================================== =========================
 
 Cloudflare, Cloudinary and imgix negotiate natively, through their own
-``format=auto``, ``f_auto`` and ``auto=format``. KeyCDN has no automatic format
-negotiation at all, and no AVIF support either: with it, ``ux_image()`` serves
-the last configured format KeyCDN supports, and ``ux_picture()`` is the way to
-offer WebP to the browsers that accept it (see
+``format=auto``, ``f_auto`` and ``auto=format``. IPX negotiates through
+``f_auto`` too. It sends a ``Vary: Accept`` header with the image, so a cache
+in front of it does not serve the format chosen for one browser to another.
+KeyCDN has no automatic format negotiation at all, and no AVIF support either:
+with it, ``ux_image()`` serves the last configured format KeyCDN supports, and
+``ux_picture()`` is the way to offer WebP to the browsers that accept it (see
 :ref:`<img> or <picture> <image_img_or_picture>`).
 
 Cloudflare
@@ -723,6 +731,110 @@ Extra operations, forwarded as-is: ``auto``, ``bg``, ``blur``, ``border``,
 negotiation. See `imgix's own rendering API reference`_ for what each one
 does.
 
+IPX
+~~~
+
+`IPX`_ is a self-hosted image server built on `sharp`_. It reads the
+transformation from the URL path, ``/<modifiers>/<image path>``, like
+``/w_800,f_webp/uploads/hero.jpg``.
+
+.. code-block:: terminal
+
+    $ composer require symfony/ux-ipx-image
+
+.. code-block:: bash
+
+    # .env.prod
+    UX_IMAGE_DSN=ipx://images.example.com
+
+The DSN uses HTTPS by default. The port and the path are optional, like
+``ipx://images.example.com:8443/_ipx``. Add ``secure=false`` to switch to plain
+HTTP.
+
+Extra operations, forwarded as-is: ``animated``, ``autoorient``,
+``background``, ``blur``, ``brightness``, ``clahe``, ``dilate``, ``enlarge``,
+``erode``, ``extend``, ``extract``, ``flatten``, ``flip``, ``flop``,
+``gamma``, ``grayscale``, ``hue``, ``kernel``, ``lightness``, ``linear``,
+``median``, ``modulate``, ``negate``, ``normalize``, ``opacity``,
+``position``, ``rotate``, ``saturation``, ``sharpen``, ``threshold``,
+``tint``, ``trim``, ``unflatten``. Join the arguments of an operation with
+``_``, like ``extract: '0_0_800_450'``. Pass ``true`` for an operation without
+arguments, like ``grayscale``. See `IPX's own modifier reference`_ for what
+each one does.
+
+IPX runs from the official ``node:26-alpine`` Docker image. You configure it
+with environment variables. This example reads the images from your
+application's ``public/`` directory:
+
+.. code-block:: yaml
+
+    # compose.yaml
+    services:
+        ipx:
+            image: node:26-alpine
+            command: npx --yes ipx@4 serve
+            environment:
+                IPX_FS_DIR: /srv/public
+                IPX_ALLOWED_MODIFIERS: width,height,resize,fit,format,quality
+            volumes:
+                - ./public:/srv/public:ro
+
+.. warning::
+
+    IPX has no URL signing, so anyone can request any transformation it
+    accepts. In ``IPX_ALLOWED_MODIFIERS``, list only what you use. ``width``,
+    ``height``, ``resize``, ``fit``, ``format`` and ``quality`` cover the
+    common parameters. Add every extra operation you pass.
+
+Local development
+.................
+
+Publish the IPX port in ``compose.override.yaml``. Docker Compose reads this
+file on top of ``compose.yaml``:
+
+.. code-block:: yaml
+
+    # compose.override.yaml
+    services:
+        ipx:
+            ports: [3000]
+
+The Symfony CLI sets ``IPX_HOST`` and ``IPX_PORT`` from the published port.
+IPX serves plain HTTP, so the DSN needs ``secure=false``:
+
+.. code-block:: bash
+
+    # .env.dev
+    UX_IMAGE_DSN=ipx://${IPX_HOST}:${IPX_PORT}?secure=false
+
+Production
+..........
+
+IPX listens on port 3000. Put it behind the reverse proxy that serves the host
+of the DSN. ``compose.prod.yaml`` publishes IPX on a fixed port, on
+``127.0.0.1`` only, so a reverse proxy on the same machine can reach it and the
+outside cannot:
+
+.. code-block:: yaml
+
+    # compose.prod.yaml
+    services:
+        ipx:
+            ports: ['127.0.0.1:3000:3000']
+
+In production, start the services with both files, and do not use
+``compose.override.yaml``:
+
+.. code-block:: terminal
+
+    $ docker compose -f compose.yaml -f compose.prod.yaml up -d
+
+IPX does not store transformed images. It transforms the image again on every
+request, so cache its responses in the reverse proxy or a CDN.
+
+By default, IPX sends ``Cache-Control: max-age=60``. To use a longer duration,
+set ``IPX_FS_MAX_AGE`` in seconds, like ``86400``.
+
 KeyCDN
 ~~~~~~
 
@@ -784,6 +896,8 @@ distinct URL is one more image the provider generates and caches:
 * imgix can require signed URLs on a source, with `secure URLs`_. Turn it on,
   and give the source's token to the provider with the ``sign_key`` DSN
   option: the source then serves only the URLs your application generated.
+* IPX has no URL signing. Limit the modifiers it accepts with
+  ``IPX_ALLOWED_MODIFIERS``.
 * KeyCDN can require a signed token on the zone, with `Secure Token`_. Turn
   it on, and give the key to the provider with the ``secure_token`` DSN
   option: the zone then serves only the URLs your application generated.
@@ -836,4 +950,7 @@ The package supports PHP 8.4 or later and Symfony 7.4 or 8.x.
 .. _`Web Folder source`: https://docs.imgix.com/en-US/getting-started/setup/creating-sources/web-folder
 .. _`secure URLs`: https://docs.imgix.com/en-US/getting-started/setup/securing-assets#enabling-secure-urls
 .. _`imgix's own rendering API reference`: https://docs.imgix.com/en-US/apis/rendering
+.. _`IPX`: https://github.com/symfony/ux/blob/3.x/src/Image/src/Bridge/Ipx/README.md
+.. _`sharp`: https://sharp.pixelplumbing.com/
+.. _`IPX's own modifier reference`: https://github.com/unjs/ipx#modifiers
 .. _`OptionsResolver component`: https://symfony.com/doc/current/components/options_resolver.html
