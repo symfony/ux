@@ -121,6 +121,27 @@ final class BatchActionControllerTest extends KernelTestCase
         ;
     }
 
+    public function testBatchActionsReceiveTheRouteAndItsDefaults(): void
+    {
+        $dehydrated = $this->dehydrateComponent($this->mountComponent('route_defaults'));
+
+        $this->browser()
+            ->throwExceptions()
+            ->post('/route-defaults/route_defaults/_batch', [
+                'body' => [
+                    'data' => json_encode([
+                        'props' => $dehydrated->getProps(),
+                        'actions' => [
+                            ['name' => 'capture'],
+                        ],
+                    ]),
+                ],
+            ])
+            ->assertSuccessful()
+            ->assertSee('route: route_defaults_live_route, scope: storefront')
+        ;
+    }
+
     public function testRedirect(): void
     {
         $dehydrated = $this->dehydrateComponent($this->mountComponent('with_actions'));
