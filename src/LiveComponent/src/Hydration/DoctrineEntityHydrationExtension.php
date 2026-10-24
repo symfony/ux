@@ -23,6 +23,13 @@ use Doctrine\Persistence\ObjectManager;
 class DoctrineEntityHydrationExtension implements HydrationExtensionInterface
 {
     /**
+     * Doctrine does not cache getManagerForClass(), which every (de)hydration needs.
+     *
+     * @var array<string, ObjectManager|null>
+     */
+    private array $objectManagers = [];
+
+    /**
      * @param ManagerRegistry[] $managerRegistries
      */
     public function __construct(
@@ -81,18 +88,21 @@ class DoctrineEntityHydrationExtension implements HydrationExtensionInterface
 
     private function objectManagerFor(string $class): ?ObjectManager
     {
-        if (!class_exists($class)) {
-            return null;
+        if (\array_key_exists($class, $this->objectManagers)) {
+            return $this->objectManagers[$class];
         }
 
-        // todo cache/warmup an array of classes that are "doctrine objects"
+        if (!class_exists($class)) {
+            return $this->objectManagers[$class] = null;
+        }
+
         foreach ($this->managerRegistries as $registry) {
             if ($om = $registry->getManagerForClass($class)) {
-                return self::ensureManagedObject($om, $class);
+                return $this->objectManagers[$class] = self::ensureManagedObject($om, $class);
             }
         }
 
-        return null;
+        return $this->objectManagers[$class] = null;
     }
 
     /**
