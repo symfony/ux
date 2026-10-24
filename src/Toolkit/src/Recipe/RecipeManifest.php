@@ -15,6 +15,7 @@ use Symfony\Component\Filesystem\Path;
 use Symfony\UX\Toolkit\Assert;
 use Symfony\UX\Toolkit\Dependency\DependencyInterface;
 use Symfony\UX\Toolkit\Dependency\DependencyParser;
+use Symfony\UX\Toolkit\Installer\InstallationDirectories;
 
 /**
  * @author Hugo Alliaume <hugo@alliau.me>
@@ -46,6 +47,7 @@ final class RecipeManifest
 
             Assert::pathDoesNotEscapeDirectory($source);
             Assert::pathDoesNotEscapeDirectory($destination);
+            InstallationDirectories::assertKnownPlaceholders($destination);
         }
     }
 

@@ -5,7 +5,7 @@
     "description": "Display task progress with accessible labels, stacked bars, contextual colors, and animation.",
     "version-added": "3.4",
     "copy-files": {
-        "templates/": "templates/"
+        "templates/components/": "%COMPONENTS_DIR%/"
     },
     "dependencies": {
         "composer": ["twig/extra-bundle", "twig/html-extra:^3.12.0"]

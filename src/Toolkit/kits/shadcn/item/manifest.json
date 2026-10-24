@@ -3,7 +3,7 @@
     "type": "component",
     "name": "Item",
     "copy-files": {
-        "templates/": "templates/"
+        "templates/components/": "%COMPONENTS_DIR%/"
     },
     "dependencies": {
         "composer": [

@@ -93,6 +93,109 @@ Pass ``--kit`` to skip the question:
 Browse the recipes of each kit, with a live preview, on
 `ux.symfony.com <https://ux.symfony.com/toolkit>`_.
 
+Choosing Where Recipes Are Installed
+------------------------------------
+
+.. versionadded:: 3.7
+
+    The ``components`` and ``controllers`` options were added in UX Toolkit 3.7.
+
+By default, ``ux:install`` writes Twig components to ``templates/components/``
+and Stimulus controllers to ``assets/controllers/``. The ``components`` and
+``controllers`` options under ``ux_toolkit`` change that. Each one takes a
+``dir`` and an optional ``subdirectory``. Paths are relative to the project
+directory.
+
+The ``dir`` Option
+~~~~~~~~~~~~~~~~~~
+
+``dir`` does not choose a new location. It tells the Toolkit where your
+application already loads files from, and it must be the same value as in that
+configuration. Otherwise, the installed components and controllers are not
+found. The Toolkit cannot read these settings itself.
+
+* ``components.dir`` must match the directory TwigComponent loads anonymous
+  components from: the Twig ``default_path`` followed by TwigComponent's
+  ``anonymous_template_directory`` (default ``templates/components``).
+* ``controllers.dir`` must match the directory your Stimulus setup loads
+  controllers from. With AssetMapper, it is an entry of
+  ``stimulus.controller_paths``. With Reprise, it is the ``controllersDir``
+  option. With Webpack Encore, it is the directory given to
+  ``require.context()`` in ``assets/bootstrap.js`` (default
+  ``assets/controllers``).
+
+For example, an AssetMapper app that loads controllers from
+``assets/js/controllers`` must use the same path in both files:
+
+.. code-block:: yaml
+
+    # config/packages/stimulus.yaml
+    stimulus:
+        controller_paths:
+            - '%kernel.project_dir%/assets/js/controllers'
+
+    # config/packages/ux_toolkit.yaml
+    ux_toolkit:
+        controllers:
+            dir: 'assets/js/controllers'
+
+The ``subdirectory`` Option
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+``subdirectory`` is the option you can choose freely. The kit files go into
+that subdirectory of ``dir``, to keep them apart from your own components:
+
+.. code-block:: yaml
+
+    # config/packages/ux_toolkit.yaml
+    ux_toolkit:
+        components:
+            subdirectory: 'ui'
+        controllers:
+            subdirectory: 'ui'
+
+TwigComponent and Stimulus derive names from the file path, so the names of the
+kit files get the subdirectory as a prefix. ``ux:install`` rewrites the copied
+files so the recipe keeps working. With ``subdirectory: ui`` on both options,
+``<twig:Button>`` becomes ``<twig:ui:Button>``, and the ``dialog`` controller
+becomes ``ui--dialog``. Its ``data-controller``, ``data-action``,
+``data-*-target``, ``data-*-value``, ``data-*-class`` and ``data-*-param``
+attributes are rewritten in templates and controllers. In your own templates,
+you then write ``<twig:ui:Dialog>``.
+
+Validation
+~~~~~~~~~~
+
+``dir`` must be a relative path inside the project. Absolute paths and paths
+going up with ``..`` are rejected. ``subdirectory`` can only contain letters,
+digits, ``_`` and ``-``, with ``/`` between directories. Names that do not
+belong to the kit (like ``<twig:ux:icon>`` or the ``live`` controller) are
+never rewritten.
+
+For Kit Authors
+~~~~~~~~~~~~~~~
+
+.. versionadded:: 3.7
+
+    The ``%COMPONENTS_DIR%`` and ``%CONTROLLERS_DIR%`` placeholders were added in
+    UX Toolkit 3.7.
+
+In a recipe ``manifest.json``, the destinations of ``copy-files`` can use the
+``%COMPONENTS_DIR%`` and ``%CONTROLLERS_DIR%`` placeholders:
+
+.. code-block:: json
+
+    {
+        "copy-files": {
+            "templates/components/": "%COMPONENTS_DIR%/",
+            "assets/controllers/": "%CONTROLLERS_DIR%/"
+        }
+    }
+
+They resolve to ``dir`` followed by ``subdirectory``. All kits shipped with the
+Toolkit use them. A plain path still works, but its files are copied as they
+are and never rewritten. An unknown placeholder is an error.
+
 The Recipe Is Yours, For Worse and For Better
 ---------------------------------------------
 

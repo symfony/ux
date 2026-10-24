@@ -4,7 +4,7 @@
     "name": "Form",
     "version-added": "3.5",
     "copy-files": {
-        "templates/": "templates/"
+        "templates/components/": "%COMPONENTS_DIR%/"
     },
     "dependencies": {
         "composer": [

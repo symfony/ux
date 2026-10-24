@@ -4,7 +4,7 @@
     "name": "Badge",
     "version-added": "2.35",
     "copy-files": {
-        "templates/": "templates/"
+        "templates/components/": "%COMPONENTS_DIR%/"
     },
     "dependencies": {
         "composer": [

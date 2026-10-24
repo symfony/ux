@@ -5,7 +5,7 @@
     "description": "A powerful, responsive navigation header with support for branding, navigation, forms, and collapsing content.",
     "version-added": "3.4",
     "copy-files": {
-        "templates/": "templates/"
+        "templates/components/": "%COMPONENTS_DIR%/"
     },
     "dependencies": {
         "composer": ["twig/extra-bundle", "twig/html-extra:^3.12.0"]

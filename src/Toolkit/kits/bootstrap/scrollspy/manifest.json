@@ -5,6 +5,6 @@
     "description": "Update Bootstrap navigation links as a scrollable region moves between sections.",
     "version-added": "3.4",
     "copy-files": {
-        "templates/": "templates/"
+        "templates/components/": "%COMPONENTS_DIR%/"
     }
 }

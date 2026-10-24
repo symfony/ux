@@ -1,0 +1,10 @@
+{
+    "$schema": "../../../../../schema-kit-recipe-v1.json",
+    "type": "component",
+    "name": "Dialog",
+    "description": "Component Dialog",
+    "copy-files": {
+        "templates/components/": "%COMPONENTS_DIR%/",
+        "assets/controllers/": "%CONTROLLERS_DIR%/"
+    }
+}

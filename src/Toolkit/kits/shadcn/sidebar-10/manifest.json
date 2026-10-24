@@ -4,7 +4,7 @@
     "version-added": "3.7",
     "name": "AppSidebar",
     "copy-files": {
-        "templates/": "templates/"
+        "templates/components/": "%COMPONENTS_DIR%/"
     },
     "dependencies": {
         "recipe": ["breadcrumb", "button", "collapsible", "dropdown-menu", "popover", "separator", "sidebar"],

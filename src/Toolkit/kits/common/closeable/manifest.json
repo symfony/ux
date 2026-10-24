@@ -4,6 +4,6 @@
     "name": "Closeable",
     "version-added": "3.4",
     "copy-files": {
-        "assets/": "assets/"
+        "assets/controllers/": "%CONTROLLERS_DIR%/"
     }
 }

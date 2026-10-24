@@ -24,6 +24,7 @@ use Symfony\Component\Process\ExecutableFinder;
 use Symfony\Component\Process\Process;
 use Symfony\UX\Toolkit\File;
 use Symfony\UX\Toolkit\Installer\DiffHighlighter;
+use Symfony\UX\Toolkit\Installer\InstallationDirectories;
 use Symfony\UX\Toolkit\Installer\Installer;
 use Symfony\UX\Toolkit\Kit\Kit;
 use Symfony\UX\Toolkit\Recipe\Recipe;
@@ -47,6 +48,7 @@ class InstallCommand extends Command
     public function __construct(
         private readonly RegistryFactory $registryFactory,
         private readonly Filesystem $filesystem,
+        private readonly InstallationDirectories $directories = new InstallationDirectories(),
     ) {
         parent::__construct();
     }
@@ -188,13 +190,13 @@ class InstallCommand extends Command
 
         $io->writeln(\sprintf('Installing recipe "<info>%s</>" from the <info>%s</> kit...', $recipe->name, $kit->manifest->name));
 
-        $installer = new Installer($this->filesystem, function (string $question, string $existingFile, string $newFile) use ($input): bool {
+        $installer = new Installer($this->filesystem, function (string $question, string $existingFile, string $newContents) use ($input): bool {
             if ($input->isInteractive()) {
-                $this->displayDiff($existingFile, $newFile);
+                $this->displayDiff($existingFile, $newContents);
             }
 
             return $this->io->confirm($question, $input->isInteractive());
-        });
+        }, $this->directories);
         $installationReport = $installer->installRecipe($kit, $recipe, $destinationPath = $input->getOption('destination'), $input->getOption('force'));
 
         if ([] === $installationReport->newFiles) {
@@ -278,14 +280,21 @@ class InstallCommand extends Command
         return $alternativeRecipes;
     }
 
-    private function displayDiff(string $existingFile, string $newFile): void
+    private function displayDiff(string $existingFile, string $newContents): void
     {
         if (null === $git = new ExecutableFinder()->find('git')) {
             return;
         }
 
-        $process = new Process([$git, 'diff', '--no-index', '--no-ext-diff', '--color=never', '--', $existingFile, $newFile]);
-        $process->run();
+        $newFile = $this->filesystem->tempnam(sys_get_temp_dir(), 'ux_toolkit_');
+        try {
+            $this->filesystem->dumpFile($newFile, $newContents);
+
+            $process = new Process([$git, 'diff', '--no-index', '--no-ext-diff', '--color=never', '--', $existingFile, $newFile]);
+            $process->run();
+        } finally {
+            $this->filesystem->remove($newFile);
+        }
 
         // "git diff --no-index" exits with 1 when the files differ, and above 1 on error
         if (1 !== $process->getExitCode()) {

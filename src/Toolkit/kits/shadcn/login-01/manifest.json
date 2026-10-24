@@ -4,7 +4,7 @@
     "version-added": "3.5",
     "name": "LoginForm",
     "copy-files": {
-        "templates/": "templates/"
+        "templates/components/": "%COMPONENTS_DIR%/"
     },
     "dependencies": {
         "recipe": ["button", "card", "field", "input"],

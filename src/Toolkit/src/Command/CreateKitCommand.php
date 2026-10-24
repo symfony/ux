@@ -19,6 +19,7 @@ use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\UX\Toolkit\Assert;
+use Symfony\UX\Toolkit\Installer\InstallationDirectories;
 
 /**
  * @author Hugo Alliaume <hugo@alliau.me>
@@ -121,7 +122,7 @@ class CreateKitCommand extends Command
             '$schema' => '../vendor/symfony/ux-toolkit/schema-kit-recipe-v1.json',
             'name' => 'Button',
             'copy-files' => [
-                'templates/' => 'templates/',
+                'templates/components/' => InstallationDirectories::COMPONENTS_DIR_PLACEHOLDER.'/',
             ],
             'dependencies' => [
                 'composer' => [

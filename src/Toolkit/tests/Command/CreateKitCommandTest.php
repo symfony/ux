@@ -72,7 +72,7 @@ class CreateKitCommandTest extends KernelTestCase
                     "$schema": "../vendor/symfony/ux-toolkit/schema-kit-recipe-v1.json",
                     "name": "Button",
                     "copy-files": {
-                        "templates/": "templates/"
+                        "templates/components/": "%COMPONENTS_DIR%/"
                     },
                     "dependencies": {
                         "composer": [

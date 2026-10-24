@@ -5,6 +5,6 @@
     "description": "Indicates the current page's location within a navigational hierarchy.",
     "version-added": "3.4",
     "copy-files": {
-        "templates/": "templates/"
+        "templates/components/": "%COMPONENTS_DIR%/"
     }
 }

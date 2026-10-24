@@ -15,6 +15,7 @@ use Symfony\UX\Toolkit\Command\CreateKitCommand;
 use Symfony\UX\Toolkit\Command\DebugKitCommand;
 use Symfony\UX\Toolkit\Command\InstallCommand;
 use Symfony\UX\Toolkit\Component\ComponentDocParser;
+use Symfony\UX\Toolkit\Installer\InstallationDirectories;
 use Symfony\UX\Toolkit\Kit\KitContextRunner;
 use Symfony\UX\Toolkit\Kit\KitFactory;
 use Symfony\UX\Toolkit\Kit\KitSynchronizer;
@@ -47,6 +48,13 @@ return static function (ContainerConfigurator $container): void {
             ->args([
                 service('.ux_toolkit.registry.registry_factory'),
                 service('filesystem'),
+                inline_service(InstallationDirectories::class)
+                    ->args([
+                        param('.ux_toolkit.components.dir'),
+                        param('.ux_toolkit.components.subdirectory'),
+                        param('.ux_toolkit.controllers.dir'),
+                        param('.ux_toolkit.controllers.subdirectory'),
+                    ]),
             ])
             ->tag('console.command')
 

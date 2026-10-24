@@ -17,6 +17,7 @@ use Symfony\Component\DependencyInjection\ServiceLocator;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 use Symfony\UX\Toolkit\Command\InstallCommand;
+use Symfony\UX\Toolkit\Installer\InstallationDirectories;
 use Symfony\UX\Toolkit\Kit\Kit;
 use Symfony\UX\Toolkit\Registry\RegistryFactory;
 use Symfony\UX\Toolkit\Registry\RegistryInterface;
@@ -92,6 +93,46 @@ class InstallCommandTest extends KernelTestCase
         $display = $tester->getDisplay();
         $this->assertStringContainsString(Path::normalize($this->tmpDir.'/templates/components/Notice.html.twig'), $display);
         $this->assertStringNotContainsString(Path::normalize($this->tmpDir.'/ui/Notice.html.twig'), $display);
+    }
+
+    public function testShouldInstallInTheConfiguredDirectories(): void
+    {
+        $kit = self::getContainer()->get('ux_toolkit.kit.kit_factory')->createKitFromAbsolutePath(self::getLocalKitPath('shadcn'));
+        $input = ['recipe' => 'alert-dialog', '--kit' => 'shadcn', '--destination' => $this->tmpDir];
+
+        $directories = new InstallationDirectories('templates/components', 'ui', 'assets/controllers', 'ui');
+        $tester = new CommandTester($this->createInstallCommand($kit, $directories));
+        $tester->execute($input, ['interactive' => false]);
+
+        $tester->assertCommandIsSuccessful();
+        $display = $tester->getDisplay();
+        $this->assertStringContainsString(Path::normalize($this->tmpDir.'/templates/components/ui/AlertDialog.html.twig'), $display);
+        $this->assertStringContainsString(Path::normalize($this->tmpDir.'/assets/controllers/ui/alert_dialog_controller.js'), $display);
+        $installedAction = $this->filesystem->readFile($this->tmpDir.'/templates/components/ui/AlertDialog/Action.html.twig');
+        $this->assertStringContainsString('<twig:ui:Button', $installedAction);
+    }
+
+    public function testShouldShowTheDiffWithTheRewrittenFileBeforeAskingToOverwriteIt(): void
+    {
+        $kit = self::getContainer()->get('ux_toolkit.kit.kit_factory')->createKitFromAbsolutePath(self::getLocalKitPath('shadcn'));
+        $input = ['recipe' => 'alert-dialog', '--kit' => 'shadcn', '--destination' => $this->tmpDir];
+        $installedFile = $this->tmpDir.'/templates/components/ui/AlertDialog/Action.html.twig';
+
+        $directories = new InstallationDirectories('templates/components', 'ui', 'assets/controllers', 'ui');
+        $tester = new CommandTester($this->createInstallCommand($kit, $directories));
+        $tester->execute($input, ['interactive' => false]);
+        $localContent = str_replace('twig:ui:Button', 'twig:Button', $this->filesystem->readFile($installedFile));
+        $this->filesystem->dumpFile($installedFile, $localContent);
+
+        $tester->setInputs(['no']);
+        $tester->execute($input, ['interactive' => true]);
+
+        $tester->assertCommandIsSuccessful();
+        $display = $tester->getDisplay();
+        $this->assertMatchesRegularExpression('/^-<twig:Button /m', $display);
+        $this->assertMatchesRegularExpression('/^\+<twig:ui:Button /m', $display);
+        $this->assertStringContainsString('already exists. Do you want to overwrite it?', $display);
+        $this->assertStringEqualsFile($installedFile, $localContent);
     }
 
     public function testShouldSuggestFrontendInstallationCommands(): void
@@ -298,7 +339,7 @@ class InstallCommandTest extends KernelTestCase
         ;
     }
 
-    private function createInstallCommand(Kit $kit): InstallCommand
+    private function createInstallCommand(Kit $kit, InstallationDirectories $directories = new InstallationDirectories()): InstallCommand
     {
         $registry = new class($kit) implements RegistryInterface {
             public function __construct(private readonly Kit $kit)
@@ -319,6 +360,7 @@ class InstallCommandTest extends KernelTestCase
         $command = new InstallCommand(
             new RegistryFactory(new ServiceLocator([Type::Local->value => static fn () => $registry])),
             self::getContainer()->get('filesystem'),
+            $directories,
         );
         $command->setName('ux:install');
 

@@ -1,0 +1,7 @@
+{
+    "$schema": "../../../../schema-kit-v1.json",
+    "name": "With installation placeholders",
+    "description": "Kit used as a test fixture, installing some recipes through the installation directory placeholders and others through plain paths.",
+    "license": "MIT",
+    "homepage": "https://ux.symfony.com/"
+}

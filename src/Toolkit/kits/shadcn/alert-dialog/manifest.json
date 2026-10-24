@@ -3,8 +3,8 @@
     "type": "component",
     "name": "Alert Dialog",
     "copy-files": {
-        "assets/": "assets/",
-        "templates/": "templates/"
+        "assets/controllers/": "%CONTROLLERS_DIR%/",
+        "templates/components/": "%COMPONENTS_DIR%/"
     },
     "dependencies": {
         "recipe": ["button"],
