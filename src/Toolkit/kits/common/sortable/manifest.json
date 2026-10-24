@@ -1,0 +1,13 @@
+{
+    "$schema": "../../../schema-kit-recipe-v1.json",
+    "type": "component",
+    "name": "Sortable",
+    "version-added": "3.7",
+    "copy-files": {
+        "assets/": "assets/"
+    },
+    "dependencies": {
+        "npm": ["sortablejs"],
+        "importmap": ["sortablejs"]
+    }
+}
