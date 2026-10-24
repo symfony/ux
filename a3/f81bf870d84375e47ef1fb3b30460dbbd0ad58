@@ -1,0 +1,34 @@
+---------------------------------------------------------------------------
+
+by github-actions[bot] at 2026-09-21T15:36:02Z
+
+<h1>📊 Packages dist files size difference</h1>
+
+Thanks for the PR! Here is the difference in size of the packages dist files between the base branch and the PR.
+Please review the changes and make sure they are expected.
+
+<table>
+    <thead><tr><th>File</th><th>Before (Size / Gzip)</th><th>After (Size / Gzip)</th></tr></thead>
+    <tbody><tr><td colspan="3"><a href="https://github.com/DanerSharifi-FR/ux/tree/fix/autocomplete-refresh-after-selection/src/Autocomplete/assets/dist"><b>Autocomplete</b></a></td></tr><tr>
+                <td><a href="https://github.com/DanerSharifi-FR/ux/blob/fix/autocomplete-refresh-after-selection/src/Autocomplete/assets/dist/controller.js"><code>controller.js</code></a></td>
+            <td>
+                    <code>12.15 kB</code>
+                    / <code>3.28 kB</code>
+                </td><td>
+                    <code>12.5 kB</code><sup>+3% 📈</sup>
+                    / <code>3.38 kB</code><sup>+3% 📈</sup>
+                </td></tr></tbody>
+</table>
+
+<!-- Sticky Pull Request Comment -->
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-10-24T11:07:01Z
+
+Thanks @DanerSharifi-FR and @boubast for the fix and the thorough tests. Here is what I changed during review:
+
+- I rebased the branch on 3.x and squashed it into one commit.
+- Closing the dropdown (Escape, blur) had the same stale-results problem as a selection, so the fix now tracks which search the loaded options belong to, instead of setting a flag after a selection. Both cases go through the same check when the dropdown opens.
+- I removed the change that marked every load as a first load, because after a preload it made the first typed character send a request, so the default 3-character minimum no longer applied.
+- After a test dependency update on 3.x, the mocked requests now have absolute URLs, so I updated the new tests to match.
