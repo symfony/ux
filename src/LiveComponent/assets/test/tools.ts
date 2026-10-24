@@ -178,6 +178,7 @@ class MockedAjaxCall {
     private delayResponseTime?: number = 0;
     private customResponseStatusCode?: number;
     private customResponseHTML?: string;
+    private isRenderSkipped = false;
 
     constructor(test: FunctionalTest) {
         this.test = test;
@@ -267,15 +268,21 @@ class MockedAjaxCall {
                 }
 
                 const template = this.template ? this.template : this.test.template;
-                const html = this.customResponseHTML ? this.customResponseHTML : template(newProps);
+                let html = this.customResponseHTML ? this.customResponseHTML : template(newProps);
 
                 // assume a normal, live-component response unless it's totally custom
-                const headers = {
+                const headers: Record<string, string> = {
                     'Content-Type': 'application/vnd.live-component+html',
                     'X-Live-Url': '',
                 };
                 if (this.customResponseHTML) {
                     headers['Content-Type'] = 'text/html';
+                }
+                if (this.isRenderSkipped) {
+                    const rootElement = htmlToElement(html);
+                    rootElement.innerHTML = '';
+                    html = rootElement.outerHTML;
+                    headers['X-Live-Skip-Render'] = '1';
                 }
                 if (this.liveUrl) {
                     headers['X-Live-Url'] = this.liveUrl;
@@ -351,6 +358,12 @@ class MockedAjaxCall {
 
     willReturnLiveUrl(liveUrl: string): MockedAjaxCall {
         this.liveUrl = liveUrl;
+
+        return this;
+    }
+
+    serverWillSkipRender(): MockedAjaxCall {
+        this.isRenderSkipped = true;
 
         return this;
     }
