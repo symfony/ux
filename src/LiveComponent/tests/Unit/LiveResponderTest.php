@@ -100,4 +100,68 @@ class LiveResponderTest extends TestCase
         $responder->reset();
         $this->assertSame([], $responder->getBrowserEventsToDispatch());
     }
+
+    public function testEmitWithBackedEnum()
+    {
+        $responder = new LiveResponder();
+        $responder->emit(TestEvent::ItemUpdated, ['id' => 1]);
+
+        $this->assertSame([
+            [
+                'event' => 'item_updated',
+                'data' => ['id' => 1],
+                'target' => null,
+                'componentName' => null,
+            ],
+        ], $responder->getEventsToEmit());
+    }
+
+    public function testEmitUpWithBackedEnum()
+    {
+        $responder = new LiveResponder();
+        $responder->emitUp(TestEvent::ItemDeleted, ['id' => 1]);
+
+        $this->assertSame([
+            [
+                'event' => 'item_deleted',
+                'data' => ['id' => 1],
+                'target' => 'up',
+                'componentName' => null,
+            ],
+        ], $responder->getEventsToEmit());
+    }
+
+    public function testEmitSelfWithBackedEnum()
+    {
+        $responder = new LiveResponder();
+        $responder->emitSelf(TestEvent::ItemUpdated, ['id' => 1]);
+
+        $this->assertSame([
+            [
+                'event' => 'item_updated',
+                'data' => ['id' => 1],
+                'target' => 'self',
+                'componentName' => null,
+            ],
+        ], $responder->getEventsToEmit());
+    }
+
+    public function testDispatchBrowserEventWithBackedEnum()
+    {
+        $responder = new LiveResponder();
+        $responder->dispatchBrowserEvent(TestEvent::ItemUpdated, ['id' => 1]);
+
+        $this->assertSame([
+            [
+                'event' => 'item_updated',
+                'payload' => ['id' => 1],
+            ],
+        ], $responder->getBrowserEventsToDispatch());
+    }
+}
+
+enum TestEvent: string
+{
+    case ItemUpdated = 'item_updated';
+    case ItemDeleted = 'item_deleted';
 }
