@@ -5,6 +5,6 @@
     "description": "Provide an accessible control for dismissing content such as modals and alerts.",
     "version-added": "3.4",
     "copy-files": {
-        "templates/": "templates/"
+        "templates/components/": "%COMPONENTS_DIR%/"
     }
 }

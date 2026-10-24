@@ -19,7 +19,7 @@
             "description": "The version of Symfony UX Toolkit in which this Recipe was added, e.g., '2.35'"
         },
         "copy-files": {
-            "description": "Relative files or directories to copy into the project",
+            "description": "Relative files or directories to copy into the project. A destination can use the \"%COMPONENTS_DIR%\" and \"%CONTROLLERS_DIR%\" placeholders, which point to the directories configured in the application (\"templates/components\" and \"assets/controllers\" by default)",
             "type": "object"
         },
         "dependencies": {

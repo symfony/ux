@@ -15,11 +15,15 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 use Symfony\UX\Toolkit\File;
+use Symfony\UX\Toolkit\Installer\InstallationDirectories;
 use Symfony\UX\Toolkit\Installer\Installer;
 use Symfony\UX\Toolkit\Kit\Kit;
+use Symfony\UX\Toolkit\Tests\TestHelperTrait;
 
 final class InstallerTest extends KernelTestCase
 {
+    use TestHelperTrait;
+
     private Filesystem $filesystem;
     private string $tmpDir;
 
@@ -53,11 +57,12 @@ final class InstallerTest extends KernelTestCase
     public function testShouldAskIfFileAlreadyExists(): void
     {
         $askedFiles = [];
-        $installer = new Installer(self::getContainer()->get('filesystem'), static function (string $question, string $existingFile, string $newFile) use (&$askedFiles) {
-            $askedFiles[] = [$existingFile, $newFile];
+        $askConfirmation = static function (string $question, string $existingFile, string $newContents) use (&$askedFiles) {
+            $askedFiles[] = [$existingFile, $newContents];
 
             return true;
-        });
+        };
+        $installer = new Installer(self::getContainer()->get('filesystem'), $askConfirmation);
         $kit = $this->createKit('shadcn');
 
         $recipe = $kit->getRecipe('button');
@@ -73,8 +78,84 @@ final class InstallerTest extends KernelTestCase
         $installer->installRecipe($kit, $recipe, $this->tmpDir, false);
 
         $expectedExistingFile = Path::join($this->tmpDir, 'templates/components/Button.html.twig');
-        $expectedNewFile = Path::join($recipe->absolutePath, 'templates/components/Button.html.twig');
-        $this->assertSame([[$expectedExistingFile, $expectedNewFile]], $askedFiles);
+        $expectedNewContents = file_get_contents(Path::join($recipe->absolutePath, 'templates/components/Button.html.twig'));
+        $this->assertSame([[$expectedExistingFile, $expectedNewContents]], $askedFiles);
+    }
+
+    public function testInstallsInTheConfiguredDirectories(): void
+    {
+        $installer = $this->createInstaller(new InstallationDirectories('templates/components', 'ui', 'assets/js/controllers', null));
+        $kit = $this->createKit('shadcn');
+
+        $installationReport = $installer->installRecipe($kit, $kit->getRecipe('dialog'), $this->tmpDir, false);
+
+        $installedFiles = array_map(static fn (File $file) => $file->destinationRelativePathName, $installationReport->newFiles);
+        $this->assertContains('templates/components/ui/Dialog.html.twig', $installedFiles);
+        $this->assertContains('templates/components/ui/Dialog/Content.html.twig', $installedFiles);
+        $this->assertContains('assets/js/controllers/dialog_controller.js', $installedFiles);
+        $this->assertFileExists($this->tmpDir.'/templates/components/ui/Dialog/Content.html.twig');
+        $this->assertFileExists($this->tmpDir.'/assets/js/controllers/dialog_controller.js');
+        $this->assertDirectoryDoesNotExist($this->tmpDir.'/assets/controllers');
+    }
+
+    public function testPrefixesTheComponentsAndControllersInstalledInSubDirectories(): void
+    {
+        $installer = $this->createInstaller(new InstallationDirectories('templates/components', 'ui', 'assets/controllers', 'ui'));
+        $kit = $this->createKit('shadcn');
+        $recipe = $kit->getRecipe('alert-dialog');
+
+        $installer->installRecipe($kit, $recipe, $this->tmpDir, false);
+
+        $sourceAction = file_get_contents($recipe->absolutePath.'/templates/components/AlertDialog/Action.html.twig');
+        $installedAction = file_get_contents($this->tmpDir.'/templates/components/ui/AlertDialog/Action.html.twig');
+        $this->assertStringContainsString('<twig:Button', $sourceAction);
+        $this->assertStringContainsString('<twig:ui:Button', $installedAction);
+        $this->assertStringNotContainsString('<twig:Button', $installedAction);
+
+        $sourceAlertDialog = file_get_contents($recipe->absolutePath.'/templates/components/AlertDialog.html.twig');
+        $installedAlertDialog = file_get_contents($this->tmpDir.'/templates/components/ui/AlertDialog.html.twig');
+        $this->assertMatchesRegularExpression('/data-controller[\'"]?\s*[:=]\s*[\'"]alert-dialog[\'"]/', $sourceAlertDialog);
+        $this->assertMatchesRegularExpression('/data-controller[\'"]?\s*[:=]\s*[\'"]ui--alert-dialog[\'"]/', $installedAlertDialog);
+        $this->assertFileExists($this->tmpDir.'/assets/controllers/ui/alert_dialog_controller.js');
+    }
+
+    public function testLeavesTheFilesCopiedWithoutPlaceholdersUntouched(): void
+    {
+        $installer = $this->createInstaller(new InstallationDirectories('templates/components', 'ui', 'assets/controllers', 'ui'));
+        $kitFactory = self::getContainer()->get('ux_toolkit.kit.kit_factory');
+        $kit = $kitFactory->createKitFromAbsolutePath(self::getFixtureKitPath('with-renamed-copy-files'));
+        $recipe = $kit->getRecipe('notice');
+
+        $installer->installRecipe($kit, $recipe, $this->tmpDir, false);
+
+        $this->assertFileEquals($recipe->absolutePath.'/ui/Notice.html.twig', $this->tmpDir.'/templates/components/Notice.html.twig');
+        $this->assertDirectoryDoesNotExist($this->tmpDir.'/templates/components/ui');
+    }
+
+    public function testAsksWithTheRewrittenContents(): void
+    {
+        $askedFiles = [];
+        $askConfirmation = static function (string $question, string $existingFile, string $newContents) use (&$askedFiles) {
+            $askedFiles[] = [$existingFile, $newContents];
+
+            return false;
+        };
+        $directories = new InstallationDirectories('templates/components', 'ui', 'assets/controllers', 'ui');
+        $installer = new Installer($this->filesystem, $askConfirmation, $directories);
+        $kit = $this->createKit('shadcn');
+        $recipe = $kit->getRecipe('alert-dialog');
+        $installedAction = Path::join($this->tmpDir, 'templates/components/ui/AlertDialog/Action.html.twig');
+
+        $installer->installRecipe($kit, $recipe, $this->tmpDir, false);
+        $expectedNewContents = file_get_contents($installedAction);
+        $this->filesystem->dumpFile($installedAction, 'Local changes');
+
+        $installationReport = $installer->installRecipe($kit, $recipe, $this->tmpDir, false);
+
+        $this->assertSame([[$installedAction, $expectedNewContents]], $askedFiles);
+        $this->assertStringEqualsFile($installedAction, 'Local changes');
+        $newFiles = array_map(static fn (File $file) => $file->destinationRelativePathName, $installationReport->newFiles);
+        $this->assertNotContains('templates/components/ui/AlertDialog/Action.html.twig', $newFiles);
     }
 
     public function testShouldNotAskIfFileIsIdentical(): void
@@ -159,6 +240,15 @@ final class InstallerTest extends KernelTestCase
 
     private function createKit(string $kitName): Kit
     {
-        return self::getContainer()->get('ux_toolkit.kit.kit_factory')->createKitFromAbsolutePath(Path::join(__DIR__, '../../kits', $kitName));
+        return self::getContainer()->get('ux_toolkit.kit.kit_factory')->createKitFromAbsolutePath(self::getLocalKitPath($kitName));
+    }
+
+    private function createInstaller(InstallationDirectories $directories): Installer
+    {
+        return new Installer(
+            $this->filesystem,
+            static fn () => throw new \BadFunctionCallException('The installer should not ask for confirmation.'),
+            $directories,
+        );
     }
 }

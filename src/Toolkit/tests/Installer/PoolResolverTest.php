@@ -38,21 +38,21 @@ final class PoolResolverTest extends TestCase
         $pool = $poolResolver->resolveForRecipe($kit, $recipeButton = $kit->getRecipe('button'));
 
         $this->assertEquals([
-            'templates/components/Button.html.twig',
+            '%COMPONENTS_DIR%/Button.html.twig',
         ], array_keys($pool->getFiles()[$recipeButton->absolutePath]));
         $this->assertCount(4, $pool->getPhpPackageDependencies());
 
         $pool = $poolResolver->resolveForRecipe($kit, $recipeTable = $kit->getRecipe('table'));
 
         $this->assertEquals([
-            'templates/components/Table.html.twig',
-            'templates/components/Table/Body.html.twig',
-            'templates/components/Table/Caption.html.twig',
-            'templates/components/Table/Cell.html.twig',
-            'templates/components/Table/Footer.html.twig',
-            'templates/components/Table/Head.html.twig',
-            'templates/components/Table/Header.html.twig',
-            'templates/components/Table/Row.html.twig',
+            '%COMPONENTS_DIR%/Table.html.twig',
+            '%COMPONENTS_DIR%/Table/Body.html.twig',
+            '%COMPONENTS_DIR%/Table/Caption.html.twig',
+            '%COMPONENTS_DIR%/Table/Cell.html.twig',
+            '%COMPONENTS_DIR%/Table/Footer.html.twig',
+            '%COMPONENTS_DIR%/Table/Head.html.twig',
+            '%COMPONENTS_DIR%/Table/Header.html.twig',
+            '%COMPONENTS_DIR%/Table/Row.html.twig',
         ], array_keys($pool->getFiles()[$recipeTable->absolutePath]));
         $this->assertCount(3, $pool->getPhpPackageDependencies());
     }

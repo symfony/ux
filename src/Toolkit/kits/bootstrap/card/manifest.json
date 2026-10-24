@@ -5,6 +5,6 @@
     "description": "Build flexible content containers with optional headers, footers, images, and contextual styles.",
     "version-added": "3.4",
     "copy-files": {
-        "templates/": "templates/"
+        "templates/components/": "%COMPONENTS_DIR%/"
     }
 }

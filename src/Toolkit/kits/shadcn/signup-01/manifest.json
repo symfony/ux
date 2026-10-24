@@ -4,7 +4,7 @@
     "version-added": "3.7",
     "name": "SignupForm",
     "copy-files": {
-        "templates/": "templates/"
+        "templates/components/": "%COMPONENTS_DIR%/"
     },
     "dependencies": {
         "recipe": ["button", "card", "field", "input"]

@@ -4,8 +4,8 @@
     "name": "Message Scroller",
     "version-added": "3.7",
     "copy-files": {
-        "assets/": "assets/",
-        "templates/": "templates/"
+        "assets/controllers/": "%CONTROLLERS_DIR%/",
+        "templates/components/": "%COMPONENTS_DIR%/"
     },
     "dependencies": {
         "recipe": ["button"],

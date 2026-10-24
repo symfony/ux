@@ -210,6 +210,57 @@ final class RecipeManifestTest extends TestCase
             JSON);
     }
 
+    public function testFromJsonWithTraversalAfterAPlaceholderInCopyFilesDestination(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('The path "%COMPONENTS_DIR%/../../tmp/PWNED" must not escape its target directory.');
+
+        RecipeManifest::fromJson(<<<JSON
+                {
+                    "type": "component",
+                    "name": "MyComponent",
+                    "copy-files": {
+                        "templates/": "%COMPONENTS_DIR%/../../tmp/PWNED"
+                    }
+                }
+            JSON);
+    }
+
+    public function testFromJsonWithPlaceholdersInCopyFilesDestination(): void
+    {
+        $manifest = RecipeManifest::fromJson(<<<JSON
+                {
+                    "type": "component",
+                    "name": "MyComponent",
+                    "copy-files": {
+                        "assets/controllers/": "%CONTROLLERS_DIR%/",
+                        "templates/components/": "%COMPONENTS_DIR%/"
+                    }
+                }
+            JSON);
+
+        $this->assertSame([
+            'assets/controllers/' => '%CONTROLLERS_DIR%/',
+            'templates/components/' => '%COMPONENTS_DIR%/',
+        ], $manifest->copyFiles);
+    }
+
+    public function testFromJsonWithUnknownPlaceholderInCopyFilesDestination(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Unknown placeholder "%TEMPLATES_DIR%" in "%TEMPLATES_DIR%/"');
+
+        RecipeManifest::fromJson(<<<JSON
+                {
+                    "type": "component",
+                    "name": "MyComponent",
+                    "copy-files": {
+                        "templates/": "%TEMPLATES_DIR%/"
+                    }
+                }
+            JSON);
+    }
+
     public function testFromJsonWithBackslashTraversalInCopyFilesDestination(): void
     {
         $this->expectException(\InvalidArgumentException::class);

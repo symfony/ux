@@ -4,7 +4,7 @@
     "name": "Tooltip",
     "version-added": "3.4",
     "copy-files": {
-        "assets/": "assets/"
+        "assets/controllers/": "%CONTROLLERS_DIR%/"
     },
     "dependencies": {
         "npm": ["@floating-ui/dom"],

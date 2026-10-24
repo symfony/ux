@@ -19,6 +19,7 @@ use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
 use Symfony\UX\Toolkit\DependencyInjection\PreviewPass;
+use Symfony\UX\Toolkit\Installer\InstallationDirectories;
 use Symfony\UX\Toolkit\Registry\LocalRegistry;
 
 /**
@@ -40,6 +41,44 @@ class UXToolkitBundle extends AbstractBundle
     {
         $definition->rootNode()
             ->children()
+                ->arrayNode('components')
+                    ->info('Where "ux:install" installs the Twig components of recipes.')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->scalarNode('dir')
+                            ->info('The directory TwigComponent loads anonymous components from, relative to the project directory. It must match your configuration: the Twig "default_path" followed by the TwigComponent "anonymous_template_directory".')
+                            ->defaultValue(InstallationDirectories::DEFAULT_COMPONENTS_DIR)
+                            ->example('templates/ui')
+                            ->cannotBeEmpty()
+                            ->validate()->always(InstallationDirectories::normalizeDirectory(...))->end()
+                        ->end()
+                        ->scalarNode('subdirectory')
+                            ->info('A subdirectory of "dir" to install the components in. Their names get it as a prefix, which the installer adds to the copied files, e.g. "<twig:ui:Button>" for "ui".')
+                            ->defaultNull()
+                            ->example('ui')
+                            ->validate()->ifString()->then(InstallationDirectories::normalizeSubdirectory(...))->end()
+                        ->end()
+                    ->end()
+                ->end()
+                ->arrayNode('controllers')
+                    ->info('Where "ux:install" installs the Stimulus controllers of recipes.')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->scalarNode('dir')
+                            ->info('The directory your Stimulus setup loads controllers from, relative to the project directory. It must match your configuration: an entry of "stimulus.controller_paths" with AssetMapper, the "controllersDir" option with Reprise, or the directory passed to "require.context()" with Webpack Encore.')
+                            ->defaultValue(InstallationDirectories::DEFAULT_CONTROLLERS_DIR)
+                            ->example('assets/js/controllers')
+                            ->cannotBeEmpty()
+                            ->validate()->always(InstallationDirectories::normalizeDirectory(...))->end()
+                        ->end()
+                        ->scalarNode('subdirectory')
+                            ->info('A subdirectory of "dir" to install the controllers in. Their identifiers get it as a prefix, which the installer adds to the copied files, e.g. "ui--dialog" for "ui".')
+                            ->defaultNull()
+                            ->example('ui')
+                            ->validate()->ifString()->then(InstallationDirectories::normalizeSubdirectory(...))->end()
+                        ->end()
+                    ->end()
+                ->end()
                 ->arrayNode('preview')
                     ->info('Wires the preview assets of kits into AssetMapper, Tailwind and the importmap.')
                     ->canBeEnabled()
@@ -84,6 +123,12 @@ class UXToolkitBundle extends AbstractBundle
 
     public function loadExtension(array $config, ContainerConfigurator $container, ContainerBuilder $builder): void
     {
+        $container->parameters()
+            ->set('.ux_toolkit.components.dir', $config['components']['dir'])
+            ->set('.ux_toolkit.components.subdirectory', $config['components']['subdirectory'])
+            ->set('.ux_toolkit.controllers.dir', $config['controllers']['dir'])
+            ->set('.ux_toolkit.controllers.subdirectory', $config['controllers']['subdirectory']);
+
         $container->import('../config/services.php');
 
         if ($builder->hasParameter('.ux_toolkit.preview.kit_dirs')) {

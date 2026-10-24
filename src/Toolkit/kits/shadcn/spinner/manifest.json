@@ -3,7 +3,7 @@
     "type": "component",
     "name": "Spinner",
     "copy-files": {
-        "templates/": "templates/"
+        "templates/components/": "%COMPONENTS_DIR%/"
     },
     "dependencies": {
         "composer": ["symfony/ux-icons", "tales-from-a-dev/twig-tailwind-extra:^1.0.0"]

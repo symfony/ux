@@ -5,7 +5,7 @@
     "description": "Add Bootstrap tooltips to focusable controls with configurable content and placement.",
     "version-added": "3.4",
     "copy-files": {
-        "templates/": "templates/"
+        "templates/components/": "%COMPONENTS_DIR%/"
     },
     "dependencies": {
         "composer": ["twig/extra-bundle", "twig/html-extra:^3.24.0"]
