@@ -1,0 +1,11 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2026-10-24T15:43:12Z
+
+Thanks for the fix, @lyrixx.
+
+Here is what I changed during review:
+
+- I rebased on 3.x. The type list conflicted with the Symfony UID support merged in the meantime, so the list now has both.
+- The Europe/Paris page-walk test only covered `date_immutable`, so removing the timezone conversion for the mutable `date` type went unnoticed. It is now one data-provided test, with the existing `datetime_immutable` case, covering all three types.
+- That made `testCursorPaginationWithMutableDateField` redundant, so I removed it.
