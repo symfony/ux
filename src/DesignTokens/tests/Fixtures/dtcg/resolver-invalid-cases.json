@@ -1,0 +1,181 @@
+{
+    "missing version": {
+        "message": "must declare version",
+        "document": {
+            "resolutionOrder": [{ "type": "set", "name": "base", "sources": [] }]
+        }
+    },
+    "report table date is not the schema identifier": {
+        "message": "must declare version",
+        "document": {
+            "version": "2025-10-01",
+            "resolutionOrder": [{ "type": "set", "name": "base", "sources": [] }]
+        }
+    },
+    "report prose date is not the schema identifier": {
+        "message": "must declare version",
+        "document": {
+            "version": "2025-11-01",
+            "resolutionOrder": [{ "type": "set", "name": "base", "sources": [] }]
+        }
+    },
+    "unknown root property": {
+        "message": "unsupported property",
+        "document": {
+            "version": "2025.10",
+            "unknown": true,
+            "resolutionOrder": [{ "type": "set", "name": "base", "sources": [] }]
+        }
+    },
+    "set without sources": {
+        "message": "sources array",
+        "document": {
+            "version": "2025.10",
+            "sets": { "base": { "description": "Missing sources." } },
+            "resolutionOrder": [{ "$ref": "#/sets/base" }]
+        }
+    },
+    "set with unknown property": {
+        "message": "unsupported property",
+        "document": {
+            "version": "2025.10",
+            "sets": { "base": { "sources": [], "unknown": true } },
+            "resolutionOrder": [{ "$ref": "#/sets/base" }]
+        }
+    },
+    "set description must be text": {
+        "message": "description",
+        "document": {
+            "version": "2025.10",
+            "sets": { "base": { "description": 42, "sources": [] } },
+            "resolutionOrder": [{ "$ref": "#/sets/base" }]
+        }
+    },
+    "set extensions must be object": {
+        "message": "$extensions",
+        "document": {
+            "version": "2025.10",
+            "sets": { "base": { "$extensions": ["invalid"], "sources": [] } },
+            "resolutionOrder": [{ "$ref": "#/sets/base" }]
+        }
+    },
+    "source must be object": {
+        "message": "must be an object",
+        "document": {
+            "version": "2025.10",
+            "sets": { "base": { "sources": [42] } },
+            "resolutionOrder": [{ "$ref": "#/sets/base" }]
+        }
+    },
+    "modifier contexts cannot be empty": {
+        "message": "non-empty contexts",
+        "document": {
+            "version": "2025.10",
+            "modifiers": { "theme": { "contexts": {} } },
+            "resolutionOrder": [{ "$ref": "#/modifiers/theme" }]
+        }
+    },
+    "single-context modifier should be a set": {
+        "message": "at least two contexts",
+        "document": {
+            "version": "2025.10",
+            "modifiers": { "theme": { "contexts": { "light": [] } } },
+            "resolutionOrder": [{ "$ref": "#/modifiers/theme" }]
+        }
+    },
+    "modifier context source must be array": {
+        "message": "array of token sources",
+        "document": {
+            "version": "2025.10",
+            "modifiers": { "theme": { "contexts": { "light": { "unexpected": true }, "dark": [] } } },
+            "resolutionOrder": [{ "$ref": "#/modifiers/theme" }]
+        }
+    },
+    "modifier default must select a context": {
+        "message": "must match a context key",
+        "document": {
+            "version": "2025.10",
+            "modifiers": { "theme": { "contexts": { "light": [], "dark": [] }, "default": "other" } },
+            "resolutionOrder": [{ "$ref": "#/modifiers/theme" }]
+        }
+    },
+    "modifier with unknown property": {
+        "message": "unsupported property",
+        "document": {
+            "version": "2025.10",
+            "modifiers": { "theme": { "contexts": { "light": [], "dark": [] }, "unknown": true } },
+            "resolutionOrder": [{ "$ref": "#/modifiers/theme" }]
+        }
+    },
+    "case-insensitive contexts must not be ambiguous": {
+        "message": "differ only by case",
+        "document": {
+            "version": "2025.10",
+            "modifiers": { "theme": { "contexts": { "light": [], "LIGHT": [] } } },
+            "resolutionOrder": [{ "$ref": "#/modifiers/theme" }]
+        }
+    },
+    "resolution order names must be unique": {
+        "message": "name \"base\" is duplicated",
+        "document": {
+            "version": "2025.10",
+            "sets": { "base": { "sources": [] } },
+            "resolutionOrder": [
+                { "$ref": "#/sets/base" },
+                { "type": "set", "name": "base", "sources": [] }
+            ]
+        }
+    },
+    "referenced resolution order names must be unique": {
+        "message": "name \"base\" is duplicated",
+        "document": {
+            "version": "2025.10",
+            "sets": { "base": { "sources": [] } },
+            "resolutionOrder": [
+                { "$ref": "#/sets/base" },
+                { "$ref": "#/sets/base" }
+            ]
+        }
+    },
+    "generic resolution order reference needs a type": {
+        "message": "does not identify a set or modifier",
+        "document": {
+            "version": "2025.10",
+            "$defs": { "item": { "name": "generic", "sources": [] } },
+            "resolutionOrder": [{ "$ref": "#/$defs/item" }]
+        }
+    },
+    "generic resolution order reference needs a name": {
+        "message": "must have a name",
+        "document": {
+            "version": "2025.10",
+            "$defs": { "item": { "type": "set", "sources": [] } },
+            "resolutionOrder": [{ "$ref": "#/$defs/item" }]
+        }
+    },
+    "same-document fragment must be a JSON Pointer": {
+        "message": "must be a JSON Pointer",
+        "document": {
+            "version": "2025.10",
+            "sets": { "base": { "sources": [] } },
+            "resolutionOrder": [{ "$ref": "#sets/base" }]
+        }
+    },
+    "set cannot reference modifier": {
+        "message": "must not reference modifiers",
+        "document": {
+            "version": "2025.10",
+            "sets": { "base": { "sources": [{ "$ref": "#/modifiers/theme" }] } },
+            "modifiers": { "theme": { "contexts": { "light": [], "dark": [] } } },
+            "resolutionOrder": [{ "$ref": "#/sets/base" }]
+        }
+    },
+    "nothing can reference resolution order": {
+        "message": "must not point into resolutionOrder",
+        "document": {
+            "version": "2025.10",
+            "sets": { "base": { "sources": [{ "$ref": "#/resolutionOrder/0" }] } },
+            "resolutionOrder": [{ "$ref": "#/sets/base" }]
+        }
+    }
+}

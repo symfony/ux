@@ -1,0 +1,12 @@
+{
+    "legacy": {
+        "dimension": {
+            "$type": "dimension",
+            "$value": "16px"
+        },
+        "color": {
+            "$type": "color",
+            "$value": "#3366ff"
+        }
+    }
+}
