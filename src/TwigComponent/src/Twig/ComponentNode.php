@@ -165,7 +165,7 @@ final class ComponentNode extends Node implements NodeOutputInterface
             // In this case, we are obviously rendering an entire template, which
             // happens to contain a {% component %} tag. So we don't need to worry
             // about trying to allow a specific embedded template to be targeted.
-            ->write('$embeddedContext["__parent__"] = $preRenderEvent->getTemplate();')
+            ->write(\sprintf('$embeddedContext["__parent__"] = $%s->getEmbeddedParentTemplate($this->env, $preRenderEvent->getTemplate());', $componentRuntime))
             ->raw("\n");
 
         /*

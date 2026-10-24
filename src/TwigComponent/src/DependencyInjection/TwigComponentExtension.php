@@ -125,6 +125,7 @@ final class TwigComponentExtension extends Extension implements ConfigurationInt
                 new Reference('ux.twig_component.component_stack'),
             ])
             ->addTag('twig.runtime')
+            ->addTag('kernel.reset', ['method' => 'reset'])
         ;
 
         $container->register('ux.twig_component.twig.lexer', ComponentLexer::class)
