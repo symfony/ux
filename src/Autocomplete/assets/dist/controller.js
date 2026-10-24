@@ -140,8 +140,10 @@ var controller_default = class extends Controller {
 		const commonConfig = this.#getCommonConfig();
 		const labelField = commonConfig.labelField ?? "text";
 		const config = this.#mergeConfigs(commonConfig, {
-			firstUrl: (query) => {
-				return `${autocompleteEndpointUrl}${autocompleteEndpointUrl.includes("?") ? "&" : "?"}query=${encodeURIComponent(query)}`;
+			firstUrl: function(query) {
+				const separator = autocompleteEndpointUrl.includes("?") ? "&" : "?";
+				const excluded = (this.settings.hideSelected ? this.items : []).map((value) => `&excluded[]=${encodeURIComponent(value)}`).join("");
+				return `${autocompleteEndpointUrl}${separator}query=${encodeURIComponent(query)}${excluded}`;
 			},
 			load: function(query, callback) {
 				const url = this.getUrl(query);
@@ -177,17 +179,34 @@ var controller_default = class extends Controller {
 			},
 			onFocus: () => {
 				if (this.resetOnFocusValue && this.tomSelect) {
-					if (this.tomSelect.control_input.value.trim() === "") {
-						this.tomSelect.clearOptions();
-						this.tomSelect.loadedSearches = {};
-						if (typeof this.tomSelect["clearPagination"] === "function") this.tomSelect["clearPagination"]();
-						this.tomSelect.load("");
-					}
+					if (this.tomSelect.control_input.value.trim() === "") this.#reloadRemoteOptions(this.tomSelect, "");
 				}
 			},
 			preload: this.preload
 		});
-		return this.#createTomSelect(config);
+		const tomSelect = this.#createTomSelect(config);
+		if (tomSelect.settings.hideSelected) {
+			let hasSelectionChanged = false;
+			tomSelect.on("item_add", () => {
+				hasSelectionChanged = true;
+			});
+			tomSelect.on("item_remove", () => {
+				hasSelectionChanged = true;
+			});
+			tomSelect.on("dropdown_open", () => {
+				if (hasSelectionChanged) {
+					hasSelectionChanged = false;
+					this.#reloadRemoteOptions(tomSelect, tomSelect.inputValue());
+				}
+			});
+		}
+		return tomSelect;
+	}
+	#reloadRemoteOptions(tomSelect, query) {
+		tomSelect.clearOptions();
+		tomSelect.loadedSearches = {};
+		if (typeof tomSelect["clearPagination"] === "function") tomSelect["clearPagination"]();
+		tomSelect.load(query);
 	}
 	getMaxOptions() {
 		if (this.hasMaxOptionsValue) return this.maxOptionsValue;

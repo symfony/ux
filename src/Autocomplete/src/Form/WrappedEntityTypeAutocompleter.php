@@ -18,10 +18,13 @@ use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\Component\PropertyAccess\PropertyPathInterface;
+use Symfony\Component\Uid\Ulid;
+use Symfony\Component\Uid\Uuid;
 use Symfony\Contracts\Service\ResetInterface;
 use Symfony\UX\Autocomplete\Doctrine\EntityMetadata;
 use Symfony\UX\Autocomplete\Doctrine\EntityMetadataFactory;
 use Symfony\UX\Autocomplete\Doctrine\EntitySearchUtil;
+use Symfony\UX\Autocomplete\ExcludedValuesAwareAutocompleterInterface;
 use Symfony\UX\Autocomplete\OptionsAwareEntityAutocompleterInterface;
 
 /**
@@ -29,13 +32,14 @@ use Symfony\UX\Autocomplete\OptionsAwareEntityAutocompleterInterface;
  *
  * @internal
  */
-final class WrappedEntityTypeAutocompleter implements OptionsAwareEntityAutocompleterInterface, ResetInterface
+final class WrappedEntityTypeAutocompleter implements OptionsAwareEntityAutocompleterInterface, ExcludedValuesAwareAutocompleterInterface, ResetInterface
 {
     use WrappedAutocompleterTrait;
 
     private ?FormInterface $form = null;
     private ?EntityMetadata $entityMetadata = null;
     private array $options = [];
+    private array $excludedValues = [];
 
     public function __construct(
         private string $formType,
@@ -58,12 +62,15 @@ final class WrappedEntityTypeAutocompleter implements OptionsAwareEntityAutocomp
 
         if ($filterQuery = $this->getFilterQuery()) {
             $filterQuery($queryBuilder, $query, $repository);
+            $this->addExcludedValuesClause($queryBuilder);
 
             return $queryBuilder;
         }
 
         // Applying max result limit or not
         $queryBuilder->setMaxResults($this->getMaxResults());
+
+        $this->addExcludedValuesClause($queryBuilder);
 
         // avoid filtering if there is no query
         if (!$query) {
@@ -177,5 +184,73 @@ final class WrappedEntityTypeAutocompleter implements OptionsAwareEntityAutocomp
         }
 
         return $this->entityMetadata;
+    }
+
+    /**
+     * Excludes the entities whose value (see getValue()) is one of the excluded values.
+     *
+     * This is skipped when the value cannot be mapped to a single field (e.g. a
+     * "choice_value" callback or a composite identifier).
+     */
+    private function addExcludedValuesClause(QueryBuilder $queryBuilder): void
+    {
+        if (!$this->excludedValues || null === $field = $this->getValueField()) {
+            return;
+        }
+
+        $type = $this->getEntityMetadata()->getPropertyDataType($field);
+        $values = array_filter(array_map(fn (string $value) => $this->normalizeExcludedValue($value, $type), $this->excludedValues), static fn (mixed $value) => null !== $value);
+
+        if (!$values) {
+            return;
+        }
+
+        $parameters = [];
+        foreach (array_values($values) as $i => $value) {
+            $parameters[] = ':ux_autocomplete_excluded_'.$i;
+            $queryBuilder->setParameter('ux_autocomplete_excluded_'.$i, $value, $type);
+        }
+
+        $queryBuilder->andWhere(\sprintf('%s.%s NOT IN (%s)', $queryBuilder->getRootAliases()[0], $field, implode(', ', $parameters)));
+    }
+
+    private function getValueField(): ?string
+    {
+        $choiceValue = $this->getFormOption('choice_value');
+
+        if ($choiceValue instanceof \Closure) {
+            return null;
+        }
+
+        if ($choiceValue instanceof PropertyPathInterface) {
+            $choiceValue = (string) $choiceValue;
+        }
+
+        if (\is_string($choiceValue)) {
+            return $this->getEntityMetadata()->hasField($choiceValue) ? $choiceValue : null;
+        }
+
+        $identifierFields = $this->getEntityMetadata()->getIdentifierFieldNames();
+
+        if (1 !== \count($identifierFields) || !$this->getEntityMetadata()->hasField($identifierFields[0])) {
+            return null;
+        }
+
+        return $identifierFields[0];
+    }
+
+    /**
+     * Returns null for values that cannot be compared with the field, so they are ignored.
+     */
+    private function normalizeExcludedValue(string $value, string $type): mixed
+    {
+        return match ($type) {
+            'smallint', 'integer', 'bigint' => false !== ($int = filter_var($value, \FILTER_VALIDATE_INT)) ? $int : null,
+            'string', 'ascii_string', 'text' => $value,
+            'guid' => preg_match('/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i', $value) ? $value : null,
+            'uuid' => class_exists(Uuid::class) && Uuid::isValid($value, Uuid::FORMAT_ALL) ? Uuid::fromString($value) : null,
+            'ulid' => class_exists(Ulid::class) && Ulid::isValid($value) ? Ulid::fromString($value) : null,
+            default => null,
+        };
     }
 }

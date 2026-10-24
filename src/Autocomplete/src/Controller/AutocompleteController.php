@@ -20,6 +20,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\UX\Autocomplete\AutocompleteResultsExecutor;
 use Symfony\UX\Autocomplete\AutocompleterRegistry;
 use Symfony\UX\Autocomplete\Checksum\ChecksumCalculator;
+use Symfony\UX\Autocomplete\ExcludedValuesAwareAutocompleterInterface;
 use Symfony\UX\Autocomplete\Form\AutocompleteChoiceTypeExtension;
 use Symfony\UX\Autocomplete\OptionsAwareAutocompleterInterface;
 use Symfony\UX\Autocomplete\OptionsAwareEntityAutocompleterInterface;
@@ -30,6 +31,12 @@ use Symfony\UX\Autocomplete\OptionsAwareEntityAutocompleterInterface;
 class AutocompleteController
 {
     public const EXTRA_OPTIONS = 'extra_options';
+    public const EXCLUDED_VALUES = 'excluded';
+
+    /**
+     * Keeps the excluded values below the bound parameters limit of the databases.
+     */
+    private const MAX_EXCLUDED_VALUES = 500;
 
     public function __construct(
         private AutocompleterRegistry $autocompleteFieldRegistry,
@@ -49,6 +56,10 @@ class AutocompleteController
         if ($autocompleter instanceof OptionsAwareAutocompleterInterface || $autocompleter instanceof OptionsAwareEntityAutocompleterInterface) {
             $extraOptions = $this->getExtraOptionsFromRequest($request);
             $autocompleter->setOptions([self::EXTRA_OPTIONS => $extraOptions]);
+        }
+
+        if ($autocompleter instanceof ExcludedValuesAwareAutocompleterInterface) {
+            $autocompleter->setExcludedValues($this->getExcludedValuesFromRequest($request));
         }
 
         $page = $request->query->getInt('page', 1);
@@ -90,6 +101,26 @@ class AutocompleteController
         $this->validateExtraOptionsChecksum($extraOptions[AutocompleteChoiceTypeExtension::CHECKSUM_KEY], $extraOptions);
 
         return $extraOptions;
+    }
+
+    /**
+     * The excluded values are neither signed nor validated: they can only
+     * restrict the results, never widen them. The values beyond the limit
+     * are ignored, so they may be returned again.
+     *
+     * @return list<string>
+     */
+    private function getExcludedValuesFromRequest(Request $request): array
+    {
+        $excludedValues = $request->query->all()[self::EXCLUDED_VALUES] ?? [];
+
+        if (!\is_array($excludedValues)) {
+            return [];
+        }
+
+        $excludedValues = array_values(array_unique(array_filter($excludedValues, static fn (mixed $value) => \is_string($value) && '' !== $value)));
+
+        return \array_slice($excludedValues, 0, self::MAX_EXCLUDED_VALUES);
     }
 
     /**

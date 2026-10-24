@@ -87,6 +87,24 @@ class EntityMetadata
         return $this->getAssociationMetadata($propertyName)['type'];
     }
 
+    /**
+     * @internal
+     */
+    public function hasField(string $propertyName): bool
+    {
+        return $this->metadata->hasField($propertyName);
+    }
+
+    /**
+     * @internal
+     *
+     * @return list<string>
+     */
+    public function getIdentifierFieldNames(): array
+    {
+        return $this->metadata->getIdentifierFieldNames();
+    }
+
     public function getIdValue(object $entity): string
     {
         return current($this->metadata->getIdentifierValues($entity));

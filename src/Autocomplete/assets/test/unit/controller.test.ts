@@ -533,6 +533,154 @@ describe('AutocompleteController', () => {
         expect(fetchMock.requests()[1].url).toEqual('http://localhost:3000/path/to/autocomplete?query=&page=2');
     });
 
+    it('excludes the selected values from the ajax results on a multiple select', async () => {
+        const { container, tomSelect } = await startAutocompleteTest(`
+            <label for="the-select">Items</label>
+            <select
+                id="the-select"
+                multiple
+                data-testid="main-element"
+                data-controller="autocomplete"
+                data-autocomplete-url-value="/path/to/autocomplete"
+            >
+                <option value="1" selected>dog1</option>
+                <option value="a&b" selected>dog2</option>
+            </select>
+        `);
+
+        // initial Ajax request on focus
+        fetchMock.mockResponseOnce(JSON.stringify({ results: [{ value: 3, text: 'dog3' }] }));
+
+        const controlInput = tomSelect.control_input;
+        userEvent.click(controlInput);
+        await waitFor(() => {
+            expect(container.querySelectorAll('.option[data-selectable]')).toHaveLength(1);
+        });
+
+        tomSelect.addItem('3');
+        tomSelect.removeItem('1');
+
+        fetchMock.mockResponseOnce(JSON.stringify({ results: [{ value: 4, text: 'dog4' }] }));
+        controlInput.value = 'dog';
+        controlInput.dispatchEvent(new Event('input'));
+        await waitFor(() => {
+            expect(fetchMock.requests().length).toEqual(2);
+        });
+
+        expect(fetchMock.requests()[0].url).toEqual(
+            'http://localhost:3000/path/to/autocomplete?query=&excluded[]=1&excluded[]=a%26b'
+        );
+        expect(fetchMock.requests()[1].url).toEqual(
+            'http://localhost:3000/path/to/autocomplete?query=dog&excluded[]=a%26b&excluded[]=3'
+        );
+    });
+
+    it('reloads the ajax results when the dropdown reopens after the selection changed', async () => {
+        const { container, tomSelect } = await startAutocompleteTest(`
+            <label for="the-select">Items</label>
+            <select
+                id="the-select"
+                multiple
+                data-testid="main-element"
+                data-controller="autocomplete"
+                data-autocomplete-url-value="/path/to/autocomplete"
+            >
+                <option value="1" selected>dog1</option>
+            </select>
+        `);
+
+        // initial Ajax request on focus
+        fetchMock.mockResponseOnce(
+            JSON.stringify({
+                results: [
+                    { value: 2, text: 'dog2' },
+                    { value: 3, text: 'dog3' },
+                ],
+            })
+        );
+
+        userEvent.click(tomSelect.control_input);
+        await waitFor(() => {
+            expect(container.querySelectorAll('.option[data-selectable]')).toHaveLength(2);
+        });
+
+        // reopening without changing the selection keeps the loaded results
+        tomSelect.close();
+        tomSelect.open();
+        expect(fetchMock.requests().length).toEqual(1);
+
+        tomSelect.addItem('2');
+        tomSelect.close();
+
+        fetchMock.mockResponseOnce(JSON.stringify({ results: [{ value: 4, text: 'dog4' }] }));
+        tomSelect.open();
+        await waitFor(() => {
+            expect(container.querySelectorAll('.option[data-value="4"]')).toHaveLength(1);
+        });
+
+        expect(fetchMock.requests().length).toEqual(2);
+        expect(fetchMock.requests()[0].url).toEqual('http://localhost:3000/path/to/autocomplete?query=&excluded[]=1');
+        expect(fetchMock.requests()[1].url).toEqual(
+            'http://localhost:3000/path/to/autocomplete?query=&excluded[]=1&excluded[]=2'
+        );
+    });
+
+    it('does not exclude the selected value from the ajax results on a single select', async () => {
+        const { container, tomSelect } = await startAutocompleteTest(`
+            <label for="the-select">Items</label>
+            <select
+                id="the-select"
+                data-testid="main-element"
+                data-controller="autocomplete"
+                data-autocomplete-url-value="/path/to/autocomplete"
+            >
+                <option value="1" selected>dog1</option>
+            </select>
+        `);
+
+        // initial Ajax request on focus
+        fetchMock.mockResponseOnce(JSON.stringify({ results: [{ value: 3, text: 'dog3' }] }));
+
+        userEvent.click(tomSelect.control_input);
+        await waitFor(() => {
+            expect(container.querySelectorAll('.option[data-value="3"]')).toHaveLength(1);
+        });
+
+        expect(fetchMock.requests().length).toEqual(1);
+        expect(fetchMock.requests()[0].url).toEqual('http://localhost:3000/path/to/autocomplete?query=');
+    });
+
+    it('does not exclude the selected values from the ajax results when they are not hidden', async () => {
+        const { container, tomSelect } = await startAutocompleteTest(`
+            <label for="the-select">Items</label>
+            <select
+                id="the-select"
+                multiple
+                data-testid="main-element"
+                data-controller="autocomplete"
+                data-autocomplete-url-value="/path/to/autocomplete"
+                data-autocomplete-tom-select-options-value='{"hideSelected": false}'
+            >
+                <option value="1" selected>dog1</option>
+            </select>
+        `);
+
+        // initial Ajax request on focus
+        fetchMock.mockResponseOnce(JSON.stringify({ results: [{ value: 3, text: 'dog3' }] }));
+
+        userEvent.click(tomSelect.control_input);
+        await waitFor(() => {
+            expect(container.querySelectorAll('.option[data-value="3"]')).toHaveLength(1);
+        });
+
+        tomSelect.addItem('3');
+        tomSelect.close();
+        tomSelect.open();
+
+        expect(fetchMock.requests().length).toEqual(1);
+        expect(fetchMock.requests()[0].url).toEqual('http://localhost:3000/path/to/autocomplete?query=');
+    });
+
     it('continues working even if options html rearranges', async () => {
         const { container, tomSelect } = await startAutocompleteTest(`
             <select data-testid="main-element" data-controller="autocomplete">

@@ -18,7 +18,7 @@ use Symfony\Component\Form\FormInterface;
  * Provides shared logic for WrappedEntityTypeAutocompleter and WrappedChoiceTypeAutocompleter.
  *
  * Classes using this trait must have $formType (string), $formFactory (FormFactoryInterface),
- * $form (?FormInterface), and $options (array) properties.
+ * $form (?FormInterface), $options (array) and $excludedValues (array) properties.
  *
  * @internal
  */
@@ -33,10 +33,16 @@ trait WrappedAutocompleterTrait
         $this->options = $options;
     }
 
+    public function setExcludedValues(array $values): void
+    {
+        $this->excludedValues = $values;
+    }
+
     public function reset(): void
     {
         unset($this->form);
         $this->form = null;
+        $this->excludedValues = [];
     }
 
     public function isGranted(Security $security): bool

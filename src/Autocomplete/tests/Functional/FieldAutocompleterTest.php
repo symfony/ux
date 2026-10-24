@@ -15,6 +15,7 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Security\Core\User\InMemoryUser;
 use Symfony\UX\Autocomplete\Tests\Fixtures\Factory\CategoryFactory;
 use Symfony\UX\Autocomplete\Tests\Fixtures\Factory\CategoryTagFactory;
+use Symfony\UX\Autocomplete\Tests\Fixtures\Factory\IngredientFactory;
 use Symfony\UX\Autocomplete\Tests\Fixtures\Factory\ProductFactory;
 use Symfony\UX\Autocomplete\Tests\Fixtures\Factory\ProductTagFactory;
 use Zenstruck\Browser\Test\HasBrowser;
@@ -159,6 +160,117 @@ class FieldAutocompleterTest extends KernelTestCase
             ->assertJsonMatches('length(results)', 2)
             ->assertJsonMatches('results[0].value', (string) $product1->getId())
             ->assertJsonMatches('results[1].value', (string) $product2->getId())
+        ;
+    }
+
+    public function testItExcludesTheGivenValuesBeforePaginating(): void
+    {
+        $ids = array_map(static fn ($category) => (string) $category->getId(), CategoryFactory::createMany(12));
+
+        // max_results = 10, 11 results once excluded
+        $browser = $this->browser()
+            ->throwExceptions()
+            ->get('/test/autocomplete/category_no_choice_label_autocomplete_type?'.http_build_query(['excluded' => [$ids[0]]]))
+            ->assertSuccessful()
+            ->assertJsonMatches('results[*].value', \array_slice($ids, 1, 10))
+        ;
+
+        $nextPage = $browser->json()->decoded()['next_page'];
+        $this->assertNotNull($nextPage);
+
+        $browser
+            ->get($nextPage)
+            ->assertSuccessful()
+            ->assertJsonMatches('results[*].value', [$ids[11]])
+            ->assertJsonMatches('next_page', null)
+        ;
+    }
+
+    public function testItExcludesTheGivenUuidValuesWithACustomQueryBuilderAlias(): void
+    {
+        $ids = array_map(static fn ($ingredient) => (string) $ingredient->getId(), IngredientFactory::createMany(3));
+
+        $results = $this->browser()
+            ->throwExceptions()
+            // the query builder uses the "o" alias
+            ->get('/test/autocomplete/ingredient_autocomplete_type?'.http_build_query(['excluded' => [$ids[0]]]))
+            ->assertSuccessful()
+            ->json()
+            ->decoded()['results']
+        ;
+
+        $this->assertEqualsCanonicalizing(\array_slice($ids, 1), array_column($results, 'value'));
+    }
+
+    public function testItExcludesTheGivenValuesWithAFilterQuery(): void
+    {
+        $ids = array_map(static fn ($category) => (string) $category->getId(), CategoryFactory::createMany(12, ['name' => 'foo']));
+
+        $this->browser()
+            ->throwExceptions()
+            ->get('/test/autocomplete/category_with_filter_query_autocomplete_type?'.http_build_query(['query' => 'foo', 'excluded' => \array_slice($ids, 0, 8)]))
+            ->assertSuccessful()
+            ->assertJsonMatches('results[*].value', \array_slice($ids, 8))
+            ->assertJsonMatches('next_page', null)
+        ;
+    }
+
+    public function testItExcludesTheGivenValuesWithACustomStringValue(): void
+    {
+        $codes = array_map(static fn ($category) => $category->getCode(), CategoryFactory::createSequence(
+            static fn () => array_map(static fn (int $i) => ['code' => 'code_'.$i], range(1, 12))
+        ));
+
+        $this->browser()
+            ->throwExceptions()
+            ->get('/test/autocomplete/category_with_property_name_as_custom_value?'.http_build_query(['excluded' => \array_slice($codes, 0, 8)]))
+            ->assertSuccessful()
+            ->assertJsonMatches('results[*].value', \array_slice($codes, 8))
+            ->assertJsonMatches('next_page', null)
+        ;
+    }
+
+    public function testItIgnoresTheExcludedValuesWithACustomCallbackValue(): void
+    {
+        $category = CategoryFactory::createOne(['code' => 'foo']);
+        CategoryFactory::createMany(2);
+
+        $this->browser()
+            ->throwExceptions()
+            ->get('/test/autocomplete/category_with_callback_as_custom_value?'.http_build_query(['excluded' => [$category->getCode()]]))
+            ->assertSuccessful()
+            ->assertJsonMatches('length(results)', 3)
+        ;
+    }
+
+    public function testItIgnoresInvalidExcludedValues(): void
+    {
+        $ids = array_map(static fn ($category) => (string) $category->getId(), CategoryFactory::createMany(3));
+
+        $this->browser()
+            ->throwExceptions()
+            ->get('/test/autocomplete/category_no_choice_label_autocomplete_type?'.http_build_query(['excluded' => ['', 'abc', '1.5', ['nested'], $ids[0]]]))
+            ->assertSuccessful()
+            ->assertJsonMatches('results[*].value', \array_slice($ids, 1))
+            ->get('/test/autocomplete/category_no_choice_label_autocomplete_type?excluded='.$ids[0])
+            ->assertSuccessful()
+            ->assertJsonMatches('results[*].value', $ids)
+        ;
+    }
+
+    public function testItIgnoresTheExcludedValuesBeyondTheLimit(): void
+    {
+        $ids = array_map(static fn ($category) => (string) $category->getId(), CategoryFactory::createMany(3));
+
+        // 500 unknown values, then one which is beyond the limit
+        $excluded = array_map(static fn (int $i) => (string) (100000 + $i), range(1, 500));
+        $excluded[] = $ids[0];
+
+        $this->browser()
+            ->throwExceptions()
+            ->get('/test/autocomplete/category_no_choice_label_autocomplete_type?'.http_build_query(['excluded' => $excluded]))
+            ->assertSuccessful()
+            ->assertJsonMatches('results[*].value', $ids)
         ;
     }
 }

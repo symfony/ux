@@ -25,6 +25,7 @@ class ExampleRepository
     {
         $this->examples = [
             new Example(UxPackage::Autocomplete, 'Autocomplete (with AJAX)', 'An autocomplete form field, by fetching results with AJAX.', 'app_ux_autocomplete_with_ajax'),
+            new Example(UxPackage::Autocomplete, 'Autocomplete (with AJAX, multiple)', 'A multiple autocomplete form field, by fetching results with AJAX, with the already selected options excluded.', 'app_ux_autocomplete_with_ajax_multiple'),
             new Example(UxPackage::Autocomplete, 'Autocomplete (without AJAX)', 'An autocomplete form field, by using the choses from the choice type field.', 'app_ux_autocomplete_without_ajax'),
             new Example(UxPackage::Autocomplete, 'Autocomplete (custom controller)', 'An autocomplete form field, with a custom Stimulus controller for AJAX results.', 'app_ux_autocomplete_custom_controller'),
             new Example(UxPackage::CalendarLink, 'Basic event', 'A simple calendar event with a title, dates, description and location, rendered as links for Google, Outlook, Office 365 and iCalendar.', 'app_ux_calendar_link_basic'),

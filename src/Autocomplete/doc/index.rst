@@ -832,6 +832,71 @@ interface.
     +       $this->options = $options;
     +   }
 
+Excluding the Already Selected Options
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. versionadded:: 3.7
+
+    The exclusion of the already selected options was added in Autocomplete 3.7.
+
+When the already selected options are hidden from the dropdown (the default
+for a ``multiple`` field, see the ``hideSelected`` option of Tom Select), the
+Stimulus controller sends them to the endpoint in the ``excluded`` query
+parameter, so that the other options remain reachable: the endpoint excludes
+them before paginating the results.
+
+This works out of the box for the fields declared with ``#[AsEntityAutocompleteField]``
+and ``#[AsAutocompleteField]``. For an entity field, the values are compared to
+the entity identifier, or to the ``choice_value`` property when it is a property
+name (the exclusion is skipped for a ``choice_value`` callback or a composite
+identifier).
+
+To support it in your own autocompleter, implement the
+``\Symfony\UX\Autocomplete\ExcludedValuesAwareAutocompleterInterface`` interface:
+
+.. code-block:: diff
+
+    use Symfony\UX\Autocomplete\ExcludedValuesAwareAutocompleterInterface;
+
+    #[AutoconfigureTag('ux.entity_autocompleter', ['alias' => 'food'])]
+    - class FoodAutocompleter implements EntityAutocompleterInterface
+    + class FoodAutocompleter implements EntityAutocompleterInterface, ExcludedValuesAwareAutocompleterInterface
+    {
+    +   /**
+    +    * @var list<string>
+    +    */
+    +   private array $excludedValues = [];
+
+    // ...
+
+        public function createFilteredQueryBuilder(EntityRepository $repository, string $query): QueryBuilder
+        {
+            $qb = $repository->createQueryBuilder('o');
+
+    +       if ($this->excludedValues !== []) {
+    +           $qb
+    +               ->andWhere('o.id NOT IN (:excludedValues)')
+    +               ->setParameter('excludedValues', $this->excludedValues)
+    +           ;
+    +       }
+
+            return $qb;
+        }
+
+    +   /**
+    +    * @param list<string> $values
+    +    */
+    +   public function setExcludedValues(array $values): void
+    +   {
+    +       $this->excludedValues = $values;
+    +   }
+
+.. note::
+
+    The excluded values come from the request and are neither signed nor
+    validated: they can only restrict the results, never widen them. Make sure
+    they are compared to a field of the right type.
+
 .. _manual-stimulus-controller:
 
 Manually using the Stimulus Controller
