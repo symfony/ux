@@ -4,7 +4,7 @@
     "name": "Button",
     "description": "Button with broken copy-files entry and a recipe dep that does not exist.",
     "copy-files": {
-        "templates/": "templates/",
+        "templates/components/": "%COMPONENTS_DIR%/",
         "missing-dir/": "missing-dir/"
     },
     "dependencies": {

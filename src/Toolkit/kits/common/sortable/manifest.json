@@ -4,7 +4,7 @@
     "name": "Sortable",
     "version-added": "3.7",
     "copy-files": {
-        "assets/": "assets/"
+        "assets/controllers/": "%CONTROLLERS_DIR%/"
     },
     "dependencies": {
         "npm": ["sortablejs"],

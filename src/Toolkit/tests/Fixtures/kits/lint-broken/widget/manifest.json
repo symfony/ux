@@ -4,7 +4,7 @@
     "name": "Widget",
     "description": "Widget uses an undeclared JS package and references a missing Stimulus controller.",
     "copy-files": {
-        "templates/": "templates/",
-        "assets/": "assets/"
+        "templates/components/": "%COMPONENTS_DIR%/",
+        "assets/controllers/": "%CONTROLLERS_DIR%/"
     }
 }
