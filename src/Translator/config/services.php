@@ -11,6 +11,7 @@
 
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
+use Symfony\UX\Translator\CacheWarmer\DumpDirectoryCacheWarmer;
 use Symfony\UX\Translator\CacheWarmer\TranslationsCacheWarmer;
 use Symfony\UX\Translator\Command\WarmCacheCommand;
 use Symfony\UX\Translator\MessageParameters\Extractor\IntlMessageParametersExtractor;
@@ -33,6 +34,13 @@ return static function (ContainerConfigurator $container): void {
                 abstract_arg('excluded_domains'),
                 abstract_arg('keys_patterns'),
                 param('kernel.default_locale'),
+            ])
+            ->tag('kernel.cache_warmer')
+
+        ->set('ux.translator.cache_warmer.dump_directory_cache_warmer', DumpDirectoryCacheWarmer::class)
+            ->args([
+                service('filesystem'),
+                abstract_arg('dump_directory'),
             ])
             ->tag('kernel.cache_warmer')
 

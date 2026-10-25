@@ -51,6 +51,9 @@ class UxTranslatorExtension extends Extension implements PrependExtensionInterfa
         $cacheWarmerDefinition->setArgument(4, $includedDomains);
         $cacheWarmerDefinition->setArgument(5, $excludedDomains);
         $cacheWarmerDefinition->setArgument(6, $config['keys_patterns'] ?? []);
+
+        $container->getDefinition('ux.translator.cache_warmer.dump_directory_cache_warmer')
+            ->setArgument(1, $config['dump_directory']);
     }
 
     public function prepend(ContainerBuilder $container): void

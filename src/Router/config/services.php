@@ -11,6 +11,7 @@
 
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
+use Symfony\UX\Router\CacheWarmer\DumpDirectoryCacheWarmer;
 use Symfony\UX\Router\CacheWarmer\RoutesCacheWarmer;
 use Symfony\UX\Router\Command\WarmCacheCommand;
 use Symfony\UX\Router\RouteNormalizer;
@@ -30,6 +31,13 @@ return static function (ContainerConfigurator $container): void {
                 abstract_arg('dump_typescript'),
                 abstract_arg('routes_patterns'),
                 param('kernel.default_locale'),
+            ])
+            ->tag('kernel.cache_warmer')
+
+        ->set('ux.router.cache_warmer.dump_directory_cache_warmer', DumpDirectoryCacheWarmer::class)
+            ->args([
+                service('filesystem'),
+                abstract_arg('dump_directory'),
             ])
             ->tag('kernel.cache_warmer')
 

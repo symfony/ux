@@ -14,6 +14,7 @@ namespace Symfony\UX\Router\Tests\Functional;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\UX\Router\Tests\Kernel\StableCacheDirAppKernel;
+use Symfony\UX\Router\Tests\Kernel\UnreachableDatabaseAppKernel;
 
 final class DumpOnContainerBuildTest extends TestCase
 {
@@ -32,21 +33,22 @@ final class DumpOnContainerBuildTest extends TestCase
         new Filesystem()->remove($this->tmpDir);
     }
 
-    public function testDumpsRoutesWhenTheDumpDirectoryDoesNotExist(): void
+    public function testCreatesTheDumpDirectoryWithoutDumpingTheRoutes(): void
     {
         $kernel = new StableCacheDirAppKernel($this->tmpDir, $this->environment);
+
         $kernel->boot();
 
-        self::assertFileExists($kernel->getDumpDir().'/index.js');
+        self::assertDirectoryExists($kernel->getDumpDir());
+        self::assertFileDoesNotExist($kernel->getDumpDir().'/index.js');
     }
 
-    public function testDoesNotDumpRoutesWhenTheDumpDirectoryExists(): void
+    public function testCreatesTheDumpDirectoryWhenTheRoutesCannotBeLoaded(): void
     {
-        $kernel = new StableCacheDirAppKernel($this->tmpDir, $this->environment);
-        new Filesystem()->mkdir($kernel->getDumpDir());
+        $kernel = new UnreachableDatabaseAppKernel($this->tmpDir, $this->environment);
 
         $kernel->boot();
 
-        self::assertFileDoesNotExist($kernel->getDumpDir().'/index.js');
+        self::assertDirectoryExists($kernel->getDumpDir());
     }
 }

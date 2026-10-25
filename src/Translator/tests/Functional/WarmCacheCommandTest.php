@@ -16,6 +16,7 @@ use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\UX\Translator\Tests\Kernel\StableCacheDirAppKernel;
+use Symfony\UX\Translator\Tests\Kernel\UnreachableDatabaseAppKernel;
 
 final class WarmCacheCommandTest extends TestCase
 {
@@ -36,8 +37,6 @@ final class WarmCacheCommandTest extends TestCase
         new StableCacheDirAppKernel($this->tmpDir)->boot();
 
         $kernel = new StableCacheDirAppKernel($this->tmpDir);
-        // Building the container dumped the translations, the command must dump them again
-        new Filesystem()->remove($kernel->getDumpDir());
         $application = new Application($kernel);
         $tester = new CommandTester($application->find('ux:translator:warm-cache'));
 
@@ -57,5 +56,17 @@ final class WarmCacheCommandTest extends TestCase
 
                 JS
         );
+    }
+
+    public function testFailsWhenTheTranslationsCannotBeLoaded(): void
+    {
+        $kernel = new UnreachableDatabaseAppKernel($this->tmpDir);
+        $application = new Application($kernel);
+        $tester = new CommandTester($application->find('ux:translator:warm-cache'));
+
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('The database is not reachable.');
+
+        $tester->execute([]);
     }
 }

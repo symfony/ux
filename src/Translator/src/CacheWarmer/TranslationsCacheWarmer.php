@@ -40,14 +40,9 @@ class TranslationsCacheWarmer implements CacheWarmerInterface
     ) {
     }
 
-    /**
-     * Optional once the translations are dumped.
-     *
-     * The dump directory is an AssetMapper path, which must exist as soon as the container is built.
-     */
     public function isOptional(): bool
     {
-        return is_dir($this->dumpDir);
+        return true;
     }
 
     public function warmUp(string $cacheDir, ?string $buildDir = null): array
