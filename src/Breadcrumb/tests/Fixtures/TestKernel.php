@@ -140,6 +140,8 @@ final class TestKernel extends Kernel
 
             if ('counting_translator' === $this->environment) {
                 $container->register('translator', CountingTranslator::class)->setPublic(true);
+            } elseif ('plain_translator' === $this->environment) {
+                $container->register('translator', PlainTranslator::class)->setPublic(true);
             }
         });
     }

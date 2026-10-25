@@ -130,7 +130,7 @@ In both examples, the edit action receives a ``$product`` too, so the product's 
 
 A cycle, a parent that points at nothing, and a parent on any crumb but the first of its level throw a ``LogicException`` when the page is requested.
 Resolving a route name reads the route collection, which is expensive, so the map of routes to controllers is kept in the ``.ux_breadcrumb.cache`` pool.
-In debug mode it is only kept for the current process, so a changed route is picked up at once.
+In debug mode it is only kept for the current request, so a changed route is picked up at once, also by a long-running worker such as FrankenPHP.
 A route whose controller is a service id rather than a class cannot be followed; name the controller class instead.
 
 Several crumbs on one controller
@@ -237,6 +237,7 @@ Placeholder                Value
 =========================  ===========================================================================
 
 Properties are read with the PropertyAccess component, so ``{name:product}`` calls ``getName()`` on a Doctrine entity whose ``$name`` is private.
+An array is read by key, so ``{q:filters}`` reads ``$filters['q']``.
 A placeholder can sit anywhere in the label, such as ``'Edit {name:product}'``.
 
 A label with placeholders is a pattern, like a route path: it is the label itself, not a translation key, so it needs no ``translationDomain: false``.
@@ -273,6 +274,7 @@ A translated application gives a translation key instead, and passes the values 
     product.view.breadcrumb: 'Product {name}'
 
 ``translationDomain: false`` skips the translator altogether, for a label that must never be taken for a translation key, such as one built from user data.
+Such a label is not a pattern either: its braces are shown as written.
 
 Building the trail at runtime
 -----------------------------
@@ -334,8 +336,11 @@ that nothing renders.
 Both take any number of crumbs, so a variable depth is a loop and a spread, as above.
 
 A crumb built here already holds its values, so it passes them as given in ``parameters``
-and a literal label with ``translationDomain: false``. Its ``Expression`` values are evaluated
-against the controller arguments the listener captured, which a crumb appended later has no say over.
+and a literal label with ``translationDomain: false``.
+Its expressions and placeholders can only read the controller arguments the listener kept.
+The listener runs before the controller, and keeps only the arguments that the ``#[Breadcrumb]`` attributes of the trail name.
+When an appended crumb names any other argument, its placeholder renders as an empty string, its URL parameter leaves it without a URL, and its translation parameter leaves the placeholder in the label.
+A bare placeholder such as ``{slug}`` still falls back to the route parameter.
 
 Adding a crumb stays cheap: nothing is resolved until a template asks for it, and a crumb
 appended after a first ``ux_breadcrumb_items()`` call is picked up rather than served from

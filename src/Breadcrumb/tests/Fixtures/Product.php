@@ -12,8 +12,7 @@
 namespace Symfony\UX\Breadcrumb\Tests\Fixtures;
 
 /**
- * Stands in for the Doctrine entity a controller receives: crumb expressions
- * dereference it, which is exactly what must not happen before render time.
+ * Stands in for the Doctrine entity a controller receives: crumb expressions dereference it, which must not happen before render time.
  */
 final class Product
 {

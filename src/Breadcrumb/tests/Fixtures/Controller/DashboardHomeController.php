@@ -14,8 +14,7 @@ namespace Symfony\UX\Breadcrumb\Tests\Fixtures\Controller;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Declares no crumb of its own: the root provider's lone crumb is the intended
- * breadcrumb of a section home page.
+ * Declares no crumb of its own: the root provider's lone crumb is the intended breadcrumb of a section home page.
  */
 final class DashboardHomeController
 {

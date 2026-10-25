@@ -15,8 +15,7 @@ use Symfony\Component\ExpressionLanguage\ExpressionFunction;
 use Symfony\Component\ExpressionLanguage\ExpressionFunctionProviderInterface;
 
 /**
- * An application-supplied function, registered through the
- * `ux_breadcrumb.expression_function_provider` tag.
+ * An application-supplied function, registered through the `ux_breadcrumb.expression_function_provider` tag.
  */
 final class FilterStateExpressionFunctionProvider implements ExpressionFunctionProviderInterface
 {

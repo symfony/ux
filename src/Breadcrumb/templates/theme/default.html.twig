@@ -1,7 +1,6 @@
 {#-
-    Deliberately unstyled: the package ships no CSS. Extend this template and override
-    the *_class blocks to attach your own classes, or ignore it entirely and walk
-    ux_breadcrumb_items() in your own markup.
+    Deliberately unstyled: the package ships no CSS.
+    Extend this template and override the *_class blocks to attach your own classes, or walk ux_breadcrumb_items() in your own markup.
 -#}
 {% block breadcrumb %}
     {% if items is not empty %}
@@ -51,8 +50,7 @@
     {% endblock %}
 
     {% block plain_item %}
-        {% set plain_classes = (block('plain_class') ~ ' ' ~ item.attributes.class|default(''))|trim %}
-        {% set attr = {class: plain_classes ?: null} %}
+        {% set attr = {class: block('plain_class')|trim ?: null} %}
         <span{{ block('attr') }}>{{ block('item_label') }}</span>
     {% endblock %}
 

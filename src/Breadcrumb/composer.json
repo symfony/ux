@@ -42,6 +42,7 @@
         "symfony/http-kernel": "^7.4|^8.0",
         "symfony/property-access": "^7.4|^8.0",
         "symfony/routing": "^7.4|^8.0",
+        "symfony/service-contracts": "^3.0",
         "symfony/translation-contracts": "^3.0",
         "symfony/twig-bundle": "^7.4|^8.0",
         "twig/twig": "^3.21|^4.0"

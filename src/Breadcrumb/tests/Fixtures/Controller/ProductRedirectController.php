@@ -20,9 +20,8 @@ use Symfony\UX\Breadcrumb\Tests\Fixtures\Product;
 use Symfony\UX\Breadcrumb\Tests\Fixtures\RouteName;
 
 /**
- * The laziness regression guard: declares crumbs that dereference an entity, then
- * redirects without rendering anything. Nothing may be translated or generated, and
- * the trail's context must hold only `product`, not `$request`.
+ * Declares crumbs that dereference an entity, then redirects without rendering anything.
+ * Nothing may be translated or generated, and the trail's context must hold only `product`, not `$request`.
  */
 #[Breadcrumb(
     label: 'product.index.breadcrumb',

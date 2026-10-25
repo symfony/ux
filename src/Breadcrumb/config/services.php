@@ -35,17 +35,14 @@ return static function (ContainerConfigurator $container): void {
         ->arg('$cache', service('.ux_breadcrumb.cache'))
     ;
 
-    // Crumb expressions are static strings parsed once, and compile() is not pooled,
-    // so a node-local, deploy-scoped pool beats a shared cache round-trip here.
+    // Crumb expressions are static strings parsed once, so a node-local, deploy-scoped pool beats a shared cache round-trip.
     $services->set('.ux_breadcrumb.cache')
         ->parent('cache.system')
         ->private()
         ->tag('cache.pool')
     ;
 
-    // Not autoconfigured on purpose: tagging every ExpressionFunctionProviderInterface
-    // in the application would pull in providers written for other expression
-    // languages (security, routing). Applications opt in by tagging explicitly.
+    // Not autoconfigured on purpose: that would pull in the providers written for other expression languages, such as security or routing.
     $services->set('ux_breadcrumb.expression_language', ExpressionLanguage::class)
         ->args([
             service('.ux_breadcrumb.cache'),
