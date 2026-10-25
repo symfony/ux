@@ -18,9 +18,7 @@ use Symfony\UX\Breadcrumb\Tests\Fixtures\Product;
 use Symfony\UX\Breadcrumb\Tests\Fixtures\RouteName;
 
 /**
- * A three-level trail exercising every kind of parameter at once: a query parameter
- * evaluated from a controller argument, an inherited route parameter, and ICU
- * translation parameters on the current page.
+ * A three-level trail with every kind of parameter at once: a query parameter evaluated from a controller argument, an inherited route parameter, and ICU translation parameters on the current page.
  */
 #[Breadcrumb(
     label: 'product.index.breadcrumb',

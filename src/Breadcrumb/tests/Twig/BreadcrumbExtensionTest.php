@@ -15,6 +15,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\UX\Breadcrumb\Attribute\Breadcrumb;
 use Symfony\UX\Breadcrumb\BreadcrumbTrail;
 use Symfony\UX\Breadcrumb\Tests\Fixtures\CountingTranslator;
@@ -92,6 +93,20 @@ final class BreadcrumbExtensionTest extends KernelTestCase
         self::assertSame(2, $translator->calls);
     }
 
+    public function testTheMemoIsPerRouterLocale(): void
+    {
+        $extension = $this->extensionFor($this->trailWithOneCrumb());
+        $router = self::getContainer()->get('router');
+        self::assertInstanceOf(RouterInterface::class, $router);
+
+        $router->getContext()->setParameter('_locale', 'en');
+        $extension->getBreadcrumb(true);
+        $router->getContext()->setParameter('_locale', 'fr');
+        $extension->getBreadcrumb(true);
+
+        self::assertSame(2, $this->translator()->calls, 'URLs depend on the router locale, so a switch must not be served the memoized items.');
+    }
+
     public function testAnEmptyTrailNeverReachesTheResolver(): void
     {
         $extension = $this->extensionFor(new BreadcrumbTrail('product_index'));
@@ -130,6 +145,13 @@ final class BreadcrumbExtensionTest extends KernelTestCase
         self::assertSame('Appended later', $after[1]->label);
     }
 
+    public function testATranslatorThatIsNotLocaleAwareIsAccepted(): void
+    {
+        $extension = $this->extensionFor($this->trailWithOneCrumb(), 'plain_translator');
+
+        self::assertSame('product.index.breadcrumb', $extension->getBreadcrumb()[0]->label);
+    }
+
     private function trailWithOneCrumb(): BreadcrumbTrail
     {
         $trail = new BreadcrumbTrail('product_index');
@@ -141,9 +163,9 @@ final class BreadcrumbExtensionTest extends KernelTestCase
         return $trail;
     }
 
-    private function extensionFor(?BreadcrumbTrail $trail): BreadcrumbExtension
+    private function extensionFor(?BreadcrumbTrail $trail, string $environment = 'counting_translator'): BreadcrumbExtension
     {
-        self::bootKernel(['environment' => 'counting_translator']);
+        self::bootKernel(['environment' => $environment]);
 
         $request = Request::create('/products');
         if (null !== $trail) {

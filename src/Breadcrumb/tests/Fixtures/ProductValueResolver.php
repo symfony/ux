@@ -16,8 +16,7 @@ use Symfony\Component\HttpKernel\Controller\ValueResolverInterface;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
 
 /**
- * Stands in for Doctrine's entity resolver, so controller arguments are real objects
- * and `ControllerArgumentsEvent::getNamedArguments()` has something worth narrowing.
+ * Stands in for Doctrine's entity resolver, so controller arguments are real objects and `ControllerArgumentsEvent::getNamedArguments()` has something worth narrowing.
  */
 final class ProductValueResolver implements ValueResolverInterface
 {

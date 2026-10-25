@@ -16,8 +16,7 @@ use Symfony\UX\Breadcrumb\Attribute\Breadcrumb;
 use Symfony\UX\Breadcrumb\Tests\Fixtures\Product;
 
 /**
- * Receives an argument but declares no expression of its own, so the only crumb that
- * can pin `product` on the trail is one a root provider supplies.
+ * Receives an argument but declares no expression of its own, so the only crumb that can pin `product` on the trail is one a root provider supplies.
  */
 #[Breadcrumb(label: 'product.view.breadcrumb')]
 final class ProductPlainController

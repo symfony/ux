@@ -17,8 +17,7 @@ use Symfony\UX\Breadcrumb\Attribute\Breadcrumb;
 use Symfony\UX\Breadcrumb\RootCrumbProviderInterface;
 
 /**
- * A root crumb carrying an expression, which the listener must scan into the context
- * even though providers run after the controller's own crumbs are collected.
+ * A root crumb carrying an expression, which the listener must scan into the context even though providers run after the controller's own crumbs are collected.
  */
 final class ExpressionRootCrumbProvider implements RootCrumbProviderInterface
 {

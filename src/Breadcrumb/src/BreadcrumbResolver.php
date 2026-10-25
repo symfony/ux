@@ -23,9 +23,6 @@ use Symfony\UX\Breadcrumb\Attribute\Breadcrumb;
 /**
  * Turns a collected trail into the items a template renders.
  *
- * Intentionally interface-less: this one is internal to the package with a single caller (BreadcrumbExtension), no cross-layer inversion to satisfy and no test double.
- * The tests use the real service from the container.
- *
  * @phpstan-import-type Placeholder from LabelPattern
  *
  * @internal
@@ -69,7 +66,7 @@ final class BreadcrumbResolver
             return $this->expressionLabel($crumb->label, $trail);
         }
 
-        if ([] !== $placeholders = LabelPattern::parse($crumb->label)) {
+        if (false !== $crumb->translationDomain && [] !== $placeholders = LabelPattern::parse($crumb->label)) {
             return $this->patternLabel($crumb->label, $placeholders, $trail);
         }
 
@@ -123,6 +120,8 @@ final class BreadcrumbResolver
     }
 
     /**
+     * PropertyAccessor reads an array or an ArrayAccess only with the `[key]` syntax, so the path is walked one segment at a time.
+     *
      * @param Placeholder $placeholder
      */
     private function placeholderValue(array $placeholder, BreadcrumbTrail $trail): mixed
@@ -131,12 +130,18 @@ final class BreadcrumbResolver
             return $trail->context[$placeholder['variable']] ?? $trail->routeParameters[$placeholder['variable']] ?? null;
         }
 
-        if (!\is_object($subject = $trail->context[$argument] ?? null) && !\is_array($subject)) {
-            return null;
-        }
+        $value = $trail->context[$argument] ?? null;
 
         try {
-            return $this->propertyAccessor->getValue($subject, $placeholder['path'] ?? $placeholder['variable']);
+            foreach (explode('.', $placeholder['path'] ?? $placeholder['variable']) as $segment) {
+                if (!\is_object($value) && !\is_array($value)) {
+                    return null;
+                }
+
+                $value = $this->propertyAccessor->getValue($value, \is_array($value) || $value instanceof \ArrayAccess ? '['.$segment.']' : $segment);
+            }
+
+            return $value;
         } catch (\Throwable) {
             return null;
         }
@@ -185,7 +190,8 @@ final class BreadcrumbResolver
     }
 
     /**
-     * A bare name is taken from the matched route and skipped when the route has none. The keyed entries come after, so they win over a bare name.
+     * A bare name is taken from the matched route and skipped when the route has none.
+     * The keyed entries come after, so they win over a bare name.
      *
      * @return array<string, mixed>
      */
@@ -223,9 +229,6 @@ final class BreadcrumbResolver
         return $parameters;
     }
 
-    /**
-     * Evaluates an Expression and keeps any other value as given.
-     */
     private function evaluate(mixed $value, BreadcrumbTrail $trail): mixed
     {
         return $value instanceof Expression ? $this->expressionLanguage->evaluate($value, $trail->context) : $value;

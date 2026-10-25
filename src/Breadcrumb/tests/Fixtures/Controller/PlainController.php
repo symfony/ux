@@ -14,8 +14,7 @@ namespace Symfony\UX\Breadcrumb\Tests\Fixtures\Controller;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Outside every prefix the root provider knows about, and carries no attribute:
- * the trail must still exist, and be empty.
+ * Outside every prefix the root provider knows about, and carries no attribute: the trail must still exist, and be empty.
  */
 final class PlainController
 {

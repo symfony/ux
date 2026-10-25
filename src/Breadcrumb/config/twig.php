@@ -25,14 +25,14 @@ return static function (ContainerConfigurator $container): void {
         ->arg('$defaultTheme', abstract_arg('default theme'))
     ;
 
-    // autoconfigure() is what picks up the #[AsTwigFunction] methods. Without it the
-    // functions are silently never registered.
+    // autoconfigure() picks up the #[AsTwigFunction] methods. Without it, the functions are silently never registered.
     $services->set('ux_breadcrumb.twig.extension', BreadcrumbExtension::class)
         ->args([
             service('ux_breadcrumb.trail_provider'),
             service('ux_breadcrumb.resolver'),
             service('ux_breadcrumb.renderer'),
             service('translator')->nullOnInvalid(),
+            service('router'),
         ])
         ->autoconfigure()
     ;

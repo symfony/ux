@@ -31,7 +31,6 @@ final class TemplateIntegrationTest extends TestCase
         $loader->addPath(\dirname(__DIR__, 2).'/templates', 'UXBreadcrumb');
 
         $this->twig = new Environment($loader, ['strict_variables' => true]);
-        // Stub |trans filter: returns the key as-is (no real translator in tests)
         $this->twig->addExtension(new class extends AbstractExtension {
             public function getFilters(): array
             {

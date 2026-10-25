@@ -46,9 +46,7 @@ final class BreadcrumbListener implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            // Must clear RequestPayloadValueResolver, which maps the #[Map*] arguments
-            // into their DTOs at -10100 on Symfony 8.x and at 0 on 7.4, so that
-            // getNamedArguments() is final by the time a crumb expression reads it.
+            // Must run after RequestPayloadValueResolver, at -10100 on Symfony 8.x and at 0 on 7.4, so the #[Map*] arguments a crumb expression reads are already mapped into their DTOs.
             KernelEvents::CONTROLLER_ARGUMENTS => [
                 ['buildTrail', -10200],
             ],
@@ -129,14 +127,16 @@ final class BreadcrumbListener implements EventSubscriberInterface
 
         $referenced = [];
         foreach ($crumbs as $crumb) {
-            if (\is_string($crumb->label)) {
+            if (\is_string($crumb->label) && false !== $crumb->translationDomain) {
                 foreach (LabelPattern::arguments($crumb->label) as $name) {
                     $referenced[$name] = true;
                 }
             }
 
-            foreach ([$crumb->label, ...$crumb->parameters, ...$crumb->translationParameters] as $expression) {
-                if ($expression instanceof Expression && preg_match_all('/[a-zA-Z_]\w*/', (string) $expression, $matches)) {
+            // Spreading the string keys would let a translation parameter replace the URL parameter of the same name.
+            foreach ([$crumb->label, ...array_values($crumb->parameters), ...array_values($crumb->translationParameters)] as $expression) {
+                // The name pattern of the ExpressionLanguage lexer.
+                if ($expression instanceof Expression && preg_match_all('/[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*/', (string) $expression, $matches)) {
                     foreach ($matches[0] as $name) {
                         $referenced[$name] = true;
                     }

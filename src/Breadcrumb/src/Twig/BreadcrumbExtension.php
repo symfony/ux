@@ -12,7 +12,7 @@
 namespace Symfony\UX\Breadcrumb\Twig;
 
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Contracts\Translation\LocaleAwareInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\UX\Breadcrumb\BreadcrumbItem;
 use Symfony\UX\Breadcrumb\BreadcrumbResolver;
 use Symfony\UX\Breadcrumb\BreadcrumbTrail;
@@ -32,6 +32,7 @@ final class BreadcrumbExtension
 {
     /**
      * A page renders the trail twice, for the visible bar and for the JSON-LD node, so the resolved items are memoized per reference type and per locale: a template may render the same trail twice inside LocaleSwitcher::runWithLocale().
+     * Labels follow the translator locale and URLs the router locale, so both are part of the key.
      *
      * Keyed by the trail, which lives and dies with its request: entries cannot leak between the requests a FrankenPHP worker serves.
      *
@@ -43,7 +44,8 @@ final class BreadcrumbExtension
         private readonly BreadcrumbTrailProvider $trailProvider,
         private readonly BreadcrumbResolver $resolver,
         private readonly BreadcrumbRenderer $renderer,
-        private readonly ?LocaleAwareInterface $localeAware = null,
+        private readonly ?TranslatorInterface $translator = null,
+        private readonly ?UrlGeneratorInterface $urlGenerator = null,
     ) {
         $this->resolved = new \WeakMap();
     }
@@ -64,9 +66,9 @@ final class BreadcrumbExtension
             ? UrlGeneratorInterface::ABSOLUTE_URL
             : UrlGeneratorInterface::ABSOLUTE_PATH;
 
-        // The crumb count stands in for a revision: the trail only ever grows, so a trail
-        // mutated after a read misses the memo rather than serving stale items.
-        $key = $referenceType.'@'.($this->localeAware?->getLocale() ?? '').'@'.\count($trail->all());
+        // The crumb count stands in for a revision: the trail only ever grows, so a trail mutated after a read misses the memo.
+        $routerLocale = $this->urlGenerator?->getContext()->getParameter('_locale');
+        $key = implode('@', [$referenceType, $this->translator?->getLocale() ?? '', \is_string($routerLocale) ? $routerLocale : '', \count($trail->all())]);
 
         $memo = $this->resolved[$trail] ?? [];
 

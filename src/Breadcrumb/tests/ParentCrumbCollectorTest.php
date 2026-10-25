@@ -14,6 +14,9 @@ namespace Symfony\UX\Breadcrumb\Tests;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Event\ControllerEvent;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\RouterInterface;
@@ -83,7 +86,7 @@ final class ParentCrumbCollectorTest extends TestCase
 
     public function testAnAncestorKeepsItsOwnRouteAndParameters(): void
     {
-        $trail = $this->collector()->collect(new ProductEditController(), []);
+        $trail = $this->collector()->collect(new ProductEditController(), $this->attributesOf(new ProductEditController()));
 
         self::assertSame('product_view', $trail[1]->route);
         self::assertSame(['slug'], $trail[1]->parameters);
@@ -169,12 +172,101 @@ final class ParentCrumbCollectorTest extends TestCase
         self::assertSame(['product.index.breadcrumb', 'product.view.breadcrumb', 'leaf'], self::labelsOf($trail));
     }
 
+    public function testALocalizedRouteResolvesByItsCanonicalName(): void
+    {
+        $routes = new RouteCollection();
+        foreach (['en' => '/products/{slug}', 'fr' => '/produits/{slug}'] as $locale => $path) {
+            $routes->add('localized_view.'.$locale, new Route($path, ['_controller' => ProductViewController::class, '_canonical_route' => 'localized_view', '_locale' => $locale]));
+        }
+        $router = $this->createStub(RouterInterface::class);
+        $router->method('getRouteCollection')->willReturn($routes);
+
+        $trail = new ParentCrumbCollector($router)->collect(static fn (): null => null, [new Breadcrumb('leaf', parent: 'localized_view')]);
+
+        self::assertSame(['product.index.breadcrumb', 'product.view.breadcrumb', 'leaf'], self::labelsOf($trail));
+    }
+
+    public function testTheCrumbsTheKernelGaveWinOverTheDeclaredOnes(): void
+    {
+        $trail = $this->collector()->collect(
+            [CatalogController::class, 'edit'],
+            [new Breadcrumb('replaced', parent: ProductIndexController::class)],
+        );
+
+        self::assertSame(['product.index.breadcrumb', 'replaced'], self::labelsOf($trail));
+    }
+
+    public function testAFirstClassCallableIsCollectedLikeItsAction(): void
+    {
+        self::assertSame(
+            ['product.index.breadcrumb', 'product.view.breadcrumb', 'product.edit.breadcrumb'],
+            $this->labels(new CatalogController()->edit(...)),
+        );
+    }
+
+    public function testReplacedCrumbsDoNotResolveTheDeclaredParent(): void
+    {
+        $trail = $this->collector()->collect(
+            [InvalidParentController::class, 'unknownRoute'],
+            [new Breadcrumb('replaced', parent: ProductIndexController::class)],
+        );
+
+        self::assertSame(['product.index.breadcrumb', 'replaced'], self::labelsOf($trail));
+    }
+
+    public function testAMisplacedParentInReplacedCrumbsIsRejected(): void
+    {
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage('"late"');
+
+        $this->collector()->collect([CatalogController::class, 'index'], [
+            new Breadcrumb('class level', parent: ProductIndexController::class),
+            new Breadcrumb('method level'),
+            new Breadcrumb('late', parent: ProductIndexController::class),
+        ]);
+    }
+
+    public function testResetForgetsTheRouteMap(): void
+    {
+        $before = new RouteCollection();
+        $before->add('moved', new Route('/moved', ['_controller' => ProductIndexController::class]));
+        $after = new RouteCollection();
+        $after->add('moved', new Route('/moved', ['_controller' => ProductViewController::class]));
+        $router = $this->createStub(RouterInterface::class);
+        $router->method('getRouteCollection')->willReturn($before, $after);
+
+        $collector = new ParentCrumbCollector($router);
+        $leaf = [new Breadcrumb('leaf', parent: 'moved')];
+
+        self::assertSame(['product.index.breadcrumb', 'leaf'], self::labelsOf($collector->collect(static fn (): null => null, $leaf)));
+
+        $collector->reset();
+
+        self::assertSame(['product.index.breadcrumb', 'product.view.breadcrumb', 'leaf'], self::labelsOf($collector->collect(static fn (): null => null, $leaf)));
+    }
+
     /**
      * @return list<string>
      */
     private function labels(mixed $controller): array
     {
-        return self::labelsOf($this->collector()->collect($controller, []));
+        return self::labelsOf($this->collector()->collect($controller, $this->attributesOf($controller)));
+    }
+
+    /**
+     * @return list<Breadcrumb>
+     */
+    private function attributesOf(mixed $controller): array
+    {
+        if (\is_string($controller)) {
+            $controller = explode('::', $controller, 2);
+        }
+        // An instance method is only callable on an instance.
+        if (\is_array($controller) && \is_string($controller[0])) {
+            $controller[0] = new $controller[0]();
+        }
+
+        return new ControllerEvent($this->createStub(HttpKernelInterface::class), $controller, new Request(), HttpKernelInterface::MAIN_REQUEST)->getAttributes(Breadcrumb::class);
     }
 
     /**

@@ -353,6 +353,33 @@ final class BreadcrumbResolverTest extends KernelTestCase
         self::assertSame('[][][][]', $this->resolver()->resolve($trail)[0]->label);
     }
 
+    public function testALiteralLabelKeepsItsBraces(): void
+    {
+        $trail = $this->trail(new Breadcrumb(label: 'Shoes {Kids} {slug} {name:product}', translationDomain: false));
+
+        self::assertSame('Shoes {Kids} {slug} {name:product}', $this->resolver()->resolve($trail)[0]->label);
+    }
+
+    public function testAPatternLabelReadsAnArrayByKey(): void
+    {
+        self::bootKernel();
+
+        $trail = new BreadcrumbTrail('product_index', [], ['filters' => ['q' => 'shoes', 'product' => new Product()]]);
+        $trail->append(new Breadcrumb(label: '{q:filters} {name:filters.product.name} [{missing:filters}]'));
+
+        self::assertSame('shoes Blue sneakers []', $this->resolver()->resolve($trail)[0]->label);
+    }
+
+    public function testAPatternLabelReadsAnArrayAccessObjectByKey(): void
+    {
+        self::bootKernel();
+
+        $trail = new BreadcrumbTrail('product_index', [], ['tags' => new \ArrayObject(['shoes', 'boots'])]);
+        $trail->append(new Breadcrumb(label: '{first:tags.0}'));
+
+        self::assertSame('shoes', $this->resolver()->resolve($trail)[0]->label);
+    }
+
     public function testAnUngenerableRouteDegradesToNoUrl(): void
     {
         $trail = $this->trail(

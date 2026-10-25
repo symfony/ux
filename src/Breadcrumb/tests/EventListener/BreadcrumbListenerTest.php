@@ -16,10 +16,16 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Controller\ArgumentResolver\RequestPayloadValueResolver;
+use Symfony\Component\HttpKernel\Event\ControllerArgumentsEvent;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\UX\Breadcrumb\Attribute\Breadcrumb;
 use Symfony\UX\Breadcrumb\BreadcrumbTrail;
 use Symfony\UX\Breadcrumb\EventListener\BreadcrumbListener;
+use Symfony\UX\Breadcrumb\Tests\Fixtures\Category;
+use Symfony\UX\Breadcrumb\Tests\Fixtures\Controller\LiteralLabelController;
+use Symfony\UX\Breadcrumb\Tests\Fixtures\Controller\NonAsciiArgumentController;
+use Symfony\UX\Breadcrumb\Tests\Fixtures\Controller\SharedParameterNameController;
 use Symfony\UX\Breadcrumb\Tests\Fixtures\CountingTranslator;
 use Symfony\UX\Breadcrumb\Tests\Fixtures\Product;
 use Symfony\UX\Breadcrumb\Tests\Fixtures\RouteName;
@@ -189,6 +195,27 @@ final class BreadcrumbListenerTest extends KernelTestCase
         self::assertSame(['product'], array_keys($trail->context));
     }
 
+    public function testAUrlAndATranslationParameterOfTheSameNameBothKeepTheirArgument(): void
+    {
+        $trail = $this->trailOf([new SharedParameterNameController(), '__invoke'], [new Product(), new Category()]);
+
+        self::assertSame(['product', 'category'], array_keys($trail->context));
+    }
+
+    public function testAnArgumentWithANonAsciiNameIsKeptInTheContext(): void
+    {
+        $trail = $this->trailOf([new NonAsciiArgumentController(), '__invoke'], [new Category()]);
+
+        self::assertSame(['catégorie'], array_keys($trail->context));
+    }
+
+    public function testALiteralLabelPinsNoArgument(): void
+    {
+        $trail = $this->trailOf([new LiteralLabelController(), '__invoke'], [new Product()]);
+
+        self::assertSame([], $trail->context);
+    }
+
     private static function priorityOf(array $subscribedEvents): int
     {
         $listener = $subscribedEvents[KernelEvents::CONTROLLER_ARGUMENTS] ?? null;
@@ -209,6 +236,22 @@ final class BreadcrumbListenerTest extends KernelTestCase
             static fn (Breadcrumb $crumb): string => $crumb->label,
             $this->handle($uri)->all(),
         );
+    }
+
+    /**
+     * @param list<mixed> $arguments
+     */
+    private function trailOf(callable $controller, array $arguments): BreadcrumbTrail
+    {
+        $request = Request::create('/');
+        $event = new ControllerArgumentsEvent($this->createStub(HttpKernelInterface::class), $controller, $arguments, $request, HttpKernelInterface::MAIN_REQUEST);
+
+        new BreadcrumbListener()->buildTrail($event);
+
+        $trail = $request->attributes->get(BreadcrumbTrail::ATTRIBUTE);
+        self::assertInstanceOf(BreadcrumbTrail::class, $trail);
+
+        return $trail;
     }
 
     private function handle(string $uri, string $environment = 'test'): BreadcrumbTrail

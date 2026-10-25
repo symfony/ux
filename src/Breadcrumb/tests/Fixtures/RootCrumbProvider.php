@@ -16,8 +16,7 @@ use Symfony\UX\Breadcrumb\Attribute\Breadcrumb;
 use Symfony\UX\Breadcrumb\RootCrumbProviderInterface;
 
 /**
- * The reference shape: branch on the route name, and yield nothing for the route
- * hierarchies that deliberately have no root crumb.
+ * The reference shape: branch on the route name, and yield nothing for the route hierarchies that deliberately have no root crumb.
  */
 final class RootCrumbProvider implements RootCrumbProviderInterface
 {
