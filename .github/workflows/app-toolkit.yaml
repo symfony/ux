@@ -51,6 +51,14 @@ jobs:
               with:
                   cache: true
 
+            # Same image as the browser server in src/Toolkit/assets/playwright.config.ts
+            - name: Pull the browser server image
+              id: browser-server-image
+              background: true
+              run: |
+                  version=$(node -p "require('@playwright/test/package.json').version")
+                  docker pull "mcr.microsoft.com/playwright:v$version-noble"
+
             - uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
               with:
                   php-version: '8.4'
@@ -74,6 +82,9 @@ jobs:
             - name: Compile app assets
               run: php bin/console asset-map:compile
               working-directory: apps/toolkit
+
+            - name: Wait for the browser server image
+              wait: browser-server-image
 
             - name: Run browser tests
               id: browser-tests
