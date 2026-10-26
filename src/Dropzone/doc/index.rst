@@ -160,6 +160,54 @@ All slots are optional, and a slot can be on several elements:
 
 Then use this form theme, for all forms or for a single one (see `How to Work with Form Themes`_).
 
+Restricting the files
+~~~~~~~~~~~~~~~~~~~~~
+
+.. versionadded:: 3.7
+
+    The filtering of dropped files by ``accept``, the ``max_files`` option and the ``dropzone:reject`` event were added in Dropzone 3.7.
+
+The file picker only shows the files that match the ``accept`` attribute of the input, but drag and drop ignores it.
+The Dropzone checks the dropped files against ``accept`` and leaves out the files that do not match.
+An extension (``.pdf``) is checked against the file name, a MIME type (``image/png``, ``image/*``) against the type of the file.
+The type comes from the operating system, so it can differ from the one you expect (on Windows, a CSV file is often ``application/vnd.ms-excel``): prefer extensions in ``accept``.
+Browsers report no type for some files (HEIC photos, for example): those files are not rejected because of a MIME type.
+In single-file mode, a rejected drop keeps the file selected before.
+
+In ``multiple`` mode, the ``max_files`` option limits the number of files, picked or dropped.
+When a selection goes over the limit, the files that fit are added and the others are left out.
+When the Validator component is installed, the option also adds a ``Count`` constraint, so the limit is checked on the server too::
+
+    ->add('photos', DropzoneType::class, [
+        'multiple' => true,
+        'max_files' => 5,
+        'attr' => ['accept' => 'image/*'],
+    ])
+
+The files left out are not added, and the ``dropzone:reject`` event is dispatched once per reason, with the files in ``event.detail.files`` and the reason (``accept`` or ``max_files``) in ``event.detail.reason``.
+Use it to show your own message:
+
+.. code-block:: javascript
+
+    this.element.addEventListener('dropzone:reject', (event) => {
+        const names = event.detail.files.map((file) => file.name).join(', ');
+        alert(event.detail.reason === 'accept' ? `Not an image: ${names}` : `Too many files: ${names}`);
+    });
+
+The ``accept`` check only helps the user: validate the type of the files on the server too, for example with the ``File`` constraint::
+
+    use Symfony\Component\Validator\Constraints\All;
+    use Symfony\Component\Validator\Constraints\File;
+
+    ->add('photos', DropzoneType::class, [
+        'multiple' => true,
+        'max_files' => 5,
+        'attr' => ['accept' => 'image/*'],
+        'constraints' => [
+            new All([new File(mimeTypes: ['image/*'])]),
+        ],
+    ])
+
 Customizing the design
 ~~~~~~~~~~~~~~~~~~~~~~
 

@@ -13,10 +13,12 @@ export default class export_default extends Controller {
   readonly previewItemTemplateTarget: HTMLTemplateElement;
   readonly hasPreviewItemTemplateTarget: boolean;
   readonly multipleValue: boolean;
+  readonly maxFilesValue: number;
   readonly removeLabelValue: string;
   static targets: string[];
   static values: {
     multiple: BooleanConstructor;
+    maxFiles: NumberConstructor;
     removeLabel: {
       type: StringConstructor;
       default: string;
@@ -29,6 +31,8 @@ export default class export_default extends Controller {
   private dragging;
   private queue;
   private generation;
+  private shownFile;
+  private dropping;
   initialize(): void;
   connect(): void;
   disconnect(): void;
@@ -47,6 +51,10 @@ export default class export_default extends Controller {
   private preAdd;
   private syncMultiple;
   private removeFileAt;
+  private onFilesDropped;
+  private checkAccept;
+  private setInputFiles;
+  private reject;
   private containsFile;
   private renderList;
   private buildListItem;

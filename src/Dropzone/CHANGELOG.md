@@ -8,6 +8,9 @@
 - Add a `dropzone_preview_item_template` form theme block and a `previewItemTemplate` target to render the preview of each file in `multiple` mode from a `<template>`
 - Add a `placeholder` option to `DropzoneType`
 - Deprecate passing the placeholder in the `attr` option of `DropzoneType`, use the `placeholder` option instead
+- Leave out the dropped files that do not match the `accept` attribute of the input
+- Add a `max_files` option to `DropzoneType` to limit the number of files in `multiple` mode, with a `Count` constraint when the Validator component is installed
+- Add a `dropzone:reject` event with the files left out and the reason
 
 ## 3.5.0
 

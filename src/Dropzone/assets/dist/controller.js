@@ -12,6 +12,7 @@ var controller_default = class extends Controller {
 	];
 	static values = {
 		multiple: Boolean,
+		maxFiles: Number,
 		removeLabel: {
 			type: String,
 			default: "Remove"
@@ -24,6 +25,8 @@ var controller_default = class extends Controller {
 	dragging = false;
 	queue = Promise.resolve();
 	generation = 0;
+	shownFile = null;
+	dropping = false;
 	initialize() {
 		this.clear = this.clear.bind(this);
 		this.onInputChange = this.onInputChange.bind(this);
@@ -31,12 +34,14 @@ var controller_default = class extends Controller {
 		this.onDragLeave = this.onDragLeave.bind(this);
 		this.onDrop = this.onDrop.bind(this);
 		this.onMultipleChange = this.onMultipleChange.bind(this);
+		this.onFilesDropped = this.onFilesDropped.bind(this);
 	}
 	connect() {
 		this.dragging = false;
 		this.element.addEventListener("dragenter", this.onDragEnter);
 		this.element.addEventListener("dragleave", this.onDragLeave);
 		this.element.addEventListener("drop", this.onDrop);
+		this.element.addEventListener("drop", this.onFilesDropped);
 		if (this.multipleValue) {
 			this.connectMultiple();
 			this.dispatchEvent("connect");
@@ -52,6 +57,7 @@ var controller_default = class extends Controller {
 		this.element.removeEventListener("dragenter", this.onDragEnter);
 		this.element.removeEventListener("dragleave", this.onDragLeave);
 		this.element.removeEventListener("drop", this.onDrop);
+		this.element.removeEventListener("drop", this.onFilesDropped);
 		if (this.multipleValue) {
 			this.inputTarget.removeEventListener("change", this.onMultipleChange);
 			return;
@@ -77,23 +83,32 @@ var controller_default = class extends Controller {
 		if (this.hasPreviewFilenameTarget) this.previewFilenameTarget.textContent = "";
 		this.filled = false;
 		this.updateState();
+		this.shownFile = null;
 		this.dispatchEvent("clear");
 	}
 	onInputChange(event) {
 		const files = Array.from(event.target.files ?? []);
 		if (files.length === 0) return;
-		this.preAdd(files, (added) => {
+		const [accepted, rejected] = this.checkAccept(files);
+		if (accepted.length === 0) {
+			this.setInputFiles(this.shownFile ? [this.shownFile] : []);
+			this.reject(rejected, "accept");
+			return;
+		}
+		this.preAdd(accepted, (added) => {
 			const file = added[0];
 			if (typeof file === "undefined") {
 				this.reset();
+				this.reject(rejected, "accept");
 				return;
 			}
-			if (this.inputTarget.files?.[0] !== file) {
+			if (this.inputTarget.files?.length !== 1 || this.inputTarget.files[0] !== file) {
 				const dataTransfer = new DataTransfer();
 				dataTransfer.items.add(file);
 				this.inputTarget.files = dataTransfer.files;
 			}
 			this.showFile(file);
+			this.reject(rejected, "accept");
 		});
 	}
 	_populateImagePreview(target, file) {
@@ -133,11 +148,18 @@ var controller_default = class extends Controller {
 		this.updateState();
 	}
 	onMultipleChange() {
-		const files = Array.from(this.inputTarget.files ?? []);
+		const [accepted, rejected] = this.checkAccept(Array.from(this.inputTarget.files ?? []));
 		this.inputTarget.files = this.dataTransfer.files;
-		this.preAdd(files, (added) => {
-			for (const file of added) if (!this.containsFile(file)) this.dataTransfer.items.add(file);
+		this.preAdd(accepted, (added) => {
+			const overflow = [];
+			for (const file of added) {
+				if (this.containsFile(file)) continue;
+				if (this.maxFilesValue > 0 && this.dataTransfer.files.length >= this.maxFilesValue) overflow.push(file);
+				else this.dataTransfer.items.add(file);
+			}
 			this.syncMultiple();
+			this.reject(rejected, "accept");
+			this.reject(overflow, "max_files");
 		});
 	}
 	showFile(file) {
@@ -147,6 +169,7 @@ var controller_default = class extends Controller {
 			if (file.type && file.type.indexOf("image") !== -1) this._populateImagePreview(this.previewImageTarget, file);
 		}
 		this.filled = true;
+		this.shownFile = file;
 		this.updateState();
 		this.dispatchEvent("change", file);
 	}
@@ -201,6 +224,41 @@ var controller_default = class extends Controller {
 		this.dataTransfer.items.remove(index);
 		this.syncMultiple();
 		this.dispatchEvent("remove", file);
+	}
+	onFilesDropped() {
+		this.dropping = true;
+		setTimeout(() => {
+			this.dropping = false;
+		});
+	}
+	checkAccept(files) {
+		if (!this.dropping) return [files, []];
+		const tokens = this.inputTarget.accept.split(",").map((token) => token.trim().toLowerCase()).filter((token) => token !== "");
+		if (tokens.length === 0 || tokens.some((token) => token === "*" || token === "*/*")) return [files, []];
+		const accepted = [];
+		const rejected = [];
+		for (const file of files) {
+			const name = file.name.toLowerCase();
+			const type = file.type.toLowerCase();
+			(tokens.some((token) => {
+				if (token.startsWith(".")) return name.endsWith(token);
+				if (type === "") return true;
+				if (token.endsWith("/*")) return type.startsWith(token.slice(0, -1));
+				return type === token;
+			}) ? accepted : rejected).push(file);
+		}
+		return [accepted, rejected];
+	}
+	setInputFiles(files) {
+		const dataTransfer = new DataTransfer();
+		for (const file of files) dataTransfer.items.add(file);
+		this.inputTarget.files = dataTransfer.files;
+	}
+	reject(files, reason) {
+		if (files.length > 0) this.dispatchEvent("reject", {
+			files,
+			reason
+		});
 	}
 	containsFile(file) {
 		return Array.from(this.dataTransfer.files).some((existing) => existing.name === file.name && existing.size === file.size && existing.lastModified === file.lastModified);

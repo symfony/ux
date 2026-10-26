@@ -5,7 +5,7 @@
     {%- set attr = attr|filter((value, name) => name != 'placeholder')|merge({'data-controller': '', class: (attr.class|default('') ~ ' dropzone-input')|trim}) -%}
     {%- set remove_label_translated = translation_domain is same as(false) ? remove_label : remove_label|trans({}, translation_domain) -%}
 
-    <div class="dropzone-container{% if multiple %} dropzone-container-multiple{% endif %}" data-controller="{{ data_controller }}"{% if multiple %} data-symfony--ux-dropzone--dropzone-multiple-value="true" data-symfony--ux-dropzone--dropzone-remove-label-value="{{ remove_label_translated }}"{% endif %}>
+    <div class="dropzone-container{% if multiple %} dropzone-container-multiple{% endif %}" data-controller="{{ data_controller }}"{% if multiple %} data-symfony--ux-dropzone--dropzone-multiple-value="true" data-symfony--ux-dropzone--dropzone-remove-label-value="{{ remove_label_translated }}"{% if max_files is not null %} data-symfony--ux-dropzone--dropzone-max-files-value="{{ max_files }}"{% endif %}{% endif %}>
         <input type="file" {{ block('widget_attributes') }} data-symfony--ux-dropzone--dropzone-target="input" />
 
         <div class="dropzone-placeholder" data-symfony--ux-dropzone--dropzone-target="placeholder">
