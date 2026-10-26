@@ -41,7 +41,7 @@ src/Toolkit/kits/<kit>/<recipe>/
 
 Sub-component file path `Component/SubName.html.twig` consumed as `<twig:Component:SubName>`.
 
-There is **no `examples/` directory** — examples live inline in `README.md` (see [Examples](#examples-conventions)). Recipe `copy-files` only copies `templates/` (+ `assets/`); the README is doc-only, never shipped to the user's app.
+There is **no `examples/` directory** — examples live inline in `README.md` (see [Examples](#examples-conventions)). Recipe `copy-files` only copies `templates/components/` (+ `assets/controllers/`); the README is doc-only, never shipped to the user's app.
 
 ### `README.md` structure
 
@@ -199,8 +199,8 @@ symfony serve -d
     "name": "<Human Name>",
     "version-added": "<Toolkit version the recipe first ships in, e.g. 3.5>",
     "copy-files": {
-        "assets/": "assets/",
-        "templates/": "templates/"
+        "assets/controllers/": "%CONTROLLERS_DIR%/",
+        "templates/components/": "%COMPONENTS_DIR%/"
     },
     "dependencies": {
         "composer": [
@@ -215,7 +215,8 @@ symfony serve -d
 ```
 
 Rules:
-- Drop `assets/` from `copy-files` if no Stimulus controller.
+- Use the `%COMPONENTS_DIR%` and `%CONTROLLERS_DIR%` placeholders in `copy-files` destinations, never a literal one like `"assets/": "assets/"`, because a literal destination ignores the directories the application configures for `ux:install` (enforced by `CopyFilesPlaceholderChecker`).
+- Drop `assets/controllers/` from `copy-files` if no Stimulus controller.
 - Add `"symfony/ux-icons"` to `composer` whenever templates use `<twig:ux:icon>`.
 - Bump `twig/html-extra` to `^3.24.0` for `html_attr_type` / `tailwind_classes`. The `tailwind_classes` class-merge idiom also needs `tales-from-a-dev/twig-tailwind-extra:^1.3.0` and `symfony/ux-twig-component:^3.5` (enforced by `ComposerSymbolChecker`).
 - Declare `dependencies.recipe` only for recipes required by the **component templates** themselves (e.g. `toggle-group` depends on `toggle`). Do NOT declare recipe deps for components used only in examples — examples are demo files, not shipped dependencies.

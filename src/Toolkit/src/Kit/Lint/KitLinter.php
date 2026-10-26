@@ -16,6 +16,7 @@ use Symfony\UX\Toolkit\Kit\Lint\Checker\AttributesDefaultsChecker;
 use Symfony\UX\Toolkit\Kit\Lint\Checker\ComponentDocChecker;
 use Symfony\UX\Toolkit\Kit\Lint\Checker\ComposerSymbolChecker;
 use Symfony\UX\Toolkit\Kit\Lint\Checker\CopyFilesExistenceChecker;
+use Symfony\UX\Toolkit\Kit\Lint\Checker\CopyFilesPlaceholderChecker;
 use Symfony\UX\Toolkit\Kit\Lint\Checker\DocHeadingLevelChecker;
 use Symfony\UX\Toolkit\Kit\Lint\Checker\JsImportChecker;
 use Symfony\UX\Toolkit\Kit\Lint\Checker\MissingRecipeManifestChecker;
@@ -45,6 +46,7 @@ final class KitLinter
         $this->checkers = [] !== $checkers ? $checkers : [
             new MissingRecipeManifestChecker(),
             new CopyFilesExistenceChecker(),
+            new CopyFilesPlaceholderChecker(),
             new RecipeReferenceChecker(),
             new StimulusControllerChecker(),
             new StimulusControllerDocChecker(),
