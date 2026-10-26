@@ -77,5 +77,40 @@ class DropzoneTypeTest extends TestCase
         $this->assertStringContainsString('multiple="multiple"', $rendered);
         $this->assertStringContainsString('class="dropzone-preview-list" data-symfony--ux-dropzone--dropzone-target="previewList"', $rendered);
         $this->assertStringContainsString('data-symfony--ux-dropzone--dropzone-remove-label-value="Remove"', $rendered);
+        $this->assertStringNotContainsString('<template', $rendered);
+    }
+
+    public function testRenderFormMultipleWithPreviewItemTemplate(): void
+    {
+        $kernel = new TwigAppKernel('test', true);
+        $kernel->boot();
+        $container = $kernel->getContainer()->get('test.service_container');
+
+        $form = $container->get(FormFactoryInterface::class)->createBuilder()
+            ->add('photos', DropzoneType::class, ['multiple' => true])
+            ->getForm()
+        ;
+
+        $rendered = $container->get(Environment::class)->render('dropzone_form_preview_item_template.html.twig', ['form' => $form->createView()]);
+
+        $this->assertStringContainsString('<ul class="dropzone-preview-list" data-symfony--ux-dropzone--dropzone-target="previewList"></ul>
+<template data-symfony--ux-dropzone--dropzone-target="previewItemTemplate"><li data-dropzone-slot="filename"></li></template>
+    </div>', $rendered);
+    }
+
+    public function testRenderFormIgnoresPreviewItemTemplateInSingleMode(): void
+    {
+        $kernel = new TwigAppKernel('test', true);
+        $kernel->boot();
+        $container = $kernel->getContainer()->get('test.service_container');
+
+        $form = $container->get(FormFactoryInterface::class)->createBuilder()
+            ->add('photo', DropzoneType::class)
+            ->getForm()
+        ;
+
+        $rendered = $container->get(Environment::class)->render('dropzone_form_preview_item_template.html.twig', ['form' => $form->createView()]);
+
+        $this->assertStringNotContainsString('<template', $rendered);
     }
 }
