@@ -31,3 +31,9 @@
     ```
 
     The placeholder is no longer rendered as a `placeholder` attribute on the `<input type="file">`, where it is not a valid attribute.
+
+- In single-file mode, the controller keeps the file already in the input when it connects, as `multiple` mode does: it no longer empties the input and no longer dispatches `dropzone:clear` then. `dropzone:clear` is now also dispatched in `multiple` mode, when the last file is removed, and in both modes when the form is reset. If a `dropzone:clear` listener expects to run on connect, run that code from your own controller's `connect()` instead.
+
+- The `onMultipleChange()` method of the controller is merged into `onInputChange()`, which now handles both modes. If you call it from a controller that extends the Dropzone one, call `onInputChange()` instead.
+
+- In `multiple` mode, `dropzone:change` is no longer dispatched when a selection adds no file, because every file is already in the list or over `max_files`.

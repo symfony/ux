@@ -9,7 +9,6 @@
 
 import { Application, Controller } from '@hotwired/stimulus';
 import { getByTestId, waitFor } from '@testing-library/dom';
-import user from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { clearDOM, mountDOM } from '../../../../../test/stimulus-helpers';
 import DropzoneController from '../../src/controller';
@@ -72,6 +71,14 @@ const startDropzone = (element: HTMLElement) =>
         element.addEventListener('dropzone:connect', () => resolve(), { once: true });
         startApplication().register('dropzone', DropzoneController);
     });
+
+// Browsers list "Files" in the types of a drag that carries files
+const fileDrag = (type: string, types: string[] = ['Files']) => {
+    const event = new Event(type, { bubbles: true });
+    Object.defineProperty(event, 'dataTransfer', { value: { types } });
+
+    return event;
+};
 
 // A drop puts the files into the input and fires "change" right after the drop event
 const dropFiles = (input: HTMLInputElement, files: File[]) => {
@@ -149,17 +156,203 @@ describe('DropzoneController', () => {
         expect(getByTestId(container, 'preview')).not.toHaveAttribute('hidden');
     };
 
-    const dragLeave = (relatedTarget: Node) => {
-        const event = new Event('dragleave', { bubbles: true });
-        Object.defineProperty(event, 'relatedTarget', { value: relatedTarget });
-        getByTestId(container, 'container').dispatchEvent(event);
-    };
-
     it('connect', async () => {
         expect(getByTestId(container, 'container')).not.toHaveClass('connected');
 
         startStimulus();
         await waitFor(() => expect(getByTestId(container, 'container')).toHaveClass('connected'));
+    });
+
+    it('ignores a drag without files', async () => {
+        await start();
+
+        getByTestId(container, 'container').dispatchEvent(fileDrag('dragenter', ['text/plain']));
+
+        expectEmpty();
+    });
+
+    it('keeps the file already in the input when it connects', async () => {
+        const file = new File(['hello'], 'hello.txt');
+        Object.defineProperty(getByTestId(container, 'input'), 'files', {
+            configurable: true,
+            writable: true,
+            value: [file],
+        });
+        let cleared = false;
+        getByTestId(container, 'container').addEventListener('dropzone:clear', () => {
+            cleared = true;
+        });
+
+        await start();
+
+        expectFilled();
+        expect(getByTestId(container, 'preview-filename')).toHaveTextContent('hello.txt');
+        expect(cleared).toBe(false);
+    });
+
+    it('keeps the previous file when a pre-add listener prevents a selection', async () => {
+        await start();
+        const input = getByTestId(container, 'input') as HTMLInputElement;
+        const photo = new File(['png'], 'photo.png', { type: 'image/png' });
+        pickFiles(input, [photo]);
+        getByTestId(container, 'container').addEventListener('dropzone:pre-add', (event) => event.preventDefault());
+
+        pickFiles(input, [new File(['b'], 'b.txt')]);
+
+        expectFilled();
+        expect(input.files?.[0]).toBe(photo);
+        expect(getByTestId(container, 'preview-filename')).toHaveTextContent('photo.png');
+    });
+
+    it('keeps the previous file in the input while a pre-add listener is pending', async () => {
+        await start();
+        const input = getByTestId(container, 'input') as HTMLInputElement;
+        const photo = new File(['png'], 'photo.png', { type: 'image/png' });
+        pickFiles(input, [photo]);
+        let resolve!: (files: File[]) => void;
+        getByTestId(container, 'container').addEventListener('dropzone:pre-add', (event: any) => {
+            event.detail.waitUntil(new Promise<File[]>((r) => (resolve = r)));
+        });
+
+        const b = new File(['b'], 'b.txt');
+        pickFiles(input, [b]);
+
+        expect(input.files?.[0]).toBe(photo);
+        resolve([b]);
+        await waitFor(() => expect(getByTestId(container, 'preview-filename')).toHaveTextContent('b.txt'));
+        expect(input.files?.[0]).toBe(b);
+    });
+
+    it('rejects the files over the first one', async () => {
+        await start();
+        const rejections: any[] = [];
+        getByTestId(container, 'container').addEventListener('dropzone:reject', (event: any) =>
+            rejections.push(event.detail)
+        );
+
+        const a = new File(['a'], 'a.txt');
+        const b = new File(['b'], 'b.txt');
+        pickFiles(getByTestId(container, 'input') as HTMLInputElement, [a, b]);
+
+        expect(getByTestId(container, 'preview-filename')).toHaveTextContent('a.txt');
+        expect(rejections).toStrictEqual([{ files: [b], reason: 'max_files' }]);
+    });
+
+    it('does not show the image of a file replaced before it is loaded', async () => {
+        await start();
+        const input = getByTestId(container, 'input') as HTMLInputElement;
+
+        pickFiles(input, [new File(['png'], 'a.png', { type: 'image/png' })]);
+        pickFiles(input, [new File(['text'], 'b.txt', { type: 'text/plain' })]);
+        await new Promise((resolve) => setTimeout(resolve, 50));
+
+        expect(getByTestId(container, 'preview-image')).toHaveAttribute('hidden');
+    });
+
+    it('clears when the form is reset', async () => {
+        const form = document.createElement('form');
+        getByTestId(container, 'container').before(form);
+        form.append(getByTestId(container, 'container'));
+        await start();
+        let cleared = false;
+        getByTestId(container, 'container').addEventListener('dropzone:clear', () => {
+            cleared = true;
+        });
+        pickFiles(getByTestId(container, 'input') as HTMLInputElement, [new File(['hello'], 'hello.txt')]);
+
+        form.reset();
+        Object.defineProperty(getByTestId(container, 'input'), 'files', {
+            configurable: true,
+            writable: true,
+            value: [],
+        });
+
+        await waitFor(() => expectEmpty());
+        expect(cleared).toBe(true);
+    });
+
+    it('does not clear when the form reset is prevented', async () => {
+        const form = document.createElement('form');
+        getByTestId(container, 'container').before(form);
+        form.append(getByTestId(container, 'container'));
+        await start();
+        let cleared = false;
+        getByTestId(container, 'container').addEventListener('dropzone:clear', () => {
+            cleared = true;
+        });
+        form.addEventListener('reset', (event) => event.preventDefault());
+        pickFiles(getByTestId(container, 'input') as HTMLInputElement, [new File(['hello'], 'hello.txt')]);
+
+        form.reset();
+        await new Promise((resolve) => setTimeout(resolve));
+
+        expectFilled();
+        expect(cleared).toBe(false);
+    });
+
+    it('does not clear after it disconnects during a form reset', async () => {
+        const form = document.createElement('form');
+        getByTestId(container, 'container').before(form);
+        form.append(getByTestId(container, 'container'));
+        await start();
+        let cleared = false;
+        getByTestId(container, 'container').addEventListener('dropzone:clear', () => {
+            cleared = true;
+        });
+        pickFiles(getByTestId(container, 'input') as HTMLInputElement, [new File(['hello'], 'hello.txt')]);
+
+        form.reset();
+        getByTestId(container, 'container').remove();
+        await new Promise((resolve) => setTimeout(resolve));
+
+        expect(cleared).toBe(false);
+    });
+
+    it('clears with the clear button when it failed to connect', async () => {
+        const template = document.createElement('template');
+        template.setAttribute('data-dropzone-target', 'previewItemTemplate');
+        template.innerHTML = '<p></p><p></p>';
+        getByTestId(container, 'container').append(template);
+        Object.defineProperty(getByTestId(container, 'input'), 'files', {
+            configurable: true,
+            writable: true,
+            value: [],
+        });
+        const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
+        const errors: unknown[] = [];
+        const onError = (event: ErrorEvent) => errors.push(event.error);
+        window.addEventListener('error', onError);
+
+        startApplication().register('dropzone', DropzoneController);
+        await waitFor(() => expect(consoleError).toHaveBeenCalled());
+        getByTestId(container, 'button').click();
+
+        window.removeEventListener('error', onError);
+        consoleError.mockRestore();
+        expect(errors).toStrictEqual([]);
+    });
+
+    it('renders the preview from the template', async () => {
+        const template = document.createElement('template');
+        template.setAttribute('data-dropzone-target', 'previewItemTemplate');
+        template.innerHTML =
+            '<p class="item"><span data-dropzone-slot="filename"></span><button type="button" data-dropzone-slot="remove"></button></p>';
+        getByTestId(container, 'container').append(template);
+        await start();
+        let cleared = false;
+        getByTestId(container, 'container').addEventListener('dropzone:clear', () => {
+            cleared = true;
+        });
+
+        pickFiles(getByTestId(container, 'input') as HTMLInputElement, [new File(['hello'], 'hello.txt')]);
+
+        expectFilled();
+        expect(getByTestId(container, 'preview').querySelector('.item span')?.textContent).toBe('hello.txt');
+
+        (getByTestId(container, 'preview').querySelector('.item button') as HTMLButtonElement).click();
+
+        expectEmpty();
+        expect(cleared).toBe(true);
     });
 
     it('is empty on connect', async () => {
@@ -199,11 +392,11 @@ describe('DropzoneController', () => {
         });
 
         // Select the file
-        const input = getByTestId(container, 'input');
+        const input = getByTestId(container, 'input') as HTMLInputElement;
         const file = new File(['hello'], 'hello.png', { type: 'image/png' });
 
-        await user.upload(input, file);
-        expect(input.files[0]).toStrictEqual(file);
+        pickFiles(input, [file]);
+        expect(input.files?.[0]).toStrictEqual(file);
 
         expectFilled();
         expect(getByTestId(container, 'input')).not.toHaveAttribute('style');
@@ -233,25 +426,26 @@ describe('DropzoneController', () => {
         await start();
         selectFiles(getByTestId(container, 'input') as HTMLInputElement, [new File(['hello'], 'hello.txt')]);
 
-        getByTestId(container, 'container').dispatchEvent(new Event('dragenter'));
+        getByTestId(container, 'container').dispatchEvent(fileDrag('dragenter'));
 
         expect(state()).toBe('dragging');
         expect(getByTestId(container, 'input')).not.toHaveAttribute('hidden');
         expect(getByTestId(container, 'placeholder')).not.toHaveAttribute('hidden');
         expect(getByTestId(container, 'preview')).toHaveAttribute('hidden');
 
-        dragLeave(getByTestId(container, 'placeholder'));
+        getByTestId(container, 'placeholder').dispatchEvent(fileDrag('dragenter'));
+        getByTestId(container, 'container').dispatchEvent(fileDrag('dragleave'));
         expect(state()).toBe('dragging');
 
-        dragLeave(document.body);
+        getByTestId(container, 'placeholder').dispatchEvent(fileDrag('dragleave'));
         expectFilled();
     });
 
     it('stays empty when a drag leaves an empty dropzone', async () => {
         await start();
 
-        getByTestId(container, 'container').dispatchEvent(new Event('dragenter'));
-        dragLeave(document.body);
+        getByTestId(container, 'container').dispatchEvent(fileDrag('dragenter'));
+        getByTestId(container, 'container').dispatchEvent(fileDrag('dragleave'));
 
         expectEmpty();
     });
@@ -261,7 +455,7 @@ describe('DropzoneController', () => {
         selectFiles(getByTestId(container, 'input') as HTMLInputElement, [new File(['content'], 'a.txt')]);
 
         // Dragging over reveals the input and hides the preview
-        getByTestId(container, 'container').dispatchEvent(new Event('dragenter'));
+        getByTestId(container, 'container').dispatchEvent(fileDrag('dragenter'));
         expect(getByTestId(container, 'preview')).toHaveAttribute('hidden');
 
         // Chrome does not fire "change" when the very same file is picked again
@@ -274,7 +468,7 @@ describe('DropzoneController', () => {
     it('keeps the input shown while the drop is dispatched', async () => {
         await start();
         selectFiles(getByTestId(container, 'input') as HTMLInputElement, [new File(['content'], 'a.txt')]);
-        getByTestId(container, 'container').dispatchEvent(new Event('dragenter'));
+        getByTestId(container, 'container').dispatchEvent(fileDrag('dragenter'));
 
         getByTestId(container, 'container').dispatchEvent(new Event('drop', { bubbles: true }));
 
@@ -284,7 +478,7 @@ describe('DropzoneController', () => {
 
     it('ends the drag when it reconnects', async () => {
         await start();
-        getByTestId(container, 'container').dispatchEvent(new Event('dragenter'));
+        getByTestId(container, 'container').dispatchEvent(fileDrag('dragenter'));
         expect(state()).toBe('dragging');
 
         const reconnected = new Promise((resolve) =>
@@ -409,9 +603,9 @@ describe('DropzoneController', () => {
         selectFiles(input, [new File(['b'], 'b.exe')]);
         pendingA.resolve([a]);
 
-        await waitFor(() => expect(state()).toBe('empty'));
-        expect(getByTestId(container, 'preview-filename')).toHaveTextContent('');
-        expectEmpty();
+        await waitFor(() => expect(state()).toBe('filled'));
+        expect(getByTestId(container, 'preview-filename')).toHaveTextContent('a.png');
+        expect((getByTestId(container, 'input') as HTMLInputElement).files?.[0]).toBe(a);
     });
 
     it('drops the pending selections when the dropzone is cleared', async () => {
@@ -451,7 +645,7 @@ describe('DropzoneController', () => {
         });
 
         const a = new File(['a'], 'a.png', { type: 'image/png' });
-        getByTestId(container, 'container').dispatchEvent(new Event('dragenter'));
+        getByTestId(container, 'container').dispatchEvent(fileDrag('dragenter'));
         selectFiles(getByTestId(container, 'input') as HTMLInputElement, [a]);
         getByTestId(container, 'container').dispatchEvent(new Event('drop', { bubbles: true }));
         await new Promise((resolve) => setTimeout(resolve, 10));
@@ -752,15 +946,13 @@ describe('DropzoneController (multiple)', () => {
         await start();
         selectFiles(getByTestId(container, 'input') as HTMLInputElement, [make('a.txt')]);
 
-        getByTestId(container, 'container').dispatchEvent(new Event('dragenter'));
+        getByTestId(container, 'container').dispatchEvent(fileDrag('dragenter'));
         expect(getByTestId(container, 'container')).toHaveAttribute('data-state', 'dragging');
 
-        const dragLeave = new Event('dragleave', { bubbles: true });
-        Object.defineProperty(dragLeave, 'relatedTarget', { value: document.body });
-        getByTestId(container, 'container').dispatchEvent(dragLeave);
+        getByTestId(container, 'container').dispatchEvent(fileDrag('dragleave'));
         expect(getByTestId(container, 'container')).toHaveAttribute('data-state', 'filled');
 
-        getByTestId(container, 'container').dispatchEvent(new Event('dragenter'));
+        getByTestId(container, 'container').dispatchEvent(fileDrag('dragenter'));
         getByTestId(container, 'container').dispatchEvent(new Event('drop', { bubbles: true }));
         await waitFor(() => expect(getByTestId(container, 'container')).toHaveAttribute('data-state', 'filled'));
     });
@@ -1154,6 +1346,91 @@ describe('DropzoneController (multiple)', () => {
             { files: [c], reason: 'max_files' },
         ]);
         expect(log).toStrictEqual(['dropzone:change', 'dropzone:reject', 'dropzone:reject']);
+    });
+
+    it('clears when the last file is removed', async () => {
+        await start();
+        const events: string[] = [];
+        for (const name of ['dropzone:change', 'dropzone:remove', 'dropzone:clear']) {
+            getByTestId(container, 'container').addEventListener(name, () => events.push(name));
+        }
+        selectFiles(getByTestId(container, 'input') as HTMLInputElement, [make('a.txt')]);
+
+        (getByTestId(container, 'list').querySelector('.dropzone-preview-list-remove') as HTMLButtonElement).click();
+
+        expect(events).toStrictEqual(['dropzone:change', 'dropzone:change', 'dropzone:remove', 'dropzone:clear']);
+    });
+
+    it('reads each image once', async () => {
+        await start();
+        const input = getByTestId(container, 'input') as HTMLInputElement;
+        const readAsDataURL = vi.spyOn(FileReader.prototype, 'readAsDataURL');
+
+        selectFiles(input, [new File(['a'], 'a.png', { type: 'image/png' })]);
+        selectFiles(input, [new File(['b'], 'b.png', { type: 'image/png' })]);
+        selectFiles(input, [new File(['c'], 'c.png', { type: 'image/png' })]);
+
+        expect(readAsDataURL).toHaveBeenCalledTimes(3);
+        readAsDataURL.mockRestore();
+    });
+
+    it('keeps dragging while the drag moves over a child, without relatedTarget', async () => {
+        await start();
+
+        getByTestId(container, 'container').dispatchEvent(fileDrag('dragenter'));
+        getByTestId(container, 'input').dispatchEvent(fileDrag('dragenter'));
+        getByTestId(container, 'container').dispatchEvent(fileDrag('dragleave'));
+
+        expect(getByTestId(container, 'container')).toHaveAttribute('data-state', 'dragging');
+    });
+
+    it('does not dispatch change when no file is added', async () => {
+        getByTestId(container, 'container').setAttribute('data-dropzone-max-files-value', '2');
+        await start();
+        const input = getByTestId(container, 'input') as HTMLInputElement;
+        selectFiles(input, [make('a.txt'), make('b.txt')]);
+        const changes = listen('dropzone:change');
+
+        selectFiles(input, [make('a.txt')]);
+        selectFiles(input, [make('c.txt')]);
+
+        expect(names()).toStrictEqual(['a.txt', 'b.txt']);
+        expect(changes).toStrictEqual([]);
+    });
+
+    it('reads an image again after a failed read', async () => {
+        await start();
+        const input = getByTestId(container, 'input') as HTMLInputElement;
+        const failOnce = vi.spyOn(FileReader.prototype, 'readAsDataURL').mockImplementationOnce(function (
+            this: FileReader
+        ) {
+            setTimeout(() => this.dispatchEvent(new ProgressEvent('error')));
+        });
+        const png = new File(['png'], 'a.png', { type: 'image/png' });
+
+        selectFiles(input, [png]);
+        await new Promise((resolve) => setTimeout(resolve, 10));
+        failOnce.mockRestore();
+        selectFiles(input, [make('b.txt')]);
+
+        await waitFor(() =>
+            expect(getByTestId(container, 'list').querySelector('.dropzone-preview-image')).not.toHaveAttribute(
+                'hidden'
+            )
+        );
+    });
+
+    it('ends the drag when the element under the cursor is removed', async () => {
+        await start();
+        selectFiles(getByTestId(container, 'input') as HTMLInputElement, [make('a.txt')]);
+        const item = getByTestId(container, 'list').firstElementChild as HTMLElement;
+
+        getByTestId(container, 'container').dispatchEvent(fileDrag('dragenter'));
+        item.dispatchEvent(fileDrag('dragenter'));
+        item.remove();
+        getByTestId(container, 'container').dispatchEvent(fileDrag('dragleave'));
+
+        expect(getByTestId(container, 'container')).toHaveAttribute('data-state', 'filled');
     });
 });
 

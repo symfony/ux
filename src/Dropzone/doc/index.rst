@@ -102,13 +102,15 @@ selections instead of replacing the previous one, displays a preview for
 each selected file and lets the user remove files individually before
 submitting.
 
-In this mode, the ``dropzone:connect``, ``dropzone:change`` and
-``dropzone:remove`` events are dispatched (``dropzone:clear`` is not
-dispatched, as there is no clear button in ``multiple`` mode). Beware
-that ``dropzone:change`` carries a single ``File`` in single-file mode,
-but a ``FileList`` in ``multiple`` mode. The ``dropzone:remove`` event
-is dispatched when a file is removed, and carries the removed ``File``
-in ``event.detail``.
+Both modes dispatch the same events.
+``dropzone:change`` is dispatched when files are added: beware that it carries a single ``File`` in single-file mode, but a ``FileList`` in ``multiple`` mode.
+In ``multiple`` mode, ``dropzone:remove`` is dispatched when a file is removed, with the removed ``File`` in ``event.detail``.
+``dropzone:clear`` is dispatched whenever the Dropzone becomes empty: when the file is cleared in single-file mode, when the last file is removed in ``multiple`` mode, and when the form is reset.
+When the controller connects, for example after the element was moved in the page, both modes keep the files already in the input.
+
+.. versionadded:: 3.7
+
+    Before Dropzone 3.7, ``dropzone:clear`` was not dispatched in ``multiple`` mode, and in single-file mode the controller emptied the input and dispatched ``dropzone:clear`` when it connected.
 
 The label of the per-file remove button can be changed with the
 ``remove_label`` option (default ``'Remove'``). It goes through the
@@ -127,7 +129,7 @@ Customizing the preview of each file
 
     The ``dropzone_preview_item_template`` block was added in Dropzone 3.7.
 
-In ``multiple`` mode, the preview of each file is built with fixed markup and CSS classes.
+The preview is built with fixed markup and CSS classes: one list item per file in ``multiple`` mode, and the preview elements of the form theme in single-file mode.
 To use your own markup (utility classes, an icon in the remove button, extra elements), override the ``dropzone_preview_item_template`` block in your form theme and render a ``<template>`` in it:
 
 .. code-block:: html+twig
@@ -152,6 +154,8 @@ All slots are optional, and a slot can be on several elements:
 * ``image``: shows the preview of an image file. On an ``<img>``, it is set as the ``src``, on any other element as the background image. The element has the ``hidden`` attribute until the preview is loaded, and keeps it for files that are not images;
 * ``filename``: receives the name of the file, as text;
 * ``remove``: removes the file on click. Its ``aria-label`` is the ``remove_label`` option followed by the file name.
+
+In single-file mode, the copy of the template replaces the content of the preview, and its ``remove`` slot clears the Dropzone.
 
 .. note::
 
@@ -185,6 +189,7 @@ When the Validator component is installed, the option also adds a ``Count`` cons
     ])
 
 The files left out are not added, and the ``dropzone:reject`` event is dispatched once per reason, with the files in ``event.detail.files`` and the reason (``accept`` or ``max_files``) in ``event.detail.reason``.
+In single-file mode, a selection of several files keeps the first one and leaves out the others with the ``max_files`` reason.
 Use it to show your own message:
 
 .. code-block:: javascript
@@ -364,7 +369,7 @@ A listener can:
 * call ``event.preventDefault()``: no file is added.
 
 While a promise is pending, the container has a ``data-state="processing"`` attribute.
-Use it to show a spinner or to disable the submit button: until the promise resolves, the input holds the files selected before (in single-file mode, the original file).
+Use it to show a spinner or to disable the submit button: until the promise resolves, the input holds the files added before.
 If the promise rejects, or resolves to something else than an array of ``File`` objects, the original files are added and the error is logged to the console.
 Selections are added in the order they were made, and clearing the Dropzone drops the selections still processed.
 

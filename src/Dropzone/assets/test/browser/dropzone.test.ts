@@ -106,7 +106,13 @@ test('single: toggles the parts with the hidden attribute and exposes the state'
     await expect(preview).toBeVisible();
     await expect(preview).not.toHaveAttribute('style');
 
-    await container.dispatchEvent('dragenter');
+    const dataTransfer = await page.evaluateHandle(() => {
+        const dataTransfer = new DataTransfer();
+        dataTransfer.items.add(new File(['b'], 'b.txt'));
+
+        return dataTransfer;
+    });
+    await container.dispatchEvent('dragenter', { dataTransfer });
     await expect(container).toHaveAttribute('data-state', 'dragging');
     await expect(placeholder).toBeVisible();
     await expect(preview).toBeHidden();
@@ -231,4 +237,34 @@ test('single: keeps the previous file when a dropped file does not match accept'
     await expect(page.locator('.dropzone-preview-filename')).toHaveText('photo.png');
     await page.locator('#upload-submit').click();
     await expect(page.locator('#upload-success')).toContainText('Uploaded: photo.png');
+});
+
+test('single: clears when the form is reset', async ({ page }) => {
+    await page.goto('/ux-dropzone/single');
+    await page
+        .locator('input[type="file"]')
+        .setInputFiles([{ name: 'a.txt', mimeType: 'text/plain', buffer: Buffer.from('aaa') }]);
+    await expect(page.locator('.dropzone-container')).toHaveAttribute('data-state', 'filled');
+
+    await page.locator('form').evaluate((form: HTMLFormElement) => form.reset());
+
+    await expect(page.locator('.dropzone-container')).toHaveAttribute('data-state', 'empty');
+    await expect(page.locator('.dropzone-placeholder')).toBeVisible();
+    expect(await page.locator('input[type="file"]').evaluate((input: HTMLInputElement) => input.files?.length)).toBe(0);
+});
+
+test('multiple: dispatches dropzone:clear when the last file is removed', async ({ page }) => {
+    await page.goto('/ux-dropzone/multiple');
+    await page.locator('.dropzone-container').evaluate((container) => {
+        (window as any).cleared = false;
+        container.addEventListener('dropzone:clear', () => ((window as any).cleared = true));
+    });
+    await page
+        .locator('input[type="file"]')
+        .setInputFiles([{ name: 'a.txt', mimeType: 'text/plain', buffer: Buffer.from('aaa') }]);
+
+    await page.locator('.dropzone-preview-list-remove').click();
+
+    await expect(page.locator('.dropzone-container')).toHaveAttribute('data-state', 'empty');
+    expect(await page.evaluate(() => (window as any).cleared)).toBe(true);
 });

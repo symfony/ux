@@ -11,6 +11,11 @@
 - Leave out the dropped files that do not match the `accept` attribute of the input
 - Add a `max_files` option to `DropzoneType` to limit the number of files in `multiple` mode, with a `Count` constraint when the Validator component is installed
 - Add a `dropzone:reject` event with the files left out and the reason
+- Use one code path for the single-file and `multiple` modes: the drag and drop, the preview template, the `dropzone:pre-add` event and the rejections behave the same in both modes
+- Dispatch `dropzone:clear` whenever the Dropzone becomes empty: also when the last file is removed in `multiple` mode, and when the form is reset
+- Keep the file already in the input when the controller connects in single-file mode, instead of emptying the input and dispatching `dropzone:clear`
+- Show the `dragging` state only for drags that carry files, and keep it while the drag moves over the elements of the Dropzone
+- Dispatch `dropzone:change` in `multiple` mode only when files are added, not when every selected file is a duplicate or over `max_files`
 
 ## 3.5.0
 

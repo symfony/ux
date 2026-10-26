@@ -21,48 +21,51 @@ var controller_default = class extends Controller {
 	dataTransfer;
 	previewItem = null;
 	processingCount = 0;
-	filled = false;
-	dragging = false;
+	dragTargets = /* @__PURE__ */ new Set();
 	queue = Promise.resolve();
 	generation = 0;
-	shownFile = null;
 	dropping = false;
+	form = null;
+	resetTimeout;
+	dataUrls = /* @__PURE__ */ new WeakMap();
+	previewedFiles = /* @__PURE__ */ new WeakMap();
 	initialize() {
 		this.clear = this.clear.bind(this);
 		this.onInputChange = this.onInputChange.bind(this);
 		this.onDragEnter = this.onDragEnter.bind(this);
 		this.onDragLeave = this.onDragLeave.bind(this);
 		this.onDrop = this.onDrop.bind(this);
-		this.onMultipleChange = this.onMultipleChange.bind(this);
-		this.onFilesDropped = this.onFilesDropped.bind(this);
+		this.onFormReset = this.onFormReset.bind(this);
 	}
 	connect() {
-		this.dragging = false;
+		this.dragTargets.clear();
+		this.dataTransfer = new DataTransfer();
+		for (const file of Array.from(this.inputTarget.files ?? []).slice(0, this.multipleValue ? void 0 : 1)) this.dataTransfer.items.add(file);
+		this.previewItem = null;
+		if (this.hasPreviewItemTemplateTarget) {
+			const elements = this.previewItemTemplateTarget.content.children;
+			if (elements.length !== 1) throw new Error("The \"previewItemTemplate\" target must contain one root element.");
+			this.previewItem = elements[0];
+		}
+		for (const target of [...this.hasPreviewTarget ? [this.previewTarget] : [], ...this.hasPreviewImageTarget ? [this.previewImageTarget] : []]) if (target.style.display === "none") target.style.removeProperty("display");
 		this.element.addEventListener("dragenter", this.onDragEnter);
 		this.element.addEventListener("dragleave", this.onDragLeave);
 		this.element.addEventListener("drop", this.onDrop);
-		this.element.addEventListener("drop", this.onFilesDropped);
-		if (this.multipleValue) {
-			this.connectMultiple();
-			this.dispatchEvent("connect");
-			return;
-		}
-		for (const target of [this.previewTarget, ...this.hasPreviewImageTarget ? [this.previewImageTarget] : []]) if (target.style.display === "none") target.style.removeProperty("display");
-		this.clear();
 		this.inputTarget.addEventListener("change", this.onInputChange);
+		this.form = this.inputTarget.form;
+		this.form?.addEventListener("reset", this.onFormReset);
+		this.render();
 		this.dispatchEvent("connect");
 	}
 	disconnect() {
 		this.generation++;
+		clearTimeout(this.resetTimeout);
 		this.element.removeEventListener("dragenter", this.onDragEnter);
 		this.element.removeEventListener("dragleave", this.onDragLeave);
 		this.element.removeEventListener("drop", this.onDrop);
-		this.element.removeEventListener("drop", this.onFilesDropped);
-		if (this.multipleValue) {
-			this.inputTarget.removeEventListener("change", this.onMultipleChange);
-			return;
-		}
 		this.inputTarget.removeEventListener("change", this.onInputChange);
+		this.form?.removeEventListener("reset", this.onFormReset);
+		this.form = null;
 	}
 	previewClearButtonTargetConnected(button) {
 		if (!this.multipleValue) button.addEventListener("click", this.clear);
@@ -72,127 +75,73 @@ var controller_default = class extends Controller {
 	}
 	clear() {
 		this.generation++;
-		this.reset();
+		const cleared = this.dataTransfer.files.length > 0;
+		this.dataTransfer = new DataTransfer();
+		this.inputTarget.files = this.dataTransfer.files;
+		this.render();
+		if (cleared) this.dispatchEvent("clear");
 	}
-	reset() {
-		this.inputTarget.value = "";
-		if (this.hasPreviewImageTarget) {
-			this.previewImageTarget.hidden = true;
-			this.previewImageTarget.style.removeProperty("background-image");
-		}
-		if (this.hasPreviewFilenameTarget) this.previewFilenameTarget.textContent = "";
-		this.filled = false;
-		this.updateState();
-		this.shownFile = null;
-		this.dispatchEvent("clear");
-	}
-	onInputChange(event) {
-		const files = Array.from(event.target.files ?? []);
-		if (files.length === 0) return;
-		const [accepted, rejected] = this.checkAccept(files);
+	onInputChange() {
+		const selected = Array.from(this.inputTarget.files ?? []);
+		const [accepted, rejected] = this.checkAccept(selected);
+		this.inputTarget.files = this.dataTransfer.files;
+		if (selected.length === 0) return;
 		if (accepted.length === 0) {
-			this.setInputFiles(this.shownFile ? [this.shownFile] : []);
 			this.reject(rejected, "accept");
 			return;
 		}
-		this.preAdd(accepted, (added) => {
-			const file = added[0];
-			if (typeof file === "undefined") {
-				this.reset();
-				this.reject(rejected, "accept");
-				return;
-			}
-			if (this.inputTarget.files?.length !== 1 || this.inputTarget.files[0] !== file) {
-				const dataTransfer = new DataTransfer();
-				dataTransfer.items.add(file);
-				this.inputTarget.files = dataTransfer.files;
-			}
-			this.showFile(file);
-			this.reject(rejected, "accept");
-		});
+		this.preAdd(accepted, (added) => this.add(added, rejected));
 	}
 	_populateImagePreview(target, file) {
+		this.previewedFiles.set(target, file);
 		this.readAsDataUrl(file, (url) => {
+			if (this.previewedFiles.get(target) !== file) return;
 			target.hidden = false;
 			target.style.backgroundImage = `url("${url}")`;
 		});
 	}
-	onDragEnter() {
-		this.dragging = true;
+	onDragEnter(event) {
+		if (!this.isFileDrag(event)) return;
+		this.dragTargets.add(event.target);
 		this.updateState();
 	}
 	onDragLeave(event) {
 		event.preventDefault();
-		if (!this.element.contains(event.relatedTarget)) {
-			this.dragging = false;
-			this.updateState();
-		}
+		if (!this.isFileDrag(event)) return;
+		this.dragTargets.delete(event.target);
+		for (const target of this.dragTargets) if (!(target instanceof Node) || !this.element.contains(target)) this.dragTargets.delete(target);
+		this.updateState();
 	}
 	onDrop() {
+		this.dropping = true;
 		setTimeout(() => {
-			this.dragging = false;
+			this.dropping = false;
+			this.dragTargets.clear();
 			this.updateState();
 		});
 	}
-	connectMultiple() {
-		this.previewItem = null;
-		if (this.hasPreviewItemTemplateTarget) {
-			const elements = this.previewItemTemplateTarget.content.children;
-			if (elements.length !== 1) throw new Error("The \"previewItemTemplate\" target must contain one root element.");
-			this.previewItem = elements[0];
-		}
-		this.dataTransfer = new DataTransfer();
-		for (const file of Array.from(this.inputTarget.files ?? [])) this.dataTransfer.items.add(file);
-		this.inputTarget.addEventListener("change", this.onMultipleChange);
-		this.renderList();
-		this.updateState();
-	}
-	onMultipleChange() {
-		const [accepted, rejected] = this.checkAccept(Array.from(this.inputTarget.files ?? []));
-		this.inputTarget.files = this.dataTransfer.files;
-		this.preAdd(accepted, (added) => {
-			const overflow = [];
-			for (const file of added) {
-				if (this.containsFile(file)) continue;
-				if (this.maxFilesValue > 0 && this.dataTransfer.files.length >= this.maxFilesValue) overflow.push(file);
-				else this.dataTransfer.items.add(file);
-			}
-			this.syncMultiple();
-			this.reject(rejected, "accept");
-			this.reject(overflow, "max_files");
+	onFormReset(event) {
+		clearTimeout(this.resetTimeout);
+		this.resetTimeout = setTimeout(() => {
+			if (!event.defaultPrevented) this.clear();
 		});
-	}
-	showFile(file) {
-		if (this.hasPreviewFilenameTarget) this.previewFilenameTarget.textContent = file.name;
-		if (this.hasPreviewImageTarget) {
-			this.previewImageTarget.hidden = true;
-			if (file.type && file.type.indexOf("image") !== -1) this._populateImagePreview(this.previewImageTarget, file);
-		}
-		this.filled = true;
-		this.shownFile = file;
-		this.updateState();
-		this.dispatchEvent("change", file);
 	}
 	preAdd(files, add) {
 		let promise = null;
-		let prevented = false;
-		if (files.length > 0) {
-			let dispatching = true;
-			const event = this.dispatchEvent("pre-add", {
-				files,
-				waitUntil: (filesPromise) => {
-					if (!dispatching || promise) throw new Error("waitUntil() can only be called once, from a \"dropzone:pre-add\" listener.");
-					promise = Promise.resolve(filesPromise);
-				}
-			}, true);
-			dispatching = false;
-			prevented = event.defaultPrevented;
-		}
-		if (prevented && promise) {
+		let dispatching = true;
+		const event = this.dispatchEvent("pre-add", {
+			files,
+			waitUntil: (filesPromise) => {
+				if (!dispatching || promise) throw new Error("waitUntil() can only be called once, from a \"dropzone:pre-add\" listener.");
+				promise = Promise.resolve(filesPromise);
+			}
+		}, true);
+		dispatching = false;
+		if (event.defaultPrevented && promise) {
 			promise.catch((error) => console.error(error));
 			promise = null;
 		}
-		const selected = prevented ? [] : files;
+		const selected = event.defaultPrevented ? [] : files;
 		if (!promise && this.processingCount === 0) {
 			add(selected);
 			return;
@@ -214,22 +163,42 @@ var controller_default = class extends Controller {
 			this.updateState();
 		});
 	}
-	syncMultiple() {
-		this.inputTarget.files = this.dataTransfer.files;
-		this.renderList();
-		this.updateState();
-		this.dispatchEvent("change", this.inputTarget.files);
+	add(added, rejected) {
+		const overflow = [];
+		let changed = false;
+		if (this.multipleValue) for (const file of added) {
+			if (this.containsFile(file)) continue;
+			if (this.maxFilesValue > 0 && this.dataTransfer.files.length >= this.maxFilesValue) overflow.push(file);
+			else {
+				this.dataTransfer.items.add(file);
+				changed = true;
+			}
+		}
+		else if (added.length > 0) {
+			this.dataTransfer = new DataTransfer();
+			this.dataTransfer.items.add(added[0]);
+			overflow.push(...added.slice(1));
+			changed = true;
+		}
+		if (changed) {
+			this.inputTarget.files = this.dataTransfer.files;
+			this.render();
+			this.dispatchEvent("change", this.multipleValue ? this.inputTarget.files : this.dataTransfer.files[0]);
+		}
+		this.reject(rejected, "accept");
+		this.reject(overflow, "max_files");
 	}
 	removeFileAt(index, file) {
+		if (!this.multipleValue) {
+			this.clear();
+			return;
+		}
 		this.dataTransfer.items.remove(index);
-		this.syncMultiple();
+		this.inputTarget.files = this.dataTransfer.files;
+		this.render();
+		this.dispatchEvent("change", this.inputTarget.files);
 		this.dispatchEvent("remove", file);
-	}
-	onFilesDropped() {
-		this.dropping = true;
-		setTimeout(() => {
-			this.dropping = false;
-		});
+		if (this.dataTransfer.files.length === 0) this.dispatchEvent("clear");
 	}
 	checkAccept(files) {
 		if (!this.dropping) return [files, []];
@@ -249,11 +218,6 @@ var controller_default = class extends Controller {
 		}
 		return [accepted, rejected];
 	}
-	setInputFiles(files) {
-		const dataTransfer = new DataTransfer();
-		for (const file of files) dataTransfer.items.add(file);
-		this.inputTarget.files = dataTransfer.files;
-	}
 	reject(files, reason) {
 		if (files.length > 0) this.dispatchEvent("reject", {
 			files,
@@ -263,10 +227,22 @@ var controller_default = class extends Controller {
 	containsFile(file) {
 		return Array.from(this.dataTransfer.files).some((existing) => existing.name === file.name && existing.size === file.size && existing.lastModified === file.lastModified);
 	}
-	renderList() {
-		if (!this.hasPreviewListTarget) return;
-		const items = Array.from(this.dataTransfer.files).map((file, index) => this.buildListItem(file, index));
-		this.previewListTarget.replaceChildren(...items);
+	render() {
+		const files = Array.from(this.dataTransfer.files);
+		if (this.multipleValue) {
+			if (this.hasPreviewListTarget) this.previewListTarget.replaceChildren(...files.map((file, index) => this.buildListItem(file, index)));
+		} else if (this.previewItem) this.previewTarget.replaceChildren(...files.map((file, index) => this.buildListItem(file, index)));
+		else {
+			const file = files[0];
+			if (this.hasPreviewFilenameTarget) this.previewFilenameTarget.textContent = file?.name ?? "";
+			if (this.hasPreviewImageTarget) {
+				this.previewedFiles.delete(this.previewImageTarget);
+				this.previewImageTarget.hidden = true;
+				this.previewImageTarget.style.removeProperty("background-image");
+				if (file && this.isImage(file)) this._populateImagePreview(this.previewImageTarget, file);
+			}
+		}
+		this.updateState();
 	}
 	buildListItem(file, index) {
 		if (this.previewItem) return this.buildListItemFromTemplate(this.previewItem, file, index);
@@ -310,22 +286,35 @@ var controller_default = class extends Controller {
 	}
 	readAsDataUrl(file, onLoad) {
 		if (typeof FileReader === "undefined") return;
-		const reader = new FileReader();
-		reader.addEventListener("load", () => onLoad(reader.result));
-		reader.readAsDataURL(file);
+		let url = this.dataUrls.get(file);
+		if (!url) {
+			url = new Promise((resolve, reject) => {
+				const reader = new FileReader();
+				reader.addEventListener("load", () => resolve(reader.result));
+				reader.addEventListener("error", () => reject(reader.error));
+				reader.readAsDataURL(file);
+			});
+			this.dataUrls.set(file, url);
+			url.catch(() => this.dataUrls.delete(file));
+		}
+		url.then(onLoad, () => {});
 	}
 	bindRemove(element, file, index) {
 		element.setAttribute("aria-label", `${this.removeLabelValue} ${file.name}`);
 		element.addEventListener("click", () => this.removeFileAt(index, file));
 	}
+	isFileDrag(event) {
+		return Array.from(event.dataTransfer?.types ?? []).includes("Files");
+	}
 	updateState() {
-		const filled = this.multipleValue ? this.dataTransfer.files.length > 0 : this.filled;
+		const filled = this.dataTransfer.files.length > 0;
+		const dragging = this.dragTargets.size > 0;
 		let state = filled ? "filled" : "empty";
-		if (this.dragging) state = "dragging";
+		if (dragging) state = "dragging";
 		if (this.processingCount > 0) state = "processing";
 		this.element.setAttribute("data-state", state);
 		if (this.multipleValue) return;
-		const showPreview = filled && !this.dragging;
+		const showPreview = filled && !dragging;
 		this.inputTarget.hidden = showPreview;
 		this.placeholderTarget.hidden = showPreview;
 		this.previewTarget.hidden = !showPreview;
