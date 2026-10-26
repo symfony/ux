@@ -18,6 +18,8 @@ var controller_default = class extends Controller {
 	};
 	dataTransfer;
 	processingCount = 0;
+	filled = false;
+	dragging = false;
 	queue = Promise.resolve();
 	generation = 0;
 	initialize() {
@@ -29,31 +31,32 @@ var controller_default = class extends Controller {
 		this.onMultipleChange = this.onMultipleChange.bind(this);
 	}
 	connect() {
-		if (this.processingCount === 0) this.element.removeAttribute("data-state");
+		this.dragging = false;
+		this.element.addEventListener("dragenter", this.onDragEnter);
+		this.element.addEventListener("dragleave", this.onDragLeave);
+		this.element.addEventListener("drop", this.onDrop);
 		if (this.multipleValue) {
 			this.connectMultiple();
 			this.dispatchEvent("connect");
 			return;
 		}
+		for (const target of [this.previewTarget, this.previewImageTarget]) if (target.style.display === "none") target.style.removeProperty("display");
 		this.clear();
 		this.previewClearButtonTarget.addEventListener("click", this.clear);
 		this.inputTarget.addEventListener("change", this.onInputChange);
-		this.element.addEventListener("dragenter", this.onDragEnter);
-		this.element.addEventListener("dragleave", this.onDragLeave);
-		this.element.addEventListener("drop", this.onDrop);
 		this.dispatchEvent("connect");
 	}
 	disconnect() {
 		this.generation++;
+		this.element.removeEventListener("dragenter", this.onDragEnter);
+		this.element.removeEventListener("dragleave", this.onDragLeave);
+		this.element.removeEventListener("drop", this.onDrop);
 		if (this.multipleValue) {
 			this.inputTarget.removeEventListener("change", this.onMultipleChange);
 			return;
 		}
 		this.previewClearButtonTarget.removeEventListener("click", this.clear);
 		this.inputTarget.removeEventListener("change", this.onInputChange);
-		this.element.removeEventListener("dragenter", this.onDragEnter);
-		this.element.removeEventListener("dragleave", this.onDragLeave);
-		this.element.removeEventListener("drop", this.onDrop);
 	}
 	clear() {
 		this.generation++;
@@ -61,12 +64,11 @@ var controller_default = class extends Controller {
 	}
 	reset() {
 		this.inputTarget.value = "";
-		this.inputTarget.style.display = "block";
-		this.placeholderTarget.style.display = "block";
-		this.previewTarget.style.display = "none";
-		this.previewImageTarget.style.display = "none";
-		this.previewImageTarget.style.backgroundImage = "none";
+		this.previewImageTarget.hidden = true;
+		this.previewImageTarget.style.removeProperty("background-image");
 		this.previewFilenameTarget.textContent = "";
+		this.filled = false;
+		this.updateState();
 		this.dispatchEvent("clear");
 	}
 	onInputChange(event) {
@@ -90,30 +92,26 @@ var controller_default = class extends Controller {
 		if (typeof FileReader === "undefined") return;
 		const reader = new FileReader();
 		reader.addEventListener("load", (event) => {
-			target.style.display = "block";
+			target.hidden = false;
 			target.style.backgroundImage = `url("${event.target.result}")`;
 		});
 		reader.readAsDataURL(file);
 	}
 	onDragEnter() {
-		this.inputTarget.style.display = "block";
-		this.placeholderTarget.style.display = "block";
-		this.previewTarget.style.display = "none";
+		this.dragging = true;
+		this.updateState();
 	}
 	onDragLeave(event) {
 		event.preventDefault();
 		if (!this.element.contains(event.relatedTarget)) {
-			this.inputTarget.style.display = "none";
-			this.placeholderTarget.style.display = "none";
-			this.previewTarget.style.display = "block";
+			this.dragging = false;
+			this.updateState();
 		}
 	}
 	onDrop() {
 		setTimeout(() => {
-			if (!this.inputTarget.files?.length || this.processingCount > 0) return;
-			this.inputTarget.style.display = "none";
-			this.placeholderTarget.style.display = "none";
-			this.previewTarget.style.display = "flex";
+			this.dragging = false;
+			this.updateState();
 		});
 	}
 	connectMultiple() {
@@ -121,6 +119,7 @@ var controller_default = class extends Controller {
 		for (const file of Array.from(this.inputTarget.files ?? [])) this.dataTransfer.items.add(file);
 		this.inputTarget.addEventListener("change", this.onMultipleChange);
 		this.renderList();
+		this.updateState();
 	}
 	onMultipleChange() {
 		const files = Array.from(this.inputTarget.files ?? []);
@@ -131,12 +130,11 @@ var controller_default = class extends Controller {
 		});
 	}
 	showFile(file) {
-		this.inputTarget.style.display = "none";
-		this.placeholderTarget.style.display = "none";
 		this.previewFilenameTarget.textContent = file.name;
-		this.previewTarget.style.display = "flex";
-		this.previewImageTarget.style.display = "none";
+		this.previewImageTarget.hidden = true;
 		if (file.type && file.type.indexOf("image") !== -1) this._populateImagePreview(this.previewImageTarget, file);
+		this.filled = true;
+		this.updateState();
 		this.dispatchEvent("change", file);
 	}
 	preAdd(files, add) {
@@ -165,7 +163,7 @@ var controller_default = class extends Controller {
 		}
 		const generation = this.generation;
 		this.processingCount++;
-		this.element.setAttribute("data-state", "processing");
+		this.updateState();
 		const result = (promise ?? Promise.resolve(selected)).then((resolved) => {
 			if (!Array.isArray(resolved) || !resolved.every((file) => file instanceof File)) throw new TypeError("The promise passed to waitUntil() must resolve to an array of files.");
 			return resolved;
@@ -177,12 +175,13 @@ var controller_default = class extends Controller {
 			if (generation === this.generation) add(resolved);
 		}).finally(() => {
 			this.processingCount--;
-			if (this.processingCount === 0) this.element.removeAttribute("data-state");
+			this.updateState();
 		});
 	}
 	syncMultiple() {
 		this.inputTarget.files = this.dataTransfer.files;
 		this.renderList();
+		this.updateState();
 		this.dispatchEvent("change", this.inputTarget.files);
 	}
 	removeFileAt(index, file) {
@@ -203,7 +202,7 @@ var controller_default = class extends Controller {
 		item.className = "dropzone-preview-list-item";
 		const image = document.createElement("div");
 		image.className = "dropzone-preview-image";
-		image.style.display = "none";
+		image.hidden = true;
 		if (file.type && file.type.indexOf("image") !== -1) this._populateImagePreview(image, file);
 		const filename = document.createElement("span");
 		filename.className = "dropzone-preview-filename";
@@ -215,6 +214,18 @@ var controller_default = class extends Controller {
 		remove.addEventListener("click", () => this.removeFileAt(index, file));
 		item.append(image, filename, remove);
 		return item;
+	}
+	updateState() {
+		const filled = this.multipleValue ? this.dataTransfer.files.length > 0 : this.filled;
+		let state = filled ? "filled" : "empty";
+		if (this.dragging) state = "dragging";
+		if (this.processingCount > 0) state = "processing";
+		this.element.setAttribute("data-state", state);
+		if (this.multipleValue) return;
+		const showPreview = filled && !this.dragging;
+		this.inputTarget.hidden = showPreview;
+		this.placeholderTarget.hidden = showPreview;
+		this.previewTarget.hidden = !showPreview;
 	}
 	dispatchEvent(name, payload = {}, cancelable = false) {
 		return this.dispatch(name, {

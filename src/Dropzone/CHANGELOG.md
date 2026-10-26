@@ -3,6 +3,8 @@
 ## 3.7.0
 
 - Add a `dropzone:pre-add` event to transform, replace or reject the selected files before they are added, and a `data-state="processing"` attribute on the container while it is pending
+- Add a `data-state` attribute on the container: `empty`, `filled`, `dragging` or `processing`
+- Show and hide the parts of the Dropzone with the `hidden` attribute instead of inline styles, see [UPGRADE.md](UPGRADE.md)
 
 ## 3.5.0
 
