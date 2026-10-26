@@ -1,0 +1,11 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2026-10-25T14:20:00Z
+
+Thanks a lot for the recipe and its tests, @seb-jean.
+
+Here is what I changed during review:
+
+- The manifest now installs the controller with `"assets/controllers/": "%CONTROLLERS_DIR%/"`, like the other Common recipes. This way it follows the controllers directory an app configures.
+- The controller now hides the password when it connects. A page restored by Turbo from its cache comes back with the password hidden, and the `hide` target no longer needs the `hidden` attribute in the markup.
+- The controller also hides the password on `pagehide`, so the back/forward cache does not restore the page with the password visible. Each change has its own test.
