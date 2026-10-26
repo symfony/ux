@@ -20,3 +20,14 @@
     ```
 
     The controller still removes that inline style when it connects, so the preview keeps working until you do.
+
+- Passing the placeholder in the `attr` option of `DropzoneType` is deprecated, use the new `placeholder` option instead:
+
+    ```diff
+     $builder->add('photo', DropzoneType::class, [
+    -    'attr' => ['placeholder' => 'Drop your photo here'],
+    +    'placeholder' => 'Drop your photo here',
+     ]);
+    ```
+
+    The placeholder is no longer rendered as a `placeholder` attribute on the `<input type="file">`, where it is not a valid attribute.
