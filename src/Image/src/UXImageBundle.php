@@ -19,6 +19,7 @@ use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigura
 use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
 use Symfony\UX\Image\Bridge\Cloudflare\CloudflareProviderFactory;
 use Symfony\UX\Image\Bridge\Cloudinary\CloudinaryProviderFactory;
+use Symfony\UX\Image\Bridge\Imagor\ImagorProviderFactory;
 use Symfony\UX\Image\Bridge\Imgix\ImgixProviderFactory;
 use Symfony\UX\Image\Bridge\Ipx\IpxProviderFactory;
 use Symfony\UX\Image\Bridge\KeyCdn\KeyCdnProviderFactory;
@@ -42,6 +43,7 @@ final class UXImageBundle extends AbstractBundle
     public static array $bridges = [
         'cloudflare' => ['factory' => CloudflareProviderFactory::class],
         'cloudinary' => ['factory' => CloudinaryProviderFactory::class],
+        'imagor' => ['factory' => ImagorProviderFactory::class],
         'imgix' => ['factory' => ImgixProviderFactory::class],
         'ipx' => ['factory' => IpxProviderFactory::class],
         'keycdn' => ['factory' => KeyCdnProviderFactory::class],

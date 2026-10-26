@@ -1,0 +1,12 @@
+src:
+https://images.example.com/unsafe/800x450/filters:format(jpeg):grayscale()/hero.jpg
+
+srcset:
+https://images.example.com/unsafe/640x360/filters:format(jpeg):grayscale()/hero.jpg 640w
+https://images.example.com/unsafe/750x422/filters:format(jpeg):grayscale()/hero.jpg 750w
+https://images.example.com/unsafe/800x450/filters:format(jpeg):grayscale()/hero.jpg 800w
+https://images.example.com/unsafe/828x466/filters:format(jpeg):grayscale()/hero.jpg 828w
+https://images.example.com/unsafe/960x540/filters:format(jpeg):grayscale()/hero.jpg 960w
+https://images.example.com/unsafe/1080x608/filters:format(jpeg):grayscale()/hero.jpg 1080w
+https://images.example.com/unsafe/1280x720/filters:format(jpeg):grayscale()/hero.jpg 1280w
+https://images.example.com/unsafe/1600x900/filters:format(jpeg):grayscale()/hero.jpg 1600w
