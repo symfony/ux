@@ -138,6 +138,39 @@ switching the ``@symfony/ux-dropzone/dist/style.min.css`` autoimport to
 Once done, the default stylesheet won't be used anymore and you can
 implement your own CSS on top of the Dropzone.
 
+.. versionadded:: 3.7
+
+    The ``data-state`` attribute and the use of the ``hidden`` attribute were added in Dropzone 3.7.
+    Before, the parts of the Dropzone were shown and hidden with inline styles.
+
+The controller shows and hides the parts of the Dropzone (input, placeholder, preview, image preview) with the ``hidden`` attribute.
+A rule of your own that sets ``display`` on these parts wins over the ``hidden`` attribute, so add this rule to your stylesheet:
+
+.. code-block:: css
+
+    .dropzone-container [hidden] {
+        display: none !important;
+    }
+
+The container also has a ``data-state`` attribute, so you can style it for each state:
+
+* ``empty``: no file is selected;
+* ``filled``: at least one file is selected;
+* ``dragging``: files are dragged over the Dropzone;
+* ``processing``: a ``dropzone:pre-add`` listener is transforming files.
+
+When several states apply, the last one of this list wins:
+
+.. code-block:: css
+
+    .dropzone-container[data-state="dragging"] {
+        border-color: #3b82f6;
+    }
+
+    .dropzone-container[data-state="processing"] {
+        opacity: 0.5;
+    }
+
 Extend the default behavior
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

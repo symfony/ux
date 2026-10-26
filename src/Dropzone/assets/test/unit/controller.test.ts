@@ -74,7 +74,6 @@ describe('DropzoneController', () => {
         container = mountDOM(`
             <div class="dropzone-container" data-controller="check dropzone" data-testid="container">
                 <input type="file"
-                       style="display: none"
                        data-dropzone-target="input"
                        data-testid="input" />
 
@@ -87,7 +86,7 @@ describe('DropzoneController', () => {
                 <div class="dropzone-preview"
                      data-dropzone-target="preview"
                      data-testid="preview"
-                     style="display: none">
+                     hidden>
 
                     <button type="button"
                             class="dropzone-preview-button"
@@ -97,7 +96,7 @@ describe('DropzoneController', () => {
                     <div class="dropzone-preview-image"
                          data-dropzone-target="previewImage"
                          data-testid="preview-image"
-                         style="display: none"></div>
+                         hidden></div>
 
                     <div class="dropzone-preview-filename"
                          data-dropzone-target="previewFilename"
@@ -111,6 +110,33 @@ describe('DropzoneController', () => {
         clearDOM();
     });
 
+    const start = async () => {
+        startStimulus();
+        await waitFor(() => expect(getByTestId(container, 'container')).toHaveClass('connected'));
+    };
+
+    const state = () => getByTestId(container, 'container').getAttribute('data-state');
+
+    const expectEmpty = () => {
+        expect(state()).toBe('empty');
+        expect(getByTestId(container, 'input')).not.toHaveAttribute('hidden');
+        expect(getByTestId(container, 'placeholder')).not.toHaveAttribute('hidden');
+        expect(getByTestId(container, 'preview')).toHaveAttribute('hidden');
+    };
+
+    const expectFilled = () => {
+        expect(state()).toBe('filled');
+        expect(getByTestId(container, 'input')).toHaveAttribute('hidden');
+        expect(getByTestId(container, 'placeholder')).toHaveAttribute('hidden');
+        expect(getByTestId(container, 'preview')).not.toHaveAttribute('hidden');
+    };
+
+    const dragLeave = (relatedTarget: Node) => {
+        const event = new Event('dragleave', { bubbles: true });
+        Object.defineProperty(event, 'relatedTarget', { value: relatedTarget });
+        getByTestId(container, 'container').dispatchEvent(event);
+    };
+
     it('connect', async () => {
         expect(getByTestId(container, 'container')).not.toHaveClass('connected');
 
@@ -118,9 +144,16 @@ describe('DropzoneController', () => {
         await waitFor(() => expect(getByTestId(container, 'container')).toHaveClass('connected'));
     });
 
+    it('is empty on connect', async () => {
+        await start();
+
+        expectEmpty();
+    });
+
     it('clear', async () => {
-        startStimulus();
-        await waitFor(() => expect(getByTestId(container, 'input')).toHaveStyle({ display: 'block' }));
+        await start();
+        selectFiles(getByTestId(container, 'input') as HTMLInputElement, [new File(['hello'], 'hello.txt')]);
+        expectFilled();
 
         // Attach a listener to ensure the event is dispatched
         let dispatched = false;
@@ -128,25 +161,18 @@ describe('DropzoneController', () => {
             dispatched = true;
         });
 
-        // Manually show preview
-        getByTestId(container, 'input').style.display = 'none';
-        getByTestId(container, 'placeholder').style.display = 'none';
-        getByTestId(container, 'preview').style.display = 'block';
-
         // Click the clear button
         getByTestId(container, 'button').click();
 
-        await waitFor(() => expect(getByTestId(container, 'input')).toHaveStyle({ display: 'block' }));
-        await waitFor(() => expect(getByTestId(container, 'placeholder')).toHaveStyle({ display: 'block' }));
-        await waitFor(() => expect(getByTestId(container, 'preview')).toHaveStyle({ display: 'none' }));
+        expectEmpty();
+        expect(getByTestId(container, 'preview-filename')).toHaveTextContent('');
 
         // The event should have been dispatched
         expect(dispatched).toBe(true);
     });
 
     it('file chosen', async () => {
-        startStimulus();
-        await waitFor(() => expect(getByTestId(container, 'input')).toHaveStyle({ display: 'block' }));
+        await start();
 
         // Attach a listener to ensure the event is dispatched
         let dispatched = null;
@@ -161,60 +187,122 @@ describe('DropzoneController', () => {
         await user.upload(input, file);
         expect(input.files[0]).toStrictEqual(file);
 
-        // The dropzone should be in preview mode
-        await waitFor(() => expect(getByTestId(container, 'input')).toHaveStyle({ display: 'none' }));
-        await waitFor(() => expect(getByTestId(container, 'placeholder')).toHaveStyle({ display: 'none' }));
+        expectFilled();
+        expect(getByTestId(container, 'input')).not.toHaveAttribute('style');
+        expect(getByTestId(container, 'placeholder')).not.toHaveAttribute('style');
+        expect(getByTestId(container, 'preview')).not.toHaveAttribute('style');
 
         // The event should have been dispatched
         expect(dispatched).not.toBeNull();
         expect(dispatched.detail).toStrictEqual(file);
     });
 
+    it('shows the image preview once it is loaded', async () => {
+        await start();
+
+        selectFiles(getByTestId(container, 'input') as HTMLInputElement, [
+            new File(['png'], 'a.png', { type: 'image/png' }),
+        ]);
+
+        const image = getByTestId(container, 'preview-image');
+        expect(image).toHaveAttribute('hidden');
+        await waitFor(() => expect(image).not.toHaveAttribute('hidden'));
+        expect(image.style.display).toBe('');
+        expect(image.style.backgroundImage).toBe('url("data:image/png;base64,cG5n")');
+    });
+
     it('on drag', async () => {
-        startStimulus();
+        await start();
+        selectFiles(getByTestId(container, 'input') as HTMLInputElement, [new File(['hello'], 'hello.txt')]);
 
-        // Simulate dragenter event
-        const dragEnterEvent = new Event('dragenter');
-        getByTestId(container, 'container').dispatchEvent(dragEnterEvent);
+        getByTestId(container, 'container').dispatchEvent(new Event('dragenter'));
 
-        // Check that the input and placeholder are visible, and preview hidden
-        await waitFor(() => expect(getByTestId(container, 'input')).toHaveStyle({ display: 'block' }));
-        await waitFor(() => expect(getByTestId(container, 'placeholder')).toHaveStyle({ display: 'block' }));
-        await waitFor(() => expect(getByTestId(container, 'preview')).toHaveStyle({ display: 'none' }));
+        expect(state()).toBe('dragging');
+        expect(getByTestId(container, 'input')).not.toHaveAttribute('hidden');
+        expect(getByTestId(container, 'placeholder')).not.toHaveAttribute('hidden');
+        expect(getByTestId(container, 'preview')).toHaveAttribute('hidden');
 
-        // Simulate dragleave event with relatedTarget set to outside the dropzone
-        const dragLeaveEvent = new Event('dragleave', { bubbles: true });
-        Object.defineProperty(dragLeaveEvent, 'relatedTarget', { value: document.body });
-        getByTestId(container, 'container').dispatchEvent(dragLeaveEvent);
+        dragLeave(getByTestId(container, 'placeholder'));
+        expect(state()).toBe('dragging');
 
-        // Check that the input and placeholder are hidden, and preview shown
-        await waitFor(() => expect(getByTestId(container, 'input')).toHaveStyle({ display: 'none' }));
-        await waitFor(() => expect(getByTestId(container, 'placeholder')).toHaveStyle({ display: 'none' }));
-        await waitFor(() => expect(getByTestId(container, 'preview')).toHaveStyle({ display: 'block' }));
+        dragLeave(document.body);
+        expectFilled();
+    });
+
+    it('stays empty when a drag leaves an empty dropzone', async () => {
+        await start();
+
+        getByTestId(container, 'container').dispatchEvent(new Event('dragenter'));
+        dragLeave(document.body);
+
+        expectEmpty();
     });
 
     it('restores the preview when the same file is dropped again', async () => {
-        startStimulus();
-
-        const input = getByTestId(container, 'input') as HTMLInputElement;
-        const file = new File(['content'], 'a.txt', { type: 'text/plain' });
-        Object.defineProperty(input, 'files', { configurable: true, writable: true, value: [file] });
+        await start();
+        selectFiles(getByTestId(container, 'input') as HTMLInputElement, [new File(['content'], 'a.txt')]);
 
         // Dragging over reveals the input and hides the preview
         getByTestId(container, 'container').dispatchEvent(new Event('dragenter'));
-        await waitFor(() => expect(getByTestId(container, 'preview')).toHaveStyle({ display: 'none' }));
+        expect(getByTestId(container, 'preview')).toHaveAttribute('hidden');
 
         // Chrome does not fire "change" when the very same file is picked again
         getByTestId(container, 'container').dispatchEvent(new Event('drop', { bubbles: true }));
 
-        await waitFor(() => expect(getByTestId(container, 'input')).toHaveStyle({ display: 'none' }));
-        await waitFor(() => expect(getByTestId(container, 'placeholder')).toHaveStyle({ display: 'none' }));
-        await waitFor(() => expect(getByTestId(container, 'preview')).toHaveStyle({ display: 'flex' }));
+        await waitFor(() => expectFilled());
+        expect(getByTestId(container, 'preview-filename')).toHaveTextContent('a.txt');
+    });
+
+    it('keeps the input shown while the drop is dispatched', async () => {
+        await start();
+        selectFiles(getByTestId(container, 'input') as HTMLInputElement, [new File(['content'], 'a.txt')]);
+        getByTestId(container, 'container').dispatchEvent(new Event('dragenter'));
+
+        getByTestId(container, 'container').dispatchEvent(new Event('drop', { bubbles: true }));
+
+        expect(getByTestId(container, 'input')).not.toHaveAttribute('hidden');
+        await waitFor(() => expectFilled());
+    });
+
+    it('ends the drag when it reconnects', async () => {
+        await start();
+        getByTestId(container, 'container').dispatchEvent(new Event('dragenter'));
+        expect(state()).toBe('dragging');
+
+        const reconnected = new Promise((resolve) =>
+            getByTestId(container, 'container').addEventListener('dropzone:connect', resolve, { once: true })
+        );
+        const element = getByTestId(container, 'container');
+        element.remove();
+        await new Promise((resolve) => setTimeout(resolve));
+        container.append(element);
+        await reconnected;
+
+        expectEmpty();
+    });
+
+    it('supports themes hiding the preview with an inline style', async () => {
+        getByTestId(container, 'preview').removeAttribute('hidden');
+        getByTestId(container, 'preview').style.display = 'none';
+        getByTestId(container, 'preview-image').removeAttribute('hidden');
+        getByTestId(container, 'preview-image').style.display = 'none';
+        await start();
+
+        expectEmpty();
+        expect(getByTestId(container, 'preview-image')).toHaveAttribute('hidden');
+
+        selectFiles(getByTestId(container, 'input') as HTMLInputElement, [
+            new File(['png'], 'a.png', { type: 'image/png' }),
+        ]);
+
+        expectFilled();
+        expect(getByTestId(container, 'preview').style.display).toBe('');
+        await waitFor(() => expect(getByTestId(container, 'preview-image')).not.toHaveAttribute('hidden'));
+        expect(getByTestId(container, 'preview-image').style.display).toBe('');
     });
 
     it('adds the files a pre-add listener resolves', async () => {
-        startStimulus();
-        await waitFor(() => expect(getByTestId(container, 'container')).toHaveClass('connected'));
+        await start();
 
         const original = new File(['hello'], 'hello.png', { type: 'image/png' });
         const transformed = new File(['resized'], 'hello.jpg', { type: 'image/jpeg' });
@@ -231,16 +319,16 @@ describe('DropzoneController', () => {
         const input = getByTestId(container, 'input') as HTMLInputElement;
         selectFiles(input, [original]);
 
+        expect(state()).toBe('processing');
         await waitFor(() => expect(getByTestId(container, 'preview-filename')).toHaveTextContent('hello.jpg'));
         expect(preAddFiles).toStrictEqual([original]);
         expect(changed).toBe(transformed);
         expect(input.files?.[0]).toBe(transformed);
-        expect(getByTestId(container, 'preview')).toHaveStyle({ display: 'flex' });
+        expectFilled();
     });
 
     it('adds nothing when a pre-add listener prevents it', async () => {
-        startStimulus();
-        await waitFor(() => expect(getByTestId(container, 'container')).toHaveClass('connected'));
+        await start();
 
         getByTestId(container, 'container').addEventListener('dropzone:pre-add', (event) => event.preventDefault());
         let changed = false;
@@ -253,8 +341,7 @@ describe('DropzoneController', () => {
 
         expect(changed).toBe(false);
         expect(input.value).toBe('');
-        expect(getByTestId(container, 'preview')).toHaveStyle({ display: 'none' });
-        expect(getByTestId(container, 'placeholder')).toHaveStyle({ display: 'block' });
+        expectEmpty();
     });
 
     const deferred = () => {
@@ -304,9 +391,9 @@ describe('DropzoneController', () => {
         selectFiles(input, [new File(['b'], 'b.exe')]);
         pendingA.resolve([a]);
 
-        await waitFor(() => expect(getByTestId(container, 'container')).not.toHaveAttribute('data-state'));
+        await waitFor(() => expect(state()).toBe('empty'));
         expect(getByTestId(container, 'preview-filename')).toHaveTextContent('');
-        expect(getByTestId(container, 'preview')).toHaveStyle({ display: 'none' });
+        expectEmpty();
     });
 
     it('drops the pending selections when the dropzone is cleared', async () => {
@@ -323,18 +410,17 @@ describe('DropzoneController', () => {
         getByTestId(container, 'button').click();
         pending.resolve([a]);
 
-        await waitFor(() => expect(getByTestId(container, 'container')).not.toHaveAttribute('data-state'));
+        await waitFor(() => expect(state()).toBe('empty'));
         expect(getByTestId(container, 'preview-filename')).toHaveTextContent('');
-        expect(getByTestId(container, 'preview')).toHaveStyle({ display: 'none' });
+        expectEmpty();
     });
 
-    it('removes a processing state left in the markup', async () => {
+    it('replaces a processing state left in the markup', async () => {
         getByTestId(container, 'container').setAttribute('data-state', 'processing');
 
-        startStimulus();
-        await waitFor(() => expect(getByTestId(container, 'container')).toHaveClass('connected'));
+        await start();
 
-        expect(getByTestId(container, 'container')).not.toHaveAttribute('data-state');
+        expectEmpty();
     });
 
     it('keeps the preview hidden after a drop while the dropped file is processed', async () => {
@@ -352,10 +438,11 @@ describe('DropzoneController', () => {
         getByTestId(container, 'container').dispatchEvent(new Event('drop', { bubbles: true }));
         await new Promise((resolve) => setTimeout(resolve, 10));
 
-        expect(getByTestId(container, 'preview')).toHaveStyle({ display: 'none' });
+        expect(state()).toBe('processing');
+        expect(getByTestId(container, 'preview')).toHaveAttribute('hidden');
 
         pending.resolve([a]);
-        await waitFor(() => expect(getByTestId(container, 'preview')).toHaveStyle({ display: 'flex' }));
+        await waitFor(() => expectFilled());
     });
 });
 
@@ -455,6 +542,48 @@ describe('DropzoneController (multiple)', () => {
         );
     });
 
+    it('sets the state from the files added', async () => {
+        await start();
+        const input = getByTestId(container, 'input') as HTMLInputElement;
+        expect(getByTestId(container, 'container')).toHaveAttribute('data-state', 'empty');
+
+        selectFiles(input, [make('a.txt')]);
+        expect(getByTestId(container, 'container')).toHaveAttribute('data-state', 'filled');
+
+        (getByTestId(container, 'list').querySelector('.dropzone-preview-list-remove') as HTMLButtonElement).click();
+        expect(getByTestId(container, 'container')).toHaveAttribute('data-state', 'empty');
+    });
+
+    it('sets the dragging state while files are dragged over', async () => {
+        await start();
+        selectFiles(getByTestId(container, 'input') as HTMLInputElement, [make('a.txt')]);
+
+        getByTestId(container, 'container').dispatchEvent(new Event('dragenter'));
+        expect(getByTestId(container, 'container')).toHaveAttribute('data-state', 'dragging');
+
+        const dragLeave = new Event('dragleave', { bubbles: true });
+        Object.defineProperty(dragLeave, 'relatedTarget', { value: document.body });
+        getByTestId(container, 'container').dispatchEvent(dragLeave);
+        expect(getByTestId(container, 'container')).toHaveAttribute('data-state', 'filled');
+
+        getByTestId(container, 'container').dispatchEvent(new Event('dragenter'));
+        getByTestId(container, 'container').dispatchEvent(new Event('drop', { bubbles: true }));
+        await waitFor(() => expect(getByTestId(container, 'container')).toHaveAttribute('data-state', 'filled'));
+    });
+
+    it('shows the image preview of each file once it is loaded', async () => {
+        await start();
+
+        selectFiles(getByTestId(container, 'input') as HTMLInputElement, [
+            new File(['png'], 'a.png', { type: 'image/png' }),
+        ]);
+
+        const image = getByTestId(container, 'list').querySelector('.dropzone-preview-image') as HTMLElement;
+        expect(image).toHaveAttribute('hidden');
+        await waitFor(() => expect(image).not.toHaveAttribute('hidden'));
+        expect(image.style.display).toBe('');
+    });
+
     it('adds the files a pre-add listener resolves', async () => {
         await start();
         const input = getByTestId(container, 'input') as HTMLInputElement;
@@ -502,7 +631,7 @@ describe('DropzoneController (multiple)', () => {
         resolve([make('b.txt')]);
 
         await waitFor(() => expect(filenames()).toStrictEqual(['a.txt', 'b.txt']));
-        expect(getByTestId(container, 'container')).not.toHaveAttribute('data-state');
+        expect(getByTestId(container, 'container')).toHaveAttribute('data-state', 'filled');
     });
 
     it('adds the original files when a pre-add listener rejects', async () => {
@@ -517,7 +646,7 @@ describe('DropzoneController (multiple)', () => {
 
         await waitFor(() => expect(filenames()).toStrictEqual(['a.txt']));
         expect(consoleError).toHaveBeenCalledWith(new Error('Cannot decode the image'));
-        expect(getByTestId(container, 'container')).not.toHaveAttribute('data-state');
+        expect(getByTestId(container, 'container')).toHaveAttribute('data-state', 'filled');
         consoleError.mockRestore();
     });
 
@@ -535,7 +664,7 @@ describe('DropzoneController (multiple)', () => {
         expect(consoleError).toHaveBeenCalledWith(
             new TypeError('The promise passed to waitUntil() must resolve to an array of files.')
         );
-        expect(getByTestId(container, 'container')).not.toHaveAttribute('data-state');
+        expect(getByTestId(container, 'container')).toHaveAttribute('data-state', 'filled');
         consoleError.mockRestore();
     });
 
@@ -646,7 +775,7 @@ describe('DropzoneController (multiple)', () => {
         selectFiles(input, [make('a.txt'), make('b.txt')]);
 
         await waitFor(() => expect(filenames()).toStrictEqual(['a.txt']));
-        expect(getByTestId(container, 'container')).not.toHaveAttribute('data-state');
+        expect(getByTestId(container, 'container')).toHaveAttribute('data-state', 'filled');
     });
 
     it('handles the promise of a prevented selection', async () => {

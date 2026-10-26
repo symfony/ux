@@ -20,6 +20,8 @@ export default class export_default extends Controller {
   };
   private dataTransfer;
   private processingCount;
+  private filled;
+  private dragging;
   private queue;
   private generation;
   initialize(): void;
@@ -41,5 +43,6 @@ export default class export_default extends Controller {
   private containsFile;
   private renderList;
   private buildListItem;
+  private updateState;
   private dispatchEvent;
 }

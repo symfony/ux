@@ -43,11 +43,11 @@ class DropzoneTypeTest extends TestCase
 
         <div class="dropzone-placeholder" data-symfony--ux-dropzone--dropzone-target="placeholder"></div>
 
-        <div class="dropzone-preview" data-symfony--ux-dropzone--dropzone-target="preview" style="display: none">
+        <div class="dropzone-preview" data-symfony--ux-dropzone--dropzone-target="preview" hidden>
             <button class="dropzone-preview-button" type="button"
                     data-symfony--ux-dropzone--dropzone-target="previewClearButton"></button>
 
-            <div class="dropzone-preview-image" style="display: none"
+            <div class="dropzone-preview-image" hidden
                  data-symfony--ux-dropzone--dropzone-target="previewImage"></div>
 
             <div data-symfony--ux-dropzone--dropzone-target="previewFilename" class="dropzone-preview-filename"></div>
