@@ -42,9 +42,8 @@ var controller_default = class extends Controller {
 			this.dispatchEvent("connect");
 			return;
 		}
-		for (const target of [this.previewTarget, this.previewImageTarget]) if (target.style.display === "none") target.style.removeProperty("display");
+		for (const target of [this.previewTarget, ...this.hasPreviewImageTarget ? [this.previewImageTarget] : []]) if (target.style.display === "none") target.style.removeProperty("display");
 		this.clear();
-		this.previewClearButtonTarget.addEventListener("click", this.clear);
 		this.inputTarget.addEventListener("change", this.onInputChange);
 		this.dispatchEvent("connect");
 	}
@@ -57,8 +56,13 @@ var controller_default = class extends Controller {
 			this.inputTarget.removeEventListener("change", this.onMultipleChange);
 			return;
 		}
-		this.previewClearButtonTarget.removeEventListener("click", this.clear);
 		this.inputTarget.removeEventListener("change", this.onInputChange);
+	}
+	previewClearButtonTargetConnected(button) {
+		if (!this.multipleValue) button.addEventListener("click", this.clear);
+	}
+	previewClearButtonTargetDisconnected(button) {
+		button.removeEventListener("click", this.clear);
 	}
 	clear() {
 		this.generation++;
@@ -66,9 +70,11 @@ var controller_default = class extends Controller {
 	}
 	reset() {
 		this.inputTarget.value = "";
-		this.previewImageTarget.hidden = true;
-		this.previewImageTarget.style.removeProperty("background-image");
-		this.previewFilenameTarget.textContent = "";
+		if (this.hasPreviewImageTarget) {
+			this.previewImageTarget.hidden = true;
+			this.previewImageTarget.style.removeProperty("background-image");
+		}
+		if (this.hasPreviewFilenameTarget) this.previewFilenameTarget.textContent = "";
 		this.filled = false;
 		this.updateState();
 		this.dispatchEvent("clear");
@@ -135,9 +141,11 @@ var controller_default = class extends Controller {
 		});
 	}
 	showFile(file) {
-		this.previewFilenameTarget.textContent = file.name;
-		this.previewImageTarget.hidden = true;
-		if (file.type && file.type.indexOf("image") !== -1) this._populateImagePreview(this.previewImageTarget, file);
+		if (this.hasPreviewFilenameTarget) this.previewFilenameTarget.textContent = file.name;
+		if (this.hasPreviewImageTarget) {
+			this.previewImageTarget.hidden = true;
+			if (file.type && file.type.indexOf("image") !== -1) this._populateImagePreview(this.previewImageTarget, file);
+		}
 		this.filled = true;
 		this.updateState();
 		this.dispatchEvent("change", file);
