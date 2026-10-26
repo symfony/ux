@@ -24,6 +24,7 @@ export default class extends Controller {
     declare readonly hasPreviewItemTemplateTarget: boolean;
 
     declare readonly multipleValue: boolean;
+    declare readonly maxFilesValue: number;
     declare readonly removeLabelValue: string;
 
     static targets = [
@@ -39,6 +40,7 @@ export default class extends Controller {
 
     static values = {
         multiple: Boolean,
+        maxFiles: Number,
         removeLabel: { type: String, default: 'Remove' },
     };
 
@@ -49,6 +51,8 @@ export default class extends Controller {
     private dragging = false;
     private queue: Promise<void> = Promise.resolve();
     private generation = 0;
+    private shownFile: File | null = null;
+    private dropping = false;
 
     initialize() {
         this.clear = this.clear.bind(this);
@@ -57,6 +61,7 @@ export default class extends Controller {
         this.onDragLeave = this.onDragLeave.bind(this);
         this.onDrop = this.onDrop.bind(this);
         this.onMultipleChange = this.onMultipleChange.bind(this);
+        this.onFilesDropped = this.onFilesDropped.bind(this);
     }
 
     connect() {
@@ -66,6 +71,7 @@ export default class extends Controller {
         this.element.addEventListener('dragenter', this.onDragEnter);
         this.element.addEventListener('dragleave', this.onDragLeave);
         this.element.addEventListener('drop', this.onDrop);
+        this.element.addEventListener('drop', this.onFilesDropped);
 
         if (this.multipleValue) {
             this.connectMultiple();
@@ -94,6 +100,7 @@ export default class extends Controller {
         this.element.removeEventListener('dragenter', this.onDragEnter);
         this.element.removeEventListener('dragleave', this.onDragLeave);
         this.element.removeEventListener('drop', this.onDrop);
+        this.element.removeEventListener('drop', this.onFilesDropped);
 
         if (this.multipleValue) {
             this.inputTarget.removeEventListener('change', this.onMultipleChange);
@@ -132,6 +139,7 @@ export default class extends Controller {
         }
         this.filled = false;
         this.updateState();
+        this.shownFile = null;
 
         this.dispatchEvent('clear');
     }
@@ -142,21 +150,31 @@ export default class extends Controller {
             return;
         }
 
-        this.preAdd(files, (added) => {
+        const [accepted, rejected] = this.checkAccept(files);
+        if (accepted.length === 0) {
+            // The browser replaced the file shown before with the rejected ones: put it back
+            this.setInputFiles(this.shownFile ? [this.shownFile] : []);
+            this.reject(rejected, 'accept');
+            return;
+        }
+
+        this.preAdd(accepted, (added) => {
             const file = added[0];
             if (typeof file === 'undefined') {
                 this.reset();
+                this.reject(rejected, 'accept');
                 return;
             }
 
-            // A later selection or a listener may have changed the input since this selection was made
-            if (this.inputTarget.files?.[0] !== file) {
+            // A later selection, a listener or a drop of several files may have changed the input since this selection was made
+            if (this.inputTarget.files?.length !== 1 || this.inputTarget.files[0] !== file) {
                 const dataTransfer = new DataTransfer();
                 dataTransfer.items.add(file);
                 this.inputTarget.files = dataTransfer.files;
             }
 
             this.showFile(file);
+            this.reject(rejected, 'accept');
         });
     }
 
@@ -217,19 +235,28 @@ export default class extends Controller {
     }
 
     onMultipleChange() {
-        const files = Array.from(this.inputTarget.files ?? []);
+        const [accepted, rejected] = this.checkAccept(Array.from(this.inputTarget.files ?? []));
 
         // The browser replaced the input's files with the new selection, put back the files already added
         this.inputTarget.files = this.dataTransfer.files;
 
-        this.preAdd(files, (added) => {
+        this.preAdd(accepted, (added) => {
+            const overflow: File[] = [];
             for (const file of added) {
-                if (!this.containsFile(file)) {
+                if (this.containsFile(file)) {
+                    continue;
+                }
+
+                if (this.maxFilesValue > 0 && this.dataTransfer.files.length >= this.maxFilesValue) {
+                    overflow.push(file);
+                } else {
                     this.dataTransfer.items.add(file);
                 }
             }
 
             this.syncMultiple();
+            this.reject(rejected, 'accept');
+            this.reject(overflow, 'max_files');
         });
     }
 
@@ -247,6 +274,7 @@ export default class extends Controller {
         }
 
         this.filled = true;
+        this.shownFile = file;
         this.updateState();
 
         this.dispatchEvent('change', file);
@@ -329,6 +357,69 @@ export default class extends Controller {
         this.dataTransfer.items.remove(index);
         this.syncMultiple();
         this.dispatchEvent('remove', file);
+    }
+
+    private onFilesDropped() {
+        // The browser puts the dropped files into the input and fires "change" right after the drop event
+        this.dropping = true;
+        setTimeout(() => {
+            this.dropping = false;
+        });
+    }
+
+    private checkAccept(files: File[]): [File[], File[]] {
+        // Only drops ignore the accept attribute: the file picker filters with the file types of the operating system
+        if (!this.dropping) {
+            return [files, []];
+        }
+
+        const tokens = this.inputTarget.accept
+            .split(',')
+            .map((token) => token.trim().toLowerCase())
+            .filter((token) => token !== '');
+        // "*" and "*/*" are not valid tokens, and browsers do not restrict the files with them either
+        if (tokens.length === 0 || tokens.some((token) => token === '*' || token === '*/*')) {
+            return [files, []];
+        }
+
+        const accepted: File[] = [];
+        const rejected: File[] = [];
+        for (const file of files) {
+            const name = file.name.toLowerCase();
+            const type = file.type.toLowerCase();
+            const matches = tokens.some((token) => {
+                if (token.startsWith('.')) {
+                    return name.endsWith(token);
+                }
+                // Browsers report no type for some files (HEIC photos, for example), leave them to the server
+                if (type === '') {
+                    return true;
+                }
+                if (token.endsWith('/*')) {
+                    return type.startsWith(token.slice(0, -1));
+                }
+
+                return type === token;
+            });
+
+            (matches ? accepted : rejected).push(file);
+        }
+
+        return [accepted, rejected];
+    }
+
+    private setInputFiles(files: File[]) {
+        const dataTransfer = new DataTransfer();
+        for (const file of files) {
+            dataTransfer.items.add(file);
+        }
+        this.inputTarget.files = dataTransfer.files;
+    }
+
+    private reject(files: File[], reason: 'accept' | 'max_files') {
+        if (files.length > 0) {
+            this.dispatchEvent('reject', { files, reason });
+        }
     }
 
     private containsFile(file: File): boolean {

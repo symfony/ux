@@ -33,3 +33,7 @@
     ```
 
     The placeholder is no longer rendered as a `placeholder` attribute on the `<input type="file">`, where it is not a valid attribute.
+
+- If your field sets `accept` (for example with `'attr' => ['accept' => ...]`), the dropped files are now checked against it, and the files that do not match are left out. Before, only the file picker filtered the files.
+
+    The type of a dropped file comes from the operating system and can differ from the one in `accept`: on Windows, a CSV file is often `application/vnd.ms-excel`, so `accept="text/csv"` now leaves out a dropped CSV file that the file picker shows. To fix this, add the extensions next to the MIME types, for example `.csv,text/csv`. To tell the user which files were left out, listen to the `dropzone:reject` event.
