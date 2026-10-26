@@ -19,10 +19,14 @@ export default class export_default extends Controller {
     };
   };
   private dataTransfer;
+  private processingCount;
+  private queue;
+  private generation;
   initialize(): void;
   connect(): void;
   disconnect(): void;
   clear(): void;
+  private reset;
   onInputChange(event: any): void;
   _populateImagePreview(target: HTMLElement, file: Blob): void;
   onDragEnter(): void;
@@ -30,6 +34,8 @@ export default class export_default extends Controller {
   onDrop(): void;
   private connectMultiple;
   onMultipleChange(): void;
+  private showFile;
+  private preAdd;
   private syncMultiple;
   private removeFileAt;
   private containsFile;

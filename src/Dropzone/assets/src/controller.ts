@@ -38,6 +38,9 @@ export default class extends Controller {
     };
 
     private dataTransfer!: DataTransfer;
+    private processingCount = 0;
+    private queue: Promise<void> = Promise.resolve();
+    private generation = 0;
 
     initialize() {
         this.clear = this.clear.bind(this);
@@ -49,6 +52,11 @@ export default class extends Controller {
     }
 
     connect() {
+        // A page snapshot taken while files were processed keeps the state of the previous controller
+        if (this.processingCount === 0) {
+            this.element.removeAttribute('data-state');
+        }
+
         if (this.multipleValue) {
             this.connectMultiple();
             this.dispatchEvent('connect');
@@ -77,6 +85,8 @@ export default class extends Controller {
     }
 
     disconnect() {
+        this.generation++;
+
         if (this.multipleValue) {
             this.inputTarget.removeEventListener('change', this.onMultipleChange);
             return;
@@ -90,6 +100,12 @@ export default class extends Controller {
     }
 
     clear() {
+        // The selections still processed must not bring a file back
+        this.generation++;
+        this.reset();
+    }
+
+    private reset() {
         this.inputTarget.value = '';
         this.inputTarget.style.display = 'block';
         this.placeholderTarget.style.display = 'block';
@@ -102,26 +118,27 @@ export default class extends Controller {
     }
 
     onInputChange(event: any) {
-        const file = event.target.files[0];
-        if (typeof file === 'undefined') {
+        const files: File[] = Array.from(event.target.files ?? []);
+        if (files.length === 0) {
             return;
         }
 
-        // Hide the input and placeholder
-        this.inputTarget.style.display = 'none';
-        this.placeholderTarget.style.display = 'none';
+        this.preAdd(files, (added) => {
+            const file = added[0];
+            if (typeof file === 'undefined') {
+                this.reset();
+                return;
+            }
 
-        // Show the filename in preview
-        this.previewFilenameTarget.textContent = file.name;
-        this.previewTarget.style.display = 'flex';
+            // A later selection or a listener may have changed the input since this selection was made
+            if (this.inputTarget.files?.[0] !== file) {
+                const dataTransfer = new DataTransfer();
+                dataTransfer.items.add(file);
+                this.inputTarget.files = dataTransfer.files;
+            }
 
-        // If the file is an image, load it and display it as preview
-        this.previewImageTarget.style.display = 'none';
-        if (file.type && file.type.indexOf('image') !== -1) {
-            this._populateImagePreview(this.previewImageTarget, file);
-        }
-
-        this.dispatchEvent('change', file);
+            this.showFile(file);
+        });
     }
 
     _populateImagePreview(target: HTMLElement, file: Blob) {
@@ -162,7 +179,8 @@ export default class extends Controller {
         // onInputChange never runs to undo what onDragEnter did and the zone looks empty
         // while a file is still selected. Deferred so input.files and any "change" landed first.
         setTimeout(() => {
-            if (!this.inputTarget.files?.length) {
+            // While the dropped files are processed, the preview is shown once they are added
+            if (!this.inputTarget.files?.length || this.processingCount > 0) {
                 return;
             }
 
@@ -187,13 +205,106 @@ export default class extends Controller {
     }
 
     onMultipleChange() {
-        for (const file of Array.from(this.inputTarget.files ?? [])) {
-            if (!this.containsFile(file)) {
-                this.dataTransfer.items.add(file);
+        const files = Array.from(this.inputTarget.files ?? []);
+
+        // The browser replaced the input's files with the new selection, put back the files already added
+        this.inputTarget.files = this.dataTransfer.files;
+
+        this.preAdd(files, (added) => {
+            for (const file of added) {
+                if (!this.containsFile(file)) {
+                    this.dataTransfer.items.add(file);
+                }
             }
+
+            this.syncMultiple();
+        });
+    }
+
+    private showFile(file: File) {
+        // Hide the input and placeholder
+        this.inputTarget.style.display = 'none';
+        this.placeholderTarget.style.display = 'none';
+
+        // Show the filename in preview
+        this.previewFilenameTarget.textContent = file.name;
+        this.previewTarget.style.display = 'flex';
+
+        // If the file is an image, load it and display it as preview
+        this.previewImageTarget.style.display = 'none';
+        if (file.type && file.type.indexOf('image') !== -1) {
+            this._populateImagePreview(this.previewImageTarget, file);
         }
 
-        this.syncMultiple();
+        this.dispatchEvent('change', file);
+    }
+
+    private preAdd(files: File[], add: (files: File[]) => void) {
+        let promise = null as Promise<File[]> | null;
+        let prevented = false;
+        if (files.length > 0) {
+            let dispatching = true;
+            const event = this.dispatchEvent(
+                'pre-add',
+                {
+                    files,
+                    waitUntil: (filesPromise: File[] | Promise<File[]>) => {
+                        if (!dispatching || promise) {
+                            throw new Error('waitUntil() can only be called once, from a "dropzone:pre-add" listener.');
+                        }
+                        promise = Promise.resolve(filesPromise);
+                    },
+                },
+                true
+            );
+            dispatching = false;
+            prevented = event.defaultPrevented;
+        }
+
+        if (prevented && promise) {
+            // The selection is dropped, but a rejection of its promise must not go unhandled
+            promise.catch((error) => console.error(error));
+            promise = null;
+        }
+        const selected = prevented ? [] : files;
+
+        if (!promise && this.processingCount === 0) {
+            add(selected);
+            return;
+        }
+
+        const generation = this.generation;
+        this.processingCount++;
+        this.element.setAttribute('data-state', 'processing');
+
+        const result = (promise ?? Promise.resolve(selected))
+            .then((resolved) => {
+                if (!Array.isArray(resolved) || !resolved.every((file) => file instanceof File)) {
+                    throw new TypeError('The promise passed to waitUntil() must resolve to an array of files.');
+                }
+
+                return resolved;
+            })
+            .catch((error) => {
+                console.error(error);
+
+                return files;
+            });
+
+        this.queue = this.queue
+            .then(() => result)
+            .then((resolved) => {
+                // The dropzone was cleared or disconnected since this selection
+                if (generation === this.generation) {
+                    add(resolved);
+                }
+            })
+            .finally(() => {
+                this.processingCount--;
+                if (this.processingCount === 0) {
+                    this.element.removeAttribute('data-state');
+                }
+            });
     }
 
     private syncMultiple() {
@@ -253,7 +364,7 @@ export default class extends Controller {
         return item;
     }
 
-    private dispatchEvent(name: string, payload: any = {}) {
-        this.dispatch(name, { detail: payload, prefix: 'dropzone' });
+    private dispatchEvent(name: string, payload: any = {}, cancelable = false) {
+        return this.dispatch(name, { detail: payload, prefix: 'dropzone', cancelable });
     }
 }
