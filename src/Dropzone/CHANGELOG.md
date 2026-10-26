@@ -2,16 +2,12 @@
 
 ## 3.7.0
 
-- Add a `dropzone:pre-add` event to transform, replace or reject the selected files before they are added, and a `data-state="processing"` attribute on the container while it is pending
-- Add a `data-state` attribute on the container: `empty`, `filled`, `dragging` or `processing`
-- Show and hide the parts of the Dropzone with the `hidden` attribute instead of inline styles, see [UPGRADE.md](UPGRADE.md)
-- Add a `dropzone_preview_item_template` form theme block and a `previewItemTemplate` target to render the preview of each file in `multiple` mode from a `<template>`
-- Make the `previewClearButton`, `previewFilename` and `previewImage` targets optional in single-file mode
-- Add a `placeholder` option to `DropzoneType`
-- Deprecate passing the placeholder in the `attr` option of `DropzoneType`, use the `placeholder` option instead
-- Leave out the dropped files that do not match the `accept` attribute of the input, see [UPGRADE.md](UPGRADE.md)
-- Add a `max_files` option to `DropzoneType` to limit the number of files in `multiple` mode, with a `Count` constraint when the Validator component is installed
-- Add a `dropzone:reject` event with the files left out and the reason
+- Add a `dropzone:pre-add` event to transform, replace or reject the selected files before they are added
+- Add a `data-state` attribute on the container, and show and hide the parts with the `hidden` attribute instead of inline styles, see [UPGRADE.md](UPGRADE.md)
+- Add a `dropzone_preview_item_template` form theme block to render the preview of each file from a `<template>`
+- Add a `placeholder` option to `DropzoneType`, and deprecate passing the placeholder in the `attr` option
+- Leave out the dropped files that do not match `accept` and the files over the new `max_files` option, and dispatch `dropzone:reject`, see [UPGRADE.md](UPGRADE.md)
+- Make the single-file and `multiple` modes behave the same, see [UPGRADE.md](UPGRADE.md)
 
 ## 3.5.0
 

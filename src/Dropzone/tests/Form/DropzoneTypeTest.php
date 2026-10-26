@@ -41,7 +41,7 @@ class DropzoneTypeTest extends TestCase
         $rendered = $this->renderForm(['attr' => ['data-controller' => 'mydropzone']]);
 
         $this->assertSame(
-            '<form name="form" method="post" enctype="multipart/form-data"><div id="form"><div><label for="form_photo" class="required">Photo</label><div class="dropzone-container" data-controller="mydropzone symfony--ux-dropzone--dropzone">
+            '<form name="form" method="post" enctype="multipart/form-data"><div id="form"><div><label for="form_photo" class="required">Photo</label><div class="dropzone-container" data-controller="mydropzone symfony--ux-dropzone--dropzone" data-symfony--ux-dropzone--dropzone-remove-label-value="Remove">
         <input type="file" id="form_photo" name="form[photo]" required="required" data-controller="" class="dropzone-input" data-symfony--ux-dropzone--dropzone-target="input" />
 
         <div class="dropzone-placeholder" data-symfony--ux-dropzone--dropzone-target="placeholder"></div>
@@ -55,6 +55,7 @@ class DropzoneTypeTest extends TestCase
 
             <div data-symfony--ux-dropzone--dropzone-target="previewFilename" class="dropzone-preview-filename"></div>
         </div>
+
     </div></div></div></form>
 ',
             str_replace(' >', '>', $rendered)
@@ -93,7 +94,7 @@ class DropzoneTypeTest extends TestCase
     </div>', $rendered);
     }
 
-    public function testRenderFormIgnoresPreviewItemTemplateInSingleMode(): void
+    public function testRenderFormSingleWithPreviewItemTemplate(): void
     {
         $kernel = new TwigAppKernel('test', true);
         $kernel->boot();
@@ -106,7 +107,7 @@ class DropzoneTypeTest extends TestCase
 
         $rendered = $container->get(Environment::class)->render('dropzone_form_preview_item_template.html.twig', ['form' => $form->createView()]);
 
-        $this->assertStringNotContainsString('<template', $rendered);
+        $this->assertStringContainsString('<template data-symfony--ux-dropzone--dropzone-target="previewItemTemplate"><li data-dropzone-slot="filename"></li></template>', $rendered);
     }
 
     public function testRenderDefaultPlaceholder(): void
