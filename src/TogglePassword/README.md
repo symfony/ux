@@ -3,6 +3,9 @@
 > [!WARNING]
 > **Deprecated**: This package has been **deprecated** in 2.x and will be removed in the next major version.
 
+> [!TIP]
+> If you only need the toggle button and not the `toggle` form option, you can use the [Password Visibility recipe](https://ux.symfony.com/toolkit/kits/common/components/password-visibility) from the Symfony UX Toolkit instead.
+
 To keep the same functionality in your Symfony application, follow these migration steps:
 
 1. Remove the `symfony/ux-toggle-password` package from your project:
