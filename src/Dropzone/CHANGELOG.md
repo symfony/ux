@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 3.7.0
+
+- Add a `placeholder` option to `DropzoneType`
+- Deprecate passing the placeholder in the `attr` option of `DropzoneType`, use the `placeholder` option instead
+
 ## 3.5.0
 
 - Add support for Symfony 8.2's standalone `AssetMapperBundle`
