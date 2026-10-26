@@ -15,7 +15,9 @@ export default class extends Controller {
     declare readonly previewTarget: HTMLDivElement;
     declare readonly previewClearButtonTarget: HTMLButtonElement;
     declare readonly previewFilenameTarget: HTMLDivElement;
+    declare readonly hasPreviewFilenameTarget: boolean;
     declare readonly previewImageTarget: HTMLDivElement;
+    declare readonly hasPreviewImageTarget: boolean;
     declare readonly previewListTarget: HTMLUListElement;
     declare readonly hasPreviewListTarget: boolean;
     declare readonly previewItemTemplateTarget: HTMLTemplateElement;
@@ -72,7 +74,7 @@ export default class extends Controller {
         }
 
         // Themes copied from older versions hide these parts with an inline style, which would win over the hidden attribute
-        for (const target of [this.previewTarget, this.previewImageTarget]) {
+        for (const target of [this.previewTarget, ...(this.hasPreviewImageTarget ? [this.previewImageTarget] : [])]) {
             if (target.style.display === 'none') {
                 target.style.removeProperty('display');
             }
@@ -80,9 +82,6 @@ export default class extends Controller {
 
         // Reset when connecting to work with Turbolinks
         this.clear();
-
-        // Clear on click on clear button
-        this.previewClearButtonTarget.addEventListener('click', this.clear);
 
         // Listen on input change and display preview
         this.inputTarget.addEventListener('change', this.onInputChange);
@@ -101,8 +100,19 @@ export default class extends Controller {
             return;
         }
 
-        this.previewClearButtonTarget.removeEventListener('click', this.clear);
         this.inputTarget.removeEventListener('change', this.onInputChange);
+    }
+
+    // Bound when the button appears, as it is optional and can be rendered after the controller connects
+    previewClearButtonTargetConnected(button: HTMLButtonElement) {
+        // In multiple mode, files are removed one by one, never cleared together
+        if (!this.multipleValue) {
+            button.addEventListener('click', this.clear);
+        }
+    }
+
+    previewClearButtonTargetDisconnected(button: HTMLButtonElement) {
+        button.removeEventListener('click', this.clear);
     }
 
     clear() {
@@ -113,9 +123,13 @@ export default class extends Controller {
 
     private reset() {
         this.inputTarget.value = '';
-        this.previewImageTarget.hidden = true;
-        this.previewImageTarget.style.removeProperty('background-image');
-        this.previewFilenameTarget.textContent = '';
+        if (this.hasPreviewImageTarget) {
+            this.previewImageTarget.hidden = true;
+            this.previewImageTarget.style.removeProperty('background-image');
+        }
+        if (this.hasPreviewFilenameTarget) {
+            this.previewFilenameTarget.textContent = '';
+        }
         this.filled = false;
         this.updateState();
 
@@ -220,12 +234,16 @@ export default class extends Controller {
     }
 
     private showFile(file: File) {
-        this.previewFilenameTarget.textContent = file.name;
+        if (this.hasPreviewFilenameTarget) {
+            this.previewFilenameTarget.textContent = file.name;
+        }
 
         // If the file is an image, load it and display it as preview
-        this.previewImageTarget.hidden = true;
-        if (file.type && file.type.indexOf('image') !== -1) {
-            this._populateImagePreview(this.previewImageTarget, file);
+        if (this.hasPreviewImageTarget) {
+            this.previewImageTarget.hidden = true;
+            if (file.type && file.type.indexOf('image') !== -1) {
+                this._populateImagePreview(this.previewImageTarget, file);
+            }
         }
 
         this.filled = true;
