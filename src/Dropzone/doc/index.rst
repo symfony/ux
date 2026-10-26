@@ -103,6 +103,46 @@ that label followed by the file name::
         'remove_label' => 'Delete',
     ])
 
+Customizing the preview of each file
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. versionadded:: 3.7
+
+    The ``dropzone_preview_item_template`` block was added in Dropzone 3.7.
+
+In ``multiple`` mode, the preview of each file is built with fixed markup and CSS classes.
+To use your own markup (utility classes, an icon in the remove button, extra elements), override the ``dropzone_preview_item_template`` block in your form theme and render a ``<template>`` in it:
+
+.. code-block:: html+twig
+
+    {# templates/form/dropzone_theme.html.twig #}
+    {% block dropzone_preview_item_template %}
+        <template data-symfony--ux-dropzone--dropzone-target="previewItemTemplate">
+            <li class="relative size-20">
+                <div data-dropzone-slot="image" class="size-full bg-cover bg-center"></div>
+                <span data-dropzone-slot="filename" class="sr-only"></span>
+                <button type="button" data-dropzone-slot="remove" class="absolute top-1 right-1">
+                    {{ ux_icon('lucide:x') }}
+                </button>
+            </li>
+        </template>
+    {% endblock %}
+
+The template must contain exactly one root element, which is cloned for each file: otherwise, the controller does not connect and reports an error in the console.
+The controller fills the elements marked with a ``data-dropzone-slot`` attribute, the root element included.
+All slots are optional, and a slot can be on several elements:
+
+* ``image``: shows the preview of an image file. On an ``<img>``, it is set as the ``src``, on any other element as the background image. The element has the ``hidden`` attribute until the preview is loaded, and keeps it for files that are not images;
+* ``filename``: receives the name of the file, as text;
+* ``remove``: removes the file on click. Its ``aria-label`` is the ``remove_label`` option followed by the file name.
+
+.. note::
+
+    A class that sets ``display`` on the ``image`` slot (such as ``block`` or ``flex``) wins over its ``hidden`` attribute, so a file that is not an image shows an empty or broken image.
+    Do not set ``display`` on this element, or add ``[data-dropzone-slot="image"][hidden] { display: none !important; }`` to your stylesheet.
+
+Then use this form theme, for all forms or for a single one (see `How to Work with Form Themes`_).
+
 Customizing the design
 ~~~~~~~~~~~~~~~~~~~~~~
 
@@ -312,3 +352,4 @@ https://symfony.com/doc/current/contributing/code/bc.html
 .. _`the Symfony UX initiative`: https://ux.symfony.com/
 .. _StimulusBundle configured in your app: https://symfony.com/bundles/StimulusBundle/current/index.html
 .. _`@symfony/ux-dropzone npm package`: https://www.npmjs.com/package/@symfony/ux-dropzone
+.. _`How to Work with Form Themes`: https://symfony.com/doc/current/form/form_themes.html
