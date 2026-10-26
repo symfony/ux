@@ -116,3 +116,8 @@
     content: '×';
     padding: 3px 7px;
 }
+
+/* Rules of the app setting "display" on these parts would otherwise win over the hidden attribute */
+.dropzone-container [hidden] {
+    display: none !important;
+}

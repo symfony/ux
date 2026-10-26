@@ -39,6 +39,8 @@ export default class extends Controller {
 
     private dataTransfer!: DataTransfer;
     private processingCount = 0;
+    private filled = false;
+    private dragging = false;
     private queue: Promise<void> = Promise.resolve();
     private generation = 0;
 
@@ -52,15 +54,24 @@ export default class extends Controller {
     }
 
     connect() {
-        // A page snapshot taken while files were processed keeps the state of the previous controller
-        if (this.processingCount === 0) {
-            this.element.removeAttribute('data-state');
-        }
+        // A drag can end while the controller is disconnected
+        this.dragging = false;
+
+        this.element.addEventListener('dragenter', this.onDragEnter);
+        this.element.addEventListener('dragleave', this.onDragLeave);
+        this.element.addEventListener('drop', this.onDrop);
 
         if (this.multipleValue) {
             this.connectMultiple();
             this.dispatchEvent('connect');
             return;
+        }
+
+        // Themes copied from older versions hide these parts with an inline style, which would win over the hidden attribute
+        for (const target of [this.previewTarget, this.previewImageTarget]) {
+            if (target.style.display === 'none') {
+                target.style.removeProperty('display');
+            }
         }
 
         // Reset when connecting to work with Turbolinks
@@ -72,20 +83,14 @@ export default class extends Controller {
         // Listen on input change and display preview
         this.inputTarget.addEventListener('change', this.onInputChange);
 
-        // Add dragenter event listener
-        this.element.addEventListener('dragenter', this.onDragEnter);
-
-        // Add dragleave event listener
-        this.element.addEventListener('dragleave', this.onDragLeave);
-
-        // Add drop event listener
-        this.element.addEventListener('drop', this.onDrop);
-
         this.dispatchEvent('connect');
     }
 
     disconnect() {
         this.generation++;
+        this.element.removeEventListener('dragenter', this.onDragEnter);
+        this.element.removeEventListener('dragleave', this.onDragLeave);
+        this.element.removeEventListener('drop', this.onDrop);
 
         if (this.multipleValue) {
             this.inputTarget.removeEventListener('change', this.onMultipleChange);
@@ -94,9 +99,6 @@ export default class extends Controller {
 
         this.previewClearButtonTarget.removeEventListener('click', this.clear);
         this.inputTarget.removeEventListener('change', this.onInputChange);
-        this.element.removeEventListener('dragenter', this.onDragEnter);
-        this.element.removeEventListener('dragleave', this.onDragLeave);
-        this.element.removeEventListener('drop', this.onDrop);
     }
 
     clear() {
@@ -107,12 +109,11 @@ export default class extends Controller {
 
     private reset() {
         this.inputTarget.value = '';
-        this.inputTarget.style.display = 'block';
-        this.placeholderTarget.style.display = 'block';
-        this.previewTarget.style.display = 'none';
-        this.previewImageTarget.style.display = 'none';
-        this.previewImageTarget.style.backgroundImage = 'none';
+        this.previewImageTarget.hidden = true;
+        this.previewImageTarget.style.removeProperty('background-image');
         this.previewFilenameTarget.textContent = '';
+        this.filled = false;
+        this.updateState();
 
         this.dispatchEvent('clear');
     }
@@ -150,7 +151,7 @@ export default class extends Controller {
         const reader = new FileReader();
 
         reader.addEventListener('load', (event: any) => {
-            target.style.display = 'block';
+            target.hidden = false;
             target.style.backgroundImage = `url("${event.target.result}")`;
         });
 
@@ -158,9 +159,8 @@ export default class extends Controller {
     }
 
     onDragEnter() {
-        this.inputTarget.style.display = 'block';
-        this.placeholderTarget.style.display = 'block';
-        this.previewTarget.style.display = 'none';
+        this.dragging = true;
+        this.updateState();
     }
 
     onDragLeave(event: any) {
@@ -168,25 +168,17 @@ export default class extends Controller {
 
         // Check if we really leave the main drag area
         if (!this.element.contains(event.relatedTarget as Node)) {
-            this.inputTarget.style.display = 'none';
-            this.placeholderTarget.style.display = 'none';
-            this.previewTarget.style.display = 'block';
+            this.dragging = false;
+            this.updateState();
         }
     }
 
     onDrop() {
-        // Chrome does not fire "change" when the very same file is picked again, so
-        // onInputChange never runs to undo what onDragEnter did and the zone looks empty
-        // while a file is still selected. Deferred so input.files and any "change" landed first.
+        // The drop ends the drag even when no "change" follows, as in Chrome when the very same file is dropped again.
+        // Deferred so the input stays shown until the browser has put the dropped files into it.
         setTimeout(() => {
-            // While the dropped files are processed, the preview is shown once they are added
-            if (!this.inputTarget.files?.length || this.processingCount > 0) {
-                return;
-            }
-
-            this.inputTarget.style.display = 'none';
-            this.placeholderTarget.style.display = 'none';
-            this.previewTarget.style.display = 'flex';
+            this.dragging = false;
+            this.updateState();
         });
     }
 
@@ -202,6 +194,7 @@ export default class extends Controller {
 
         this.inputTarget.addEventListener('change', this.onMultipleChange);
         this.renderList();
+        this.updateState();
     }
 
     onMultipleChange() {
@@ -222,19 +215,16 @@ export default class extends Controller {
     }
 
     private showFile(file: File) {
-        // Hide the input and placeholder
-        this.inputTarget.style.display = 'none';
-        this.placeholderTarget.style.display = 'none';
-
-        // Show the filename in preview
         this.previewFilenameTarget.textContent = file.name;
-        this.previewTarget.style.display = 'flex';
 
         // If the file is an image, load it and display it as preview
-        this.previewImageTarget.style.display = 'none';
+        this.previewImageTarget.hidden = true;
         if (file.type && file.type.indexOf('image') !== -1) {
             this._populateImagePreview(this.previewImageTarget, file);
         }
+
+        this.filled = true;
+        this.updateState();
 
         this.dispatchEvent('change', file);
     }
@@ -275,7 +265,7 @@ export default class extends Controller {
 
         const generation = this.generation;
         this.processingCount++;
-        this.element.setAttribute('data-state', 'processing');
+        this.updateState();
 
         const result = (promise ?? Promise.resolve(selected))
             .then((resolved) => {
@@ -301,15 +291,14 @@ export default class extends Controller {
             })
             .finally(() => {
                 this.processingCount--;
-                if (this.processingCount === 0) {
-                    this.element.removeAttribute('data-state');
-                }
+                this.updateState();
             });
     }
 
     private syncMultiple() {
         this.inputTarget.files = this.dataTransfer.files;
         this.renderList();
+        this.updateState();
         this.dispatchEvent('change', this.inputTarget.files);
     }
 
@@ -343,7 +332,7 @@ export default class extends Controller {
 
         const image = document.createElement('div');
         image.className = 'dropzone-preview-image';
-        image.style.display = 'none';
+        image.hidden = true;
         if (file.type && file.type.indexOf('image') !== -1) {
             this._populateImagePreview(image, file);
         }
@@ -362,6 +351,29 @@ export default class extends Controller {
         item.append(image, filename, remove);
 
         return item;
+    }
+
+    private updateState() {
+        const filled = this.multipleValue ? this.dataTransfer.files.length > 0 : this.filled;
+
+        let state = filled ? 'filled' : 'empty';
+        if (this.dragging) {
+            state = 'dragging';
+        }
+        if (this.processingCount > 0) {
+            state = 'processing';
+        }
+        this.element.setAttribute('data-state', state);
+
+        if (this.multipleValue) {
+            return;
+        }
+
+        // Show the input and placeholder to receive a drop, and the preview of the file otherwise
+        const showPreview = filled && !this.dragging;
+        this.inputTarget.hidden = showPreview;
+        this.placeholderTarget.hidden = showPreview;
+        this.previewTarget.hidden = !showPreview;
     }
 
     private dispatchEvent(name: string, payload: any = {}, cancelable = false) {
