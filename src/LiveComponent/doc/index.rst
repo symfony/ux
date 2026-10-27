@@ -1444,6 +1444,63 @@ the removal response.
 Like the download responses, ``LiveResponse::remove()`` can only be returned from a
 ``LiveAction`` or a ``LiveListener``, over POST.
 
+.. _skipping-the-re-render:
+
+Skipping the Re-Render
+~~~~~~~~~~~~~~~~~~~~~~
+
+.. versionadded:: 3.7
+
+    ``LiveResponse::skipRender()`` was added in LiveComponent 3.7.
+
+Some actions change the state of a component, but nothing that its template shows: marking a notification as read, saving a draft in the background, tracking a click.
+By default, every action renders the whole template again.
+Return ``LiveResponse::skipRender()`` to update the state without rendering the template::
+
+    #[LiveAction]
+    public function markAsRead(): LiveResponse
+    {
+        $this->notification->markAsRead();
+        $this->unread = false;
+
+        return LiveResponse::skipRender();
+    }
+
+The server does not render the template.
+It only sends back an empty element with the live attributes of the root element.
+The browser keeps the HTML it already has and does not morph it.
+
+The response still delivers:
+
+* the new value of every LiveProp, so the next request starts from the updated state;
+* the events emitted by the action and the browser events it dispatched;
+* the new URL, for LiveProps bound to the URL with ``url: true``.
+
+Fields bound with ``data-model`` are updated in the browser as usual.
+The rest of the HTML is not updated until the next render, so the action should only change state that the template does not show.
+Child components do not get new props from their parent either, until the parent renders again.
+
+Methods with the ``#[PreReRender]`` attribute still run before the response is built.
+With a :ref:`form <forms>`, this means that the form is still submitted and validated.
+When the form is invalid, the component renders as usual, so the validation errors are shown.
+
+Like the other responses, ``LiveResponse::skipRender()`` can only be returned from a ``LiveAction`` or a ``LiveListener``, over POST.
+
+In a batch, the render is only skipped when every action of the batch asks for it.
+Otherwise, the component renders as if no action had returned ``skipRender()``.
+When the same request also carries a model change that needs a render, for example a ``data-model`` field updated right before the click, the browser follows up with a normal re-render.
+
+In JavaScript, the ``render:started`` and ``render:finished`` hooks still fire.
+Call ``backendResponse.isRenderSkipped()`` in a hook to know that the render was skipped:
+
+.. code-block:: javascript
+
+    this.component.on('render:started', (html, backendResponse) => {
+        if (backendResponse.isRenderSkipped()) {
+            // the HTML of the component was not updated
+        }
+    });
+
 .. _working-with-files:
 
 Files
@@ -1642,6 +1699,7 @@ Batched actions
 Unlike a redirect, a download does not interrupt a batch: the actions you queued after it still
 run, and the file rides along with the final render. If several of them return a
 ``LiveResponse``, the last one wins.
+A ``LiveResponse::skipRender()`` is the exception: it only counts when every action of the batch returns one (see :ref:`skipping-the-re-render`).
 
 .. _forms:
 

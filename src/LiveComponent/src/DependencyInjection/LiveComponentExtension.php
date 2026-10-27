@@ -58,6 +58,7 @@ use Symfony\UX\LiveComponent\Util\RequestPropsExtractor;
 use Symfony\UX\LiveComponent\Util\TwigAttributeHelperFactory;
 use Symfony\UX\TwigComponent\ComponentFactory;
 use Symfony\UX\TwigComponent\ComponentRenderer;
+use Twig\Environment;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
@@ -139,6 +140,8 @@ final class LiveComponentExtension extends Extension implements PrependExtension
             ->addTag('container.service_subscriber', ['key' => ComponentRenderer::class, 'id' => 'ux.twig_component.component_renderer'])
             ->addTag('container.service_subscriber', ['key' => LiveComponentHydrator::class, 'id' => 'ux.live_component.component_hydrator'])
             ->addTag('container.service_subscriber', ['key' => LiveComponentMetadataFactory::class, 'id' => 'ux.live_component.metadata_factory'])
+            ->addTag('container.service_subscriber', ['key' => LiveControllerAttributesCreator::class, 'id' => 'ux.live_component.live_controller_attributes_creator'])
+            ->addTag('container.service_subscriber', ['key' => Environment::class, 'id' => 'twig'])
         ;
 
         $container->register('ux.live_component.live_url_subscriber', LiveUrlSubscriber::class)

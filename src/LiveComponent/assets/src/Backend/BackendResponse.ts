@@ -59,6 +59,15 @@ export default class {
         return this.response.headers.has('X-Live-Remove');
     }
 
+    /**
+     * Whether the action changed the state without rendering the template.
+     *
+     * The body then holds only an empty element, which carries the new props and events in the live attributes of the root element.
+     */
+    isRenderSkipped(): boolean {
+        return this.response.headers.has('X-Live-Skip-Render');
+    }
+
     private async parse(): Promise<void> {
         const htmlLength = this.response.headers.get('X-Live-Html-Length');
 
