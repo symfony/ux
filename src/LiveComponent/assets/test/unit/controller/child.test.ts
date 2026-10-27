@@ -24,6 +24,8 @@ import {
     shutdownTests,
 } from '../../tools';
 
+const user = userEvent.setup({ delay: null });
+
 describe('Component parent -> child initialization and rendering tests', () => {
     afterEach(() => {
         shutdownTests();
@@ -440,7 +442,7 @@ describe('Component parent -> child initialization and rendering tests', () => {
 
         // B) Type into the child
         // |norender is used on this field
-        userEvent.type(childTest.queryByDataModel('fullName'), ' Weaver');
+        await user.type(childTest.queryByDataModel('fullName'), ' Weaver');
 
         // C) Re-render the parent
         test.expectsAjaxCall().serverWillChangeProps((data: any) => {

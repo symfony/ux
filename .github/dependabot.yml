@@ -58,9 +58,6 @@ updates:
           # Follows the Node version of .nvmrc
           - dependency-name: '@types/node'
             update-types: ['version-update:semver-major']
-          # The LiveComponent tests are not migrated to user-event 14 yet
-          - dependency-name: '@testing-library/user-event'
-            update-types: ['version-update:semver-major']
       groups:
           npm-dev-dependencies:
               patterns:

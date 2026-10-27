@@ -12,6 +12,8 @@ import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it } from 'vitest';
 import { createTest, initComponent, shutdownTests } from '../../tools';
 
+const user = userEvent.setup({ delay: null });
+
 describe('LiveController data-loading Tests', () => {
     afterEach(() => {
         shutdownTests();
@@ -147,7 +149,7 @@ describe('LiveController data-loading Tests', () => {
             // delay so we can check loading
             .delayResponse(50);
 
-        userEvent.type(test.queryByDataModel('comments'), 'Changing the comments!');
+        await user.type(test.queryByDataModel('comments'), 'Changing the comments!');
         // it should not be loading yet due to debouncing
         expect(getByTestId(test.element, 'comments-loading')).not.toBeVisible();
         // wait for ajax call to start
@@ -167,7 +169,7 @@ describe('LiveController data-loading Tests', () => {
             // delay so we can check loading
             .delayResponse(50);
 
-        await userEvent.type(test.queryByDataModel('user.email'), 'ryan@symfonycasts.com');
+        await user.type(test.queryByDataModel('user.email'), 'ryan@symfonycasts.com');
         // it should not be loading yet due to debouncing
         expect(getByTestId(test.element, 'email-loading')).not.toBeVisible();
         // wait for ajax call to start

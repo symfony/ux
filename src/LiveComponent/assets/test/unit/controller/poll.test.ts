@@ -12,6 +12,8 @@ import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it } from 'vitest';
 import { createTest, initComponent, shutdownTests } from '../../tools';
 
+const user = userEvent.setup({ delay: null });
+
 describe('LiveController polling Tests', () => {
     afterEach(() => {
         shutdownTests();
@@ -198,7 +200,7 @@ describe('LiveController polling Tests', () => {
             })
             .delayResponse(100);
 
-        await userEvent.type(test.queryByDataModel('name'), ' Weaver');
+        await user.type(test.queryByDataModel('name'), ' Weaver');
 
         setTimeout(() => {
             // first poll, should happen after 50 ms, but needs to wait the full 100

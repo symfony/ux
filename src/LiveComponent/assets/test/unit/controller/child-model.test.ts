@@ -12,6 +12,8 @@ import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it } from 'vitest';
 import { createTest, initComponent, shutdownTests } from '../../tools';
 
+const user = userEvent.setup({ delay: null });
+
 describe('Component parent -> child data-model binding tests', () => {
     afterEach(() => {
         shutdownTests();
@@ -52,7 +54,7 @@ describe('Component parent -> child data-model binding tests', () => {
             );
 
         // type into the child component
-        await userEvent.type(test.queryByDataModel('value'), 'ice cream');
+        await user.type(test.queryByDataModel('value'), 'ice cream');
 
         // wait for parent to start/stop loading
         await waitFor(() => expect(test.element).toHaveAttribute('aria-busy', 'true'));
@@ -90,7 +92,7 @@ describe('Component parent -> child data-model binding tests', () => {
             );
 
         // type into the child component
-        await userEvent.type(test.queryByDataModel('value'), 'ice cream');
+        await user.type(test.queryByDataModel('value'), 'ice cream');
 
         // wait for parent to start/stop loading
         await waitFor(() => expect(test.element).toHaveAttribute('aria-busy', 'true'));
@@ -115,7 +117,7 @@ describe('Component parent -> child data-model binding tests', () => {
         );
 
         // type into the child component
-        await userEvent.type(test.queryByDataModel('value'), 'ice cream');
+        await user.type(test.queryByDataModel('value'), 'ice cream');
 
         // wait for parent model to be set
         await waitFor(() => expect(test.component.getData('foodName')).toEqual('ice cream'));
@@ -158,7 +160,7 @@ describe('Component parent -> child data-model binding tests', () => {
 
         // type into the child component
         const inputElement = test.queryByDataModel('value');
-        await userEvent.type(inputElement, 'ice cream');
+        await user.type(inputElement, 'ice cream');
 
         // wait for parent to start/stop loading
         await waitFor(() => expect(test.element).toHaveAttribute('aria-busy', 'true'));
@@ -169,7 +171,7 @@ describe('Component parent -> child data-model binding tests', () => {
         otherContainer.appendChild(getByTestId(test.element, 'child'));
 
         // type into the child component
-        await userEvent.type(inputElement, ' sandwich');
+        await user.type(inputElement, ' sandwich');
         // wait for a potential Ajax call to start
         await new Promise((resolve) => setTimeout(resolve, 50));
         expect(test.element).not.toHaveAttribute('aria-busy');

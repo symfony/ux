@@ -12,6 +12,8 @@ import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it } from 'vitest';
 import { createTest, initComponent, shutdownTests } from '../../tools';
 
+const user = userEvent.setup({ delay: null });
+
 describe('LiveController data-model Tests', () => {
     afterEach(() => {
         shutdownTests();
@@ -106,7 +108,7 @@ describe('LiveController data-model Tests', () => {
         test.expectsAjaxCall().expectUpdatedData({ name: 'Ryan Weaver' });
 
         // this will cause the input to "blur" and trigger the change event
-        userEvent.click(getByText(test.element, 'Do nothing'));
+        await user.click(getByText(test.element, 'Do nothing'));
 
         await waitFor(() => expect(test.element).toHaveTextContent('Name is: Ryan Weaver'));
         expect(test.component.valueStore.getOriginalProps()).toEqual({ name: 'Ryan Weaver' });
@@ -136,14 +138,14 @@ describe('LiveController data-model Tests', () => {
 
         test.expectsAjaxCall().expectUpdatedData({ name: 'Jan' });
 
-        userEvent.click(getByText(test.element, 'Change name to Jan'));
+        await user.click(getByText(test.element, 'Change name to Jan'));
 
         await waitFor(() => expect(test.element).toHaveTextContent('Name is: Jan'));
         expect(test.component.valueStore.getOriginalProps()).toEqual({ name: 'Jan' });
 
         test.expectsAjaxCall().expectUpdatedData({ name: 'Dan' });
 
-        userEvent.click(getByText(test.element, 'Change name to Dan'));
+        await user.click(getByText(test.element, 'Change name to Dan'));
 
         await waitFor(() => expect(test.element).toHaveTextContent('Name is: Dan'));
         expect(test.component.valueStore.getOriginalProps()).toEqual({ name: 'Dan' });
@@ -168,7 +170,7 @@ describe('LiveController data-model Tests', () => {
 
         test.expectsAjaxCall().expectUpdatedData({ color: 'orange' });
 
-        await userEvent.type(test.queryByNameAttribute('color'), 'orange');
+        await user.type(test.queryByNameAttribute('color'), 'orange');
 
         await waitFor(() => expect(test.element).toHaveTextContent('Favorite color: orange'));
         expect(test.component.valueStore.getOriginalProps()).toEqual({ color: 'orange' });
@@ -195,7 +197,7 @@ describe('LiveController data-model Tests', () => {
             // firstName is the model that is matched and updated
             .expectUpdatedData({ firstName: 'Ryan' });
 
-        await userEvent.type(test.queryByDataModel('firstName'), 'Ryan');
+        await user.type(test.queryByDataModel('firstName'), 'Ryan');
 
         await waitFor(() => expect(test.element).toHaveTextContent('First name: Ryan'));
         expect(test.component.valueStore.getOriginalProps()).toEqual({ firstName: 'Ryan', name: '' });
@@ -220,7 +222,7 @@ describe('LiveController data-model Tests', () => {
             // "cross country" takes precedence over real value
             .expectUpdatedData({ sport: 'cross country' });
 
-        await userEvent.type(test.queryByDataModel('sport'), 'steeple chase');
+        await user.type(test.queryByDataModel('sport'), 'steeple chase');
 
         await waitFor(() => expect(test.element).toHaveTextContent('Sport: cross country'));
     });
@@ -241,7 +243,7 @@ describe('LiveController data-model Tests', () => {
 
         test.expectsAjaxCall().expectUpdatedData({ 'user.name': 'Ryan Weaver' });
 
-        await userEvent.type(test.queryByDataModel('user[name]'), ' Weaver');
+        await user.type(test.queryByDataModel('user[name]'), ' Weaver');
 
         await waitFor(() => expect(test.element).toHaveTextContent('Name: Ryan Weaver'));
         expect(test.component.valueStore.getOriginalProps()).toEqual({ user: { name: 'Ryan Weaver' } });
@@ -263,7 +265,7 @@ describe('LiveController data-model Tests', () => {
 
         test.expectsAjaxCall().expectUpdatedData({ 'user.name': 'Ryan Weaver' });
 
-        await userEvent.type(test.queryByDataModel('user.name'), ' Weaver');
+        await user.type(test.queryByDataModel('user.name'), ' Weaver');
 
         await waitFor(() => expect(test.element).toHaveTextContent('Name: Ryan Weaver'));
         expect(test.component.valueStore.getOriginalProps()).toEqual({ user: 5, 'user.name': 'Ryan Weaver' });
@@ -300,8 +302,8 @@ describe('LiveController data-model Tests', () => {
         // only 1 Ajax call will be made thanks to debouncing
         test.expectsAjaxCall().expectUpdatedData({ 'form.check1': '1', 'form.check2': '1' });
 
-        await userEvent.click(check2Element);
-        await userEvent.click(check1Element);
+        await user.click(check2Element);
+        await user.click(check1Element);
 
         await waitFor(() => expect(test.element).toHaveTextContent('Checkbox 2 is checked'));
 
@@ -339,8 +341,8 @@ describe('LiveController data-model Tests', () => {
         // only 1 Ajax call will be made thanks to debouncing
         test.expectsAjaxCall().expectUpdatedData({ 'form.check1': null, 'form.check2': '1' });
 
-        await userEvent.click(check2Element);
-        await userEvent.click(check1Element);
+        await user.click(check2Element);
+        await user.click(check1Element);
         await waitFor(() => expect(test.element).toHaveTextContent('Checkbox 1 is unchecked'));
 
         expect(test.component.valueStore.getOriginalProps()).toEqual({ form: { check1: null, check2: '1' } });
@@ -401,8 +403,8 @@ describe('LiveController data-model Tests', () => {
         // only 1 Ajax call will be made thanks to debouncing
         test.expectsAjaxCall().expectUpdatedData({ 'form.check': ['foo', 'bar'] });
 
-        await userEvent.click(check1Element);
-        await userEvent.click(check2Element);
+        await user.click(check1Element);
+        await user.click(check2Element);
 
         await waitFor(() => expect(test.element).toHaveTextContent('Checkbox 2 is checked'));
 
@@ -435,8 +437,8 @@ describe('LiveController data-model Tests', () => {
         // only 1 Ajax call will be made thanks to debouncing
         test.expectsAjaxCall().expectUpdatedData({ check: ['foo', 'bar'] });
 
-        await userEvent.click(check1Element);
-        await userEvent.click(check2Element);
+        await user.click(check1Element);
+        await user.click(check2Element);
 
         await waitFor(() => expect(test.element).toHaveTextContent('Checkbox 2 is checked'));
 
@@ -469,8 +471,8 @@ describe('LiveController data-model Tests', () => {
         // only 1 Ajax call will be made thanks to debouncing
         test.expectsAjaxCall().expectUpdatedData({ 'form.check': ['bar'] });
 
-        await userEvent.click(check2Element);
-        await userEvent.click(check1Element);
+        await user.click(check2Element);
+        await user.click(check1Element);
 
         await waitFor(() => expect(test.element).toHaveTextContent('Checkbox 1 is unchecked'));
 
@@ -501,8 +503,8 @@ describe('LiveController data-model Tests', () => {
         // only 1 Ajax call will be made thanks to debouncing
         test.expectsAjaxCall().expectUpdatedData({ check: ['bar'] });
 
-        await userEvent.click(check1Element);
-        await userEvent.click(check2Element);
+        await user.click(check1Element);
+        await user.click(check2Element);
 
         await waitFor(() => expect(test.element).toHaveTextContent('Checkbox 1 is unchecked'));
 
@@ -533,8 +535,8 @@ describe('LiveController data-model Tests', () => {
         test.expectsAjaxCall().expectUpdatedData({ 'form.select': ['foo', 'bar'] });
 
         const selectElement = getByLabelText(test.element, 'Select:');
-        await userEvent.selectOptions(selectElement, 'foo');
-        await userEvent.selectOptions(selectElement, 'bar');
+        await user.selectOptions(selectElement, 'foo');
+        await user.selectOptions(selectElement, 'bar');
 
         await waitFor(() => expect(test.element).toHaveTextContent('Select: foo bar Option 2 is selected'));
 
@@ -565,13 +567,13 @@ describe('LiveController data-model Tests', () => {
         test.expectsAjaxCall().expectUpdatedData({ 'form.select': ['bar'] });
 
         const selectElement = getByLabelText(test.element, 'Select:');
-        await userEvent.selectOptions(selectElement, 'bar');
-        await userEvent.deselectOptions(selectElement, 'foo');
+        await user.selectOptions(selectElement, 'bar');
+        await user.deselectOptions(selectElement, 'foo');
 
         await waitFor(() => expect(test.element).toHaveTextContent('Select: foo bar Option 2 is selected'));
 
         test.expectsAjaxCall().expectUpdatedData({ 'form.select': [] });
-        await userEvent.deselectOptions(selectElement, 'bar');
+        await user.deselectOptions(selectElement, 'bar');
 
         await waitFor(() => expect(test.element).toHaveTextContent('Select: foo bar Option 2 is unselected'));
         expect(test.component.valueStore.getOriginalProps()).toEqual({ form: { select: [] } });
@@ -597,7 +599,7 @@ describe('LiveController data-model Tests', () => {
             validatedFields: ['otherField', 'treat'],
         });
 
-        await userEvent.type(test.queryByDataModel('treat'), 'ice cream');
+        await user.type(test.queryByDataModel('treat'), 'ice cream');
 
         await waitFor(() => expect(test.element).toHaveTextContent('Treat: ice cream'));
     });
@@ -623,7 +625,7 @@ describe('LiveController data-model Tests', () => {
                 data.pizzaTopping = 'pineapple';
             });
 
-        await userEvent.type(test.queryByDataModel('pizzaTopping'), 'mushroom');
+        await user.type(test.queryByDataModel('pizzaTopping'), 'mushroom');
 
         await waitFor(() => expect(test.element).toHaveTextContent('Mmmm pineapple pizza'));
         // the controller sees the new data and adopts it
@@ -650,7 +652,7 @@ describe('LiveController data-model Tests', () => {
         test.expectsAjaxCall().expectUpdatedData({ firstName: 'Ryan' });
         test.expectsAjaxCall().expectUpdatedData({ lastName: 'Weaver' });
 
-        await userEvent.type(test.queryByDataModel('firstName'), 'Ryan');
+        await user.type(test.queryByDataModel('firstName'), 'Ryan');
         await userEvent.type(test.queryByDataModel('lastName'), 'Weaver', {
             // delay *slightly* to give the previous Ajax request time to start
             // but this is still far less than the debounce. So if debouncing
@@ -659,7 +661,7 @@ describe('LiveController data-model Tests', () => {
             delay: 1,
         });
         // triggers the "change" event on the 2nd field
-        userEvent.click(getByText(test.element, 'Do nothing'));
+        await user.click(getByText(test.element, 'Do nothing'));
 
         await waitFor(() => expect(test.element).toHaveTextContent('First Name: Ryan'));
         await waitFor(() => expect(test.element).toHaveTextContent('Last Name: Weaver'));
@@ -763,7 +765,7 @@ describe('LiveController data-model Tests', () => {
             dessertSelect.dispatchEvent(new Event('change', { bubbles: true }));
         });
 
-        await userEvent.selectOptions(foodSelect, 'carrot');
+        await user.selectOptions(foodSelect, 'carrot');
 
         await waitFor(() => expect(test.element).toHaveTextContent('Food: carrot'));
         expect(test.element).toHaveTextContent('Dessert: carrot_cake');
@@ -809,7 +811,7 @@ describe('LiveController data-model Tests', () => {
                 data.comment = data.comment.toUpperCase();
             });
 
-        await userEvent.type(commentField, ' so good');
+        await user.type(commentField, ' so good');
         await waitFor(() => expect(test.element).toHaveTextContent('Comment: MMMM SO GOOD'));
 
         expect(foodSelect.selectedOptions.length).toEqual(1);
@@ -899,7 +901,7 @@ describe('LiveController data-model Tests', () => {
         commentField.dispatchEvent(new Event('input', { bubbles: true }));
 
         // also type into the unmapped field - but no worry about the model sync'ing this time
-        await userEvent.type(getByTestId(test.element, 'unmappedTextarea'), ' here!');
+        await user.type(getByTestId(test.element, 'unmappedTextarea'), ' here!');
 
         await waitFor(() => expect(test.element).toHaveTextContent('FieldClass: changed-class'));
         // re-find in case the element itself has changed by morphdom
@@ -949,12 +951,12 @@ describe('LiveController data-model Tests', () => {
         // mimic changing the field, but without (yet) triggering the change event
         const commentField = getByTestId(test.element, 'comment');
         const inputField = getByTestId(test.element, 'other-input');
-        userEvent.type(commentField, ' ftw!');
+        await user.type(commentField, ' ftw!');
         // To make the test more robust, make the textarea NOT the active element.
         // The active element's value is ignored during morphing. Here, we want
         // to test that even if the morph system *does* want to update the value
         // of the textarea, the value will be kept.
-        userEvent.type(inputField, 'making this element active');
+        await user.type(inputField, 'making this element active');
 
         await renderPromise;
 
@@ -1053,7 +1055,7 @@ describe('LiveController data-model Tests', () => {
         `
         );
 
-        await userEvent.type(test.queryByDataModel('username'), 'ab');
+        await user.type(test.queryByDataModel('username'), 'ab');
         expect(test.component.valueStore.getOriginalProps()).toEqual({ username: '' });
     });
 
@@ -1070,7 +1072,7 @@ describe('LiveController data-model Tests', () => {
 
         test.expectsAjaxCall().expectUpdatedData({ username: 'abc' });
 
-        await userEvent.type(test.queryByDataModel('username'), 'abc');
+        await user.type(test.queryByDataModel('username'), 'abc');
         await waitFor(() => expect(test.element).toHaveTextContent('Username: abc'));
     });
 
@@ -1085,7 +1087,7 @@ describe('LiveController data-model Tests', () => {
         `
         );
 
-        await userEvent.type(test.queryByDataModel('username'), 'abcdef');
+        await user.type(test.queryByDataModel('username'), 'abcdef');
         expect(test.component.valueStore.getOriginalProps()).toEqual({ username: '' });
     });
 
@@ -1103,8 +1105,8 @@ describe('LiveController data-model Tests', () => {
         test.expectsAjaxCall().expectUpdatedData({ age: '30' });
 
         const input = test.queryByDataModel('age');
-        await userEvent.clear(input);
-        await userEvent.type(input, '30');
+        await user.clear(input);
+        await user.type(input, '30');
 
         await waitFor(() => expect(test.element).toHaveTextContent('Age: 30'));
     });
@@ -1121,8 +1123,8 @@ describe('LiveController data-model Tests', () => {
         );
 
         const input = test.queryByDataModel('age');
-        await userEvent.clear(input);
-        await userEvent.type(input, '15');
+        await user.clear(input);
+        await user.type(input, '15');
 
         expect(test.component.valueStore.getOriginalProps()).toEqual({ age: '' });
     });
@@ -1139,8 +1141,8 @@ describe('LiveController data-model Tests', () => {
         );
 
         const input = test.queryByDataModel('age');
-        await userEvent.clear(input);
-        await userEvent.type(input, '70');
+        await user.clear(input);
+        await user.type(input, '70');
 
         expect(test.component.valueStore.getOriginalProps()).toEqual({ age: '' });
     });
@@ -1157,18 +1159,18 @@ describe('LiveController data-model Tests', () => {
         );
 
         // too short
-        await userEvent.type(test.queryByDataModel('username'), 'ab');
+        await user.type(test.queryByDataModel('username'), 'ab');
         expect(test.component.valueStore.getOriginalProps()).toEqual({ username: '' });
 
         // too long
-        await userEvent.clear(test.queryByDataModel('username'));
-        await userEvent.type(test.queryByDataModel('username'), 'abcdef');
+        await user.clear(test.queryByDataModel('username'));
+        await user.type(test.queryByDataModel('username'), 'abcdef');
         expect(test.component.valueStore.getOriginalProps()).toEqual({ username: '' });
 
         // valid
         test.expectsAjaxCall().expectUpdatedData({ username: 'abc' });
-        await userEvent.clear(test.queryByDataModel('username'));
-        await userEvent.type(test.queryByDataModel('username'), 'abc');
+        await user.clear(test.queryByDataModel('username'));
+        await user.type(test.queryByDataModel('username'), 'abc');
         await waitFor(() => expect(test.element).toHaveTextContent('Username: abc'));
     });
 
@@ -1186,19 +1188,19 @@ describe('LiveController data-model Tests', () => {
         const input = test.queryByDataModel('age');
 
         // too low
-        await userEvent.clear(input);
-        await userEvent.type(input, '17');
+        await user.clear(input);
+        await user.type(input, '17');
         expect(test.component.valueStore.getOriginalProps()).toEqual({ age: '' });
 
         // too high
-        await userEvent.clear(input);
-        await userEvent.type(input, '70');
+        await user.clear(input);
+        await user.type(input, '70');
         expect(test.component.valueStore.getOriginalProps()).toEqual({ age: '' });
 
         // valid
         test.expectsAjaxCall().expectUpdatedData({ age: '30' });
-        await userEvent.clear(input);
-        await userEvent.type(input, '30');
+        await user.clear(input);
+        await user.type(input, '30');
         await waitFor(() => expect(test.element).toHaveTextContent('Age: 30'));
     });
 
@@ -1215,8 +1217,8 @@ describe('LiveController data-model Tests', () => {
 
         // 1. First, try entering an invalid value (2 characters)
         const input = test.queryByDataModel('username');
-        await userEvent.clear(input);
-        await userEvent.type(input, 'ab');
+        await user.clear(input);
+        await user.type(input, 'ab');
 
         // Model SHOULD NOT be updated, state should remain the same
         expect(test.component.valueStore.getOriginalProps()).toEqual({ username: 'starting_name' });
@@ -1225,7 +1227,7 @@ describe('LiveController data-model Tests', () => {
         // An empty value ('') should bypass the min_length rule and be sent to the server
         test.expectsAjaxCall().expectUpdatedData({ username: '' });
 
-        await userEvent.clear(input);
+        await user.clear(input);
 
         // FIX: Ensure the old value is completely gone from the DOM to confirm re-render
         await waitFor(() => expect(test.element).not.toHaveTextContent('starting_name'));
@@ -1245,8 +1247,8 @@ describe('LiveController data-model Tests', () => {
 
         // 1. First, enter an invalid value (<18)
         const input = test.queryByDataModel('age');
-        await userEvent.clear(input);
-        await userEvent.type(input, '15');
+        await user.clear(input);
+        await user.type(input, '15');
 
         // Model SHOULD NOT be updated
         expect(test.component.valueStore.getOriginalProps()).toEqual({ age: '30' });
@@ -1254,7 +1256,7 @@ describe('LiveController data-model Tests', () => {
         // 2. Completely clear the input
         test.expectsAjaxCall().expectUpdatedData({ age: '' });
 
-        await userEvent.clear(input);
+        await user.clear(input);
 
         // FIX: Ensure the old value '30' is no longer in the DOM
         await waitFor(() => expect(test.element).not.toHaveTextContent('Age: 30'));
@@ -1274,8 +1276,8 @@ describe('LiveController data-model Tests', () => {
 
         // 1. First, try entering an invalid value (6 characters)
         const input = test.queryByDataModel('username');
-        await userEvent.clear(input);
-        await userEvent.type(input, 'abcdef');
+        await user.clear(input);
+        await user.type(input, 'abcdef');
 
         // Model SHOULD NOT be updated, state should remain the same
         expect(test.component.valueStore.getOriginalProps()).toEqual({ username: 'starting_name' });
@@ -1284,7 +1286,7 @@ describe('LiveController data-model Tests', () => {
         // An empty value ('') should bypass the max_length rule and be sent to the server
         test.expectsAjaxCall().expectUpdatedData({ username: '' });
 
-        await userEvent.clear(input);
+        await user.clear(input);
 
         // FIX: Ensure the old value is completely gone from the DOM to confirm re-render
         await waitFor(() => expect(test.element).not.toHaveTextContent('starting_name'));
