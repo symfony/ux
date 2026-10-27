@@ -18,42 +18,40 @@ Now, create a "fresh" form and pass it into your stream:
 
 .. code-block:: diff
 
-    // src/Controller/TaskController.php
-    // ...
+     // src/Controller/TaskController.php
+     // ...
 
-    #[Route('/task')]
-    class TaskController extends AbstractController
-    {
-        #[Route('/new', name: 'app_task_new', methods: ['GET', 'POST'])]
-        public function new(Request $request): Response
-        {
-            $task = new Task();
-            $form = $this->createForm(TaskType::class, $task);
+     #[Route('/task')]
+     class TaskController extends AbstractController
+     {
+         #[Route('/new', name: 'app_task_new', methods: ['GET', 'POST'])]
+         public function new(Request $request): Response
+         {
+             $task = new Task();
+             $form = $this->createForm(TaskType::class, $task);
+             $form->handleRequest($request);
 
-   +        $emptyForm = clone $form;
-            $form->handleRequest($request);
+             if ($form->isSubmitted() && $form->isValid()) {
+                 // ...
 
-            if ($form->isSubmitted() && $form->isValid()) {
-                // ...
+                 if (TurboBundle::STREAM_FORMAT === $request->getPreferredFormat()) {
+                     $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
 
-                if (TurboBundle::STREAM_FORMAT === $request->getPreferredFormat()) {
-                    $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
+                     return $this->renderBlock('task/new.html.twig', 'success_stream', [
+                         'task' => $task,
+    +                    'form' => $this->createForm(TaskType::class, new Task()),
+                     ]);
+                 }
 
-                    return $this->renderBlock('task/new.html.twig', 'success_stream', [
-                        'task' => $task,
-   +                    'form' => $emptyForm,
-                    ]);
-                }
+                 // ...
+                 return $this->redirectToRoute('app_task_index', [], Response::HTTP_SEE_OTHER);
+             }
 
-                // ...
-                return $this->redirectToRoute('app_task_index', [], Response::HTTP_SEE_OTHER);
-            }
-
-            return $this->render('task/new.html.twig', [
-                'form' => $form,
-            ]);
-        }
-    }
+             return $this->render('task/new.html.twig', [
+                 'form' => $form,
+             ]);
+         }
+     }
 
 Now, in your stream template, "replace" the entire form:
 
@@ -72,3 +70,9 @@ Now, in your stream template, "replace" the entire form:
          </template>
      </turbo-stream>
      {% endblock %}
+
+.. tip::
+
+    If you return the stream messages with ``TurboStreamResponse`` instead,
+    chain a ``replace()`` call that renders the new form. See
+    :ref:`Turbo Stream Responses <turbo-stream-responses>`.
