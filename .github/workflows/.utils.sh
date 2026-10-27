@@ -38,9 +38,14 @@ _run_package_tests() {
     local max_jobs="${1:-$(( $(nproc 2>/dev/null || echo 4) + 3 ))}"
     local logs
     logs="$(mktemp -d)"
-    local pkg safe rc=0
+    local pkg safe rc=0 bridges_started=''
 
-    for pkg in $PACKAGES; do
+    # A bridge's vendor/ links back to its package, and PHPUnit loops forever on that link when it scans the package's src/
+    for pkg in $(printf '%s\n' $PACKAGES | grep -v /src/Bridge/) $(printf '%s\n' $PACKAGES | grep /src/Bridge/); do
+        if [[ $pkg == */src/Bridge/* && -z $bridges_started ]]; then
+            wait
+            bridges_started=1
+        fi
         # Throttle: wait for a running job to finish before starting the next package.
         # "|| :" keeps errexit (bash -e) from aborting on a failed job's exit code;
         # failures are collected from the .rc files during replay instead.
