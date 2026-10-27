@@ -1,6 +1,10 @@
 import { connectStreamSource, disconnectStreamSource } from "@hotwired/turbo";
 var TurboMercureStreamSourceElement = class extends HTMLElement {
-	static observedAttributes = ["src", "private"];
+	static observedAttributes = [
+		"src",
+		"private",
+		"connected"
+	];
 	es;
 	connectedCallback() {
 		const src = this.getAttribute("src");
@@ -18,11 +22,12 @@ var TurboMercureStreamSourceElement = class extends HTMLElement {
 		}
 		this.removeAttribute("connected");
 	}
-	attributeChangedCallback() {
-		if (this.es) {
+	attributeChangedCallback(name) {
+		if (!this.es) return;
+		if ("connected" !== name) {
 			this.disconnectedCallback();
 			this.connectedCallback();
-		}
+		} else if (EventSource.OPEN === this.es.readyState && !this.hasAttribute("connected")) this.setAttribute("connected", "");
 	}
 };
 if (!customElements.get("turbo-mercure-stream-source")) customElements.define("turbo-mercure-stream-source", TurboMercureStreamSourceElement);
