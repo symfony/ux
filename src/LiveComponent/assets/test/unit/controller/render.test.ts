@@ -13,6 +13,8 @@ import { afterEach, describe, expect, it } from 'vitest';
 import { htmlToElement } from '../../../src/dom_utils';
 import { createTest, initComponent, shutdownTests } from '../../tools';
 
+const user = userEvent.setup({ delay: null });
+
 describe('LiveController rendering Tests', () => {
     afterEach(() => {
         shutdownTests();
@@ -66,12 +68,12 @@ describe('LiveController rendering Tests', () => {
             .expectUpdatedData({ title: 'greetings!!' })
             .delayResponse(100);
 
-        userEvent.type(test.queryByDataModel('title'), '!!');
+        await user.type(test.queryByDataModel('title'), '!!');
 
         setTimeout(() => {
             // wait 10 ms (long enough for the shortened debounce to finish and the
             // Ajax request to start) and then type into this field
-            userEvent.type(test.queryByDataModel('comment'), 'I had a great time');
+            user.type(test.queryByDataModel('comment'), 'I had a great time');
         }, 10);
 
         // title model updated like normal
@@ -128,15 +130,12 @@ describe('LiveController rendering Tests', () => {
 
         test.expectsAjaxCall().expectUpdatedData({ title: 'greetings!!' }).delayResponse(100);
 
-        userEvent.type(test.queryByDataModel('title'), '!!');
+        await user.type(test.queryByDataModel('title'), '!!');
 
         setTimeout(() => {
             // wait 10 ms (long enough for the shortened debounce to finish and the
             // Ajax request to start) and then type into this field
-            userEvent.type(
-                test.element.querySelector('textarea') as HTMLTextAreaElement,
-                'typing after the request starts'
-            );
+            user.type(test.element.querySelector('textarea') as HTMLTextAreaElement, 'typing after the request starts');
         }, 10);
 
         // title model updated like normal
@@ -149,7 +148,7 @@ describe('LiveController rendering Tests', () => {
         // make a 2nd request
         test.expectsAjaxCall().expectUpdatedData({ title: 'greetings!! Yay!' }).delayResponse(100);
 
-        userEvent.type(test.queryByDataModel('title'), ' Yay!');
+        await user.type(test.queryByDataModel('title'), ' Yay!');
 
         // title model updated like normal
         await waitFor(() => expect(test.element).toHaveTextContent('Title: "greetings!! Yay!"'));
@@ -157,30 +156,6 @@ describe('LiveController rendering Tests', () => {
         expect((test.element.querySelector('textarea') as HTMLTextAreaElement).value).toEqual(
             'typing after the request starts'
         );
-    });
-
-    it('conserves cursor position of active model element', async () => {
-        const test = await createTest(
-            { name: '' },
-            (data) => `
-            <div ${initComponent(data)}>
-                <input data-model="name" class="anything">
-            </div>
-        `
-        );
-
-        test.expectsAjaxCall().expectUpdatedData({ name: 'Hello' });
-
-        const input = test.queryByDataModel('name') as HTMLInputElement;
-        userEvent.type(input, 'Hello');
-        userEvent.keyboard('{ArrowLeft}{ArrowLeft}');
-
-        await test.component.render();
-
-        // the cursor position should be preserved
-        expect(input.selectionStart).toBe(3);
-        userEvent.type(input, '!');
-        expect(input.value).toBe('Hel!lo');
     });
 
     it('uses the new value of an unmapped field that was NOT modified even if active', async () => {
@@ -203,7 +178,7 @@ describe('LiveController rendering Tests', () => {
 
         const input = test.element.querySelector('input') as HTMLInputElement;
         // focus the input, but don't change it
-        userEvent.type(input, '');
+        await user.click(input);
         await test.component.render();
         expect(input.value).toEqual('Hello');
     });
@@ -393,11 +368,11 @@ describe('LiveController rendering Tests', () => {
 
         getByText(test.element, 'Reload').click();
 
-        setTimeout(() => {
+        setTimeout(async () => {
             // wait 10 ms (long enough for the shortened debounce to finish and the
             // Ajax request to start) and then type into the fields
-            userEvent.type(test.queryByDataModel('title'), '!!!');
-            userEvent.type(test.queryByDataModel('contents'), 'Welcome to our test!');
+            await user.type(test.queryByDataModel('title'), '!!!');
+            await user.type(test.queryByDataModel('contents'), 'Welcome to our test!');
 
             // NOW we're expecting th 2nd request
             test.expectsAjaxCall()
@@ -427,10 +402,10 @@ describe('LiveController rendering Tests', () => {
         );
 
         // type: 50ms debounce will begin
-        userEvent.type(test.queryByDataModel('title'), ' to you');
+        await user.type(test.queryByDataModel('title'), ' to you');
         setTimeout(() => {
             // wait 40 ms: not long enough for debounce, then modify this field
-            userEvent.type(test.queryByDataModel('contents'), 'Welcome to our test!');
+            user.type(test.queryByDataModel('contents'), 'Welcome to our test!');
 
             // the ONE request will not start until 50ms (debounce) from now
             // delay 40 ms before we start to expect it

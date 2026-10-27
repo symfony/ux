@@ -12,6 +12,8 @@ import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it } from 'vitest';
 import { createTest, initComponent, shutdownTests } from '../../tools';
 
+const user = userEvent.setup({ delay: null });
+
 describe('LiveController Action Tests', () => {
     afterEach(() => {
         shutdownTests();
@@ -66,7 +68,7 @@ describe('LiveController Action Tests', () => {
                 data.isSaved = true;
             });
 
-        await userEvent.type(test.queryByDataModel('comment'), 'great tortugas!');
+        await user.type(test.queryByDataModel('comment'), 'great tortugas!');
         // type immediately, still during the model debounce
         getByText(test.element, 'Save').click();
 
@@ -132,7 +134,7 @@ describe('LiveController Action Tests', () => {
         // because an action immediately happens
         test.expectsAjaxCall().expectUpdatedData({ food: 'pizza' }).expectActionCalled('changeFood');
 
-        await userEvent.selectOptions(test.queryByDataModel('food'), 'pizza');
+        await user.selectOptions(test.queryByDataModel('food'), 'pizza');
 
         await waitFor(() => expect(test.element).toHaveTextContent('Food: pizza'));
     });
@@ -173,7 +175,7 @@ describe('LiveController Action Tests', () => {
         getByText(test.element, 'Save').click();
         // slight pause (should allow action request to start), then start typing
         setTimeout(() => {
-            userEvent.type(test.queryByDataModel('comment'), ' holes');
+            user.type(test.queryByDataModel('comment'), ' holes');
         }, 10);
 
         await waitFor(() => expect(test.element).toHaveTextContent('Comment Saved!'));
