@@ -5,15 +5,15 @@ on:
         branches-ignore:
             - 'dependabot/**'
         paths:
-            - '.github/workflows/demo-native.yaml'
+            - '.github/workflows/app-demo-native.yaml'
             - 'apps/demo-native/**'
             - 'src/Native/**'
             - 'src/StimulusBundle/**'
             - '!src/*/doc/**'
             - '!src/**/*.md'
     pull_request:
-        paths-ignore:
-            - '.github/workflows/demo-native.yaml'
+        paths:
+            - '.github/workflows/app-demo-native.yaml'
             - 'apps/demo-native/**'
             - 'src/Native/**'
             - 'src/StimulusBundle/**'

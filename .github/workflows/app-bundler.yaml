@@ -4,13 +4,41 @@ on:
     push:
         branches-ignore:
             - 'dependabot/**'
-        paths-ignore:
-            - 'src/*/doc/**'
-            - 'src/**/*.md'
+        paths:
+            - '.github/workflows/app-bundler.yaml'
+            - '.github/build-packages.php'
+            - 'apps/bundler/**'
+            - 'composer.json'
+            - 'package.json'
+            - 'pnpm-lock.yaml'
+            - 'pnpm-workspace.yaml'
+            - 'src/*/composer.json'
+            - 'src/*/assets/**'
+            - 'src/*/src/Bridge/*/composer.json'
+            - 'src/*/src/Bridge/*/assets/**'
+            # Their PHP code dumps the routes and the translations that the JS imports
+            - 'src/Router/**'
+            - 'src/Translator/**'
+            - '!src/*/doc/**'
+            - '!src/**/*.md'
     pull_request:
-        paths-ignore:
-            - 'src/*/doc/**'
-            - 'src/**/*.md'
+        paths:
+            - '.github/workflows/app-bundler.yaml'
+            - '.github/build-packages.php'
+            - 'apps/bundler/**'
+            - 'composer.json'
+            - 'package.json'
+            - 'pnpm-lock.yaml'
+            - 'pnpm-workspace.yaml'
+            - 'src/*/composer.json'
+            - 'src/*/assets/**'
+            - 'src/*/src/Bridge/*/composer.json'
+            - 'src/*/src/Bridge/*/assets/**'
+            # Their PHP code dumps the routes and the translations that the JS imports
+            - 'src/Router/**'
+            - 'src/Translator/**'
+            - '!src/*/doc/**'
+            - '!src/**/*.md'
 
 concurrency:
     group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}

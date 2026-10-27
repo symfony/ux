@@ -9,13 +9,11 @@ on:
         branches-ignore:
             - 'dependabot/**'
         paths-ignore:
-            - '.github/workflows/app-tests.yaml'
             - '.github/workflows/unit-tests.yaml'
             - 'src/*/doc/**'
             - 'src/**/*.md'
     pull_request:
         paths-ignore:
-            - '.github/workflows/app-tests.yaml'
             - '.github/workflows/unit-tests.yaml'
             - 'src/*/doc/**'
             - 'src/**/*.md'
@@ -27,7 +25,28 @@ concurrency:
 permissions: {}
 
 jobs:
+    changes:
+        runs-on: ubuntu-latest
+        outputs:
+            js: ${{ steps.affected.outputs.js }}
+        steps:
+            - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+              with:
+                  persist-credentials: false
+                  fetch-depth: 2
+
+            - name: List the affected packages
+              id: affected
+              run: |
+                  if [ "$GITHUB_EVENT_NAME" = 'pull_request' ]; then
+                      git diff --name-only HEAD^1 HEAD | php .github/affected-packages.php browser
+                  else
+                      php .github/affected-packages.php browser --all
+                  fi | tee -a "$GITHUB_OUTPUT"
+
     test:
+        needs: changes
+        if: needs.changes.outputs.js != ''
         runs-on: ubuntu-latest
         strategy:
             fail-fast: false
@@ -105,7 +124,10 @@ jobs:
               working-directory: apps/e2e
 
             - name: Run browser tests
-              run: pnpm run test:browser --project ${{ matrix.browser }}
+              env:
+                  PNPM_FILTERS: ${{ needs.changes.outputs.js }}
+                  BROWSER: ${{ matrix.browser }}
+              run: pnpm $PNPM_FILTERS --workspace-concurrency=1 run test:browser --project "$BROWSER"
               id: browser-tests
 
             - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
