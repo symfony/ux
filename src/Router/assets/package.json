@@ -26,10 +26,5 @@
         "importmap": {
             "@symfony/ux-router": "path:%PACKAGE%/dist/router_controller.js"
         }
-    },
-    "devDependencies": {
-        "jsdom": "^29.1.1",
-        "typescript": "^6.0.3",
-        "vitest": "^5.0.3"
     }
 }

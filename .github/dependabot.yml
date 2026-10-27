@@ -16,10 +16,7 @@ updates:
 
     # npm, but only for the tooling (build, lint, tests). bin/update_tooling_dependencies.ts updates the same list locally.
     - package-ecosystem: 'npm'
-      directories:
-          - '/'
-          - '/src/*/assets'
-          - '/src/*/src/Bridge/*/assets'
+      directory: '/'
       schedule:
           interval: 'weekly'
       allow:

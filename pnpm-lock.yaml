@@ -22,18 +22,57 @@ importers:
       '@testing-library/jest-dom':
         specifier: ^7.0.1
         version: 7.0.1(@testing-library/dom@10.4.2)(vitest@5.0.3(@types/node@22.20.5)(jsdom@29.1.1)(msw@2.10.4(@types/node@22.20.5)(typescript@6.0.3))(vite@8.3.4(@types/node@22.20.5)(esbuild@0.28.1)(terser@5.43.1)(tsx@4.20.3)(yaml@2.9.1)))
+      '@testing-library/user-event':
+        specifier: ^14.6.7
+        version: 14.6.7(@testing-library/dom@10.4.2)
       '@tsdown/css':
         specifier: ^0.23.1
         version: 0.23.1(postcss@8.5.30)(tsdown@0.23.1)(tsx@4.20.3)(yaml@2.9.1)
+      '@types/google.maps':
+        specifier: ^3.55.9
+        version: 3.58.1
+      '@types/hotwired__turbo':
+        specifier: ^8.0.4
+        version: 8.0.4
+      '@types/leaflet':
+        specifier: ^1.9.12
+        version: 1.9.20
       '@types/node':
         specifier: ^22.20.5
         version: 22.20.5
+      '@types/node-fetch':
+        specifier: ^2.6.13
+        version: 2.6.13
+      '@types/react':
+        specifier: ^18.0 || ^19.0
+        version: 18.3.23
+      '@types/react-dom':
+        specifier: ^18.0 || ^19.0
+        version: 18.3.7(@types/react@18.3.23)
+      '@types/webpack-env':
+        specifier: ^1.18.8
+        version: 1.18.8
+      '@vitejs/plugin-react':
+        specifier: ^6.1.2
+        version: 6.1.2(vite@8.3.4(@types/node@22.20.5)(esbuild@0.28.1)(terser@5.43.1)(tsx@4.20.3)(yaml@2.9.1))
+      '@vitejs/plugin-vue':
+        specifier: ^6.0.10
+        version: 6.0.10(vite@8.3.4(@types/node@22.20.5)(esbuild@0.28.1)(terser@5.43.1)(tsx@4.20.3)(yaml@2.9.1))(vue@3.5.17(typescript@6.0.3))
       browserslist:
         specifier: ^4.29.3
         version: 4.29.3
+      idiomorph:
+        specifier: ^0.7.4
+        version: 0.7.4
+      jsdom:
+        specifier: ^29.1.1
+        version: 29.1.1
       lightningcss:
         specifier: ^1.33.0
         version: 1.33.0
+      node-fetch:
+        specifier: ^3.3.2
+        version: 3.3.2
       oxc-parser:
         specifier: ^0.153.0
         version: 0.153.0
@@ -49,80 +88,15 @@ importers:
       proxy-agent:
         specifier: ^8.0.2
         version: 8.0.2(supports-color@10.2.2)
+      resize-observer-polyfill:
+        specifier: ^1.5.1
+        version: 1.5.1
       tinyglobby:
         specifier: ^0.2.17
         version: 0.2.17
       tsdown:
         specifier: ^0.23.1
         version: 0.23.1(@tsdown/css@0.23.1)(tsx@4.20.3)(typescript@6.0.3)(unrun@0.2.32(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0))
-      vitest:
-        specifier: ^5.0.3
-        version: 5.0.3(@types/node@22.20.5)(jsdom@29.1.1)(msw@2.10.4(@types/node@22.20.5)(typescript@6.0.3))(vite@8.3.4(@types/node@22.20.5)(esbuild@0.28.1)(terser@5.43.1)(tsx@4.20.3)(yaml@2.9.1))
-      web-features:
-        specifier: ^3.42.0
-        version: 3.42.0
-      yaml:
-        specifier: ^2.9.1
-        version: 2.9.1
-
-  src/Autocomplete/assets:
-    devDependencies:
-      '@hotwired/stimulus':
-        specifier: ^3.0.0
-        version: 3.2.2
-      '@testing-library/dom':
-        specifier: ^10.4.2
-        version: 10.4.2
-      '@testing-library/jest-dom':
-        specifier: ^7.0.1
-        version: 7.0.1(@testing-library/dom@10.4.2)(vitest@5.0.3(@types/node@22.20.5)(jsdom@29.1.1)(msw@2.10.4(@types/node@22.20.5)(typescript@6.0.3))(vite@8.3.4(@types/node@22.20.5)(esbuild@0.28.1)(terser@5.43.1)(tsx@4.20.3)(yaml@2.9.1)))
-      '@testing-library/user-event':
-        specifier: ^14.6.7
-        version: 14.6.7(@testing-library/dom@10.4.2)
-      jsdom:
-        specifier: ^29.1.1
-        version: 29.1.1
-      tom-select:
-        specifier: ^2.2.2
-        version: 2.4.3
-      tslib:
-        specifier: ^2.8.1
-        version: 2.8.1
-      typescript:
-        specifier: ^6.0.3
-        version: 6.0.3
-      vitest:
-        specifier: ^5.0.3
-        version: 5.0.3(@types/node@22.20.5)(jsdom@29.1.1)(msw@2.10.4(@types/node@22.20.5)(typescript@6.0.3))(vite@8.3.4(@types/node@22.20.5)(esbuild@0.28.1)(terser@5.43.1)(tsx@4.20.3)(yaml@2.9.1))
-      vitest-fetch-mock:
-        specifier: ^0.4.5
-        version: 0.4.5(vitest@5.0.3(@types/node@22.20.5)(jsdom@29.1.1)(msw@2.10.4(@types/node@22.20.5)(typescript@6.0.3))(vite@8.3.4(@types/node@22.20.5)(esbuild@0.28.1)(terser@5.43.1)(tsx@4.20.3)(yaml@2.9.1)))
-
-  src/CalendarLink/assets: {}
-
-  src/Chartjs/assets:
-    devDependencies:
-      '@hotwired/stimulus':
-        specifier: ^3.0.0
-        version: 3.2.2
-      '@testing-library/dom':
-        specifier: ^10.4.2
-        version: 10.4.2
-      '@testing-library/jest-dom':
-        specifier: ^7.0.1
-        version: 7.0.1(@testing-library/dom@10.4.2)(vitest@5.0.3(@types/node@22.20.5)(jsdom@29.1.1)(msw@2.10.4(@types/node@22.20.5)(typescript@6.0.3))(vite@8.3.4(@types/node@22.20.5)(esbuild@0.28.1)(terser@5.43.1)(tsx@4.20.3)(yaml@2.9.1)))
-      '@testing-library/user-event':
-        specifier: ^14.6.7
-        version: 14.6.7(@testing-library/dom@10.4.2)
-      chart.js:
-        specifier: ^3.4.1 || ^4.0
-        version: 3.9.1
-      jsdom:
-        specifier: ^29.1.1
-        version: 29.1.1
-      resize-observer-polyfill:
-        specifier: ^1.5.1
-        version: 1.5.1
       tslib:
         specifier: ^2.8.1
         version: 2.8.1
@@ -135,63 +109,50 @@ importers:
       vitest-canvas-mock:
         specifier: ^1.2.0
         version: 1.2.0(vitest@5.0.3(@types/node@22.20.5)(jsdom@29.1.1)(msw@2.10.4(@types/node@22.20.5)(typescript@6.0.3))(vite@8.3.4(@types/node@22.20.5)(esbuild@0.28.1)(terser@5.43.1)(tsx@4.20.3)(yaml@2.9.1)))
+      vitest-fetch-mock:
+        specifier: ^0.4.5
+        version: 0.4.5(vitest@5.0.3(@types/node@22.20.5)(jsdom@29.1.1)(msw@2.10.4(@types/node@22.20.5)(typescript@6.0.3))(vite@8.3.4(@types/node@22.20.5)(esbuild@0.28.1)(terser@5.43.1)(tsx@4.20.3)(yaml@2.9.1)))
+      web-features:
+        specifier: ^3.42.0
+        version: 3.42.0
+      yaml:
+        specifier: ^2.9.1
+        version: 2.9.1
+
+  src/Autocomplete/assets:
+    devDependencies:
+      '@hotwired/stimulus':
+        specifier: ^3.0.0
+        version: 3.2.2
+      tom-select:
+        specifier: ^2.2.2
+        version: 2.4.3
+
+  src/CalendarLink/assets: {}
+
+  src/Chartjs/assets:
+    devDependencies:
+      '@hotwired/stimulus':
+        specifier: ^3.0.0
+        version: 3.2.2
+      chart.js:
+        specifier: ^3.4.1 || ^4.0
+        version: 3.9.1
 
   src/Cropperjs/assets:
     devDependencies:
       '@hotwired/stimulus':
         specifier: ^3.0.0
         version: 3.2.2
-      '@testing-library/dom':
-        specifier: ^10.4.2
-        version: 10.4.2
-      '@testing-library/jest-dom':
-        specifier: ^7.0.1
-        version: 7.0.1(@testing-library/dom@10.4.2)(vitest@5.0.3(@types/node@22.20.5)(jsdom@29.1.1)(msw@2.10.4(@types/node@22.20.5)(typescript@6.0.3))(vite@8.3.4(@types/node@22.20.5)(esbuild@0.28.1)(terser@5.43.1)(tsx@4.20.3)(yaml@2.9.1)))
-      '@testing-library/user-event':
-        specifier: ^14.6.7
-        version: 14.6.7(@testing-library/dom@10.4.2)
       cropperjs:
         specifier: ^1.5.9
         version: 1.6.2
-      jsdom:
-        specifier: ^29.1.1
-        version: 29.1.1
-      tslib:
-        specifier: ^2.8.1
-        version: 2.8.1
-      typescript:
-        specifier: ^6.0.3
-        version: 6.0.3
-      vitest:
-        specifier: ^5.0.3
-        version: 5.0.3(@types/node@22.20.5)(jsdom@29.1.1)(msw@2.10.4(@types/node@22.20.5)(typescript@6.0.3))(vite@8.3.4(@types/node@22.20.5)(esbuild@0.28.1)(terser@5.43.1)(tsx@4.20.3)(yaml@2.9.1))
 
   src/Dropzone/assets:
     devDependencies:
       '@hotwired/stimulus':
         specifier: ^3.0.0
         version: 3.2.2
-      '@testing-library/dom':
-        specifier: ^10.4.2
-        version: 10.4.2
-      '@testing-library/jest-dom':
-        specifier: ^7.0.1
-        version: 7.0.1(@testing-library/dom@10.4.2)(vitest@5.0.3(@types/node@22.20.5)(jsdom@29.1.1)(msw@2.10.4(@types/node@22.20.5)(typescript@6.0.3))(vite@8.3.4(@types/node@22.20.5)(esbuild@0.28.1)(terser@5.43.1)(tsx@4.20.3)(yaml@2.9.1)))
-      '@testing-library/user-event':
-        specifier: ^14.6.7
-        version: 14.6.7(@testing-library/dom@10.4.2)
-      jsdom:
-        specifier: ^29.1.1
-        version: 29.1.1
-      tslib:
-        specifier: ^2.8.1
-        version: 2.8.1
-      typescript:
-        specifier: ^6.0.3
-        version: 6.0.3
-      vitest:
-        specifier: ^5.0.3
-        version: 5.0.3(@types/node@22.20.5)(jsdom@29.1.1)(msw@2.10.4(@types/node@22.20.5)(typescript@6.0.3))(vite@8.3.4(@types/node@22.20.5)(esbuild@0.28.1)(terser@5.43.1)(tsx@4.20.3)(yaml@2.9.1))
 
   src/Inspector/assets: {}
 
@@ -200,63 +161,12 @@ importers:
       '@hotwired/stimulus':
         specifier: ^3.0.0
         version: 3.2.2
-      '@testing-library/dom':
-        specifier: ^10.4.2
-        version: 10.4.2
-      '@testing-library/jest-dom':
-        specifier: ^7.0.1
-        version: 7.0.1(@testing-library/dom@10.4.2)(vitest@5.0.3(@types/node@22.20.5)(jsdom@29.1.1)(msw@2.10.4(@types/node@22.20.5)(typescript@6.0.3))(vite@8.3.4(@types/node@22.20.5)(esbuild@0.28.1)(terser@5.43.1)(tsx@4.20.3)(yaml@2.9.1)))
-      '@testing-library/user-event':
-        specifier: ^14.6.7
-        version: 14.6.7(@testing-library/dom@10.4.2)
-      '@types/node-fetch':
-        specifier: ^2.6.13
-        version: 2.6.13
-      idiomorph:
-        specifier: ^0.7.4
-        version: 0.7.4
-      jsdom:
-        specifier: ^29.1.1
-        version: 29.1.1
-      node-fetch:
-        specifier: ^3.3.2
-        version: 3.3.2
-      tslib:
-        specifier: ^2.8.1
-        version: 2.8.1
-      typescript:
-        specifier: ^6.0.3
-        version: 6.0.3
-      vitest:
-        specifier: ^5.0.3
-        version: 5.0.3(@types/node@22.20.5)(jsdom@29.1.1)(msw@2.10.4(@types/node@22.20.5)(typescript@6.0.3))(vite@8.3.4(@types/node@22.20.5)(esbuild@0.28.1)(terser@5.43.1)(tsx@4.20.3)(yaml@2.9.1))
 
   src/Map/assets:
     devDependencies:
       '@hotwired/stimulus':
         specifier: ^3.0.0
         version: 3.2.2
-      '@testing-library/dom':
-        specifier: ^10.4.2
-        version: 10.4.2
-      '@testing-library/jest-dom':
-        specifier: ^7.0.1
-        version: 7.0.1(@testing-library/dom@10.4.2)(vitest@5.0.3(@types/node@22.20.5)(jsdom@29.1.1)(msw@2.10.4(@types/node@22.20.5)(typescript@6.0.3))(vite@8.3.4(@types/node@22.20.5)(esbuild@0.28.1)(terser@5.43.1)(tsx@4.20.3)(yaml@2.9.1)))
-      '@testing-library/user-event':
-        specifier: ^14.6.7
-        version: 14.6.7(@testing-library/dom@10.4.2)
-      jsdom:
-        specifier: ^29.1.1
-        version: 29.1.1
-      tslib:
-        specifier: ^2.8.1
-        version: 2.8.1
-      typescript:
-        specifier: ^6.0.3
-        version: 6.0.3
-      vitest:
-        specifier: ^5.0.3
-        version: 5.0.3(@types/node@22.20.5)(jsdom@29.1.1)(msw@2.10.4(@types/node@22.20.5)(typescript@6.0.3))(vite@8.3.4(@types/node@22.20.5)(esbuild@0.28.1)(terser@5.43.1)(tsx@4.20.3)(yaml@2.9.1))
 
   src/Map/src/Bridge/Google/assets:
     dependencies:
@@ -270,27 +180,6 @@ importers:
       '@hotwired/stimulus':
         specifier: ^3.0.0
         version: 3.2.2
-      '@testing-library/dom':
-        specifier: ^10.4.2
-        version: 10.4.2
-      '@testing-library/jest-dom':
-        specifier: ^7.0.1
-        version: 7.0.1(@testing-library/dom@10.4.2)(vitest@5.0.3(@types/node@22.20.5)(jsdom@29.1.1)(msw@2.10.4(@types/node@22.20.5)(typescript@6.0.3))(vite@8.3.4(@types/node@22.20.5)(esbuild@0.28.1)(terser@5.43.1)(tsx@4.20.3)(yaml@2.9.1)))
-      '@testing-library/user-event':
-        specifier: ^14.6.7
-        version: 14.6.7(@testing-library/dom@10.4.2)
-      '@types/google.maps':
-        specifier: ^3.55.9
-        version: 3.58.1
-      jsdom:
-        specifier: ^29.1.1
-        version: 29.1.1
-      tslib:
-        specifier: ^2.8.1
-        version: 2.8.1
-      typescript:
-        specifier: ^6.0.3
-        version: 6.0.3
 
   src/Map/src/Bridge/Leaflet/assets:
     dependencies:
@@ -301,30 +190,9 @@ importers:
       '@hotwired/stimulus':
         specifier: ^3.0.0
         version: 3.2.2
-      '@testing-library/dom':
-        specifier: ^10.4.2
-        version: 10.4.2
-      '@testing-library/jest-dom':
-        specifier: ^7.0.1
-        version: 7.0.1(@testing-library/dom@10.4.2)(vitest@5.0.3(@types/node@22.20.5)(jsdom@29.1.1)(msw@2.10.4(@types/node@22.20.5)(typescript@6.0.3))(vite@8.3.4(@types/node@22.20.5)(esbuild@0.28.1)(terser@5.43.1)(tsx@4.20.3)(yaml@2.9.1)))
-      '@testing-library/user-event':
-        specifier: ^14.6.7
-        version: 14.6.7(@testing-library/dom@10.4.2)
-      '@types/leaflet':
-        specifier: ^1.9.12
-        version: 1.9.20
-      jsdom:
-        specifier: ^29.1.1
-        version: 29.1.1
       leaflet:
         specifier: ^1.9.4
         version: 1.9.4
-      tslib:
-        specifier: ^2.8.1
-        version: 2.8.1
-      typescript:
-        specifier: ^6.0.3
-        version: 6.0.3
 
   src/Native/assets:
     devDependencies:
@@ -340,27 +208,6 @@ importers:
       '@hotwired/stimulus':
         specifier: ^3.0.0
         version: 3.2.2
-      '@testing-library/dom':
-        specifier: ^10.4.2
-        version: 10.4.2
-      '@testing-library/jest-dom':
-        specifier: ^7.0.1
-        version: 7.0.1(@testing-library/dom@10.4.2)(vitest@5.0.3(@types/node@22.20.5)(jsdom@29.1.1)(msw@2.10.4(@types/node@22.20.5)(typescript@6.0.3))(vite@8.3.4(@types/node@22.20.5)(esbuild@0.28.1)(terser@5.43.1)(tsx@4.20.3)(yaml@2.9.1)))
-      '@testing-library/user-event':
-        specifier: ^14.6.7
-        version: 14.6.7(@testing-library/dom@10.4.2)
-      jsdom:
-        specifier: ^29.1.1
-        version: 29.1.1
-      tslib:
-        specifier: ^2.8.1
-        version: 2.8.1
-      typescript:
-        specifier: ^6.0.3
-        version: 6.0.3
-      vitest:
-        specifier: ^5.0.3
-        version: 5.0.3(@types/node@22.20.5)(jsdom@29.1.1)(msw@2.10.4(@types/node@22.20.5)(typescript@6.0.3))(vite@8.3.4(@types/node@22.20.5)(esbuild@0.28.1)(terser@5.43.1)(tsx@4.20.3)(yaml@2.9.1))
 
   src/Pagination/assets: {}
 
@@ -369,112 +216,26 @@ importers:
       '@hotwired/stimulus':
         specifier: ^3.0.0
         version: 3.2.2
-      '@testing-library/dom':
-        specifier: ^10.4.2
-        version: 10.4.2
-      '@testing-library/jest-dom':
-        specifier: ^7.0.1
-        version: 7.0.1(@testing-library/dom@10.4.2)(vitest@5.0.3(@types/node@22.20.5)(jsdom@29.1.1)(msw@2.10.4(@types/node@22.20.5)(typescript@6.0.3))(vite@8.3.4(@types/node@22.20.5)(esbuild@0.28.1)(terser@5.43.1)(tsx@4.20.3)(yaml@2.9.1)))
-      '@testing-library/user-event':
-        specifier: ^14.6.7
-        version: 14.6.7(@testing-library/dom@10.4.2)
-      '@types/react':
-        specifier: ^18.0 || ^19.0
-        version: 18.3.23
-      '@types/react-dom':
-        specifier: ^18.0 || ^19.0
-        version: 18.3.7(@types/react@18.3.23)
-      '@types/webpack-env':
-        specifier: ^1.18.8
-        version: 1.18.8
-      '@vitejs/plugin-react':
-        specifier: ^6.1.2
-        version: 6.1.2(vite@8.3.4(@types/node@22.20.5)(esbuild@0.28.1)(terser@5.43.1)(tsx@4.20.3)(yaml@2.9.1))
-      jsdom:
-        specifier: ^29.1.1
-        version: 29.1.1
       react:
         specifier: ^18.0 || ^19.0
         version: 18.3.1
       react-dom:
         specifier: ^18.0 || ^19.0
         version: 18.3.1(react@18.3.1)
-      tslib:
-        specifier: ^2.8.1
-        version: 2.8.1
-      typescript:
-        specifier: ^6.0.3
-        version: 6.0.3
-      vitest:
-        specifier: ^5.0.3
-        version: 5.0.3(@types/node@22.20.5)(jsdom@29.1.1)(msw@2.10.4(@types/node@22.20.5)(typescript@6.0.3))(vite@8.3.4(@types/node@22.20.5)(esbuild@0.28.1)(terser@5.43.1)(tsx@4.20.3)(yaml@2.9.1))
 
-  src/Router/assets:
-    devDependencies:
-      jsdom:
-        specifier: ^29.1.1
-        version: 29.1.1
-      typescript:
-        specifier: ^6.0.3
-        version: 6.0.3
-      vitest:
-        specifier: ^5.0.3
-        version: 5.0.3(@types/node@22.20.5)(jsdom@29.1.1)(msw@2.10.4(@types/node@22.20.5)(typescript@6.0.3))(vite@8.3.4(@types/node@22.20.5)(esbuild@0.28.1)(terser@5.43.1)(tsx@4.20.3)(yaml@2.9.1))
+  src/Router/assets: {}
 
   src/StimulusBundle/assets:
     dependencies:
       '@hotwired/stimulus':
         specifier: ^3.0.0
         version: 3.2.2
-    devDependencies:
-      '@testing-library/dom':
-        specifier: ^10.4.2
-        version: 10.4.2
-      '@testing-library/jest-dom':
-        specifier: ^7.0.1
-        version: 7.0.1(@testing-library/dom@10.4.2)(vitest@5.0.3(@types/node@22.20.5)(jsdom@29.1.1)(msw@2.10.4(@types/node@22.20.5)(typescript@6.0.3))(vite@8.3.4(@types/node@22.20.5)(esbuild@0.28.1)(terser@5.43.1)(tsx@4.20.3)(yaml@2.9.1)))
-      '@testing-library/user-event':
-        specifier: ^14.6.7
-        version: 14.6.7(@testing-library/dom@10.4.2)
-      jsdom:
-        specifier: ^29.1.1
-        version: 29.1.1
-      tslib:
-        specifier: ^2.8.1
-        version: 2.8.1
-      typescript:
-        specifier: ^6.0.3
-        version: 6.0.3
-      vitest:
-        specifier: ^5.0.3
-        version: 5.0.3(@types/node@22.20.5)(jsdom@29.1.1)(msw@2.10.4(@types/node@22.20.5)(typescript@6.0.3))(vite@8.3.4(@types/node@22.20.5)(esbuild@0.28.1)(terser@5.43.1)(tsx@4.20.3)(yaml@2.9.1))
 
   src/Translator/assets:
     devDependencies:
-      '@testing-library/dom':
-        specifier: ^10.4.2
-        version: 10.4.2
-      '@testing-library/jest-dom':
-        specifier: ^7.0.1
-        version: 7.0.1(@testing-library/dom@10.4.2)(vitest@5.0.3(@types/node@22.20.5)(jsdom@29.1.1)(msw@2.10.4(@types/node@22.20.5)(typescript@6.0.3))(vite@8.3.4(@types/node@22.20.5)(esbuild@0.28.1)(terser@5.43.1)(tsx@4.20.3)(yaml@2.9.1)))
-      '@testing-library/user-event':
-        specifier: ^14.6.7
-        version: 14.6.7(@testing-library/dom@10.4.2)
       intl-messageformat:
         specifier: ^10.5.11
         version: 10.7.16
-      jsdom:
-        specifier: ^29.1.1
-        version: 29.1.1
-      tslib:
-        specifier: ^2.8.1
-        version: 2.8.1
-      typescript:
-        specifier: ^6.0.3
-        version: 6.0.3
-      vitest:
-        specifier: ^5.0.3
-        version: 5.0.3(@types/node@22.20.5)(jsdom@29.1.1)(msw@2.10.4(@types/node@22.20.5)(typescript@6.0.3))(vite@8.3.4(@types/node@22.20.5)(esbuild@0.28.1)(terser@5.43.1)(tsx@4.20.3)(yaml@2.9.1))
 
   src/Turbo/assets:
     devDependencies:
@@ -484,63 +245,12 @@ importers:
       '@hotwired/turbo':
         specifier: ^7.1.0 || ^8.0
         version: 8.0.23
-      '@testing-library/dom':
-        specifier: ^10.4.2
-        version: 10.4.2
-      '@testing-library/jest-dom':
-        specifier: ^7.0.1
-        version: 7.0.1(@testing-library/dom@10.4.2)(vitest@5.0.3(@types/node@22.20.5)(jsdom@29.1.1)(msw@2.10.4(@types/node@22.20.5)(typescript@6.0.3))(vite@8.3.4(@types/node@22.20.5)(esbuild@0.28.1)(terser@5.43.1)(tsx@4.20.3)(yaml@2.9.1)))
-      '@testing-library/user-event':
-        specifier: ^14.6.7
-        version: 14.6.7(@testing-library/dom@10.4.2)
-      '@types/hotwired__turbo':
-        specifier: ^8.0.4
-        version: 8.0.4
-      jsdom:
-        specifier: ^29.1.1
-        version: 29.1.1
-      tslib:
-        specifier: ^2.8.1
-        version: 2.8.1
-      typescript:
-        specifier: ^6.0.3
-        version: 6.0.3
-      vitest:
-        specifier: ^5.0.3
-        version: 5.0.3(@types/node@22.20.5)(jsdom@29.1.1)(msw@2.10.4(@types/node@22.20.5)(typescript@6.0.3))(vite@8.3.4(@types/node@22.20.5)(esbuild@0.28.1)(terser@5.43.1)(tsx@4.20.3)(yaml@2.9.1))
 
   src/Vue/assets:
     devDependencies:
       '@hotwired/stimulus':
         specifier: ^3.0.0
         version: 3.2.2
-      '@testing-library/dom':
-        specifier: ^10.4.2
-        version: 10.4.2
-      '@testing-library/jest-dom':
-        specifier: ^7.0.1
-        version: 7.0.1(@testing-library/dom@10.4.2)(vitest@5.0.3(@types/node@22.20.5)(jsdom@29.1.1)(msw@2.10.4(@types/node@22.20.5)(typescript@6.0.3))(vite@8.3.4(@types/node@22.20.5)(esbuild@0.28.1)(terser@5.43.1)(tsx@4.20.3)(yaml@2.9.1)))
-      '@testing-library/user-event':
-        specifier: ^14.6.7
-        version: 14.6.7(@testing-library/dom@10.4.2)
-      '@types/webpack-env':
-        specifier: ^1.18.8
-        version: 1.18.8
-      '@vitejs/plugin-vue':
-        specifier: ^6.0.10
-        version: 6.0.10(vite@8.3.4(@types/node@22.20.5)(esbuild@0.28.1)(terser@5.43.1)(tsx@4.20.3)(yaml@2.9.1))(vue@3.5.17(typescript@6.0.3))
-      jsdom:
-        specifier: ^29.1.1
-        version: 29.1.1
-      tslib:
-        specifier: ^2.8.1
-        version: 2.8.1
-      typescript:
-        specifier: ^6.0.3
-        version: 6.0.3
-      vitest:
-        specifier: ^5.0.3
-        version: 5.0.3(@types/node@22.20.5)(jsdom@29.1.1)(msw@2.10.4(@types/node@22.20.5)(typescript@6.0.3))(vite@8.3.4(@types/node@22.20.5)(esbuild@0.28.1)(terser@5.43.1)(tsx@4.20.3)(yaml@2.9.1))
       vue:
         specifier: ^3.0
         version: 3.5.17(typescript@6.0.3)

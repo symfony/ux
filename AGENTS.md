@@ -147,6 +147,7 @@ apps/
 
 - **Dist files committed**: after TS source change, run `pnpm run build` + commit `dist/`.
 - **pnpm workspaces**: `src/*/assets` and `src/*/src/Bridge/*/assets`.
+- **devDependencies**: a package only repeats its `peerDependencies` there; tools and types go in the root `package.json`, because npm installs them in every app requiring the package through `file:vendor/...` (checked by the `validate-packages` CI job).
 - **Peer dependency matrix**: JS unit tests may run against multiple peer dep versions (via `bin/unit_test_package.sh`).
 - **PHPStan**: only configured for `src/Turbo` (`phpstan.dist.neon`).
 - **Snapshot tests**: Toolkit uses PHPUnit snapshots — update with `php vendor/bin/phpunit -d --update-snapshots`.

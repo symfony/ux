@@ -144,6 +144,18 @@ jobs:
                       done
                   done
 
+            # An app installs a package through "file:vendor/...", and npm then installs its devDependencies too
+            - name: Check all package.json devDependencies are peerDependencies of the exact same version
+              if: always()
+              run: |
+                  for file in $(find src/ -mindepth 2 -type f -name package.json -not -path "*/tests/*" -not -path "*/vendor/*" -not -path "*/node_modules/*"); do
+                      devDependencies=$(jq -r '(.peerDependencies // {}) as $peers | (.devDependencies // {}) | to_entries[] | select($peers[.key] != .value) | .key' "$file")
+                      if [ -n "$devDependencies" ]; then
+                          echo "File $file has devDependencies that are not peerDependencies of the exact same version, move them to the root package.json:" $devDependencies;
+                          exit 1;
+                      fi
+                  done
+
             - name: Check all package.json have a README.md next to them
               if: always()
               run: |
