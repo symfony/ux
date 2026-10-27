@@ -9,16 +9,14 @@ on:
         branches-ignore:
             - 'dependabot/**'
         paths-ignore:
-            - '.github/workflows/app-tests.yaml'
-            - '.github/workflows/demo-native.yaml'
+            - '.github/workflows/app-demo-native.yaml'
             - 'apps/demo-native/**'
             - 'apps/e2e/**'
             - 'src/*/doc/**'
             - 'src/**/*.md'
     pull_request:
         paths-ignore:
-            - '.github/workflows/app-tests.yaml'
-            - '.github/workflows/demo-native.yaml'
+            - '.github/workflows/app-demo-native.yaml'
             - 'apps/demo-native/**'
             - 'apps/e2e/**'
             - 'src/*/doc/**'
@@ -31,7 +29,29 @@ concurrency:
 permissions: {}
 
 jobs:
+    changes:
+        runs-on: ubuntu-latest
+        outputs:
+            php: ${{ steps.affected.outputs.php }}
+            js: ${{ steps.affected.outputs.js }}
+        steps:
+            - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+              with:
+                  persist-credentials: false
+                  fetch-depth: 2
+
+            - name: List the affected packages
+              id: affected
+              run: |
+                  if [ "$GITHUB_EVENT_NAME" = 'pull_request' ]; then
+                      git diff --name-only HEAD^1 HEAD | php .github/affected-packages.php unit
+                  else
+                      php .github/affected-packages.php unit --all
+                  fi | tee -a "$GITHUB_OUTPUT"
+
     php:
+        needs: changes
+        if: needs.changes.outputs.php != ''
         runs-on: ${{ matrix.os || 'ubuntu-latest' }}
         strategy:
             fail-fast: false
@@ -76,6 +96,8 @@ jobs:
                   persist-credentials: false
 
             - name: Configure environment
+              env:
+                  AFFECTED_PACKAGES: ${{ needs.changes.outputs.php }}
               run: |
                   echo COLUMNS=120 >> $GITHUB_ENV
                   echo COMPOSER_MIN_STAB='composer config minimum-stability ${{ matrix.minimum-stability || 'stable' }} --ansi' >> $GITHUB_ENV
@@ -91,7 +113,7 @@ jobs:
                   #  EXCLUDED_PACKAGES="$EXCLUDED_PACKAGES"
                   #fi
 
-                  PACKAGES=$(find src/ -mindepth 2 -type f -name composer.json -not -path "*/vendor/*" -printf '%h\n' | sed 's/^src\///' | grep -Ev "$EXCLUDED_PACKAGES" | sort |  tr '\n' ' ')
+                  PACKAGES=$(echo "$AFFECTED_PACKAGES" | tr ' ' '\n' | grep -Ev "$EXCLUDED_PACKAGES" | tr '\n' ' ')
                   echo "Packages: $PACKAGES"
                   echo "PACKAGES=$PACKAGES" >> $GITHUB_ENV
 
@@ -128,6 +150,8 @@ jobs:
                   source .github/workflows/.utils.sh
                   _run_package_tests
     js:
+        needs: changes
+        if: needs.changes.outputs.js != ''
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -138,6 +162,9 @@ jobs:
               with:
                   cache: true
 
-            - run: pnpm run test:unit
+            - name: Run packages tests
+              env:
+                  PNPM_FILTERS: ${{ needs.changes.outputs.js }}
+              run: pnpm $PNPM_FILTERS --workspace-concurrency=1 --aggregate-output run test:unit
 
             - run: pnpm run test:unit:bin
