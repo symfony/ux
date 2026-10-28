@@ -7,7 +7,7 @@ Installation
 Reprise reads the Stimulus controllers registered in
 ``assets/controllers.json``, so once you point the `Symfony Reprise`_
 plugin at that file, Turbo's controllers are picked up automatically.
-See the StimulusBundle documentation for how to set that up.
+See the `StimulusBundle documentation`_ to set it up.
 
 After installing Symfony UX Turbo, install your assets and rebuild:
 
@@ -22,7 +22,7 @@ Reloading When a JavaScript/CSS File Changes
 Turbo Drive can automatically perform a full refresh when a CSS or JS
 file changes, so your users always get the latest version.
 
-Unlike WebpackEncore, there's nothing to enable for versioning:
+Unlike Webpack Encore, there's nothing to enable for versioning:
 Reprise content-hashes your files by default.
 
 All you need to do is add a ``data-turbo-track="reload"`` attribute to
@@ -45,9 +45,10 @@ You can also pass the same attribute per call, as a fourth
 
 .. code-block:: twig
 
-    {{ reprise_entry_script_tags('app', attributes={ 'data-turbo-track': 'reload' }) }}
+    {{ reprise_entry_script_tags('app', attributes={'data-turbo-track': 'reload'}) }}
 
 For more info, see: `Turbo Reloading When Assets Change`_.
 
 .. _`Turbo Reloading When Assets Change`: https://turbo.hotwired.dev/handbook/drive#reloading-when-assets-change
 .. _`Symfony Reprise`: https://github.com/symfony/reprise
+.. _`StimulusBundle documentation`: https://symfony.com/bundles/StimulusBundle/current/index.html

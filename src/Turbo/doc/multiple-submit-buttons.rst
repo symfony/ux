@@ -3,8 +3,8 @@ How to Handle Multiple Submit Buttons with Turbo Drive
 
 When your form contains more than one submit button and you want to check
 which of the buttons was clicked to adapt the program flow in your controller,
-you need to add a value to each button because Turbo Drive doesn't send
-elements with an empty value::
+you need to add a value to each button because Turbo Drive 7.1 doesn't send
+the clicked button when it has no ``value`` attribute::
 
     // src/Form/TaskType.php
     namespace App\Form;
@@ -34,3 +34,9 @@ elements with an empty value::
                 ]);
         }
     }
+
+.. note::
+
+    This is only needed with Turbo 7.1. Starting from Turbo 7.2, the clicked
+    button is always sent, and the ``isClicked()`` method of each button works
+    without adding any value.

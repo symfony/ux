@@ -12,10 +12,10 @@ the following configuration:
         hubs:
             hub1:
                 url: https://hub1.example.net/.well-known/mercure
-                jwt: snip
+                jwt: ...
             hub2:
                 url: https://hub2.example.net/.well-known/mercure
-                jwt: snip
+                jwt: ...
 
 Use the appropriate Mercure ``HubInterface`` service to send a change
 using a specific transport::
@@ -65,10 +65,12 @@ list of transports to use for a specific entity class using the
         private ?string $title = null;
     }
 
-Finally, generate the HTML attributes registering the Stimulus
-controller corresponding to your transport by passing an extra argument
-to ``turbo_stream_listen()``:
+Finally, pass the name of the transport to use when subscribing the page to
+the updates:
 
 .. code-block:: html+twig
 
-    <div id="tasks" {{ turbo_stream_listen('App\\Entity\\Task', 'hub2') }}></div>
+    <twig:Turbo:Stream:From topics="App\\Entity\\Task" transport="hub2" />
+
+    {# or, with the Twig function #}
+    {{ turbo_stream_from('App\\Entity\\Task', transport: 'hub2') }}

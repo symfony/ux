@@ -6,15 +6,18 @@ Symfony UX Turbo
 
     Do you prefer video tutorials? Check out the `Symfony UX Turbo screencast series`_.
 
-Symfony UX Turbo is a Symfony bundle integrating the `Hotwire Turbo`_
-library in Symfony applications. It is part of `the Symfony UX initiative`_.
+Symfony UX Turbo integrates the `Hotwire Turbo`_ library in Symfony
+applications. It is part of `the Symfony UX initiative`_.
 
-Symfony UX Turbo allows having the same user experience as with
-`Single Page Applications`_ but without having to write a single line of
-JavaScript!
+Turbo gives your application the fast and fluid feel of
+`Single Page Applications`_ while you keep rendering HTML on the server with
+controllers and Twig templates. You don't write JavaScript to fetch data or
+to update the page: Turbo does it for you.
 
-Symfony UX Turbo also integrates with `Symfony Mercure`_ or any other
-transports to broadcast DOM changes to all currently connected users!
+On top of the Turbo library, this bundle provides Twig functions and
+components to generate Turbo markup, helpers to detect Turbo requests in your
+controllers and integrations with `Symfony Mercure`_ and Doctrine to push page
+updates to all connected users in real time.
 
 Installation
 ------------
@@ -25,23 +28,95 @@ Install the bundle using Composer and Symfony Flex:
 
     $ composer require symfony/ux-turbo
 
+How Turbo Works
+---------------
+
+HTML Over the Wire
+~~~~~~~~~~~~~~~~~~
+
+In a traditional application, every click on a link or every form submission
+makes the browser load a new page: it downloads the HTML, discards the current
+page, parses the CSS and JavaScript again and renders everything from scratch.
+Single Page Applications avoid this by loading the page once and then asking
+the server only for data (usually JSON), which JavaScript code turns into HTML
+in the browser. This feels faster, but you must build and maintain a second
+application in JavaScript.
+
+Turbo follows a third approach called *HTML over the wire*: the server keeps
+rendering HTML, as usual in Symfony applications, but Turbo requests it in the
+background and inserts it into the current page instead of loading a new page.
+Your templates, controllers, forms, security and validation stay the same, and
+the user doesn't see full page reloads.
+
+Drive, Frames and Streams
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Turbo provides three tools. Each one updates a different amount of the page:
+
+**Turbo Drive**
+    Handles navigation for the entire page. When the user clicks a link or
+    submits a form, Turbo Drive makes the request in the background and
+    replaces the ``<body>`` of the page with the one of the response. It's
+    enabled by default, so you get it for free when installing this bundle.
+
+**Turbo Frames**
+    Divide the page into independent sections. Links and forms inside a
+    ``<turbo-frame>`` element only replace the contents of that frame with the
+    matching frame of the response. The rest of the page doesn't change.
+
+**Turbo Streams**
+    Make precise changes to one or more parts of the page at the same time.
+    The server sends *stream messages* (append this item to that list, remove
+    that row, update this counter, etc.) either as the response to a form
+    submission or pushed in real time (e.g. with Mercure) to all users who are
+    viewing the page.
+
+=============  ====================================  ==============================================
+Tool           What it updates                       Use it when
+=============  ====================================  ==============================================
+Turbo Drive    The entire page, without a reload     Always; it's enabled by default
+Turbo Frames   One section, which is fully reloaded  Inline editing, pagination, tabs, lazy loading
+Turbo Streams  Several parts, with precise actions   Changes in several places, real-time updates
+=============  ====================================  ==============================================
+
+When choosing between Frames and Streams, think about how you'd describe the
+change. If it's "this section of the page reloads", use a Turbo Frame. If it's
+"add this item to the list, update the counter and reset the form", use Turbo
+Streams.
+
+When Not to Use Turbo
+~~~~~~~~~~~~~~~~~~~~~
+
+Turbo works best for applications whose pages are mostly rendered on the
+server: admin backends, CRUD applications, e-commerce sites, dashboards, blogs,
+etc. Consider other tools in these cases:
+
+* The interface keeps a lot of state in the browser and changes it on every
+  keystroke or mouse movement (e.g. rich text editors, drawing tools,
+  interactive maps or spreadsheets). Each change would need a request to the
+  server, so it's better to build those parts with JavaScript. Use
+  `Stimulus`_ controllers to integrate them in your Turbo pages;
+* The application must work offline, or it's already built as a Single Page
+  Application that consumes a JSON API;
+* You want a component that re-renders itself as the user types (e.g. a form
+  with fields that depend on each other or a live search). It's possible with
+  Turbo, but `Symfony UX LiveComponent`_ is designed for this use case.
+
 Usage
 -----
 
 Turbo Drive
 ~~~~~~~~~~~
 
-Turbo Drive enhances page-level navigation. It watches for link clicks
-and form submissions, performs them in the background, and updates the
-page without doing a full reload. This gives you the "single-page-app"
-experience without major changes to your code!
-
-Turbo Drive is automatically enabled when you install Symfony UX Turbo.
+Turbo Drive watches for link clicks and form submissions, performs them in the
+background and updates the page without doing a full reload. It's
+automatically enabled when you install Symfony UX Turbo.
 
 Getting Started with Turbo Drive
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-There are 3 things to be aware of:
+Most applications work with Turbo Drive without changes, but there are three
+things to be aware of:
 
 1. Make sure your JavaScript is Turbo-ready
 """""""""""""""""""""""""""""""""""""""""""
@@ -235,20 +310,47 @@ Generates a ``<meta>`` tag to configure the scroll behavior for page refreshes.
 Turbo Frames
 ~~~~~~~~~~~~
 
-Turbo Frames let you treat **any subset of a page as its own component**: links
-and form submissions within a frame replace only that part, without any custom
-JavaScript. Frames can also be **lazy-loaded**, making it easy to split a page
-into independently cached pieces.
+A Turbo Frame is a section of the page wrapped in a ``<turbo-frame>`` element
+with a unique ``id``. Links and forms inside the frame keep working as usual,
+but Turbo only replaces the contents of that frame with the frame that has the
+same ``id`` in the response. The rest of the page doesn't change.
+
+Use frames for self-contained parts of the page, such as editing a row of a
+list without leaving the list, paginating a block or switching tabs:
+
+.. code-block:: html+twig
+
+    {# templates/task/show.html.twig #}
+    <twig:Turbo:Frame id="task_{{ task.id }}">
+        <p>{{ task.title }}</p>
+
+        <a href="{{ path('app_task_edit', {id: task.id}) }}">Edit this task</a>
+    </twig:Turbo:Frame>
+
+    {# templates/task/edit.html.twig #}
+    <twig:Turbo:Frame id="task_{{ task.id }}">
+        {{ form(form) }}
+
+        <a href="{{ path('app_task_show', {id: task.id}) }}">Cancel</a>
+    </twig:Turbo:Frame>
+
+When the user clicks on "Edit this task", Turbo requests the edit page,
+looks for the ``<turbo-frame id="task_42">`` element in it and replaces the
+contents of the current frame with it. Submitting the form works the same way,
+as long as the response contains a frame with that ``id``, so the user edits
+the task without leaving the list. The edit page also works as a regular full
+page when opened directly.
+
+Frames can also be **lazy-loaded**: they start empty and Turbo fetches their
+contents from the URL defined in their ``src`` attribute. This is useful to
+defer slow parts of a page or to cache them independently.
 
 <twig:Turbo:Frame>
 ^^^^^^^^^^^^^^^^^^
 
-Returns a ``<turbo-frame>`` element that can either be used to encapsulate
-frame content or as a lazy-loading container that starts empty but fetches
-the URL supplied in the ``src`` attribute.
-
-Examples
-""""""""
+The ``<twig:Turbo:Frame>`` Twig component renders a ``<turbo-frame>``
+element. Use it to wrap the contents of a frame or as a lazy-loading container
+with the ``src`` attribute:
 
 .. code-block:: html+twig
 
@@ -272,35 +374,10 @@ Examples
         <div>My task frame!</div>
     </turbo-frame>
 
-Navigation within a Frame
-"""""""""""""""""""""""""
-
-When a link inside a Turbo Frame is clicked, Turbo automatically replaces
-the frame content with the matching frame from the linked page.
-
-.. code-block:: html+twig
-
-    {# templates/task/show.html.twig #}
-    <twig:Turbo:Frame id="task_{{ task.id }}">
-        <p>{{ task.title }}</p>
-
-        <a href="{{ path('app_task_edit', {id: task.id}) }}">Edit this task</a>
-    </twig:Turbo:Frame>
-
-    {# templates/task/edit.html.twig #}
-    <twig:Turbo:Frame id="task_{{ task.id }}">
-        {{ form(form) }}
-
-        <a href="{{ path('app_task_show', {id: task.id}) }}">Cancel</a>
-    </twig:Turbo:Frame>
-
-When the user clicks on "Edit this task", the Turbo Frame will be
-automatically replaced with the matching frame from ``task/edit.html.twig``.
-
 Detecting Turbo Frame Requests
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-nject the ``TurboFrame`` service to detect whether the current request
+Inject the ``TurboFrame`` service to detect whether the current request
 was triggered by a Turbo Frame and retrieve the frame's ID::
 
     // src/Controller/TaskController.php
@@ -397,16 +474,113 @@ This renders a minimal HTML document:
 Turbo Streams
 ~~~~~~~~~~~~~
 
-Symfony UX Turbo registers ``text/vnd.turbo-stream.html`` as the
-``TurboBundle::STREAM_FORMAT`` format, which can be detected in controllers
-using ``$request->getPreferredFormat()``.
+With Turbo Streams, the server sends pieces of HTML together with an
+instruction that tells Turbo what to do with them and where in the page.
+
+.. _turbo-stream-anatomy:
+
+Anatomy of a Stream Message
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+This is a stream message that adds a new task to a list:
+
+.. code-block:: html
+
+    <turbo-stream action="append" targets="#task_list">
+        <template>
+            <li id="task_42">Buy some milk</li>
+        </template>
+    </turbo-stream>
+
+Each message has three parts:
+
+``action``
+    What to do: append, replace, remove, etc.
+``targets``
+    A CSS selector of the element(s) to change. Instead of ``targets``, you
+    can also use ``target`` with the ``id`` of a single element, without the
+    ``#`` (e.g. ``target="task_list"``). The helpers of Symfony UX Turbo
+    generate ``targets``.
+``<template>``
+    The new HTML contents, which must always be wrapped by a ``<template>``
+    element. Actions that don't insert contents (``remove`` and ``refresh``)
+    don't include it.
+
+When Turbo receives this message, it looks for the ``#task_list`` element in
+the page and adds the ``<li>`` element at the end of it. Nothing else in the
+page changes. If no element matches the target, Turbo ignores the message
+without displaying any error, so check the ``id`` attributes of your page if
+an update doesn't show up.
+
+A single response can contain several messages. Turbo applies them in order.
+
+Common Actions
+^^^^^^^^^^^^^^
+
+These are the actions you'll use most of the time:
+
+===========  ==============================================  ======================================
+Action       What it does to the target                      Typical use
+===========  ==============================================  ======================================
+``append``   Adds the contents inside it, at the end         Add a comment or a chat message
+``prepend``  Adds the contents inside it, at the beginning   Add an item to a "newest first" list
+``replace``  Replaces the entire element                     Update an edited row, show form errors
+``update``   Replaces the contents and keeps the element     Update a counter or a badge
+``remove``   Removes the element                             Delete a row or close an alert
+===========  ==============================================  ======================================
+
+The difference between ``replace`` and ``update`` is a common source of
+errors. If your template includes the element itself, with its ``id``
+(e.g. ``<li id="task_42">...</li>``), use ``replace``. If it only includes
+the inner contents (e.g. ``42``), use ``update``. If you use ``replace`` with
+contents that don't include the ``id``, the following messages won't find the
+target anymore.
+
+Turbo also provides the ``before``, ``after`` and ``refresh`` actions and a
+*morphing* mode for ``replace`` and ``update``. They are all explained in the
+:ref:`list of stream actions <turbo-stream-actions>`.
+
+How Stream Messages Reach the Page
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Turbo receives stream messages through two different channels:
+
+**In the response to a form submission**
+    The user submits a form and the controller responds with stream messages
+    instead of a redirect. Only the user who submitted the form sees the
+    changes. This is explained in the next section.
+
+**Broadcast in real time**
+    The server publishes stream messages to a hub, such as Mercure, at any
+    moment, and every browser displaying the page receives them. This is
+    useful for chats, notifications and dashboards. This is explained in the
+    :ref:`Broadcasting <turbo-broadcasting>` section.
+
+The messages are the same in both cases. Put the HTML of each item in a Twig
+template fragment (e.g. ``task/_task.html.twig``) and include it from the
+regular page, from the stream responses and from the broadcast templates, so
+you don't duplicate any HTML.
+
+.. _turbo-stream-responses:
 
 Turbo Stream Responses
 ^^^^^^^^^^^^^^^^^^^^^^
 
-When a user submits a form or triggers an action, the controller can detect
-the Turbo Stream format and return a partial page update instead of a full
-redirect. There are two ways to do this:
+When a form uses the ``POST``, ``PUT``, ``PATCH`` or ``DELETE`` method, Turbo
+adds the ``text/vnd.turbo-stream.html`` MIME type to the ``Accept`` header of
+the request. Symfony UX Turbo registers this MIME type as the
+``turbo_stream`` request format (also available as the
+``TurboBundle::STREAM_FORMAT`` constant), so controllers can check it with
+``$request->getPreferredFormat()`` and respond with stream messages. Other
+requests (e.g. from a browser with JavaScript disabled) keep receiving the
+usual redirect, so your application keeps working without Turbo.
+
+.. tip::
+
+    Links and ``GET`` forms don't accept stream responses by default. Add the
+    ``data-turbo-stream`` attribute to them to change this.
+
+There are two ways to return stream messages from a controller:
 
 **Option 1: inline with** ``TurboStreamResponse``
 
@@ -479,7 +653,8 @@ Turbo Stream response. This is the better fit when the stream markup belongs
 with the page template it updates, for example when it uses the
 ``<twig:Turbo:Stream:*>`` components. Call
 ``$request->setRequestFormat(TurboBundle::STREAM_FORMAT)`` so that the response
-gets the Turbo Stream content type::
+gets the Turbo Stream content type. Otherwise, the response is sent as
+``text/html`` and Turbo doesn't apply the stream messages::
 
     // src/Controller/TaskController.php
     namespace App\Controller;
@@ -528,6 +703,8 @@ gets the Turbo Stream content type::
             <li id="task_{{ task.id }}">{{ task.title }}</li>
         </twig:Turbo:Stream:Append>
     {% endblock %}
+
+.. _turbo-stream-actions:
 
 Stream Messages and Actions
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -747,30 +924,23 @@ value to ``null`` to add a boolean attribute::
 
     `Read the Turbo Streams reference for more details`_.
 
+.. _turbo-broadcasting:
+
 Broadcasting
 ~~~~~~~~~~~~
 
-Symfony UX Turbo also supports broadcasting HTML updates to all
-currently connected clients, using the
-`Mercure`_ protocol or any other.
+Broadcasting sends stream messages to every browser that displays a page, not
+only to the user who made the request. Use it to build real-time features such
+as chats, notifications or dashboards. The messages are the same ones described
+in :ref:`Anatomy of a Stream Message <turbo-stream-anatomy>`; only the channel
+that delivers them changes. Symfony UX Turbo uses the `Mercure`_ protocol by
+default, but supports any other transport.
 
 Start by installing `the Mercure support`_ on your project:
 
 .. code-block:: terminal
 
     $ composer require symfony/mercure-bundle
-
-Then, enable the "mercure stream" controller in ``assets/controllers.json``:
-
-.. code-block:: diff
-
-    "@symfony/ux-turbo": {
-        "mercure-turbo-stream": {
-    -         "enabled": false,
-    +         "enabled": true,
-            "fetch": "eager"
-        }
-    },
 
 .. deprecated:: 3.1
 
@@ -800,9 +970,9 @@ Otherwise, configure Mercure Hub(s) as explained in the documentation:
                     secret: '%env(MERCURE_JWT_SECRET)%'
                     publish: '*'
 
-To illustrate this, here is how to build a real-time task list with **0 lines
-of JavaScript**. When a task is created, all connected clients will
-automatically see it appear in the list::
+The following example builds a real-time task list. When a user creates a task,
+it appears in the list of all users who are viewing it. First, publish the
+stream messages to a Mercure *topic* after saving the task::
 
     // src/Controller/TaskController.php
     namespace App\Controller;
@@ -829,7 +999,8 @@ automatically see it appear in the list::
                 $task = $form->getData();
                 // ... save the task
 
-                // Push the update to all connected clients via Mercure
+                // the first argument is the topic: every page subscribed to
+                // 'tasks' receives the stream messages rendered by the template
                 $hub->publish(new Update(
                     'tasks',
                     $this->renderView('task/stream/new.html.twig', ['task' => $task])
@@ -846,28 +1017,41 @@ automatically see it appear in the list::
 
 .. code-block:: html+twig
 
-    {# task/index.html.twig #}
+    {# templates/task/stream/new.html.twig #}
+    <turbo-stream action="append" targets="#task_list">
+        <template>
+            {{ include('task/_task.html.twig') }}
+        </template>
+    </turbo-stream>
+
+Then, subscribe the page to that topic with the ``<twig:Turbo:Stream:From>``
+component (explained in the next section). When Turbo receives the messages,
+it applies them to the page:
+
+.. code-block:: html+twig
+
+    {# templates/task/index.html.twig #}
     {% extends 'base.html.twig' %}
 
     {% block body %}
         <h1>Tasks</h1>
 
-        <div id="tasks" {{ turbo_stream_listen('tasks') }}>
-            {# New tasks will automatically appear here for all connected users #}
+        <twig:Turbo:Stream:From topics="tasks" />
+
+        <ul id="task_list">
             {% for task in tasks %}
-                <div id="task_{{ task.id }}">{{ task.title }}</div>
+                {{ include('task/_task.html.twig') }}
             {% endfor %}
-        </div>
+        </ul>
     {% endblock %}
 
-.. code-block:: html+twig
+    {# templates/task/_task.html.twig #}
+    <li id="task_{{ task.id }}">{{ task.title }}</li>
 
-    {# task/stream/new.html.twig #}
-    <turbo-stream action="append" targets="#tasks">
-        <template>
-            <div id="task_{{ task.id }}">{{ task.title }}</div>
-        </template>
-    </turbo-stream>
+The ``task/stream/new.html.twig`` template is the same you'd use to respond to
+the form submission with stream messages. Only the delivery changes: instead of
+returning it in the HTTP response to one user, Mercure sends it to all pages
+subscribed to the ``tasks`` topic.
 
 .. seealso::
 
@@ -961,19 +1145,23 @@ updates and deletions of entities:
         private ?string $title = null;
     }
 
-To subscribe to updates of an entity, pass it as parameter of the
-``turbo_stream_listen()`` Twig helper:
+To subscribe to updates of an entity, pass it to the ``turbo_stream_from()``
+Twig function:
 
 .. code-block:: html+twig
 
-    <div id="task_{{ task.id }}" {{ turbo_stream_listen(task) }}></div>
+    {{ turbo_stream_from(task) }}
+    <div id="task_{{ task.id }}">{{ task.title }}</div>
 
 Alternatively, you can subscribe to updates made to all entities of a
 given class by using its Fully Qualified Class Name:
 
 .. code-block:: html+twig
 
-    <div id="tasks" {{ turbo_stream_listen('App\\Entity\\Task') }}></div>
+    {{ turbo_stream_from('App\\Entity\\Task') }}
+    <div id="tasks">
+        {# ... #}
+    </div>
 
 Finally, create the template that will be rendered when an entity is
 created, modified or deleted:
@@ -1165,6 +1353,7 @@ Symfony UX Turbo has been created by `Kévin Dunglas`_. It has been inspired by
 .. _`Symfony Mercure`: https://symfony.com/doc/current/mercure.html
 .. _`Symfony UX Turbo screencast series`: https://symfonycasts.com/screencast/turbo
 .. _`Stimulus`: https://stimulus.hotwired.dev
+.. _`Symfony UX LiveComponent`: https://symfony.com/bundles/ux-live-component/current/index.html
 .. _`Turbo Reloading When Assets Change`: https://turbo.hotwired.dev/handbook/drive#reloading-when-assets-change
 .. _`Read the Turbo Drive documentation`: https://turbo.hotwired.dev/handbook/drive
 .. _`Read the Turbo meta tags reference`: https://turbo.hotwired.dev/reference/attributes#meta-tags
