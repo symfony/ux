@@ -1,0 +1,47 @@
+---------------------------------------------------------------------------
+
+by arrabiata-asanz at 2025-05-23T14:47:42Z
+
+i think the failed tests don't apply to the changes in this PR. (Deprecation warning and Exception Messages Formatting)
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-05-23T14:47:51Z
+
+Thanks for the PR! I'm totally not familiar with LiveComponent, but:
+1. can we add a test preventing any regression?
+2. I think we should also pass `_route_params`, no?
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-05-23T14:50:11Z
+
+> i think the failed tests don't apply to the changes in this PR. (Deprecation warning and Exception Messages Formatting)
+
+Yes you can ignore the 8.4 dev job, but for fabbot, it would be nice to fix it (even if not related :) )
+
+---------------------------------------------------------------------------
+
+by smnandre at 2025-05-24T16:21:15Z
+
+Hmm.. could we also add some tests for this?
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-04-14T12:04:17Z
+
+Hi, Symfony UX 3.0 has been released, and the `2.x` branch is no longer maintained.
+
+Could you please retarget this PR to the `3.x` branch instead? That way we can review and merge it in the currently supported version.
+
+Thanks!
+
+Status: Needs Work
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-10-24T07:04:04Z
+
+Thanks a lot for the fix, @arrabiata-asanz, and for your patience. I rebased the PR onto `3.x`, and the sub-requests now get `_route_params` and the route parameters as well as `_route`, so route defaults like the `_routeScope` from #1022 reach them too.
+
+I also added a functional test. It fails on `3.x` and on the original one-line change (the route default is missing), and it passes now.
