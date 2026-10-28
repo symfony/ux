@@ -79,7 +79,7 @@ Choosing a Kit
 Four kits are shipped with the Toolkit:
 
 * ``shadcn``, `Shadcn UI <https://ux.symfony.com/toolkit/kits/shadcn>`_
-* ``flowbite-4``, `Flowbite v4 <https://ux.symfony.com/toolkit/kits/flowbite>`_
+* ``flowbite-4``, `Flowbite v4 <https://ux.symfony.com/toolkit/kits/flowbite-4>`_
 * ``bootstrap``, `Bootstrap 5.3 <https://ux.symfony.com/toolkit/kits/bootstrap>`_
 * ``common``, `design-system agnostic recipes <https://ux.symfony.com/toolkit/kits/common>`_
   for common Symfony needs, such as logout links

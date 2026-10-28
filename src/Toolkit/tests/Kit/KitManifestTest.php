@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\Toolkit\Tests\Kit;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\UX\Toolkit\Dependency\ImportmapPackageDependency;
 use Symfony\UX\Toolkit\Dependency\NpmPackageDependency;
@@ -164,5 +165,20 @@ final class KitManifestTest extends TestCase
                     }
                 }
             JSON);
+    }
+
+    #[DataProvider('provideBundledKitNames')]
+    public function testBundledKitHomepageIsItsPageOnUxSymfonyCom(string $kitName): void
+    {
+        $manifest = KitManifest::fromJson(file_get_contents(__DIR__.'/../../kits/'.$kitName.'/manifest.json'));
+
+        $this->assertSame('https://ux.symfony.com/toolkit/kits/'.$kitName, $manifest->homepage);
+    }
+
+    public static function provideBundledKitNames(): \Generator
+    {
+        foreach (glob(__DIR__.'/../../kits/*', \GLOB_ONLYDIR) as $kitPath) {
+            yield basename($kitPath) => [basename($kitPath)];
+        }
     }
 }
