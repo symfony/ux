@@ -75,7 +75,7 @@ final class TurboStream
     /**
      * Initiates a Page Refresh to render new content with morphing.
      *
-     * @see Initiates a Page Refresh to render new content with morphing.
+     * @see https://turbo.hotwired.dev/handbook/page_refreshes
      */
     public static function refresh(?string $requestId = null): string
     {
