@@ -39,7 +39,7 @@ final class ComponentProperties
     ) {
         $cacheItem = $this->cache?->getItem(self::CACHE_KEY);
 
-        $this->classMetadata = $cacheItem?->isHit() ? [...$cacheItem->get(), ...$classMetadata] : $classMetadata;
+        $this->classMetadata = $cacheItem?->isHit() ? $cacheItem->get() + $classMetadata : $classMetadata;
     }
 
     /**
@@ -78,9 +78,7 @@ final class ComponentProperties
         }
 
         foreach ($this->classMetadata as $class => $metadata) {
-            if (null === $metadata) {
-                $this->classMetadata[$class] = $this->loadClassMetadata($class);
-            }
+            $this->classMetadata[$class] = $this->loadClassMetadata($class);
         }
 
         $this->cache->save($this->cache->getItem(self::CACHE_KEY)->set($this->classMetadata));
