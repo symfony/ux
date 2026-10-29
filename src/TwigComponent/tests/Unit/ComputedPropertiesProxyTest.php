@@ -67,6 +67,26 @@ final class ComputedPropertiesProxyTest extends TestCase
         $this->assertSame(1, $proxy->count());
     }
 
+    public function testProxyCachesNullReturns(): void
+    {
+        $component = new class {
+            public int $calls = 0;
+
+            public function getValue(): ?string
+            {
+                ++$this->calls;
+
+                return null;
+            }
+        };
+        $proxy = new ComputedPropertiesProxy($component);
+
+        $this->assertNull($proxy->getValue());
+        $this->assertNull($proxy->getValue());
+        $this->assertNull($proxy->value());
+        $this->assertSame(1, $component->calls);
+    }
+
     public function testCanProxyPublicProperties(): void
     {
         $proxy = new ComputedPropertiesProxy(new class {

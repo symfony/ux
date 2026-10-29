@@ -18,6 +18,9 @@ final class ComputedPropertiesProxy
 {
     private array $cache = [];
 
+    /** @var array<string, string> */
+    private array $methods = [];
+
     /**
      * @internal
      */
@@ -40,9 +43,9 @@ final class ComputedPropertiesProxy
             return $this->component[$name];
         }
 
-        $method = $this->normalizeMethod($name);
+        $method = $this->methods[$name] ??= $this->normalizeMethod($name);
 
-        if (isset($this->cache[$method])) {
+        if (\array_key_exists($method, $this->cache)) {
             return $this->cache[$method];
         }
 
