@@ -1152,7 +1152,7 @@ be added with the ``DefaultActionTrait``.
 
 Live components __are__ actually Symfony controllers so you can add
 controller attributes (i.e. ``#[IsGranted]``) to either the entire class
-just a single action.
+or just a single action.
 
 You can also trigger custom actions on your component. Let's pretend we
 want to add a "Reset Max" button to our "random number" component
@@ -3931,7 +3931,7 @@ In this case, any changes to the ``<select>`` element attributes will still be
 Define another route for your Component
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The default route for live components is ``/components/{_live_component}/{_live_action}``.
+The default route for live components is ``/_components/{_live_component}/{_live_action}``.
 Sometimes it may be useful to customize this URL - e.g. so that the component lives
 under a specific firewall.
 
