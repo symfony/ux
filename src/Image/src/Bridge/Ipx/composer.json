@@ -1,0 +1,28 @@
+{
+    "name": "symfony/ux-ipx-image",
+    "type": "symfony-ux-image-bridge",
+    "description": "Symfony UX Image IPX Bridge",
+    "keywords": ["symfony-ux", "ipx", "image", "responsive"],
+    "homepage": "https://symfony.com",
+    "license": "MIT",
+    "authors": [
+        { "name": "Hugo Alliaume", "email": "hugo@alliau.me" },
+        { "name": "Symfony Community", "homepage": "https://symfony.com/contributors" }
+    ],
+    "require": {
+        "php": ">=8.4",
+        "symfony/ux-image": "^3.7"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^12.0",
+        "spatie/phpunit-snapshot-assertions": "^5.2.3"
+    },
+    "autoload": {
+        "psr-4": { "Symfony\\UX\\Image\\Bridge\\Ipx\\": "src/" },
+        "exclude-from-classmap": []
+    },
+    "autoload-dev": {
+        "psr-4": { "Symfony\\UX\\Image\\Bridge\\Ipx\\Tests\\": "tests/" }
+    },
+    "minimum-stability": "dev"
+}

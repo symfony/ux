@@ -20,6 +20,7 @@ use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
 use Symfony\UX\Image\Bridge\Cloudflare\CloudflareProviderFactory;
 use Symfony\UX\Image\Bridge\Cloudinary\CloudinaryProviderFactory;
 use Symfony\UX\Image\Bridge\Imgix\ImgixProviderFactory;
+use Symfony\UX\Image\Bridge\Ipx\IpxProviderFactory;
 use Symfony\UX\Image\Bridge\KeyCdn\KeyCdnProviderFactory;
 use Symfony\UX\Image\DependencyInjection\ProviderNamesPass;
 use Symfony\UX\Image\Provider\NullProviderFactory;
@@ -42,6 +43,7 @@ final class UXImageBundle extends AbstractBundle
         'cloudflare' => ['factory' => CloudflareProviderFactory::class],
         'cloudinary' => ['factory' => CloudinaryProviderFactory::class],
         'imgix' => ['factory' => ImgixProviderFactory::class],
+        'ipx' => ['factory' => IpxProviderFactory::class],
         'keycdn' => ['factory' => KeyCdnProviderFactory::class],
     ];
 
