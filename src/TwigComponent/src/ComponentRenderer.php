@@ -17,6 +17,7 @@ use Symfony\UX\TwigComponent\Event\PostRenderEvent;
 use Symfony\UX\TwigComponent\Event\PreCreateForRenderEvent;
 use Symfony\UX\TwigComponent\Event\PreRenderEvent;
 use Twig\Environment;
+use Twig\TemplateWrapper;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
@@ -26,6 +27,9 @@ use Twig\Environment;
 final class ComponentRenderer implements ComponentRendererInterface, ResetInterface
 {
     private array $templateClasses = [];
+
+    /** @var array<string, TemplateWrapper> */
+    private array $parentTemplates = [];
 
     public function __construct(
         private Environment $twig,
@@ -94,7 +98,7 @@ final class ComponentRenderer implements ComponentRendererInterface, ResetInterf
         $mounted->addExtraMetadata('hostTemplate', $hostTemplateName);
         $mounted->addExtraMetadata('embeddedTemplateIndex', $index);
 
-        return $this->pushAndPreRender($mounted, $context);
+        return $this->pushAndPreRender($mounted, $context, true);
     }
 
     public function finishEmbeddedComponentRender(): void
@@ -106,12 +110,12 @@ final class ComponentRenderer implements ComponentRendererInterface, ResetInterf
         }
     }
 
-    private function pushAndPreRender(MountedComponent $mounted, array $context = []): PreRenderEvent
+    private function pushAndPreRender(MountedComponent $mounted, array $context = [], bool $embedded = false): PreRenderEvent
     {
         $this->componentStack->push($mounted);
 
         try {
-            return $this->preRender($mounted, $context);
+            return $this->preRender($mounted, $context, $embedded);
         } catch (\Throwable $e) {
             $this->componentStack->pop();
 
@@ -119,7 +123,7 @@ final class ComponentRenderer implements ComponentRendererInterface, ResetInterf
         }
     }
 
-    private function preRender(MountedComponent $mounted, array $context = []): PreRenderEvent
+    private function preRender(MountedComponent $mounted, array $context = [], bool $embedded = false): PreRenderEvent
     {
         $component = $mounted->getComponent();
         $metadata = $this->factory->metadataFor($mounted->getName());
@@ -154,13 +158,22 @@ final class ComponentRenderer implements ComponentRendererInterface, ResetInterf
         // as they override initial context values
         $variables['__context'] = [] === $context ? [] : array_diff_key($context, $inputProps, $classProps);
 
-        // Without listeners, creating the event once the variables are complete spares a copy of them
-        return isset($event) ? $event->setVariables($variables) : new PreRenderEvent($mounted, $metadata, $variables);
+        // Without listeners, creating the event without the variables and setting them once complete spares a copy of them
+        $event ??= new PreRenderEvent($mounted, $metadata, []);
+
+        if ($embedded) {
+            // Used by the "extends" of the embedded template; a template wrapper spares Twig from resolving its name again
+            $variables['__parent__'] = $this->parentTemplates[$template = $event->getTemplate()] ??= $this->twig->load($template);
+            $variables['outerBlocks'] ??= new BlockStack();
+        }
+
+        return $event->setVariables($variables);
     }
 
     public function reset(): void
     {
         $this->templateClasses = [];
+        $this->parentTemplates = [];
         $this->componentStack->reset();
     }
 }
