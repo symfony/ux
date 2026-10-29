@@ -1,0 +1,23 @@
+---------------------------------------------------------------------------
+
+by github-actions[bot] at 2026-10-27T17:24:25Z
+
+<h1>📊 Packages dist files size difference</h1>
+
+Thanks for the PR! Here is the difference in size of the packages dist files between the base branch and the PR.
+Please review the changes and make sure they are expected.
+
+<table>
+    <thead><tr><th>File</th><th>Before (Size / Gzip)</th><th>After (Size / Gzip)</th></tr></thead>
+    <tbody><tr><td colspan="3"><a href="https://github.com/nicolas-grekas/ux/tree/turbo-stream-source-morph/src/Turbo/assets/dist"><b>Turbo</b></a></td></tr><tr>
+                <td><a href="https://github.com/nicolas-grekas/ux/blob/turbo-stream-source-morph/src/Turbo/assets/dist/mercure_stream_source_element.js"><code>mercure_stream_source_element.js</code></a></td>
+            <td>
+                    <code>1.05 kB</code>
+                    / <code>488 B</code>
+                </td><td>
+                    <code>1.23 kB</code><sup>+17% 📈</sup>
+                    / <code>556 B</code><sup>+14% 📈</sup>
+                </td></tr></tbody>
+</table>
+
+<!-- Sticky Pull Request Comment -->
