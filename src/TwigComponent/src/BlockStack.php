@@ -33,10 +33,12 @@ final class BlockStack
      */
     private static array $templateIndexStack = [];
 
-    public function convert(array $blocks, int $targetEmbeddedTemplateIndex, ?Template $caller = null): array
+    /**
+     * @param int|null $hostEmbeddedTemplateIndex Found by the first call that needs it, then reused by the next calls from the same run of a template method, because the templates above that method on the call stack do not change while it runs
+     */
+    public function convert(array $blocks, int $targetEmbeddedTemplateIndex, ?Template $caller = null, ?int &$hostEmbeddedTemplateIndex = null): array
     {
         $newBlocks = [];
-        $hostEmbeddedTemplateIndex = null;
         foreach ($blocks as $blockName => $block) {
             // Keep already converted outer blocks untouched
             if (str_starts_with($blockName, self::OUTER_BLOCK_PREFIX)) {

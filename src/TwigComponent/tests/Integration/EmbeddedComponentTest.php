@@ -95,6 +95,13 @@ final class EmbeddedComponentTest extends KernelTestCase
         $this->assertStringNotContainsString("Hello world!\n<div", $output);
     }
 
+    public function testBlockCanBeUsedViaTheOuterBlocksInsideATwigEmbed(): void
+    {
+        $output = self::render('embedded_component_blocks_outer_blocks_inside_twig_embed.html.twig');
+
+        $this->assertStringContainsStringIgnoringIndentation('<div>Hello world!</div>', $output);
+    }
+
     /**
      * Rule 8: Defining a block for a component overrides any default content that block has in the component's
      * template. This also means that when passing block down that you will lose that default content. That can be
