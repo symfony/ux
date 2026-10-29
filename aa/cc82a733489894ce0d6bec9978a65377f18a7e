@@ -1,0 +1,57 @@
+---------------------------------------------------------------------------
+
+by tacman at 2026-10-27T16:04:42Z
+
+We hit a second symptom of the same 3.6 change, which this PR as written does not cover: the Doctrine metadata warmer.
+
+Fresh tree (Docker build, no `var/routes`), API Platform resources backed by Doctrine ORM, `cache:clear --env=prod`:
+
+```
+DoctrineMetadataCacheWarmer must load metadata first, check priority of your warmers.
+```
+
+Because `RoutesCacheWarmer` is mandatory without the dump dir, it runs during container compilation, `$router->getRouteCollection()` runs API Platform's `ApiLoader`, and its property metadata factories call `DoctrineExtractor::getType()`, which loads entity metadata into the entity manager. The optional pass then runs `DoctrineMetadataCacheWarmer` (priority 1000), which refuses to run once any metadata is loaded. `mkdir -p var/routes` before `cache:clear` works around it, since the warmer is then optional and runs after Doctrine's.
+
+`DumpDirectoryCacheWarmer` here still performs the dump during compilation when the directory is missing, and the dump succeeds in our case, so the Doctrine warmer still fails afterwards. Creating the directory empty in the mandatory warmer and leaving the dump to the optional pass (where ordering by priority applies) would fix both the database-down case and this one.
+
+Reproduced with symfony/ux-router 3.6.0, doctrine/doctrine-bundle 3.3.2 and 3.3.3, api-platform/core, Symfony 8.x.
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-10-27T22:21:41Z
+
+Hum, thank for the report, I will investigate
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-10-28T06:49:11Z
+
+I just pushed more modifications, is it better @tacman and @thisismeonmounteverest?
+
+---------------------------------------------------------------------------
+
+by tacman at 2026-10-28T10:07:20Z
+
+Thanks for the update! What is the recommended way to install this PR's `symfony/ux-router` changes in a consuming application through Composer?
+
+We're testing the API Platform / Doctrine cache-warmup fix and want to remove our `mkdir -p var/routes` build workaround. Updating to `symfony/ux-router:3.x-dev` resolved to `17efd95`, whose `RoutesCacheWarmer` still makes `isOptional()` depend on the dump directory existing.
+
+Since this PR lives in the UX monorepo, is there a split-package branch/ref we can require for Router, or another supported way to consume the PR? We can use the local UX `link` script for development, but also need a reproducible clean Docker/Dokku build without a local symlink. Would you recommend copying `src/Router` into a Composer path repository temporarily?
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-10-28T10:18:56Z
+
+I would have gone for the `link` script in development. For a prod and cleaner solution or one compatible with Docker/Dokky builds, you'd need to import the UX Router code somewhere into your project.
+
+---------------------------------------------------------------------------
+
+by tacman at 2026-10-28T11:19:35Z
+
+yes, that's my normal path, but this was never failing in development.  I _think_ your fix will work.
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-10-29T21:05:18Z
+
+Let's say it works 🤞🏻
