@@ -14,6 +14,7 @@ namespace Symfony\UX\Translator\Tests\Functional;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\UX\Translator\Tests\Kernel\StableCacheDirAppKernel;
+use Symfony\UX\Translator\Tests\Kernel\UnreachableDatabaseAppKernel;
 
 final class DumpOnContainerBuildTest extends TestCase
 {
@@ -32,21 +33,22 @@ final class DumpOnContainerBuildTest extends TestCase
         new Filesystem()->remove($this->tmpDir);
     }
 
-    public function testDumpsTranslationsWhenTheDumpDirectoryDoesNotExist(): void
+    public function testCreatesTheDumpDirectoryWithoutDumpingTheTranslations(): void
     {
         $kernel = new StableCacheDirAppKernel($this->tmpDir, $this->environment);
+
         $kernel->boot();
 
-        $this->assertFileExists($kernel->getDumpDir().'/index.js');
+        $this->assertDirectoryExists($kernel->getDumpDir());
+        $this->assertFileDoesNotExist($kernel->getDumpDir().'/index.js');
     }
 
-    public function testDoesNotDumpTranslationsWhenTheDumpDirectoryExists(): void
+    public function testCreatesTheDumpDirectoryWhenTheTranslationsCannotBeLoaded(): void
     {
-        $kernel = new StableCacheDirAppKernel($this->tmpDir, $this->environment);
-        new Filesystem()->mkdir($kernel->getDumpDir());
+        $kernel = new UnreachableDatabaseAppKernel($this->tmpDir, $this->environment);
 
         $kernel->boot();
 
-        $this->assertFileDoesNotExist($kernel->getDumpDir().'/index.js');
+        $this->assertDirectoryExists($kernel->getDumpDir());
     }
 }

@@ -19,7 +19,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  *
  * @internal
  */
-final class StableCacheDirAppKernel extends FrameworkAppKernel
+class StableCacheDirAppKernel extends FrameworkAppKernel
 {
     public function __construct(
         private string $tmpDir,

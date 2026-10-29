@@ -91,6 +91,8 @@ class UXRouterBundle extends AbstractBundle
                 ->arg(2, $config['dump_directory'])
                 ->arg(3, $config['dump_typescript'])
                 ->arg(4, $config['routes'])
+            ->get('ux.router.cache_warmer.dump_directory_cache_warmer')
+                ->arg(1, $config['dump_directory'])
         ;
 
         if ($builder->getParameter('kernel.debug')) {
