@@ -46,7 +46,7 @@ final class TopicResolver
      */
     public function resolveForProtocolV0(array $topics): array
     {
-        return array_map(fn (object|string $topic): string => $this->resolve($topic, false)[1], $topics);
+        return array_values(array_unique(array_map(fn (object|string $topic): string => $this->resolve($topic, false)[1], $topics)));
     }
 
     /**
@@ -60,7 +60,9 @@ final class TopicResolver
         $matchers = [];
         foreach ($topics as $topic) {
             [$type, $pattern] = $this->resolve($topic, true);
-            $matchers[$type][] = $pattern;
+            if (!\in_array($pattern, $matchers[$type] ?? [], true)) {
+                $matchers[$type][] = $pattern;
+            }
         }
 
         return 1 === \count($matchers) && isset($matchers['exact']) ? $matchers['exact'] : $matchers;
