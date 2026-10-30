@@ -14,6 +14,14 @@ parameters:
 		-
 			message: "#^Class Symfony\\\\Component\\\\Mercure\\\\ProtocolVersion not found\\.$#"
 
+		# twig/html-extra 3.29+ and twig/twig 3.24+ are optional: checked before rendering attributes
+		-
+			identifier: function.alreadyNarrowedType
+			path: src/Bridge/Mercure/MercureStreamSourceRenderer.php
+		-
+			identifier: smaller.alwaysFalse
+			path: src/Bridge/Mercure/MercureStreamSourceRenderer.php
+
 		-
 			message: "#^Method .*::test.*\\(\\) has no return type specified\\.$#"
 

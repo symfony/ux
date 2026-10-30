@@ -73,6 +73,31 @@ final class TurboRuntimeTest extends TestCase
         );
     }
 
+    public function testRenderTurboStreamFromWithAttributes(): void
+    {
+        $twig = $this->createStub(Environment::class);
+        $renderer = $this->createMock(StreamSourceRendererInterface::class);
+        $renderer->expects($this->once())
+            ->method('render')
+            ->with('a_topic', ['private' => false, 'attributes' => ['id' => 'a_topic_stream']])
+            ->willReturn('<turbo-mercure-stream-source src="https://hub/.well-known/mercure?topic=a_topic" id="a_topic_stream"></turbo-mercure-stream-source>')
+        ;
+        $streamSourceRenderers = new class(['default' => static fn () => $renderer]) implements ServiceProviderInterface {
+            use ServiceLocatorTrait;
+        };
+        $renderers = new class([]) implements ServiceProviderInterface {
+            use ServiceLocatorTrait;
+        };
+
+        $runtime = new TurboRuntime($renderers, 'default', new TurboFrame(new RequestStack()), $streamSourceRenderers);
+        $html = $runtime->renderTurboStreamFrom($twig, 'a_topic', false, null, ['id' => 'a_topic_stream']);
+
+        $this->assertSame(
+            '<turbo-mercure-stream-source src="https://hub/.well-known/mercure?topic=a_topic" id="a_topic_stream"></turbo-mercure-stream-source>',
+            $html,
+        );
+    }
+
     public function testRenderTurboStreamFromUsesCustomRenderer(): void
     {
         $twig = $this->createStub(Environment::class);
