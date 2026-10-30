@@ -152,7 +152,15 @@ final class ComponentRenderer implements ComponentRendererInterface, ResetInterf
         // add the context in a separate variable to keep track
         // of what is coming from outside the component, excluding props
         // as they override initial context values
-        $variables['__context'] = [] === $context ? [] : array_diff_key($context, $inputProps, $classProps);
+        // Unlike array_diff_key(), this only copies the context when a prop overrides one of its variables
+        foreach ([$inputProps, $classProps] as $props) {
+            foreach ($props as $name => $value) {
+                if (\array_key_exists($name, $context)) {
+                    unset($context[$name]);
+                }
+            }
+        }
+        $variables['__context'] = $context;
 
         // Without listeners, creating the event once the variables are complete spares a copy of them
         return isset($event) ? $event->setVariables($variables) : new PreRenderEvent($mounted, $metadata, $variables);
