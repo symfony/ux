@@ -3,6 +3,7 @@
 ## 3.7.0
 
 - Render the HTML attributes of `<twig:Turbo:Stream:From>` on the `<turbo-mercure-stream-source>` element, and add an `attributes` argument to `turbo_stream_from()`
+- Add a `subscribe` option to `turbo_stream_from()` and `<twig:Turbo:Stream:From>`, to grant a private stream source more topics than the ones it listens to
 
 ## 3.6.0
 

@@ -53,6 +53,8 @@ When the template passes HTML attributes to ``turbo_stream_from()`` or to ``<twi
 Render them on your element, or ignore them if your element does not support them.
 ``Twig\Extra\Html\HtmlExtension::htmlAttrValue()`` resolves each value the way the ``html_attr()`` Twig function does.
 
+When the template passes the ``subscribe`` option of ``turbo_stream_from()`` or ``<twig:Turbo:Stream:From>``, ``$options['subscribe']`` holds it: the topics to authorize in addition to the listened ones.
+
 The broadcaster must be registered as a service tagged with
 ``turbo.broadcaster`` and the stream source renderer must be tagged with
 ``turbo.stream_source_renderer``. If you enabled `autoconfigure option`_
