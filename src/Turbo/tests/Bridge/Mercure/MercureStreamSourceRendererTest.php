@@ -12,13 +12,19 @@
 namespace Symfony\UX\Turbo\Tests\Bridge\Mercure;
 
 use PHPUnit\Framework\Attributes\DataProvider;
+use Psr\Log\LoggerInterface;
+use Psr\Log\LogLevel;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\ErrorHandler\BufferingLogger;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Mercure\Exception\ExceptionInterface;
 use Symfony\Component\Mercure\HubInterface;
 use Symfony\Component\Mercure\ProtocolVersion;
+use Symfony\UX\Turbo\Bridge\Mercure\MercureStreamSourceRenderer;
 use Symfony\UX\Turbo\Bridge\Mercure\TopicResolver;
+use Symfony\UX\Turbo\Broadcaster\IdAccessor;
 use Symfony\UX\Turbo\Tests\Fixtures\Book;
 use Twig\Error\RuntimeError;
 
@@ -363,6 +369,71 @@ final class MercureStreamSourceRendererTest extends KernelTestCase
         }
     }
 
+    public function testRenderTurboStreamFromFailsWhenTheAuthorizationCookieCannotBeCreated(): void
+    {
+        $renderer = $this->createRenderer('legacy', false);
+
+        $this->expectException(ExceptionInterface::class);
+        $this->expectExceptionMessage('Unable to create authorization cookie for a hub on the different second-level domain "127.0.0.1".');
+
+        $this->renderInRequest(Request::create('http://localhost/'), static fn (): string => $renderer->render('chat', ['private' => true]));
+    }
+
+    public function testRenderTurboStreamFromIgnoresCookieDomainErrors(): void
+    {
+        $logger = new BufferingLogger();
+        $renderer = $this->createRenderer('legacy', true, $logger);
+
+        $html = $this->renderInRequest(Request::create('http://localhost/'), static fn (): string => $renderer->render('chat', ['private' => true]));
+
+        $this->assertSame('', $html);
+        $logs = $logger->cleanLogs();
+        $this->assertCount(1, $logs);
+        $this->assertSame(LogLevel::WARNING, $logs[0][0]);
+        $this->assertSame('The private Turbo stream source of the "{hub}" Mercure hub is not rendered, as its authorization cookie cannot be created for the domain of the page: {message}', $logs[0][1]);
+        $this->assertSame('legacy', $logs[0][2]['hub']);
+        $this->assertSame('Unable to create authorization cookie for a hub on the different second-level domain "127.0.0.1".', $logs[0][2]['message']);
+        $this->assertInstanceOf(ExceptionInterface::class, $logs[0][2]['exception']);
+    }
+
+    public function testRenderTurboStreamFromDoesNotIgnoreErrorsOfPublicStreamSources(): void
+    {
+        $renderer = $this->createRenderer('unknown', true, new BufferingLogger());
+
+        $this->expectException(ExceptionInterface::class);
+
+        $renderer->render('chat');
+    }
+
+    public function testRenderTurboStreamFromDoesNotIgnoreErrorsBuildingTheUrl(): void
+    {
+        $renderer = $this->createRenderer('unknown', true, new BufferingLogger());
+
+        $this->expectException(ExceptionInterface::class);
+
+        $this->renderInRequest(Request::create('http://localhost/'), static fn (): string => $renderer->render('chat', ['private' => true]));
+    }
+
+    public function testRenderTurboStreamFromDoesNotIgnoreAnAuthorizationCookieSetTwice(): void
+    {
+        $renderer = $this->createRenderer('legacy', true, new BufferingLogger());
+
+        $this->expectException(ExceptionInterface::class);
+        $this->expectExceptionMessage('has already been set');
+
+        $this->renderInRequest(Request::create('http://127.0.0.1/'), static fn (): string => $renderer->render('chat', ['private' => true]).$renderer->render('news', ['private' => true]));
+    }
+
+    public function testRenderTurboStreamFromDoesNotIgnoreAHubWithoutTokenFactory(): void
+    {
+        $renderer = $this->createRenderer('default', true, new BufferingLogger());
+
+        $this->expectException(ExceptionInterface::class);
+        $this->expectExceptionMessage('does not contain a token factory');
+
+        $this->renderInRequest(Request::create('http://localhost/'), static fn (): string => $renderer->render('chat', ['private' => true]));
+    }
+
     /**
      * @param array<mixed> $context
      *
@@ -372,20 +443,37 @@ final class MercureStreamSourceRendererTest extends KernelTestCase
     {
         $twig = self::getContainer()->get('twig');
         self::assertInstanceOf(\Twig\Environment::class, $twig);
-        $requestStack = self::getContainer()->get('request_stack');
-        self::assertInstanceOf(RequestStack::class, $requestStack);
 
         $request = Request::create('http://127.0.0.1/');
-        $requestStack->push($request);
-        try {
-            $html = $twig->createTemplate($template)->render($context);
-        } finally {
-            $requestStack->pop();
-        }
+        $html = $this->renderInRequest($request, static fn (): string => $twig->createTemplate($template)->render($context));
 
         $cookie = $request->attributes->get('_mercure_authorization_cookies', [])[$hub] ?? null;
         self::assertInstanceOf(Cookie::class, $cookie);
 
         return [$html, json_decode(base64_decode(strtr(explode('.', (string) $cookie->getValue())[1], '-_', '+/')), true, flags: \JSON_THROW_ON_ERROR)];
+    }
+
+    private function createRenderer(string $hubName, bool $ignoreCookieDomainErrors, ?LoggerInterface $logger = null): MercureStreamSourceRenderer
+    {
+        $twig = self::getContainer()->get('twig');
+        self::assertInstanceOf(\Twig\Environment::class, $twig);
+
+        return new MercureStreamSourceRenderer(new IdAccessor(), $twig, $hubName, null, $ignoreCookieDomainErrors, $logger);
+    }
+
+    /**
+     * @param callable(): string $render
+     */
+    private function renderInRequest(Request $request, callable $render): string
+    {
+        $requestStack = self::getContainer()->get('request_stack');
+        self::assertInstanceOf(RequestStack::class, $requestStack);
+
+        $requestStack->push($request);
+        try {
+            return $render();
+        } finally {
+            $requestStack->pop();
+        }
     }
 }

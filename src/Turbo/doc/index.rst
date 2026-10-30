@@ -1167,6 +1167,44 @@ The ``subscribe`` option takes the same values as ``topics``, and needs ``privat
     symfony/mercure 0.9 and earlier set the authorization cookie once per request, so a page cannot have two private stream sources for the same hub.
     With these versions, use a single private stream source that listens to all the topics of the page.
 
+Private Stream Sources on Another Domain than the Hub
+"""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+.. versionadded:: 3.7
+
+    The ``turbo.mercure.ignore_cookie_domain_errors`` option was introduced in Symfony UX 3.7.
+
+A private stream source sets the Mercure authorization cookie while the page renders.
+Mercure can only create this cookie when the page and the hub share the same second-level domain (for example ``example.com`` and ``mercure.example.com``).
+If they do not, the page fails with an exception.
+
+In functional tests, the test client serves pages on ``localhost``.
+In the test environment, point the public URL of the hub to the same host:
+
+.. code-block:: yaml
+
+    # config/packages/mercure.yaml
+    when@test:
+        mercure:
+            hubs:
+                default:
+                    public_url: 'http://localhost/.well-known/mercure'
+
+Sometimes the domains cannot match.
+For example, your app may have an alternate domain, or a preview environment may use the hub of another domain.
+Live updates cannot work on such a page anyway.
+Enable the ``ignore_cookie_domain_errors`` option to render nothing instead of the stream source, and to log a warning:
+
+.. code-block:: yaml
+
+    # config/packages/turbo.yaml
+    turbo:
+        mercure:
+            ignore_cookie_domain_errors: true
+
+Only this error is ignored.
+Other errors still fail the page, for example a hub without a JWT secret, or two private stream sources for the same hub on one page.
+
 Mercure Protocol 1.0
 """"""""""""""""""""
 
