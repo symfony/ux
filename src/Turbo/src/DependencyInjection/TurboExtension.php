@@ -39,6 +39,7 @@ final class TurboExtension extends Extension implements PrependExtensionInterfac
         $loader = (new PhpFileLoader($container, new FileLocator(\dirname(__DIR__).'/../config')));
         $loader->load('services.php');
         $container->getDefinition('turbo.twig.runtime')->replaceArgument(1, $config['default_transport']);
+        $container->setParameter('.turbo.mercure.ignore_cookie_domain_errors', $config['mercure']['ignore_cookie_domain_errors']);
 
         $this->registerTwig($config, $container);
         $this->registerBroadcast($config, $container, $loader);

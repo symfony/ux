@@ -27,4 +27,20 @@ final class TurboExtensionTest extends TestCase
             $container->getDefinition('turbo.doctrine.event_listener')->getTag('kernel.reset'),
         );
     }
+
+    public function testCookieDomainErrorsAreNotIgnoredByDefault(): void
+    {
+        $container = new ContainerBuilder();
+        new TurboExtension()->load([], $container);
+
+        $this->assertFalse($container->getParameter('.turbo.mercure.ignore_cookie_domain_errors'));
+    }
+
+    public function testCookieDomainErrorsCanBeIgnored(): void
+    {
+        $container = new ContainerBuilder();
+        new TurboExtension()->load([['mercure' => ['ignore_cookie_domain_errors' => true]]], $container);
+
+        $this->assertTrue($container->getParameter('.turbo.mercure.ignore_cookie_domain_errors'));
+    }
 }

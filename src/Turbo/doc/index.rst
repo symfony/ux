@@ -1115,6 +1115,24 @@ entity of a class uses a URL Pattern
 (``https://symfony.com/ux-turbo/App%5CEntity%5CBook/:id``). The deprecated
 ``turbo_stream_listen()`` function does not support this protocol.
 
+.. versionadded:: 3.7
+
+    The ``turbo.mercure.ignore_cookie_domain_errors`` option was introduced in Symfony UX 3.7.
+
+A private stream source sets the Mercure authorization cookie while the page renders.
+Mercure cannot create it when the page is served on another domain than the hub (an alternate domain, a preview environment, or ``localhost`` in functional tests), and the page then fails with an exception.
+As live updates are not required for the page to work, you can render nothing instead in these environments, and log a warning:
+
+.. code-block:: yaml
+
+    # config/packages/turbo.yaml
+    when@test:
+        turbo:
+            mercure:
+                ignore_cookie_domain_errors: true
+
+This only applies to the domain of the cookie: other errors, such as a hub without a JWT secret or two private stream sources for the same hub on one page, still fail the page.
+
 Broadcast Doctrine Entities Update
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
