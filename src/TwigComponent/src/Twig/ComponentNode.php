@@ -11,7 +11,6 @@
 
 namespace Symfony\UX\TwigComponent\Twig;
 
-use Symfony\UX\TwigComponent\BlockStack;
 use Twig\Attribute\YieldReady;
 use Twig\Compiler;
 use Twig\Environment;
@@ -153,31 +152,17 @@ final class ComponentNode extends Node implements NodeOutputInterface
             ->raw($this->getAttribute('embedded_index'))
             ->raw(");\n");
 
+        // The variables already hold "__parent__" (used in the extends of the embedded template) and "outerBlocks".
+        // Writing to them here would copy them, because the event holds them too.
         $compiler
             ->write('$embeddedContext = $preRenderEvent->getVariables();')
-            ->raw("\n")
-            // Add __parent__ to the embedded context: this is used in its extends
-            // Note: PreRenderEvent::getTemplateIndex() is not used here. This is
-            // only used during "normal" {{ component() }} rendering, which allows
-            // you to target rendering a specific "embedded template" that originally
-            // came from a {% component %} tag. This is used by LiveComponents to
-            // allow an "embedded component" syntax live component to be re-rendered.
-            // In this case, we are obviously rendering an entire template, which
-            // happens to contain a {% component %} tag. So we don't need to worry
-            // about trying to allow a specific embedded template to be targeted.
-            ->write('$embeddedContext["__parent__"] = $preRenderEvent->getTemplate();')
             ->raw("\n");
 
         /*
-         * Block 3) Add & update the block stack
+         * Block 3) Update the block stack
          *
-         * We add the outerBlock to the context if it doesn't exist yet.
-         * Then add them to the block stack and get the converted embedded blocks.
+         * Add the blocks to the block stack and get the converted embedded blocks.
          */
-        $compiler
-            ->write(\sprintf('$embeddedContext["outerBlocks"] ??= new \%s();', BlockStack::class))
-            ->raw("\n");
-
         $compiler->write('$embeddedBlocks = $embeddedContext["outerBlocks"]->convert($blocks, ')
             ->raw($this->getAttribute('embedded_index'))
             ->raw(", \$this);\n");
