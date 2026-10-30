@@ -1135,6 +1135,17 @@ entity of a class uses a URL Pattern
 (``https://symfony.com/ux-turbo/App%5CEntity%5CBook/:id``). The deprecated
 ``turbo_stream_listen()`` function does not support this protocol.
 
+By default, each page opens its own connection to the hub, even when it listens to the same topics as the previous page.
+To keep the connection open when Turbo Drive goes from one page to another, give the stream source an ``id`` and mark it as permanent with ``data-turbo-permanent``:
+
+.. code-block:: html+twig
+
+    <twig:Turbo:Stream:From topics="chat" id="chat-stream" data-turbo-permanent />
+
+Turbo matches permanent elements across pages by their ``id`` only, and keeps the element of the previous page.
+Derive the ``id`` from the topics and from the ``private`` option (e.g. ``private-chat-stream``).
+Otherwise, a page that listens to other topics, or that is not private, keeps the connection of the previous page, with its topics and its credentials.
+
 Broadcast Doctrine Entities Update
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
