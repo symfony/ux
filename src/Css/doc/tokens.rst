@@ -26,12 +26,39 @@ Raw tokens
             fonts:
                 body: ['Inter', 'sans-serif']
 
-The categories are fixed: ``colors``, ``spacing``, ``sizes``, ``radii``,
-``fontSizes``, ``fontWeights``, ``lineHeights``, ``fonts``, ``shadows``,
-``zIndex``, ``durations`` and ``easings``. Inside a category, tokens can be
-nested in groups: ``blue.500`` is the ``500`` token of the ``blue`` group. A
-``fonts``, ``shadows`` or ``easings`` token can be a list, which is joined with
-commas.
+The twelve categories are fixed. :doc:`token-categories` lists the properties
+that take each one and the shape of their values. Inside a category, tokens can
+be nested in groups: ``blue.500`` is the ``500`` token of the ``blue`` group. A
+``fonts`` or ``shadows`` token can be a list, which is joined with commas. An
+``easings`` token can be the four numbers of a ``cubic-bezier()``.
+
+A group can also have a value of its own, under the ``DEFAULT`` key:
+
+.. code-block:: yaml
+
+    # config/packages/ux_css.yaml
+    ux_css:
+        tokens:
+            colors:
+                bg: { DEFAULT: '#ffffff', muted: '#f9fafb' }
+
+Here, ``bg`` is the group itself, and ``bg.muted`` is the token inside it:
+
+.. code-block:: html+twig
+
+    <div class="{{ css({ bg: 'bg', color: 'bg.muted' }) }}">
+
+A token can also be written in the form Panda CSS uses, with a ``value`` key
+and an optional ``description`` key. UX CSS reads the value and ignores the
+description:
+
+.. code-block:: yaml
+
+    # config/packages/ux_css.yaml
+    ux_css:
+        tokens:
+            spacing:
+                sm: { value: '0.5rem', description: 'Gap between inline items' }
 
 In ``css()``, a token is its name as a string:
 
@@ -84,36 +111,24 @@ value. Templates use the semantic name and never repeat the condition:
 ``color: 'fg'`` follows dark mode by itself. :doc:`conditions` lists the
 available conditions.
 
+A reference also works inside a longer value, and in raw tokens too:
+
+.. code-block:: yaml
+
+    # config/packages/ux_css.yaml
+    ux_css:
+        tokens:
+            shadows:
+                focus: '0 0 0 3px {colors.blue.500}'
+
+The shadow is written as ``0 0 0 3px var(--colors-blue-500)``, so it follows
+the color.
+
 Which properties take which tokens
 ----------------------------------
 
 Each property takes the tokens of one category. The mapping comes from Panda
-CSS and cannot be changed. The most common ones:
-
-=============== ==============================================================
-Category        Properties (and their shorthands)
-=============== ==============================================================
-``colors``      ``color``, ``background`` (``bg``), ``backgroundColor``
-                (``bgColor``), ``borderColor``, ``outlineColor``, ``fill``,
-                ``stroke``, ``accentColor``, ``caretColor``
-``spacing``     ``padding`` (``p``, ``px``, ``py``, ``pt``, ...), ``margin``
-                (``m``, ``mx``, ``my``, ``mt``, ...), ``gap``, ``rowGap``,
-                ``columnGap``, ``top``, ``right``, ``bottom``, ``left``,
-                ``inset``
-``sizes``       ``width`` (``w``), ``height`` (``h``), ``minWidth``
-                (``minW``), ``maxWidth`` (``maxW``), ``minHeight``
-                (``minH``), ``maxHeight`` (``maxH``)
-``radii``       ``borderRadius`` (``rounded``) and its sides and corners
-``fontSizes``   ``fontSize``
-``fontWeights`` ``fontWeight``
-``lineHeights`` ``lineHeight``
-``fonts``       ``fontFamily``
-``shadows``     ``boxShadow`` (``shadow``), ``textShadow``
-``zIndex``      ``zIndex``
-``durations``   ``transitionDuration``, ``transitionDelay``,
-                ``animationDuration``, ``animationDelay``
-``easings``     ``transitionTimingFunction``, ``animationTimingFunction``
-=============== ==============================================================
+CSS and cannot be changed: see :doc:`token-categories`.
 
 Tokens as CSS variables
 -----------------------
@@ -184,6 +199,40 @@ A few more forms are accepted wherever a token is expected:
 * ``mt: '-md'`` gives the negative value of a spacing token;
 * ``gap: 'var(--card-gap)'`` uses a CSS variable of your own.
 
+Tokens inside a longer value
+----------------------------
+
+In ``css()``, ``token(category.path)`` writes the CSS variable of a token
+inside a longer value. A second argument is a fallback:
+
+.. code-block:: html+twig
+
+    <hr class="{{ css({ border: '1px solid token(colors.blue.500, gray)' }) }}">
+
+This gives:
+
+.. code-block:: css
+
+    border: 1px solid var(--colors-blue-500, gray);
+
+A property that takes a category needs the value between square brackets:
+
+.. code-block:: html+twig
+
+    <input class="{{ css({ _focus: { shadow: '[0 0 0 3px token(colors.blue.500)]' } }) }}">
+
+In the key of an at-rule, ``token()`` is replaced by the raw value of the
+token, because a media query cannot read a CSS variable:
+
+.. code-block:: html+twig
+
+    <aside class="{{ css({ '@media (min-width: token(sizes.prose))': { display: 'block' } }) }}">
+
+This gives ``@media (min-width: 65ch)``.
+
+The ``{category.path}`` form of the configuration is not accepted in
+``css()``: a value cannot contain braces. Use ``token()`` instead.
+
 Configuration errors
 --------------------
 
@@ -200,7 +249,7 @@ Reference to a token that does not exist    ``The "colors.primary" token
                                             "colors.rde". Did you mean
                                             "colors.red"?``
 Tokens that refer to each other             ``Circular token reference:
-                                            colors.a -> colors.b -> colors.a.``
+                                            "colors.a -> colors.b -> colors.a".``
 Unknown condition in a conditional value    ``The "colors.fg" token uses the
                                             unknown condition "_drak". Did you
                                             mean "_dark"?``
