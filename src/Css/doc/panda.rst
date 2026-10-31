@@ -51,7 +51,7 @@ These features of Panda CSS have no equivalent yet:
 * text styles, layer styles and animation styles;
 * themes, and the ``hash`` option for class names;
 * global CSS, keyframes and custom utilities in the configuration;
-* token categories beyond the twelve listed in :doc:`tokens`;
+* token categories beyond the twelve listed in :doc:`token-categories`;
 * importing tokens from a W3C design tokens file.
 
 .. _`Panda CSS`: https://panda-css.com/

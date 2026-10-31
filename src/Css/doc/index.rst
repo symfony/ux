@@ -80,6 +80,8 @@ Write styles
 ------------
 
 * :doc:`tokens` declares colors, spacing and the other design tokens.
+* :doc:`token-categories` lists the token categories, the properties that take
+  each one and the shape of their values.
 * :doc:`conditions` covers hover, dark mode, other conditions, and
   breakpoints.
 * :doc:`css-function` is the reference for the ``css()`` syntax and values.

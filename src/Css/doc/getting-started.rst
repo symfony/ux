@@ -150,7 +150,8 @@ what is checked.
 Next steps
 ----------
 
-* :doc:`tokens` covers every token category and how to use tokens in
+* :doc:`tokens` covers how to declare tokens and how to use them in
   hand-written CSS.
+* :doc:`token-categories` lists every token category.
 * :doc:`css-function` is the reference for the ``css()`` syntax.
 * :doc:`dynamic-styles` explains values only known at runtime.
