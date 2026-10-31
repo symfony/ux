@@ -1911,8 +1911,24 @@ namespace Symfony\UX\Css;
  */
 final class CssReference
 {
-    public const COLORS = [
-        'blue.500' => '#3b82f6',
-        'primary' => '#3b82f6',
+    public const TOKENS = [
+        'colors' => [
+            'blue.500' => '#3b82f6',
+            'primary' => '#3b82f6',
+        ],
+        'spacing' => [
+            'sm' => '0.5rem',
+            'md' => '1rem',
+            '-sm' => '-0.5rem',
+            '-md' => '-1rem',
+        ],
+        'breakpoints' => [
+            'sm' => '40rem',
+            'md' => '48rem',
+        ],
+        'sizes' => [
+            'breakpoint-sm' => '40rem',
+            'breakpoint-md' => '48rem',
+        ],
     ];
 }
