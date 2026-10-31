@@ -58,6 +58,34 @@ final class ReferenceDumperTest extends TestCase
         $this->assertSame($first->dump(), $second->dump());
     }
 
+    public function testTheReferenceListsTheValueOfEachColorToken(): void
+    {
+        $project = self::PROJECT;
+        $project['theme']['tokens']['colors']['white'] = ['value' => '#fff'];
+        $project['theme']['semanticTokens']['colors']['fg'] = ['value' => ['base' => '{colors.primary}', '_dark' => '{colors.white}']];
+        $dumper = new ReferenceDumper(new StyleValidator(Engine::fromProjectConfig($project)));
+
+        $reference = $dumper->dump();
+
+        $this->assertStringContainsString(<<<'PHP'
+                public const COLORS = [
+                    'blue.500' => '#3b82f6',
+                    'white' => '#fff',
+                    'primary' => '#3b82f6',
+                    'fg' => '#3b82f6',
+                ];
+            PHP, $reference);
+    }
+
+    public function testTheReferenceListsNoColorWithoutColorTokens(): void
+    {
+        $dumper = new ReferenceDumper(new StyleValidator(Engine::fromProjectConfig([])));
+
+        $reference = $dumper->dump();
+
+        $this->assertStringContainsString('    public const COLORS = [];', $reference);
+    }
+
     public function testTokenNamesThatPhpDocCannotHoldAreLeftToString(): void
     {
         $dumper = new ReferenceDumper(new StyleValidator(Engine::fromProjectConfig(self::projectWithOddTokenNames())));

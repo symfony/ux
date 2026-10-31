@@ -1911,4 +1911,8 @@ namespace Symfony\UX\Css;
  */
 final class CssReference
 {
+    public const COLORS = [
+        'blue.500' => '#3b82f6',
+        'primary' => '#3b82f6',
+    ];
 }

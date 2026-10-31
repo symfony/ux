@@ -13,6 +13,7 @@ namespace Symfony\UX\Css\Validation;
 
 use Symfony\UX\Css\DependencyInjection\PandaConfigConverter;
 use Symfony\UX\Css\Engine\Engine;
+use Symfony\UX\Css\Engine\Tokens;
 use Symfony\UX\Css\Exception\InvalidStyleException;
 
 /**
@@ -205,6 +206,11 @@ final class StyleValidator
         sort($names, \SORT_STRING);
 
         return $names;
+    }
+
+    public function tokens(): Tokens
+    {
+        return $this->engine->tokens();
     }
 
     /**

@@ -10,8 +10,9 @@ and breakpoints. It is rewritten only when its content changes, like
 ``config/reference.php``. Commit it, so the types are there on every
 machine.
 
-The file declares a ``CssStyles`` array shape on an empty
-``Symfony\UX\Css\CssReference`` class::
+The file declares a ``CssStyles`` array shape on the
+``Symfony\UX\Css\CssReference`` class, and your colors in its ``COLORS``
+constant::
 
     // config/reference_css.php
     namespace Symfony\UX\Css;
@@ -35,6 +36,10 @@ The file declares a ``CssStyles`` array shape on an empty
      */
     final class CssReference
     {
+        public const COLORS = [
+            'blue.500' => '#3b82f6',
+            'primary' => '#3b82f6',
+        ];
     }
 
 Each property lists the tokens or keywords it accepts, and each condition and
@@ -46,6 +51,11 @@ down.
 ``string`` stays in every union. Values written in a template are checked when
 Twig compiles it, and values only known at runtime are checked in debug mode:
 see :doc:`validation`.
+
+``COLORS`` maps each color token to its value, so that editors can show the
+color of a token. A semantic token that refers to another token gets the final
+value: ``primary`` refers to ``{colors.blue.500}``, so it gets ``#3b82f6``. A
+conditional token, with ``base`` and ``_dark`` keys, gets its ``base`` value.
 
 In your editor
 --------------
