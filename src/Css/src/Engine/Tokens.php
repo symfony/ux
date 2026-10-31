@@ -142,16 +142,13 @@ final class Tokens
     }
 
     /**
-     * @return string|null the base value of a token, following the tokens it refers to, or null when it has no value, like the virtual color palette
+     * @return string|null the base value of a token, with the CSS variables it uses replaced by their value, or null when one has no value, like the virtual color palette
      */
     public function getResolvedValue(string $name): ?string
     {
         $value = $this->getVar($name);
-        while (\is_string($value) && preg_match('/^var\((--[^,)]+)\)$/', $value, $match)) {
-            $value = $this->vars['base'][$match[1]] ?? null;
-        }
 
-        return \is_string($value) ? $value : null;
+        return null !== $value ? $this->resolveVars($value) : null;
     }
 
     /**
@@ -160,6 +157,14 @@ final class Tokens
     public function getCategoryValues(string $category): ?array
     {
         return $this->valuesByCategory[$category] ?? null;
+    }
+
+    /**
+     * @return list<string>
+     */
+    public function getCategories(): array
+    {
+        return array_map(strval(...), array_keys($this->valuesByCategory));
     }
 
     /**
@@ -246,6 +251,25 @@ final class Tokens
             || self::isCompositeShadow($value)
             || self::isCompositeBorder($value)
             || self::isCompositeAsset($value);
+    }
+
+    private function resolveVars(string $value): ?string
+    {
+        $resolved = true;
+        $value = (string) preg_replace_callback('/var\((--[^,)]+)\)/', function (array $match) use (&$resolved): string {
+            $var = $this->vars['base'][$match[1]] ?? null;
+            $var = \is_scalar($var) ? $this->resolveVars(JsValue::toString($var)) : null;
+            $resolved = $resolved && null !== $var;
+
+            return $var ?? '';
+        }, $value);
+
+        if (!$resolved) {
+            return null;
+        }
+
+        // a negative token, like spacing.-4, is written calc(var(--spacing-4) * -1)
+        return preg_match('/^calc\(([0-9.]+[a-z%]*) \* -1\)$/', $value, $match) ? '-'.$match[1] : $value;
     }
 
     /**

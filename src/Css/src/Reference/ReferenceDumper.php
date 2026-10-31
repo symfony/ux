@@ -37,7 +37,7 @@ final class ReferenceDumper
          */
         final class CssReference
         {
-        {COLORS}
+        {TOKENS}
         }
 
         PHP;
@@ -66,28 +66,33 @@ final class ReferenceDumper
 
         return strtr(self::TEMPLATE, [
             '{TYPES}' => implode("\n", $lines),
-            '{COLORS}' => $this->colorsConstant(),
+            '{TOKENS}' => $this->tokensConstant(),
         ]);
     }
 
-    private function colorsConstant(): string
+    private function tokensConstant(): string
     {
         $tokens = $this->validator->tokens();
 
-        $lines = [];
-        foreach (array_keys($tokens->getCategoryValues('colors') ?? []) as $name) {
-            $value = $tokens->getResolvedValue('colors.'.$name);
-            if (null !== $value) {
-                $key = var_export((string) $name, true);
-                $lines[] = \sprintf('        %s => %s,', $key, var_export($value, true));
+        $lines = ['    public const TOKENS = ['];
+        foreach ($tokens->getCategories() as $category) {
+            $values = [];
+            foreach (array_keys($tokens->getCategoryValues($category) ?? []) as $name) {
+                $value = $tokens->getResolvedValue($category.'.'.$name);
+                if (null !== $value) {
+                    $key = var_export((string) $name, true);
+                    $values[] = \sprintf('            %s => %s,', $key, var_export($value, true));
+                }
+            }
+
+            if ($values) {
+                array_push($lines, \sprintf('        %s => [', var_export($category, true)), ...$values);
+                $lines[] = '        ],';
             }
         }
+        $lines[] = '    ];';
 
-        if (!$lines) {
-            return '    public const COLORS = [];';
-        }
-
-        return implode("\n", ['    public const COLORS = [', ...$lines, '    ];']);
+        return implode("\n", $lines);
     }
 
     /**
