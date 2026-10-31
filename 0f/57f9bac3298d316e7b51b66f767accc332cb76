@@ -1,0 +1,18 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2026-10-31T08:42:10Z
+
+Thanks for the PR, Tac! I pushed a few changes:
+
+- I rebased it on 3.x and squashed it into one commit.
+- The bridge now requires `symfony/ux-image` `^3.7`, because ux-image 3.6.0 does not register the `imagor` bridge.
+- The CHANGELOG entry moved to 3.7.0.
+- To match the IPX bridge, the DSN option `scheme=http` is now `secure=false`.
+- The port now comes from `Dsn::getPort()`.
+- Validation now lives only in the factory. The provider no longer re-checks operation names and formats, because `ImageUrlGenerator` already does it.
+
+I also changed one behavior: when `origin` is set, an absolute `src` no longer bypasses it.
+
+Before, the app signed a URL to any host whenever `src` came from user data, such as an avatar URL. That meant the signature no longer protected the Imagor server.
+
+Without `origin`, absolute URLs still pass through to the server as before.
