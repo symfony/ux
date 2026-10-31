@@ -17,6 +17,8 @@ use Symfony\UX\Turbo\Broadcaster\IdAccessor;
 use Symfony\UX\Turbo\StreamSourceRendererInterface;
 use Twig\Environment;
 use Twig\Extension\AbstractExtension;
+use Twig\Extra\Html\HtmlExtension;
+use Twig\Runtime\EscaperRuntime;
 
 /**
  * Renders a Mercure stream source element, delegating authorization to the Mercure Bundle.
@@ -65,9 +67,42 @@ final class MercureStreamSourceRenderer implements StreamSourceRendererInterface
         $url = $mercure->mercure($topicStrings, $mercureOptions);
 
         return \sprintf(
-            '<turbo-mercure-stream-source src="%s"%s></turbo-mercure-stream-source>',
+            '<turbo-mercure-stream-source src="%s"%s%s></turbo-mercure-stream-source>',
             htmlspecialchars($url, \ENT_QUOTES | \ENT_SUBSTITUTE, 'UTF-8'),
             $private ? ' private' : '',
+            $this->renderAttributes($options['attributes'] ?? []),
         );
+    }
+
+    /**
+     * @param array<array-key, mixed> $attributes
+     */
+    private function renderAttributes(array $attributes): string
+    {
+        $escaper = $this->twig->getRuntime(EscaperRuntime::class);
+
+        $html = '';
+        foreach ($attributes as $name => $value) {
+            if (!\is_string($name)) {
+                throw new \InvalidArgumentException(\sprintf('The attribute name "%s" is not valid.', $name));
+            }
+
+            $lowercaseName = strtolower($name);
+            if ('src' === $lowercaseName) {
+                throw new \InvalidArgumentException(\sprintf('The "%s" attribute of <turbo-mercure-stream-source> is reserved, it is built from the topics.', $name));
+            }
+
+            if ('private' === $lowercaseName) {
+                throw new \InvalidArgumentException(\sprintf('The "%s" attribute of <turbo-mercure-stream-source> is reserved, use the "private" argument of turbo_stream_from() instead.', $name));
+            }
+
+            if (null === $value = HtmlExtension::htmlAttrValue($name, $value)) {
+                continue;
+            }
+
+            $html .= ' '.$escaper->escape($name, 'html_attr_relaxed').'="'.$escaper->escape($value).'"';
+        }
+
+        return $html;
     }
 }

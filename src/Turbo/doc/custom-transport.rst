@@ -49,6 +49,10 @@ Then a stream source renderer::
         }
     }
 
+When the template passes HTML attributes to ``turbo_stream_from()`` or to ``<twig:Turbo:Stream:From>``, ``$options['attributes']`` holds them, as an array of names and values.
+Render them on your element, or ignore them if your element does not support them.
+``Twig\Extra\Html\HtmlExtension::htmlAttrValue()`` resolves each value the way the ``html_attr()`` Twig function does.
+
 The broadcaster must be registered as a service tagged with
 ``turbo.broadcaster`` and the stream source renderer must be tagged with
 ``turbo.stream_source_renderer``. If you enabled `autoconfigure option`_
