@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 3.7.0
+
+- Make the `previewClearButton`, `previewFilename` and `previewImage` targets optional in single-file mode
+
 ## 3.5.0
 
 - Add support for Symfony 8.2's standalone `AssetMapperBundle`

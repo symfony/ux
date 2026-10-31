@@ -138,6 +138,19 @@ switching the ``@symfony/ux-dropzone/dist/style.min.css`` autoimport to
 Once done, the default stylesheet won't be used anymore and you can
 implement your own CSS on top of the Dropzone.
 
+If you override the ``dropzone_widget`` block in your form theme, the clear button, the file name and the image preview of the single-file mode are optional: leave out the elements with the ``previewClearButton``, ``previewFilename`` or ``previewImage`` target that your design does not need.
+
+Without the clear button, the user cannot deselect the file: once a file is chosen, the input is hidden behind the preview.
+To clear the Dropzone from another element inside it, use the ``clear`` action of the controller:
+
+.. code-block:: html
+
+    <button type="button" data-action="symfony--ux-dropzone--dropzone#clear">Remove</button>
+
+.. versionadded:: 3.7
+
+    These targets became optional in Dropzone 3.7.
+
 Extend the default behavior
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
