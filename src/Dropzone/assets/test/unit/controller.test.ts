@@ -10,7 +10,7 @@
 import { Application, Controller } from '@hotwired/stimulus';
 import { getByTestId, waitFor } from '@testing-library/dom';
 import user from '@testing-library/user-event';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { clearDOM, mountDOM } from '../../../../../test/stimulus-helpers';
 import DropzoneController from '../../src/controller';
 
@@ -38,10 +38,33 @@ class CheckController extends Controller {
     }
 }
 
-const startStimulus = () => {
+const applications: Application[] = [];
+
+const startApplication = () => {
     const application = Application.start();
+    applications.push(application);
+
+    return application;
+};
+
+afterEach(() => {
+    for (const application of applications.splice(0)) {
+        application.stop();
+    }
+});
+
+const startStimulus = () => {
+    const application = startApplication();
     application.register('check', CheckController);
     application.register('dropzone', DropzoneController);
+};
+
+// Simulate a native file pick. A real <input> replaces its FileList on every pick.
+// jsdom can't build a populated FileList, and user-event makes `files` read-only,
+// so we install a writable `files` (which the controller writes back to as well) and dispatch the change event ourselves.
+const selectFiles = (input: HTMLInputElement, files: File[]) => {
+    Object.defineProperty(input, 'files', { configurable: true, writable: true, value: files });
+    input.dispatchEvent(new Event('change'));
 };
 
 describe('DropzoneController', () => {
@@ -188,6 +211,152 @@ describe('DropzoneController', () => {
         await waitFor(() => expect(getByTestId(container, 'placeholder')).toHaveStyle({ display: 'none' }));
         await waitFor(() => expect(getByTestId(container, 'preview')).toHaveStyle({ display: 'flex' }));
     });
+
+    it('adds the files a pre-add listener resolves', async () => {
+        startStimulus();
+        await waitFor(() => expect(getByTestId(container, 'container')).toHaveClass('connected'));
+
+        const original = new File(['hello'], 'hello.png', { type: 'image/png' });
+        const transformed = new File(['resized'], 'hello.jpg', { type: 'image/jpeg' });
+        let preAddFiles: File[] = [];
+        getByTestId(container, 'container').addEventListener('dropzone:pre-add', (event: any) => {
+            preAddFiles = event.detail.files;
+            event.detail.waitUntil(Promise.resolve([transformed]));
+        });
+        let changed: File | null = null;
+        getByTestId(container, 'container').addEventListener('dropzone:change', (event: any) => {
+            changed = event.detail;
+        });
+
+        const input = getByTestId(container, 'input') as HTMLInputElement;
+        selectFiles(input, [original]);
+
+        await waitFor(() => expect(getByTestId(container, 'preview-filename')).toHaveTextContent('hello.jpg'));
+        expect(preAddFiles).toStrictEqual([original]);
+        expect(changed).toBe(transformed);
+        expect(input.files?.[0]).toBe(transformed);
+        expect(getByTestId(container, 'preview')).toHaveStyle({ display: 'flex' });
+    });
+
+    it('adds nothing when a pre-add listener prevents it', async () => {
+        startStimulus();
+        await waitFor(() => expect(getByTestId(container, 'container')).toHaveClass('connected'));
+
+        getByTestId(container, 'container').addEventListener('dropzone:pre-add', (event) => event.preventDefault());
+        let changed = false;
+        getByTestId(container, 'container').addEventListener('dropzone:change', () => {
+            changed = true;
+        });
+
+        const input = getByTestId(container, 'input') as HTMLInputElement;
+        selectFiles(input, [new File(['hello'], 'hello.png', { type: 'image/png' })]);
+
+        expect(changed).toBe(false);
+        expect(input.value).toBe('');
+        expect(getByTestId(container, 'preview')).toHaveStyle({ display: 'none' });
+        expect(getByTestId(container, 'placeholder')).toHaveStyle({ display: 'block' });
+    });
+
+    const deferred = () => {
+        let resolve!: (files: File[]) => void;
+        const promise = new Promise<File[]>((r) => (resolve = r));
+
+        return { promise, resolve };
+    };
+
+    it('submits the file it shows when selections resolve out of order', async () => {
+        startStimulus();
+        await waitFor(() => expect(getByTestId(container, 'container')).toHaveClass('connected'));
+
+        const a = new File(['a'], 'a.png', { type: 'image/png' });
+        const resizedA = new File(['resized'], 'a.jpg', { type: 'image/jpeg' });
+        const b = new File(['b'], 'b.pdf', { type: 'application/pdf' });
+        const pendingA = deferred();
+        getByTestId(container, 'container').addEventListener('dropzone:pre-add', (event: any) => {
+            event.detail.waitUntil(event.detail.files[0] === a ? pendingA.promise : Promise.resolve([b]));
+        });
+
+        const input = getByTestId(container, 'input') as HTMLInputElement;
+        selectFiles(input, [a]);
+        selectFiles(input, [b]);
+        pendingA.resolve([resizedA]);
+
+        await waitFor(() => expect(getByTestId(container, 'preview-filename')).toHaveTextContent('b.pdf'));
+        expect(input.files?.[0]).toBe(b);
+    });
+
+    it('applies a prevented selection after the pending ones', async () => {
+        startStimulus();
+        await waitFor(() => expect(getByTestId(container, 'container')).toHaveClass('connected'));
+
+        const a = new File(['a'], 'a.png', { type: 'image/png' });
+        const pendingA = deferred();
+        getByTestId(container, 'container').addEventListener('dropzone:pre-add', (event: any) => {
+            if (event.detail.files[0] === a) {
+                event.detail.waitUntil(pendingA.promise);
+            } else {
+                event.preventDefault();
+            }
+        });
+
+        const input = getByTestId(container, 'input') as HTMLInputElement;
+        selectFiles(input, [a]);
+        selectFiles(input, [new File(['b'], 'b.exe')]);
+        pendingA.resolve([a]);
+
+        await waitFor(() => expect(getByTestId(container, 'container')).not.toHaveAttribute('data-state'));
+        expect(getByTestId(container, 'preview-filename')).toHaveTextContent('');
+        expect(getByTestId(container, 'preview')).toHaveStyle({ display: 'none' });
+    });
+
+    it('drops the pending selections when the dropzone is cleared', async () => {
+        startStimulus();
+        await waitFor(() => expect(getByTestId(container, 'container')).toHaveClass('connected'));
+
+        const pending = deferred();
+        getByTestId(container, 'container').addEventListener('dropzone:pre-add', (event: any) => {
+            event.detail.waitUntil(pending.promise);
+        });
+
+        const a = new File(['a'], 'a.png', { type: 'image/png' });
+        selectFiles(getByTestId(container, 'input') as HTMLInputElement, [a]);
+        getByTestId(container, 'button').click();
+        pending.resolve([a]);
+
+        await waitFor(() => expect(getByTestId(container, 'container')).not.toHaveAttribute('data-state'));
+        expect(getByTestId(container, 'preview-filename')).toHaveTextContent('');
+        expect(getByTestId(container, 'preview')).toHaveStyle({ display: 'none' });
+    });
+
+    it('removes a processing state left in the markup', async () => {
+        getByTestId(container, 'container').setAttribute('data-state', 'processing');
+
+        startStimulus();
+        await waitFor(() => expect(getByTestId(container, 'container')).toHaveClass('connected'));
+
+        expect(getByTestId(container, 'container')).not.toHaveAttribute('data-state');
+    });
+
+    it('keeps the preview hidden after a drop while the dropped file is processed', async () => {
+        startStimulus();
+        await waitFor(() => expect(getByTestId(container, 'container')).toHaveClass('connected'));
+
+        const pending = deferred();
+        getByTestId(container, 'container').addEventListener('dropzone:pre-add', (event: any) => {
+            event.detail.waitUntil(pending.promise);
+        });
+
+        const a = new File(['a'], 'a.png', { type: 'image/png' });
+        getByTestId(container, 'container').dispatchEvent(new Event('dragenter'));
+        selectFiles(getByTestId(container, 'input') as HTMLInputElement, [a]);
+        getByTestId(container, 'container').dispatchEvent(new Event('drop', { bubbles: true }));
+        await new Promise((resolve) => setTimeout(resolve, 10));
+
+        expect(getByTestId(container, 'preview')).toHaveStyle({ display: 'none' });
+
+        pending.resolve([a]);
+        await waitFor(() => expect(getByTestId(container, 'preview')).toHaveStyle({ display: 'flex' }));
+    });
 });
 
 describe('DropzoneController (multiple)', () => {
@@ -218,20 +387,16 @@ describe('DropzoneController (multiple)', () => {
     const start = () =>
         new Promise<void>((resolve) => {
             getByTestId(container, 'container').addEventListener('dropzone:connect', () => resolve(), { once: true });
-            const application = Application.start();
+            const application = startApplication();
             application.register('dropzone', DropzoneController);
         });
 
-    // Simulate a native file pick. A real <input multiple> replaces its FileList
-    // on every pick; jsdom can't build a populated FileList, and user-event makes
-    // `files` read-only, so we install create a writable `files` (which the
-    // controller writes back to as well) and dispatch the change event ourselves.
-    const selectFiles = (input: HTMLInputElement, files: File[]) => {
-        Object.defineProperty(input, 'files', { configurable: true, writable: true, value: files });
-        input.dispatchEvent(new Event('change'));
-    };
-
     const make = (name: string, lastModified = 1) => new File(['content'], name, { type: 'text/plain', lastModified });
+
+    const filenames = () =>
+        Array.from(getByTestId(container, 'list').querySelectorAll('.dropzone-preview-filename')).map(
+            (element) => element.textContent
+        );
 
     it('accumulates files across selections', async () => {
         await start();
@@ -288,5 +453,216 @@ describe('DropzoneController (multiple)', () => {
                     ?.getAttribute('aria-label')
             ).toBe('Remove a.txt')
         );
+    });
+
+    it('adds the files a pre-add listener resolves', async () => {
+        await start();
+        const input = getByTestId(container, 'input') as HTMLInputElement;
+        getByTestId(container, 'container').addEventListener('dropzone:pre-add', (event: any) => {
+            event.detail.waitUntil(
+                Promise.resolve(event.detail.files.map((file: File) => make(`resized-${file.name}`)))
+            );
+        });
+
+        selectFiles(input, [make('a.txt'), make('b.txt')]);
+
+        await waitFor(() => expect(filenames()).toStrictEqual(['resized-a.txt', 'resized-b.txt']));
+        expect(Array.from(input.files ?? []).map((file) => file.name)).toStrictEqual([
+            'resized-a.txt',
+            'resized-b.txt',
+        ]);
+    });
+
+    it('keeps the previous files when a pre-add listener prevents the selection', async () => {
+        await start();
+        const input = getByTestId(container, 'input') as HTMLInputElement;
+        selectFiles(input, [make('a.txt')]);
+        getByTestId(container, 'container').addEventListener('dropzone:pre-add', (event) => event.preventDefault());
+
+        selectFiles(input, [make('b.txt')]);
+
+        expect(filenames()).toStrictEqual(['a.txt']);
+        expect(Array.from(input.files ?? []).map((file) => file.name)).toStrictEqual(['a.txt']);
+    });
+
+    it('keeps the previous files in the input while a pre-add listener is pending', async () => {
+        await start();
+        const input = getByTestId(container, 'input') as HTMLInputElement;
+        selectFiles(input, [make('a.txt')]);
+        let resolve!: (files: File[]) => void;
+        getByTestId(container, 'container').addEventListener('dropzone:pre-add', (event: any) => {
+            event.detail.waitUntil(new Promise<File[]>((r) => (resolve = r)));
+        });
+
+        selectFiles(input, [make('b.txt')]);
+
+        expect(getByTestId(container, 'container')).toHaveAttribute('data-state', 'processing');
+        expect(Array.from(input.files ?? []).map((file) => file.name)).toStrictEqual(['a.txt']);
+
+        resolve([make('b.txt')]);
+
+        await waitFor(() => expect(filenames()).toStrictEqual(['a.txt', 'b.txt']));
+        expect(getByTestId(container, 'container')).not.toHaveAttribute('data-state');
+    });
+
+    it('adds the original files when a pre-add listener rejects', async () => {
+        await start();
+        const input = getByTestId(container, 'input') as HTMLInputElement;
+        const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
+        getByTestId(container, 'container').addEventListener('dropzone:pre-add', (event: any) => {
+            event.detail.waitUntil(Promise.reject(new Error('Cannot decode the image')));
+        });
+
+        selectFiles(input, [make('a.txt')]);
+
+        await waitFor(() => expect(filenames()).toStrictEqual(['a.txt']));
+        expect(consoleError).toHaveBeenCalledWith(new Error('Cannot decode the image'));
+        expect(getByTestId(container, 'container')).not.toHaveAttribute('data-state');
+        consoleError.mockRestore();
+    });
+
+    it('adds the original files when a pre-add listener resolves to something else than files', async () => {
+        await start();
+        const input = getByTestId(container, 'input') as HTMLInputElement;
+        const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
+        getByTestId(container, 'container').addEventListener('dropzone:pre-add', (event: any) => {
+            event.detail.waitUntil(Promise.resolve(undefined));
+        });
+
+        selectFiles(input, [make('a.txt')]);
+
+        await waitFor(() => expect(filenames()).toStrictEqual(['a.txt']));
+        expect(consoleError).toHaveBeenCalledWith(
+            new TypeError('The promise passed to waitUntil() must resolve to an array of files.')
+        );
+        expect(getByTestId(container, 'container')).not.toHaveAttribute('data-state');
+        consoleError.mockRestore();
+    });
+
+    it('adds the files in selection order when an earlier pre-add listener resolves later', async () => {
+        await start();
+        const input = getByTestId(container, 'input') as HTMLInputElement;
+        const resolvers: Array<() => void> = [];
+        getByTestId(container, 'container').addEventListener('dropzone:pre-add', (event: any) => {
+            const files = event.detail.files;
+            event.detail.waitUntil(new Promise<File[]>((r) => resolvers.push(() => r(files))));
+        });
+
+        selectFiles(input, [make('a.txt')]);
+        selectFiles(input, [make('b.txt')]);
+        resolvers[1]();
+        resolvers[0]();
+
+        await waitFor(() => expect(filenames()).toStrictEqual(['a.txt', 'b.txt']));
+    });
+
+    it('adds a selection without pre-add promise after the pending ones', async () => {
+        await start();
+        const input = getByTestId(container, 'input') as HTMLInputElement;
+        let resolve!: () => void;
+        getByTestId(container, 'container').addEventListener('dropzone:pre-add', (event: any) => {
+            const files = event.detail.files;
+            if (files[0].name === 'a.txt') {
+                event.detail.waitUntil(new Promise<File[]>((r) => (resolve = () => r(files))));
+            }
+        });
+
+        selectFiles(input, [make('a.txt')]);
+        selectFiles(input, [make('b.txt')]);
+
+        expect(filenames()).toStrictEqual([]);
+        resolve();
+        await waitFor(() => expect(filenames()).toStrictEqual(['a.txt', 'b.txt']));
+    });
+
+    it('throws when waitUntil is called twice', async () => {
+        await start();
+        const input = getByTestId(container, 'input') as HTMLInputElement;
+        let error: unknown = null;
+        getByTestId(container, 'container').addEventListener('dropzone:pre-add', (event: any) => {
+            event.detail.waitUntil(Promise.resolve(event.detail.files));
+            try {
+                event.detail.waitUntil(Promise.resolve([]));
+            } catch (e) {
+                error = e;
+            }
+        });
+
+        selectFiles(input, [make('a.txt')]);
+
+        expect(error).toStrictEqual(
+            new Error('waitUntil() can only be called once, from a "dropzone:pre-add" listener.')
+        );
+        await waitFor(() => expect(filenames()).toStrictEqual(['a.txt']));
+    });
+
+    it('throws when waitUntil is called after the pre-add event', async () => {
+        await start();
+        const input = getByTestId(container, 'input') as HTMLInputElement;
+        let waitUntil!: (promise: Promise<File[]>) => void;
+        getByTestId(container, 'container').addEventListener('dropzone:pre-add', (event: any) => {
+            waitUntil = event.detail.waitUntil;
+        });
+
+        selectFiles(input, [make('a.txt')]);
+
+        expect(() => waitUntil(Promise.resolve([]))).toThrow(
+            'waitUntil() can only be called once, from a "dropzone:pre-add" listener.'
+        );
+        expect(filenames()).toStrictEqual(['a.txt']);
+    });
+
+    it('adds the original files when a pre-add listener resolves to something else than files in an array', async () => {
+        await start();
+        const input = getByTestId(container, 'input') as HTMLInputElement;
+        const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
+        const listener = (event: any) => event.detail.waitUntil(Promise.resolve([new Blob(['resized'])]));
+        getByTestId(container, 'container').addEventListener('dropzone:pre-add', listener);
+
+        selectFiles(input, [make('a.txt')]);
+
+        await waitFor(() => expect(filenames()).toStrictEqual(['a.txt']));
+        expect(consoleError).toHaveBeenCalledWith(
+            new TypeError('The promise passed to waitUntil() must resolve to an array of files.')
+        );
+
+        getByTestId(container, 'container').removeEventListener('dropzone:pre-add', listener);
+        getByTestId(container, 'container').addEventListener('dropzone:pre-add', (event: any) => {
+            event.detail.waitUntil(Promise.resolve(event.detail.files));
+        });
+        selectFiles(input, [make('b.txt')]);
+
+        await waitFor(() => expect(filenames()).toStrictEqual(['a.txt', 'b.txt']));
+        consoleError.mockRestore();
+    });
+
+    it('accepts files passed to waitUntil without a promise', async () => {
+        await start();
+        const input = getByTestId(container, 'input') as HTMLInputElement;
+        getByTestId(container, 'container').addEventListener('dropzone:pre-add', (event: any) => {
+            event.detail.waitUntil(event.detail.files.filter((file: File) => file.name !== 'b.txt'));
+        });
+
+        selectFiles(input, [make('a.txt'), make('b.txt')]);
+
+        await waitFor(() => expect(filenames()).toStrictEqual(['a.txt']));
+        expect(getByTestId(container, 'container')).not.toHaveAttribute('data-state');
+    });
+
+    it('handles the promise of a prevented selection', async () => {
+        await start();
+        const input = getByTestId(container, 'input') as HTMLInputElement;
+        const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
+        getByTestId(container, 'container').addEventListener('dropzone:pre-add', (event: any) => {
+            event.detail.waitUntil(Promise.reject(new Error('Cannot decode the image')));
+            event.preventDefault();
+        });
+
+        selectFiles(input, [make('a.txt')]);
+        await new Promise((resolve) => setTimeout(resolve, 10));
+
+        expect(filenames()).toStrictEqual([]);
+        expect(consoleError).toHaveBeenCalledWith(new Error('Cannot decode the image'));
+        consoleError.mockRestore();
     });
 });

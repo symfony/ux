@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 3.7.0
+
+- Add a `dropzone:pre-add` event to transform, replace or reject the selected files before they are added, and a `data-state="processing"` attribute on the container while it is pending
+
 ## 3.5.0
 
 - Add support for Symfony 8.2's standalone `AssetMapperBundle`
