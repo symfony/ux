@@ -13,6 +13,7 @@
         "apps/**/var",
         "src/**/dist",
         "src/**/var",
+        "src/Css/resources/*.json",
         "src/**/tests/**/fixtures/**",
         "src/**/tests/**/Fixtures/**",
         "src/Router/assets/test/fixtures/**",

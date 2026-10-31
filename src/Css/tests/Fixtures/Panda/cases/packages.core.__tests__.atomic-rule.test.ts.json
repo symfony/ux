@@ -1,0 +1,795 @@
+{
+  "source": "packages/core/__tests__/atomic-rule.test.ts",
+  "cases": [
+    {
+      "id": "fixture::packages/core/__tests__/atomic-rule.test.ts::atomic / with basic style object > respect color mode::1",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/atomic-rule.test.ts",
+        "test": "atomic / with basic style object > respect color mode",
+        "line": 6
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          "color": {
+            "_light": "red",
+            "_dark": "green"
+          },
+          "opacity": {
+            "_dark": "slate400"
+          }
+        }
+      ],
+      "options": null,
+      "expected": {
+        "classNames": [
+          "light\\:c_red",
+          "dark\\:c_green",
+          "dark\\:op_slate400"
+        ],
+        "css": "@layer utilities {\n  [data-theme=light] .light\\:c_red,.light .light\\:c_red,.light\\:c_red.light,.light\\:c_red[data-theme=light] {\n    color: red;\n}\n\n  [data-theme=dark] .dark\\:c_green,.dark .dark\\:c_green,.dark\\:c_green.dark,.dark\\:c_green[data-theme=dark] {\n    color: green;\n}\n\n  [data-theme=dark] .dark\\:op_slate400,.dark .dark\\:op_slate400,.dark\\:op_slate400.dark,.dark\\:op_slate400[data-theme=dark] {\n    opacity: slate400;\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/core/__tests__/atomic-rule.test.ts::atomic / with basic style object > respect important syntax::1",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/atomic-rule.test.ts",
+        "test": "atomic / with basic style object > respect important syntax",
+        "line": 6
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          "color": "red !important",
+          "fontSize": "30px!"
+        }
+      ],
+      "options": null,
+      "expected": {
+        "classNames": [
+          "c_red",
+          "fs_30px"
+        ],
+        "css": "@layer utilities {\n  .c_red\\! {\n    color: red !important;\n}\n\n  .fs_30px\\! {\n    font-size: 30px !important;\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/core/__tests__/atomic-rule.test.ts::atomic / with basic style object > should resolve responsive array with gaps::1",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/atomic-rule.test.ts",
+        "test": "atomic / with basic style object > should resolve responsive array with gaps",
+        "line": 6
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          "width": [
+            "50px",
+            null,
+            "60px"
+          ]
+        }
+      ],
+      "options": null,
+      "expected": {
+        "classNames": [
+          "w_50px",
+          "md\\:w_60px"
+        ],
+        "css": "@layer utilities {\n  .w_50px {\n    width: 50px;\n}\n\n  @media screen and (min-width: 48rem) {\n    .md\\:w_60px {\n      width: 60px;\n}\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/core/__tests__/atomic-rule.test.ts::atomic / with basic style object > should resolve responsive array::1",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/atomic-rule.test.ts",
+        "test": "atomic / with basic style object > should resolve responsive array",
+        "line": 6
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          "width": [
+            "50px",
+            "60px"
+          ]
+        }
+      ],
+      "options": null,
+      "expected": {
+        "classNames": [
+          "w_50px",
+          "sm\\:w_60px"
+        ],
+        "css": "@layer utilities {\n  .w_50px {\n    width: 50px;\n}\n\n  @media screen and (min-width: 40rem) {\n    .sm\\:w_60px {\n      width: 60px;\n}\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/core/__tests__/atomic-rule.test.ts::atomic / with basic style object > should resolve shorthand::1",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/atomic-rule.test.ts",
+        "test": "atomic / with basic style object > should resolve shorthand",
+        "line": 6
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          "width": "50px",
+          "w": "20px"
+        }
+      ],
+      "options": null,
+      "expected": {
+        "classNames": [
+          "w_20px"
+        ],
+        "css": "@layer utilities {\n  .w_20px {\n    width: 20px;\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/core/__tests__/atomic-rule.test.ts::atomic / with basic style object > should resolve shorthand::2",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/atomic-rule.test.ts",
+        "test": "atomic / with basic style object > should resolve shorthand",
+        "line": 6
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          "width": {
+            "base": "50px",
+            "md": "60px"
+          },
+          "w": "70px"
+        }
+      ],
+      "options": null,
+      "expected": {
+        "classNames": [
+          "w_70px"
+        ],
+        "css": "@layer utilities {\n  .w_70px {\n    width: 70px;\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/core/__tests__/atomic-rule.test.ts::atomic / with basic style object > should skip `_` notation::1",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/atomic-rule.test.ts",
+        "test": "atomic / with basic style object > should skip `_` notation",
+        "line": 6
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          "left": {
+            "base": "20px",
+            "md": "40px"
+          }
+        }
+      ],
+      "options": null,
+      "expected": {
+        "classNames": [
+          "left_20px",
+          "md\\:left_40px"
+        ],
+        "css": "@layer utilities {\n  .left_20px {\n    left: 20px;\n}\n\n  @media screen and (min-width: 48rem) {\n    .md\\:left_40px {\n      left: 40px;\n}\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/core/__tests__/atomic-rule.test.ts::atomic / with basic style object > should work with basic::1",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/atomic-rule.test.ts",
+        "test": "atomic / with basic style object > should work with basic",
+        "line": 6
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          "bg": "red.300"
+        }
+      ],
+      "options": null,
+      "expected": {
+        "classNames": [
+          "bg_red\\.300"
+        ],
+        "css": "@layer utilities {\n  .bg_red\\.300 {\n    background: var(--colors-red-300);\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/core/__tests__/atomic-rule.test.ts::atomic / with basic style object > should work with inner responsive::1",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/atomic-rule.test.ts",
+        "test": "atomic / with basic style object > should work with inner responsive",
+        "line": 6
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          "ml": {
+            "_ltr": {
+              "sm": "4"
+            },
+            "_rtl": "-4"
+          }
+        }
+      ],
+      "options": null,
+      "expected": {
+        "classNames": [
+          "rtl\\:ml_-4",
+          "ltr\\:sm\\:ml_4"
+        ],
+        "css": "@layer utilities {\n  :where([dir=rtl], :dir(rtl)) .rtl\\:ml_-4 {\n    margin-left: calc(var(--spacing-4) * -1);\n}\n\n  @media screen and (min-width: 40rem) {\n    :where([dir=ltr], :dir(ltr)) .ltr\\:sm\\:ml_4 {\n      margin-left: var(--spacing-4);\n}\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/core/__tests__/atomic-rule.test.ts::atomic / with basic style object > should work with negative tokens::1",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/atomic-rule.test.ts",
+        "test": "atomic / with basic style object > should work with negative tokens",
+        "line": 6
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          "mx": -2
+        }
+      ],
+      "options": null,
+      "expected": {
+        "classNames": [
+          "mx_-2"
+        ],
+        "css": "@layer utilities {\n  .mx_-2 {\n    margin-inline: calc(var(--spacing-2) * -1);\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/core/__tests__/atomic-rule.test.ts::atomic / with basic style object > should work with outer responsive::1",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/atomic-rule.test.ts",
+        "test": "atomic / with basic style object > should work with outer responsive",
+        "line": 6
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          "top": {
+            "sm": {
+              "_rtl": "20px",
+              "_hover": "50px"
+            },
+            "lg": "120px"
+          }
+        }
+      ],
+      "options": null,
+      "expected": {
+        "classNames": [
+          "sm\\:rtl\\:top_20px",
+          "sm\\:hover\\:top_50px",
+          "lg\\:top_120px"
+        ],
+        "css": "@layer utilities {\n  @media screen and (min-width: 40rem) {\n    :where([dir=rtl], :dir(rtl)) .sm\\:rtl\\:top_20px {\n      top: 20px;\n}\n    .sm\\:hover\\:top_50px:is(:hover, [data-hover]) {\n      top: 50px;\n}\n}\n\n  @media screen and (min-width: 64rem) {\n    .lg\\:top_120px {\n      top: 120px;\n}\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/core/__tests__/atomic-rule.test.ts::atomic / with direct nesting > outlier: should work with basic::1",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/atomic-rule.test.ts",
+        "test": "atomic / with direct nesting > outlier: should work with basic",
+        "line": 6
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          "all": "unset",
+          "backgroundColor": "red",
+          "border": "none",
+          "padding": "$3 $3",
+          "borderRadius": "$button",
+          "fontSize": "$xsmall",
+          "cursor": "pointer",
+          "& + span": {
+            "marginLeft": "$2"
+          },
+          "&:focus, &:hover": {
+            "boxShadow": "none"
+          },
+          ".test &": {
+            "backgroundColor": "blue"
+          },
+          "& .my-class": {
+            "color": "red"
+          },
+          ":focus > &": {
+            "color": "white"
+          },
+          "@media (min-width: 768px)": {
+            "backgroundColor": "green",
+            "fontSize": "$small",
+            "&:hover": {
+              "backgroundColor": "yellow"
+            }
+          },
+          "& span": {
+            "color": "red"
+          }
+        }
+      ],
+      "options": null,
+      "expected": {
+        "classNames": [
+          "all_unset",
+          "bd_none",
+          "p_\\$3_\\$3",
+          "bdr_\\$button",
+          "bg-c_red",
+          "fs_\\$xsmall",
+          "cursor_pointer",
+          "\\[\\.test_\\&\\]\\:bg-c_blue",
+          "\\[\\&_\\.my-class\\]\\:c_red",
+          "\\[\\&_span\\]\\:c_red",
+          "\\[\\&_\\+_span\\]\\:ml_\\$2",
+          "\\[\\&\\:focus\\,_\\&\\:hover\\]\\:bx-sh_none",
+          "\\[\\:focus_\\>_\\&\\]\\:c_white",
+          "\\[\\@media_\\(min-width\\:_768px\\)\\]\\:bg-c_green",
+          "\\[\\@media_\\(min-width\\:_768px\\)\\]\\:fs_\\$small",
+          "\\[\\@media_\\(min-width\\:_768px\\)\\]\\:\\[\\&\\:hover\\]\\:bg-c_yellow"
+        ],
+        "css": "@layer utilities {\n  .all_unset {\n    all: unset;\n}\n\n  .bd_none {\n    border: var(--borders-none);\n}\n\n  .p_\\$3_\\$3 {\n    padding: $3 $3;\n}\n\n  .bdr_\\$button {\n    border-radius: $button;\n}\n\n  .bg-c_red {\n    background-color: red;\n}\n\n  .fs_\\$xsmall {\n    font-size: $xsmall;\n}\n\n  .cursor_pointer {\n    cursor: pointer;\n}\n\n  .test .\\[\\.test_\\&\\]\\:bg-c_blue {\n    background-color: blue;\n}\n\n  .\\[\\&_\\.my-class\\]\\:c_red .my-class,.\\[\\&_span\\]\\:c_red span {\n    color: red;\n}\n\n  .\\[\\&_\\+_span\\]\\:ml_\\$2 + span {\n    margin-left: $2;\n}\n\n  .\\[\\&\\:focus\\,_\\&\\:hover\\]\\:bx-sh_none:focus,.\\[\\&\\:focus\\,_\\&\\:hover\\]\\:bx-sh_none:hover {\n    box-shadow: none;\n}\n\n  :focus > .\\[\\:focus_\\>_\\&\\]\\:c_white {\n    color: var(--colors-white);\n}\n\n  @media (min-width: 768px) {\n    .\\[\\@media_\\(min-width\\:_768px\\)\\]\\:bg-c_green {\n      background-color: green;\n}\n    .\\[\\@media_\\(min-width\\:_768px\\)\\]\\:fs_\\$small {\n      font-size: $small;\n}\n    .\\[\\@media_\\(min-width\\:_768px\\)\\]\\:\\[\\&\\:hover\\]\\:bg-c_yellow:hover {\n      background-color: yellow;\n}\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/core/__tests__/atomic-rule.test.ts::atomic / with direct nesting > responsive helpers::1",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/atomic-rule.test.ts",
+        "test": "atomic / with direct nesting > responsive helpers",
+        "line": 6
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          "hideFrom": "sm"
+        }
+      ],
+      "options": null,
+      "expected": {
+        "classNames": [
+          "hide_sm"
+        ],
+        "css": "@layer utilities {\n  @media screen and (min-width: 40rem) {\n    .hide_sm {\n      display: none;\n}\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/core/__tests__/atomic-rule.test.ts::atomic / with direct nesting > responsive helpers::2",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/atomic-rule.test.ts",
+        "test": "atomic / with direct nesting > responsive helpers",
+        "line": 6
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          "hideBelow": "lg"
+        }
+      ],
+      "options": null,
+      "expected": {
+        "classNames": [
+          "show_lg"
+        ],
+        "css": "@layer utilities {\n  @media screen and (max-width: 63.9975rem) {\n    .show_lg {\n      display: none;\n}\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/core/__tests__/atomic-rule.test.ts::atomic / with direct nesting > should sort mobile first::1",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/atomic-rule.test.ts",
+        "test": "atomic / with direct nesting > should sort mobile first",
+        "line": 6
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          "@media screen and (max-width: 640px)": {
+            "margin": "8"
+          },
+          "@media screen and (min-width: 980px)": {
+            "margin": "3"
+          },
+          "@media screen and (max-width: 980px)": {
+            "margin": "6"
+          },
+          "@supports (display: grid)": {
+            "backgroundColor": "red"
+          },
+          "@media screen and (max-width: 768px)": {
+            "margin": "7"
+          },
+          "@media screen and (min-width: 640px)": {
+            "margin": "1"
+          },
+          "@supports not (display: grid)": {
+            "backgroundColor": "green"
+          },
+          "@media screen and (min-width: 1280px)": {
+            "margin": "4"
+          },
+          "@supports (display: flex)": {
+            "backgroundColor": "blue"
+          },
+          "@media screen and (min-width: 768px)": {
+            "margin": "2"
+          },
+          "@media screen and (max-width: 1280px)": {
+            "margin": "5"
+          }
+        }
+      ],
+      "options": null,
+      "expected": {
+        "classNames": [
+          "\\[\\@media_screen_and_\\(min-width\\:_640px\\)\\]\\:m_1",
+          "\\[\\@media_screen_and_\\(min-width\\:_768px\\)\\]\\:m_2",
+          "\\[\\@media_screen_and_\\(min-width\\:_980px\\)\\]\\:m_3",
+          "\\[\\@media_screen_and_\\(min-width\\:_1280px\\)\\]\\:m_4",
+          "\\[\\@media_screen_and_\\(max-width\\:_1280px\\)\\]\\:m_5",
+          "\\[\\@media_screen_and_\\(max-width\\:_980px\\)\\]\\:m_6",
+          "\\[\\@media_screen_and_\\(max-width\\:_768px\\)\\]\\:m_7",
+          "\\[\\@media_screen_and_\\(max-width\\:_640px\\)\\]\\:m_8",
+          "\\[\\@supports_\\(display\\:_flex\\)\\]\\:bg-c_blue",
+          "\\[\\@supports_\\(display\\:_grid\\)\\]\\:bg-c_red",
+          "\\[\\@supports_not_\\(display\\:_grid\\)\\]\\:bg-c_green"
+        ],
+        "css": "@layer utilities {\n  @supports (display: flex) {\n    .\\[\\@supports_\\(display\\:_flex\\)\\]\\:bg-c_blue {\n      background-color: blue;\n}\n}\n\n  @supports (display: grid) {\n    .\\[\\@supports_\\(display\\:_grid\\)\\]\\:bg-c_red {\n      background-color: red;\n}\n}\n\n  @supports not (display: grid) {\n    .\\[\\@supports_not_\\(display\\:_grid\\)\\]\\:bg-c_green {\n      background-color: green;\n}\n}\n\n  @media screen and (min-width: 640px) {\n    .\\[\\@media_screen_and_\\(min-width\\:_640px\\)\\]\\:m_1 {\n      margin: var(--spacing-1);\n}\n}\n\n  @media screen and (min-width: 768px) {\n    .\\[\\@media_screen_and_\\(min-width\\:_768px\\)\\]\\:m_2 {\n      margin: var(--spacing-2);\n}\n}\n\n  @media screen and (min-width: 980px) {\n    .\\[\\@media_screen_and_\\(min-width\\:_980px\\)\\]\\:m_3 {\n      margin: var(--spacing-3);\n}\n}\n\n  @media screen and (min-width: 1280px) {\n    .\\[\\@media_screen_and_\\(min-width\\:_1280px\\)\\]\\:m_4 {\n      margin: var(--spacing-4);\n}\n}\n\n  @media screen and (max-width: 1280px) {\n    .\\[\\@media_screen_and_\\(max-width\\:_1280px\\)\\]\\:m_5 {\n      margin: var(--spacing-5);\n}\n}\n\n  @media screen and (max-width: 980px) {\n    .\\[\\@media_screen_and_\\(max-width\\:_980px\\)\\]\\:m_6 {\n      margin: var(--spacing-6);\n}\n}\n\n  @media screen and (max-width: 768px) {\n    .\\[\\@media_screen_and_\\(max-width\\:_768px\\)\\]\\:m_7 {\n      margin: var(--spacing-7);\n}\n}\n\n  @media screen and (max-width: 640px) {\n    .\\[\\@media_screen_and_\\(max-width\\:_640px\\)\\]\\:m_8 {\n      margin: var(--spacing-8);\n}\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/core/__tests__/atomic-rule.test.ts::atomic / with direct nesting > should work for inline media::1",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/atomic-rule.test.ts",
+        "test": "atomic / with direct nesting > should work for inline media",
+        "line": 6
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          "@media (min-width: 768px)": {
+            "backgroundColor": "green"
+          }
+        }
+      ],
+      "options": null,
+      "expected": {
+        "classNames": [
+          "\\[\\@media_\\(min-width\\:_768px\\)\\]\\:bg-c_green"
+        ],
+        "css": "@layer utilities {\n  @media (min-width: 768px) {\n    .\\[\\@media_\\(min-width\\:_768px\\)\\]\\:bg-c_green {\n      background-color: green;\n}\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/core/__tests__/atomic-rule.test.ts::atomic / with direct nesting > simple nesting::1",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/atomic-rule.test.ts",
+        "test": "atomic / with direct nesting > simple nesting",
+        "line": 6
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          "& kbd": {
+            "color": "red"
+          }
+        }
+      ],
+      "options": null,
+      "expected": {
+        "classNames": [
+          "\\[\\&_kbd\\]\\:c_red"
+        ],
+        "css": "@layer utilities {\n  .\\[\\&_kbd\\]\\:c_red kbd {\n    color: red;\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/core/__tests__/atomic-rule.test.ts::atomic / with direct nesting > with custom formatTokenName and formatCssVar::1",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/atomic-rule.test.ts",
+        "test": "atomic / with direct nesting > with custom formatTokenName and formatCssVar",
+        "line": 6
+      },
+      "unsupported": "config hooks"
+    },
+    {
+      "id": "fixture::packages/core/__tests__/atomic-rule.test.ts::atomic / with grouped conditions styles > multiple scopes::1",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/atomic-rule.test.ts",
+        "test": "atomic / with grouped conditions styles > multiple scopes",
+        "line": 6
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          "@media base": {
+            "&:hover": {
+              "left": "40px",
+              "textAlign": {
+                "sm": "left"
+              }
+            }
+          }
+        }
+      ],
+      "options": null,
+      "expected": {
+        "classNames": [
+          "\\[\\@media_base\\]\\:\\[\\&\\:hover\\]\\:left_40px",
+          "\\[\\@media_base\\]\\:\\[\\&\\:hover\\]\\:sm\\:ta_left"
+        ],
+        "css": "@layer utilities {\n  @media base {\n    .\\[\\@media_base\\]\\:\\[\\&\\:hover\\]\\:left_40px:hover {\n      left: 40px;\n}\n}\n\n  @media base {\n    @media screen and (min-width: 40rem) {\n      .\\[\\@media_base\\]\\:\\[\\&\\:hover\\]\\:sm\\:ta_left:hover {\n        text-align: left;\n}\n}\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/core/__tests__/atomic-rule.test.ts::atomic / with grouped conditions styles > nested > nested > property::1",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/atomic-rule.test.ts",
+        "test": "atomic / with grouped conditions styles > nested > nested > property",
+        "line": 6
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          "_hover": {
+            "_disabled": {
+              "bg": {
+                "sm": "red.300"
+              }
+            }
+          }
+        }
+      ],
+      "options": null,
+      "expected": {
+        "classNames": [
+          "hover\\:disabled\\:sm\\:bg_red\\.300"
+        ],
+        "css": "@layer utilities {\n  @media screen and (min-width: 40rem) {\n    .hover\\:disabled\\:sm\\:bg_red\\.300:is(:hover, [data-hover]):is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {\n      background: var(--colors-red-300);\n}\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/core/__tests__/atomic-rule.test.ts::atomic / with grouped conditions styles > nested > property::1",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/atomic-rule.test.ts",
+        "test": "atomic / with grouped conditions styles > nested > property",
+        "line": 6
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          "_hover": {
+            "bg": {
+              "sm": {
+                "_dark": "red.300"
+              }
+            },
+            "color": "pink.400"
+          }
+        }
+      ],
+      "options": null,
+      "expected": {
+        "classNames": [
+          "hover\\:c_pink\\.400",
+          "hover\\:sm\\:dark\\:bg_red\\.300"
+        ],
+        "css": "@layer utilities {\n  .hover\\:c_pink\\.400:is(:hover, [data-hover]) {\n    color: var(--colors-pink-400);\n}\n\n  @media screen and (min-width: 40rem) {\n    [data-theme=dark] .hover\\:sm\\:dark\\:bg_red\\.300:is(:hover, [data-hover]),.dark .hover\\:sm\\:dark\\:bg_red\\.300:is(:hover, [data-hover]),.hover\\:sm\\:dark\\:bg_red\\.300:is(:hover, [data-hover]).dark,.hover\\:sm\\:dark\\:bg_red\\.300:is(:hover, [data-hover])[data-theme=dark] {\n      background: var(--colors-red-300);\n}\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/core/__tests__/atomic-rule.test.ts::atomic / with grouped conditions styles > simple::1",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/atomic-rule.test.ts",
+        "test": "atomic / with grouped conditions styles > simple",
+        "line": 6
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          "_hover": {
+            "bg": "pink.400"
+          }
+        }
+      ],
+      "options": null,
+      "expected": {
+        "classNames": [
+          "hover\\:bg_pink\\.400"
+        ],
+        "css": "@layer utilities {\n  .hover\\:bg_pink\\.400:is(:hover, [data-hover]) {\n    background: var(--colors-pink-400);\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/core/__tests__/atomic-rule.test.ts::atomic / with nesting scope > [@media] should work with nested selector::1",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/atomic-rule.test.ts",
+        "test": "atomic / with nesting scope > [@media] should work with nested selector",
+        "line": 6
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          "@media base": {
+            "left": "40px",
+            "textAlign": {
+              "sm": "left"
+            }
+          }
+        }
+      ],
+      "options": null,
+      "expected": {
+        "classNames": [
+          "\\[\\@media_base\\]\\:left_40px",
+          "\\[\\@media_base\\]\\:sm\\:ta_left"
+        ],
+        "css": "@layer utilities {\n  @media base {\n    .\\[\\@media_base\\]\\:left_40px {\n      left: 40px;\n}\n}\n\n  @media base {\n    @media screen and (min-width: 40rem) {\n      .\\[\\@media_base\\]\\:sm\\:ta_left {\n        text-align: left;\n}\n}\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/core/__tests__/atomic-rule.test.ts::atomic / with nesting scope > [parent selector] should work with nested selector::1",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/atomic-rule.test.ts",
+        "test": "atomic / with nesting scope > [parent selector] should work with nested selector",
+        "line": 6
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          "input:hover &": {
+            "bg": "red400",
+            "fontSize": {
+              "sm": "14px",
+              "lg": "18px"
+            }
+          }
+        }
+      ],
+      "options": null,
+      "expected": {
+        "classNames": [
+          "\\[input\\:hover_\\&\\]\\:bg_red400",
+          "\\[input\\:hover_\\&\\]\\:sm\\:fs_14px",
+          "\\[input\\:hover_\\&\\]\\:lg\\:fs_18px"
+        ],
+        "css": "@layer utilities {\n  input:hover .\\[input\\:hover_\\&\\]\\:bg_red400 {\n    background: red400;\n}\n\n  @media screen and (min-width: 40rem) {\n    input:hover .\\[input\\:hover_\\&\\]\\:sm\\:fs_14px {\n      font-size: 14px;\n}\n}\n\n  @media screen and (min-width: 64rem) {\n    input:hover .\\[input\\:hover_\\&\\]\\:lg\\:fs_18px {\n      font-size: 18px;\n}\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/core/__tests__/atomic-rule.test.ts::atomic / with nesting scope > [pseudo] should work with nested selector::1",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/atomic-rule.test.ts",
+        "test": "atomic / with nesting scope > [pseudo] should work with nested selector",
+        "line": 6
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          "& > p": {
+            "left": {
+              "base": "20px",
+              "md": "40px"
+            },
+            "bg": {
+              "_light": "red400",
+              "_dark": "green500"
+            },
+            "font": {
+              "_rtl": "sans",
+              "_ltr": {
+                "_dark": {
+                  "sm": {
+                    "_hover": "serif"
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
+      "options": null,
+      "expected": {
+        "classNames": [
+          "\\[\\&_\\>_p\\]\\:left_20px",
+          "\\[\\&_\\>_p\\]\\:light\\:bg_red400",
+          "\\[\\&_\\>_p\\]\\:dark\\:bg_green500",
+          "\\[\\&_\\>_p\\]\\:rtl\\:font_sans",
+          "\\[\\&_\\>_p\\]\\:ltr\\:dark\\:sm\\:hover\\:font_serif",
+          "\\[\\&_\\>_p\\]\\:md\\:left_40px"
+        ],
+        "css": "@layer utilities {\n  .\\[\\&_\\>_p\\]\\:left_20px > p {\n    left: 20px;\n}\n\n  [data-theme=light] .\\[\\&_\\>_p\\]\\:light\\:bg_red400 > p,.light .\\[\\&_\\>_p\\]\\:light\\:bg_red400 > p,.\\[\\&_\\>_p\\]\\:light\\:bg_red400 > p.light,.\\[\\&_\\>_p\\]\\:light\\:bg_red400 > p[data-theme=light] {\n    background: red400;\n}\n\n  [data-theme=dark] .\\[\\&_\\>_p\\]\\:dark\\:bg_green500 > p,.dark .\\[\\&_\\>_p\\]\\:dark\\:bg_green500 > p,.\\[\\&_\\>_p\\]\\:dark\\:bg_green500 > p.dark,.\\[\\&_\\>_p\\]\\:dark\\:bg_green500 > p[data-theme=dark] {\n    background: green500;\n}\n\n  :where([dir=rtl], :dir(rtl)) .\\[\\&_\\>_p\\]\\:rtl\\:font_sans > p {\n    font: sans;\n}\n\n  @media screen and (min-width: 40rem) {\n    [data-theme=dark] :where([dir=ltr], :dir(ltr)) .\\[\\&_\\>_p\\]\\:ltr\\:dark\\:sm\\:hover\\:font_serif > p:is(:hover, [data-hover]),.dark :where([dir=ltr], :dir(ltr)) .\\[\\&_\\>_p\\]\\:ltr\\:dark\\:sm\\:hover\\:font_serif > p:is(:hover, [data-hover]),:where([dir=ltr], :dir(ltr)) .\\[\\&_\\>_p\\]\\:ltr\\:dark\\:sm\\:hover\\:font_serif > p.dark:is(:hover, [data-hover]),:where([dir=ltr], :dir(ltr)) .\\[\\&_\\>_p\\]\\:ltr\\:dark\\:sm\\:hover\\:font_serif > p[data-theme=dark]:is(:hover, [data-hover]) {\n      font: serif;\n}\n}\n\n  @media screen and (min-width: 48rem) {\n    .\\[\\&_\\>_p\\]\\:md\\:left_40px > p {\n      left: 40px;\n}\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/core/__tests__/atomic-rule.test.ts::atomic / with nesting scope > [selector] should work with nested selector::1",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/atomic-rule.test.ts",
+        "test": "atomic / with nesting scope > [selector] should work with nested selector",
+        "line": 6
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          "&::placeholder": {
+            "left": "40px",
+            "bg": "red400",
+            "textAlign": {
+              "sm": "left"
+            }
+          }
+        }
+      ],
+      "options": null,
+      "expected": {
+        "classNames": [
+          "\\[\\&\\:\\:placeholder\\]\\:bg_red400",
+          "\\[\\&\\:\\:placeholder\\]\\:left_40px",
+          "\\[\\&\\:\\:placeholder\\]\\:sm\\:ta_left"
+        ],
+        "css": "@layer utilities {\n  .\\[\\&\\:\\:placeholder\\]\\:bg_red400::placeholder {\n    background: red400;\n}\n\n  .\\[\\&\\:\\:placeholder\\]\\:left_40px::placeholder {\n    left: 40px;\n}\n\n  @media screen and (min-width: 40rem) {\n    .\\[\\&\\:\\:placeholder\\]\\:sm\\:ta_left::placeholder {\n      text-align: left;\n}\n}\n}"
+      }
+    }
+  ]
+}

@@ -38,10 +38,12 @@ $gitattributesRules = [
     ['/doc', 'dir'],
     ['/docker-compose.yml', 'file'],
     ['/kits/*/*/tests', 'glob'],
+    ['/phpbench.json', 'file'],
     ['/phpstan.dist.neon', 'file'],
     ['/phpunit.dist.xml', 'file'],
     ['/phpunit.xml.dist', 'file'],
     ['/tests', 'dir'],
+    ['/tools', 'dir'],
 ];
 
 /**
@@ -59,6 +61,7 @@ $gitignoreRules = [
     ['/.phpunit.cache', 'always', null],
     ['/.php-cs-fixer.cache', 'always', null],
     ['/.twig-cs-fixer.cache', 'file', '/.twig-cs-fixer.dist.php'],
+    ['/.phpbench', 'file', '/phpbench.json'],
     ['/var', 'always', null],
 ];
 

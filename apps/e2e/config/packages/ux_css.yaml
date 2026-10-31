@@ -1,0 +1,5 @@
+ux_css:
+    static_css:
+        css:
+            - properties:
+                  color: [danger, primary]

@@ -1,0 +1,2 @@
+ux_design_tokens:
+    paths: ['%kernel.project_dir%/design/tokens.json']

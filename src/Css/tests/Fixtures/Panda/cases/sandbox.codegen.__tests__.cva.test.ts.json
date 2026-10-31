@@ -1,0 +1,82 @@
+{
+  "source": "sandbox/codegen/__tests__/cva.test.ts",
+  "cases": [
+    {
+      "id": "react::sandbox/codegen/__tests__/cva.test.ts::cva > base styles::1",
+      "kind": "codegen-css",
+      "config": "codegen-react",
+      "source": {
+        "file": "sandbox/codegen/__tests__/cva.test.ts",
+        "test": "cva > base styles",
+        "line": 32
+      },
+      "inputs": [
+        {
+          "borderRadius": "md",
+          "fontWeight": "semibold",
+          "h": "10",
+          "px": "4"
+        }
+      ],
+      "expected": {
+        "className": "bdr_md fw_semibold h_10 px_4"
+      }
+    },
+    {
+      "id": "react::sandbox/codegen/__tests__/cva.test.ts::cva > outline variant styles::1",
+      "kind": "codegen-css",
+      "config": "codegen-react",
+      "source": {
+        "file": "sandbox/codegen/__tests__/cva.test.ts",
+        "test": "cva > outline variant styles",
+        "line": 46
+      },
+      "inputs": [
+        {
+          "borderRadius": "md",
+          "fontWeight": "semibold",
+          "height": "10",
+          "paddingInline": "4",
+          "border": "1px solid",
+          "color": {
+            "base": "colorPalette.600",
+            "_dark": "colorPalette.200"
+          },
+          "borderColor": "currentColor"
+        }
+      ],
+      "expected": {
+        "className": "bdr_md fw_semibold h_10 px_4 bd_1px_solid c_colorPalette.600 dark:c_colorPalette.200 bd-c_currentColor"
+      }
+    },
+    {
+      "id": "react::sandbox/codegen/__tests__/cva.test.ts::cva > solid variant styles::1",
+      "kind": "codegen-css",
+      "config": "codegen-react",
+      "source": {
+        "file": "sandbox/codegen/__tests__/cva.test.ts",
+        "test": "cva > solid variant styles",
+        "line": 38
+      },
+      "inputs": [
+        {
+          "borderRadius": "md",
+          "fontWeight": "semibold",
+          "height": "10",
+          "paddingInline": "4",
+          "background": {
+            "base": "colorPalette.500",
+            "_dark": "colorPalette.300"
+          },
+          "color": {
+            "base": "white",
+            "_dark": "gray.800"
+          }
+        }
+      ],
+      "expected": {
+        "className": "bdr_md fw_semibold h_10 px_4 bg_colorPalette.500 dark:bg_colorPalette.300 c_white dark:c_gray.800"
+      }
+    }
+  ]
+}
