@@ -1,0 +1,70 @@
+src:
+https://images.example.com/unsafe/800x450/filters:format(jpeg)/hero.jpg
+
+srcset:
+https://images.example.com/unsafe/640x360/filters:format(jpeg)/hero.jpg 640w
+https://images.example.com/unsafe/750x422/filters:format(jpeg)/hero.jpg 750w
+https://images.example.com/unsafe/828x466/filters:format(jpeg)/hero.jpg 828w
+https://images.example.com/unsafe/960x540/filters:format(jpeg)/hero.jpg 960w
+https://images.example.com/unsafe/1080x608/filters:format(jpeg)/hero.jpg 1080w
+https://images.example.com/unsafe/1280x720/filters:format(jpeg)/hero.jpg 1280w
+https://images.example.com/unsafe/1668x938/filters:format(jpeg)/hero.jpg 1668w
+https://images.example.com/unsafe/1920x1080/filters:format(jpeg)/hero.jpg 1920w
+https://images.example.com/unsafe/2048x1152/filters:format(jpeg)/hero.jpg 2048w
+https://images.example.com/unsafe/2560x1440/filters:format(jpeg)/hero.jpg 2560w
+https://images.example.com/unsafe/3200x1800/filters:format(jpeg)/hero.jpg 3200w
+https://images.example.com/unsafe/3840x2160/filters:format(jpeg)/hero.jpg 3840w
+https://images.example.com/unsafe/4480x2520/filters:format(jpeg)/hero.jpg 4480w
+https://images.example.com/unsafe/5120x2880/filters:format(jpeg)/hero.jpg 5120w
+https://images.example.com/unsafe/6016x3384/filters:format(jpeg)/hero.jpg 6016w
+
+source (image/avif):
+https://images.example.com/unsafe/640x360/filters:format(avif)/hero.jpg 640w
+https://images.example.com/unsafe/750x422/filters:format(avif)/hero.jpg 750w
+https://images.example.com/unsafe/828x466/filters:format(avif)/hero.jpg 828w
+https://images.example.com/unsafe/960x540/filters:format(avif)/hero.jpg 960w
+https://images.example.com/unsafe/1080x608/filters:format(avif)/hero.jpg 1080w
+https://images.example.com/unsafe/1280x720/filters:format(avif)/hero.jpg 1280w
+https://images.example.com/unsafe/1668x938/filters:format(avif)/hero.jpg 1668w
+https://images.example.com/unsafe/1920x1080/filters:format(avif)/hero.jpg 1920w
+https://images.example.com/unsafe/2048x1152/filters:format(avif)/hero.jpg 2048w
+https://images.example.com/unsafe/2560x1440/filters:format(avif)/hero.jpg 2560w
+https://images.example.com/unsafe/3200x1800/filters:format(avif)/hero.jpg 3200w
+https://images.example.com/unsafe/3840x2160/filters:format(avif)/hero.jpg 3840w
+https://images.example.com/unsafe/4480x2520/filters:format(avif)/hero.jpg 4480w
+https://images.example.com/unsafe/5120x2880/filters:format(avif)/hero.jpg 5120w
+https://images.example.com/unsafe/6016x3384/filters:format(avif)/hero.jpg 6016w
+
+source (image/webp):
+https://images.example.com/unsafe/640x360/filters:format(webp)/hero.jpg 640w
+https://images.example.com/unsafe/750x422/filters:format(webp)/hero.jpg 750w
+https://images.example.com/unsafe/828x466/filters:format(webp)/hero.jpg 828w
+https://images.example.com/unsafe/960x540/filters:format(webp)/hero.jpg 960w
+https://images.example.com/unsafe/1080x608/filters:format(webp)/hero.jpg 1080w
+https://images.example.com/unsafe/1280x720/filters:format(webp)/hero.jpg 1280w
+https://images.example.com/unsafe/1668x938/filters:format(webp)/hero.jpg 1668w
+https://images.example.com/unsafe/1920x1080/filters:format(webp)/hero.jpg 1920w
+https://images.example.com/unsafe/2048x1152/filters:format(webp)/hero.jpg 2048w
+https://images.example.com/unsafe/2560x1440/filters:format(webp)/hero.jpg 2560w
+https://images.example.com/unsafe/3200x1800/filters:format(webp)/hero.jpg 3200w
+https://images.example.com/unsafe/3840x2160/filters:format(webp)/hero.jpg 3840w
+https://images.example.com/unsafe/4480x2520/filters:format(webp)/hero.jpg 4480w
+https://images.example.com/unsafe/5120x2880/filters:format(webp)/hero.jpg 5120w
+https://images.example.com/unsafe/6016x3384/filters:format(webp)/hero.jpg 6016w
+
+source (image/jpeg):
+https://images.example.com/unsafe/640x360/filters:format(jpeg)/hero.jpg 640w
+https://images.example.com/unsafe/750x422/filters:format(jpeg)/hero.jpg 750w
+https://images.example.com/unsafe/828x466/filters:format(jpeg)/hero.jpg 828w
+https://images.example.com/unsafe/960x540/filters:format(jpeg)/hero.jpg 960w
+https://images.example.com/unsafe/1080x608/filters:format(jpeg)/hero.jpg 1080w
+https://images.example.com/unsafe/1280x720/filters:format(jpeg)/hero.jpg 1280w
+https://images.example.com/unsafe/1668x938/filters:format(jpeg)/hero.jpg 1668w
+https://images.example.com/unsafe/1920x1080/filters:format(jpeg)/hero.jpg 1920w
+https://images.example.com/unsafe/2048x1152/filters:format(jpeg)/hero.jpg 2048w
+https://images.example.com/unsafe/2560x1440/filters:format(jpeg)/hero.jpg 2560w
+https://images.example.com/unsafe/3200x1800/filters:format(jpeg)/hero.jpg 3200w
+https://images.example.com/unsafe/3840x2160/filters:format(jpeg)/hero.jpg 3840w
+https://images.example.com/unsafe/4480x2520/filters:format(jpeg)/hero.jpg 4480w
+https://images.example.com/unsafe/5120x2880/filters:format(jpeg)/hero.jpg 5120w
+https://images.example.com/unsafe/6016x3384/filters:format(jpeg)/hero.jpg 6016w

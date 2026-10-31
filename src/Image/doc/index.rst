@@ -6,8 +6,8 @@ to change, or even change drastically.
 
 Symfony UX Image renders responsive images in Symfony applications by
 delegating every transformation to a URL-based image provider, such as
-`Cloudflare`_, `Cloudinary`_, `imgix`_, `IPX`_ or `KeyCDN`_. It is part
-of `the Symfony UX initiative`_.
+`Cloudflare`_, `Cloudinary`_, `Imagor`_, `imgix`_, `IPX`_ or `KeyCDN`_. It is
+part of `the Symfony UX initiative`_.
 
 The package never decodes, resizes or encodes an image itself. Every
 transformation is expressed as a URL, built by whichever provider is
@@ -51,7 +51,8 @@ The ``<twig:ux:image>`` component renders a single image:
 ``src`` is the public URL path of the original image, as your application
 serves it. Every provider reads it the same way: Cloudflare, Cloudinary, imgix
 and KeyCDN fetch it from your origin, IPX from your ``public/`` directory,
-and ``null://`` renders it as is.
+and ``null://`` renders it as is. Imagor fetches it from your origin once its
+``origin`` DSN option is set.
 Switching providers therefore never changes your templates.
 
 For example, with ``UX_IMAGE_DSN=cloudflare://cdn.example.com``, this template:
@@ -289,6 +290,7 @@ Scheme         Install                                          DSN example
 ``keycdn``     ``composer require symfony/ux-keycdn-image``     ``keycdn://myzone.kxcdn.com``
 ``cloudflare`` ``composer require symfony/ux-cloudflare-image`` ``cloudflare://cdn.example.com``
 ``cloudinary`` ``composer require symfony/ux-cloudinary-image`` ``cloudinary://my-cloud?origin=https://example.com``
+``imagor``     ``composer require symfony/ux-imagor-image``     ``imagor://images.example.com?origin=https://example.com``
 ``imgix``      ``composer require symfony/ux-imgix-image``      ``imgix://my-source.imgix.net``
 ``ipx``        ``composer require symfony/ux-ipx-image``        ``ipx://images.example.com``
 ============== ================================================ ===========================================================
@@ -548,8 +550,8 @@ Providers
 Parameter mapping
 ~~~~~~~~~~~~~~~~~
 
-Every ``ImageTransformation`` property maps to a provider-specific query
-parameter:
+Every ``ImageTransformation`` property maps to provider-specific URL parameters.
+Imagor uses path segments, described in its section below:
 
 ========================= =============== =============== =============== =============== ===============
 ``ImageTransformation``   `Cloudflare`_   `Cloudinary`_   `imgix`_        `IPX`_          `KeyCDN`_
@@ -567,8 +569,8 @@ IPX takes ``width`` and ``height`` together as one ``s`` modifier, like
 ``s_800x450``.
 
 ``operations`` (see
-:ref:`Provider-specific operations <image_provider_operations>`) is merged
-into the generated URL verbatim, once resolved for the active provider.
+:ref:`Provider-specific operations <image_provider_operations>`) is translated
+into the generated URL, once resolved for the active provider.
 
 Supported formats and negotiation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -578,6 +580,7 @@ Provider      Supported formats                     Negotiates automatically?
 ============= ===================================== =========================
 `Cloudflare`_ ``avif``, ``webp``, ``jpeg``, ``png`` **Yes**
 `Cloudinary`_ ``avif``, ``webp``, ``jpeg``, ``png`` **Yes**
+`Imagor`_     ``avif``, ``webp``, ``jpeg``, ``png`` **No**
 `imgix`_      ``avif``, ``webp``, ``jpeg``, ``png`` **Yes**
 `IPX`_        ``avif``, ``webp``, ``jpeg``, ``png`` **Yes**
 `KeyCDN`_     ``webp``, ``jpeg``, ``png``           **No**
@@ -680,6 +683,46 @@ image), ``dpr``, ``e`` (effect), ``fl`` (flags), ``g`` (gravity), ``o``
 (zoom). A value can contain a ``:``, like ``{e: 'sharpen:100'}``, but not a
 ``/`` or a ``,``. See `Cloudinary's own transformation reference`_ for what
 each one does.
+
+Imagor
+~~~~~~
+
+`Imagor`_ is a self-hosted image processing server:
+
+.. code-block:: terminal
+
+    $ composer require symfony/ux-imagor-image
+
+.. code-block:: dotenv
+
+    UX_IMAGE_DSN=imagor://images.example.com?origin=https%3A%2F%2Fexample.com&sign_key=your-secret
+
+The host is the image server. ``origin`` is the source HTTP(S) base URL;
+without it, ``src`` is a storage/loader key. With ``origin``, ``src`` always
+resolves under it, even when it is an absolute URL. The DSN preserves ports
+and an optional reverse-proxy path prefix. Add ``secure=false`` for a local
+HTTP server.
+
+``sign_key`` must match ``IMAGOR_SECRET``. The default ``signer=sha1`` and
+``sign_truncate=0`` match stock Imagor. ``sha256`` and ``sha512`` are also
+supported; match the signer and truncation to the server configuration.
+Without a key, URLs use ``unsafe`` and require unsafe mode on the server.
+URL-encode DSN values and keep signing keys outside committed files.
+
+Dimensions become ``WIDTHxHEIGHT`` (``0`` for an unspecified dimension).
+Cover uses the default centered crop; contain uses ``fit-in`` without
+upscaling. Quality and format become ``quality()`` and ``format()`` filters.
+Automatic format negotiation depends on server flags, so the bridge does
+not advertise it; use ``ux_picture()`` to offer multiple explicit formats.
+
+Supported operations are ``background_color``, ``blur``, ``brightness``,
+``contrast``, ``crop``, ``dpi``, ``fill``, ``focal``, ``grayscale``, ``hue``,
+``no_upscale``, ``page``, ``rgb``, ``rotate``, ``round_corner``, ``saturation``,
+``sharpen``, ``strip_exif`` and ``strip_metadata``. The four no-argument filters
+(``grayscale``, ``no_upscale``, ``strip_exif``, ``strip_metadata``) take booleans.
+Other filters take numbers or argument strings, such as ``'10,20,200,150'``
+for ``crop``. Filters preserve insertion order; crop runs after resize.
+See the bridge README for argument restrictions and signing examples.
 
 imgix
 ~~~~~
@@ -893,6 +936,10 @@ distinct URL is one more image the provider generates and caches:
 * With fetch delivery, anyone can also ask your Cloudinary account to fetch
   an image from any other domain. Restrict the `allowed fetch domains`_ to
   your origin.
+* Imagor requires signed URLs unless ``IMAGOR_UNSAFE`` is on. Give the
+  server's ``IMAGOR_SECRET`` to the provider with the ``sign_key`` DSN option,
+  and keep ``IMAGOR_UNSAFE`` off in production: the server then serves only
+  the URLs your application generated.
 * imgix can require signed URLs on a source, with `secure URLs`_. Turn it on,
   and give the source's token to the provider with the ``sign_key`` DSN
   option: the source then serves only the URLs your application generated.
@@ -942,6 +989,7 @@ The package supports PHP 8.4 or later and Symfony 7.4 or 8.x.
 .. _`auto-upload mapping`: https://cloudinary.com/documentation/migration#lazy_migration_with_auto_upload
 .. _`Cloudinary's own transformation reference`: https://cloudinary.com/documentation/transformation_reference
 .. _`Strict transformations`: https://cloudinary.com/documentation/control_access_to_media#strict_transformations
+.. _`Imagor`: https://github.com/symfony/ux/blob/3.x/src/Image/src/Bridge/Imagor/README.md
 .. _`KeyCDN`: https://github.com/symfony/ux/blob/3.x/src/Image/src/Bridge/KeyCdn/README.md
 .. _`KeyCDN Image Processing`: https://www.keycdn.com/support/image-processing
 .. _`KeyCDN's own parameter reference`: https://www.keycdn.com/support/image-processing
