@@ -42,16 +42,17 @@ final class MercureStreamSourceRenderer implements StreamSourceRendererInterface
     public function render(string|object|array $topics, array $options = []): string
     {
         $private = $options['private'] ?? false;
+        $subscribe = $options['subscribe'] ?? null;
 
-        $topics = \is_array($topics) ? array_values($topics) : [$topics];
-        $topicStrings = TopicResolver::speaksProtocolV1($this->hub)
-            ? $this->topicResolver->resolveForProtocolV1($topics)
-            : $this->topicResolver->resolveForProtocolV0($topics);
+        $topics = self::toList($topics);
+        $topicStrings = $this->resolve($topics);
 
         $mercureOptions = ['hub' => $this->hubName];
         if ($private) {
             $mercureOptions['withCredentials'] = true;
-            $mercureOptions['subscribe'] = $topicStrings;
+            $mercureOptions['subscribe'] = null === $subscribe
+                ? $topicStrings
+                : $this->resolve([...$topics, ...self::toList($subscribe)]);
         }
 
         // Mercure >= 0.7: https://github.com/symfony/mercure/pull/123
@@ -69,5 +70,27 @@ final class MercureStreamSourceRenderer implements StreamSourceRendererInterface
             htmlspecialchars($url, \ENT_QUOTES | \ENT_SUBSTITUTE, 'UTF-8'),
             $private ? ' private' : '',
         );
+    }
+
+    /**
+     * @param string|object|array<string|object> $topics
+     *
+     * @return list<string|object>
+     */
+    private static function toList(string|object|array $topics): array
+    {
+        return \is_array($topics) ? array_values($topics) : [$topics];
+    }
+
+    /**
+     * @param list<string|object> $topics
+     *
+     * @return list<string>|array<string, list<string>>
+     */
+    private function resolve(array $topics): array
+    {
+        return TopicResolver::speaksProtocolV1($this->hub)
+            ? $this->topicResolver->resolveForProtocolV1($topics)
+            : $this->topicResolver->resolveForProtocolV0($topics);
     }
 }
