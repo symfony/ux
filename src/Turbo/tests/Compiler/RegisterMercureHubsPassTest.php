@@ -14,6 +14,8 @@ namespace Symfony\UX\Turbo\Tests\Compiler;
 use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\Reference;
 use Symfony\UX\Turbo\Bridge\Mercure\TurboStreamListenRenderer;
 use Symfony\UX\Turbo\DependencyInjection\Compiler\RegisterMercureHubsPass;
 
@@ -32,6 +34,36 @@ final class RegisterMercureHubsPassTest extends TestCase
         $this->assertTrue($container->has('turbo.mercure.hub.renderer'));
         $this->assertTrue($container->has('turbo.mercure.hub.stream_source_renderer'));
         $this->assertTrue($container->has('turbo.mercure.hub.broadcaster'));
+    }
+
+    public function testProcessPassesTheCookieDomainErrorsSettingToTheStreamSourceRenderer(): void
+    {
+        $pass = new RegisterMercureHubsPass();
+
+        $container = new ContainerBuilder();
+        $container->setParameter('.turbo.mercure.ignore_cookie_domain_errors', true);
+        $container->register('hub')
+            ->addTag('mercure.hub');
+
+        $pass->process($container);
+
+        $definition = $container->getDefinition('turbo.mercure.hub.stream_source_renderer');
+        $this->assertTrue($definition->getArgument(4));
+        $this->assertEquals(new Reference('logger', ContainerInterface::NULL_ON_INVALID_REFERENCE), $definition->getArgument(5));
+        $this->assertSame([['channel' => 'turbo']], $definition->getTag('monolog.logger'));
+    }
+
+    public function testProcessDoesNotIgnoreCookieDomainErrorsByDefault(): void
+    {
+        $pass = new RegisterMercureHubsPass();
+
+        $container = new ContainerBuilder();
+        $container->register('hub')
+            ->addTag('mercure.hub');
+
+        $pass->process($container);
+
+        $this->assertFalse($container->getDefinition('turbo.mercure.hub.stream_source_renderer')->getArgument(4));
     }
 
     public function testRendererServiceIsDeprecated(): void

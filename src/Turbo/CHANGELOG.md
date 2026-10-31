@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 3.7.0
+
+- Add the `turbo.mercure.ignore_cookie_domain_errors` option, to render nothing and log a warning instead of failing when the authorization cookie of a private stream source cannot be created for the domain of the page
+
 ## 3.6.0
 
 - Support the Mercure protocol 1.0 in `turbo_stream_from()` and `<twig:Turbo:Stream:From>`: listening to every entity of a class subscribes to a URL Pattern (`:id`) instead of a URI Template (`{id}`), which the protocol 1.0 dropped

@@ -44,6 +44,15 @@ final class Configuration implements ConfigurationInterface
                     ->end()
                 ->end()
                 ->scalarNode('default_transport')->defaultValue('default')->end()
+                ->arrayNode('mercure')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->booleanNode('ignore_cookie_domain_errors')
+                            ->info('Render nothing and log a warning, instead of failing, when the authorization cookie of a private stream source cannot be created because the page is served on another domain than the hub')
+                            ->defaultFalse()
+                        ->end()
+                    ->end()
+                ->end()
             ->end()
         ;
 
