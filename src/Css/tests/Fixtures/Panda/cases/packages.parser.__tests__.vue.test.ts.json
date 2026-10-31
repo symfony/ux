@@ -1,0 +1,128 @@
+{
+  "source": "packages/parser/__tests__/vue.test.ts",
+  "cases": [
+    {
+      "id": "fixture::packages/parser/__tests__/vue.test.ts::extract Vue templates > Nested templates::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/vue.test.ts",
+        "test": "extract Vue templates > Nested templates",
+        "line": 215
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          "textStyle": "overline"
+        },
+        {
+          "textStyle": "h7"
+        },
+        {
+          "textStyle": "text",
+          "color": "grey.70"
+        }
+      ],
+      "expected": {
+        "css": "@layer utilities {\n  .c_grey\\.70 {\n    color: grey.70;\n}\n}"
+      },
+      "unsupported": "extracted non-css items (jsx)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/vue.test.ts::extract Vue templates > vue 2 Options API template::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/vue.test.ts",
+        "test": "extract Vue templates > vue 2 Options API template",
+        "line": 463
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          "color": "green.400"
+        },
+        {
+          "color": "purple.400"
+        },
+        {
+          "color": "red.500"
+        },
+        {
+          "color": "red",
+          "fontWeight": "bold"
+        },
+        {
+          "color": "green"
+        }
+      ],
+      "expected": {
+        "css": "@layer utilities {\n  .c_green\\.400 {\n    color: var(--colors-green-400);\n}\n\n  .c_purple\\.400 {\n    color: var(--colors-purple-400);\n}\n\n  .c_red\\.500 {\n    color: var(--colors-red-500);\n}\n\n  .c_red {\n    color: red;\n}\n\n  .fw_bold {\n    font-weight: var(--font-weights-bold);\n}\n\n  .c_green {\n    color: green;\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/vue.test.ts::extract Vue templates > vue 3 composition API::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/vue.test.ts",
+        "test": "extract Vue templates > vue 3 composition API",
+        "line": 70
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          "color": "green.400"
+        },
+        {
+          "color": "purple.400"
+        },
+        {
+          "color": "red.500"
+        },
+        {
+          "color": "red",
+          "fontWeight": "bold"
+        },
+        {
+          "color": "green"
+        }
+      ],
+      "expected": {
+        "css": "@layer utilities {\n  .c_green\\.400 {\n    color: var(--colors-green-400);\n}\n\n  .c_purple\\.400 {\n    color: var(--colors-purple-400);\n}\n\n  .c_red\\.500 {\n    color: var(--colors-red-500);\n}\n\n  .c_red {\n    color: red;\n}\n\n  .fw_bold {\n    font-weight: var(--font-weights-bold);\n}\n\n  .c_green {\n    color: green;\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/vue.test.ts::extract Vue templates > vue 3 script setup::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/vue.test.ts",
+        "test": "extract Vue templates > vue 3 script setup",
+        "line": 322
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          "color": "green.400"
+        },
+        {
+          "color": "purple.400"
+        },
+        {
+          "color": "red.500"
+        },
+        {
+          "color": "red",
+          "fontWeight": "bold"
+        },
+        {
+          "color": "green"
+        }
+      ],
+      "expected": {
+        "css": "@layer utilities {\n  .c_green\\.400 {\n    color: var(--colors-green-400);\n}\n\n  .c_purple\\.400 {\n    color: var(--colors-purple-400);\n}\n\n  .c_red\\.500 {\n    color: var(--colors-red-500);\n}\n\n  .c_red {\n    color: red;\n}\n\n  .fw_bold {\n    font-weight: var(--font-weights-bold);\n}\n\n  .c_green {\n    color: green;\n}\n}"
+      }
+    }
+  ]
+}

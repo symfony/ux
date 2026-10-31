@@ -1,0 +1,289 @@
+{
+  "source": "packages/core/__tests__/composition.test.ts",
+  "cases": [
+    {
+      "id": "fixture::packages/core/__tests__/composition.test.ts::compositions > should resolve animation styles::1",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/composition.test.ts",
+        "test": "compositions > should resolve animation styles",
+        "line": 26
+      },
+      "userConfig": {
+        "theme": {
+          "animationStyles": {
+            "scale-fade-in": {
+              "value": {
+                "transformOrigin": "var(--transform-origin)",
+                "animationName": "scale-in, fade-in"
+              }
+            },
+            "scale-fade-out": {
+              "value": {
+                "transformOrigin": "var(--transform-origin)",
+                "animationName": "scale-out, fade-out"
+              }
+            }
+          }
+        }
+      },
+      "inputs": [
+        {
+          "animationStyle": "scale-fade-in"
+        }
+      ],
+      "configPatch": {
+        "theme": {
+          "animationStyles": {
+            "$value": {
+              "scale-fade-in": {
+                "value": {
+                  "transformOrigin": "var(--transform-origin)",
+                  "animationName": "scale-in, fade-in"
+                }
+              },
+              "scale-fade-out": {
+                "value": {
+                  "transformOrigin": "var(--transform-origin)",
+                  "animationName": "scale-out, fade-out"
+                }
+              }
+            }
+          },
+          "$order": [
+            "animationStyles",
+            "keyframes",
+            "breakpoints",
+            "tokens",
+            "textStyles",
+            "containerSizes",
+            "semanticTokens",
+            "recipes",
+            "slotRecipes"
+          ]
+        }
+      },
+      "options": null,
+      "expected": {
+        "classNames": [
+          "animationStyle_scale-fade-in"
+        ],
+        "css": "@layer utilities {\n  @layer compositions {\n    .animationStyle_scale-fade-in {\n      transform-origin: var(--transform-origin);\n      animation-name: scale-in, fade-in;\n}\n    }\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/core/__tests__/composition.test.ts::compositions > should resolve DEFAULT::1",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/composition.test.ts",
+        "test": "compositions > should resolve DEFAULT",
+        "line": 26
+      },
+      "userConfig": {
+        "theme": {
+          "animationStyles": {
+            "scale-fade-in": {
+              "value": {
+                "transformOrigin": "var(--transform-origin)",
+                "animationName": "scale-in, fade-in"
+              }
+            },
+            "scale-fade-out": {
+              "value": {
+                "transformOrigin": "var(--transform-origin)",
+                "animationName": "scale-out, fade-out"
+              }
+            }
+          }
+        }
+      },
+      "inputs": [
+        {
+          "textStyle": "headline"
+        }
+      ],
+      "configPatch": {
+        "theme": {
+          "animationStyles": {
+            "$value": {
+              "scale-fade-in": {
+                "value": {
+                  "transformOrigin": "var(--transform-origin)",
+                  "animationName": "scale-in, fade-in"
+                }
+              },
+              "scale-fade-out": {
+                "value": {
+                  "transformOrigin": "var(--transform-origin)",
+                  "animationName": "scale-out, fade-out"
+                }
+              }
+            }
+          },
+          "$order": [
+            "animationStyles",
+            "keyframes",
+            "breakpoints",
+            "tokens",
+            "textStyles",
+            "containerSizes",
+            "semanticTokens",
+            "recipes",
+            "slotRecipes"
+          ]
+        }
+      },
+      "options": null,
+      "expected": {
+        "classNames": [
+          "textStyle_headline"
+        ],
+        "css": "@layer utilities {\n  @layer compositions {\n    .textStyle_headline {\n      font-size: 1.5rem;\n      font-weight: var(--font-weights-bold);\n}\n    }\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/core/__tests__/composition.test.ts::compositions > should respect the layer::1",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/composition.test.ts",
+        "test": "compositions > should respect the layer",
+        "line": 26
+      },
+      "userConfig": {
+        "theme": {
+          "animationStyles": {
+            "scale-fade-in": {
+              "value": {
+                "transformOrigin": "var(--transform-origin)",
+                "animationName": "scale-in, fade-in"
+              }
+            },
+            "scale-fade-out": {
+              "value": {
+                "transformOrigin": "var(--transform-origin)",
+                "animationName": "scale-out, fade-out"
+              }
+            }
+          }
+        }
+      },
+      "inputs": [
+        {
+          "textStyle": "headline.h1"
+        }
+      ],
+      "configPatch": {
+        "theme": {
+          "animationStyles": {
+            "$value": {
+              "scale-fade-in": {
+                "value": {
+                  "transformOrigin": "var(--transform-origin)",
+                  "animationName": "scale-in, fade-in"
+                }
+              },
+              "scale-fade-out": {
+                "value": {
+                  "transformOrigin": "var(--transform-origin)",
+                  "animationName": "scale-out, fade-out"
+                }
+              }
+            }
+          },
+          "$order": [
+            "animationStyles",
+            "keyframes",
+            "breakpoints",
+            "tokens",
+            "textStyles",
+            "containerSizes",
+            "semanticTokens",
+            "recipes",
+            "slotRecipes"
+          ]
+        }
+      },
+      "options": null,
+      "expected": {
+        "classNames": [
+          "textStyle_headline\\.h1"
+        ],
+        "css": "@layer utilities {\n  @layer compositions {\n    .textStyle_headline\\.h1 {\n      font-size: 2rem;\n      font-weight: var(--font-weights-bold);\n}\n    }\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/core/__tests__/composition.test.ts::compositions > should respect the layer::2",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/composition.test.ts",
+        "test": "compositions > should respect the layer",
+        "line": 26
+      },
+      "userConfig": {
+        "theme": {
+          "animationStyles": {
+            "scale-fade-in": {
+              "value": {
+                "transformOrigin": "var(--transform-origin)",
+                "animationName": "scale-in, fade-in"
+              }
+            },
+            "scale-fade-out": {
+              "value": {
+                "transformOrigin": "var(--transform-origin)",
+                "animationName": "scale-out, fade-out"
+              }
+            }
+          }
+        }
+      },
+      "inputs": [
+        {
+          "textStyle": "headline.h2"
+        }
+      ],
+      "configPatch": {
+        "theme": {
+          "animationStyles": {
+            "$value": {
+              "scale-fade-in": {
+                "value": {
+                  "transformOrigin": "var(--transform-origin)",
+                  "animationName": "scale-in, fade-in"
+                }
+              },
+              "scale-fade-out": {
+                "value": {
+                  "transformOrigin": "var(--transform-origin)",
+                  "animationName": "scale-out, fade-out"
+                }
+              }
+            }
+          },
+          "$order": [
+            "animationStyles",
+            "keyframes",
+            "breakpoints",
+            "tokens",
+            "textStyles",
+            "containerSizes",
+            "semanticTokens",
+            "recipes",
+            "slotRecipes"
+          ]
+        }
+      },
+      "options": null,
+      "expected": {
+        "classNames": [
+          "textStyle_headline\\.h2"
+        ],
+        "css": "@layer utilities {\n  @layer compositions {\n    .textStyle_headline\\.h2 {\n      font-size: 1.5rem;\n      font-weight: var(--font-weights-bold);\n}\n\n    @media screen and (min-width: 64rem) {\n      .textStyle_headline\\.h2 {\n        font-size: 2rem;\n}\n}\n    }\n}"
+      }
+    }
+  ]
+}

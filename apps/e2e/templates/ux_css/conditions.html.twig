@@ -1,0 +1,35 @@
+{% extends 'example.html.twig' %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('ux_css/styles.css') }}">
+{% endblock %}
+
+{% block example %}
+    <button type="button" data-testid="css-focus-active" class="{{ css({color: 'danger', _focus: {color: 'primary'}, _active: {textDecorationLine: 'underline'}}) }}">
+        Focus or press me
+    </button>
+
+    <button type="button" disabled data-testid="css-disabled" class="{{ css({_disabled: {opacity: 0.5}}) }}">
+        Disabled
+    </button>
+
+    <input type="checkbox" data-testid="css-checked" aria-label="Check me" class="{{ css({_checked: {opacity: 0.5}}) }}">
+
+    <div data-testid="css-breakpoint" class="{{ css({p: '4', color: 'danger', md: {p: '8', _hover: {color: 'primary'}}}) }}">
+        Hover me on a wide screen
+    </div>
+
+    <div data-testid="css-conditional-value" class="{{ css({color: {base: 'danger', _hover: 'primary'}}) }}">
+        Hover me
+    </div>
+
+    <div class="group" data-testid="css-group">
+        <span data-testid="css-group-child" class="{{ css({color: 'danger', _groupHover: {color: 'primary'}}) }}">
+            Hover my parent
+        </span>
+    </div>
+
+    <div data-testid="css-os-dark" class="{{ css({color: 'danger', _osDark: {color: 'primary'}}) }}">
+        Primary in dark mode
+    </div>
+{% endblock %}

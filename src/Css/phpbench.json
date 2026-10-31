@@ -1,0 +1,16 @@
+{
+    "$schema": "./vendor/phpbench/phpbench/phpbench.schema.json",
+    "runner.bootstrap": "vendor/autoload.php",
+    "runner.path": "tests/Benchmark",
+    "runner.php_config": {
+        "opcache.enable_cli": 1,
+        "opcache.file_update_protection": 0,
+        "xdebug.mode": "off"
+    },
+    "report.generators": {
+        "css": {
+            "extends": "aggregate",
+            "cols": ["benchmark", "subject", "set", "revs", "its", "mode", "rstdev"]
+        }
+    }
+}

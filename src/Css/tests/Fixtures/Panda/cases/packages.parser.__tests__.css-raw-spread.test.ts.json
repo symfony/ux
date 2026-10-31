@@ -1,0 +1,276 @@
+{
+  "source": "packages/parser/__tests__/css-raw-spread.test.ts",
+  "cases": [
+    {
+      "id": "fixture::packages/parser/__tests__/css-raw-spread.test.ts::css.raw spreading in conditions > handles deeply nested spreading with conditions::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/css-raw-spread.test.ts",
+        "test": "css.raw spreading in conditions > handles deeply nested spreading with conditions",
+        "line": 279
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          "color": "text.primary",
+          "fontSize": "md"
+        },
+        {
+          "color": "text.primary",
+          "fontSize": "md",
+          "cursor": "pointer",
+          "transition": "all 0.2s"
+        },
+        {
+          "color": "text.primary",
+          "fontSize": "md",
+          "border": "1px solid",
+          "borderColor": "border.default",
+          "_hover": {
+            "color": "text.primary",
+            "fontSize": "md",
+            "cursor": "pointer",
+            "transition": "all 0.2s",
+            "borderColor": "border.hover",
+            "_dark": {
+              "color": "text.primary",
+              "fontSize": "md",
+              "cursor": "pointer",
+              "transition": "all 0.2s",
+              "borderColor": "border.dark.hover"
+            }
+          },
+          "sm": {
+            "color": "text.primary",
+            "fontSize": "md",
+            "padding": "2",
+            "_hover": {
+              "color": "text.primary",
+              "fontSize": "md",
+              "cursor": "pointer",
+              "transition": "all 0.2s",
+              "padding": "3"
+            }
+          }
+        }
+      ],
+      "expected": {
+        "css": "@layer utilities {\n  .bd_1px_solid {\n    border: 1px solid;\n}\n\n  .trs_all_0\\.2s {\n    transition: all 0.2s;\n}\n\n  .bd-c_border\\.default {\n    border-color: border.default;\n}\n\n  .c_text\\.primary {\n    color: text.primary;\n}\n\n  .fs_md {\n    font-size: var(--font-sizes-md);\n}\n\n  .cursor_pointer {\n    cursor: pointer;\n}\n\n  .hover\\:trs_all_0\\.2s:is(:hover, [data-hover]) {\n    transition: all 0.2s;\n}\n\n  .hover\\:bd-c_border\\.hover:is(:hover, [data-hover]) {\n    border-color: border.hover;\n}\n\n  .hover\\:c_text\\.primary:is(:hover, [data-hover]) {\n    color: text.primary;\n}\n\n  .hover\\:fs_md:is(:hover, [data-hover]) {\n    font-size: var(--font-sizes-md);\n}\n\n  .hover\\:cursor_pointer:is(:hover, [data-hover]) {\n    cursor: pointer;\n}\n\n  [data-theme=dark] .hover\\:dark\\:trs_all_0\\.2s:is(:hover, [data-hover]),.dark .hover\\:dark\\:trs_all_0\\.2s:is(:hover, [data-hover]),.hover\\:dark\\:trs_all_0\\.2s:is(:hover, [data-hover]).dark,.hover\\:dark\\:trs_all_0\\.2s:is(:hover, [data-hover])[data-theme=dark] {\n    transition: all 0.2s;\n}\n\n  [data-theme=dark] .hover\\:dark\\:bd-c_border\\.dark\\.hover:is(:hover, [data-hover]),.dark .hover\\:dark\\:bd-c_border\\.dark\\.hover:is(:hover, [data-hover]),.hover\\:dark\\:bd-c_border\\.dark\\.hover:is(:hover, [data-hover]).dark,.hover\\:dark\\:bd-c_border\\.dark\\.hover:is(:hover, [data-hover])[data-theme=dark] {\n    border-color: border.dark.hover;\n}\n\n  [data-theme=dark] .hover\\:dark\\:c_text\\.primary:is(:hover, [data-hover]),.dark .hover\\:dark\\:c_text\\.primary:is(:hover, [data-hover]),.hover\\:dark\\:c_text\\.primary:is(:hover, [data-hover]).dark,.hover\\:dark\\:c_text\\.primary:is(:hover, [data-hover])[data-theme=dark] {\n    color: text.primary;\n}\n\n  [data-theme=dark] .hover\\:dark\\:fs_md:is(:hover, [data-hover]),.dark .hover\\:dark\\:fs_md:is(:hover, [data-hover]),.hover\\:dark\\:fs_md:is(:hover, [data-hover]).dark,.hover\\:dark\\:fs_md:is(:hover, [data-hover])[data-theme=dark] {\n    font-size: var(--font-sizes-md);\n}\n\n  [data-theme=dark] .hover\\:dark\\:cursor_pointer:is(:hover, [data-hover]),.dark .hover\\:dark\\:cursor_pointer:is(:hover, [data-hover]),.hover\\:dark\\:cursor_pointer:is(:hover, [data-hover]).dark,.hover\\:dark\\:cursor_pointer:is(:hover, [data-hover])[data-theme=dark] {\n    cursor: pointer;\n}\n\n  @media screen and (min-width: 40rem) {\n    .sm\\:p_2 {\n      padding: var(--spacing-2);\n}\n    .sm\\:c_text\\.primary {\n      color: text.primary;\n}\n    .sm\\:fs_md {\n      font-size: var(--font-sizes-md);\n}\n    .sm\\:hover\\:p_3:is(:hover, [data-hover]) {\n      padding: var(--spacing-3);\n}\n    .sm\\:hover\\:trs_all_0\\.2s:is(:hover, [data-hover]) {\n      transition: all 0.2s;\n}\n    .sm\\:hover\\:c_text\\.primary:is(:hover, [data-hover]) {\n      color: text.primary;\n}\n    .sm\\:hover\\:fs_md:is(:hover, [data-hover]) {\n      font-size: var(--font-sizes-md);\n}\n    .sm\\:hover\\:cursor_pointer:is(:hover, [data-hover]) {\n      cursor: pointer;\n}\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/css-raw-spread.test.ts::css.raw spreading in conditions > handles nested spreading with identifiers::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/css-raw-spread.test.ts",
+        "test": "css.raw spreading in conditions > handles nested spreading with identifiers",
+        "line": 193
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          "display": "flex",
+          "gap": "10px"
+        },
+        {
+          "background": "gray.100",
+          "cursor": "pointer"
+        },
+        {
+          "display": "flex",
+          "gap": "10px",
+          "_hover": {
+            "background": "gray.100",
+            "cursor": "pointer",
+            "transform": "scale(1.05)"
+          },
+          "_focus": {
+            "display": "flex",
+            "gap": "10px",
+            "outline": "2px solid blue"
+          }
+        }
+      ],
+      "expected": {
+        "css": "@layer utilities {\n  .bg_gray\\.100 {\n    background: var(--colors-gray-100);\n}\n\n  .gap_10px {\n    gap: 10px;\n}\n\n  .d_flex {\n    display: flex;\n}\n\n  .cursor_pointer {\n    cursor: pointer;\n}\n\n  .focus\\:gap_10px:is(:focus, [data-focus]) {\n    gap: 10px;\n}\n\n  .focus\\:ring_2px_solid_blue:is(:focus, [data-focus]) {\n    outline: 2px solid blue;\n}\n\n  .focus\\:d_flex:is(:focus, [data-focus]) {\n    display: flex;\n}\n\n  .hover\\:bg_gray\\.100:is(:hover, [data-hover]) {\n    background: var(--colors-gray-100);\n}\n\n  .hover\\:cursor_pointer:is(:hover, [data-hover]) {\n    cursor: pointer;\n}\n\n  .hover\\:trf_scale\\(1\\.05\\):is(:hover, [data-hover]) {\n    transform: scale(1.05);\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/css-raw-spread.test.ts::css.raw spreading in conditions > handles spreading across multiple files::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/css-raw-spread.test.ts",
+        "test": "css.raw spreading in conditions > handles spreading across multiple files",
+        "line": 450
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          "fontFamily": "sans-serif",
+          "lineHeight": 1.5
+        },
+        {
+          "fontFamily": "sans-serif",
+          "lineHeight": 1.5,
+          "padding": "8px 16px",
+          "borderRadius": "4px"
+        },
+        {
+          "fontFamily": "sans-serif",
+          "lineHeight": 1.5,
+          "padding": "8px 16px",
+          "borderRadius": "4px",
+          "backgroundColor": "blue.500",
+          "_hover": {
+            "fontFamily": "sans-serif",
+            "lineHeight": 1.5,
+            "padding": "8px 16px",
+            "borderRadius": "4px",
+            "backgroundColor": "blue.600"
+          }
+        }
+      ],
+      "expected": {
+        "css": "@layer utilities {\n  .p_8px_16px {\n    padding: 8px 16px;\n}\n\n  .bdr_4px {\n    border-radius: 4px;\n}\n\n  .ff_sans-serif {\n    font-family: sans-serif;\n}\n\n  .lh_1\\.5 {\n    line-height: 1.5;\n}\n\n  .bg-c_blue\\.500 {\n    background-color: var(--colors-blue-500);\n}\n\n  .hover\\:p_8px_16px:is(:hover, [data-hover]) {\n    padding: 8px 16px;\n}\n\n  .hover\\:bdr_4px:is(:hover, [data-hover]) {\n    border-radius: 4px;\n}\n\n  .hover\\:ff_sans-serif:is(:hover, [data-hover]) {\n    font-family: sans-serif;\n}\n\n  .hover\\:lh_1\\.5:is(:hover, [data-hover]) {\n    line-height: 1.5;\n}\n\n  .hover\\:bg-c_blue\\.600:is(:hover, [data-hover]) {\n    background-color: var(--colors-blue-600);\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/css-raw-spread.test.ts::css.raw spreading in conditions > handles spreading css.raw in arbitrary selectors::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/css-raw-spread.test.ts",
+        "test": "css.raw spreading in conditions > handles spreading css.raw in arbitrary selectors",
+        "line": 375
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          "margin": 0,
+          "padding": 0,
+          "boxSizing": "border-box"
+        },
+        {
+          "margin": 0,
+          "padding": 0,
+          "boxSizing": "border-box",
+          "listStyle": "none",
+          "& li": {
+            "margin": 0,
+            "padding": 0,
+            "boxSizing": "border-box",
+            "display": "block",
+            "&:hover": {
+              "margin": 0,
+              "padding": 0,
+              "boxSizing": "border-box",
+              "background": "gray.50"
+            }
+          },
+          "[data-selected]": {
+            "margin": 0,
+            "padding": 0,
+            "boxSizing": "border-box",
+            "fontWeight": "bold"
+          }
+        }
+      ],
+      "expected": {
+        "css": "@layer utilities {\n  .m_0 {\n    margin: var(--spacing-0);\n}\n\n  .p_0 {\n    padding: var(--spacing-0);\n}\n\n  .li-s_none {\n    list-style: none;\n}\n\n  .bx-s_border-box {\n    box-sizing: border-box;\n}\n\n  .fw_bold {\n    font-weight: var(--font-weights-bold);\n}\n\n  .\\[\\&_li\\]\\:m_0 li {\n    margin: var(--spacing-0);\n}\n\n  .\\[\\&_li\\]\\:p_0 li {\n    padding: var(--spacing-0);\n}\n\n  .\\[\\&_li\\]\\:bx-s_border-box li {\n    box-sizing: border-box;\n}\n\n  .\\[\\&_li\\]\\:d_block li {\n    display: block;\n}\n\n  .\\[\\&_li\\]\\:\\[\\&\\:hover\\]\\:m_0 li:hover {\n    margin: var(--spacing-0);\n}\n\n  .\\[\\&_li\\]\\:\\[\\&\\:hover\\]\\:p_0 li:hover {\n    padding: var(--spacing-0);\n}\n\n  .\\[\\&_li\\]\\:\\[\\&\\:hover\\]\\:bg_gray\\.50 li:hover {\n    background: var(--colors-gray-50);\n}\n\n  .\\[\\&_li\\]\\:\\[\\&\\:hover\\]\\:bx-s_border-box li:hover {\n    box-sizing: border-box;\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/css-raw-spread.test.ts::css.raw spreading in conditions > handles variable assignment with spread::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/css-raw-spread.test.ts",
+        "test": "css.raw spreading in conditions > handles variable assignment with spread",
+        "line": 133
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          "color": "blue",
+          "fontSize": "16px"
+        },
+        {
+          "color": "blue",
+          "fontSize": "16px",
+          "_hover": {
+            "color": "blue",
+            "fontSize": "16px",
+            "opacity": 0.9
+          }
+        }
+      ],
+      "expected": {
+        "css": "@layer utilities {\n  .c_blue {\n    color: blue;\n}\n\n  .fs_16px {\n    font-size: 16px;\n}\n\n  .hover\\:c_blue:is(:hover, [data-hover]) {\n    color: blue;\n}\n\n  .hover\\:fs_16px:is(:hover, [data-hover]) {\n    font-size: 16px;\n}\n\n  .hover\\:op_0\\.9:is(:hover, [data-hover]) {\n    opacity: 0.9;\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/css-raw-spread.test.ts::css.raw spreading in conditions > spreads css.raw in pseudo selectors::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/css-raw-spread.test.ts",
+        "test": "css.raw spreading in conditions > spreads css.raw in pseudo selectors",
+        "line": 23
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          "color": "red",
+          "fontSize": "14px"
+        },
+        {
+          "color": "red",
+          "fontSize": "14px",
+          "_hover": {
+            "color": "red",
+            "fontSize": "14px",
+            "opacity": 0.8
+          }
+        }
+      ],
+      "expected": {
+        "css": "@layer utilities {\n  .c_red {\n    color: red;\n}\n\n  .fs_14px {\n    font-size: 14px;\n}\n\n  .hover\\:c_red:is(:hover, [data-hover]) {\n    color: red;\n}\n\n  .hover\\:fs_14px:is(:hover, [data-hover]) {\n    font-size: 14px;\n}\n\n  .hover\\:op_0\\.8:is(:hover, [data-hover]) {\n    opacity: 0.8;\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/css-raw-spread.test.ts::css.raw spreading in conditions > spreads css.raw in responsive conditions::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/css-raw-spread.test.ts",
+        "test": "css.raw spreading in conditions > spreads css.raw in responsive conditions",
+        "line": 77
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          "padding": "10px",
+          "margin": "5px"
+        },
+        {
+          "sm": {
+            "padding": "10px",
+            "margin": "5px",
+            "width": "100%"
+          },
+          "md": {
+            "padding": "10px",
+            "margin": "5px",
+            "width": "50%"
+          }
+        }
+      ],
+      "expected": {
+        "css": "@layer utilities {\n  .p_10px {\n    padding: 10px;\n}\n\n  .m_5px {\n    margin: 5px;\n}\n\n  @media screen and (min-width: 40rem) {\n    .sm\\:p_10px {\n      padding: 10px;\n}\n    .sm\\:m_5px {\n      margin: 5px;\n}\n    .sm\\:w_100\\% {\n      width: 100%;\n}\n}\n\n  @media screen and (min-width: 48rem) {\n    .md\\:p_10px {\n      padding: 10px;\n}\n    .md\\:m_5px {\n      margin: 5px;\n}\n    .md\\:w_50\\% {\n      width: 50%;\n}\n}\n}"
+      }
+    }
+  ]
+}

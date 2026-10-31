@@ -1,0 +1,393 @@
+{
+  "source": "packages/parser/__tests__/pattern-raw-extraction.test.ts",
+  "cases": [
+    {
+      "id": "fixture::packages/parser/__tests__/pattern-raw-extraction.test.ts::pattern.raw() extraction in selectors > comparing all scenarios: top-level vs selector vs inline::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/pattern-raw-extraction.test.ts",
+        "test": "pattern.raw() extraction in selectors > comparing all scenarios: top-level vs selector vs inline",
+        "line": 792
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          "direction": "row",
+          "gap": "4",
+          "padding": "6"
+        },
+        {
+          "padding": "6",
+          "&:hover": {
+            "direction": "row",
+            "gap": "4",
+            "opacity": 0.8
+          }
+        },
+        {
+          "padding": "6",
+          "&:hover": {
+            "direction": "column",
+            "gap": "8",
+            "opacity": 0.8
+          }
+        }
+      ],
+      "expected": {
+        "css": "@layer utilities {\n  .p_6 {\n    padding: var(--spacing-6);\n}\n\n  .gap_4 {\n    gap: var(--spacing-4);\n}\n\n  .gap_8 {\n    gap: var(--spacing-8);\n}\n\n  .d_flex {\n    display: flex;\n}\n\n  .flex-d_row {\n    flex-direction: row;\n}\n\n  .flex-d_column {\n    flex-direction: column;\n}\n\n  .direction_row {\n    direction: row;\n}\n\n  .\\[\\&\\:hover\\]\\:gap_4:hover {\n    gap: var(--spacing-4);\n}\n\n  .\\[\\&\\:hover\\]\\:gap_8:hover {\n    gap: var(--spacing-8);\n}\n\n  .\\[\\&\\:hover\\]\\:direction_row:hover {\n    direction: row;\n}\n\n  .\\[\\&\\:hover\\]\\:op_0\\.8:hover {\n    opacity: 0.8;\n}\n\n  .\\[\\&\\:hover\\]\\:direction_column:hover {\n    direction: column;\n}\n}"
+      },
+      "unsupported": "extracted non-css items (pattern)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/pattern-raw-extraction.test.ts::pattern.raw() extraction in selectors > complex selectors with pattern.raw::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/pattern-raw-extraction.test.ts",
+        "test": "pattern.raw() extraction in selectors > complex selectors with pattern.raw",
+        "line": 1008
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          "listStyle": "none",
+          "& > li": {
+            "inline": true,
+            "&:first-child": {
+              "columns": 2,
+              "gap": "3",
+              "marginTop": 0
+            },
+            "&:hover:not(:disabled)": {
+              "inline": false,
+              "background": "gray.50"
+            }
+          },
+          "[data-selected=\"true\"]": {
+            "columns": 4,
+            "fontWeight": "bold"
+          },
+          ".active": {
+            "p": "4",
+            "color": "blue.500"
+          }
+        }
+      ],
+      "expected": {
+        "css": "@layer utilities {\n  .p_4 {\n    padding: var(--spacing-4);\n}\n\n  .li-s_none {\n    list-style: none;\n}\n\n  .columns_4 {\n    columns: 4;\n}\n\n  .gap_3 {\n    gap: var(--spacing-3);\n}\n\n  .gap_8px {\n    gap: 8px;\n}\n\n  .fw_bold {\n    font-weight: var(--font-weights-bold);\n}\n\n  .c_blue\\.500 {\n    color: var(--colors-blue-500);\n}\n\n  .d_inline-flex {\n    display: inline-flex;\n}\n\n  .ai_center {\n    align-items: center;\n}\n\n  .jc_center {\n    justify-content: center;\n}\n\n  .d_flex {\n    display: flex;\n}\n\n  .d_grid {\n    display: grid;\n}\n\n  .grid-tc_repeat\\(2\\,_minmax\\(0\\,_1fr\\)\\) {\n    grid-template-columns: repeat(2, minmax(0, 1fr));\n}\n\n  .grid-tc_repeat\\(4\\,_minmax\\(0\\,_1fr\\)\\) {\n    grid-template-columns: repeat(4, minmax(0, 1fr));\n}\n\n  .\\[\\&_\\>_li\\]\\:inline_true > li {\n    inline: true;\n}\n\n  .\\[\\&_\\>_li\\]\\:\\[\\&\\:hover\\:not\\(\\:disabled\\)\\]\\:bg_gray\\.50 > li:hover:not(:disabled) {\n    background: var(--colors-gray-50);\n}\n\n  .\\[\\&_\\>_li\\]\\:\\[\\&\\:first-child\\]\\:columns_2 > li:first-child {\n    columns: 2;\n}\n\n  .\\[\\&_\\>_li\\]\\:\\[\\&\\:first-child\\]\\:gap_3 > li:first-child {\n    gap: var(--spacing-3);\n}\n\n  .\\[\\&_\\>_li\\]\\:\\[\\&\\:first-child\\]\\:mt_0 > li:first-child {\n    margin-top: var(--spacing-0);\n}\n}"
+      },
+      "unsupported": "extracted non-css items (pattern)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/pattern-raw-extraction.test.ts::pattern.raw() extraction in selectors > css.raw() inline within pattern (reverse scenario)::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/pattern-raw-extraction.test.ts",
+        "test": "pattern.raw() extraction in selectors > css.raw() inline within pattern (reverse scenario)",
+        "line": 559
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          "color": "red",
+          "fontSize": "16px"
+        }
+      ],
+      "expected": {
+        "css": "@layer utilities {\n  .gap_8px {\n    gap: 8px;\n}\n\n  .d_flex {\n    display: flex;\n}\n\n  .flex-d_column {\n    flex-direction: column;\n}\n\n  .c_red {\n    color: red;\n}\n\n  .fs_16px {\n    font-size: 16px;\n}\n\n  .\\[\\&\\:hover\\]\\:c_red:hover {\n    color: red;\n}\n\n  .\\[\\&\\:hover\\]\\:fs_16px:hover {\n    font-size: 16px;\n}\n\n  .\\[\\&\\:hover\\]\\:op_0\\.9:hover {\n    opacity: 0.9;\n}\n}"
+      },
+      "unsupported": "extracted non-css items (pattern)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/pattern-raw-extraction.test.ts::pattern.raw() extraction in selectors > inline pattern.raw() within selector::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/pattern-raw-extraction.test.ts",
+        "test": "pattern.raw() extraction in selectors > inline pattern.raw() within selector",
+        "line": 226
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          "padding": "4",
+          "&:hover": {
+            "direction": "row",
+            "gap": "8",
+            "opacity": 0.8
+          }
+        }
+      ],
+      "expected": {
+        "css": "@layer utilities {\n  .p_4 {\n    padding: var(--spacing-4);\n}\n\n  .gap_8 {\n    gap: var(--spacing-8);\n}\n\n  .d_flex {\n    display: flex;\n}\n\n  .flex-d_row {\n    flex-direction: row;\n}\n\n  .\\[\\&\\:hover\\]\\:gap_8:hover {\n    gap: var(--spacing-8);\n}\n\n  .\\[\\&\\:hover\\]\\:direction_row:hover {\n    direction: row;\n}\n\n  .\\[\\&\\:hover\\]\\:op_0\\.8:hover {\n    opacity: 0.8;\n}\n}"
+      },
+      "unsupported": "extracted non-css items (pattern)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/pattern-raw-extraction.test.ts::pattern.raw() extraction in selectors > multiple inline pattern.raw() calls in nested selectors::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/pattern-raw-extraction.test.ts",
+        "test": "pattern.raw() extraction in selectors > multiple inline pattern.raw() calls in nested selectors",
+        "line": 279
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          "display": "block",
+          "& > div": {
+            "direction": "column",
+            "gap": "2",
+            "&:hover": {
+              "inline": true,
+              "background": "gray.100"
+            },
+            "&:focus": {
+              "columns": 2,
+              "gap": "4",
+              "outline": "none"
+            }
+          }
+        }
+      ],
+      "expected": {
+        "css": "@layer utilities {\n  .gap_2 {\n    gap: var(--spacing-2);\n}\n\n  .gap_4 {\n    gap: var(--spacing-4);\n}\n\n  .d_block {\n    display: block;\n}\n\n  .d_flex {\n    display: flex;\n}\n\n  .flex-d_column {\n    flex-direction: column;\n}\n\n  .d_inline-flex {\n    display: inline-flex;\n}\n\n  .ai_center {\n    align-items: center;\n}\n\n  .jc_center {\n    justify-content: center;\n}\n\n  .d_grid {\n    display: grid;\n}\n\n  .grid-tc_repeat\\(2\\,_minmax\\(0\\,_1fr\\)\\) {\n    grid-template-columns: repeat(2, minmax(0, 1fr));\n}\n\n  .\\[\\&_\\>_div\\]\\:gap_2 > div {\n    gap: var(--spacing-2);\n}\n\n  .\\[\\&_\\>_div\\]\\:direction_column > div {\n    direction: column;\n}\n\n  .\\[\\&_\\>_div\\]\\:\\[\\&\\:hover\\]\\:bg_gray\\.100 > div:hover {\n    background: var(--colors-gray-100);\n}\n\n  .\\[\\&_\\>_div\\]\\:\\[\\&\\:focus\\]\\:columns_2 > div:focus {\n    columns: 2;\n}\n\n  .\\[\\&_\\>_div\\]\\:\\[\\&\\:focus\\]\\:gap_4 > div:focus {\n    gap: var(--spacing-4);\n}\n\n  .\\[\\&_\\>_div\\]\\:\\[\\&\\:focus\\]\\:ring_none > div:focus {\n    outline: var(--borders-none);\n}\n\n  .\\[\\&_\\>_div\\]\\:\\[\\&\\:hover\\]\\:inline_true > div:hover {\n    inline: true;\n}\n}"
+      },
+      "unsupported": "extracted non-css items (pattern)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/pattern-raw-extraction.test.ts::pattern.raw() extraction in selectors > multiple pattern.raw spreads in same object::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/pattern-raw-extraction.test.ts",
+        "test": "pattern.raw() extraction in selectors > multiple pattern.raw spreads in same object",
+        "line": 711
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          "&:hover": {
+            "direction": "row",
+            "inline": true,
+            "gap": "4",
+            "color": "red"
+          }
+        }
+      ],
+      "expected": {
+        "css": "@layer utilities {\n  .gap_4 {\n    gap: var(--spacing-4);\n}\n\n  .d_flex {\n    display: flex;\n}\n\n  .flex-d_row {\n    flex-direction: row;\n}\n\n  .d_inline-flex {\n    display: inline-flex;\n}\n\n  .ai_center {\n    align-items: center;\n}\n\n  .jc_center {\n    justify-content: center;\n}\n\n  .flex-d_column {\n    flex-direction: column;\n}\n\n  .\\[\\&\\:hover\\]\\:gap_4:hover {\n    gap: var(--spacing-4);\n}\n\n  .\\[\\&\\:hover\\]\\:direction_row:hover {\n    direction: row;\n}\n\n  .\\[\\&\\:hover\\]\\:inline_true:hover {\n    inline: true;\n}\n\n  .\\[\\&\\:hover\\]\\:c_red:hover {\n    color: red;\n}\n}"
+      },
+      "unsupported": "extracted non-css items (pattern)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/pattern-raw-extraction.test.ts::pattern.raw() extraction in selectors > pattern function called inside another pattern::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/pattern-raw-extraction.test.ts",
+        "test": "pattern.raw() extraction in selectors > pattern function called inside another pattern",
+        "line": 604
+      },
+      "userConfig": null,
+      "inputs": [],
+      "expected": {
+        "css": "@layer utilities {\n  .gap_4 {\n    gap: var(--spacing-4);\n}\n\n  .d_flex {\n    display: flex;\n}\n\n  .flex-d_column {\n    flex-direction: column;\n}\n\n  .flex-d_row {\n    flex-direction: row;\n}\n\n  .\\[\\&\\:hover\\]\\:gap_4:hover {\n    gap: var(--spacing-4);\n}\n\n  .\\[\\&\\:hover\\]\\:direction_row:hover {\n    direction: row;\n}\n\n  .\\[\\&\\:hover\\]\\:op_0\\.9:hover {\n    opacity: 0.9;\n}\n}"
+      },
+      "unsupported": "extracted non-css items (pattern)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/pattern-raw-extraction.test.ts::pattern.raw() extraction in selectors > pattern.raw with css.raw, cva, and sva in selectors::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/pattern-raw-extraction.test.ts",
+        "test": "pattern.raw() extraction in selectors > pattern.raw with css.raw, cva, and sva in selectors",
+        "line": 901
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          "padding": "4",
+          "&:hover": {
+            "direction": "row",
+            "justify": "center",
+            "opacity": 0.9
+          }
+        }
+      ],
+      "expected": {
+        "css": "@layer utilities {\n  .p_4 {\n    padding: var(--spacing-4);\n}\n\n  .bd_1px_solid {\n    border: 1px solid;\n}\n\n  .d_flex {\n    display: flex;\n}\n\n  .flex-d_row {\n    flex-direction: row;\n}\n\n  .jc_center {\n    justify-content: center;\n}\n\n  .cursor_pointer {\n    cursor: pointer;\n}\n\n  .\\[\\&\\:focus\\]\\:ring_none:focus {\n    outline: var(--borders-none);\n}\n\n  .\\[\\&\\:focus\\]\\:direction_row:focus {\n    direction: row;\n}\n\n  .\\[\\&\\:focus\\]\\:justify_center:focus {\n    justify: center;\n}\n\n  .\\[\\&\\:hover\\]\\:bg_blue\\.100:hover {\n    background: var(--colors-blue-100);\n}\n\n  .\\[\\&\\:hover\\]\\:direction_row:hover {\n    direction: row;\n}\n\n  .\\[\\&\\:hover\\]\\:justify_center:hover {\n    justify: center;\n}\n\n  .\\[\\&\\:hover\\]\\:op_0\\.9:hover {\n    opacity: 0.9;\n}\n}"
+      },
+      "unsupported": "extracted non-css items (pattern, cva, sva)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/pattern-raw-extraction.test.ts::pattern.raw() extraction in selectors > pattern.raw() in cva inline::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/pattern-raw-extraction.test.ts",
+        "test": "pattern.raw() extraction in selectors > pattern.raw() in cva inline",
+        "line": 511
+      },
+      "userConfig": null,
+      "inputs": [],
+      "expected": {
+        "css": "@layer utilities {\n  .cursor_pointer {\n    cursor: pointer;\n}\n\n  .d_flex {\n    display: flex;\n}\n\n  .flex-d_column {\n    flex-direction: column;\n}\n\n  .ai_center {\n    align-items: center;\n}\n\n  .\\[\\&\\:disabled\\]\\:direction_column:disabled {\n    direction: column;\n}\n\n  .\\[\\&\\:disabled\\]\\:align_center:disabled {\n    align: center;\n}\n\n  .\\[\\&\\:disabled\\]\\:op_0\\.5:disabled {\n    opacity: 0.5;\n}\n}"
+      },
+      "unsupported": "extracted non-css items (cva, pattern)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/pattern-raw-extraction.test.ts::pattern.raw() extraction in selectors > pattern.raw() in cva recipe with selectors::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/pattern-raw-extraction.test.ts",
+        "test": "pattern.raw() extraction in selectors > pattern.raw() in cva recipe with selectors",
+        "line": 370
+      },
+      "userConfig": null,
+      "inputs": [],
+      "expected": {
+        "css": "@layer utilities {\n  .p_2 {\n    padding: var(--spacing-2);\n}\n\n  .gap_2 {\n    gap: var(--spacing-2);\n}\n\n  .d_flex {\n    display: flex;\n}\n\n  .flex-d_column {\n    flex-direction: column;\n}\n\n  .cursor_pointer {\n    cursor: pointer;\n}\n\n  .\\[\\&\\:focus\\]\\:gap_2:focus {\n    gap: var(--spacing-2);\n}\n\n  .\\[\\&\\:focus\\]\\:ring_2px_solid_blue:focus {\n    outline: 2px solid blue;\n}\n\n  .\\[\\&\\:focus\\]\\:direction_column:focus {\n    direction: column;\n}\n\n  .\\[\\&\\:hover\\]\\:gap_2:hover {\n    gap: var(--spacing-2);\n}\n\n  .\\[\\&\\:hover\\]\\:direction_column:hover {\n    direction: column;\n}\n\n  .\\[\\&\\:hover\\]\\:op_0\\.9:hover {\n    opacity: 0.9;\n}\n}"
+      },
+      "unsupported": "extracted non-css items (pattern, cva)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/pattern-raw-extraction.test.ts::pattern.raw() extraction in selectors > pattern.raw() in nested arbitrary selectors::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/pattern-raw-extraction.test.ts",
+        "test": "pattern.raw() extraction in selectors > pattern.raw() in nested arbitrary selectors",
+        "line": 177
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          "listStyle": "none",
+          "& li": {
+            "display": "block",
+            "&:hover": {
+              "inline": true,
+              "p": "4",
+              "background": "gray.50"
+            }
+          }
+        }
+      ],
+      "expected": {
+        "css": "@layer utilities {\n  .p_4 {\n    padding: var(--spacing-4);\n}\n\n  .li-s_none {\n    list-style: none;\n}\n\n  .d_inline-flex {\n    display: inline-flex;\n}\n\n  .ai_center {\n    align-items: center;\n}\n\n  .jc_center {\n    justify-content: center;\n}\n\n  .\\[\\&_li\\]\\:d_block li {\n    display: block;\n}\n\n  .\\[\\&_li\\]\\:\\[\\&\\:hover\\]\\:p_4 li:hover {\n    padding: var(--spacing-4);\n}\n\n  .\\[\\&_li\\]\\:\\[\\&\\:hover\\]\\:bg_gray\\.50 li:hover {\n    background: var(--colors-gray-50);\n}\n\n  .\\[\\&_li\\]\\:\\[\\&\\:hover\\]\\:inline_true li:hover {\n    inline: true;\n}\n}"
+      },
+      "unsupported": "extracted non-css items (pattern)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/pattern-raw-extraction.test.ts::pattern.raw() extraction in selectors > pattern.raw() in sva with complex selectors::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/pattern-raw-extraction.test.ts",
+        "test": "pattern.raw() extraction in selectors > pattern.raw() in sva with complex selectors",
+        "line": 447
+      },
+      "userConfig": null,
+      "inputs": [],
+      "expected": {
+        "css": "@layer utilities {\n  .bd_1px_solid {\n    border: 1px solid;\n}\n\n  .p_4 {\n    padding: var(--spacing-4);\n}\n\n  .gap_4 {\n    gap: var(--spacing-4);\n}\n\n  .d_grid {\n    display: grid;\n}\n\n  .grid-tc_repeat\\(3\\,_minmax\\(0\\,_1fr\\)\\) {\n    grid-template-columns: repeat(3, minmax(0, 1fr));\n}\n\n  .\\[\\&\\[data-selected\\]\\]\\:columns_3[data-selected] {\n    columns: 3;\n}\n\n  .\\[\\&\\[data-selected\\]\\]\\:gap_4[data-selected] {\n    gap: var(--spacing-4);\n}\n\n  .\\[\\&\\[data-selected\\]\\]\\:bd-c_blue\\.500[data-selected] {\n    border-color: var(--colors-blue-500);\n}\n\n  .\\[\\&_\\>_\\*\\:first-child\\]\\:columns_3 > *:first-child {\n    columns: 3;\n}\n\n  .\\[\\&_\\>_\\*\\:first-child\\]\\:gap_4 > *:first-child {\n    gap: var(--spacing-4);\n}\n\n  .\\[\\&_\\>_\\*\\:first-child\\]\\:mt_0 > *:first-child {\n    margin-top: var(--spacing-0);\n}\n}"
+      },
+      "unsupported": "extracted non-css items (pattern, sva)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/pattern-raw-extraction.test.ts::pattern.raw() extraction in selectors > pattern.raw() spread at top level::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/pattern-raw-extraction.test.ts",
+        "test": "pattern.raw() extraction in selectors > pattern.raw() spread at top level",
+        "line": 21
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          "direction": "column",
+          "gap": "4",
+          "padding": "6"
+        }
+      ],
+      "expected": {
+        "css": "@layer utilities {\n  .p_6 {\n    padding: var(--spacing-6);\n}\n\n  .gap_4 {\n    gap: var(--spacing-4);\n}\n\n  .d_flex {\n    display: flex;\n}\n\n  .flex-d_column {\n    flex-direction: column;\n}\n\n  .direction_column {\n    direction: column;\n}\n}"
+      },
+      "unsupported": "extracted non-css items (pattern)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/pattern-raw-extraction.test.ts::pattern.raw() extraction in selectors > pattern.raw() spread in _hover condition::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/pattern-raw-extraction.test.ts",
+        "test": "pattern.raw() extraction in selectors > pattern.raw() spread in _hover condition",
+        "line": 121
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          "color": "blue.500",
+          "_hover": {
+            "direction": "row",
+            "justify": "center",
+            "align": "center",
+            "color": "blue.600"
+          }
+        }
+      ],
+      "expected": {
+        "css": "@layer utilities {\n  .d_flex {\n    display: flex;\n}\n\n  .flex-d_row {\n    flex-direction: row;\n}\n\n  .ai_center {\n    align-items: center;\n}\n\n  .jc_center {\n    justify-content: center;\n}\n\n  .c_blue\\.500 {\n    color: var(--colors-blue-500);\n}\n\n  .hover\\:direction_row:is(:hover, [data-hover]) {\n    direction: row;\n}\n\n  .hover\\:justify_center:is(:hover, [data-hover]) {\n    justify: center;\n}\n\n  .hover\\:align_center:is(:hover, [data-hover]) {\n    align: center;\n}\n\n  .hover\\:c_blue\\.600:is(:hover, [data-hover]) {\n    color: var(--colors-blue-600);\n}\n}"
+      },
+      "unsupported": "extracted non-css items (pattern)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/pattern-raw-extraction.test.ts::pattern.raw() extraction in selectors > pattern.raw() spread within hover selector::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/pattern-raw-extraction.test.ts",
+        "test": "pattern.raw() extraction in selectors > pattern.raw() spread within hover selector",
+        "line": 69
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          "padding": "4",
+          "&:hover": {
+            "direction": "row",
+            "gap": "8",
+            "opacity": 0.8
+          }
+        }
+      ],
+      "expected": {
+        "css": "@layer utilities {\n  .p_4 {\n    padding: var(--spacing-4);\n}\n\n  .gap_8 {\n    gap: var(--spacing-8);\n}\n\n  .d_flex {\n    display: flex;\n}\n\n  .flex-d_row {\n    flex-direction: row;\n}\n\n  .\\[\\&\\:hover\\]\\:gap_8:hover {\n    gap: var(--spacing-8);\n}\n\n  .\\[\\&\\:hover\\]\\:direction_row:hover {\n    direction: row;\n}\n\n  .\\[\\&\\:hover\\]\\:op_0\\.8:hover {\n    opacity: 0.8;\n}\n}"
+      },
+      "unsupported": "extracted non-css items (pattern)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/pattern-raw-extraction.test.ts::pattern.raw() extraction in selectors > recipe with pattern.raw in compound variant::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/pattern-raw-extraction.test.ts",
+        "test": "pattern.raw() extraction in selectors > recipe with pattern.raw in compound variant",
+        "line": 658
+      },
+      "userConfig": null,
+      "inputs": [],
+      "expected": {
+        "css": "@layer utilities {\n  .p_8 {\n    padding: var(--spacing-8);\n}\n\n  .cursor_pointer {\n    cursor: pointer;\n}\n\n  .inline_true {\n    inline: true;\n}\n\n  .d_inline-flex {\n    display: inline-flex;\n}\n\n  .ai_center {\n    align-items: center;\n}\n\n  .jc_center {\n    justify-content: center;\n}\n}"
+      },
+      "unsupported": "extracted non-css items (cva, pattern)"
+    }
+  ]
+}

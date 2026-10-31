@@ -1,0 +1,94 @@
+{
+  "source": "packages/parser/__tests__/import-map.test.ts",
+  "cases": [
+    {
+      "id": "fixture::packages/parser/__tests__/import-map.test.ts::config.importMap > multiple importMap::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/import-map.test.ts",
+        "test": "config.importMap > multiple importMap",
+        "line": 183
+      },
+      "userConfig": {
+        "importMap": {
+          "css": [
+            "@acme/org/css",
+            "@foo/org/css"
+          ],
+          "recipes": [
+            "@acme/org/recipes",
+            "@bar/org/recipes"
+          ],
+          "patterns": "@acme/org/patterns"
+        }
+      },
+      "configPatch": {
+        "importMap": {
+          "$value": {
+            "css": [
+              "@acme/org/css",
+              "@foo/org/css"
+            ],
+            "recipes": [
+              "@acme/org/recipes",
+              "@bar/org/recipes"
+            ],
+            "patterns": "@acme/org/patterns"
+          }
+        }
+      },
+      "inputs": [
+        {
+          "color": "red"
+        }
+      ],
+      "expected": {
+        "css": "@layer recipes {\n  @layer _base {\n    .buttonStyle {\n      display: inline-flex;\n      align-items: center;\n      justify-content: center;\n}\n\n    .buttonStyle:is(:hover, [data-hover]) {\n      background-color: var(--colors-red-200);\n      font-size: var(--font-sizes-3xl);\n      color: var(--colors-white);\n}\n}\n\n  .buttonStyle--size_md {\n    padding: 0 0.75rem;\n    height: 3rem;\n    min-width: 3rem;\n}\n\n  .buttonStyle--variant_solid {\n    background-color: blue;\n    color: var(--colors-white);\n}\n\n  .buttonStyle--variant_solid[data-disabled] {\n    background-color: gray;\n    color: var(--colors-black);\n    font-size: var(--font-sizes-2xl);\n}\n\n  .buttonStyle--variant_solid:is(:hover, [data-hover]) {\n    background-color: darkblue;\n}\n}\n\n@layer utilities {\n  .c_red {\n    color: red;\n}\n}"
+      },
+      "unsupported": "extracted non-css items (recipe)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/import-map.test.ts::config.importMap > nested outdir + tsconfig.compilerOptions.baseUrl importMap behaviour::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/import-map.test.ts",
+        "test": "config.importMap > nested outdir + tsconfig.compilerOptions.baseUrl importMap behaviour",
+        "line": 38
+      },
+      "userConfig": {
+        "outdir": "src/styled-system",
+        "cwd": "app",
+        "importMap": "styled-system"
+      },
+      "configPatch": {
+        "outdir": {
+          "$value": "src/styled-system"
+        },
+        "importMap": {
+          "$value": "styled-system"
+        },
+        "tsconfig": {
+          "$value": {
+            "compilerOptions": {
+              "baseUrl": "app/src"
+            }
+          }
+        }
+      },
+      "inputs": [
+        {
+          "flex": 2
+        },
+        {
+          "flex": 1
+        }
+      ],
+      "expected": {
+        "css": "@layer utilities {\n  .m_auto {\n    margin: auto;\n}\n\n  .mx_auto {\n    margin-inline: auto;\n}\n\n  .px_4 {\n    padding-inline: var(--spacing-4);\n}\n\n  .flex_2 {\n    flex: 2;\n}\n\n  .flex_1 {\n    flex: 1 1 0%;\n}\n\n  .pos_relative {\n    position: relative;\n}\n\n  .page_A4 {\n    page: A4;\n}\n\n  .d_flex {\n    display: flex;\n}\n\n  .flex-d_column {\n    flex-direction: column;\n}\n\n  .max-w_8xl {\n    max-width: var(--sizes-8xl);\n}\n\n  .h_600px {\n    height: 600px;\n}\n\n  @media screen and (min-width: 40rem) {\n    .sm\\:flex-d_row {\n      flex-direction: row;\n}\n}\n\n  @media screen and (min-width: 48rem) {\n    .md\\:px_6 {\n      padding-inline: var(--spacing-6);\n}\n}\n\n  @media screen and (min-width: 64rem) {\n    .lg\\:px_8 {\n      padding-inline: var(--spacing-8);\n}\n}\n\n  @media print {\n    .print\\:flex-d_row {\n      flex-direction: row;\n}\n    .print\\:w_210mm {\n      width: 210mm;\n}\n    .print\\:h_297mm {\n      height: 297mm;\n}\n}\n}"
+      },
+      "unsupported": "extracted non-css items (pattern)"
+    }
+  ]
+}

@@ -256,6 +256,9 @@
     "symfony/ux-cropperjs": {
         "version": "v2.29.1"
     },
+    "symfony/ux-css": {
+        "version": "3.x-dev"
+    },
     "symfony/ux-dropzone": {
         "version": "v2.29.1"
     },

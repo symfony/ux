@@ -37,6 +37,8 @@ class ExampleRepository
             new Example(UxPackage::ChartJs, 'Pie chart with options', 'A pie chart with custom options to control the appearance and behavior.', 'app_ux_chartjs_pie_with_options'),
             new Example(UxPackage::Cropperjs, 'Image cropper', 'Crop an image with Cropper.js using default options.', 'app_ux_cropperjs_crop'),
             new Example(UxPackage::Cropperjs, 'Image cropper with aspect ratio', 'Crop an image with a fixed 16:9 aspect ratio constraint.', 'app_ux_cropperjs_crop_with_aspect_ratio'),
+            new Example(UxPackage::Css, 'Styles with css()', 'Padding, a responsive margin and a hover color from css(), and a color only known at runtime, kept by static_css.', 'app_ux_css_basic'),
+            new Example(UxPackage::Css, 'Conditions with css()', 'Focus, active, disabled, checked, group hover and dark mode styles, a hover nested in a breakpoint, and a conditional value.', 'app_ux_css_conditions'),
             new Example(UxPackage::Dropzone, 'Single file upload', 'Upload one file, with a preview and a clear button.', 'app_ux_dropzone_single'),
             new Example(UxPackage::Dropzone, 'Multiple file upload', 'Upload several files at once: accumulate across picks, preview each, and remove individually.', 'app_ux_dropzone_multiple'),
             new Example(UxPackage::LiveComponent, 'Examples filtering', 'On this page, you can filter all examples by query terms, and observe how the UI and URLs update during and after processing.', 'app_home'),

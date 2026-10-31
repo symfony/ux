@@ -1,0 +1,197 @@
+{
+  "source": "packages/core/__tests__/gradient.test.ts",
+  "cases": [
+    {
+      "id": "fixture::packages/core/__tests__/gradient.test.ts::gradient utilities > bgGradient with direction shortcut::1",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/gradient.test.ts",
+        "test": "gradient utilities > bgGradient with direction shortcut",
+        "line": 20
+      },
+      "userConfig": {
+        "theme": {
+          "extend": {
+            "tokens": {
+              "gradients": {
+                "primary": {
+                  "value": "linear-gradient(to right, #ff0000, #0000ff)"
+                }
+              }
+            }
+          }
+        }
+      },
+      "inputs": [
+        {
+          "bgGradient": "to-r"
+        }
+      ],
+      "configPatch": {
+        "theme": {
+          "tokens": {
+            "gradients": {
+              "$value": {
+                "primary": {
+                  "value": "linear-gradient(to right, #ff0000, #0000ff)"
+                }
+              }
+            }
+          }
+        }
+      },
+      "options": null,
+      "expected": {
+        "classNames": [
+          "bg-grad_to-r"
+        ],
+        "css": "@layer utilities {\n  .bg-grad_to-r {\n    --gradient-stops: var(--gradient-via-stops, var(--gradient-position), var(--gradient-from) var(--gradient-from-position), var(--gradient-to) var(--gradient-to-position));\n    --gradient-position: to right;\n    background-image: linear-gradient(var(--gradient-stops));\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/core/__tests__/gradient.test.ts::gradient utilities > bgGradient with gradient token::1",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/gradient.test.ts",
+        "test": "gradient utilities > bgGradient with gradient token",
+        "line": 20
+      },
+      "userConfig": {
+        "theme": {
+          "extend": {
+            "tokens": {
+              "gradients": {
+                "primary": {
+                  "value": "linear-gradient(to right, #ff0000, #0000ff)"
+                }
+              }
+            }
+          }
+        }
+      },
+      "inputs": [
+        {
+          "bgGradient": "primary"
+        }
+      ],
+      "configPatch": {
+        "theme": {
+          "tokens": {
+            "gradients": {
+              "$value": {
+                "primary": {
+                  "value": "linear-gradient(to right, #ff0000, #0000ff)"
+                }
+              }
+            }
+          }
+        }
+      },
+      "options": null,
+      "expected": {
+        "classNames": [
+          "bg-grad_primary"
+        ],
+        "css": "@layer utilities {\n  .bg-grad_primary {\n    background-image: var(--gradients-primary);\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/core/__tests__/gradient.test.ts::gradient utilities > bgGradient with token references::1",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/gradient.test.ts",
+        "test": "gradient utilities > bgGradient with token references",
+        "line": 20
+      },
+      "userConfig": {
+        "theme": {
+          "extend": {
+            "tokens": {
+              "gradients": {
+                "primary": {
+                  "value": "linear-gradient(to right, #ff0000, #0000ff)"
+                }
+              }
+            }
+          }
+        }
+      },
+      "inputs": [
+        {
+          "bgGradient": "linear-gradient({colors.red.200}, {colors.blue.300})"
+        }
+      ],
+      "configPatch": {
+        "theme": {
+          "tokens": {
+            "gradients": {
+              "$value": {
+                "primary": {
+                  "value": "linear-gradient(to right, #ff0000, #0000ff)"
+                }
+              }
+            }
+          }
+        }
+      },
+      "options": null,
+      "expected": {
+        "classNames": [
+          "bg-grad_linear-gradient\\(\\{colors\\.red\\.200\\}\\,_\\{colors\\.blue\\.300\\}\\)"
+        ],
+        "css": "@layer utilities {\n  .bg-grad_linear-gradient\\(\\{colors\\.red\\.200\\}\\,_\\{colors\\.blue\\.300\\}\\) {\n    background-image: linear-gradient(var(--colors-red-200), var(--colors-blue-300));\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/core/__tests__/gradient.test.ts::gradient utilities > textGradient with token references::1",
+      "kind": "rule-processor",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/gradient.test.ts",
+        "test": "gradient utilities > textGradient with token references",
+        "line": 20
+      },
+      "userConfig": {
+        "theme": {
+          "extend": {
+            "tokens": {
+              "gradients": {
+                "primary": {
+                  "value": "linear-gradient(to right, #ff0000, #0000ff)"
+                }
+              }
+            }
+          }
+        }
+      },
+      "inputs": [
+        {
+          "textGradient": "linear-gradient({colors.red.200}, {colors.blue.300})"
+        }
+      ],
+      "configPatch": {
+        "theme": {
+          "tokens": {
+            "gradients": {
+              "$value": {
+                "primary": {
+                  "value": "linear-gradient(to right, #ff0000, #0000ff)"
+                }
+              }
+            }
+          }
+        }
+      },
+      "options": null,
+      "expected": {
+        "classNames": [
+          "txt-grad_linear-gradient\\(\\{colors\\.red\\.200\\}\\,_\\{colors\\.blue\\.300\\}\\)"
+        ],
+        "css": "@layer utilities {\n  .txt-grad_linear-gradient\\(\\{colors\\.red\\.200\\}\\,_\\{colors\\.blue\\.300\\}\\) {\n    background-image: linear-gradient(var(--colors-red-200), var(--colors-blue-300));\n    -webkit-background-clip: text;\n    color: transparent;\n}\n}"
+      }
+    }
+  ]
+}

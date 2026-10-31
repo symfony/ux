@@ -148,6 +148,8 @@ importers:
         specifier: ^1.5.9
         version: 1.6.2
 
+  src/Css/assets: {}
+
   src/Dropzone/assets:
     devDependencies:
       '@hotwired/stimulus':

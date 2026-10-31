@@ -1,0 +1,119 @@
+{
+  "source": "packages/parser/__tests__/namespace.test.ts",
+  "cases": [
+    {
+      "id": "fixture::packages/parser/__tests__/namespace.test.ts::extract namespace > TS namespaces - css::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/namespace.test.ts",
+        "test": "extract namespace > TS namespaces - css",
+        "line": 87
+      },
+      "userConfig": null,
+      "inputs": [
+        {
+          "color": "red"
+        }
+      ],
+      "expected": {
+        "css": "@layer utilities {\n  .c_red {\n    color: red;\n}\n\n  .c_blue {\n    color: blue;\n}\n\n  .c_green {\n    color: green;\n}\n}"
+      },
+      "unsupported": "extracted non-css items (cva, sva)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/namespace.test.ts::extract namespace > TS namespaces - ignore not from panda::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/namespace.test.ts",
+        "test": "extract namespace > TS namespaces - ignore not from panda",
+        "line": 232
+      },
+      "userConfig": null,
+      "inputs": [],
+      "expected": {
+        "css": ""
+      }
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/namespace.test.ts::extract namespace > TS namespaces - ignore not from panda::2",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/namespace.test.ts",
+        "test": "extract namespace > TS namespaces - ignore not from panda",
+        "line": 292
+      },
+      "userConfig": null,
+      "inputs": [],
+      "expected": {
+        "css": ""
+      }
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/namespace.test.ts::extract namespace > TS namespaces - JSX factory::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/namespace.test.ts",
+        "test": "extract namespace > TS namespaces - JSX factory",
+        "line": 245
+      },
+      "userConfig": null,
+      "inputs": [],
+      "expected": {
+        "css": "@layer utilities {\n  .c_red {\n    color: red;\n}\n\n  .c_blue {\n    color: blue;\n}\n}"
+      },
+      "unsupported": "extracted non-css items (cva, jsx-factory)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/namespace.test.ts::extract namespace > TS namespaces - jsx::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/namespace.test.ts",
+        "test": "extract namespace > TS namespaces - jsx",
+        "line": 158
+      },
+      "userConfig": null,
+      "inputs": [],
+      "expected": {
+        "css": "@layer utilities {\n  .gap_8px {\n    gap: 8px;\n}\n\n  .c_red {\n    color: red;\n}\n\n  .d_flex {\n    display: flex;\n}\n\n  .flex-d_column {\n    flex-direction: column;\n}\n\n  .c_blue {\n    color: blue;\n}\n\n  .d_grid {\n    display: grid;\n}\n\n  .c_green {\n    color: green;\n}\n}"
+      },
+      "unsupported": "extracted non-css items (jsx-factory, jsx-pattern)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/namespace.test.ts::extract namespace > TS namespaces - patterns::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/namespace.test.ts",
+        "test": "extract namespace > TS namespaces - patterns",
+        "line": 12
+      },
+      "userConfig": null,
+      "inputs": [],
+      "expected": {
+        "css": "@layer utilities {\n  .gap_8px {\n    gap: 8px;\n}\n\n  .d_flex {\n    display: flex;\n}\n\n  .flex-d_column {\n    flex-direction: column;\n}\n\n  .mt_40px {\n    margin-top: 40px;\n}\n}"
+      },
+      "unsupported": "extracted non-css items (pattern)"
+    },
+    {
+      "id": "fixture::packages/parser/__tests__/namespace.test.ts::extract namespace > TS namespaces - recipes::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/namespace.test.ts",
+        "test": "extract namespace > TS namespaces - recipes",
+        "line": 55
+      },
+      "userConfig": null,
+      "inputs": [],
+      "expected": {
+        "css": "@layer recipes {\n  .card--rounded_true {\n    border-radius: 0.375rem;\n}\n}"
+      },
+      "unsupported": "extracted non-css items (recipe)"
+    }
+  ]
+}

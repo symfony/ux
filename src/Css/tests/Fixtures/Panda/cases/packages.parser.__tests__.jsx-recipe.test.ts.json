@@ -1,0 +1,66 @@
+{
+  "source": "packages/parser/__tests__/jsx-recipe.test.ts",
+  "cases": [
+    {
+      "id": "fixture::packages/parser/__tests__/jsx-recipe.test.ts::recipe jsx > jsx recipes matching with dot component that are not from a namespace::1",
+      "kind": "parse-and-extract",
+      "config": "fixture",
+      "source": {
+        "file": "packages/parser/__tests__/jsx-recipe.test.ts",
+        "test": "recipe jsx > jsx recipes matching with dot component that are not from a namespace",
+        "line": 210
+      },
+      "userConfig": {
+        "theme": {
+          "extend": {
+            "slotRecipes": {
+              "tabs": {
+                "className": "tabs",
+                "slots": [
+                  "root",
+                  "list",
+                  "trigger",
+                  "content",
+                  "indicator"
+                ],
+                "base": {
+                  "root": {
+                    "display": "flex"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "configPatch": {
+        "theme": {
+          "slotRecipes": {
+            "tabs": {
+              "$value": {
+                "className": "tabs",
+                "slots": [
+                  "root",
+                  "list",
+                  "trigger",
+                  "content",
+                  "indicator"
+                ],
+                "base": {
+                  "root": {
+                    "display": "flex"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "inputs": [],
+      "expected": {
+        "css": "@layer recipes.slots {\n  @layer _base {\n    .tabs__root {\n      display: flex;\n}\n    }\n}"
+      },
+      "unsupported": "extracted non-css items (jsx-recipe, jsx)"
+    }
+  ]
+}
