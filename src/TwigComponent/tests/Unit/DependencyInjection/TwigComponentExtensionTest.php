@@ -126,6 +126,36 @@ class TwigComponentExtensionTest extends TestCase
         $this->assertSame(TwigEnvironmentConfigurator::class, $container->getDefinition('ux.twig_component.twig.environment_configurator')->getClass());
     }
 
+    public function testComponentPropertiesAreNotCachedInDebugMode(): void
+    {
+        $container = $this->createContainer();
+        $container->setParameter('kernel.debug', true);
+        $container->registerExtension(new TwigComponentExtension());
+        $container->loadFromExtension('twig_component', [
+            'defaults' => [],
+            'anonymous_template_directory' => 'components/',
+        ]);
+        $this->compileContainer($container);
+
+        $this->assertNull($container->getDefinition('ux.twig_component.component_properties')->getArgument(2));
+    }
+
+    public function testComponentPropertiesAreCachedInProduction(): void
+    {
+        $container = $this->createContainer();
+        $container->setParameter('kernel.debug', false);
+        $container->registerExtension(new TwigComponentExtension());
+        $container->loadFromExtension('twig_component', [
+            'defaults' => [],
+            'anonymous_template_directory' => 'components/',
+        ]);
+        $this->compileContainer($container);
+
+        $cache = $container->getDefinition('ux.twig_component.component_properties')->getArgument(2);
+
+        $this->assertSame('cache.ux.twig_component', (string) $cache);
+    }
+
     private function createContainer()
     {
         $container = new ContainerBuilder(new ParameterBag([
