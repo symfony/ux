@@ -1,0 +1,21 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2026-09-27T11:03:41Z
+
+Some updates:
+- Pushed integration with DesignTokens from #3932 - not really testable for the moment.
+- Opened https://github.com/Haehnchen/idea-php-symfony2-plugin/pull/2889
+- Added `Current limitations` section in PR description
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-10-01T20:54:18Z
+
+New updates, the following PRs on PHPStan will helps to get better performances when dealing with the `reference_css.php` file:
+- https://github.com/phpstan/phpstan-src/pull/6652
+- https://github.com/phpstan/phpstan-src/pull/6649
+- https://github.com/phpstan/phpstan-src/pull/6671
+- https://github.com/phpstan/phpstan-src/pull/6672
+- https://github.com/phpstan/phpstan-src/pull/6673
+- https://github.com/phpstan/phpstan-src/pull/6674
+- https://github.com/phpstan/phpstan-src/pull/6675
