@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 3.7.0
+
+- Add a `dropzone_preview_item_template` form theme block and a `previewItemTemplate` target to render the preview of each file in `multiple` mode from a `<template>`
+
 ## 3.5.0
 
 - Add support for Symfony 8.2's standalone `AssetMapperBundle`

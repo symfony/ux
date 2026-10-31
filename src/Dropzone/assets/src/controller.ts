@@ -18,6 +18,8 @@ export default class extends Controller {
     declare readonly previewImageTarget: HTMLDivElement;
     declare readonly previewListTarget: HTMLUListElement;
     declare readonly hasPreviewListTarget: boolean;
+    declare readonly previewItemTemplateTarget: HTMLTemplateElement;
+    declare readonly hasPreviewItemTemplateTarget: boolean;
 
     declare readonly multipleValue: boolean;
     declare readonly removeLabelValue: string;
@@ -30,6 +32,7 @@ export default class extends Controller {
         'previewFilename',
         'previewImage',
         'previewList',
+        'previewItemTemplate',
     ];
 
     static values = {
@@ -38,6 +41,7 @@ export default class extends Controller {
     };
 
     private dataTransfer!: DataTransfer;
+    private previewItem: Element | null = null;
 
     initialize() {
         this.clear = this.clear.bind(this);
@@ -125,19 +129,10 @@ export default class extends Controller {
     }
 
     _populateImagePreview(target: HTMLElement, file: Blob) {
-        if (typeof FileReader === 'undefined') {
-            // FileReader API not available, skip
-            return;
-        }
-
-        const reader = new FileReader();
-
-        reader.addEventListener('load', (event: any) => {
+        this.readAsDataUrl(file, (url) => {
             target.style.display = 'block';
-            target.style.backgroundImage = `url("${event.target.result}")`;
+            target.style.backgroundImage = `url("${url}")`;
         });
-
-        reader.readAsDataURL(file);
     }
 
     onDragEnter() {
@@ -175,6 +170,16 @@ export default class extends Controller {
     // --- Multiple-file handling ------------------------------------------------
 
     private connectMultiple() {
+        this.previewItem = null;
+        if (this.hasPreviewItemTemplateTarget) {
+            // Checked before any file is added, so an invalid template cannot leave the input and the list apart
+            const elements = this.previewItemTemplateTarget.content.children;
+            if (elements.length !== 1) {
+                throw new Error('The "previewItemTemplate" target must contain one root element.');
+            }
+            this.previewItem = elements[0];
+        }
+
         this.dataTransfer = new DataTransfer();
 
         // Reseed from the input in case the controller reconnects with files already selected
@@ -226,14 +231,18 @@ export default class extends Controller {
         this.previewListTarget.replaceChildren(...items);
     }
 
-    private buildListItem(file: File, index: number): HTMLLIElement {
+    private buildListItem(file: File, index: number): Element {
+        if (this.previewItem) {
+            return this.buildListItemFromTemplate(this.previewItem, file, index);
+        }
+
         const item = document.createElement('li');
         item.className = 'dropzone-preview-list-item';
 
         const image = document.createElement('div');
         image.className = 'dropzone-preview-image';
         image.style.display = 'none';
-        if (file.type && file.type.indexOf('image') !== -1) {
+        if (this.isImage(file)) {
             this._populateImagePreview(image, file);
         }
 
@@ -245,12 +254,68 @@ export default class extends Controller {
         const remove = document.createElement('button');
         remove.type = 'button';
         remove.className = 'dropzone-preview-list-remove';
-        remove.setAttribute('aria-label', `${this.removeLabelValue} ${file.name}`);
-        remove.addEventListener('click', () => this.removeFileAt(index, file));
+        this.bindRemove(remove, file, index);
 
         item.append(image, filename, remove);
 
         return item;
+    }
+
+    private buildListItemFromTemplate(template: Element, file: File, index: number): Element {
+        const item = template.cloneNode(true) as Element;
+        const slots = (name: string): Element[] => {
+            const selector = `[data-dropzone-slot="${name}"]`;
+
+            return [...(item.matches(selector) ? [item] : []), ...Array.from(item.querySelectorAll(selector))];
+        };
+
+        const images = slots('image') as HTMLElement[];
+        for (const image of images) {
+            image.hidden = true;
+        }
+        if (images.length > 0 && this.isImage(file)) {
+            this.readAsDataUrl(file, (url) => {
+                for (const image of images) {
+                    if (image instanceof HTMLImageElement) {
+                        image.src = url;
+                    } else {
+                        image.style.backgroundImage = `url("${url}")`;
+                    }
+                    image.hidden = false;
+                }
+            });
+        }
+
+        for (const filename of slots('filename')) {
+            // Always use textContent: file names are user input and must never be treated as HTML
+            filename.textContent = file.name;
+        }
+
+        for (const remove of slots('remove')) {
+            this.bindRemove(remove, file, index);
+        }
+
+        return item;
+    }
+
+    private isImage(file: File): boolean {
+        return !!file.type && file.type.indexOf('image') !== -1;
+    }
+
+    private readAsDataUrl(file: Blob, onLoad: (url: string) => void) {
+        if (typeof FileReader === 'undefined') {
+            // FileReader API not available, skip
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.addEventListener('load', () => onLoad(reader.result as string));
+        reader.readAsDataURL(file);
+    }
+
+    private bindRemove(element: Element, file: File, index: number) {
+        element.setAttribute('aria-label', `${this.removeLabelValue} ${file.name}`);
+        element.addEventListener('click', () => this.removeFileAt(index, file));
     }
 
     private dispatchEvent(name: string, payload: any = {}) {
