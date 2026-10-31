@@ -15,8 +15,10 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\UX\LiveComponent\Hydration\DoctrineEntityHydrationExtension;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Entity\CompositeIdEntity;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Entity\ForeignKeyIdEntity;
+use Symfony\UX\LiveComponent\Tests\Fixtures\Entity\UuidIdEntity;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Factory\CompositeIdEntityFactory;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Factory\ForeignKeyIdEntityFactory;
+use Symfony\UX\LiveComponent\Tests\Fixtures\Factory\UuidIdEntityFactory;
 use Zenstruck\Foundry\Test\Factories;
 use Zenstruck\Foundry\Test\ResetDatabase;
 
@@ -49,5 +51,18 @@ class DoctrineEntityHydrationExtensionTest extends KernelTestCase
 
         self::assertSame($foreignKeyIdEntity->id->id, $dehydrated);
         self::assertSame($foreignKeyIdEntity, $extension->hydrate($dehydrated, ForeignKeyIdEntity::class));
+    }
+
+    public function testUuidId(): void
+    {
+        $uuidIdEntity = UuidIdEntityFactory::createOne();
+
+        /** @var DoctrineEntityHydrationExtension $extension */
+        $extension = self::getContainer()->get('ux.live_component.doctrine_entity_hydration_extension');
+
+        $dehydrated = $extension->dehydrate($uuidIdEntity);
+
+        self::assertSame($uuidIdEntity->id->toRfc4122(), $dehydrated);
+        self::assertSame($uuidIdEntity, $extension->hydrate($dehydrated, UuidIdEntity::class));
     }
 }
