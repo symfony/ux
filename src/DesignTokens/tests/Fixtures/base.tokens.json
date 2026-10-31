@@ -1,0 +1,34 @@
+{
+    "$description": "Fixture token file for tests",
+    "color": {
+        "$type": "color",
+        "brand": {
+            "primary":   { "$value": { "colorSpace": "srgb", "components": [0.231, 0.51, 0.965] }, "$description": "Brand blue" },
+            "secondary": { "$value": { "colorSpace": "srgb", "components": [0.388, 0.4, 0.945] } }
+        },
+        "neutral": {
+            "white": { "$value": { "colorSpace": "srgb", "components": [1, 1, 1] } },
+            "black": { "$value": { "colorSpace": "srgb", "components": [0, 0, 0] } }
+        }
+    },
+    "size": {
+        "$type": "dimension",
+        "base":   { "$value": { "value": 8, "unit": "px" } },
+        "large":  { "$value": { "value": 16, "unit": "px" } }
+    },
+    "typography": {
+        "heading": {
+            "$type": "typography",
+            "$value": {
+                "fontFamily": ["Inter", "sans-serif"],
+                "fontSize": "2rem",
+                "fontWeight": "700",
+                "lineHeight": "1.2"
+            }
+        }
+    },
+    "alias": {
+        "$type": "color",
+        "accent": { "$value": "{color.brand.primary}" }
+    }
+}

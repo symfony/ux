@@ -1,0 +1,44 @@
+{
+    "$schema": "https://www.designtokens.org/schemas/2025.10/resolver.json",
+    "version": "2025.10",
+    "sets": {
+        "foundation": {
+            "sources": [
+                {
+                    "color": {
+                        "surface": { "$type": "number", "$value": 0 }
+                    },
+                    "space": {
+                        "control": { "$type": "dimension", "$value": { "value": 8, "unit": "px" } }
+                    }
+                }
+            ]
+        }
+    },
+    "modifiers": {
+        "theme": {
+            "contexts": {
+                "light": [{ "color": { "surface": { "$type": "number", "$value": 1 } } }],
+                "dark": [{ "color": { "surface": { "$type": "number", "$value": 2 } } }]
+            },
+            "default": "light"
+        }
+    },
+    "resolutionOrder": [
+        { "$ref": "#/sets/foundation" },
+        { "$ref": "#/modifiers/theme" },
+        {
+            "type": "modifier",
+            "name": "density",
+            "contexts": {
+                "comfortable": [{ "space": { "control": { "$type": "dimension", "$value": { "value": 8, "unit": "px" } } } }],
+                "compact": [{ "space": { "control": { "$type": "dimension", "$value": { "value": 4, "unit": "px" } } } }]
+            }
+        },
+        {
+            "type": "set",
+            "name": "component",
+            "sources": [{ "component": { "precedence": { "$type": "number", "$value": 3 } } }]
+        }
+    ]
+}

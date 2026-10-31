@@ -1,0 +1,27 @@
+{
+    "color": {
+        "action": {
+            "$type": "color",
+            "primary": { "$value": "{color.palette.primary-dark}" },
+            "primary-hover": { "$value": "{color.palette.primary-dark}" },
+            "on-primary": { "$value": "{color.palette.ink}" }
+        },
+        "content": {
+            "$type": "color",
+            "default": { "$value": "{color.palette.surface-light}" },
+            "muted": { "$value": "{color.palette.muted-dark}" }
+        },
+        "surface": {
+            "$type": "color",
+            "canvas": { "$value": "{color.palette.ink}" },
+            "subtle": { "$value": "{color.palette.surface-dark}" }
+        },
+        "border": { "$type": "color", "default": { "$value": "{color.palette.muted-light}" } },
+        "focus": { "$type": "color", "ring": { "$value": "{color.palette.primary-dark}" } },
+        "selection": {
+            "$type": "color",
+            "background": { "$value": "{color.palette.primary-dark}" },
+            "foreground": { "$value": "{color.palette.ink}" }
+        }
+    }
+}
