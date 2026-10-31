@@ -20,6 +20,7 @@ export default class extends Controller {
     declare readonly hasPreviewListTarget: boolean;
 
     declare readonly multipleValue: boolean;
+    declare readonly maxFilesValue: number;
     declare readonly removeLabelValue: string;
 
     static targets = [
@@ -34,10 +35,13 @@ export default class extends Controller {
 
     static values = {
         multiple: Boolean,
+        maxFiles: Number,
         removeLabel: { type: String, default: 'Remove' },
     };
 
     private dataTransfer!: DataTransfer;
+    private shownFile: File | null = null;
+    private dropping = false;
 
     initialize() {
         this.clear = this.clear.bind(this);
@@ -46,9 +50,12 @@ export default class extends Controller {
         this.onDragLeave = this.onDragLeave.bind(this);
         this.onDrop = this.onDrop.bind(this);
         this.onMultipleChange = this.onMultipleChange.bind(this);
+        this.onFilesDropped = this.onFilesDropped.bind(this);
     }
 
     connect() {
+        this.element.addEventListener('drop', this.onFilesDropped);
+
         if (this.multipleValue) {
             this.connectMultiple();
             this.dispatchEvent('connect');
@@ -77,6 +84,8 @@ export default class extends Controller {
     }
 
     disconnect() {
+        this.element.removeEventListener('drop', this.onFilesDropped);
+
         if (this.multipleValue) {
             this.inputTarget.removeEventListener('change', this.onMultipleChange);
             return;
@@ -97,14 +106,28 @@ export default class extends Controller {
         this.previewImageTarget.style.display = 'none';
         this.previewImageTarget.style.backgroundImage = 'none';
         this.previewFilenameTarget.textContent = '';
+        this.shownFile = null;
 
         this.dispatchEvent('clear');
     }
 
     onInputChange(event: any) {
-        const file = event.target.files[0];
-        if (typeof file === 'undefined') {
+        const files: File[] = Array.from(event.target.files ?? []);
+        if (files.length === 0) {
             return;
+        }
+
+        const [accepted, rejected] = this.checkAccept(files);
+        const file = accepted[0];
+        if (typeof file === 'undefined') {
+            // The browser replaced the file shown before with the rejected ones: put it back
+            this.setInputFiles(this.shownFile ? [this.shownFile] : []);
+            this.reject(rejected, 'accept');
+            return;
+        }
+
+        if (files.length !== 1 || files[0] !== file) {
+            this.setInputFiles([file]);
         }
 
         // Hide the input and placeholder
@@ -121,7 +144,9 @@ export default class extends Controller {
             this._populateImagePreview(this.previewImageTarget, file);
         }
 
+        this.shownFile = file;
         this.dispatchEvent('change', file);
+        this.reject(rejected, 'accept');
     }
 
     _populateImagePreview(target: HTMLElement, file: Blob) {
@@ -187,13 +212,23 @@ export default class extends Controller {
     }
 
     onMultipleChange() {
-        for (const file of Array.from(this.inputTarget.files ?? [])) {
-            if (!this.containsFile(file)) {
+        const [accepted, rejected] = this.checkAccept(Array.from(this.inputTarget.files ?? []));
+        const overflow: File[] = [];
+        for (const file of accepted) {
+            if (this.containsFile(file)) {
+                continue;
+            }
+
+            if (this.maxFilesValue > 0 && this.dataTransfer.files.length >= this.maxFilesValue) {
+                overflow.push(file);
+            } else {
                 this.dataTransfer.items.add(file);
             }
         }
 
         this.syncMultiple();
+        this.reject(rejected, 'accept');
+        this.reject(overflow, 'max_files');
     }
 
     private syncMultiple() {
@@ -206,6 +241,69 @@ export default class extends Controller {
         this.dataTransfer.items.remove(index);
         this.syncMultiple();
         this.dispatchEvent('remove', file);
+    }
+
+    private onFilesDropped() {
+        // The browser puts the dropped files into the input and fires "change" right after the drop event
+        this.dropping = true;
+        setTimeout(() => {
+            this.dropping = false;
+        });
+    }
+
+    private checkAccept(files: File[]): [File[], File[]] {
+        // Only drops ignore the accept attribute: the file picker filters with the file types of the operating system
+        if (!this.dropping) {
+            return [files, []];
+        }
+
+        const tokens = this.inputTarget.accept
+            .split(',')
+            .map((token) => token.trim().toLowerCase())
+            .filter((token) => token !== '');
+        // "*" and "*/*" are not valid tokens, and browsers do not restrict the files with them either
+        if (tokens.length === 0 || tokens.some((token) => token === '*' || token === '*/*')) {
+            return [files, []];
+        }
+
+        const accepted: File[] = [];
+        const rejected: File[] = [];
+        for (const file of files) {
+            const name = file.name.toLowerCase();
+            const type = file.type.toLowerCase();
+            const matches = tokens.some((token) => {
+                if (token.startsWith('.')) {
+                    return name.endsWith(token);
+                }
+                // Browsers report no type for some files (HEIC photos, for example), leave them to the server
+                if (type === '') {
+                    return true;
+                }
+                if (token.endsWith('/*')) {
+                    return type.startsWith(token.slice(0, -1));
+                }
+
+                return type === token;
+            });
+
+            (matches ? accepted : rejected).push(file);
+        }
+
+        return [accepted, rejected];
+    }
+
+    private setInputFiles(files: File[]) {
+        const dataTransfer = new DataTransfer();
+        for (const file of files) {
+            dataTransfer.items.add(file);
+        }
+        this.inputTarget.files = dataTransfer.files;
+    }
+
+    private reject(files: File[], reason: 'accept' | 'max_files') {
+        if (files.length > 0) {
+            this.dispatchEvent('reject', { files, reason });
+        }
     }
 
     private containsFile(file: File): boolean {

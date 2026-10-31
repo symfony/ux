@@ -11,12 +11,15 @@ var controller_default = class extends Controller {
 	];
 	static values = {
 		multiple: Boolean,
+		maxFiles: Number,
 		removeLabel: {
 			type: String,
 			default: "Remove"
 		}
 	};
 	dataTransfer;
+	shownFile = null;
+	dropping = false;
 	initialize() {
 		this.clear = this.clear.bind(this);
 		this.onInputChange = this.onInputChange.bind(this);
@@ -24,8 +27,10 @@ var controller_default = class extends Controller {
 		this.onDragLeave = this.onDragLeave.bind(this);
 		this.onDrop = this.onDrop.bind(this);
 		this.onMultipleChange = this.onMultipleChange.bind(this);
+		this.onFilesDropped = this.onFilesDropped.bind(this);
 	}
 	connect() {
+		this.element.addEventListener("drop", this.onFilesDropped);
 		if (this.multipleValue) {
 			this.connectMultiple();
 			this.dispatchEvent("connect");
@@ -40,6 +45,7 @@ var controller_default = class extends Controller {
 		this.dispatchEvent("connect");
 	}
 	disconnect() {
+		this.element.removeEventListener("drop", this.onFilesDropped);
 		if (this.multipleValue) {
 			this.inputTarget.removeEventListener("change", this.onMultipleChange);
 			return;
@@ -58,18 +64,29 @@ var controller_default = class extends Controller {
 		this.previewImageTarget.style.display = "none";
 		this.previewImageTarget.style.backgroundImage = "none";
 		this.previewFilenameTarget.textContent = "";
+		this.shownFile = null;
 		this.dispatchEvent("clear");
 	}
 	onInputChange(event) {
-		const file = event.target.files[0];
-		if (typeof file === "undefined") return;
+		const files = Array.from(event.target.files ?? []);
+		if (files.length === 0) return;
+		const [accepted, rejected] = this.checkAccept(files);
+		const file = accepted[0];
+		if (typeof file === "undefined") {
+			this.setInputFiles(this.shownFile ? [this.shownFile] : []);
+			this.reject(rejected, "accept");
+			return;
+		}
+		if (files.length !== 1 || files[0] !== file) this.setInputFiles([file]);
 		this.inputTarget.style.display = "none";
 		this.placeholderTarget.style.display = "none";
 		this.previewFilenameTarget.textContent = file.name;
 		this.previewTarget.style.display = "flex";
 		this.previewImageTarget.style.display = "none";
 		if (file.type && file.type.indexOf("image") !== -1) this._populateImagePreview(this.previewImageTarget, file);
+		this.shownFile = file;
 		this.dispatchEvent("change", file);
+		this.reject(rejected, "accept");
 	}
 	_populateImagePreview(target, file) {
 		if (typeof FileReader === "undefined") return;
@@ -108,8 +125,16 @@ var controller_default = class extends Controller {
 		this.renderList();
 	}
 	onMultipleChange() {
-		for (const file of Array.from(this.inputTarget.files ?? [])) if (!this.containsFile(file)) this.dataTransfer.items.add(file);
+		const [accepted, rejected] = this.checkAccept(Array.from(this.inputTarget.files ?? []));
+		const overflow = [];
+		for (const file of accepted) {
+			if (this.containsFile(file)) continue;
+			if (this.maxFilesValue > 0 && this.dataTransfer.files.length >= this.maxFilesValue) overflow.push(file);
+			else this.dataTransfer.items.add(file);
+		}
 		this.syncMultiple();
+		this.reject(rejected, "accept");
+		this.reject(overflow, "max_files");
 	}
 	syncMultiple() {
 		this.inputTarget.files = this.dataTransfer.files;
@@ -120,6 +145,41 @@ var controller_default = class extends Controller {
 		this.dataTransfer.items.remove(index);
 		this.syncMultiple();
 		this.dispatchEvent("remove", file);
+	}
+	onFilesDropped() {
+		this.dropping = true;
+		setTimeout(() => {
+			this.dropping = false;
+		});
+	}
+	checkAccept(files) {
+		if (!this.dropping) return [files, []];
+		const tokens = this.inputTarget.accept.split(",").map((token) => token.trim().toLowerCase()).filter((token) => token !== "");
+		if (tokens.length === 0 || tokens.some((token) => token === "*" || token === "*/*")) return [files, []];
+		const accepted = [];
+		const rejected = [];
+		for (const file of files) {
+			const name = file.name.toLowerCase();
+			const type = file.type.toLowerCase();
+			(tokens.some((token) => {
+				if (token.startsWith(".")) return name.endsWith(token);
+				if (type === "") return true;
+				if (token.endsWith("/*")) return type.startsWith(token.slice(0, -1));
+				return type === token;
+			}) ? accepted : rejected).push(file);
+		}
+		return [accepted, rejected];
+	}
+	setInputFiles(files) {
+		const dataTransfer = new DataTransfer();
+		for (const file of files) dataTransfer.items.add(file);
+		this.inputTarget.files = dataTransfer.files;
+	}
+	reject(files, reason) {
+		if (files.length > 0) this.dispatchEvent("reject", {
+			files,
+			reason
+		});
 	}
 	containsFile(file) {
 		return Array.from(this.dataTransfer.files).some((existing) => existing.name === file.name && existing.size === file.size && existing.lastModified === file.lastModified);
