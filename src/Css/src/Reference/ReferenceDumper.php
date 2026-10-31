@@ -73,11 +73,10 @@ final class ReferenceDumper
     private function colorsConstant(): string
     {
         $tokens = $this->validator->tokens();
-        $vars = $tokens->getVars()['base'] ?? [];
 
         $lines = [];
-        foreach ($tokens->getCategoryValues('colors') ?? [] as $name => $var) {
-            $value = self::resolveVar($var, $vars);
+        foreach (array_keys($tokens->getCategoryValues('colors') ?? []) as $name) {
+            $value = $tokens->getResolvedValue('colors.'.$name);
             if (null !== $value) {
                 $key = var_export((string) $name, true);
                 $lines[] = \sprintf('        %s => %s,', $key, var_export($value, true));
@@ -89,23 +88,6 @@ final class ReferenceDumper
         }
 
         return implode("\n", ['    public const COLORS = [', ...$lines, '    ];']);
-    }
-
-    /**
-     * @param array<string, mixed> $vars the value of each CSS variable, by name
-     *
-     * @return string|null the value with the CSS variables it is made of resolved, or null when one has no value, like the virtual color palette
-     */
-    private static function resolveVar(string $value, array $vars): ?string
-    {
-        while (preg_match('/^var\((--[^,)]+)\)$/', $value, $match)) {
-            if (!\is_string($vars[$match[1]] ?? null)) {
-                return null;
-            }
-            $value = $vars[$match[1]];
-        }
-
-        return $value;
     }
 
     /**

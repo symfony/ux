@@ -142,6 +142,19 @@ final class Tokens
     }
 
     /**
+     * @return string|null the base value of a token, following the tokens it refers to, or null when it has no value, like the virtual color palette
+     */
+    public function getResolvedValue(string $name): ?string
+    {
+        $value = $this->getVar($name);
+        while (\is_string($value) && preg_match('/^var\((--[^,)]+)\)$/', $value, $match)) {
+            $value = $this->vars['base'][$match[1]] ?? null;
+        }
+
+        return \is_string($value) ? $value : null;
+    }
+
+    /**
      * @return array<string, string>|null
      */
     public function getCategoryValues(string $category): ?array

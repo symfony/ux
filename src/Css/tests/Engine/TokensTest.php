@@ -105,6 +105,26 @@ final class TokensTest extends TestCase
         $this->assertSame($expected, $tokens->getValue($name));
     }
 
+    public static function provideResolvedValues(): iterable
+    {
+        yield 'plain value' => ['colors.red.300', '#f00'];
+        yield 'reference' => ['colors.alias', '#f00'];
+        yield 'semantic token' => ['colors.text', '#f00'];
+        yield 'conditional semantic token gives its base value' => ['colors.primary', '#f00'];
+        yield 'conditional spacing gives its base value' => ['spacing.gutter', '1rem'];
+        yield 'value made of a reference is left as is' => ['colors.ghost', 'color-mix(in srgb, var(--pd-colors-red-300) 50%, transparent)'];
+        yield 'virtual color palette' => ['colors.colorPalette.300', null];
+        yield 'unknown token' => ['colors.nope', null];
+    }
+
+    #[DataProvider('provideResolvedValues')]
+    public function testGetResolvedValue(string $name, ?string $expected): void
+    {
+        $tokens = self::createTokens();
+
+        $this->assertSame($expected, $tokens->getResolvedValue($name));
+    }
+
     public static function provideSvgAssets(): iterable
     {
         yield 'panda example' => ['<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 16"><path stroke="white" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h8"/></svg>', 'url("data:image/svg+xml,%3csvg xmlns=\'http://www.w3.org/2000/svg\' fill=\'none\' viewBox=\'0 0 16 16\'%3e%3cpath stroke=\'white\' stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2\' d=\'M4 8h8\'/%3e%3c/svg%3e")'];
