@@ -58,7 +58,7 @@ final class ReferenceDumperTest extends TestCase
         $this->assertSame($first->dump(), $second->dump());
     }
 
-    public function testTheReferenceListsTheValueOfEachColorToken(): void
+    public function testTheReferenceListsTheValueOfEachTokenByCategory(): void
     {
         $project = self::PROJECT;
         $project['theme']['tokens']['colors']['white'] = ['value' => '#fff'];
@@ -67,23 +67,23 @@ final class ReferenceDumperTest extends TestCase
 
         $reference = $dumper->dump();
 
+        $this->assertStringContainsString('    public const TOKENS = [', $reference);
         $this->assertStringContainsString(<<<'PHP'
-                public const COLORS = [
-                    'blue.500' => '#3b82f6',
-                    'white' => '#fff',
-                    'primary' => '#3b82f6',
-                    'fg' => '#3b82f6',
-                ];
+                    'colors' => [
+                        'blue.500' => '#3b82f6',
+                        'white' => '#fff',
+                        'primary' => '#3b82f6',
+                        'fg' => '#3b82f6',
+                    ],
             PHP, $reference);
-    }
-
-    public function testTheReferenceListsNoColorWithoutColorTokens(): void
-    {
-        $dumper = new ReferenceDumper(new StyleValidator(Engine::fromProjectConfig([])));
-
-        $reference = $dumper->dump();
-
-        $this->assertStringContainsString('    public const COLORS = [];', $reference);
+        $this->assertStringContainsString(<<<'PHP'
+                    'spacing' => [
+                        'sm' => '0.5rem',
+                        'md' => '1rem',
+                        '-sm' => '-0.5rem',
+                        '-md' => '-1rem',
+                    ],
+            PHP, $reference);
     }
 
     public function testTokenNamesThatPhpDocCannotHoldAreLeftToString(): void

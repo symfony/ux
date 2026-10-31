@@ -11,8 +11,8 @@ and breakpoints. It is rewritten only when its content changes, like
 machine.
 
 The file declares a ``CssStyles`` array shape on the
-``Symfony\UX\Css\CssReference`` class, and your colors in its ``COLORS``
-constant::
+``Symfony\UX\Css\CssReference`` class, and the values of your tokens in its
+``TOKENS`` constant::
 
     // config/reference_css.php
     namespace Symfony\UX\Css;
@@ -36,9 +36,15 @@ constant::
      */
     final class CssReference
     {
-        public const COLORS = [
-            'blue.500' => '#3b82f6',
-            'primary' => '#3b82f6',
+        public const TOKENS = [
+            'colors' => [
+                'blue.500' => '#3b82f6',
+                'primary' => '#3b82f6',
+            ],
+            'spacing' => [
+                'md' => '1rem',
+                '-md' => '-1rem',
+            ],
         ];
     }
 
@@ -52,10 +58,12 @@ down.
 Twig compiles it, and values only known at runtime are checked in debug mode:
 see :doc:`validation`.
 
-``COLORS`` maps each color token to its value, so that editors can show the
-color of a token. A semantic token that refers to another token gets the final
-value: ``primary`` refers to ``{colors.blue.500}``, so it gets ``#3b82f6``. A
-conditional token, with ``base`` and ``_dark`` keys, gets its ``base`` value.
+``TOKENS`` maps each token to its value, by category, so that editors can show
+the value of a token: the color of a color token, the length of a spacing token.
+A semantic token gets the final value of the token it refers to: ``primary``
+refers to ``{colors.blue.500}``, so it gets ``#3b82f6``. A conditional token
+gets its ``base`` value. A negative token gets the negative value: ``-md`` gets
+``-1rem``.
 
 In your editor
 --------------

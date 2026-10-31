@@ -74,6 +74,18 @@ final class TokensTest extends TestCase
         $this->assertNull($tokens->getCategoryValues('nope'));
     }
 
+    public function testGetCategories(): void
+    {
+        $tokens = self::createTokens();
+
+        $categories = $tokens->getCategories();
+
+        $this->assertContains('colors', $categories);
+        $this->assertContains('spacing', $categories);
+        $this->assertContains('opacity', $categories);
+        $this->assertNotContains('nope', $categories);
+    }
+
     public static function provideValues(): iterable
     {
         yield 'plain value' => ['colors.red.300', '#f00'];
@@ -112,7 +124,10 @@ final class TokensTest extends TestCase
         yield 'semantic token' => ['colors.text', '#f00'];
         yield 'conditional semantic token gives its base value' => ['colors.primary', '#f00'];
         yield 'conditional spacing gives its base value' => ['spacing.gutter', '1rem'];
-        yield 'value made of a reference is left as is' => ['colors.ghost', 'color-mix(in srgb, var(--pd-colors-red-300) 50%, transparent)'];
+        yield 'reference inside a value' => ['colors.ghost', 'color-mix(in srgb, #f00 50%, transparent)'];
+        yield 'negative spacing' => ['spacing.-4', '-1rem'];
+        yield 'negative semantic spacing' => ['spacing.-gutter', '-1rem'];
+        yield 'number' => ['opacity.half', '0.5'];
         yield 'virtual color palette' => ['colors.colorPalette.300', null];
         yield 'unknown token' => ['colors.nope', null];
     }
