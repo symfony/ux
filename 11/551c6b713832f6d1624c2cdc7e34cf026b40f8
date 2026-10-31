@@ -1,0 +1,9 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2026-10-31T07:59:55Z
+
+Thanks Javier! I pushed two changes on top of your commit.
+
+The cache is now skipped in debug mode. Editing `#[ExposeInTemplate]` on a private property does not rebuild the container, so the cached metadata would go stale.
+
+`warmup()` now rebuilds every entry. Running `cache:warmup` over an existing cache refreshes the metadata instead of saving the old one again.
