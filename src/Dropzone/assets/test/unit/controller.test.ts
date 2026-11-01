@@ -10,7 +10,7 @@
 import { Application, Controller } from '@hotwired/stimulus';
 import { getByTestId, waitFor } from '@testing-library/dom';
 import user from '@testing-library/user-event';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { clearDOM, mountDOM } from '../../../../../test/stimulus-helpers';
 import DropzoneController from '../../src/controller';
 
@@ -38,11 +38,40 @@ class CheckController extends Controller {
     }
 }
 
-const startStimulus = () => {
+const applications: Application[] = [];
+
+const startApplication = () => {
     const application = Application.start();
+    applications.push(application);
+
+    return application;
+};
+
+afterEach(() => {
+    for (const application of applications.splice(0)) {
+        application.stop();
+    }
+});
+
+const startStimulus = () => {
+    const application = startApplication();
     application.register('check', CheckController);
     application.register('dropzone', DropzoneController);
 };
+
+// Simulate a native file pick. A real <input> replaces its FileList on every pick.
+// jsdom can't build a populated FileList, and user-event makes `files` read-only,
+// so we install a writable `files` (which the controller writes back to as well) and dispatch the change event ourselves.
+const selectFiles = (input: HTMLInputElement, files: File[]) => {
+    Object.defineProperty(input, 'files', { configurable: true, writable: true, value: files });
+    input.dispatchEvent(new Event('change'));
+};
+
+const startDropzone = (element: HTMLElement) =>
+    new Promise<void>((resolve) => {
+        element.addEventListener('dropzone:connect', () => resolve(), { once: true });
+        startApplication().register('dropzone', DropzoneController);
+    });
 
 describe('DropzoneController', () => {
     let container: HTMLElement;
@@ -215,21 +244,7 @@ describe('DropzoneController (multiple)', () => {
         clearDOM();
     });
 
-    const start = () =>
-        new Promise<void>((resolve) => {
-            getByTestId(container, 'container').addEventListener('dropzone:connect', () => resolve(), { once: true });
-            const application = Application.start();
-            application.register('dropzone', DropzoneController);
-        });
-
-    // Simulate a native file pick. A real <input multiple> replaces its FileList
-    // on every pick; jsdom can't build a populated FileList, and user-event makes
-    // `files` read-only, so we install create a writable `files` (which the
-    // controller writes back to as well) and dispatch the change event ourselves.
-    const selectFiles = (input: HTMLInputElement, files: File[]) => {
-        Object.defineProperty(input, 'files', { configurable: true, writable: true, value: files });
-        input.dispatchEvent(new Event('change'));
-    };
+    const start = () => startDropzone(getByTestId(container, 'container'));
 
     const make = (name: string, lastModified = 1) => new File(['content'], name, { type: 'text/plain', lastModified });
 
@@ -288,5 +303,197 @@ describe('DropzoneController (multiple)', () => {
                     ?.getAttribute('aria-label')
             ).toBe('Remove a.txt')
         );
+    });
+});
+
+describe('DropzoneController (multiple, preview item template)', () => {
+    let container: HTMLElement;
+
+    const mount = (template: string) => {
+        container = mountDOM(`
+            <div data-controller="dropzone" data-dropzone-multiple-value="true" data-testid="container">
+                <input type="file" multiple data-dropzone-target="input" data-testid="input" />
+                <ul data-dropzone-target="previewList" data-testid="list"></ul>
+                <template data-dropzone-target="previewItemTemplate">${template}</template>
+            </div>
+        `);
+    };
+
+    const start = () => startDropzone(getByTestId(container, 'container'));
+
+    afterEach(() => {
+        clearDOM();
+    });
+
+    it('renders each file from the template', async () => {
+        mount(`
+            <li class="item">
+                <div data-dropzone-slot="image" class="thumbnail"></div>
+                <span data-dropzone-slot="filename" class="name"></span>
+                <button type="button" data-dropzone-slot="remove" class="remove"><svg></svg></button>
+            </li>
+        `);
+        await start();
+
+        selectFiles(getByTestId(container, 'input') as HTMLInputElement, [
+            new File(['a'], 'a.txt', { type: 'text/plain' }),
+            new File(['b'], '<b>.txt', { type: 'text/plain' }),
+        ]);
+
+        const items = getByTestId(container, 'list').querySelectorAll('li.item');
+        expect(items).toHaveLength(2);
+        expect(items[0].querySelector('.name')?.textContent).toBe('a.txt');
+        expect(items[1].querySelector('.name')?.textContent).toBe('<b>.txt');
+        expect(items[1].querySelector('.name')?.children).toHaveLength(0);
+        expect(items[0].querySelector('.remove')).toHaveAttribute('aria-label', 'Remove a.txt');
+        expect(items[0].querySelector('.remove svg')).not.toBeNull();
+        expect(items[0].querySelector('.thumbnail')).toHaveAttribute('hidden');
+        expect(items[0].querySelector('.thumbnail')).not.toHaveAttribute('style');
+    });
+
+    it('removes the file of the clicked remove slot', async () => {
+        mount(`
+            <li>
+                <span data-dropzone-slot="filename"></span>
+                <button type="button" data-dropzone-slot="remove"></button>
+            </li>
+        `);
+        await start();
+        const input = getByTestId(container, 'input') as HTMLInputElement;
+        selectFiles(input, [new File(['a'], 'a.txt'), new File(['b'], 'b.txt')]);
+
+        (getByTestId(container, 'list').querySelector('[data-dropzone-slot="remove"]') as HTMLButtonElement).click();
+
+        const names = Array.from(
+            getByTestId(container, 'list').querySelectorAll('[data-dropzone-slot="filename"]')
+        ).map((element) => element.textContent);
+        expect(names).toStrictEqual(['b.txt']);
+        expect(Array.from(input.files ?? []).map((file) => file.name)).toStrictEqual(['b.txt']);
+    });
+
+    it('shows the image preview as the background of the image slot', async () => {
+        mount('<li><div data-dropzone-slot="image"></div></li>');
+        await start();
+
+        selectFiles(getByTestId(container, 'input') as HTMLInputElement, [
+            new File(['png'], 'a.png', { type: 'image/png' }),
+        ]);
+
+        const image = getByTestId(container, 'list').querySelector('[data-dropzone-slot="image"]') as HTMLElement;
+        await waitFor(() => expect(image).not.toHaveAttribute('hidden'));
+        expect(image.style.backgroundImage).toBe('url("data:image/png;base64,cG5n")');
+    });
+
+    it('shows the image preview as the source of an img image slot', async () => {
+        mount('<li><img data-dropzone-slot="image" alt=""></li>');
+        await start();
+
+        selectFiles(getByTestId(container, 'input') as HTMLInputElement, [
+            new File(['png'], 'a.png', { type: 'image/png' }),
+        ]);
+
+        const image = getByTestId(container, 'list').querySelector('[data-dropzone-slot="image"]') as HTMLImageElement;
+        await waitFor(() => expect(image).not.toHaveAttribute('hidden'));
+        expect(image).toHaveAttribute('src', 'data:image/png;base64,cG5n');
+        expect(image).not.toHaveAttribute('style');
+    });
+
+    it.each([
+        ['no element', 'Text only'],
+        ['several root elements', '<li></li><li></li>'],
+    ])('fails to connect when the template has %s', async (_, template) => {
+        mount(template);
+        const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
+        let connected = false;
+        getByTestId(container, 'container').addEventListener('dropzone:connect', () => {
+            connected = true;
+        });
+
+        startApplication().register('dropzone', DropzoneController);
+
+        await waitFor(() =>
+            expect(consoleError).toHaveBeenCalledWith(
+                expect.any(String),
+                'Error connecting controller',
+                new Error('The "previewItemTemplate" target must contain one root element.'),
+                expect.anything()
+            )
+        );
+        expect(connected).toBe(false);
+        consoleError.mockRestore();
+    });
+
+    it('fills a filename slot on the root element of the template', async () => {
+        mount('<li data-dropzone-slot="filename"></li>');
+        await start();
+
+        selectFiles(getByTestId(container, 'input') as HTMLInputElement, [new File(['a'], 'a.txt')]);
+
+        expect(getByTestId(container, 'list').querySelector('li')?.textContent).toBe('a.txt');
+    });
+
+    it('binds a remove slot on the root element of the template', async () => {
+        mount('<button type="button" data-dropzone-slot="remove"></button>');
+        await start();
+        const input = getByTestId(container, 'input') as HTMLInputElement;
+        selectFiles(input, [new File(['a'], 'a.txt'), new File(['b'], 'b.txt')]);
+
+        const button = getByTestId(container, 'list').querySelector('button') as HTMLButtonElement;
+        expect(button).toHaveAttribute('aria-label', 'Remove a.txt');
+        button.click();
+
+        expect(Array.from(input.files ?? []).map((file) => file.name)).toStrictEqual(['b.txt']);
+    });
+
+    it('fills every element of a slot', async () => {
+        mount(`
+            <li>
+                <span data-dropzone-slot="filename" class="name"></span>
+                <span data-dropzone-slot="filename" class="sr-only"></span>
+                <button type="button" data-dropzone-slot="remove" class="icon"></button>
+                <button type="button" data-dropzone-slot="remove" class="text">Remove</button>
+            </li>
+        `);
+        await start();
+        const input = getByTestId(container, 'input') as HTMLInputElement;
+        selectFiles(input, [new File(['a'], 'a.txt'), new File(['b'], 'b.txt')]);
+
+        const items = getByTestId(container, 'list').querySelectorAll('li');
+        expect(items[0].querySelector('.name')?.textContent).toBe('a.txt');
+        expect(items[0].querySelector('.sr-only')?.textContent).toBe('a.txt');
+        expect(items[0].querySelector('.text')).toHaveAttribute('aria-label', 'Remove a.txt');
+
+        (items[0].querySelector('.text') as HTMLButtonElement).click();
+
+        expect(Array.from(input.files ?? []).map((file) => file.name)).toStrictEqual(['b.txt']);
+    });
+
+    it('does not submit the form with a remove slot without type', async () => {
+        mount('<li><button data-dropzone-slot="remove">Remove</button></li>');
+        const form = document.createElement('form');
+        getByTestId(container, 'container').before(form);
+        form.append(getByTestId(container, 'container'));
+        let submitted = false;
+        form.addEventListener('submit', (event) => {
+            event.preventDefault();
+            submitted = true;
+        });
+        await start();
+        const input = getByTestId(container, 'input') as HTMLInputElement;
+        selectFiles(input, [new File(['a'], 'a.txt')]);
+
+        (getByTestId(container, 'list').querySelector('button') as HTMLButtonElement).click();
+
+        expect(submitted).toBe(false);
+        expect(input.files).toHaveLength(0);
+    });
+
+    it('renders a template without slots', async () => {
+        mount('<li class="item">File</li>');
+        await start();
+
+        selectFiles(getByTestId(container, 'input') as HTMLInputElement, [new File(['a'], 'a.txt')]);
+
+        expect(getByTestId(container, 'list').querySelectorAll('li.item')).toHaveLength(1);
     });
 });
