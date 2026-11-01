@@ -15,7 +15,9 @@ export default class extends Controller {
     declare readonly previewTarget: HTMLDivElement;
     declare readonly previewClearButtonTarget: HTMLButtonElement;
     declare readonly previewFilenameTarget: HTMLDivElement;
+    declare readonly hasPreviewFilenameTarget: boolean;
     declare readonly previewImageTarget: HTMLDivElement;
+    declare readonly hasPreviewImageTarget: boolean;
     declare readonly previewListTarget: HTMLUListElement;
     declare readonly hasPreviewListTarget: boolean;
 
@@ -58,9 +60,6 @@ export default class extends Controller {
         // Reset when connecting to work with Turbolinks
         this.clear();
 
-        // Clear on click on clear button
-        this.previewClearButtonTarget.addEventListener('click', this.clear);
-
         // Listen on input change and display preview
         this.inputTarget.addEventListener('change', this.onInputChange);
 
@@ -82,11 +81,22 @@ export default class extends Controller {
             return;
         }
 
-        this.previewClearButtonTarget.removeEventListener('click', this.clear);
         this.inputTarget.removeEventListener('change', this.onInputChange);
         this.element.removeEventListener('dragenter', this.onDragEnter);
         this.element.removeEventListener('dragleave', this.onDragLeave);
         this.element.removeEventListener('drop', this.onDrop);
+    }
+
+    // Bound when the button appears, as it is optional and can be rendered after the controller connects
+    previewClearButtonTargetConnected(button: HTMLButtonElement) {
+        // In multiple mode, files are removed one by one, never cleared together
+        if (!this.multipleValue) {
+            button.addEventListener('click', this.clear);
+        }
+    }
+
+    previewClearButtonTargetDisconnected(button: HTMLButtonElement) {
+        button.removeEventListener('click', this.clear);
     }
 
     clear() {
@@ -94,9 +104,13 @@ export default class extends Controller {
         this.inputTarget.style.display = 'block';
         this.placeholderTarget.style.display = 'block';
         this.previewTarget.style.display = 'none';
-        this.previewImageTarget.style.display = 'none';
-        this.previewImageTarget.style.backgroundImage = 'none';
-        this.previewFilenameTarget.textContent = '';
+        if (this.hasPreviewImageTarget) {
+            this.previewImageTarget.style.display = 'none';
+            this.previewImageTarget.style.backgroundImage = 'none';
+        }
+        if (this.hasPreviewFilenameTarget) {
+            this.previewFilenameTarget.textContent = '';
+        }
 
         this.dispatchEvent('clear');
     }
@@ -112,13 +126,17 @@ export default class extends Controller {
         this.placeholderTarget.style.display = 'none';
 
         // Show the filename in preview
-        this.previewFilenameTarget.textContent = file.name;
+        if (this.hasPreviewFilenameTarget) {
+            this.previewFilenameTarget.textContent = file.name;
+        }
         this.previewTarget.style.display = 'flex';
 
         // If the file is an image, load it and display it as preview
-        this.previewImageTarget.style.display = 'none';
-        if (file.type && file.type.indexOf('image') !== -1) {
-            this._populateImagePreview(this.previewImageTarget, file);
+        if (this.hasPreviewImageTarget) {
+            this.previewImageTarget.style.display = 'none';
+            if (file.type && file.type.indexOf('image') !== -1) {
+                this._populateImagePreview(this.previewImageTarget, file);
+            }
         }
 
         this.dispatchEvent('change', file);

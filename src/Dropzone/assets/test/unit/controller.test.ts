@@ -10,7 +10,7 @@
 import { Application, Controller } from '@hotwired/stimulus';
 import { getByTestId, waitFor } from '@testing-library/dom';
 import user from '@testing-library/user-event';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { clearDOM, mountDOM } from '../../../../../test/stimulus-helpers';
 import DropzoneController from '../../src/controller';
 
@@ -38,8 +38,23 @@ class CheckController extends Controller {
     }
 }
 
-const startStimulus = () => {
+const applications: Application[] = [];
+
+const startApplication = () => {
     const application = Application.start();
+    applications.push(application);
+
+    return application;
+};
+
+afterEach(() => {
+    for (const application of applications.splice(0)) {
+        application.stop();
+    }
+});
+
+const startStimulus = () => {
+    const application = startApplication();
     application.register('check', CheckController);
     application.register('dropzone', DropzoneController);
 };
@@ -188,6 +203,92 @@ describe('DropzoneController', () => {
         await waitFor(() => expect(getByTestId(container, 'placeholder')).toHaveStyle({ display: 'none' }));
         await waitFor(() => expect(getByTestId(container, 'preview')).toHaveStyle({ display: 'flex' }));
     });
+
+    it.each(['button', 'preview-filename', 'preview-image'])('works without the %s target', async (testId) => {
+        getByTestId(container, testId).remove();
+        startStimulus();
+        await waitFor(() => expect(getByTestId(container, 'container')).toHaveClass('connected'));
+
+        let changed: File | null = null;
+        getByTestId(container, 'container').addEventListener('dropzone:change', (event: any) => {
+            changed = event.detail;
+        });
+
+        const input = getByTestId(container, 'input') as HTMLInputElement;
+        const file = new File(['png'], 'a.png', { type: 'image/png' });
+        Object.defineProperty(input, 'files', { configurable: true, writable: true, value: [file] });
+        input.dispatchEvent(new Event('change'));
+
+        expect(changed).toBe(file);
+        expect(getByTestId(container, 'preview')).toHaveStyle({ display: 'flex' });
+        expect(getByTestId(container, 'placeholder')).toHaveStyle({ display: 'none' });
+    });
+
+    const pick = (file: File) => {
+        const input = getByTestId(container, 'input') as HTMLInputElement;
+        Object.defineProperty(input, 'files', { configurable: true, writable: true, value: [file] });
+        input.dispatchEvent(new Event('change'));
+    };
+
+    it('shows the file name without the image preview target', async () => {
+        getByTestId(container, 'preview-image').remove();
+        startStimulus();
+        await waitFor(() => expect(getByTestId(container, 'container')).toHaveClass('connected'));
+
+        pick(new File(['png'], 'a.png', { type: 'image/png' }));
+
+        expect(getByTestId(container, 'preview-filename')).toHaveTextContent('a.png');
+    });
+
+    it('shows the image preview without the file name target', async () => {
+        getByTestId(container, 'preview-filename').remove();
+        startStimulus();
+        await waitFor(() => expect(getByTestId(container, 'container')).toHaveClass('connected'));
+
+        pick(new File(['png'], 'a.png', { type: 'image/png' }));
+
+        await waitFor(() =>
+            expect(getByTestId(container, 'preview-image').style.backgroundImage).toBe(
+                'url("data:image/png;base64,cG5n")'
+            )
+        );
+    });
+
+    it('disconnects without the clear button target', async () => {
+        getByTestId(container, 'button').remove();
+        startStimulus();
+        await waitFor(() => expect(getByTestId(container, 'container')).toHaveClass('connected'));
+        const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+        for (const application of applications.splice(0)) {
+            application.stop();
+        }
+
+        expect(consoleError).not.toHaveBeenCalled();
+        consoleError.mockRestore();
+    });
+
+    it('clears with a clear button added after connect', async () => {
+        getByTestId(container, 'button').remove();
+        startStimulus();
+        await waitFor(() => expect(getByTestId(container, 'container')).toHaveClass('connected'));
+        pick(new File(['hello'], 'hello.txt'));
+
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.setAttribute('data-dropzone-target', 'previewClearButton');
+        getByTestId(container, 'preview').append(button);
+        await new Promise((resolve) => setTimeout(resolve));
+        let cleared = false;
+        getByTestId(container, 'container').addEventListener('dropzone:clear', () => {
+            cleared = true;
+        });
+
+        button.click();
+
+        expect(cleared).toBe(true);
+        expect(getByTestId(container, 'preview')).toHaveStyle({ display: 'none' });
+    });
 });
 
 describe('DropzoneController (multiple)', () => {
@@ -218,7 +319,7 @@ describe('DropzoneController (multiple)', () => {
     const start = () =>
         new Promise<void>((resolve) => {
             getByTestId(container, 'container').addEventListener('dropzone:connect', () => resolve(), { once: true });
-            const application = Application.start();
+            const application = startApplication();
             application.register('dropzone', DropzoneController);
         });
 
@@ -288,5 +389,28 @@ describe('DropzoneController (multiple)', () => {
                     ?.getAttribute('aria-label')
             ).toBe('Remove a.txt')
         );
+    });
+
+    it('does not clear the files with a clear button', async () => {
+        // The theme also renders the preview of the single-file mode in multiple mode
+        const preview = document.createElement('div');
+        preview.setAttribute('data-dropzone-target', 'preview');
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.setAttribute('data-dropzone-target', 'previewClearButton');
+        preview.append(button);
+        getByTestId(container, 'container').append(preview);
+        await start();
+        const input = getByTestId(container, 'input') as HTMLInputElement;
+        selectFiles(input, [make('a.txt')]);
+        let cleared = false;
+        getByTestId(container, 'container').addEventListener('dropzone:clear', () => {
+            cleared = true;
+        });
+
+        button.click();
+
+        expect(cleared).toBe(false);
+        expect(getByTestId(container, 'list').children).toHaveLength(1);
     });
 });
