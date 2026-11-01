@@ -146,6 +146,16 @@ final class Tokens
      */
     public function getResolvedValue(string $name): ?string
     {
+        $token = $this->byName[$name] ?? null;
+        if ($token?->extensions['isNegative'] ?? false) {
+            $value = $this->getResolvedValue(implode('.', $token->extensions['originalPath']));
+            if (null === $value) {
+                return null;
+            }
+
+            return preg_match('/^[0-9.]+[a-z%]*$/', $value) ? '-'.$value : 'calc('.$value.' * -1)';
+        }
+
         $value = $this->getVar($name);
 
         return null !== $value ? $this->resolveVars($value) : null;
@@ -264,12 +274,7 @@ final class Tokens
             return $var ?? '';
         }, $value);
 
-        if (!$resolved) {
-            return null;
-        }
-
-        // a negative token, like spacing.-4, is written calc(var(--spacing-4) * -1)
-        return preg_match('/^calc\(([0-9.]+[a-z%]*) \* -1\)$/', $value, $match) ? '-'.$match[1] : $value;
+        return $resolved ? $value : null;
     }
 
     /**
