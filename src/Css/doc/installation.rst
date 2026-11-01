@@ -7,10 +7,10 @@ Install the bundle with Composer:
 
     $ composer require symfony/ux-css
 
-Symfony Flex registers ``UXCssBundle`` for you, and its recipe creates
-``config/packages/ux_css.yaml`` with the default tokens of Panda CSS enabled
-(see :doc:`tokens`). If your application does not use Flex, register the
-bundle manually::
+Symfony Flex registers ``UXCssBundle`` for you. Its recipe creates
+``config/packages/ux_css.yaml``, with the default tokens of Panda CSS enabled
+(see :doc:`tokens`), and imports the stylesheet from ``assets/app.js``. If your
+application does not use Flex, register the bundle manually::
 
     // config/bundles.php
     return [
@@ -38,19 +38,18 @@ templates to read.
 Load the stylesheet
 -------------------
 
-The bundle writes its CSS to ``var/ux_css/styles.css``. With AssetMapper, add
-it to the base template:
+The bundle writes its CSS to ``var/ux_css/styles.css``. Import it from your
+JavaScript entry, after your own styles:
 
-.. code-block:: html+twig
+.. code-block:: javascript
 
-    {# templates/base.html.twig #}
-    {% block stylesheets %}
-        <link rel="stylesheet" href="{{ asset('ux_css/styles.css') }}">
-    {% endblock %}
+    // assets/app.js
+    import './styles/app.css';
+    import '../var/ux_css/styles.css';
 
-The bundle registers ``var/ux_css/`` as an AssetMapper path under the
-``ux_css`` prefix, so there is nothing to configure. With Webpack Encore or
-Symfony Reprise, import the file from your JavaScript entry instead: see
-:doc:`bundlers`.
+The Symfony Flex recipe adds this line for you. It works with AssetMapper,
+Symfony Reprise and Webpack Encore. The bundle registers ``var/ux_css/`` as an
+AssetMapper path under the ``ux_css`` prefix, so there is nothing to configure.
+:doc:`bundlers` gives the details for each tool.
 
 Next, :doc:`getting-started` declares your first tokens.
