@@ -23,6 +23,7 @@ use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
 use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
@@ -49,6 +50,20 @@ final class Kernel extends BaseKernel
     public function index(): Response
     {
         return new Response('index');
+    }
+
+    /**
+     * Validates a form submitted with its CSRF token, as a regular (non-live) form submit.
+     */
+    public function submitCsrfForm(Request $request): Response
+    {
+        // a real application has a session started: the stateless CSRF strategy is stored in it
+        $request->getSession()->set('started', true);
+
+        $form = $this->container->get('test.service_container')->get('form.factory')->create();
+        $form->handleRequest($request);
+
+        return new Response('', $form->isSubmitted() && $form->isValid() ? 200 : 422);
     }
 
     public function renderTemplate(string $template, ?Environment $twig = null): Response
@@ -121,6 +136,13 @@ final class Kernel extends BaseKernel
                 'property_info' => ['with_constructor_extractor' => false],
             ] : []),
         ]);
+
+        if ('stateless_csrf' === $this->environment) {
+            $c->extension('framework', [
+                'csrf_protection' => ['enabled' => true, 'stateless_token_ids' => ['submit']],
+                'form' => ['csrf_protection' => ['token_id' => 'submit']],
+            ]);
+        }
 
         $c->extension('twig', [
             'default_path' => '%kernel.project_dir%/tests/Fixtures/templates',
@@ -228,6 +250,7 @@ final class Kernel extends BaseKernel
         $routes->add('template', '/render-template/{template}')->controller('kernel::renderTemplate');
         $routes->add('render_namespaced_template', '/render-namespaced-template/{template}')->controller('kernel::renderNamespacedTemplate');
         $routes->add('homepage', '/')->controller('kernel::index');
+        $routes->add('submit_csrf_form', '/submit-csrf-form')->controller('kernel::submitCsrfForm')->methods(['POST']);
         $routes->add('alternate_live_route', '/alt/{_live_component}/{_live_action}')->defaults(['_live_action' => 'get']);
         $routes->add('localized_route', '/locale/{_locale}/{_live_component}/{_live_action}')->defaults(['_live_action' => 'get']);
         $routes->add('route_defaults_live_route', '/route-defaults/{_live_component}/{_live_action}')->defaults(['_live_action' => 'get', '_scope' => 'storefront']);

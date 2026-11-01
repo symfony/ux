@@ -44,6 +44,11 @@ use Symfony\UX\TwigComponent\MountedComponent;
  */
 class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscriberInterface
 {
+    /**
+     * Set on the request once it is known to be a live component request.
+     */
+    public const LIVE_REQUEST_ATTRIBUTE = '_live_request';
+
     private const HTML_CONTENT_TYPE = 'application/vnd.live-component+html';
     private const REDIRECT_HEADER = 'X-Live-Redirect';
     private const HTML_LENGTH_HEADER = 'X-Live-Html-Length';
@@ -75,6 +80,8 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
         if (!$this->isLiveComponentRequest($request)) {
             return;
         }
+
+        $request->attributes->set(self::LIVE_REQUEST_ATTRIBUTE, true);
 
         if ($request->attributes->has('_controller')) {
             return;

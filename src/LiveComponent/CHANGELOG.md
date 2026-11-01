@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 3.7
+
+- Skip the CSRF validation of the forms submitted during a live request, already protected by its `X-Requested-With`
+  header: a stateless CSRF token failed there once the session had used a double-submitted one
+
 ## 3.6
 
 - Export the `ComponentHooks` TypeScript type, to type hook callbacks defined outside of `Component.on()`
