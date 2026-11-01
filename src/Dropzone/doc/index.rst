@@ -198,6 +198,77 @@ Then in your form, add your controller as an HTML attribute::
         // ...
     }
 
+Transforming files before they are added
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. versionadded:: 3.7
+
+    The ``dropzone:pre-add`` event was added in Dropzone 3.7.
+
+Each time the user picks or drops files, the ``dropzone:pre-add`` event is dispatched before the files are added and previewed, in single-file and in ``multiple`` mode.
+``event.detail.files`` holds the new files, as an array of ``File``.
+A listener can:
+
+* pass a promise to ``event.detail.waitUntil()``: the ``File`` objects the promise resolves to are added instead (fewer, more or other files). Call it once, synchronously, from the listener. It also accepts the array of files itself;
+* call ``event.preventDefault()``: no file is added.
+
+While a promise is pending, the container has a ``data-state="processing"`` attribute.
+Use it to show a spinner or to disable the submit button: until the promise resolves, the input holds the files selected before (in single-file mode, the original file).
+If the promise rejects, or resolves to something else than an array of ``File`` objects, the original files are added and the error is logged to the console.
+Selections are added in the order they were made, and clearing the Dropzone drops the selections still processed.
+
+In ``multiple`` mode, a file picked twice is added once: files are compared by name, size and ``lastModified``.
+When you create a new ``File``, pass the ``lastModified`` of the original, or the same file picked twice is added twice.
+
+For example, to resize the photos in the browser before they are uploaded:
+
+.. code-block:: javascript
+
+    // assets/controllers/image_resize_controller.js
+    import { Controller } from '@hotwired/stimulus';
+
+    const MAX_DIMENSION = 2000;
+
+    export default class extends Controller {
+        connect() {
+            this.element.addEventListener('dropzone:pre-add', this._onPreAdd);
+        }
+
+        disconnect() {
+            this.element.removeEventListener('dropzone:pre-add', this._onPreAdd);
+        }
+
+        _onPreAdd = (event) => {
+            // Keep the original of a file that cannot be resized, without giving up on the others
+            event.detail.waitUntil(Promise.all(event.detail.files.map((file) => this._resize(file).catch(() => file))));
+        };
+
+        async _resize(file) {
+            if (!file.type.startsWith('image/')) {
+                return file;
+            }
+
+            const bitmap = await createImageBitmap(file);
+            try {
+                const scale = Math.min(1, MAX_DIMENSION / Math.max(bitmap.width, bitmap.height));
+                const canvas = new OffscreenCanvas(Math.round(bitmap.width * scale), Math.round(bitmap.height * scale));
+                canvas.getContext('2d').drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+                const blob = await canvas.convertToBlob({ type: 'image/jpeg', quality: 0.85 });
+
+                return new File([blob], file.name.replace(/\.\w+$/, '.jpg'), { type: 'image/jpeg', lastModified: file.lastModified });
+            } finally {
+                bitmap.close();
+            }
+        }
+    }
+
+Then add the controller to the field::
+
+    ->add('photos', DropzoneType::class, [
+        'multiple' => true,
+        'attr' => ['data-controller' => 'image-resize'],
+    ])
+
 Backward Compatibility promise
 ------------------------------
 
