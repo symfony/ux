@@ -9,16 +9,20 @@ export default class export_default extends Controller {
   readonly previewListTarget: HTMLUListElement;
   readonly hasPreviewListTarget: boolean;
   readonly multipleValue: boolean;
+  readonly maxFilesValue: number;
   readonly removeLabelValue: string;
   static targets: string[];
   static values: {
     multiple: BooleanConstructor;
+    maxFiles: NumberConstructor;
     removeLabel: {
       type: StringConstructor;
       default: string;
     };
   };
   private dataTransfer;
+  private shownFile;
+  private dropping;
   initialize(): void;
   connect(): void;
   disconnect(): void;
@@ -32,6 +36,10 @@ export default class export_default extends Controller {
   onMultipleChange(): void;
   private syncMultiple;
   private removeFileAt;
+  private onFilesDropped;
+  private checkAccept;
+  private setInputFiles;
+  private reject;
   private containsFile;
   private renderList;
   private buildListItem;

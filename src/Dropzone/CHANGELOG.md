@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 3.7.0
+
+- Leave out the dropped files that do not match the `accept` attribute of the input
+- Add a `max_files` option to `DropzoneType` to limit the number of files in `multiple` mode, with a `Count` constraint when the Validator component is installed
+- Add a `dropzone:reject` event with the files left out and the reason
+
 ## 3.5.0
 
 - Add support for Symfony 8.2's standalone `AssetMapperBundle`
