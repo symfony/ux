@@ -1104,6 +1104,23 @@ You can also use the ``turbo_stream_from()`` Twig function directly:
     {{ turbo_stream_from('chat', private: true) }}
     {{ turbo_stream_from('App\\Entity\\Book', transport: 'hub2') }}
 
+.. versionadded:: 3.7
+
+    HTML attributes on ``<twig:Turbo:Stream:From>`` and the ``attributes`` argument of ``turbo_stream_from()`` were introduced in Symfony UX 3.7.
+
+The other attributes of the component are rendered on the ``<turbo-mercure-stream-source>`` element, for example to give it an ``id`` or to attach a Stimulus controller to it.
+With the ``turbo_stream_from()`` function, pass them in the ``attributes`` argument.
+Their values are rendered like with the ``html_attr()`` Twig function:
+
+.. code-block:: html+twig
+
+    <twig:Turbo:Stream:From topics="chat" id="chat-stream" data-controller="chat-status" />
+
+    {{ turbo_stream_from('chat', attributes: {id: 'chat-stream', 'data-controller': 'chat-status'}) }}
+
+The ``src`` and ``private`` attributes are reserved: ``src`` is built from the topics, and ``private`` comes from the ``private`` argument.
+With a :doc:`custom transport <custom-transport>`, the attributes are rendered only if its stream source renderer supports them.
+
 .. versionadded:: 3.6
 
     Support for the Mercure protocol 1.0 was introduced in Symfony UX 3.6.
