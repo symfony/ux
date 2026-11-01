@@ -80,6 +80,8 @@ final class FrameworkAppKernel extends Kernel
         ];
         // The hub the protocol 0.x tests target, so that they do not depend on that default
         $hubs['legacy'] = $hubs['default'];
+        // A secret, and not a token, so that the hub can create the authorization cookie of private stream sources
+        $hubs['legacy']['jwt'] = ['secret' => '!ChangeThisMercureHubJWTSecretKey!', 'publish' => '*'];
 
         if (enum_exists(ProtocolVersion::class)) {
             $hubs['legacy']['protocol_version'] = '0.x';
