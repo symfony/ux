@@ -42,8 +42,8 @@ line. You find the mistake when you open the page, and ``lint:twig`` finds it
 in CI, before it reaches production.
 
 The bundle needs no Node.js. PHP reads the templates and writes the CSS file.
-AssetMapper serves it as is, and Webpack Encore or Symfony Reprise can import
-it like any other stylesheet.
+AssetMapper serves it as is, and Symfony Reprise or Webpack Encore can import it
+like any other stylesheet.
 
 Mental model
 ------------
@@ -93,8 +93,8 @@ Write styles
 Ship it
 -------
 
-* :doc:`bundlers` loads the stylesheet with AssetMapper, Webpack Encore or
-  Symfony Reprise.
+* :doc:`bundlers` loads the stylesheet with AssetMapper, Symfony Reprise or
+  Webpack Encore.
 * :doc:`production` covers the deployment order and the measured performance.
 * :doc:`configuration` is the complete configuration reference.
 * :doc:`panda` lists what differs from Panda CSS and what is not supported
