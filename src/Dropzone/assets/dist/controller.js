@@ -17,6 +17,11 @@ var controller_default = class extends Controller {
 		}
 	};
 	dataTransfer;
+	processingCount = 0;
+	filled = false;
+	dragging = false;
+	queue = Promise.resolve();
+	generation = 0;
 	initialize() {
 		this.clear = this.clear.bind(this);
 		this.onInputChange = this.onInputChange.bind(this);
@@ -26,79 +31,87 @@ var controller_default = class extends Controller {
 		this.onMultipleChange = this.onMultipleChange.bind(this);
 	}
 	connect() {
+		this.dragging = false;
+		this.element.addEventListener("dragenter", this.onDragEnter);
+		this.element.addEventListener("dragleave", this.onDragLeave);
+		this.element.addEventListener("drop", this.onDrop);
 		if (this.multipleValue) {
 			this.connectMultiple();
 			this.dispatchEvent("connect");
 			return;
 		}
+		for (const target of [this.previewTarget, this.previewImageTarget]) if (target.style.display === "none") target.style.removeProperty("display");
 		this.clear();
 		this.previewClearButtonTarget.addEventListener("click", this.clear);
 		this.inputTarget.addEventListener("change", this.onInputChange);
-		this.element.addEventListener("dragenter", this.onDragEnter);
-		this.element.addEventListener("dragleave", this.onDragLeave);
-		this.element.addEventListener("drop", this.onDrop);
 		this.dispatchEvent("connect");
 	}
 	disconnect() {
+		this.generation++;
+		this.element.removeEventListener("dragenter", this.onDragEnter);
+		this.element.removeEventListener("dragleave", this.onDragLeave);
+		this.element.removeEventListener("drop", this.onDrop);
 		if (this.multipleValue) {
 			this.inputTarget.removeEventListener("change", this.onMultipleChange);
 			return;
 		}
 		this.previewClearButtonTarget.removeEventListener("click", this.clear);
 		this.inputTarget.removeEventListener("change", this.onInputChange);
-		this.element.removeEventListener("dragenter", this.onDragEnter);
-		this.element.removeEventListener("dragleave", this.onDragLeave);
-		this.element.removeEventListener("drop", this.onDrop);
 	}
 	clear() {
+		this.generation++;
+		this.reset();
+	}
+	reset() {
 		this.inputTarget.value = "";
-		this.inputTarget.style.display = "block";
-		this.placeholderTarget.style.display = "block";
-		this.previewTarget.style.display = "none";
-		this.previewImageTarget.style.display = "none";
-		this.previewImageTarget.style.backgroundImage = "none";
+		this.previewImageTarget.hidden = true;
+		this.previewImageTarget.style.removeProperty("background-image");
 		this.previewFilenameTarget.textContent = "";
+		this.filled = false;
+		this.updateState();
 		this.dispatchEvent("clear");
 	}
 	onInputChange(event) {
-		const file = event.target.files[0];
-		if (typeof file === "undefined") return;
-		this.inputTarget.style.display = "none";
-		this.placeholderTarget.style.display = "none";
-		this.previewFilenameTarget.textContent = file.name;
-		this.previewTarget.style.display = "flex";
-		this.previewImageTarget.style.display = "none";
-		if (file.type && file.type.indexOf("image") !== -1) this._populateImagePreview(this.previewImageTarget, file);
-		this.dispatchEvent("change", file);
+		const files = Array.from(event.target.files ?? []);
+		if (files.length === 0) return;
+		this.preAdd(files, (added) => {
+			const file = added[0];
+			if (typeof file === "undefined") {
+				this.reset();
+				return;
+			}
+			if (this.inputTarget.files?.[0] !== file) {
+				const dataTransfer = new DataTransfer();
+				dataTransfer.items.add(file);
+				this.inputTarget.files = dataTransfer.files;
+			}
+			this.showFile(file);
+		});
 	}
 	_populateImagePreview(target, file) {
 		if (typeof FileReader === "undefined") return;
 		const reader = new FileReader();
 		reader.addEventListener("load", (event) => {
-			target.style.display = "block";
+			target.hidden = false;
 			target.style.backgroundImage = `url("${event.target.result}")`;
 		});
 		reader.readAsDataURL(file);
 	}
 	onDragEnter() {
-		this.inputTarget.style.display = "block";
-		this.placeholderTarget.style.display = "block";
-		this.previewTarget.style.display = "none";
+		this.dragging = true;
+		this.updateState();
 	}
 	onDragLeave(event) {
 		event.preventDefault();
 		if (!this.element.contains(event.relatedTarget)) {
-			this.inputTarget.style.display = "none";
-			this.placeholderTarget.style.display = "none";
-			this.previewTarget.style.display = "block";
+			this.dragging = false;
+			this.updateState();
 		}
 	}
 	onDrop() {
 		setTimeout(() => {
-			if (!this.inputTarget.files?.length) return;
-			this.inputTarget.style.display = "none";
-			this.placeholderTarget.style.display = "none";
-			this.previewTarget.style.display = "flex";
+			this.dragging = false;
+			this.updateState();
 		});
 	}
 	connectMultiple() {
@@ -106,14 +119,69 @@ var controller_default = class extends Controller {
 		for (const file of Array.from(this.inputTarget.files ?? [])) this.dataTransfer.items.add(file);
 		this.inputTarget.addEventListener("change", this.onMultipleChange);
 		this.renderList();
+		this.updateState();
 	}
 	onMultipleChange() {
-		for (const file of Array.from(this.inputTarget.files ?? [])) if (!this.containsFile(file)) this.dataTransfer.items.add(file);
-		this.syncMultiple();
+		const files = Array.from(this.inputTarget.files ?? []);
+		this.inputTarget.files = this.dataTransfer.files;
+		this.preAdd(files, (added) => {
+			for (const file of added) if (!this.containsFile(file)) this.dataTransfer.items.add(file);
+			this.syncMultiple();
+		});
+	}
+	showFile(file) {
+		this.previewFilenameTarget.textContent = file.name;
+		this.previewImageTarget.hidden = true;
+		if (file.type && file.type.indexOf("image") !== -1) this._populateImagePreview(this.previewImageTarget, file);
+		this.filled = true;
+		this.updateState();
+		this.dispatchEvent("change", file);
+	}
+	preAdd(files, add) {
+		let promise = null;
+		let prevented = false;
+		if (files.length > 0) {
+			let dispatching = true;
+			const event = this.dispatchEvent("pre-add", {
+				files,
+				waitUntil: (filesPromise) => {
+					if (!dispatching || promise) throw new Error("waitUntil() can only be called once, from a \"dropzone:pre-add\" listener.");
+					promise = Promise.resolve(filesPromise);
+				}
+			}, true);
+			dispatching = false;
+			prevented = event.defaultPrevented;
+		}
+		if (prevented && promise) {
+			promise.catch((error) => console.error(error));
+			promise = null;
+		}
+		const selected = prevented ? [] : files;
+		if (!promise && this.processingCount === 0) {
+			add(selected);
+			return;
+		}
+		const generation = this.generation;
+		this.processingCount++;
+		this.updateState();
+		const result = (promise ?? Promise.resolve(selected)).then((resolved) => {
+			if (!Array.isArray(resolved) || !resolved.every((file) => file instanceof File)) throw new TypeError("The promise passed to waitUntil() must resolve to an array of files.");
+			return resolved;
+		}).catch((error) => {
+			console.error(error);
+			return files;
+		});
+		this.queue = this.queue.then(() => result).then((resolved) => {
+			if (generation === this.generation) add(resolved);
+		}).finally(() => {
+			this.processingCount--;
+			this.updateState();
+		});
 	}
 	syncMultiple() {
 		this.inputTarget.files = this.dataTransfer.files;
 		this.renderList();
+		this.updateState();
 		this.dispatchEvent("change", this.inputTarget.files);
 	}
 	removeFileAt(index, file) {
@@ -134,7 +202,7 @@ var controller_default = class extends Controller {
 		item.className = "dropzone-preview-list-item";
 		const image = document.createElement("div");
 		image.className = "dropzone-preview-image";
-		image.style.display = "none";
+		image.hidden = true;
 		if (file.type && file.type.indexOf("image") !== -1) this._populateImagePreview(image, file);
 		const filename = document.createElement("span");
 		filename.className = "dropzone-preview-filename";
@@ -147,10 +215,23 @@ var controller_default = class extends Controller {
 		item.append(image, filename, remove);
 		return item;
 	}
-	dispatchEvent(name, payload = {}) {
-		this.dispatch(name, {
+	updateState() {
+		const filled = this.multipleValue ? this.dataTransfer.files.length > 0 : this.filled;
+		let state = filled ? "filled" : "empty";
+		if (this.dragging) state = "dragging";
+		if (this.processingCount > 0) state = "processing";
+		this.element.setAttribute("data-state", state);
+		if (this.multipleValue) return;
+		const showPreview = filled && !this.dragging;
+		this.inputTarget.hidden = showPreview;
+		this.placeholderTarget.hidden = showPreview;
+		this.previewTarget.hidden = !showPreview;
+	}
+	dispatchEvent(name, payload = {}, cancelable = false) {
+		return this.dispatch(name, {
 			detail: payload,
-			prefix: "dropzone"
+			prefix: "dropzone",
+			cancelable
 		});
 	}
 };
