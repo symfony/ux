@@ -1115,6 +1115,29 @@ entity of a class uses a URL Pattern
 (``https://symfony.com/ux-turbo/App%5CEntity%5CBook/:id``). The deprecated
 ``turbo_stream_listen()`` function does not support this protocol.
 
+.. versionadded:: 3.7
+
+    The ``subscribe`` option was introduced in Symfony UX 3.7.
+
+A private stream source sets the Mercure authorization cookie, which grants the topics it listens to.
+The browser keeps one such cookie per hub, so the last page rendered decides what every open page can receive.
+For example, opening a page that listens to ``news`` revokes ``chat`` for a tab still open on a page that listens to ``chat``, as soon as its connection to the hub reconnects.
+To grant the same topics on every page, pass the topics the user can subscribe to in the ``subscribe`` option.
+The cookie grants them in addition to the listened topics:
+
+.. code-block:: html+twig
+
+    <twig:Turbo:Stream:From topics="chat" private :subscribe="['chat', 'news']" />
+
+    {{ turbo_stream_from('news', private: true, subscribe: ['chat', 'news']) }}
+
+The ``subscribe`` option takes the same values as ``topics``, and needs ``private``.
+
+.. note::
+
+    symfony/mercure 0.9 and earlier set the authorization cookie once per request, so a page cannot have two private stream sources for the same hub.
+    With these versions, use a single private stream source that listens to all the topics of the page.
+
 Broadcast Doctrine Entities Update
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 

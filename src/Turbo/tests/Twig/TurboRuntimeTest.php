@@ -73,6 +73,51 @@ final class TurboRuntimeTest extends TestCase
         );
     }
 
+    public function testRenderTurboStreamFromWithSubscribe(): void
+    {
+        $twig = $this->createStub(Environment::class);
+        $renderer = $this->createMock(StreamSourceRendererInterface::class);
+        $renderer->expects($this->once())
+            ->method('render')
+            ->with('chat', ['private' => true, 'subscribe' => ['chat', 'news']])
+            ->willReturn('<turbo-mercure-stream-source src="https://hub/.well-known/mercure?topic=chat" private></turbo-mercure-stream-source>')
+        ;
+        $streamSourceRenderers = new class(['default' => static fn () => $renderer]) implements ServiceProviderInterface {
+            use ServiceLocatorTrait;
+        };
+        $renderers = new class([]) implements ServiceProviderInterface {
+            use ServiceLocatorTrait;
+        };
+
+        $runtime = new TurboRuntime($renderers, 'default', new TurboFrame(new RequestStack()), $streamSourceRenderers);
+        $html = $runtime->renderTurboStreamFrom($twig, 'chat', true, null, ['chat', 'news']);
+
+        $this->assertSame(
+            '<turbo-mercure-stream-source src="https://hub/.well-known/mercure?topic=chat" private></turbo-mercure-stream-source>',
+            $html,
+        );
+    }
+
+    public function testRenderTurboStreamFromRejectsSubscribeWithoutPrivate(): void
+    {
+        $twig = $this->createStub(Environment::class);
+        $renderer = $this->createMock(StreamSourceRendererInterface::class);
+        $renderer->expects($this->never())->method('render');
+        $streamSourceRenderers = new class(['default' => static fn () => $renderer]) implements ServiceProviderInterface {
+            use ServiceLocatorTrait;
+        };
+        $renderers = new class([]) implements ServiceProviderInterface {
+            use ServiceLocatorTrait;
+        };
+
+        $runtime = new TurboRuntime($renderers, 'default', new TurboFrame(new RequestStack()), $streamSourceRenderers);
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('The "subscribe" option of turbo_stream_from() needs the "private" option.');
+
+        $runtime->renderTurboStreamFrom($twig, 'chat', false, null, ['chat', 'news']);
+    }
+
     public function testRenderTurboStreamFromUsesCustomRenderer(): void
     {
         $twig = $this->createStub(Environment::class);

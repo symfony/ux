@@ -25,6 +25,7 @@ use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 use Symfony\UX\StimulusBundle\StimulusBundle;
 use Symfony\UX\Turbo\TurboBundle;
 use Symfony\UX\Turbo\TurboFrame;
+use Symfony\UX\TwigComponent\TwigComponentBundle;
 
 /**
  * Minimal kernel used by Turbo PHPUnit tests.
@@ -55,6 +56,7 @@ final class FrameworkAppKernel extends Kernel
         yield new TwigBundle();
         yield new MercureBundle();
         yield new StimulusBundle();
+        yield new TwigComponentBundle();
         yield new TurboBundle();
     }
 
@@ -80,6 +82,8 @@ final class FrameworkAppKernel extends Kernel
         ];
         // The hub the protocol 0.x tests target, so that they do not depend on that default
         $hubs['legacy'] = $hubs['default'];
+        // A secret, and not a token, so that the hub can create the authorization cookie of private stream sources
+        $hubs['legacy']['jwt'] = ['secret' => '!ChangeThisMercureHubJWTSecretKey!', 'publish' => '*'];
 
         if (enum_exists(ProtocolVersion::class)) {
             $hubs['legacy']['protocol_version'] = '0.x';
@@ -96,6 +100,11 @@ final class FrameworkAppKernel extends Kernel
             ];
         }
         $container->extension('mercure', ['hubs' => $hubs]);
+
+        $container->extension('twig_component', [
+            'defaults' => [],
+            'anonymous_template_directory' => 'components',
+        ]);
     }
 
     protected function configureRoutes(RoutingConfigurator $routes): void

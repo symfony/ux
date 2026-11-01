@@ -34,17 +34,27 @@ final class TurboRuntime implements RuntimeExtensionInterface
     }
 
     /**
-     * @param string|object|array<string|object> $topics
+     * @param string|object|array<string|object>      $topics
+     * @param string|object|array<string|object>|null $subscribe
      */
-    public function renderTurboStreamFrom(Environment $env, string|object|array $topics, bool $private = false, ?string $transport = null): string
+    public function renderTurboStreamFrom(Environment $env, string|object|array $topics, bool $private = false, ?string $transport = null, string|object|array|null $subscribe = null): string
     {
+        if (null !== $subscribe && !$private) {
+            throw new \InvalidArgumentException('The "subscribe" option of turbo_stream_from() needs the "private" option.');
+        }
+
         $transport ??= $this->defaultTransport;
 
         if (!$this->streamSourceRenderers->has($transport)) {
             throw new \InvalidArgumentException(\sprintf('The Turbo stream transport "%s" does not exist.', $transport));
         }
 
-        return $this->streamSourceRenderers->get($transport)->render($topics, ['private' => $private]);
+        $options = ['private' => $private];
+        if (null !== $subscribe) {
+            $options['subscribe'] = $subscribe;
+        }
+
+        return $this->streamSourceRenderers->get($transport)->render($topics, $options);
     }
 
     /**

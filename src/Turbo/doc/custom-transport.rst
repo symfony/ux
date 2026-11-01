@@ -49,6 +49,8 @@ Then a stream source renderer::
         }
     }
 
+When the template passes the ``subscribe`` option of ``turbo_stream_from()`` or ``<twig:Turbo:Stream:From>``, ``$options['subscribe']`` holds it: the topics to authorize in addition to the listened ones.
+
 The broadcaster must be registered as a service tagged with
 ``turbo.broadcaster`` and the stream source renderer must be tagged with
 ``turbo.stream_source_renderer``. If you enabled `autoconfigure option`_
