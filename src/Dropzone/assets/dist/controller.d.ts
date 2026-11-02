@@ -8,6 +8,8 @@ export default class export_default extends Controller {
   readonly previewImageTarget: HTMLDivElement;
   readonly previewListTarget: HTMLUListElement;
   readonly hasPreviewListTarget: boolean;
+  readonly previewItemTemplateTarget: HTMLTemplateElement;
+  readonly hasPreviewItemTemplateTarget: boolean;
   readonly multipleValue: boolean;
   readonly removeLabelValue: string;
   static targets: string[];
@@ -19,6 +21,7 @@ export default class export_default extends Controller {
     };
   };
   private dataTransfer;
+  private previewItem;
   private processingCount;
   private filled;
   private dragging;
@@ -43,6 +46,10 @@ export default class export_default extends Controller {
   private containsFile;
   private renderList;
   private buildListItem;
+  private buildListItemFromTemplate;
+  private isImage;
+  private readAsDataUrl;
+  private bindRemove;
   private updateState;
   private dispatchEvent;
 }

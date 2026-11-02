@@ -23,6 +23,9 @@
         </div>
 {% if multiple %}
         <ul class="dropzone-preview-list" data-symfony--ux-dropzone--dropzone-target="previewList"></ul>
+{{ block('dropzone_preview_item_template') }}
 {% endif %}
     </div>
 {%- endblock %}
+
+{% block dropzone_preview_item_template %}{% endblock %}

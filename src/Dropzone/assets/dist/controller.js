@@ -7,7 +7,8 @@ var controller_default = class extends Controller {
 		"previewClearButton",
 		"previewFilename",
 		"previewImage",
-		"previewList"
+		"previewList",
+		"previewItemTemplate"
 	];
 	static values = {
 		multiple: Boolean,
@@ -17,6 +18,7 @@ var controller_default = class extends Controller {
 		}
 	};
 	dataTransfer;
+	previewItem = null;
 	processingCount = 0;
 	filled = false;
 	dragging = false;
@@ -89,13 +91,10 @@ var controller_default = class extends Controller {
 		});
 	}
 	_populateImagePreview(target, file) {
-		if (typeof FileReader === "undefined") return;
-		const reader = new FileReader();
-		reader.addEventListener("load", (event) => {
+		this.readAsDataUrl(file, (url) => {
 			target.hidden = false;
-			target.style.backgroundImage = `url("${event.target.result}")`;
+			target.style.backgroundImage = `url("${url}")`;
 		});
-		reader.readAsDataURL(file);
 	}
 	onDragEnter() {
 		this.dragging = true;
@@ -115,6 +114,12 @@ var controller_default = class extends Controller {
 		});
 	}
 	connectMultiple() {
+		this.previewItem = null;
+		if (this.hasPreviewItemTemplateTarget) {
+			const elements = this.previewItemTemplateTarget.content.children;
+			if (elements.length !== 1) throw new Error("The \"previewItemTemplate\" target must contain one root element.");
+			this.previewItem = elements[0];
+		}
 		this.dataTransfer = new DataTransfer();
 		for (const file of Array.from(this.inputTarget.files ?? [])) this.dataTransfer.items.add(file);
 		this.inputTarget.addEventListener("change", this.onMultipleChange);
@@ -198,22 +203,54 @@ var controller_default = class extends Controller {
 		this.previewListTarget.replaceChildren(...items);
 	}
 	buildListItem(file, index) {
+		if (this.previewItem) return this.buildListItemFromTemplate(this.previewItem, file, index);
 		const item = document.createElement("li");
 		item.className = "dropzone-preview-list-item";
 		const image = document.createElement("div");
 		image.className = "dropzone-preview-image";
 		image.hidden = true;
-		if (file.type && file.type.indexOf("image") !== -1) this._populateImagePreview(image, file);
+		if (this.isImage(file)) this._populateImagePreview(image, file);
 		const filename = document.createElement("span");
 		filename.className = "dropzone-preview-filename";
 		filename.textContent = file.name;
 		const remove = document.createElement("button");
 		remove.type = "button";
 		remove.className = "dropzone-preview-list-remove";
-		remove.setAttribute("aria-label", `${this.removeLabelValue} ${file.name}`);
-		remove.addEventListener("click", () => this.removeFileAt(index, file));
+		this.bindRemove(remove, file, index);
 		item.append(image, filename, remove);
 		return item;
+	}
+	buildListItemFromTemplate(template, file, index) {
+		const item = template.cloneNode(true);
+		const slots = (name) => {
+			const selector = `[data-dropzone-slot="${name}"]`;
+			return [...item.matches(selector) ? [item] : [], ...Array.from(item.querySelectorAll(selector))];
+		};
+		const images = slots("image");
+		for (const image of images) image.hidden = true;
+		if (images.length > 0 && this.isImage(file)) this.readAsDataUrl(file, (url) => {
+			for (const image of images) {
+				if (image instanceof HTMLImageElement) image.src = url;
+				else image.style.backgroundImage = `url("${url}")`;
+				image.hidden = false;
+			}
+		});
+		for (const filename of slots("filename")) filename.textContent = file.name;
+		for (const remove of slots("remove")) this.bindRemove(remove, file, index);
+		return item;
+	}
+	isImage(file) {
+		return !!file.type && file.type.indexOf("image") !== -1;
+	}
+	readAsDataUrl(file, onLoad) {
+		if (typeof FileReader === "undefined") return;
+		const reader = new FileReader();
+		reader.addEventListener("load", () => onLoad(reader.result));
+		reader.readAsDataURL(file);
+	}
+	bindRemove(element, file, index) {
+		element.setAttribute("aria-label", `${this.removeLabelValue} ${file.name}`);
+		element.addEventListener("click", () => this.removeFileAt(index, file));
 	}
 	updateState() {
 		const filled = this.multipleValue ? this.dataTransfer.files.length > 0 : this.filled;
