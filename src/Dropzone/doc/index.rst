@@ -55,6 +55,23 @@ replacement of the native FileType class::
         // ...
     }
 
+Changing the placeholder
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. versionadded:: 3.7
+
+    The ``placeholder`` option was added in Dropzone 3.7.
+    Before, the placeholder was passed in the ``attr`` option.
+
+The text shown in the Dropzone is ``'Drag and drop or browse'`` by default.
+Change it with the ``placeholder`` option, which goes through the form's translation domain and also accepts a ``TranslatableInterface`` object.
+Pass ``false`` to show no text.
+When you pass your own ``attr`` option, the default text is not used: pass the ``placeholder`` option too::
+
+    ->add('photo', DropzoneType::class, [
+        'placeholder' => 'Drop your photo here',
+    ])
+
 Uploading multiple files
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
