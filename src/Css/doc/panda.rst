@@ -31,8 +31,6 @@ What differs on purpose
   string or not, nor a line break inside a string. So ``content: '"\2192"'``
   and ``content: '"a'`` are refused. A selector or at-rule key cannot contain
   quotes.
-* With ``strict_tokens``, a category with no token refuses bare strings.
-  Panda's types accept any string in that case.
 * For a few unusual values, such as ``'0.50'``, repeated spaces or a ``base``
   key at the top of the hash, Panda's runtime and its build step give
   different class names. UX CSS names the classes of the values written in

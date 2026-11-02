@@ -13,14 +13,16 @@ namespace Symfony\UX\Css;
  * @psalm-type AnchorScopeValue = '-moz-initial'|'all'|'inherit'|'initial'|'none'|'revert'|'revert-layer'|'unset'|string
  * @psalm-type AnimationCompositionValue = '-moz-initial'|'accumulate'|'add'|'inherit'|'initial'|'replace'|'revert'|'revert-layer'|'unset'|string
  * @psalm-type AnimationDirectionValue = '-moz-initial'|'alternate'|'alternate-reverse'|'inherit'|'initial'|'normal'|'reverse'|'revert'|'revert-layer'|'unset'|string
+ * @psalm-type AnimationDurationValue = '-moz-initial'|'auto'|'inherit'|'initial'|'revert'|'revert-layer'|'unset'|string
  * @psalm-type AnimationFillModeValue = '-moz-initial'|'backwards'|'both'|'forwards'|'inherit'|'initial'|'none'|'revert'|'revert-layer'|'unset'|string
  * @psalm-type AnimationIterationCountValue = '-moz-initial'|'infinite'|'inherit'|'initial'|'revert'|'revert-layer'|'unset'|int|float|string
  * @psalm-type AnimationPlayStateValue = '-moz-initial'|'inherit'|'initial'|'paused'|'revert'|'revert-layer'|'running'|'unset'|string
  * @psalm-type AnimationRangeValue = '-moz-initial'|'contain'|'cover'|'entry'|'entry-crossing'|'exit'|'exit-crossing'|'inherit'|'initial'|'normal'|'revert'|'revert-layer'|'unset'|int|float|string
  * @psalm-type AnimationTimelineValue = '-moz-initial'|'auto'|'inherit'|'initial'|'none'|'revert'|'revert-layer'|'unset'|string
- * @psalm-type AnimationsToken = '-moz-initial'|'alternate'|'alternate-reverse'|'auto'|'backwards'|'both'|'ease'|'ease-in'|'ease-in-out'|'ease-out'|'forwards'|'infinite'|'inherit'|'initial'|'linear'|'none'|'normal'|'paused'|'reverse'|'revert'|'revert-layer'|'running'|'step-end'|'step-start'|'unset'|int|float|string
+ * @psalm-type AnimationTimingFunctionValue = '-moz-initial'|'ease'|'ease-in'|'ease-in-out'|'ease-out'|'inherit'|'initial'|'linear'|'revert'|'revert-layer'|'step-end'|'step-start'|'unset'|string
+ * @psalm-type AnimationValue = '-moz-initial'|'alternate'|'alternate-reverse'|'auto'|'backwards'|'both'|'ease'|'ease-in'|'ease-in-out'|'ease-out'|'forwards'|'infinite'|'inherit'|'initial'|'linear'|'none'|'normal'|'paused'|'reverse'|'revert'|'revert-layer'|'running'|'step-end'|'step-start'|'unset'|int|float|string
  * @psalm-type AppearanceValue = '-moz-initial'|'auto'|'button'|'checkbox'|'inherit'|'initial'|'listbox'|'menulist'|'menulist-button'|'meter'|'none'|'progress-bar'|'radio'|'revert'|'revert-layer'|'searchfield'|'textarea'|'textfield'|'unset'|string
- * @psalm-type AspectRatiosToken = '-moz-initial'|'auto'|'inherit'|'initial'|'revert'|'revert-layer'|'unset'|int|float|string
+ * @psalm-type AspectRatioValue = '-moz-initial'|'auto'|'inherit'|'initial'|'revert'|'revert-layer'|'unset'|int|float|string
  * @psalm-type BackdropFilterValue = 'auto'|string
  * @psalm-type BackfaceVisibilityValue = '-moz-initial'|'hidden'|'inherit'|'initial'|'revert'|'revert-layer'|'unset'|'visible'|string
  * @psalm-type BackgroundBlendModeValue = '-moz-initial'|'color'|'color-burn'|'color-dodge'|'darken'|'difference'|'exclusion'|'hard-light'|'hue'|'inherit'|'initial'|'lighten'|'luminosity'|'multiply'|'normal'|'overlay'|'revert'|'revert-layer'|'saturation'|'screen'|'soft-light'|'unset'|string
@@ -32,7 +34,6 @@ namespace Symfony\UX\Css;
  * @psalm-type BorderCollapseValue = '-moz-initial'|'collapse'|'inherit'|'initial'|'revert'|'revert-layer'|'separate'|'unset'|string
  * @psalm-type BorderImageRepeatValue = '-moz-initial'|'inherit'|'initial'|'repeat'|'revert'|'revert-layer'|'round'|'space'|'stretch'|'unset'|string
  * @psalm-type BorderImageValue = '-moz-initial'|'inherit'|'initial'|'none'|'repeat'|'revert'|'revert-layer'|'round'|'space'|'stretch'|'unset'|int|float|string
- * @psalm-type BordersToken = '-moz-initial'|'AccentColor'|'AccentColorText'|'ActiveBorder'|'ActiveCaption'|'ActiveText'|'AppWorkspace'|'Background'|'ButtonBorder'|'ButtonFace'|'ButtonHighlight'|'ButtonShadow'|'ButtonText'|'Canvas'|'CanvasText'|'CaptionText'|'Field'|'FieldText'|'GrayText'|'Highlight'|'HighlightText'|'InactiveBorder'|'InactiveCaption'|'InactiveCaptionText'|'InfoBackground'|'InfoText'|'LinkText'|'Mark'|'MarkText'|'Menu'|'MenuText'|'Scrollbar'|'SelectedItem'|'SelectedItemText'|'ThreeDDarkShadow'|'ThreeDFace'|'ThreeDHighlight'|'ThreeDLightShadow'|'ThreeDShadow'|'VisitedText'|'Window'|'WindowFrame'|'WindowText'|'aliceblue'|'antiquewhite'|'aqua'|'aquamarine'|'auto'|'azure'|'beige'|'bisque'|'black'|'blanchedalmond'|'blue'|'blueviolet'|'brown'|'burlywood'|'cadetblue'|'chartreuse'|'chocolate'|'coral'|'cornflowerblue'|'cornsilk'|'crimson'|'currentColor'|'cyan'|'darkblue'|'darkcyan'|'darkgoldenrod'|'darkgray'|'darkgreen'|'darkgrey'|'darkkhaki'|'darkmagenta'|'darkolivegreen'|'darkorange'|'darkorchid'|'darkred'|'darksalmon'|'darkseagreen'|'darkslateblue'|'darkslategray'|'darkslategrey'|'darkturquoise'|'darkviolet'|'dashed'|'deeppink'|'deepskyblue'|'dimgray'|'dimgrey'|'dodgerblue'|'dotted'|'double'|'firebrick'|'floralwhite'|'forestgreen'|'fuchsia'|'gainsboro'|'ghostwhite'|'gold'|'goldenrod'|'gray'|'green'|'greenyellow'|'grey'|'groove'|'honeydew'|'hotpink'|'indianred'|'indigo'|'inherit'|'initial'|'inset'|'ivory'|'khaki'|'lavender'|'lavenderblush'|'lawngreen'|'lemonchiffon'|'lightblue'|'lightcoral'|'lightcyan'|'lightgoldenrodyellow'|'lightgray'|'lightgreen'|'lightgrey'|'lightpink'|'lightsalmon'|'lightseagreen'|'lightskyblue'|'lightslategray'|'lightslategrey'|'lightsteelblue'|'lightyellow'|'lime'|'limegreen'|'linen'|'magenta'|'maroon'|'medium'|'mediumaquamarine'|'mediumblue'|'mediumorchid'|'mediumpurple'|'mediumseagreen'|'mediumslateblue'|'mediumspringgreen'|'mediumturquoise'|'mediumvioletred'|'midnightblue'|'mintcream'|'mistyrose'|'moccasin'|'navajowhite'|'navy'|'none'|'oldlace'|'olive'|'olivedrab'|'orange'|'orangered'|'orchid'|'outset'|'palegoldenrod'|'palegreen'|'paleturquoise'|'palevioletred'|'papayawhip'|'peachpuff'|'peru'|'pink'|'plum'|'powderblue'|'purple'|'rebeccapurple'|'red'|'revert'|'revert-layer'|'ridge'|'rosybrown'|'royalblue'|'saddlebrown'|'salmon'|'sandybrown'|'seagreen'|'seashell'|'sienna'|'silver'|'skyblue'|'slateblue'|'slategray'|'slategrey'|'snow'|'solid'|'springgreen'|'steelblue'|'tan'|'teal'|'thick'|'thin'|'thistle'|'tomato'|'transparent'|'turquoise'|'unset'|'violet'|'wheat'|'white'|'whitesmoke'|'yellow'|'yellowgreen'|int|float|string
  * @psalm-type BoxAlignValue = '-moz-initial'|'baseline'|'center'|'end'|'inherit'|'initial'|'revert'|'revert-layer'|'start'|'stretch'|'unset'|string
  * @psalm-type BoxDecorationBreakValue = '-moz-initial'|'clone'|'inherit'|'initial'|'revert'|'revert-layer'|'slice'|'unset'|string
  * @psalm-type BoxDirectionValue = '-moz-initial'|'inherit'|'initial'|'normal'|'reverse'|'revert'|'revert-layer'|'unset'|string
@@ -59,12 +60,10 @@ namespace Symfony\UX\Css;
  * @psalm-type ContainerTypeValue = '-moz-initial'|'inherit'|'initial'|'inline-size'|'normal'|'revert'|'revert-layer'|'scroll-state'|'size'|'unset'|string
  * @psalm-type ContentValue = '-moz-initial'|'close-quote'|'inherit'|'initial'|'no-close-quote'|'no-open-quote'|'none'|'normal'|'open-quote'|'revert'|'revert-layer'|'unset'|string
  * @psalm-type ContentVisibilityValue = '-moz-initial'|'auto'|'hidden'|'inherit'|'initial'|'revert'|'revert-layer'|'unset'|'visible'|string
- * @psalm-type CursorToken = '-moz-grab'|'-moz-initial'|'-moz-zoom-in'|'-moz-zoom-out'|'-webkit-grab'|'-webkit-grabbing'|'-webkit-zoom-in'|'-webkit-zoom-out'|'alias'|'all-scroll'|'auto'|'cell'|'col-resize'|'context-menu'|'copy'|'crosshair'|'default'|'e-resize'|'ew-resize'|'grab'|'grabbing'|'help'|'inherit'|'initial'|'move'|'n-resize'|'ne-resize'|'nesw-resize'|'no-drop'|'none'|'not-allowed'|'ns-resize'|'nw-resize'|'nwse-resize'|'pointer'|'progress'|'revert'|'revert-layer'|'row-resize'|'s-resize'|'se-resize'|'sw-resize'|'text'|'unset'|'vertical-text'|'w-resize'|'wait'|'zoom-in'|'zoom-out'|string
+ * @psalm-type CursorValue = '-moz-grab'|'-moz-initial'|'-moz-zoom-in'|'-moz-zoom-out'|'-webkit-grab'|'-webkit-grabbing'|'-webkit-zoom-in'|'-webkit-zoom-out'|'alias'|'all-scroll'|'auto'|'cell'|'col-resize'|'context-menu'|'copy'|'crosshair'|'default'|'e-resize'|'ew-resize'|'grab'|'grabbing'|'help'|'inherit'|'initial'|'move'|'n-resize'|'ne-resize'|'nesw-resize'|'no-drop'|'none'|'not-allowed'|'ns-resize'|'nw-resize'|'nwse-resize'|'pointer'|'progress'|'revert'|'revert-layer'|'row-resize'|'s-resize'|'se-resize'|'sw-resize'|'text'|'unset'|'vertical-text'|'w-resize'|'wait'|'zoom-in'|'zoom-out'|string
  * @psalm-type DirectionValue = '-moz-initial'|'inherit'|'initial'|'ltr'|'revert'|'revert-layer'|'rtl'|'unset'|string
  * @psalm-type DisplayValue = '-moz-initial'|'-ms-flexbox'|'-ms-grid'|'-ms-inline-flexbox'|'-ms-inline-grid'|'-webkit-flex'|'-webkit-inline-flex'|'block'|'contents'|'flex'|'flow'|'flow-root'|'grid'|'inherit'|'initial'|'inline'|'inline-block'|'inline-flex'|'inline-grid'|'inline-list-item'|'inline-table'|'list-item'|'none'|'revert'|'revert-layer'|'ruby'|'ruby-base'|'ruby-base-container'|'ruby-text'|'ruby-text-container'|'run-in'|'table'|'table-caption'|'table-cell'|'table-column'|'table-column-group'|'table-footer-group'|'table-header-group'|'table-row'|'table-row-group'|'unset'|string
  * @psalm-type DominantBaselineValue = '-moz-initial'|'alphabetic'|'auto'|'central'|'hanging'|'ideographic'|'inherit'|'initial'|'mathematical'|'middle'|'revert'|'revert-layer'|'text-bottom'|'text-top'|'unset'|string
- * @psalm-type DurationsToken = '-moz-initial'|'auto'|'inherit'|'initial'|'revert'|'revert-layer'|'unset'|string
- * @psalm-type EasingsToken = '-moz-initial'|'ease'|'ease-in'|'ease-in-out'|'ease-out'|'inherit'|'initial'|'linear'|'revert'|'revert-layer'|'step-end'|'step-start'|'unset'|string
  * @psalm-type EmptyCellsValue = '-moz-initial'|'hide'|'inherit'|'initial'|'revert'|'revert-layer'|'show'|'unset'|string
  * @psalm-type FieldSizingValue = '-moz-initial'|'content'|'fixed'|'inherit'|'initial'|'revert'|'revert-layer'|'unset'|string
  * @psalm-type FlexDirectionValue = '-moz-initial'|'column'|'column-reverse'|'inherit'|'initial'|'revert'|'revert-layer'|'row'|'row-reverse'|'unset'|string
@@ -73,10 +72,11 @@ namespace Symfony\UX\Css;
  * @psalm-type FlexWrapValue = '-moz-initial'|'inherit'|'initial'|'nowrap'|'revert'|'revert-layer'|'unset'|'wrap'|'wrap-reverse'|string
  * @psalm-type FloatValue = 'end'|'start'|string
  * @psalm-type FocusRingValue = 'inside'|'mixed'|'none'|'outside'|string
+ * @psalm-type FontFamilyValue = '-apple-system'|'-moz-initial'|'cursive'|'emoji'|'fangsong'|'fantasy'|'inherit'|'initial'|'math'|'monospace'|'revert'|'revert-layer'|'sans-serif'|'serif'|'system-ui'|'ui-monospace'|'ui-rounded'|'ui-sans-serif'|'ui-serif'|'unset'|string
  * @psalm-type FontFeatureSettingsValue = '-moz-initial'|'inherit'|'initial'|'normal'|'revert'|'revert-layer'|'unset'|string
  * @psalm-type FontKerningValue = '-moz-initial'|'auto'|'inherit'|'initial'|'none'|'normal'|'revert'|'revert-layer'|'unset'|string
  * @psalm-type FontSizeAdjustValue = '-moz-initial'|'from-font'|'inherit'|'initial'|'none'|'revert'|'revert-layer'|'unset'|int|float|string
- * @psalm-type FontSizesToken = '-moz-initial'|'inherit'|'initial'|'large'|'larger'|'math'|'medium'|'revert'|'revert-layer'|'small'|'smaller'|'unset'|'x-large'|'x-small'|'xx-large'|'xx-small'|'xxx-large'|int|float|string
+ * @psalm-type FontSizeValue = '-moz-initial'|'inherit'|'initial'|'large'|'larger'|'math'|'medium'|'revert'|'revert-layer'|'small'|'smaller'|'unset'|'x-large'|'x-small'|'xx-large'|'xx-small'|'xxx-large'|int|float|string
  * @psalm-type FontSmoothValue = '-moz-initial'|'always'|'auto'|'inherit'|'initial'|'large'|'medium'|'never'|'revert'|'revert-layer'|'small'|'unset'|'x-large'|'x-small'|'xx-large'|'xx-small'|'xxx-large'|int|float|string
  * @psalm-type FontSmoothingValue = 'antialiased'|'subpixel-antialiased'|string
  * @psalm-type FontStretchValue = '-moz-initial'|'condensed'|'expanded'|'extra-condensed'|'extra-expanded'|'inherit'|'initial'|'normal'|'revert'|'revert-layer'|'semi-condensed'|'semi-expanded'|'ultra-condensed'|'ultra-expanded'|'unset'|string
@@ -91,8 +91,7 @@ namespace Symfony\UX\Css;
  * @psalm-type FontVariantNumericValue = '-moz-initial'|'diagonal-fractions'|'inherit'|'initial'|'lining-nums'|'normal'|'oldstyle-nums'|'ordinal'|'proportional-nums'|'revert'|'revert-layer'|'slashed-zero'|'stacked-fractions'|'tabular-nums'|'unset'|string
  * @psalm-type FontVariantPositionValue = '-moz-initial'|'inherit'|'initial'|'normal'|'revert'|'revert-layer'|'sub'|'super'|'unset'|string
  * @psalm-type FontVariantValue = '-moz-initial'|'all-petite-caps'|'all-small-caps'|'common-ligatures'|'contextual'|'diagonal-fractions'|'discretionary-ligatures'|'full-width'|'historical-forms'|'historical-ligatures'|'inherit'|'initial'|'jis04'|'jis78'|'jis83'|'jis90'|'lining-nums'|'no-common-ligatures'|'no-contextual'|'no-discretionary-ligatures'|'no-historical-ligatures'|'none'|'normal'|'oldstyle-nums'|'ordinal'|'petite-caps'|'proportional-nums'|'proportional-width'|'revert'|'revert-layer'|'ruby'|'simplified'|'slashed-zero'|'small-caps'|'stacked-fractions'|'tabular-nums'|'titling-caps'|'traditional'|'unicase'|'unset'|string
- * @psalm-type FontWeightsToken = '-moz-initial'|'bold'|'bolder'|'inherit'|'initial'|'lighter'|'normal'|'revert'|'revert-layer'|'unset'|int|float|string
- * @psalm-type FontsToken = '-apple-system'|'-moz-initial'|'cursive'|'emoji'|'fangsong'|'fantasy'|'inherit'|'initial'|'math'|'monospace'|'revert'|'revert-layer'|'sans-serif'|'serif'|'system-ui'|'ui-monospace'|'ui-rounded'|'ui-sans-serif'|'ui-serif'|'unset'|string
+ * @psalm-type FontWeightValue = '-moz-initial'|'bold'|'bolder'|'inherit'|'initial'|'lighter'|'normal'|'revert'|'revert-layer'|'unset'|int|float|string
  * @psalm-type ForcedColorAdjustValue = '-moz-initial'|'auto'|'inherit'|'initial'|'none'|'preserve-parent-color'|'revert'|'revert-layer'|'unset'|string
  * @psalm-type GradientsToken = 'to-b'|'to-bl'|'to-br'|'to-l'|'to-r'|'to-t'|'to-tl'|'to-tr'|string
  * @psalm-type GridAutoColumnsValue = 'fr'|'max'|'min'|string
@@ -133,6 +132,7 @@ namespace Symfony\UX\Css;
  * @psalm-type OffsetRotateValue = '-moz-initial'|'auto'|'inherit'|'initial'|'reverse'|'revert'|'revert-layer'|'unset'|string
  * @psalm-type OffsetValue = '-moz-initial'|'auto'|'border-box'|'bottom'|'center'|'content-box'|'fill-box'|'inherit'|'initial'|'left'|'none'|'normal'|'padding-box'|'revert'|'revert-layer'|'right'|'stroke-box'|'top'|'unset'|'view-box'|int|float|string
  * @psalm-type OutlineStyleValue = '-moz-initial'|'auto'|'dashed'|'dotted'|'double'|'groove'|'inherit'|'initial'|'inset'|'none'|'outset'|'revert'|'revert-layer'|'ridge'|'solid'|'unset'|string
+ * @psalm-type OutlineValue = '-moz-initial'|'AccentColor'|'AccentColorText'|'ActiveBorder'|'ActiveCaption'|'ActiveText'|'AppWorkspace'|'Background'|'ButtonBorder'|'ButtonFace'|'ButtonHighlight'|'ButtonShadow'|'ButtonText'|'Canvas'|'CanvasText'|'CaptionText'|'Field'|'FieldText'|'GrayText'|'Highlight'|'HighlightText'|'InactiveBorder'|'InactiveCaption'|'InactiveCaptionText'|'InfoBackground'|'InfoText'|'LinkText'|'Mark'|'MarkText'|'Menu'|'MenuText'|'Scrollbar'|'SelectedItem'|'SelectedItemText'|'ThreeDDarkShadow'|'ThreeDFace'|'ThreeDHighlight'|'ThreeDLightShadow'|'ThreeDShadow'|'VisitedText'|'Window'|'WindowFrame'|'WindowText'|'aliceblue'|'antiquewhite'|'aqua'|'aquamarine'|'auto'|'azure'|'beige'|'bisque'|'black'|'blanchedalmond'|'blue'|'blueviolet'|'brown'|'burlywood'|'cadetblue'|'chartreuse'|'chocolate'|'coral'|'cornflowerblue'|'cornsilk'|'crimson'|'currentColor'|'cyan'|'darkblue'|'darkcyan'|'darkgoldenrod'|'darkgray'|'darkgreen'|'darkgrey'|'darkkhaki'|'darkmagenta'|'darkolivegreen'|'darkorange'|'darkorchid'|'darkred'|'darksalmon'|'darkseagreen'|'darkslateblue'|'darkslategray'|'darkslategrey'|'darkturquoise'|'darkviolet'|'dashed'|'deeppink'|'deepskyblue'|'dimgray'|'dimgrey'|'dodgerblue'|'dotted'|'double'|'firebrick'|'floralwhite'|'forestgreen'|'fuchsia'|'gainsboro'|'ghostwhite'|'gold'|'goldenrod'|'gray'|'green'|'greenyellow'|'grey'|'groove'|'honeydew'|'hotpink'|'indianred'|'indigo'|'inherit'|'initial'|'inset'|'ivory'|'khaki'|'lavender'|'lavenderblush'|'lawngreen'|'lemonchiffon'|'lightblue'|'lightcoral'|'lightcyan'|'lightgoldenrodyellow'|'lightgray'|'lightgreen'|'lightgrey'|'lightpink'|'lightsalmon'|'lightseagreen'|'lightskyblue'|'lightslategray'|'lightslategrey'|'lightsteelblue'|'lightyellow'|'lime'|'limegreen'|'linen'|'magenta'|'maroon'|'medium'|'mediumaquamarine'|'mediumblue'|'mediumorchid'|'mediumpurple'|'mediumseagreen'|'mediumslateblue'|'mediumspringgreen'|'mediumturquoise'|'mediumvioletred'|'midnightblue'|'mintcream'|'mistyrose'|'moccasin'|'navajowhite'|'navy'|'none'|'oldlace'|'olive'|'olivedrab'|'orange'|'orangered'|'orchid'|'outset'|'palegoldenrod'|'palegreen'|'paleturquoise'|'palevioletred'|'papayawhip'|'peachpuff'|'peru'|'pink'|'plum'|'powderblue'|'purple'|'rebeccapurple'|'red'|'revert'|'revert-layer'|'ridge'|'rosybrown'|'royalblue'|'saddlebrown'|'salmon'|'sandybrown'|'seagreen'|'seashell'|'sienna'|'silver'|'skyblue'|'slateblue'|'slategray'|'slategrey'|'snow'|'solid'|'springgreen'|'steelblue'|'tan'|'teal'|'thick'|'thin'|'thistle'|'tomato'|'transparent'|'turquoise'|'unset'|'violet'|'wheat'|'white'|'whitesmoke'|'yellow'|'yellowgreen'|int|float|string
  * @psalm-type OverflowBlockValue = '-moz-initial'|'auto'|'clip'|'hidden'|'inherit'|'initial'|'revert'|'revert-layer'|'scroll'|'unset'|'visible'|string
  * @psalm-type OverflowClipBoxValue = '-moz-initial'|'content-box'|'inherit'|'initial'|'padding-box'|'revert'|'revert-layer'|'unset'|string
  * @psalm-type OverflowClipMarginValue = '-moz-initial'|'border-box'|'content-box'|'inherit'|'initial'|'padding-box'|'revert'|'revert-layer'|'unset'|int|float|string
@@ -285,11 +285,11 @@ namespace Symfony\UX\Css;
  *     all?: AllValue|array<AllValue|array<array-key, mixed>>,
  *     anchorName?: WebkitMaskImageValue|array<WebkitMaskImageValue|array<array-key, mixed>>,
  *     anchorScope?: AnchorScopeValue|array<AnchorScopeValue|array<array-key, mixed>>,
- *     animation?: AnimationsToken|array<AnimationsToken|array<array-key, mixed>>,
+ *     animation?: AnimationValue|array<AnimationValue|array<array-key, mixed>>,
  *     animationComposition?: AnimationCompositionValue|array<AnimationCompositionValue|array<array-key, mixed>>,
  *     animationDelay?: AllValue|array<AllValue|array<array-key, mixed>>,
  *     animationDirection?: AnimationDirectionValue|array<AnimationDirectionValue|array<array-key, mixed>>,
- *     animationDuration?: DurationsToken|array<DurationsToken|array<array-key, mixed>>,
+ *     animationDuration?: AnimationDurationValue|array<AnimationDurationValue|array<array-key, mixed>>,
  *     animationFillMode?: AnimationFillModeValue|array<AnimationFillModeValue|array<array-key, mixed>>,
  *     animationIterationCount?: AnimationIterationCountValue|array<AnimationIterationCountValue|array<array-key, mixed>>,
  *     animationName?: WebkitMaskImageValue|array<WebkitMaskImageValue|array<array-key, mixed>>,
@@ -299,9 +299,9 @@ namespace Symfony\UX\Css;
  *     animationRangeStart?: AnimationRangeValue|array<AnimationRangeValue|array<array-key, mixed>>,
  *     animationState?: int|float|string|array<int|float|string|array<array-key, mixed>>,
  *     animationTimeline?: AnimationTimelineValue|array<AnimationTimelineValue|array<array-key, mixed>>,
- *     animationTimingFunction?: EasingsToken|array<EasingsToken|array<array-key, mixed>>,
+ *     animationTimingFunction?: AnimationTimingFunctionValue|array<AnimationTimingFunctionValue|array<array-key, mixed>>,
  *     appearance?: AppearanceValue|array<AppearanceValue|array<array-key, mixed>>,
- *     aspectRatio?: AspectRatiosToken|array<AspectRatiosToken|array<array-key, mixed>>,
+ *     aspectRatio?: AspectRatioValue|array<AspectRatioValue|array<array-key, mixed>>,
  *     backdropBlur?: int|float|string|array<int|float|string|array<array-key, mixed>>,
  *     backdropBrightness?: int|float|string|array<int|float|string|array<array-key, mixed>>,
  *     backdropContrast?: int|float|string|array<int|float|string|array<array-key, mixed>>,
@@ -381,7 +381,7 @@ namespace Symfony\UX\Css;
  *     borderImageRepeat?: BorderImageRepeatValue|array<BorderImageRepeatValue|array<array-key, mixed>>,
  *     borderImageSlice?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
  *     borderImageSource?: WebkitMaskImageValue|array<WebkitMaskImageValue|array<array-key, mixed>>,
- *     borderImageWidth?: AspectRatiosToken|array<AspectRatiosToken|array<array-key, mixed>>,
+ *     borderImageWidth?: AspectRatioValue|array<AspectRatioValue|array<array-key, mixed>>,
  *     borderInline?: WebkitBorderBeforeValue|array<WebkitBorderBeforeValue|array<array-key, mixed>>,
  *     borderInlineColor?: ColorsToken|array<ColorsToken|array<array-key, mixed>>,
  *     borderInlineEnd?: WebkitBorderBeforeValue|array<WebkitBorderBeforeValue|array<array-key, mixed>>,
@@ -452,7 +452,7 @@ namespace Symfony\UX\Css;
  *     caretColor?: ColorsToken|array<ColorsToken|array<array-key, mixed>>,
  *     caretShape?: CaretShapeValue|array<CaretShapeValue|array<array-key, mixed>>,
  *     clear?: ClearValue|array<ClearValue|array<array-key, mixed>>,
- *     clip?: DurationsToken|array<DurationsToken|array<array-key, mixed>>,
+ *     clip?: AnimationDurationValue|array<AnimationDurationValue|array<array-key, mixed>>,
  *     clipPath?: ClipPathValue|array<ClipPathValue|array<array-key, mixed>>,
  *     clipRule?: ClipRuleValue|array<ClipRuleValue|array<array-key, mixed>>,
  *     color?: ColorsToken|array<ColorsToken|array<array-key, mixed>>,
@@ -461,7 +461,7 @@ namespace Symfony\UX\Css;
  *     colorPalette?: ColorPaletteValue|array<ColorPaletteValue|array<array-key, mixed>>,
  *     colorRendering?: ColorRenderingValue|array<ColorRenderingValue|array<array-key, mixed>>,
  *     colorScheme?: ColorSchemeValue|array<ColorSchemeValue|array<array-key, mixed>>,
- *     columnCount?: AspectRatiosToken|array<AspectRatiosToken|array<array-key, mixed>>,
+ *     columnCount?: AspectRatioValue|array<AspectRatioValue|array<array-key, mixed>>,
  *     columnFill?: ColumnFillValue|array<ColumnFillValue|array<array-key, mixed>>,
  *     columnGap?: SpacingToken2|array<SpacingToken2|array<array-key, mixed>>,
  *     columnRule?: WebkitBorderBeforeValue|array<WebkitBorderBeforeValue|array<array-key, mixed>>,
@@ -469,8 +469,8 @@ namespace Symfony\UX\Css;
  *     columnRuleStyle?: WebkitBorderBeforeStyleValue|array<WebkitBorderBeforeStyleValue|array<array-key, mixed>>,
  *     columnRuleWidth?: WebkitBorderBeforeWidthValue|array<WebkitBorderBeforeWidthValue|array<array-key, mixed>>,
  *     columnSpan?: AnchorScopeValue|array<AnchorScopeValue|array<array-key, mixed>>,
- *     columnWidth?: AspectRatiosToken|array<AspectRatiosToken|array<array-key, mixed>>,
- *     columns?: AspectRatiosToken|array<AspectRatiosToken|array<array-key, mixed>>,
+ *     columnWidth?: AspectRatioValue|array<AspectRatioValue|array<array-key, mixed>>,
+ *     columns?: AspectRatioValue|array<AspectRatioValue|array<array-key, mixed>>,
  *     contain?: ContainValue|array<ContainValue|array<array-key, mixed>>,
  *     containIntrinsicBlockSize?: WebkitLineClampValue|array<WebkitLineClampValue|array<array-key, mixed>>,
  *     containIntrinsicHeight?: WebkitLineClampValue|array<WebkitLineClampValue|array<array-key, mixed>>,
@@ -487,7 +487,7 @@ namespace Symfony\UX\Css;
  *     counterIncrement?: WebkitMaskImageValue|array<WebkitMaskImageValue|array<array-key, mixed>>,
  *     counterReset?: WebkitMaskImageValue|array<WebkitMaskImageValue|array<array-key, mixed>>,
  *     counterSet?: WebkitMaskImageValue|array<WebkitMaskImageValue|array<array-key, mixed>>,
- *     cursor?: CursorToken|array<CursorToken|array<array-key, mixed>>,
+ *     cursor?: CursorValue|array<CursorValue|array<array-key, mixed>>,
  *     cx?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
  *     cy?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
  *     d?: WebkitMaskImageValue|array<WebkitMaskImageValue|array<array-key, mixed>>,
@@ -525,13 +525,13 @@ namespace Symfony\UX\Css;
  *     focusRingWidth?: int|float|string|array<int|float|string|array<array-key, mixed>>,
  *     focusVisibleRing?: FocusRingValue|array<FocusRingValue|array<array-key, mixed>>,
  *     font?: FontValue|array<FontValue|array<array-key, mixed>>,
- *     fontFamily?: FontsToken|array<FontsToken|array<array-key, mixed>>,
+ *     fontFamily?: FontFamilyValue|array<FontFamilyValue|array<array-key, mixed>>,
  *     fontFeatureSettings?: FontFeatureSettingsValue|array<FontFeatureSettingsValue|array<array-key, mixed>>,
  *     fontKerning?: FontKerningValue|array<FontKerningValue|array<array-key, mixed>>,
  *     fontLanguageOverride?: FontFeatureSettingsValue|array<FontFeatureSettingsValue|array<array-key, mixed>>,
  *     fontOpticalSizing?: AnimationTimelineValue|array<AnimationTimelineValue|array<array-key, mixed>>,
  *     fontPalette?: ColorSchemeValue|array<ColorSchemeValue|array<array-key, mixed>>,
- *     fontSize?: FontSizesToken|array<FontSizesToken|array<array-key, mixed>>,
+ *     fontSize?: FontSizeValue|array<FontSizeValue|array<array-key, mixed>>,
  *     fontSizeAdjust?: FontSizeAdjustValue|array<FontSizeAdjustValue|array<array-key, mixed>>,
  *     fontSmooth?: FontSmoothValue|array<FontSmoothValue|array<array-key, mixed>>,
  *     fontSmoothing?: FontSmoothingValue|array<FontSmoothingValue|array<array-key, mixed>>,
@@ -551,10 +551,10 @@ namespace Symfony\UX\Css;
  *     fontVariantNumeric?: FontVariantNumericValue|array<FontVariantNumericValue|array<array-key, mixed>>,
  *     fontVariantPosition?: FontVariantPositionValue|array<FontVariantPositionValue|array<array-key, mixed>>,
  *     fontVariationSettings?: FontFeatureSettingsValue|array<FontFeatureSettingsValue|array<array-key, mixed>>,
- *     fontWeight?: FontWeightsToken|array<FontWeightsToken|array<array-key, mixed>>,
+ *     fontWeight?: FontWeightValue|array<FontWeightValue|array<array-key, mixed>>,
  *     forcedColorAdjust?: ForcedColorAdjustValue|array<ForcedColorAdjustValue|array<array-key, mixed>>,
  *     gap?: SpacingToken2|array<SpacingToken2|array<array-key, mixed>>,
- *     glyphOrientationVertical?: AspectRatiosToken|array<AspectRatiosToken|array<array-key, mixed>>,
+ *     glyphOrientationVertical?: AspectRatioValue|array<AspectRatioValue|array<array-key, mixed>>,
  *     gradientFrom?: ColorsToken|array<ColorsToken|array<array-key, mixed>>,
  *     gradientFromPosition?: int|float|string|array<int|float|string|array<array-key, mixed>>,
  *     gradientTo?: ColorsToken|array<ColorsToken|array<array-key, mixed>>,
@@ -563,19 +563,19 @@ namespace Symfony\UX\Css;
  *     gradientViaPosition?: int|float|string|array<int|float|string|array<array-key, mixed>>,
  *     grayscale?: int|float|string|array<int|float|string|array<array-key, mixed>>,
  *     grid?: WebkitMaskImageValue|array<WebkitMaskImageValue|array<array-key, mixed>>,
- *     gridArea?: AspectRatiosToken|array<AspectRatiosToken|array<array-key, mixed>>,
+ *     gridArea?: AspectRatioValue|array<AspectRatioValue|array<array-key, mixed>>,
  *     gridAutoColumns?: GridAutoColumnsValue|array<GridAutoColumnsValue|array<array-key, mixed>>,
  *     gridAutoFlow?: GridAutoFlowValue|array<GridAutoFlowValue|array<array-key, mixed>>,
  *     gridAutoRows?: GridAutoColumnsValue|array<GridAutoColumnsValue|array<array-key, mixed>>,
- *     gridColumn?: AspectRatiosToken|array<AspectRatiosToken|array<array-key, mixed>>,
- *     gridColumnEnd?: AspectRatiosToken|array<AspectRatiosToken|array<array-key, mixed>>,
+ *     gridColumn?: AspectRatioValue|array<AspectRatioValue|array<array-key, mixed>>,
+ *     gridColumnEnd?: AspectRatioValue|array<AspectRatioValue|array<array-key, mixed>>,
  *     gridColumnGap?: SpacingToken2|array<SpacingToken2|array<array-key, mixed>>,
- *     gridColumnStart?: AspectRatiosToken|array<AspectRatiosToken|array<array-key, mixed>>,
+ *     gridColumnStart?: AspectRatioValue|array<AspectRatioValue|array<array-key, mixed>>,
  *     gridGap?: SpacingToken2|array<SpacingToken2|array<array-key, mixed>>,
- *     gridRow?: AspectRatiosToken|array<AspectRatiosToken|array<array-key, mixed>>,
- *     gridRowEnd?: AspectRatiosToken|array<AspectRatiosToken|array<array-key, mixed>>,
+ *     gridRow?: AspectRatioValue|array<AspectRatioValue|array<array-key, mixed>>,
+ *     gridRowEnd?: AspectRatioValue|array<AspectRatioValue|array<array-key, mixed>>,
  *     gridRowGap?: SpacingToken2|array<SpacingToken2|array<array-key, mixed>>,
- *     gridRowStart?: AspectRatiosToken|array<AspectRatiosToken|array<array-key, mixed>>,
+ *     gridRowStart?: AspectRatioValue|array<AspectRatioValue|array<array-key, mixed>>,
  *     gridTemplate?: WebkitMaskImageValue|array<WebkitMaskImageValue|array<array-key, mixed>>,
  *     gridTemplateAreas?: WebkitMaskImageValue|array<WebkitMaskImageValue|array<array-key, mixed>>,
  *     gridTemplateColumns?: GridTemplateColumnsValue|array<GridTemplateColumnsValue|array<array-key, mixed>>,
@@ -586,8 +586,8 @@ namespace Symfony\UX\Css;
  *     hideBelow?: BreakpointsToken|array<BreakpointsToken|array<array-key, mixed>>,
  *     hideFrom?: BreakpointsToken|array<BreakpointsToken|array<array-key, mixed>>,
  *     hueRotate?: int|float|string|array<int|float|string|array<array-key, mixed>>,
- *     hyphenateCharacter?: DurationsToken|array<DurationsToken|array<array-key, mixed>>,
- *     hyphenateLimitChars?: AspectRatiosToken|array<AspectRatiosToken|array<array-key, mixed>>,
+ *     hyphenateCharacter?: AnimationDurationValue|array<AnimationDurationValue|array<array-key, mixed>>,
+ *     hyphenateLimitChars?: AspectRatioValue|array<AspectRatioValue|array<array-key, mixed>>,
  *     hyphens?: HyphensValue|array<HyphensValue|array<array-key, mixed>>,
  *     imageOrientation?: ImageOrientationValue|array<ImageOrientationValue|array<array-key, mixed>>,
  *     imageRendering?: ImageRenderingValue|array<ImageRenderingValue|array<array-key, mixed>>,
@@ -653,7 +653,7 @@ namespace Symfony\UX\Css;
  *     maskBorderRepeat?: BorderImageRepeatValue|array<BorderImageRepeatValue|array<array-key, mixed>>,
  *     maskBorderSlice?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
  *     maskBorderSource?: WebkitMaskImageValue|array<WebkitMaskImageValue|array<array-key, mixed>>,
- *     maskBorderWidth?: AspectRatiosToken|array<AspectRatiosToken|array<array-key, mixed>>,
+ *     maskBorderWidth?: AspectRatioValue|array<AspectRatioValue|array<array-key, mixed>>,
  *     maskClip?: MaskClipValue|array<MaskClipValue|array<array-key, mixed>>,
  *     maskComposite?: MaskCompositeValue|array<MaskCompositeValue|array<array-key, mixed>>,
  *     maskImage?: WebkitMaskImageValue|array<WebkitMaskImageValue|array<array-key, mixed>>,
@@ -700,7 +700,7 @@ namespace Symfony\UX\Css;
  *     opacity?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
  *     order?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
  *     orphans?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
- *     outline?: BordersToken|array<BordersToken|array<array-key, mixed>>,
+ *     outline?: OutlineValue|array<OutlineValue|array<array-key, mixed>>,
  *     outlineColor?: ColorsToken|array<ColorsToken|array<array-key, mixed>>,
  *     outlineOffset?: SpacingToken2|array<SpacingToken2|array<array-key, mixed>>,
  *     outlineStyle?: OutlineStyleValue|array<OutlineStyleValue|array<array-key, mixed>>,
@@ -736,7 +736,7 @@ namespace Symfony\UX\Css;
  *     paddingTop?: SpacingToken2|array<SpacingToken2|array<array-key, mixed>>,
  *     paddingX?: SpacingToken2|array<SpacingToken2|array<array-key, mixed>>,
  *     paddingY?: SpacingToken2|array<SpacingToken2|array<array-key, mixed>>,
- *     page?: DurationsToken|array<DurationsToken|array<array-key, mixed>>,
+ *     page?: AnimationDurationValue|array<AnimationDurationValue|array<array-key, mixed>>,
  *     pageBreakAfter?: PageBreakAfterValue|array<PageBreakAfterValue|array<array-key, mixed>>,
  *     pageBreakBefore?: PageBreakAfterValue|array<PageBreakAfterValue|array<array-key, mixed>>,
  *     pageBreakInside?: PageBreakInsideValue|array<PageBreakInsideValue|array<array-key, mixed>>,
@@ -752,7 +752,7 @@ namespace Symfony\UX\Css;
  *     pointerEvents?: PointerEventsValue|array<PointerEventsValue|array<array-key, mixed>>,
  *     pos?: PositionValue|array<PositionValue|array<array-key, mixed>>,
  *     position?: PositionValue|array<PositionValue|array<array-key, mixed>>,
- *     positionAnchor?: DurationsToken|array<DurationsToken|array<array-key, mixed>>,
+ *     positionAnchor?: AnimationDurationValue|array<AnimationDurationValue|array<array-key, mixed>>,
  *     positionArea?: PositionAreaValue|array<PositionAreaValue|array<array-key, mixed>>,
  *     positionTry?: PositionTryValue|array<PositionTryValue|array<array-key, mixed>>,
  *     positionTryFallbacks?: PositionTryValue|array<PositionTryValue|array<array-key, mixed>>,
@@ -768,7 +768,7 @@ namespace Symfony\UX\Css;
  *     r?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
  *     resize?: ResizeValue|array<ResizeValue|array<array-key, mixed>>,
  *     right?: SpacingToken2|array<SpacingToken2|array<array-key, mixed>>,
- *     ring?: BordersToken|array<BordersToken|array<array-key, mixed>>,
+ *     ring?: OutlineValue|array<OutlineValue|array<array-key, mixed>>,
  *     ringColor?: ColorsToken|array<ColorsToken|array<array-key, mixed>>,
  *     ringOffset?: SpacingToken2|array<SpacingToken2|array<array-key, mixed>>,
  *     ringWidth?: WebkitBorderBeforeWidthValue|array<WebkitBorderBeforeWidthValue|array<array-key, mixed>>,
@@ -902,7 +902,7 @@ namespace Symfony\UX\Css;
  *     textSizeAdjust?: AnimationTimelineValue|array<AnimationTimelineValue|array<array-key, mixed>>,
  *     textSpacingTrim?: TextSpacingTrimValue|array<TextSpacingTrimValue|array<array-key, mixed>>,
  *     textTransform?: TextTransformValue|array<TextTransformValue|array<array-key, mixed>>,
- *     textUnderlineOffset?: AspectRatiosToken|array<AspectRatiosToken|array<array-key, mixed>>,
+ *     textUnderlineOffset?: AspectRatioValue|array<AspectRatioValue|array<array-key, mixed>>,
  *     textUnderlinePosition?: TextUnderlinePositionValue|array<TextUnderlinePositionValue|array<array-key, mixed>>,
  *     textWrap?: TextWrapValue|array<TextWrapValue|array<array-key, mixed>>,
  *     textWrapMode?: TextWrapModeValue|array<TextWrapModeValue|array<array-key, mixed>>,
@@ -919,7 +919,7 @@ namespace Symfony\UX\Css;
  *     transitionDelay?: AllValue|array<AllValue|array<array-key, mixed>>,
  *     transitionDuration?: AllValue|array<AllValue|array<array-key, mixed>>,
  *     transitionProperty?: TransitionPropertyValue|array<TransitionPropertyValue|array<array-key, mixed>>,
- *     transitionTimingFunction?: EasingsToken|array<EasingsToken|array<array-key, mixed>>,
+ *     transitionTimingFunction?: AnimationTimingFunctionValue|array<AnimationTimingFunctionValue|array<array-key, mixed>>,
  *     translate?: RotateValue|array<RotateValue|array<array-key, mixed>>,
  *     translateX?: SpacingToken3|array<SpacingToken3|array<array-key, mixed>>,
  *     translateY?: SpacingToken3|array<SpacingToken3|array<array-key, mixed>>,
@@ -931,7 +931,7 @@ namespace Symfony\UX\Css;
  *     verticalAlign?: VerticalAlignValue|array<VerticalAlignValue|array<array-key, mixed>>,
  *     viewTimeline?: WebkitMaskImageValue|array<WebkitMaskImageValue|array<array-key, mixed>>,
  *     viewTimelineAxis?: ScrollTimelineAxisValue|array<ScrollTimelineAxisValue|array<array-key, mixed>>,
- *     viewTimelineInset?: AspectRatiosToken|array<AspectRatiosToken|array<array-key, mixed>>,
+ *     viewTimelineInset?: AspectRatioValue|array<AspectRatioValue|array<array-key, mixed>>,
  *     viewTimelineName?: WebkitMaskImageValue|array<WebkitMaskImageValue|array<array-key, mixed>>,
  *     viewTransitionName?: ViewTransitionNameValue|array<ViewTransitionNameValue|array<array-key, mixed>>,
  *     visibility?: VisibilityValue|array<VisibilityValue|array<array-key, mixed>>,
@@ -948,7 +948,7 @@ namespace Symfony\UX\Css;
  *     x?: SpacingToken3|array<SpacingToken3|array<array-key, mixed>>,
  *     y?: SpacingToken3|array<SpacingToken3|array<array-key, mixed>>,
  *     z?: SpacingToken3|array<SpacingToken3|array<array-key, mixed>>,
- *     zIndex?: AspectRatiosToken|array<AspectRatiosToken|array<array-key, mixed>>,
+ *     zIndex?: AspectRatioValue|array<AspectRatioValue|array<array-key, mixed>>,
  *     zoom?: ZoomValue|array<ZoomValue|array<array-key, mixed>>,
  *     "@/2xl"?: CssStylesNested,
  *     "@/3xl"?: CssStylesNested,
@@ -1116,11 +1116,11 @@ namespace Symfony\UX\Css;
  *     all?: AllValue|array<AllValue|array<array-key, mixed>>,
  *     anchorName?: WebkitMaskImageValue|array<WebkitMaskImageValue|array<array-key, mixed>>,
  *     anchorScope?: AnchorScopeValue|array<AnchorScopeValue|array<array-key, mixed>>,
- *     animation?: AnimationsToken|array<AnimationsToken|array<array-key, mixed>>,
+ *     animation?: AnimationValue|array<AnimationValue|array<array-key, mixed>>,
  *     animationComposition?: AnimationCompositionValue|array<AnimationCompositionValue|array<array-key, mixed>>,
  *     animationDelay?: AllValue|array<AllValue|array<array-key, mixed>>,
  *     animationDirection?: AnimationDirectionValue|array<AnimationDirectionValue|array<array-key, mixed>>,
- *     animationDuration?: DurationsToken|array<DurationsToken|array<array-key, mixed>>,
+ *     animationDuration?: AnimationDurationValue|array<AnimationDurationValue|array<array-key, mixed>>,
  *     animationFillMode?: AnimationFillModeValue|array<AnimationFillModeValue|array<array-key, mixed>>,
  *     animationIterationCount?: AnimationIterationCountValue|array<AnimationIterationCountValue|array<array-key, mixed>>,
  *     animationName?: WebkitMaskImageValue|array<WebkitMaskImageValue|array<array-key, mixed>>,
@@ -1130,9 +1130,9 @@ namespace Symfony\UX\Css;
  *     animationRangeStart?: AnimationRangeValue|array<AnimationRangeValue|array<array-key, mixed>>,
  *     animationState?: int|float|string|array<int|float|string|array<array-key, mixed>>,
  *     animationTimeline?: AnimationTimelineValue|array<AnimationTimelineValue|array<array-key, mixed>>,
- *     animationTimingFunction?: EasingsToken|array<EasingsToken|array<array-key, mixed>>,
+ *     animationTimingFunction?: AnimationTimingFunctionValue|array<AnimationTimingFunctionValue|array<array-key, mixed>>,
  *     appearance?: AppearanceValue|array<AppearanceValue|array<array-key, mixed>>,
- *     aspectRatio?: AspectRatiosToken|array<AspectRatiosToken|array<array-key, mixed>>,
+ *     aspectRatio?: AspectRatioValue|array<AspectRatioValue|array<array-key, mixed>>,
  *     backdropBlur?: int|float|string|array<int|float|string|array<array-key, mixed>>,
  *     backdropBrightness?: int|float|string|array<int|float|string|array<array-key, mixed>>,
  *     backdropContrast?: int|float|string|array<int|float|string|array<array-key, mixed>>,
@@ -1212,7 +1212,7 @@ namespace Symfony\UX\Css;
  *     borderImageRepeat?: BorderImageRepeatValue|array<BorderImageRepeatValue|array<array-key, mixed>>,
  *     borderImageSlice?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
  *     borderImageSource?: WebkitMaskImageValue|array<WebkitMaskImageValue|array<array-key, mixed>>,
- *     borderImageWidth?: AspectRatiosToken|array<AspectRatiosToken|array<array-key, mixed>>,
+ *     borderImageWidth?: AspectRatioValue|array<AspectRatioValue|array<array-key, mixed>>,
  *     borderInline?: WebkitBorderBeforeValue|array<WebkitBorderBeforeValue|array<array-key, mixed>>,
  *     borderInlineColor?: ColorsToken|array<ColorsToken|array<array-key, mixed>>,
  *     borderInlineEnd?: WebkitBorderBeforeValue|array<WebkitBorderBeforeValue|array<array-key, mixed>>,
@@ -1283,7 +1283,7 @@ namespace Symfony\UX\Css;
  *     caretColor?: ColorsToken|array<ColorsToken|array<array-key, mixed>>,
  *     caretShape?: CaretShapeValue|array<CaretShapeValue|array<array-key, mixed>>,
  *     clear?: ClearValue|array<ClearValue|array<array-key, mixed>>,
- *     clip?: DurationsToken|array<DurationsToken|array<array-key, mixed>>,
+ *     clip?: AnimationDurationValue|array<AnimationDurationValue|array<array-key, mixed>>,
  *     clipPath?: ClipPathValue|array<ClipPathValue|array<array-key, mixed>>,
  *     clipRule?: ClipRuleValue|array<ClipRuleValue|array<array-key, mixed>>,
  *     color?: ColorsToken|array<ColorsToken|array<array-key, mixed>>,
@@ -1292,7 +1292,7 @@ namespace Symfony\UX\Css;
  *     colorPalette?: ColorPaletteValue|array<ColorPaletteValue|array<array-key, mixed>>,
  *     colorRendering?: ColorRenderingValue|array<ColorRenderingValue|array<array-key, mixed>>,
  *     colorScheme?: ColorSchemeValue|array<ColorSchemeValue|array<array-key, mixed>>,
- *     columnCount?: AspectRatiosToken|array<AspectRatiosToken|array<array-key, mixed>>,
+ *     columnCount?: AspectRatioValue|array<AspectRatioValue|array<array-key, mixed>>,
  *     columnFill?: ColumnFillValue|array<ColumnFillValue|array<array-key, mixed>>,
  *     columnGap?: SpacingToken2|array<SpacingToken2|array<array-key, mixed>>,
  *     columnRule?: WebkitBorderBeforeValue|array<WebkitBorderBeforeValue|array<array-key, mixed>>,
@@ -1300,8 +1300,8 @@ namespace Symfony\UX\Css;
  *     columnRuleStyle?: WebkitBorderBeforeStyleValue|array<WebkitBorderBeforeStyleValue|array<array-key, mixed>>,
  *     columnRuleWidth?: WebkitBorderBeforeWidthValue|array<WebkitBorderBeforeWidthValue|array<array-key, mixed>>,
  *     columnSpan?: AnchorScopeValue|array<AnchorScopeValue|array<array-key, mixed>>,
- *     columnWidth?: AspectRatiosToken|array<AspectRatiosToken|array<array-key, mixed>>,
- *     columns?: AspectRatiosToken|array<AspectRatiosToken|array<array-key, mixed>>,
+ *     columnWidth?: AspectRatioValue|array<AspectRatioValue|array<array-key, mixed>>,
+ *     columns?: AspectRatioValue|array<AspectRatioValue|array<array-key, mixed>>,
  *     contain?: ContainValue|array<ContainValue|array<array-key, mixed>>,
  *     containIntrinsicBlockSize?: WebkitLineClampValue|array<WebkitLineClampValue|array<array-key, mixed>>,
  *     containIntrinsicHeight?: WebkitLineClampValue|array<WebkitLineClampValue|array<array-key, mixed>>,
@@ -1318,7 +1318,7 @@ namespace Symfony\UX\Css;
  *     counterIncrement?: WebkitMaskImageValue|array<WebkitMaskImageValue|array<array-key, mixed>>,
  *     counterReset?: WebkitMaskImageValue|array<WebkitMaskImageValue|array<array-key, mixed>>,
  *     counterSet?: WebkitMaskImageValue|array<WebkitMaskImageValue|array<array-key, mixed>>,
- *     cursor?: CursorToken|array<CursorToken|array<array-key, mixed>>,
+ *     cursor?: CursorValue|array<CursorValue|array<array-key, mixed>>,
  *     cx?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
  *     cy?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
  *     d?: WebkitMaskImageValue|array<WebkitMaskImageValue|array<array-key, mixed>>,
@@ -1356,13 +1356,13 @@ namespace Symfony\UX\Css;
  *     focusRingWidth?: int|float|string|array<int|float|string|array<array-key, mixed>>,
  *     focusVisibleRing?: FocusRingValue|array<FocusRingValue|array<array-key, mixed>>,
  *     font?: FontValue|array<FontValue|array<array-key, mixed>>,
- *     fontFamily?: FontsToken|array<FontsToken|array<array-key, mixed>>,
+ *     fontFamily?: FontFamilyValue|array<FontFamilyValue|array<array-key, mixed>>,
  *     fontFeatureSettings?: FontFeatureSettingsValue|array<FontFeatureSettingsValue|array<array-key, mixed>>,
  *     fontKerning?: FontKerningValue|array<FontKerningValue|array<array-key, mixed>>,
  *     fontLanguageOverride?: FontFeatureSettingsValue|array<FontFeatureSettingsValue|array<array-key, mixed>>,
  *     fontOpticalSizing?: AnimationTimelineValue|array<AnimationTimelineValue|array<array-key, mixed>>,
  *     fontPalette?: ColorSchemeValue|array<ColorSchemeValue|array<array-key, mixed>>,
- *     fontSize?: FontSizesToken|array<FontSizesToken|array<array-key, mixed>>,
+ *     fontSize?: FontSizeValue|array<FontSizeValue|array<array-key, mixed>>,
  *     fontSizeAdjust?: FontSizeAdjustValue|array<FontSizeAdjustValue|array<array-key, mixed>>,
  *     fontSmooth?: FontSmoothValue|array<FontSmoothValue|array<array-key, mixed>>,
  *     fontSmoothing?: FontSmoothingValue|array<FontSmoothingValue|array<array-key, mixed>>,
@@ -1382,10 +1382,10 @@ namespace Symfony\UX\Css;
  *     fontVariantNumeric?: FontVariantNumericValue|array<FontVariantNumericValue|array<array-key, mixed>>,
  *     fontVariantPosition?: FontVariantPositionValue|array<FontVariantPositionValue|array<array-key, mixed>>,
  *     fontVariationSettings?: FontFeatureSettingsValue|array<FontFeatureSettingsValue|array<array-key, mixed>>,
- *     fontWeight?: FontWeightsToken|array<FontWeightsToken|array<array-key, mixed>>,
+ *     fontWeight?: FontWeightValue|array<FontWeightValue|array<array-key, mixed>>,
  *     forcedColorAdjust?: ForcedColorAdjustValue|array<ForcedColorAdjustValue|array<array-key, mixed>>,
  *     gap?: SpacingToken2|array<SpacingToken2|array<array-key, mixed>>,
- *     glyphOrientationVertical?: AspectRatiosToken|array<AspectRatiosToken|array<array-key, mixed>>,
+ *     glyphOrientationVertical?: AspectRatioValue|array<AspectRatioValue|array<array-key, mixed>>,
  *     gradientFrom?: ColorsToken|array<ColorsToken|array<array-key, mixed>>,
  *     gradientFromPosition?: int|float|string|array<int|float|string|array<array-key, mixed>>,
  *     gradientTo?: ColorsToken|array<ColorsToken|array<array-key, mixed>>,
@@ -1394,19 +1394,19 @@ namespace Symfony\UX\Css;
  *     gradientViaPosition?: int|float|string|array<int|float|string|array<array-key, mixed>>,
  *     grayscale?: int|float|string|array<int|float|string|array<array-key, mixed>>,
  *     grid?: WebkitMaskImageValue|array<WebkitMaskImageValue|array<array-key, mixed>>,
- *     gridArea?: AspectRatiosToken|array<AspectRatiosToken|array<array-key, mixed>>,
+ *     gridArea?: AspectRatioValue|array<AspectRatioValue|array<array-key, mixed>>,
  *     gridAutoColumns?: GridAutoColumnsValue|array<GridAutoColumnsValue|array<array-key, mixed>>,
  *     gridAutoFlow?: GridAutoFlowValue|array<GridAutoFlowValue|array<array-key, mixed>>,
  *     gridAutoRows?: GridAutoColumnsValue|array<GridAutoColumnsValue|array<array-key, mixed>>,
- *     gridColumn?: AspectRatiosToken|array<AspectRatiosToken|array<array-key, mixed>>,
- *     gridColumnEnd?: AspectRatiosToken|array<AspectRatiosToken|array<array-key, mixed>>,
+ *     gridColumn?: AspectRatioValue|array<AspectRatioValue|array<array-key, mixed>>,
+ *     gridColumnEnd?: AspectRatioValue|array<AspectRatioValue|array<array-key, mixed>>,
  *     gridColumnGap?: SpacingToken2|array<SpacingToken2|array<array-key, mixed>>,
- *     gridColumnStart?: AspectRatiosToken|array<AspectRatiosToken|array<array-key, mixed>>,
+ *     gridColumnStart?: AspectRatioValue|array<AspectRatioValue|array<array-key, mixed>>,
  *     gridGap?: SpacingToken2|array<SpacingToken2|array<array-key, mixed>>,
- *     gridRow?: AspectRatiosToken|array<AspectRatiosToken|array<array-key, mixed>>,
- *     gridRowEnd?: AspectRatiosToken|array<AspectRatiosToken|array<array-key, mixed>>,
+ *     gridRow?: AspectRatioValue|array<AspectRatioValue|array<array-key, mixed>>,
+ *     gridRowEnd?: AspectRatioValue|array<AspectRatioValue|array<array-key, mixed>>,
  *     gridRowGap?: SpacingToken2|array<SpacingToken2|array<array-key, mixed>>,
- *     gridRowStart?: AspectRatiosToken|array<AspectRatiosToken|array<array-key, mixed>>,
+ *     gridRowStart?: AspectRatioValue|array<AspectRatioValue|array<array-key, mixed>>,
  *     gridTemplate?: WebkitMaskImageValue|array<WebkitMaskImageValue|array<array-key, mixed>>,
  *     gridTemplateAreas?: WebkitMaskImageValue|array<WebkitMaskImageValue|array<array-key, mixed>>,
  *     gridTemplateColumns?: GridTemplateColumnsValue|array<GridTemplateColumnsValue|array<array-key, mixed>>,
@@ -1417,8 +1417,8 @@ namespace Symfony\UX\Css;
  *     hideBelow?: BreakpointsToken|array<BreakpointsToken|array<array-key, mixed>>,
  *     hideFrom?: BreakpointsToken|array<BreakpointsToken|array<array-key, mixed>>,
  *     hueRotate?: int|float|string|array<int|float|string|array<array-key, mixed>>,
- *     hyphenateCharacter?: DurationsToken|array<DurationsToken|array<array-key, mixed>>,
- *     hyphenateLimitChars?: AspectRatiosToken|array<AspectRatiosToken|array<array-key, mixed>>,
+ *     hyphenateCharacter?: AnimationDurationValue|array<AnimationDurationValue|array<array-key, mixed>>,
+ *     hyphenateLimitChars?: AspectRatioValue|array<AspectRatioValue|array<array-key, mixed>>,
  *     hyphens?: HyphensValue|array<HyphensValue|array<array-key, mixed>>,
  *     imageOrientation?: ImageOrientationValue|array<ImageOrientationValue|array<array-key, mixed>>,
  *     imageRendering?: ImageRenderingValue|array<ImageRenderingValue|array<array-key, mixed>>,
@@ -1484,7 +1484,7 @@ namespace Symfony\UX\Css;
  *     maskBorderRepeat?: BorderImageRepeatValue|array<BorderImageRepeatValue|array<array-key, mixed>>,
  *     maskBorderSlice?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
  *     maskBorderSource?: WebkitMaskImageValue|array<WebkitMaskImageValue|array<array-key, mixed>>,
- *     maskBorderWidth?: AspectRatiosToken|array<AspectRatiosToken|array<array-key, mixed>>,
+ *     maskBorderWidth?: AspectRatioValue|array<AspectRatioValue|array<array-key, mixed>>,
  *     maskClip?: MaskClipValue|array<MaskClipValue|array<array-key, mixed>>,
  *     maskComposite?: MaskCompositeValue|array<MaskCompositeValue|array<array-key, mixed>>,
  *     maskImage?: WebkitMaskImageValue|array<WebkitMaskImageValue|array<array-key, mixed>>,
@@ -1531,7 +1531,7 @@ namespace Symfony\UX\Css;
  *     opacity?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
  *     order?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
  *     orphans?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
- *     outline?: BordersToken|array<BordersToken|array<array-key, mixed>>,
+ *     outline?: OutlineValue|array<OutlineValue|array<array-key, mixed>>,
  *     outlineColor?: ColorsToken|array<ColorsToken|array<array-key, mixed>>,
  *     outlineOffset?: SpacingToken2|array<SpacingToken2|array<array-key, mixed>>,
  *     outlineStyle?: OutlineStyleValue|array<OutlineStyleValue|array<array-key, mixed>>,
@@ -1567,7 +1567,7 @@ namespace Symfony\UX\Css;
  *     paddingTop?: SpacingToken2|array<SpacingToken2|array<array-key, mixed>>,
  *     paddingX?: SpacingToken2|array<SpacingToken2|array<array-key, mixed>>,
  *     paddingY?: SpacingToken2|array<SpacingToken2|array<array-key, mixed>>,
- *     page?: DurationsToken|array<DurationsToken|array<array-key, mixed>>,
+ *     page?: AnimationDurationValue|array<AnimationDurationValue|array<array-key, mixed>>,
  *     pageBreakAfter?: PageBreakAfterValue|array<PageBreakAfterValue|array<array-key, mixed>>,
  *     pageBreakBefore?: PageBreakAfterValue|array<PageBreakAfterValue|array<array-key, mixed>>,
  *     pageBreakInside?: PageBreakInsideValue|array<PageBreakInsideValue|array<array-key, mixed>>,
@@ -1583,7 +1583,7 @@ namespace Symfony\UX\Css;
  *     pointerEvents?: PointerEventsValue|array<PointerEventsValue|array<array-key, mixed>>,
  *     pos?: PositionValue|array<PositionValue|array<array-key, mixed>>,
  *     position?: PositionValue|array<PositionValue|array<array-key, mixed>>,
- *     positionAnchor?: DurationsToken|array<DurationsToken|array<array-key, mixed>>,
+ *     positionAnchor?: AnimationDurationValue|array<AnimationDurationValue|array<array-key, mixed>>,
  *     positionArea?: PositionAreaValue|array<PositionAreaValue|array<array-key, mixed>>,
  *     positionTry?: PositionTryValue|array<PositionTryValue|array<array-key, mixed>>,
  *     positionTryFallbacks?: PositionTryValue|array<PositionTryValue|array<array-key, mixed>>,
@@ -1599,7 +1599,7 @@ namespace Symfony\UX\Css;
  *     r?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
  *     resize?: ResizeValue|array<ResizeValue|array<array-key, mixed>>,
  *     right?: SpacingToken2|array<SpacingToken2|array<array-key, mixed>>,
- *     ring?: BordersToken|array<BordersToken|array<array-key, mixed>>,
+ *     ring?: OutlineValue|array<OutlineValue|array<array-key, mixed>>,
  *     ringColor?: ColorsToken|array<ColorsToken|array<array-key, mixed>>,
  *     ringOffset?: SpacingToken2|array<SpacingToken2|array<array-key, mixed>>,
  *     ringWidth?: WebkitBorderBeforeWidthValue|array<WebkitBorderBeforeWidthValue|array<array-key, mixed>>,
@@ -1733,7 +1733,7 @@ namespace Symfony\UX\Css;
  *     textSizeAdjust?: AnimationTimelineValue|array<AnimationTimelineValue|array<array-key, mixed>>,
  *     textSpacingTrim?: TextSpacingTrimValue|array<TextSpacingTrimValue|array<array-key, mixed>>,
  *     textTransform?: TextTransformValue|array<TextTransformValue|array<array-key, mixed>>,
- *     textUnderlineOffset?: AspectRatiosToken|array<AspectRatiosToken|array<array-key, mixed>>,
+ *     textUnderlineOffset?: AspectRatioValue|array<AspectRatioValue|array<array-key, mixed>>,
  *     textUnderlinePosition?: TextUnderlinePositionValue|array<TextUnderlinePositionValue|array<array-key, mixed>>,
  *     textWrap?: TextWrapValue|array<TextWrapValue|array<array-key, mixed>>,
  *     textWrapMode?: TextWrapModeValue|array<TextWrapModeValue|array<array-key, mixed>>,
@@ -1750,7 +1750,7 @@ namespace Symfony\UX\Css;
  *     transitionDelay?: AllValue|array<AllValue|array<array-key, mixed>>,
  *     transitionDuration?: AllValue|array<AllValue|array<array-key, mixed>>,
  *     transitionProperty?: TransitionPropertyValue|array<TransitionPropertyValue|array<array-key, mixed>>,
- *     transitionTimingFunction?: EasingsToken|array<EasingsToken|array<array-key, mixed>>,
+ *     transitionTimingFunction?: AnimationTimingFunctionValue|array<AnimationTimingFunctionValue|array<array-key, mixed>>,
  *     translate?: RotateValue|array<RotateValue|array<array-key, mixed>>,
  *     translateX?: SpacingToken3|array<SpacingToken3|array<array-key, mixed>>,
  *     translateY?: SpacingToken3|array<SpacingToken3|array<array-key, mixed>>,
@@ -1762,7 +1762,7 @@ namespace Symfony\UX\Css;
  *     verticalAlign?: VerticalAlignValue|array<VerticalAlignValue|array<array-key, mixed>>,
  *     viewTimeline?: WebkitMaskImageValue|array<WebkitMaskImageValue|array<array-key, mixed>>,
  *     viewTimelineAxis?: ScrollTimelineAxisValue|array<ScrollTimelineAxisValue|array<array-key, mixed>>,
- *     viewTimelineInset?: AspectRatiosToken|array<AspectRatiosToken|array<array-key, mixed>>,
+ *     viewTimelineInset?: AspectRatioValue|array<AspectRatioValue|array<array-key, mixed>>,
  *     viewTimelineName?: WebkitMaskImageValue|array<WebkitMaskImageValue|array<array-key, mixed>>,
  *     viewTransitionName?: ViewTransitionNameValue|array<ViewTransitionNameValue|array<array-key, mixed>>,
  *     visibility?: VisibilityValue|array<VisibilityValue|array<array-key, mixed>>,
@@ -1779,7 +1779,7 @@ namespace Symfony\UX\Css;
  *     x?: SpacingToken3|array<SpacingToken3|array<array-key, mixed>>,
  *     y?: SpacingToken3|array<SpacingToken3|array<array-key, mixed>>,
  *     z?: SpacingToken3|array<SpacingToken3|array<array-key, mixed>>,
- *     zIndex?: AspectRatiosToken|array<AspectRatiosToken|array<array-key, mixed>>,
+ *     zIndex?: AspectRatioValue|array<AspectRatioValue|array<array-key, mixed>>,
  *     zoom?: ZoomValue|array<ZoomValue|array<array-key, mixed>>,
  *     "@/2xl"?: array<string, mixed>,
  *     "@/3xl"?: array<string, mixed>,

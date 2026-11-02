@@ -11,7 +11,6 @@
 
 namespace Symfony\UX\Css\Validation;
 
-use Symfony\UX\Css\DependencyInjection\PandaConfigConverter;
 use Symfony\UX\Css\Engine\Engine;
 use Symfony\UX\Css\Engine\Tokens;
 use Symfony\UX\Css\Exception\InvalidStyleException;
@@ -124,7 +123,7 @@ final class StyleValidator
     private ?array $conditions = null;
 
     /**
-     * @var array<string, array{type: array{literals: array<string, true>, string: bool, number: bool, boolean: bool, cssVars: bool}, hatch: bool, category: ?string, emptyCategory: bool}>
+     * @var array<string, array{type: array{literals: array<string, true>, string: bool, number: bool, boolean: bool, cssVars: bool}, hatch: bool, category: ?string}>
      */
     private array $valueTypes = [];
 
@@ -300,16 +299,6 @@ final class StyleValidator
         }
 
         $shown = \is_string($value) ? $value : json_encode($value);
-        if ($rule['emptyCategory']) {
-            $message = \sprintf('Unknown %1$s token "%2$s": no %1$s token is declared.', $rule['category'], $shown);
-            $hint = \sprintf(
-                ' Add them under ux_css.tokens.%s, or write a raw value between brackets, like "[%s]".',
-                $rule['category'],
-                $shown,
-            );
-
-            throw new InvalidStyleException($message.$hint);
-        }
         $suggestion = '';
         if (\is_string($value)) {
             $literals = array_map(strval(...), array_keys($rule['type']['literals']));
@@ -336,7 +325,7 @@ final class StyleValidator
         $property = $this->engine->utilities()->resolveShorthand($key);
         $strictKey = \in_array($key, self::STRICT_PROPERTIES, true);
         $strictProperty = \in_array($property, self::STRICT_PROPERTIES, true);
-        [$utilityType, $category, $boundCategory] = $this->utilityType($property);
+        [$utilityType, $category] = $this->utilityType($property);
         $cssType = \in_array($property, self::cssTypes()['properties'], true) ? self::cssType($property) : null;
         $cssVars = self::type(cssVars: true);
 
@@ -349,20 +338,15 @@ final class StyleValidator
         if ($this->strictPropertyValues && $strictProperty) {
             $type = [...$type, 'string' => false, 'number' => false];
 
-            return ['type' => $type, 'hatch' => true, 'category' => null, 'emptyCategory' => false];
-        }
-        if ($this->strictTokens && $this->hasNoToken($boundCategory)) {
-            $type = [...$type, 'string' => false];
-
-            return ['type' => $type, 'hatch' => true, 'category' => $boundCategory, 'emptyCategory' => true];
+            return ['type' => $type, 'hatch' => true, 'category' => null];
         }
         if ($this->strictTokens) {
-            return ['type' => $type, 'hatch' => true, 'category' => $category, 'emptyCategory' => false];
+            return ['type' => $type, 'hatch' => true, 'category' => $category];
         }
 
         $type = [...$type, 'string' => true];
 
-        return ['type' => $type, 'hatch' => false, 'category' => null, 'emptyCategory' => false];
+        return ['type' => $type, 'hatch' => false, 'category' => null];
     }
 
     /**
@@ -377,7 +361,7 @@ final class StyleValidator
             $config = ['values' => $names];
         }
         if (!\is_array($config)) {
-            return [null, null, null];
+            return [null, null];
         }
 
         $values = $config['values'] ?? null;
@@ -400,7 +384,7 @@ final class StyleValidator
         } elseif (\is_array($values) && array_is_list($values)) {
             $literals = array_map(strval(...), $values);
         } elseif (\is_array($values) && isset($values['type'])) {
-            return ['boolean' === $values['type'] ? self::type(boolean: true) : null, null, null];
+            return ['boolean' === $values['type'] ? self::type(boolean: true) : null, null];
         } elseif (\is_array($values)) {
             $literals = array_map(strval(...), array_keys($values));
         }
@@ -410,7 +394,7 @@ final class StyleValidator
             $type = self::union($type, self::cssType($config['property']));
         }
 
-        return [$type, [] !== $literals ? $category : null, $category];
+        return [$type, [] !== $literals ? $category : null];
     }
 
     /**
@@ -554,15 +538,6 @@ final class StyleValidator
         $this->conditions ??= array_fill_keys($this->engine->conditions()->getNames(), true);
 
         return isset($this->conditions[$key]);
-    }
-
-    private function hasNoToken(?string $category): bool
-    {
-        if (null === $category || !\in_array($category, PandaConfigConverter::CATEGORIES, true)) {
-            return false;
-        }
-
-        return [] === ($this->engine->tokens()->getCategoryValues($category) ?? []);
     }
 
     private static function isUnsafe(string $text): bool
