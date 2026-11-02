@@ -38,18 +38,24 @@ templates to read.
 Load the stylesheet
 -------------------
 
-The bundle writes its CSS to ``var/ux_css/styles.css``. Import it from your
-JavaScript entry, after your own styles:
+The bundle writes its CSS to ``var/ux_css/styles.css``. Import it at the top of
+your main stylesheet, right after the statement that orders the cascade
+layers:
 
-.. code-block:: javascript
+.. code-block:: css
 
-    // assets/app.js
-    import './styles/app.css';
-    import '../var/ux_css/styles.css';
+    /* assets/styles/app.css */
+    @layer reset, base, tokens, components, utilities;
 
-The Symfony Flex recipe adds this line for you. It works with AssetMapper,
+    @import '../../var/ux_css/styles.css';
+
+    /* ... your own styles */
+
+The Symfony Flex recipe adds these lines for you. They work with AssetMapper,
 Symfony Reprise and Webpack Encore. The bundle registers ``var/ux_css/`` as an
 AssetMapper path under the ``ux_css`` prefix, so there is nothing to configure.
-:doc:`bundlers` gives the details for each tool.
+Since your stylesheet imports the file, editors that follow ``@import`` see
+the CSS variables of your tokens. :doc:`bundlers` gives the details for each
+tool.
 
 Next, :doc:`getting-started` declares your first tokens.

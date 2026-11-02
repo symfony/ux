@@ -1,3 +1,7 @@
+@layer reset, base, tokens, components, utilities;
+
+@import '../../var/ux_css/styles.css';
+
 body {
     background-color: lightgray;
 }
