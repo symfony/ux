@@ -10,7 +10,6 @@ import { registerReactControllerComponents } from '@symfony/ux-react';
 
 // any CSS you import will output into a single css file (app.css in this case)
 import './styles/app.css';
-import '../var/ux_css/styles.css';
 import { trans } from './translator.js';
 import { path } from './router.js';
 

@@ -4,35 +4,43 @@ Loading the stylesheet
 The bundle writes one plain CSS file, ``var/ux_css/styles.css``. Any tool that
 serves or bundles CSS can use it.
 
-From the JavaScript entry
--------------------------
+From your stylesheet
+--------------------
 
-Import the file from a JavaScript entry:
+Import the file at the top of your main stylesheet:
 
-.. code-block:: javascript
+.. code-block:: css
 
-    // assets/app.js
-    import './styles/app.css';
-    import '../var/ux_css/styles.css';
+    /* assets/styles/app.css */
+    @layer reset, base, tokens, components, utilities;
 
-The Symfony Flex recipe adds this line right after
-``import './styles/app.css';``. It works the same way with AssetMapper, Symfony
+    @import '../../var/ux_css/styles.css';
+
+    /* ... your own styles */
+
+The Symfony Flex recipe adds these two lines at the top of
+``assets/styles/app.css``. They work the same way with AssetMapper, Symfony
 Reprise and Webpack Encore.
 
-The first stylesheet that names a cascade layer sets the order of the layers.
-Importing UX CSS after your own styles lets the layers of your CSS (such as
-``base``) be declared before the ``utilities`` layer, so ``css()`` classes win
-over them. The section "The CSS layers" of :doc:`css-function` explains layers.
+The ``@layer`` statement comes first because the first stylesheet that names a
+cascade layer sets the order of the layers. With this order, ``css()`` classes
+win over the rules you write in the ``base`` and ``components`` layers. CSS
+only accepts ``@import`` before any other rule, except ``@layer`` statements.
+The section "The CSS layers" of :doc:`css-function` explains layers.
+
+Importing the file from your stylesheet also lets editors that follow
+``@import`` see the CSS variables of your tokens, so they can complete
+``var(--colors-primary)`` in your own CSS.
 
 AssetMapper
 -----------
 
 The bundle registers ``var/ux_css/`` as an AssetMapper path under the
-``ux_css`` prefix. ``importmap()`` adds a ``<link>`` tag for each CSS file that
-the entry imports, this one included.
+``ux_css`` prefix. AssetMapper rewrites the ``@import`` path to the versioned
+URL of the file, which the browser then loads after ``app.css``.
 
-In dev, the bundle updates the file before Twig renders the page, so the link
-always points to the current version. Its digest changes with its content,
+In dev, the bundle updates the file before Twig renders the page, so the
+import always points to the current version. Its digest changes with its content,
 so browsers never keep an old copy.
 
 In production, ``asset-map:compile`` copies the file to ``public/assets/``,
