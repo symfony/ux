@@ -34,24 +34,34 @@ final class Stylesheet
     /**
      * @param list<AtomicStyle> $styles
      * @param list<Node>        $tokens the content of the tokens layer, see {@see TokenCss}
+     * @param list<Node>        $reset  the content of the reset layer, see {@see ResetCss}
      */
-    public function render(array $styles, array $tokens = []): string
+    public function render(array $styles, array $tokens = [], array $reset = []): string
     {
-        return $this->build($styles, $tokens)->toString();
+        return $this->build($styles, $tokens, $reset)->toString();
     }
 
     /**
      * @param list<AtomicStyle> $styles
      * @param list<Node>        $tokens
+     * @param list<Node>        $reset
      */
-    public function build(array $styles, array $tokens = []): Root
+    public function build(array $styles, array $tokens = [], array $reset = []): Root
     {
         $layer = new AtRule('layer', 'utilities');
         foreach (SortStyleRules::sort($styles) as $style) {
             $layer->append(...StyleStringifier::stringify($style->result));
         }
 
-        $root = new Root([...([] !== $tokens ? [new AtRule('layer', 'tokens', $tokens)] : []), $layer]);
+        $layers = [];
+        if ([] !== $reset) {
+            $layers[] = new AtRule('layer', 'reset', $reset);
+        }
+        if ([] !== $tokens) {
+            $layers[] = new AtRule('layer', 'tokens', $tokens);
+        }
+
+        $root = new Root([...$layers, $layer]);
         $this->expandBreakpointAtRules($root);
 
         return new Optimizer()->optimize($root);

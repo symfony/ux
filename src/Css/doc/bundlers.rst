@@ -57,5 +57,5 @@ it. On a fresh checkout or in CI, run ``cache:warmup`` before the build:
     $ npm run build
 
 Minifiers may drop the ``@layer tokens, utilities;`` statement at the top of
-the file. The two layers keep their order, since they appear in that order
-anyway.
+the file. The layers keep their order, since they appear in that order anyway,
+with ``reset`` first when :doc:`preflight` is enabled.

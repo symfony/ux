@@ -117,16 +117,24 @@ The generated file puts the tokens and the rules in two cascade layers:
 
     @layer tokens, utilities;
 
+With the :doc:`preflight <preflight>` option, it also writes a CSS reset in a
+``reset`` layer, which comes first:
+
+.. code-block:: css
+
+    @layer reset, tokens, utilities;
+
 CSS written outside of any layer wins over layered CSS, whatever its
 specificity. So a rule of your own stylesheet, or of a library such as
 Bootstrap, overrides a ``css()`` class on the same property. To give
-``css()`` the last word, put your own CSS in a layer declared before
-``utilities``:
+``css()`` the last word, put your own CSS in layers declared around the ones of
+the bundle. This follows the layer order of Panda CSS, with ``components``
+instead of ``recipes`` for the CSS of your own components:
 
 .. code-block:: css
 
     /* assets/styles/app.css */
-    @layer base, tokens, utilities;
+    @layer reset, base, tokens, components, utilities;
 
     @layer base {
         a { color: var(--colors-fg); }
@@ -134,8 +142,9 @@ Bootstrap, overrides a ``css()`` class on the same property. To give
 
 Layers are ordered by the first place their name appears. A later layer wins
 over an earlier one. Put this statement at the top of the first stylesheet the
-page loads, before the ``css()`` stylesheet. For ``!important`` declarations,
-the order is reversed.
+page loads, before the ``css()`` stylesheet. The statement can list the
+``reset`` layer even when ``preflight`` is off: an unused layer has no effect.
+For ``!important`` declarations, the order is reversed.
 
 Output escaping
 ---------------

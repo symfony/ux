@@ -33,6 +33,10 @@ Every option of the bundle, with its default value:
         # Only accept the keywords of a property whose values are keywords
         strict_property_values: true
 
+        # Write a CSS reset in the "reset" layer: true, or a "scope" (a
+        # selector) with a "level" ("parent" or "element")
+        preflight: false
+
         # Values to write to the stylesheet even when no template uses them,
         # for css() calls with values only known at runtime
         static_css:
@@ -109,6 +113,36 @@ strict_property_values
 When enabled, a property whose values are keywords, such as ``display`` or
 ``position``, only accepts those keywords. This is the
 ``strictPropertyValues`` option of Panda CSS, which Panda disables by default.
+
+preflight
+---------
+
+**type**: ``boolean`` or ``array`` **default**: ``false``
+
+When enabled, the stylesheet starts with a CSS reset, in the ``reset`` layer,
+and declares ``@layer reset, tokens, utilities;``. This is the ``preflight``
+option of Panda CSS. See :doc:`preflight`.
+
+.. code-block:: yaml
+
+    # config/packages/ux_css.yaml
+    ux_css:
+        # the reset applies to the whole page
+        preflight: true
+
+        # or to what is inside the elements that match the scope
+        preflight:
+            scope: '.reset'
+            level: parent
+
+``scope``
+    A CSS selector that limits the reset to a part of the page. Without it, the
+    reset applies to the whole page.
+
+``level``
+    ``parent`` (the default) writes the reset for the elements inside the
+    scope, and ``element`` writes it for the elements that match the scope.
+    Setting ``level`` requires a ``scope``.
 
 static_css
 ----------

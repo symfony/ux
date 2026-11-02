@@ -44,6 +44,8 @@ Each case replayed by `PandaGoldenTest` ends in one of three ways:
 
 Some cases record the CSS of Panda's tokens layer (`generate-token.test.ts`). Those are compared after removing the whitespace and the last semicolon before each closing brace, because Panda re-parses that CSS several times and leaves random indentation there. Everything else must be identical.
 
+Other cases record the CSS of Panda's reset layer (`generate-reset.test.ts`), for the `preflight` option. They are compared as is, byte for byte, with no normalization. The option that the Panda test passes is in the `userConfig` of the case, because the recorder leaves `preflight` out of the config patch.
+
 `tests/Fixtures/Panda/expectations.php` lists every case id that currently passes, and this list acts as a ratchet: once a case is listed, it must keep passing, or the test fails. After making more cases pass, update the list with:
 
 ```shell

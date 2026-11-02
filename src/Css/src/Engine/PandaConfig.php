@@ -26,7 +26,7 @@ final class PandaConfig
     private const PRESET = __DIR__.'/../../resources/panda-preset.json';
 
     /**
-     * @param array{conditions?: array<string, string|list<string>>, theme?: array<string, mixed>} $project
+     * @param array{conditions?: array<string, string|list<string>>, theme?: array<string, mixed>, preflight?: bool|array{scope: string, level: string}} $project
      *
      * @return array<string, mixed>
      */
@@ -38,6 +38,7 @@ final class PandaConfig
             ...$preset,
             'conditions' => ($project['conditions'] ?? []) + $preset['conditions'],
             'theme' => ($project['theme'] ?? []) + $preset['theme'],
+            'preflight' => $project['preflight'] ?? false,
         ];
     }
 }

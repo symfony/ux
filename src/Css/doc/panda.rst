@@ -41,6 +41,14 @@ What differs on purpose
   its values for other conditions, such as ``_dark``, are kept. Panda drops
   them.
 * In ``static_css``, ``*`` also works on a shorthand, such as ``p``.
+* The generated file only declares the layers it writes: ``tokens`` and
+  ``utilities``, plus ``reset`` with ``preflight``. Panda declares its five
+  layers, ``reset, base, tokens, recipes, utilities``, in the file. Declare the
+  order of all your layers in your own stylesheet, see :doc:`css-function`.
+* The ``preflight`` option is written ``preflight: true`` or
+  ``preflight: { scope: '.reset', level: element }``, like in Panda. It also
+  takes an ``enabled`` key, as the other options of Symfony bundles that can be
+  turned off.
 
 Not supported yet
 -----------------

@@ -65,9 +65,9 @@ final class PandaConfigConverter
     }
 
     /**
-     * @param array{tokens: array<string, mixed>, semantic_tokens: array<string, mixed>, conditions: array<string, string|list<string>>, breakpoints: array<string, string>} $config
+     * @param array{tokens: array<string, mixed>, semantic_tokens: array<string, mixed>, conditions: array<string, string|list<string>>, breakpoints: array<string, string>, preflight?: array{enabled: bool, scope?: string, level?: string}} $config
      *
-     * @return array{conditions: array<string, string|list<string>>, theme: array<string, mixed>}
+     * @return array{conditions: array<string, string|list<string>>, theme: array<string, mixed>, preflight: bool|array{scope: string, level: string}}
      *
      * @throws InvalidConfigurationException
      */
@@ -139,7 +139,22 @@ final class PandaConfigConverter
                 'semanticTokens' => $semanticTokens,
                 'breakpoints' => $config['breakpoints'],
             ]),
+            'preflight' => self::convertPreflight($config['preflight'] ?? ['enabled' => false]),
         ];
+    }
+
+    /**
+     * @param array{enabled: bool, scope?: string, level?: string} $preflight
+     *
+     * @return bool|array{scope: string, level: string}
+     */
+    private static function convertPreflight(array $preflight): bool|array
+    {
+        if (!$preflight['enabled'] || !isset($preflight['scope'])) {
+            return $preflight['enabled'];
+        }
+
+        return ['scope' => $preflight['scope'], 'level' => $preflight['level'] ?? 'parent'];
     }
 
     /**
