@@ -338,6 +338,10 @@ final class LiveComponentHydrator
             foreach ($collectionValueType->traverse() as $t) {
                 if ($t instanceof ObjectType) {
                     foreach ($value as $key => $objectItem) {
+                        if (null === $objectItem) {
+                            continue;
+                        }
+
                         $value[$key] = $this->hydrateObjectValue($objectItem, $t->getClassName(), true, $propMetadata->getFormat(), $parentObject::class, \sprintf('%s.%s', $propMetadata->getName(), $key), $parentObject);
                     }
 
@@ -546,6 +550,12 @@ final class LiveComponentHydrator
             foreach ($collectionValueType ? $collectionValueType->traverse() : [] as $t) {
                 if ($t instanceof ObjectType) {
                     foreach ($value as $key => $objectItem) {
+                        // a null item is kept as-is: LiveCollectionTrait adds new
+                        // items as null until their form entry is filled in
+                        if (null === $objectItem) {
+                            continue;
+                        }
+
                         if (!$t->accepts($objectItem)) {
                             throw new \LogicException(\sprintf('The LiveProp "%s" on component "%s" is an array. We determined the array is full of "%s" objects, but at least one key had a different value of "%s".', $propMetadata->getName(), $parentObject::class, $t->getClassName(), get_debug_type($objectItem)));
                         }
