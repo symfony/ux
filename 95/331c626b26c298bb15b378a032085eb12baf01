@@ -1,0 +1,39 @@
+---------------------------------------------------------------------------
+
+by github-actions[bot] at 2026-10-26T02:29:12Z
+
+<h1>📊 Packages dist files size difference</h1>
+
+Thanks for the PR! Here is the difference in size of the packages dist files between the base branch and the PR.
+Please review the changes and make sure they are expected.
+
+<table>
+    <thead><tr><th>File</th><th>Before (Size / Gzip)</th><th>After (Size / Gzip)</th></tr></thead>
+    <tbody><tr><td colspan="3"><a href="https://github.com/ker0x/symfony-ux/tree/feat/dropzone-data-state/src/Dropzone/assets/dist"><b>Dropzone</b></a></td></tr><tr>
+                <td><a href="https://github.com/ker0x/symfony-ux/blob/feat/dropzone-data-state/src/Dropzone/assets/dist/controller.d.ts"><code>controller.d.ts</code></a></td>
+            <td>
+                    <code>1.29 kB</code>
+                    / <code>522 B</code>
+                </td><td>
+                    <code>1.34 kB</code><sup>+5% 📈</sup>
+                    / <code>544 B</code><sup>+4% 📈</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/ker0x/symfony-ux/blob/feat/dropzone-data-state/src/Dropzone/assets/dist/controller.js"><code>controller.js</code></a></td>
+            <td>
+                    <code>7.59 kB</code>
+                    / <code>2.06 kB</code>
+                </td><td>
+                    <code>7.61 kB</code><sup>0%</sup>
+                    / <code>2.18 kB</code><sup>+6% 📈</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/ker0x/symfony-ux/blob/feat/dropzone-data-state/src/Dropzone/assets/dist/style.min.css"><code>style.min.css</code></a></td>
+            <td>
+                    <code>1.52 kB</code>
+                    / <code>590 B</code>
+                </td><td>
+                    <code>1.57 kB</code><sup>+3% 📈</sup>
+                    / <code>613 B</code><sup>+4% 📈</sup>
+                </td></tr></tbody>
+</table>
+
+<!-- Sticky Pull Request Comment -->
