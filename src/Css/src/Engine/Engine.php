@@ -142,6 +142,22 @@ final class Engine
         );
     }
 
+    /**
+     * Whether the config asks for the reset layer, like Panda's `preflight` option.
+     */
+    public function hasPreflight(): bool
+    {
+        return JsValue::isTruthy($this->config['preflight'] ?? false);
+    }
+
+    public function resetCss(): ResetCss
+    {
+        return new ResetCss(
+            new GroupedStyles($this->utilities(), $this->conditions(), $this->encoder(), $this->decoder()),
+            $this->config['preflight'] ?? true,
+        );
+    }
+
     public function stylesheet(): Stylesheet
     {
         return $this->stylesheet ??= new Stylesheet($this->breakpoints());

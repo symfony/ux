@@ -161,8 +161,52 @@ final class ConfigurationTest extends KernelTestCase
         $this->assertStringContainsString('--spacing-gutter: var(--spacing-sm);', $css);
     }
 
+    public static function providePreflightConfigs(): iterable
+    {
+        yield 'not set' => [null, false];
+        yield 'false' => [false, false];
+        yield 'true' => [true, true];
+        yield 'a scope' => [['scope' => '.reset'], ['scope' => '.reset', 'level' => 'parent']];
+        yield 'a scope and a level' => [['scope' => '.reset', 'level' => 'element'], ['scope' => '.reset', 'level' => 'element']];
+        yield 'a scope, disabled' => [['enabled' => false, 'scope' => '.reset'], false];
+    }
+
+    #[DataProvider('providePreflightConfigs')]
+    public function testThePreflightOptionDrivesTheBuildEngine(mixed $preflight, bool|array $expected): void
+    {
+        self::bootKernel(['ux_css' => null === $preflight ? [] : ['preflight' => $preflight]]);
+
+        $engine = self::getContainer()->get('ux_css.engine');
+
+        $this->assertSame($expected, $engine->config()['preflight']);
+        $this->assertSame(false !== $expected, $engine->hasPreflight());
+    }
+
+    public function testThePreflightIsWrittenByTheCssGenerator(): void
+    {
+        self::bootKernel(['ux_css' => ['preflight' => ['scope' => '.reset', 'level' => 'element']]]);
+        $generator = self::getContainer()->get('ux_css.css_generator');
+
+        $css = $generator->generate([]);
+
+        $this->assertStringStartsWith("@layer reset, tokens, utilities;\n\n@layer reset {\n  .reset {\n", $css);
+        $this->assertStringContainsString("\n  img.reset {\n", $css);
+    }
+
     public static function provideInvalidConfigs(): iterable
     {
+        yield 'preflight level without a scope' => [
+            ['preflight' => ['level' => 'element']],
+            'The "scope" option is required when the "level" option is set.',
+        ];
+        yield 'preflight with an empty scope' => [
+            ['preflight' => ['scope' => '']],
+            'The path "ux_css.preflight.scope" cannot contain an empty value, but got "".',
+        ];
+        yield 'unknown preflight level' => [
+            ['preflight' => ['scope' => '.reset', 'level' => 'child']],
+            'The value "child" is not allowed for path "ux_css.preflight.level". Permissible values: "parent", "element"',
+        ];
         yield 'unknown token category' => [
             ['tokens' => ['colours' => ['red' => '#f00']]],
             'Unknown token category "colours". Did you mean "colors"?',

@@ -50,16 +50,19 @@ final class CssGenerator
     {
         $stylesheet = $this->engine->stylesheet();
         $atomicStyles = $this->engine->decoder()->decode($this->entries($styles));
-        $root = $stylesheet->build($atomicStyles, $this->engine->tokenCss()->nodes());
+        $preflight = $this->engine->hasPreflight();
+        $reset = $preflight ? $this->engine->resetCss()->nodes() : [];
+        $root = $stylesheet->build($atomicStyles, $this->engine->tokenCss()->nodes(), $reset);
         if ([] === $root->nodes) {
             return '';
         }
 
+        $layers = $preflight ? ['reset', 'tokens', 'utilities'] : ['tokens', 'utilities'];
         if ($compact) {
-            return '@layer tokens,utilities;'.$root->toCompactString();
+            return '@layer '.implode(',', $layers).';'.$root->toCompactString();
         }
 
-        return "@layer tokens, utilities;\n\n".$root->toString()."\n";
+        return '@layer '.implode(', ', $layers).";\n\n".$root->toString()."\n";
     }
 
     /**

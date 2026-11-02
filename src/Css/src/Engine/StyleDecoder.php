@@ -44,7 +44,37 @@ final class StyleDecoder
         return $styles;
     }
 
-    private function decodeEntry(StyleEntry $entry): AtomicStyle
+    /**
+     * Port of `StyleDecoder::getGroup()`: the entries as one style object, with no class selector around it.
+     *
+     * @param list<StyleEntry> $entries
+     *
+     * @return array<string, mixed>
+     */
+    public function group(array $entries): array
+    {
+        $details = [];
+        foreach ($entries as $entry) {
+            [$styles] = $this->transformEntry($entry);
+            $conditions = [] !== $entry->conditions ? $this->conditions->sortDetails($entry->conditions) : null;
+            $details[] = new AtomicStyle($entry, '', '', $conditions, $styles);
+        }
+
+        $group = [];
+        foreach (SortStyleRules::sort($details) as $detail) {
+            $blocks = null !== $detail->conditions ? $this->expandMultiBlock($detail->conditions) : [[]];
+            foreach ($blocks as $blockConditions) {
+                self::deepSet($group, $this->conditionPath($blockConditions), $detail->result);
+            }
+        }
+
+        return $group;
+    }
+
+    /**
+     * @return array{array<string, mixed>, bool, string} the styles of the entry, whether it is important, and its class name
+     */
+    private function transformEntry(StyleEntry $entry): array
     {
         $value = JsValue::parse($entry->value);
         $important = \is_string($value) && str_contains($value, '!');
@@ -55,8 +85,15 @@ final class StyleDecoder
         $transformed = $this->utilities->transform($entry->property, $value);
         $styles = $important ? self::markImportant($transformed['styles']) : $transformed['styles'];
 
+        return [$styles, $important, $transformed['className']];
+    }
+
+    private function decodeEntry(StyleEntry $entry): AtomicStyle
+    {
+        [$styles, $important, $transformedClassName] = $this->transformEntry($entry);
+
         $conditionClasses = $this->conditions->finalize($entry->conditions);
-        $htmlClass = implode(':', [...$conditionClasses, $this->formatClassName($transformed['className'])]);
+        $htmlClass = implode(':', [...$conditionClasses, $this->formatClassName($transformedClassName)]);
         $className = CssEscaper::escape($htmlClass);
         $selector = '.'.$className.($important ? '\\!' : '');
 
@@ -73,11 +110,7 @@ final class StyleDecoder
         $conditions = $this->conditions->sortDetails($entry->conditions);
         $result = [];
         foreach ($this->expandMultiBlock($conditions) as $blockConditions) {
-            $path = [$selector];
-            foreach ($blockConditions as $condition) {
-                array_push($path, ...$this->resolveCondition($condition));
-            }
-            self::deepSet($result, $path, $styles);
+            self::deepSet($result, $this->conditionPath($blockConditions, [$selector]), $styles);
         }
 
         return new AtomicStyle($entry, $className, $htmlClass.($important ? '!' : ''), $conditions, $result);
@@ -140,6 +173,21 @@ final class StyleDecoder
     }
 
     /**
+     * @param list<Condition> $conditions
+     * @param list<string>    $path
+     *
+     * @return list<string>
+     */
+    private function conditionPath(array $conditions, array $path = []): array
+    {
+        foreach ($conditions as $condition) {
+            array_push($path, ...$this->resolveCondition($condition));
+        }
+
+        return $path;
+    }
+
+    /**
      * @return list<string>
      */
     private function resolveCondition(Condition $condition): array
@@ -154,12 +202,18 @@ final class StyleDecoder
     }
 
     /**
-     * @param array<string, mixed> $target
-     * @param list<string>         $path
-     * @param array<string, mixed> $value
+     * @param array<array-key, mixed> $target
+     * @param list<string>            $path
+     * @param array<string, mixed>    $value
      */
     private static function deepSet(array &$target, array $path, array $value): void
     {
+        if ([] === $path) {
+            $target = array_replace_recursive($target, $value);
+
+            return;
+        }
+
         $current = &$target;
         foreach ($path as $index => $key) {
             $current[$key] ??= [];

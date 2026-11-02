@@ -53,6 +53,13 @@ final class PandaCaseRunner
             throw new OutOfScopeException('Hashed class names are out of v1.');
         }
 
+        if ('reset-css' === $case->kind) {
+            // the recorder leaves `preflight` out of the config patch: the option the test passes is in the user config
+            $engine = $this->createEngine([...$config, 'preflight' => $case->userConfig['preflight'] ?? true]);
+
+            return $engine->stylesheet()->render([], [], $engine->resetCss()->nodes());
+        }
+
         $engine = $this->engines[$case->config.':'.md5(serialize($case->configPatch))] ??= $this->createEngine($config);
         if ('token-css' === $case->kind) {
             if ([] !== ($config['themes'] ?? [])) {

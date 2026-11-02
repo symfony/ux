@@ -85,6 +85,7 @@ Write styles
 * :doc:`conditions` covers hover, dark mode, other conditions, and
   breakpoints.
 * :doc:`css-function` is the reference for the ``css()`` syntax and values.
+* :doc:`preflight` writes a CSS reset in its own layer, like Panda CSS.
 * :doc:`validation` explains which mistakes are caught, and where.
 * :doc:`editors` covers the types generated for editors and static analysis.
 * :doc:`dynamic-styles` covers values only known at runtime and

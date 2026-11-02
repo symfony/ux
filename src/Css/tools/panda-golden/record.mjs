@@ -101,6 +101,18 @@ const instrumentPanda = () => {
         "  ctx.appendCssOfType('tokens', sheet)\n  return goldenTokenCss(config, ctx.config, sheet.toCss())\n}"
     );
 
+    const resetTest = join(pandaDir, 'packages/generator/__tests__/generate-reset.test.ts');
+    replaceOnce(
+        resetTest,
+        "import { createContext } from '@pandacss/fixture'\n",
+        "import { createContext } from '@pandacss/fixture'\nimport { goldenResetCss } from '../../../golden/hooks'\n"
+    );
+    replaceOnce(
+        resetTest,
+        "  ctx.appendCssOfType('preflight', sheet)\n  return sheet.toCss()\n}",
+        "  ctx.appendCssOfType('preflight', sheet)\n  return goldenResetCss(config, ctx.config, sheet.toCss())\n}"
+    );
+
     const staticCssTest = join(pandaDir, 'packages/core/__tests__/static-css.test.ts');
     replaceOnce(
         staticCssTest,
@@ -290,6 +302,7 @@ const toCase = (record, id) => {
             };
         }
         case 'token-css':
+        case 'reset-css':
             return {
                 ...base,
                 userConfig: json.userConfig,

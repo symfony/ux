@@ -105,6 +105,35 @@ final class CssGeneratorTest extends TestCase
         $this->assertStringNotContainsString('@layer utilities {', $css);
     }
 
+    public function testThePreflightIsWrittenFirstInTheResetLayer(): void
+    {
+        $generator = new CssGenerator(Engine::fromProjectConfig([...self::PROJECT, 'preflight' => true]));
+
+        $css = $generator->generate(self::STYLES);
+
+        $this->assertStringStartsWith("@layer reset, tokens, utilities;\n\n@layer reset {\n  html,:host {\n", $css);
+        $this->assertLessThan(strpos($css, '@layer tokens {'), strpos($css, '@layer reset {'));
+        $this->assertLessThan(strpos($css, '@layer utilities {'), strpos($css, '@layer tokens {'));
+    }
+
+    public function testTheCompactPreflightIsWrittenFirstToo(): void
+    {
+        $generator = new CssGenerator(Engine::fromProjectConfig([...self::PROJECT, 'preflight' => true]));
+
+        $css = $generator->generate(self::STYLES, compact: true);
+
+        $this->assertStringStartsWith('@layer reset,tokens,utilities;@layer reset{html,:host{--font-fallback:', $css);
+    }
+
+    public function testThePreflightIsOffByDefault(): void
+    {
+        $withoutOption = self::generator()->generate(self::STYLES);
+        $disabled = new CssGenerator(Engine::fromProjectConfig([...self::PROJECT, 'preflight' => false]));
+
+        $this->assertSame($withoutOption, $disabled->generate(self::STYLES));
+        $this->assertStringNotContainsString('reset', $withoutOption);
+    }
+
     public function testBreakpointsAreTokensToo(): void
     {
         $generator = new CssGenerator(Engine::fromProjectConfig([]));

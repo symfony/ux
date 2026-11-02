@@ -64,6 +64,15 @@ export const goldenTokenCss = (userConfig: unknown, config: Record<string, unkno
     return css;
 };
 
+export const goldenResetCss = (userConfig: unknown, config: Record<string, unknown>, css: string): string => {
+    record('reset-css', {
+        userConfig: describeFunctions(userConfig),
+        resolvedConfig: userConfig ? toJson(config) : null,
+        css,
+    });
+    return css;
+};
+
 export const goldenStaticCss = <T extends { results: { css: unknown[] }; css: string }>(
     options: unknown,
     config: Record<string, unknown>,

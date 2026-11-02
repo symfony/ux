@@ -54,6 +54,36 @@ final class StylesheetFileTest extends TestCase
         $this->assertStringContainsString('.hover\:bg_fg:is(:hover, [data-hover]){background:var(--colors-fg)}', $css);
     }
 
+    public function testCacheWarmupWritesThePreflightFirstWhenItIsEnabled(): void
+    {
+        $this->bootKernel(debug: false, config: self::CONFIG + ['preflight' => true]);
+
+        $css = $this->readStylesheet();
+
+        $this->assertStringContainsString('@layer reset,tokens,utilities;@layer reset{html,:host{', $css);
+        $this->assertStringContainsString('@layer tokens{', $css);
+        $this->assertStringContainsString('.p_md{padding:var(--spacing-md)}', $css);
+    }
+
+    public function testThePreflightIsNotWrittenByDefault(): void
+    {
+        $this->bootKernel(debug: false);
+
+        $this->assertStringNotContainsString('reset', $this->readStylesheet());
+    }
+
+    public function testAPreflightChangeRewritesTheStylesheet(): void
+    {
+        $kernel = $this->bootKernel();
+        $this->service($kernel, 'ux_css.stylesheet_dumper')->update();
+        $this->assertStringNotContainsString('@layer reset', $this->readStylesheet());
+
+        $changedKernel = $this->bootKernel(config: self::CONFIG + ['preflight' => ['scope' => '.reset']]);
+        $this->service($changedKernel, 'ux_css.stylesheet_dumper')->update();
+
+        $this->assertStringContainsString("@layer reset, tokens, utilities;\n\n@layer reset {\n  .reset {\n", $this->readStylesheet());
+    }
+
     public static function provideDebugModes(): iterable
     {
         yield 'readable, in debug' => [true];
