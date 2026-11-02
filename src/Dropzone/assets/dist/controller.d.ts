@@ -5,7 +5,9 @@ export default class export_default extends Controller {
   readonly previewTarget: HTMLDivElement;
   readonly previewClearButtonTarget: HTMLButtonElement;
   readonly previewFilenameTarget: HTMLDivElement;
+  readonly hasPreviewFilenameTarget: boolean;
   readonly previewImageTarget: HTMLDivElement;
+  readonly hasPreviewImageTarget: boolean;
   readonly previewListTarget: HTMLUListElement;
   readonly hasPreviewListTarget: boolean;
   readonly previewItemTemplateTarget: HTMLTemplateElement;
@@ -30,6 +32,8 @@ export default class export_default extends Controller {
   initialize(): void;
   connect(): void;
   disconnect(): void;
+  previewClearButtonTargetConnected(button: HTMLButtonElement): void;
+  previewClearButtonTargetDisconnected(button: HTMLButtonElement): void;
   clear(): void;
   private reset;
   onInputChange(event: any): void;

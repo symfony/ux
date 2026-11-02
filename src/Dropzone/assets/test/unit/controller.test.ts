@@ -450,6 +450,92 @@ describe('DropzoneController', () => {
         pending.resolve([a]);
         await waitFor(() => expectFilled());
     });
+
+    it.each(['button', 'preview-filename', 'preview-image'])('works without the %s target', async (testId) => {
+        getByTestId(container, testId).remove();
+        startStimulus();
+        await waitFor(() => expect(getByTestId(container, 'container')).toHaveClass('connected'));
+
+        let changed: File | null = null;
+        getByTestId(container, 'container').addEventListener('dropzone:change', (event: any) => {
+            changed = event.detail;
+        });
+
+        const input = getByTestId(container, 'input') as HTMLInputElement;
+        const file = new File(['png'], 'a.png', { type: 'image/png' });
+        Object.defineProperty(input, 'files', { configurable: true, writable: true, value: [file] });
+        input.dispatchEvent(new Event('change'));
+
+        expect(changed).toBe(file);
+        expect(getByTestId(container, 'preview')).not.toHaveAttribute('hidden');
+        expect(getByTestId(container, 'placeholder')).toHaveAttribute('hidden');
+    });
+
+    const pick = (file: File) => {
+        const input = getByTestId(container, 'input') as HTMLInputElement;
+        Object.defineProperty(input, 'files', { configurable: true, writable: true, value: [file] });
+        input.dispatchEvent(new Event('change'));
+    };
+
+    it('shows the file name without the image preview target', async () => {
+        getByTestId(container, 'preview-image').remove();
+        startStimulus();
+        await waitFor(() => expect(getByTestId(container, 'container')).toHaveClass('connected'));
+
+        pick(new File(['png'], 'a.png', { type: 'image/png' }));
+
+        expect(getByTestId(container, 'preview-filename')).toHaveTextContent('a.png');
+    });
+
+    it('shows the image preview without the file name target', async () => {
+        getByTestId(container, 'preview-filename').remove();
+        startStimulus();
+        await waitFor(() => expect(getByTestId(container, 'container')).toHaveClass('connected'));
+
+        pick(new File(['png'], 'a.png', { type: 'image/png' }));
+
+        await waitFor(() =>
+            expect(getByTestId(container, 'preview-image').style.backgroundImage).toBe(
+                'url("data:image/png;base64,cG5n")'
+            )
+        );
+    });
+
+    it('disconnects without the clear button target', async () => {
+        getByTestId(container, 'button').remove();
+        startStimulus();
+        await waitFor(() => expect(getByTestId(container, 'container')).toHaveClass('connected'));
+        const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+        for (const application of applications.splice(0)) {
+            application.stop();
+        }
+
+        expect(consoleError).not.toHaveBeenCalled();
+        consoleError.mockRestore();
+    });
+
+    it('clears with a clear button added after connect', async () => {
+        getByTestId(container, 'button').remove();
+        startStimulus();
+        await waitFor(() => expect(getByTestId(container, 'container')).toHaveClass('connected'));
+        pick(new File(['hello'], 'hello.txt'));
+
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.setAttribute('data-dropzone-target', 'previewClearButton');
+        getByTestId(container, 'preview').append(button);
+        await new Promise((resolve) => setTimeout(resolve));
+        let cleared = false;
+        getByTestId(container, 'container').addEventListener('dropzone:clear', () => {
+            cleared = true;
+        });
+
+        button.click();
+
+        expect(cleared).toBe(true);
+        expect(getByTestId(container, 'preview')).toHaveAttribute('hidden');
+    });
 });
 
 describe('DropzoneController (multiple)', () => {
@@ -794,6 +880,29 @@ describe('DropzoneController (multiple)', () => {
         expect(filenames()).toStrictEqual([]);
         expect(consoleError).toHaveBeenCalledWith(new Error('Cannot decode the image'));
         consoleError.mockRestore();
+    });
+
+    it('does not clear the files with a clear button', async () => {
+        // The theme also renders the preview of the single-file mode in multiple mode
+        const preview = document.createElement('div');
+        preview.setAttribute('data-dropzone-target', 'preview');
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.setAttribute('data-dropzone-target', 'previewClearButton');
+        preview.append(button);
+        getByTestId(container, 'container').append(preview);
+        await start();
+        const input = getByTestId(container, 'input') as HTMLInputElement;
+        selectFiles(input, [make('a.txt')]);
+        let cleared = false;
+        getByTestId(container, 'container').addEventListener('dropzone:clear', () => {
+            cleared = true;
+        });
+
+        button.click();
+
+        expect(cleared).toBe(false);
+        expect(getByTestId(container, 'list').children).toHaveLength(1);
     });
 });
 

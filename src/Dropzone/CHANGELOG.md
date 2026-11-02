@@ -6,6 +6,7 @@
 - Add a `data-state` attribute on the container: `empty`, `filled`, `dragging` or `processing`
 - Show and hide the parts of the Dropzone with the `hidden` attribute instead of inline styles, see [UPGRADE.md](UPGRADE.md)
 - Add a `dropzone_preview_item_template` form theme block and a `previewItemTemplate` target to render the preview of each file in `multiple` mode from a `<template>`
+- Make the `previewClearButton`, `previewFilename` and `previewImage` targets optional in single-file mode
 
 ## 3.5.0
 
