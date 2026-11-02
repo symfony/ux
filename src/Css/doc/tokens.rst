@@ -185,15 +185,10 @@ The brackets give the classes ``w_[37ch]`` and ``c_[#ff6600]``. The value is
 written to the CSS as is. With ``strict_tokens: false``, any string is accepted
 without brackets, as in Panda CSS by default.
 
-With ``strict_tokens``, a category that has no token at all refuses bare
-strings too. The error says which key to fill:
-
-.. code-block:: text
-
-    Unknown fontSizes token "lg": no fontSizes token is declared. Add them under
-    ux_css.tokens.fontSizes, or write a raw value between brackets, like "[lg]".
-
-Numbers and keywords such as ``bold`` are still accepted.
+A category that has no token at all accepts any value that the CSS property
+accepts, as in Panda CSS. For example, ``borderWidth: '1px'`` and
+``opacity: '0.5'`` work when no ``borderWidths`` or ``opacity`` token is
+declared.
 
 A few more forms are accepted wherever a token is expected:
 

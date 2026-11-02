@@ -22,11 +22,6 @@ Unknown token                               ``Unknown colors token "primry".
 Raw value without brackets                  ``Unknown sizes token "37ch".
                                             Write a raw value between brackets,
                                             like "[37ch]".``
-Category with no token                      ``Unknown fontSizes token "lg": no
-                                            fontSizes token is declared. Add
-                                            them under ux_css.tokens.fontSizes,
-                                            or write a raw value between
-                                            brackets, like "[lg]".``
 Invalid keyword                             ``Invalid value "flexx" for
                                             "display". Did you mean "flex"?``
 ``base`` outside a conditional value        ``"base" can only be used inside a
@@ -42,10 +37,9 @@ Several hashes                              ``css() takes a single hash of
                                             styles.``
 =========================================== ====================================
 
-Unknown tokens, raw values without brackets, and bare strings for a category
-with no token are refused by ``strict_tokens``. Invalid keywords are refused by
-``strict_property_values``. Both options are enabled by default: see
-:doc:`configuration` to turn them off.
+Unknown tokens and raw values without brackets are refused by
+``strict_tokens``. Invalid keywords are refused by ``strict_property_values``.
+Both options are enabled by default: see :doc:`configuration` to turn them off.
 
 Where mistakes show up
 ----------------------
