@@ -1,0 +1,31 @@
+---------------------------------------------------------------------------
+
+by github-actions[bot] at 2026-10-26T02:40:14Z
+
+<h1>📊 Packages dist files size difference</h1>
+
+Thanks for the PR! Here is the difference in size of the packages dist files between the base branch and the PR.
+Please review the changes and make sure they are expected.
+
+<table>
+    <thead><tr><th>File</th><th>Before (Size / Gzip)</th><th>After (Size / Gzip)</th></tr></thead>
+    <tbody><tr><td colspan="3"><a href="https://github.com/ker0x/symfony-ux/tree/feat/dropzone-optional-targets/src/Dropzone/assets/dist"><b>Dropzone</b></a></td></tr><tr>
+                <td><a href="https://github.com/ker0x/symfony-ux/blob/feat/dropzone-optional-targets/src/Dropzone/assets/dist/controller.d.ts"><code>controller.d.ts</code></a></td>
+            <td>
+                    <code>1.57 kB</code>
+                    / <code>592 B</code>
+                </td><td>
+                    <code>1.8 kB</code><sup>+14% 📈</sup>
+                    / <code>622 B</code><sup>+5% 📈</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/ker0x/symfony-ux/blob/feat/dropzone-optional-targets/src/Dropzone/assets/dist/controller.js"><code>controller.js</code></a></td>
+            <td>
+                    <code>9.03 kB</code>
+                    / <code>2.56 kB</code>
+                </td><td>
+                    <code>9.29 kB</code><sup>+3% 📈</sup>
+                    / <code>2.61 kB</code><sup>+2% 📈</sup>
+                </td></tr></tbody>
+</table>
+
+<!-- Sticky Pull Request Comment -->
