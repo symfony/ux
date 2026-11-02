@@ -36,6 +36,17 @@ test('dump resolved configs', async () => {
         'zIndex',
         'durations',
         'easings',
+        'gradients',
+        'letterSpacings',
+        'borders',
+        'borderWidths',
+        'blurs',
+        'animations',
+        'opacity',
+        'aspectRatios',
+        'cursor',
+        'assets',
+        'containerNames',
     ];
     const tokens = Object.fromEntries(
         Object.entries(presetPanda.theme.tokens ?? {}).filter(([category]) => categories.includes(category))

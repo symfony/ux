@@ -64,7 +64,7 @@ final class UXCssBundle extends AbstractBundle
                     ->defaultNull()
                 ->end()
                 ->arrayNode('tokens')
-                    ->info('Raw values, grouped by category: colors, spacing, sizes, radii, fontSizes, fontWeights, lineHeights, fonts, shadows, zIndex, durations, easings.')
+                    ->info('Raw values, grouped by category: colors, spacing, sizes, radii, fontSizes, fontWeights, lineHeights, letterSpacings, fonts, shadows, borders, borderWidths, blurs, zIndex, opacity, cursor, aspectRatios, gradients, assets, animations, containerNames, durations, easings.')
                     ->normalizeKeys(false)
                     ->useAttributeAsKey('category')
                     ->variablePrototype()->end()

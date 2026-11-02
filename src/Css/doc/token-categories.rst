@@ -4,8 +4,10 @@ Token categories
 Every token belongs to a category. The category decides which properties take
 the token by name, and the shape of its value.
 
-There are twelve categories and they cannot be changed.
-``default_tokens: panda`` fills every category except ``zIndex``.
+There are twenty-three categories, the same as Panda CSS, and they cannot be
+changed. ``default_tokens: panda`` fills every category except ``zIndex``,
+``borderWidths``, ``opacity``, ``cursor``, ``gradients``, ``assets`` and
+``containerNames``, for which Panda CSS has no default token.
 
 A property listed under a category takes the tokens of that category, its own
 keywords and numbers. With ``strict_tokens``, another value goes between square
@@ -417,3 +419,310 @@ The value is a number.
 .. code-block:: html+twig
 
     <dialog class="{{ css({ zIndex: 'modal' }) }}">
+
+``letterSpacings``
+------------------
+
+Used by:
+
+* ``letterSpacing``
+
+The value is a length.
+
+.. code-block:: yaml
+
+    # config/packages/ux_css.yaml
+    ux_css:
+        tokens:
+            letterSpacings: { tight: '-0.025em', wide: '0.05em' }
+
+.. code-block:: html+twig
+
+    <h1 class="{{ css({ letterSpacing: 'tight' }) }}">
+
+.. code-block:: css
+
+    --letter-spacings-tight: -0.025em;
+
+``borders``
+-----------
+
+Used by:
+
+* ``border``
+* ``borderBlock`` (``borderY``)
+* ``borderBlockEnd``
+* ``borderBlockStart``
+* ``borderBottom``
+* ``borderInline`` (``borderX``)
+* ``borderInlineEnd`` (``borderEnd``)
+* ``borderInlineStart`` (``borderStart``)
+* ``borderLeft``
+* ``borderRight``
+* ``borderTop``
+* ``outline`` (``ring``)
+
+The value is a border, or an object with a ``width``, a ``style`` and a
+``color``. A number as ``width`` is in pixels, and the ``color`` can reference
+a color token. The object goes under the ``value`` key.
+
+.. code-block:: yaml
+
+    # config/packages/ux_css.yaml
+    ux_css:
+        tokens:
+            borders:
+                subtle: '1px solid #e5e7eb'
+                accent:
+                    value: { width: 2, style: 'solid', color: '{colors.brand}' }
+
+.. code-block:: html+twig
+
+    <div class="{{ css({ border: 'accent' }) }}">
+
+.. code-block:: css
+
+    --borders-subtle: 1px solid #e5e7eb;
+    --borders-accent: 2px solid var(--colors-brand);
+
+``borderWidths``
+----------------
+
+Used by:
+
+* ``borderBlockEndWidth``
+* ``borderBlockStartWidth``
+* ``borderBlockWidth`` (``borderYWidth``)
+* ``borderBottomWidth``
+* ``borderInlineEndWidth`` (``borderEndWidth``)
+* ``borderInlineStartWidth`` (``borderStartWidth``)
+* ``borderInlineWidth`` (``borderXWidth``)
+* ``borderLeftWidth``
+* ``borderRightWidth``
+* ``borderTopWidth``
+* ``borderWidth``
+* ``divideX``
+* ``divideY``
+* ``focusRingWidth``
+* ``outlineWidth`` (``ringWidth``)
+* ``strokeWidth``
+
+The value is a length.
+
+.. code-block:: yaml
+
+    # config/packages/ux_css.yaml
+    ux_css:
+        tokens:
+            borderWidths: { thin: '1px', thick: '4px' }
+
+.. code-block:: html+twig
+
+    <div class="{{ css({ borderWidth: 'thick' }) }}">
+
+``blurs``
+---------
+
+Used by:
+
+* ``backdropBlur``
+* ``blur``
+
+The value is a length. The property writes it inside ``blur()``.
+
+.. code-block:: yaml
+
+    # config/packages/ux_css.yaml
+    ux_css:
+        tokens:
+            blurs: { sm: '8px', md: '12px' }
+
+.. code-block:: html+twig
+
+    <div class="{{ css({ backdropFilter: 'auto', backdropBlur: 'md' }) }}">
+
+.. code-block:: css
+
+    --blurs-md: 12px;
+    --backdrop-blur: blur(var(--blurs-md));
+
+``opacity``
+-----------
+
+Used by:
+
+* ``opacity``
+
+The value is a number, such as ``0.6``, or a string.
+
+.. code-block:: yaml
+
+    # config/packages/ux_css.yaml
+    ux_css:
+        tokens:
+            opacity: { muted: 0.6, disabled: 0.4 }
+
+.. code-block:: html+twig
+
+    <button class="{{ css({ opacity: 'disabled' }) }}">
+
+``cursor``
+----------
+
+Used by:
+
+* ``cursor``
+
+The value is a cursor keyword.
+
+.. code-block:: yaml
+
+    # config/packages/ux_css.yaml
+    ux_css:
+        tokens:
+            cursor: { action: 'pointer', busy: 'progress' }
+
+.. code-block:: html+twig
+
+    <button class="{{ css({ cursor: 'action' }) }}">
+
+``aspectRatios``
+----------------
+
+Used by:
+
+* ``aspectRatio``
+
+The value is a ratio.
+
+.. code-block:: yaml
+
+    # config/packages/ux_css.yaml
+    ux_css:
+        tokens:
+            aspectRatios: { video: '16 / 9', square: '1 / 1' }
+
+.. code-block:: html+twig
+
+    <iframe class="{{ css({ aspectRatio: 'video' }) }}">
+
+.. code-block:: css
+
+    --aspect-ratios-video: 16 / 9;
+
+``gradients``
+-------------
+
+Used by:
+
+* ``backgroundGradient`` (``bgGradient``)
+* ``backgroundLinear`` (``bgLinear``)
+* ``backgroundRadial`` (``bgRadial``)
+* ``textGradient``
+
+The value is a CSS gradient, or an object with a ``type`` (``linear`` or
+``radial``), a ``placement`` and a list of ``stops``. A stop is a color, or all
+the stops are objects with a ``color`` and a ``position`` in pixels. The object
+goes under the ``value`` key.
+
+.. code-block:: yaml
+
+    # config/packages/ux_css.yaml
+    ux_css:
+        tokens:
+            gradients:
+                sunset:
+                    value:
+                        type: 'linear'
+                        placement: 'to right'
+                        stops: ['#f97316', '#db2777']
+                spotlight: 'radial-gradient(circle, #fff, #000)'
+
+.. code-block:: html+twig
+
+    <section class="{{ css({ bgGradient: 'sunset' }) }}">
+
+.. code-block:: css
+
+    --gradients-sunset: linear-gradient(to right, #f97316, #db2777);
+
+``bgGradient``, ``bgLinear`` and ``textGradient`` also take the directions of
+Panda CSS, such as ``to-r``, with the ``gradientFrom``, ``gradientVia`` and
+``gradientTo`` colors.
+
+``assets``
+----------
+
+Used by:
+
+* ``backgroundImage`` (``bgImage``)
+* ``listStyleImage``
+
+The value is a CSS image, or an object with a ``type`` and a ``value``. With
+the ``url`` type, the value is a URL and the token is written as ``url()``.
+With the ``svg`` type, the value is the markup of an SVG, which the token
+writes as a data URI. The object goes under the ``value`` key.
+
+.. code-block:: yaml
+
+    # config/packages/ux_css.yaml
+    ux_css:
+        tokens:
+            assets:
+                logo:
+                    value: { type: 'url', value: '/images/logo.svg' }
+                dot:
+                    value:
+                        type: 'svg'
+                        value: '<svg xmlns="http://www.w3.org/2000/svg">...</svg>'
+
+.. code-block:: html+twig
+
+    <header class="{{ css({ bgImage: 'logo' }) }}">
+
+.. code-block:: css
+
+    --assets-logo: url("/images/logo.svg");
+
+``animations``
+--------------
+
+Used by:
+
+* ``animation``
+
+The value is an ``animation`` shorthand. UX CSS does not write keyframes: the
+animation of a token must name ``@keyframes`` that your own CSS defines. That
+includes the ``spin``, ``ping``, ``pulse`` and ``bounce`` animations of
+``default_tokens: panda``.
+
+.. code-block:: yaml
+
+    # config/packages/ux_css.yaml
+    ux_css:
+        tokens:
+            animations: { fade: 'fade-in 200ms ease-out' }
+
+.. code-block:: html+twig
+
+    <div class="{{ css({ animation: 'fade' }) }}">
+
+``containerNames``
+------------------
+
+Used by:
+
+* ``containerName``
+
+The value is a container name, as ``@container`` queries refer to it.
+
+.. code-block:: yaml
+
+    # config/packages/ux_css.yaml
+    ux_css:
+        tokens:
+            containerNames: { sidebar: 'sidebar' }
+
+.. code-block:: html+twig
+
+    <aside class="{{ css({ containerName: 'sidebar' }) }}">

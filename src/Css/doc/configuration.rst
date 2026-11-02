@@ -11,8 +11,9 @@ Every option of the bundle, with its default value:
         default_tokens: null
 
         # Raw values, grouped by category: colors, spacing, sizes, radii,
-        # fontSizes, fontWeights, lineHeights, fonts, shadows, zIndex,
-        # durations, easings
+        # fontSizes, fontWeights, lineHeights, letterSpacings, fonts, shadows,
+        # borders, borderWidths, blurs, zIndex, opacity, cursor, aspectRatios,
+        # gradients, assets, animations, containerNames, durations, easings
         tokens: {}
 
         # References to other tokens, like "{colors.blue.500}". A value with a
