@@ -97,7 +97,7 @@ final class ReferenceDumper
 
     /**
      * @param array<string, string> $aliases     the value types written as aliases, by name
-     * @param array<string, string> $aliasOfType the name of each alias, by type
+     * @param array<string, string> $aliasOfType the name of each alias, by token category (or property) and type
      */
     private function valueType(string $key, array &$aliases, array &$aliasOfType): string
     {
@@ -121,13 +121,15 @@ final class ReferenceDumper
         if (!str_contains($type, "'")) {
             return $type;
         }
-        if (isset($aliasOfType[$type])) {
-            return $aliasOfType[$type];
+        $owner = null !== $values['category'] ? 'category:'.$values['category'] : 'property:'.$values['property'];
+        $id = $owner."\n".$type;
+        if (isset($aliasOfType[$id])) {
+            return $aliasOfType[$id];
         }
 
         $name = self::aliasName($values['property'], $values['category'], $aliases);
         $aliases[$name] = $type;
-        $aliasOfType[$type] = $name;
+        $aliasOfType[$id] = $name;
 
         return $name;
     }
