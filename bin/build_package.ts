@@ -72,6 +72,11 @@ async function main() {
         platform: 'browser',
         target: baselineTarget(packageData.config?.baseline ?? DEFAULT_BASELINE),
         tsconfig: path.join(packageRoot, 'tsconfig.json'),
+        inputOptions: {
+            experimental: {
+                attachDebugInfo: 'none',
+            },
+        },
         dts: {
             entry: inputFiles.filter((inputFile) => !inputFile.endsWith('.css')),
         },
@@ -96,8 +101,7 @@ async function main() {
             {
                 name: 'symfony-ux:clean-output',
                 renderChunk(code, chunk) {
-                    // Remove #region/#endregion comments from all files
-                    let result = code.replace(/^\s*\/\/#(?:end)?region[^\n]*\n?/gm, '');
+                    let result = code;
 
                     // Remove standalone JSDoc comments only from .js files (preserve them in .d.ts).
                     // Stop at the first closing delimiter, including for inline type casts.
@@ -107,7 +111,7 @@ async function main() {
                         );
                     }
 
-                    return result;
+                    return result.endsWith('\n') ? result : `${result}\n`;
                 },
             },
         ],
