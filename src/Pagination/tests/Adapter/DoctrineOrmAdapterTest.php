@@ -346,6 +346,62 @@ final class DoctrineOrmAdapterTest extends TestCase
         self::assertStringNotContainsString('DISTINCT', strtoupper($this->queryCollector->queries()[0]));
     }
 
+    public function testCountUnbindsParametersOnlyUsedBySelect(): void
+    {
+        foreach (['Alice' => true, 'Bob' => true, 'Carol' => false] as $name => $active) {
+            $author = new Author()->setName($name)->setActive($active);
+            $this->entityManager->persist($author);
+            $this->entityManager->persist(new Book()->setTitle('Cheap book by '.$name)->setPrice(5)->setAuthor($author));
+            $this->entityManager->persist(new Book()->setTitle('Expensive book by '.$name)->setPrice(50)->setAuthor($author));
+        }
+        $this->entityManager->flush();
+
+        $qb = $this->entityManager->createQueryBuilder()
+            ->select('a')
+            ->addSelect('(SELECT COUNT(b.id) FROM '.Book::class.' b WHERE b.author = a AND b.price > :minPrice) AS expensiveBooks')
+            ->from(Author::class, 'a')
+            ->where('a.active = :active')
+            ->setParameter('minPrice', 10)
+            ->setParameter('active', true);
+
+        self::assertSame(2, $this->adapter->count($qb));
+    }
+
+    public function testCountUnbindsParametersOnlyUsedByOrderBy(): void
+    {
+        foreach (['Alice', 'Bob', 'Carol'] as $name) {
+            $this->entityManager->persist(new Author()->setName($name));
+        }
+        $this->entityManager->flush();
+
+        $qb = $this->entityManager->createQueryBuilder()
+            ->select('a')
+            ->from(Author::class, 'a')
+            ->orderBy('CASE WHEN a.name = :pinned THEN 0 ELSE 1 END')
+            ->addOrderBy('a.id')
+            ->setParameter('pinned', 'Bob');
+
+        self::assertSame(3, $this->adapter->count($qb));
+    }
+
+    public function testCountUnbindsPositionalParametersOnlyUsedBySelect(): void
+    {
+        foreach (['Alice' => true, 'Bob' => true, 'Carol' => false] as $name => $active) {
+            $this->entityManager->persist(new Author()->setName($name)->setActive($active));
+        }
+        $this->entityManager->flush();
+
+        $qb = $this->entityManager->createQueryBuilder()
+            ->select('a')
+            ->addSelect('CASE WHEN a.name = ?1 THEN 0 ELSE 1 END AS HIDDEN pinnedFirst')
+            ->from(Author::class, 'a')
+            ->where('a.active = ?2')
+            ->setParameter(1, 'Bob')
+            ->setParameter(2, true);
+
+        self::assertSame(2, $this->adapter->count($qb));
+    }
+
     /**
      * Test COUNT with one-to-many JOIN.
      *
