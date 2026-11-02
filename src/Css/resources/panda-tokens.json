@@ -1,5 +1,30 @@
 {
   "tokens": {
+    "aspectRatios": {
+      "square": {
+        "value": "1 / 1"
+      },
+      "landscape": {
+        "value": "4 / 3"
+      },
+      "portrait": {
+        "value": "3 / 4"
+      },
+      "wide": {
+        "value": "16 / 9"
+      },
+      "ultrawide": {
+        "value": "18 / 5"
+      },
+      "golden": {
+        "value": "1.618 / 1"
+      }
+    },
+    "borders": {
+      "none": {
+        "value": "none"
+      }
+    },
     "easings": {
       "default": {
         "value": "cubic-bezier(0.4, 0, 0.2, 1)"
@@ -158,6 +183,26 @@
           "\"Courier New\"",
           "monospace"
         ]
+      }
+    },
+    "letterSpacings": {
+      "tighter": {
+        "value": "-0.05em"
+      },
+      "tight": {
+        "value": "-0.025em"
+      },
+      "normal": {
+        "value": "0em"
+      },
+      "wide": {
+        "value": "0.025em"
+      },
+      "wider": {
+        "value": "0.05em"
+      },
+      "widest": {
+        "value": "0.1em"
       }
     },
     "fontSizes": {
@@ -1032,6 +1077,29 @@
         }
       }
     },
+    "blurs": {
+      "xs": {
+        "value": "4px"
+      },
+      "sm": {
+        "value": "8px"
+      },
+      "md": {
+        "value": "12px"
+      },
+      "lg": {
+        "value": "16px"
+      },
+      "xl": {
+        "value": "24px"
+      },
+      "2xl": {
+        "value": "40px"
+      },
+      "3xl": {
+        "value": "64px"
+      }
+    },
     "spacing": {
       "0": {
         "value": "0rem"
@@ -1301,6 +1369,20 @@
       },
       "fit": {
         "value": "fit-content"
+      }
+    },
+    "animations": {
+      "spin": {
+        "value": "spin 1s linear infinite"
+      },
+      "ping": {
+        "value": "ping 1s cubic-bezier(0, 0, 0.2, 1) infinite"
+      },
+      "pulse": {
+        "value": "pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite"
+      },
+      "bounce": {
+        "value": "bounce 1s infinite"
       }
     }
   },

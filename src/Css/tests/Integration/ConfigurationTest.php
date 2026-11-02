@@ -193,6 +193,188 @@ final class ConfigurationTest extends KernelTestCase
         $this->assertStringContainsString("\n  img.reset {\n", $css);
     }
 
+    public static function provideTokenCategories(): iterable
+    {
+        yield 'blurs' => [
+            ['blurs' => ['sm' => '4px']],
+            ['backdropFilter' => 'auto', 'backdropBlur' => 'sm'],
+            ['--blurs-sm: 4px;', '--backdrop-blur: blur(var(--blurs-sm));'],
+        ];
+        yield 'letterSpacings' => [
+            ['letterSpacings' => ['wide' => '0.1em']],
+            ['letterSpacing' => 'wide'],
+            ['--letter-spacings-wide: 0.1em;', 'letter-spacing: var(--letter-spacings-wide);'],
+        ];
+        yield 'borders' => [
+            ['borders' => ['subtle' => '1px solid #e5e7eb']],
+            ['border' => 'subtle'],
+            ['--borders-subtle: 1px solid #e5e7eb;', 'border: var(--borders-subtle);'],
+        ];
+        yield 'borderWidths' => [
+            ['borderWidths' => ['thin' => '1px']],
+            ['borderWidth' => 'thin'],
+            ['--border-widths-thin: 1px;', 'border-width: var(--border-widths-thin);'],
+        ];
+        yield 'gradients' => [
+            ['gradients' => ['sunset' => 'radial-gradient(circle, #f97316, #db2777)']],
+            ['bgRadial' => 'sunset'],
+            ['--gradients-sunset: radial-gradient(circle, #f97316, #db2777);'],
+        ];
+        yield 'opacity' => [
+            ['opacity' => ['half' => '0.5']],
+            ['opacity' => 'half'],
+            ['--opacity-half: 0.5;', 'opacity: var(--opacity-half);'],
+        ];
+        yield 'aspectRatios' => [
+            ['aspectRatios' => ['wide' => '16 / 9']],
+            ['aspectRatio' => 'wide'],
+            ['--aspect-ratios-wide: 16 / 9;', 'aspect-ratio: var(--aspect-ratios-wide);'],
+        ];
+        yield 'cursor' => [
+            ['cursor' => ['click' => 'pointer']],
+            ['cursor' => 'click'],
+            ['--cursor-click: pointer;', 'cursor: var(--cursor-click);'],
+        ];
+        yield 'assets' => [
+            ['assets' => ['logo' => 'url("/images/logo.svg")']],
+            ['bgImage' => 'logo'],
+            ['--assets-logo: url("/images/logo.svg");', 'background-image: var(--assets-logo);'],
+        ];
+        yield 'containerNames' => [
+            ['containerNames' => ['sidebar' => 'sidebar']],
+            ['containerName' => 'sidebar'],
+            ['--container-names-sidebar: sidebar;', 'container-name: var(--container-names-sidebar);'],
+        ];
+        yield 'animations' => [
+            ['animations' => ['spin' => 'spin 1s linear infinite']],
+            ['animation' => 'spin'],
+            ['--animations-spin: spin 1s linear infinite;', 'animation: var(--animations-spin);'],
+        ];
+    }
+
+    #[DataProvider('provideTokenCategories')]
+    public function testATokenOfEachCategoryIsDeclaredAndUsed(array $tokens, array $styles, array $declarations): void
+    {
+        self::bootKernel(['ux_css' => ['tokens' => $tokens]]);
+        $validator = self::getContainer()->get('ux_css.validator');
+        $generator = self::getContainer()->get('ux_css.css_generator');
+
+        $validator->validate($styles);
+        $css = $generator->generate([$styles]);
+
+        foreach ($declarations as $declaration) {
+            $this->assertStringContainsString($declaration, $css);
+        }
+    }
+
+    public static function provideCompositeTokens(): iterable
+    {
+        yield 'border' => [
+            ['borders' => ['accent' => ['value' => ['width' => 1, 'style' => 'solid', 'color' => '#2563eb']]]],
+            '--borders-accent: 1px solid #2563eb;',
+        ];
+        yield 'gradient' => [
+            ['gradients' => ['brand' => ['value' => ['type' => 'linear', 'placement' => 'to right', 'stops' => ['#2563eb', '#db2777']]]]],
+            '--gradients-brand: linear-gradient(to right, #2563eb, #db2777);',
+        ];
+        yield 'shadow' => [
+            ['shadows' => ['card' => ['value' => ['offsetX' => 0, 'offsetY' => 4, 'blur' => 4, 'spread' => 0, 'color' => '#0000001a']]]],
+            '--shadows-card: 0px 4px 4px 0px #0000001a;',
+        ];
+        yield 'url asset' => [
+            ['assets' => ['logo' => ['value' => ['type' => 'url', 'value' => '/images/logo.svg']]]],
+            '--assets-logo: url("/images/logo.svg");',
+        ];
+        yield 'svg asset' => [
+            ['assets' => ['dot' => ['value' => ['type' => 'svg', 'value' => '<svg xmlns="http://www.w3.org/2000/svg"><circle r="1"/></svg>']]]],
+            '--assets-dot: url("data:image/svg+xml,%3csvg xmlns=\'http://www.w3.org/2000/svg\'%3e%3ccircle r=\'1\'/%3e%3c/svg%3e");',
+        ];
+        yield 'gradient with stop positions' => [
+            ['gradients' => ['fade' => ['value' => ['type' => 'linear', 'placement' => 'to bottom', 'stops' => [['color' => '#fff', 'position' => 0], ['color' => '#000', 'position' => 100]]]]]],
+            '--gradients-fade: linear-gradient(to bottom, #fff 0px, #000 100px);',
+        ];
+        yield 'border with a width that has a unit' => [
+            ['borders' => ['thin' => ['value' => ['width' => '0.5rem', 'style' => 'dashed', 'color' => 'red']]]],
+            '--borders-thin: 0.5rem dashed red;',
+        ];
+    }
+
+    public function testASemanticTokenOfEachCategoryCanReferenceATokenOrChangeWithConditions(): void
+    {
+        $config = [
+            'tokens' => [
+                'letterSpacings' => ['wide' => '0.1em'],
+                'borders' => ['subtle' => '1px solid #e5e7eb'],
+                'opacity' => ['dim' => 0.5],
+            ],
+            'semantic_tokens' => [
+                'letterSpacings' => ['heading' => '{letterSpacings.wide}'],
+                'borders' => [
+                    'card' => '{borders.subtle}',
+                    'accent' => [
+                        'base' => ['width' => 1, 'style' => 'solid', 'color' => '#2563eb'],
+                        '_dark' => ['width' => 2, 'style' => 'solid', 'color' => '#93c5fd'],
+                    ],
+                ],
+                'opacity' => ['disabled' => ['base' => '{opacity.dim}', '_dark' => '0.4']],
+            ],
+        ];
+        self::bootKernel(['ux_css' => $config]);
+        $generator = self::getContainer()->get('ux_css.css_generator');
+
+        $css = $generator->generate([['letterSpacing' => 'heading', 'border' => 'accent', 'opacity' => 'disabled']]);
+
+        $this->assertStringContainsString('--letter-spacings-heading: var(--letter-spacings-wide);', $css);
+        $this->assertStringContainsString('--borders-card: var(--borders-subtle);', $css);
+        $this->assertStringContainsString('--borders-accent: 1px solid #2563eb;', $css);
+        $this->assertStringContainsString('--borders-accent: 2px solid #93c5fd;', $css);
+        $this->assertStringContainsString('--opacity-disabled: var(--opacity-dim);', $css);
+        $this->assertStringContainsString('--opacity-disabled: 0.4;', $css);
+    }
+
+    public function testPandaDefaultTokensResolveTheTokensOfTheNewCategories(): void
+    {
+        self::bootKernel(['ux_css' => ['default_tokens' => 'panda']]);
+        $validator = self::getContainer()->get('ux_css.validator');
+        $generator = self::getContainer()->get('ux_css.css_generator');
+        $styles = ['letterSpacing' => 'tight', 'backdropFilter' => 'auto', 'backdropBlur' => 'md', 'animation' => 'spin'];
+
+        $validator->validate($styles);
+        $css = $generator->generate([$styles]);
+
+        $this->assertStringContainsString('letter-spacing: var(--letter-spacings-tight);', $css);
+        $this->assertStringContainsString('--backdrop-blur: blur(var(--blurs-md));', $css);
+        $this->assertStringContainsString('--animations-spin: spin 1s linear infinite;', $css);
+        $this->assertStringContainsString('animation: var(--animations-spin);', $css);
+    }
+
+    #[DataProvider('provideCompositeTokens')]
+    public function testCompositeTokensAcceptAnObjectInTheValueForm(array $tokens, string $declaration): void
+    {
+        self::bootKernel(['ux_css' => ['tokens' => $tokens]]);
+        $generator = self::getContainer()->get('ux_css.css_generator');
+
+        $css = $generator->generate([]);
+
+        $this->assertStringContainsString($declaration, $css);
+    }
+
+    public function testPandaDefaultTokensIncludeBlursLetterSpacingsAspectRatiosAndBorders(): void
+    {
+        self::bootKernel(['ux_css' => ['default_tokens' => 'panda']]);
+        $validator = self::getContainer()->get('ux_css.validator');
+        $generator = self::getContainer()->get('ux_css.css_generator');
+        $styles = ['backdropFilter' => 'auto', 'backdropBlur' => 'sm', 'letterSpacing' => 'wide', 'aspectRatio' => 'wide', 'border' => 'none'];
+
+        $validator->validate($styles);
+        $css = $generator->generate([$styles]);
+
+        $this->assertStringContainsString('--blurs-sm: 8px;', $css);
+        $this->assertStringContainsString('--letter-spacings-wide: 0.025em;', $css);
+        $this->assertStringContainsString('--aspect-ratios-wide: 16 / 9;', $css);
+        $this->assertStringContainsString('--borders-none: none;', $css);
+    }
+
     public static function provideInvalidConfigs(): iterable
     {
         yield 'preflight level without a scope' => [
@@ -244,6 +426,33 @@ final class ConfigurationTest extends KernelTestCase
         yield 'token value that is a hash' => [
             ['tokens' => ['spacing' => ['sm' => ['value' => ['min' => '0.5rem']]]]],
             'The value of the "spacing.sm" token must be a string or a number, array given.',
+        ];
+        yield 'border that is not a width, a style and a color' => [
+            ['tokens' => ['borders' => ['subtle' => ['value' => ['width' => 1, 'style' => 'solid']]]]],
+            'The value of the "borders.subtle" token must be a string or an object like { width: 1, style: "solid", color: "#ccc" }, {"width":1,"style":"solid"} given.',
+        ];
+        yield 'asset of an unknown type' => [
+            ['tokens' => ['assets' => ['logo' => ['value' => ['type' => 'png', 'value' => '/logo.png']]]]],
+            'The value of the "assets.logo" token must be a string or an object like { type: "url", value: "/logo.svg" }, {"type":"png","value":"/logo.png"} given.',
+        ];
+        yield 'gradient without stops' => [
+            ['semantic_tokens' => ['gradients' => ['brand' => ['value' => ['type' => 'linear', 'placement' => 'to right']]]]],
+            'The value of the "gradients.brand" token must be a string or an object like { type: "linear", placement: "to right", stops: ["red", "blue"] }, {"type":"linear","placement":"to right"} given.',
+        ];
+        yield 'list in a category that takes none' => [
+            ['tokens' => ['letterSpacings' => ['wide' => ['value' => ['0.1em']]]]],
+            'The value of the "letterSpacings.wide" token must be a string or a number, array given.',
+        ];
+        yield 'new category with a typo' => [
+            ['tokens' => ['letterSpacing' => ['wide' => '0.1em']]],
+            'Unknown token category "letterSpacing". Did you mean "letterSpacings"?',
+        ];
+        yield 'unknown token in a semantic token of a new category' => [
+            [
+                'tokens' => ['blurs' => ['md' => '12px']],
+                'semantic_tokens' => ['blurs' => ['glass' => '{blurs.mdd}']],
+            ],
+            'The "blurs.glass" token references the unknown token "blurs.mdd". Did you mean "blurs.md"?',
         ];
         yield 'breakpoint named like a shorthand' => [
             ['breakpoints' => ['p' => '40rem']],

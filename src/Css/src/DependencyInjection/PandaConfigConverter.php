@@ -13,6 +13,7 @@ namespace Symfony\UX\Css\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\UX\Css\Engine\PandaConfig;
+use Symfony\UX\Css\Engine\Tokens;
 use Symfony\UX\Css\Validation\Suggestion;
 
 /**
@@ -37,9 +38,27 @@ final class PandaConfigConverter
         'zIndex',
         'durations',
         'easings',
+        'gradients',
+        'letterSpacings',
+        'borders',
+        'borderWidths',
+        'blurs',
+        'animations',
+        'opacity',
+        'aspectRatios',
+        'cursor',
+        'assets',
+        'containerNames',
     ];
 
     private const LIST_CATEGORIES = ['fonts', 'easings', 'shadows'];
+
+    private const OBJECT_CATEGORIES = [
+        'shadows' => '{ offsetX: 0, offsetY: 4, blur: 8, spread: 0, color: "#0003" }',
+        'gradients' => '{ type: "linear", placement: "to right", stops: ["red", "blue"] }',
+        'borders' => '{ width: 1, style: "solid", color: "#ccc" }',
+        'assets' => '{ type: "url", value: "/logo.svg" }',
+    ];
 
     /**
      * Puts the tokens of the project on top of default ones: a project token, in any form, replaces the default
@@ -243,14 +262,25 @@ final class PandaConfigConverter
         array $conditionKeys,
     ): array {
         if ($semantic && \is_array($value) && \array_key_exists('base', $value)) {
-            self::assertConditions($value, $name, $conditionKeys);
+            self::assertConditions($value, $name, $conditionKeys, $path[0]);
             $values[$name] = $value;
 
             return ['value' => $value];
         }
 
         $isList = \is_array($value) && array_is_list($value) && \in_array($path[0], self::LIST_CATEGORIES, true);
-        if (!$isList && !\is_string($value) && !\is_int($value) && !\is_float($value)) {
+        $isObject = \is_array($value) && !array_is_list($value) && isset(self::OBJECT_CATEGORIES[$path[0]]);
+        if ($isObject && !Tokens::isComposite($value)) {
+            $message = \sprintf(
+                'The value of the "%s" token must be a string or an object like %s, %s given.',
+                $name,
+                self::OBJECT_CATEGORIES[$path[0]],
+                json_encode($value, \JSON_UNESCAPED_SLASHES | \JSON_UNESCAPED_UNICODE),
+            );
+
+            throw new InvalidConfigurationException($message);
+        }
+        if (!$isList && !$isObject && !\is_string($value) && !\is_int($value) && !\is_float($value)) {
             $message = \sprintf(
                 'The value of the "%s" token must be a string or a number, %s given.',
                 $name,
@@ -276,7 +306,7 @@ final class PandaConfigConverter
      * @param array<array-key, mixed> $conditions
      * @param list<string>            $conditionKeys
      */
-    private static function assertConditions(array $conditions, string $name, array $conditionKeys): void
+    private static function assertConditions(array $conditions, string $name, array $conditionKeys, string $category): void
     {
         foreach ($conditions as $key => $value) {
             if (!\in_array((string) $key, $conditionKeys, true)) {
@@ -285,8 +315,8 @@ final class PandaConfigConverter
 
                 throw new InvalidConfigurationException($message.$suggestion);
             }
-            if (\is_array($value)) {
-                self::assertConditions($value, $name, $conditionKeys);
+            if (\is_array($value) && !(isset(self::OBJECT_CATEGORIES[$category]) && Tokens::isComposite($value))) {
+                self::assertConditions($value, $name, $conditionKeys, $category);
             }
         }
     }

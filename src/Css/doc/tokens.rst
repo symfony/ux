@@ -26,11 +26,13 @@ Raw tokens
             fonts:
                 body: ['Inter', 'sans-serif']
 
-The twelve categories are fixed. :doc:`token-categories` lists the properties
-that take each one and the shape of their values. Inside a category, tokens can
-be nested in groups: ``blue.500`` is the ``500`` token of the ``blue`` group. A
-``fonts`` or ``shadows`` token can be a list, which is joined with commas. An
-``easings`` token can be the four numbers of a ``cubic-bezier()``.
+The categories are fixed, and are the same as in Panda CSS.
+:doc:`token-categories` lists the properties that take each one and the shape of
+their values. Inside a category, tokens can be nested in groups: ``blue.500`` is
+the ``500`` token of the ``blue`` group. A ``fonts`` or ``shadows`` token can be
+a list, which is joined with commas. An ``easings`` token can be the four
+numbers of a ``cubic-bezier()``. A ``shadows``, ``borders``, ``gradients`` or
+``assets`` token can be an object under the ``value`` key.
 
 A group can also have a value of its own, under the ``DEFAULT`` key:
 
@@ -71,8 +73,9 @@ Default tokens
 
 ``default_tokens: panda`` adds the default tokens of Panda CSS: a palette of
 colors from ``red.50`` to ``red.950`` and more, a spacing scale from ``0`` to
-``96``, and sizes, radii, font sizes, font weights, line heights, fonts,
-shadows, durations and easings. The Symfony Flex recipe enables it.
+``96``, and sizes, radii, font sizes, font weights, line heights, letter
+spacings, fonts, shadows, borders, blurs, aspect ratios, animations, durations
+and easings. The Symfony Flex recipe enables it.
 
 .. code-block:: yaml
 

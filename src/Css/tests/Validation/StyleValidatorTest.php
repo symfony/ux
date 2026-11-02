@@ -24,6 +24,8 @@ final class StyleValidatorTest extends TestCase
             'tokens' => [
                 'colors' => ['red' => ['value' => '#f00']],
                 'spacing' => ['md' => ['value' => '1rem'], 'lg' => ['value' => '2rem']],
+                'letterSpacings' => ['tight' => ['value' => '-0.025em']],
+                'blurs' => ['md' => ['value' => '12px']],
             ],
             'semanticTokens' => [
                 'colors' => ['primary' => ['value' => '{colors.red}'], 'fg' => ['value' => '{colors.red}']],
@@ -63,6 +65,18 @@ final class StyleValidatorTest extends TestCase
         yield 'declaration in a variable key' => [['--x:1;color:red' => '1'], 'The key "--x:1;color:red" cannot contain ";", "{", "}", "\\", quotes, "<" or a CSS comment.'];
         yield 'token of a category with no token' => [['fontSize' => 'lg'], 'Unknown fontSizes token "lg": no fontSizes token is declared. Add them under ux_css.tokens.fontSizes, or write a raw value between brackets, like "[lg]".'];
         yield 'token of a category with no token, next to keywords' => [['fontWeight' => 'heavy'], 'Unknown fontWeights token "heavy": no fontWeights token is declared. Add them under ux_css.tokens.fontWeights, or write a raw value between brackets, like "[heavy]".'];
+        yield 'unknown letterSpacings token' => [['letterSpacing' => 'tigt'], 'Unknown letterSpacings token "tigt". Did you mean "tight"?'];
+        yield 'raw letterSpacings value without brackets' => [['letterSpacing' => '3px'], 'Unknown letterSpacings token "3px". Write a raw value between brackets, like "[3px]".'];
+        yield 'unknown blurs token' => [['backdropBlur' => 'mdd'], 'Unknown blurs token "mdd". Did you mean "md"?'];
+        yield 'token of a category with no token, aspectRatios' => [['aspectRatio' => 'wide'], 'Unknown aspectRatios token "wide": no aspectRatios token is declared. Add them under ux_css.tokens.aspectRatios, or write a raw value between brackets, like "[wide]".'];
+        yield 'token of a category with no token, borders' => [['border' => 'subtle'], 'Unknown borders token "subtle": no borders token is declared. Add them under ux_css.tokens.borders, or write a raw value between brackets, like "[subtle]".'];
+        yield 'token of a category with no token, borderWidths' => [['borderWidth' => '2px'], 'Unknown borderWidths token "2px": no borderWidths token is declared. Add them under ux_css.tokens.borderWidths, or write a raw value between brackets, like "[2px]".'];
+        yield 'token of a category with no token, animations' => [['animation' => 'spin'], 'Unknown animations token "spin": no animations token is declared. Add them under ux_css.tokens.animations, or write a raw value between brackets, like "[spin]".'];
+        yield 'token of a category with no token, opacity' => [['opacity' => 'half'], 'Unknown opacity token "half": no opacity token is declared. Add them under ux_css.tokens.opacity, or write a raw value between brackets, like "[half]".'];
+        yield 'token of a category with no token, cursor' => [['cursor' => 'click'], 'Unknown cursor token "click": no cursor token is declared. Add them under ux_css.tokens.cursor, or write a raw value between brackets, like "[click]".'];
+        yield 'token of a category with no token, gradients' => [['bgGradient' => 'sunset'], 'Unknown gradients token "sunset": no gradients token is declared. Add them under ux_css.tokens.gradients, or write a raw value between brackets, like "[sunset]".'];
+        yield 'token of a category with no token, assets' => [['bgImage' => 'logo'], 'Unknown assets token "logo": no assets token is declared. Add them under ux_css.tokens.assets, or write a raw value between brackets, like "[logo]".'];
+        yield 'token of a category with no token, containerNames' => [['containerName' => 'sidebar'], 'Unknown containerNames token "sidebar": no containerNames token is declared. Add them under ux_css.tokens.containerNames, or write a raw value between brackets, like "[sidebar]".'];
         yield 'object' => [['color' => new \stdClass()], 'The value of "color" must be a string, a number or a boolean, "stdClass" given.'];
     }
 
@@ -149,6 +163,30 @@ final class StyleValidatorTest extends TestCase
         $this->expectNotToPerformAssertions();
 
         $validator->validate(['fontSize' => '[18px]', 'fontWeight' => 'bold', 'zIndex' => 10, 'opacity' => 0.5]);
+    }
+
+    public function testTheTokensOfTheNewCategoriesAreAcceptedAsWellAsRawValuesBetweenBrackets(): void
+    {
+        $project = [
+            'theme' => [
+                'tokens' => [
+                    'letterSpacings' => ['tight' => ['value' => '-0.025em']],
+                    'blurs' => ['md' => ['value' => '12px']],
+                    'borders' => ['subtle' => ['value' => '1px solid #ccc']],
+                ],
+            ],
+        ];
+        $validator = new StyleValidator(Engine::fromProjectConfig($project));
+
+        $this->expectNotToPerformAssertions();
+
+        $validator->validate([
+            'letterSpacing' => 'tight',
+            'backdropBlur' => 'md',
+            'border' => 'subtle',
+            'aspectRatio' => '[16 / 9]',
+            'cursor' => 'pointer',
+        ]);
     }
 
     public function testRawValuesAreAcceptedWithoutStrictTokens(): void
