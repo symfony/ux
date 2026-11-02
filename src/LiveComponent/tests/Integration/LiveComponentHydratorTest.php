@@ -1045,6 +1045,50 @@ final class LiveComponentHydratorTest extends KernelTestCase
                 });
         }];
 
+        yield 'Array of DTOs: a null item (de)hydrates correctly' => [static function () {
+            return HydrationTest::create(new class {
+                /**
+                 * @var Symfony\UX\LiveComponent\Tests\Fixtures\Dto\CustomerDetails[] $customerDetailsCollection
+                 */
+                #[LiveProp]
+                public array $customerDetailsCollection = [];
+
+                public function mount(): void
+                {
+                    $customerDetails = new CustomerDetails();
+                    $customerDetails->lastName = 'Matheo';
+                    $customerDetails->firstName = 'Daninos';
+                    $customerDetails->address = new Address();
+                    $customerDetails->address->address = '1 rue du Bac';
+                    $customerDetails->address->city = 'Paris';
+
+                    $this->customerDetailsCollection[] = $customerDetails;
+                    // an item added by LiveCollectionTrait is null until
+                    // its form entry has been filled in
+                    $this->customerDetailsCollection[] = null;
+                }
+            })
+                ->mountWith([])
+                ->assertDehydratesTo([
+                    'customerDetailsCollection' => [
+                        [
+                            'lastName' => 'Matheo',
+                            'firstName' => 'Daninos',
+                            'address' => [
+                                'address' => '1 rue du Bac',
+                                'city' => 'Paris',
+                            ],
+                        ],
+                        null,
+                    ],
+                ])
+                ->assertObjectAfterHydration(static function (object $object) {
+                    self::assertCount(2, $object->customerDetailsCollection);
+                    self::assertInstanceOf(CustomerDetails::class, $object->customerDetailsCollection[0]);
+                    self::assertNull($object->customerDetailsCollection[1]);
+                });
+        }];
+
         yield 'Array with DTOs: using serializer, fully writable allows anything to change' => [static function () {
             $address1 = object(Address::class, ['address' => '17 Arcadia Road', 'city' => 'London']);
             $address2 = object(Address::class, ['address' => '4 Privet Drive', 'city' => 'Little Whinging']);
