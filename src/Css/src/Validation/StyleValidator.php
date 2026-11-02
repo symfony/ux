@@ -32,6 +32,8 @@ final class StyleValidator
 
     private const UNSAFE = 'cannot contain ";", "{", "}", "\\", quotes, "<" or a CSS comment';
 
+    private const UNSAFE_VALUE = 'cannot contain ";", "{", "}", "\\", "<", a CSS comment, a line break inside a string or a quote that does not open and close a string';
+
     private const CSS_WIDE_KEYWORDS = [
         'inherit' => true,
         'initial' => true,
@@ -143,7 +145,7 @@ final class StyleValidator
         foreach ($styles as $key => $value) {
             $key = (string) $key;
 
-            if (self::isUnsafe($key)) {
+            if (self::isUnsafe($key) || false !== strpbrk($key, '"\'')) {
                 throw new InvalidStyleException(\sprintf('The key "%s" '.self::UNSAFE.'.', $key));
             }
 
@@ -279,8 +281,8 @@ final class StyleValidator
 
             throw new InvalidStyleException($message);
         }
-        if (\is_string($value) && self::isUnsafe($value)) {
-            $message = \sprintf('The value of "%s" %s, "%s" given.', $key, self::UNSAFE, $value);
+        if (\is_string($value) && (self::isUnsafe($value) || self::hasUnbalancedQuotes($value))) {
+            $message = \sprintf('The value of "%s" %s, "%s" given.', $key, self::UNSAFE_VALUE, $value);
 
             throw new InvalidStyleException($message);
         }
@@ -565,7 +567,15 @@ final class StyleValidator
 
     private static function isUnsafe(string $text): bool
     {
-        return false !== strpbrk($text, ';{}"\\\'<') || str_contains($text, '/*') || str_contains($text, '*/');
+        return false !== strpbrk($text, ';{}\\<') || str_contains($text, '/*') || str_contains($text, '*/');
+    }
+
+    /**
+     * Quotes are only accepted around complete CSS strings, which cannot hold a line break.
+     */
+    private static function hasUnbalancedQuotes(string $text): bool
+    {
+        return !preg_match('/^(?:[^"\']++|"[^"\n\r\f]*+"|\'[^\'\n\r\f]*+\')*+$/D', $text);
     }
 
     /**

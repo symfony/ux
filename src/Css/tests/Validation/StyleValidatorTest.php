@@ -42,10 +42,23 @@ final class StyleValidatorTest extends TestCase
         yield 'unknown breakpoint' => [['mdd' => ['p' => 'md']], 'Unknown property "mdd". Did you mean "md"?'];
         yield 'invalid keyword' => [['display' => 'flexx'], 'Invalid value "flexx" for "display". Did you mean "flex"?'];
         yield 'base outside a conditional value' => [['base' => ['color' => 'primary']], '"base" can only be used inside a conditional value, like { color: { base: \'red\', _hover: \'blue\' } }.'];
-        yield 'quote' => [['content' => '"a"'], 'The value of "content" cannot contain ";", "{", "}", "\\", quotes, "<" or a CSS comment, ""a"" given.'];
-        yield 'css injection' => [['w' => '[1px;} body{display:none]'], 'The value of "w" cannot contain ";", "{", "}", "\\", quotes, "<" or a CSS comment, "[1px;} body{display:none]" given.'];
-        yield 'comment' => [['color' => '[red /*]'], 'The value of "color" cannot contain ";", "{", "}", "\\", quotes, "<" or a CSS comment, "[red /*]" given.'];
-        yield 'backslash' => [['color' => '[red\\]'], 'The value of "color" cannot contain ";", "{", "}", "\\", quotes, "<" or a CSS comment, "[red\\]" given.'];
+        yield 'unbalanced double quote' => [['content' => '"a'], self::unsafeValue('content', '"a')];
+        yield 'unbalanced single quote' => [['fontFamily' => "'a"], self::unsafeValue('fontFamily', "'a")];
+        yield 'unclosed string after a closed one' => [['content' => '"a" "b'], self::unsafeValue('content', '"a" "b')];
+        yield 'quote of the other kind does not close a string' => [['content' => '"a\''], self::unsafeValue('content', '"a\'')];
+        yield 'semicolon in a string' => [['content' => '"a;b"'], self::unsafeValue('content', '"a;b"')];
+        yield 'closing brace in a string' => [['content' => '"}"'], self::unsafeValue('content', '"}"')];
+        yield 'opening brace in a string' => [['content' => '"{"'], self::unsafeValue('content', '"{"')];
+        yield 'angle bracket in a string' => [['content' => '"<"'], self::unsafeValue('content', '"<"')];
+        yield 'backslash in a string' => [['content' => '"\\201D"'], self::unsafeValue('content', '"\\201D"')];
+        yield 'comment in a string' => [['content' => '"/*"'], self::unsafeValue('content', '"/*"')];
+        yield 'new line in a string' => [['content' => "\"a\nb\""], self::unsafeValue('content', "\"a\nb\"")];
+        yield 'carriage return in a string' => [['content' => "\"a\rb\""], self::unsafeValue('content', "\"a\rb\"")];
+        yield 'quote breaking out of a string' => [['content' => '"" } body { color: red; "'], self::unsafeValue('content', '"" } body { color: red; "')];
+        yield 'quote in a selector key' => [['&[data-x="y"]' => ['color' => 'fg']], 'The key "&[data-x="y"]" cannot contain ";", "{", "}", "\\", quotes, "<" or a CSS comment.'];
+        yield 'css injection' => [['w' => '[1px;} body{display:none]'], self::unsafeValue('w', '[1px;} body{display:none]')];
+        yield 'comment' => [['color' => '[red /*]'], self::unsafeValue('color', '[red /*]')];
+        yield 'backslash' => [['color' => '[red\\]'], self::unsafeValue('color', '[red\\]')];
         yield 'brace in a selector key' => [['& {' => ['color' => 'fg']], 'The key "& {" cannot contain ";", "{", "}", "\\", quotes, "<" or a CSS comment.'];
         yield 'declaration in a variable key' => [['--x:1;color:red' => '1'], 'The key "--x:1;color:red" cannot contain ";", "{", "}", "\\", quotes, "<" or a CSS comment.'];
         yield 'token of a category with no token' => [['fontSize' => 'lg'], 'Unknown fontSizes token "lg": no fontSizes token is declared. Add them under ux_css.tokens.fontSizes, or write a raw value between brackets, like "[lg]".'];
@@ -82,6 +95,36 @@ final class StyleValidatorTest extends TestCase
             '--size' => '12px',
             'srOnly' => true,
         ]);
+    }
+
+    public static function provideCssStrings(): iterable
+    {
+        yield 'empty content' => ['content', '""'];
+        yield 'typographic quote' => ['content', '"”"'];
+        yield 'single quotes' => ['content', "'→'"];
+        yield 'string with spaces and the other quote' => ['content', '"it\'s"'];
+        yield 'two strings' => ['content', '"a" "b"'];
+        yield 'attr() and a string' => ['content', 'attr(data-label) ": "'];
+        yield 'grid template areas' => ['gridTemplateAreas', '"a b" "c d"'];
+        yield 'quotes' => ['quotes', '"«" "»"'];
+        yield 'font feature settings' => ['fontFeatureSettings', '"cv02", "cv03"'];
+        yield 'font family, as a raw value (no fonts token is declared)' => ['fontFamily', '["Inter var", sans-serif]'];
+    }
+
+    #[DataProvider('provideCssStrings')]
+    public function testCompleteCssStringsAreAccepted(string $property, string $value): void
+    {
+        $validator = new StyleValidator(Engine::fromProjectConfig(self::PROJECT));
+
+        $this->expectNotToPerformAssertions();
+
+        $validator->validate([$property => $value]);
+        $validator->validate(['_before' => [$property => ['base' => $value, 'md' => $value]]]);
+    }
+
+    private static function unsafeValue(string $property, string $given): string
+    {
+        return \sprintf('The value of "%s" cannot contain ";", "{", "}", "\\", "<", a CSS comment, a line break inside a string or a quote that does not open and close a string, "%s" given.', $property, $given);
     }
 
     public function testCssWideKeywordsAreAcceptedWithStrictTokens(): void

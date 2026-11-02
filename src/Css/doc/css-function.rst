@@ -64,9 +64,21 @@ square brackets (``w: '[37ch]'``) and a CSS variable (``gap:
 A value that ends with ``!`` or ``!important`` is written with
 ``!important``: ``color: 'primary!'``.
 
-A value cannot contain ``;``, ``{``, ``}``, a backslash, quotes, ``<`` or a
-CSS comment. Neither can a selector or at-rule key. This stops a style from
-writing extra CSS rules or breaking the ``class`` attribute.
+A value can contain CSS strings, as long as every quote opens and closes a
+string. This is how you write a pseudo-element or grid areas:
+
+.. code-block:: html+twig
+
+    <blockquote class="{{ css({ _before: { content: '""' } }) }}">
+
+    {{ css({ gridTemplateAreas: '"header header" "nav main"' }) }}
+
+A value cannot contain ``;``, ``{``, ``}``, a backslash, ``<``, a CSS comment, a
+line break inside a string or a quote that is not part of a complete string,
+and this applies inside strings too. Write the character itself instead of an
+escape sequence: ``content: '"→"'``, not ``content: '"\2192"'``. A selector or
+at-rule key cannot contain quotes at all. This stops a style from writing extra
+CSS rules or breaking the ``class`` attribute.
 
 Conditions and breakpoints
 --------------------------
