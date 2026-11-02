@@ -25,8 +25,12 @@ What differs on purpose
   exception: the CSS-wide keywords, ``inherit``, ``initial``, ``unset``,
   ``revert`` and ``revert-layer``, are accepted on every property. Panda's
   strict types refuse them on properties bound to tokens.
-* A value cannot contain ``;``, ``{``, ``}``, a backslash, quotes, ``<`` or a
-  CSS comment. So ``content: '"x"'`` is refused.
+* A value can contain quotes only as complete CSS strings, like
+  ``content: '""'`` or ``gridTemplateAreas: '"nav main"'``. It cannot
+  contain ``;``, ``{``, ``}``, a backslash, ``<`` or a CSS comment, inside a
+  string or not, nor a line break inside a string. So ``content: '"\2192"'``
+  and ``content: '"a'`` are refused. A selector or at-rule key cannot contain
+  quotes.
 * With ``strict_tokens``, a category with no token refuses bare strings.
   Panda's types accept any string in that case.
 * For a few unusual values, such as ``'0.50'``, repeated spaces or a ``base``

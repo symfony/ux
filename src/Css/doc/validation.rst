@@ -33,8 +33,11 @@ Invalid keyword                             ``Invalid value "flexx" for
                                             conditional value, like { color: {
                                             base: 'red', _hover: 'blue' } }.``
 Forbidden character                         ``The value of "content" cannot
-                                            contain ";", "{", "}", "\", quotes,
-                                            "<" or a CSS comment, ""x"" given.``
+                                            contain ";", "{", "}", "\", "<", a
+                                            CSS comment, a line break inside a
+                                            string or a quote that does not
+                                            open and close a string, ""x"
+                                            given.``
 Several hashes                              ``css() takes a single hash of
                                             styles.``
 =========================================== ====================================

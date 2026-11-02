@@ -241,6 +241,46 @@ final class CssFunctionTest extends KernelTestCase
         $this->assertSame('<div class="content_&quot;&gt;&lt;script&gt;"></div>', $html);
     }
 
+    public function testACssStringIsEscapedInTheClassAttributeAndMatchesItsSelector(): void
+    {
+        $template = '<div class="{{ css({ _before: { content: \'""\' } }) }}"></div>';
+
+        $html = $this->render($template);
+        $dynamicHtml = $this->render('<div class="{{ css(styles) }}"></div>', ['styles' => ['_before' => ['content' => '""']]]);
+        $compiled = $this->compile($template);
+        $css = self::getContainer()->get('ux_css.css_generator')->generate([['_before' => ['content' => '""']]]);
+
+        $this->assertSame('<div class="before:content_&quot;&quot;"></div>', $html);
+        $this->assertSame($html, $dynamicHtml);
+        $this->assertStringNotContainsString('CssRuntime', $compiled);
+        $this->assertStringContainsString('.before\:content_\"\"::before {', $css);
+        $this->assertStringContainsString('content: "";', $css);
+        $this->assertStringContainsString('.'.CssEscaper::escape('before:content_""').'::before {', $css);
+    }
+
+    public function testSingleQuotedStringsAreEscapedInTheClassAttribute(): void
+    {
+        $html = $this->render('<div class="{{ css({ _after: { content: "\'”\'" } }) }}"></div>');
+
+        $this->assertSame('<div class="after:content_&#039;”&#039;"></div>', $html);
+    }
+
+    public function testAnUnbalancedQuoteIsASyntaxError(): void
+    {
+        $this->expectException(SyntaxError::class);
+        $this->expectExceptionMessage('a quote that does not open and close a string, ""a" given');
+
+        $this->compile('{{ css({ _before: { content: \'"a\' } }) }}');
+    }
+
+    public function testDynamicStringsAreValidatedInDebug(): void
+    {
+        $this->expectException(RuntimeError::class);
+        $this->expectExceptionMessage('a quote that does not open and close a string');
+
+        $this->render('{{ css(styles) }}', ['styles' => ['content' => '"" } body { color: red; "']]);
+    }
+
     public function testStaticValuesAreEscapedToo(): void
     {
         $html = $this->render('<div class="{{ css({ w: \'[a&b>c]\' }) }}"></div>');
