@@ -1,0 +1,117 @@
+---------------------------------------------------------------------------
+
+by github-actions[bot] at 2026-11-02T15:43:31Z
+
+<h1>📊 Packages dist files size difference</h1>
+
+Thanks for the PR! Here is the difference in size of the packages dist files between the base branch and the PR.
+Please review the changes and make sure they are expected.
+
+<table>
+    <thead><tr><th>File</th><th>Before (Size / Gzip)</th><th>After (Size / Gzip)</th></tr></thead>
+    <tbody><tr><td colspan="3"><a href="https://github.com/symfony/ux/tree/dependabot/npm_and_yarn/npm-dev-dependencies-12deed23d8/src/Inspector/assets/dist"><b>Inspector</b></a></td></tr><tr>
+                <td><a href="https://github.com/symfony/ux/blob/dependabot/npm_and_yarn/npm-dev-dependencies-12deed23d8/src/Inspector/assets/dist/inspector.d.ts"><code>inspector.d.ts</code></a></td>
+            <td>
+                    <code>725 B</code>
+                    / <code>371 B</code>
+                </td><td>
+                    <code>726 B</code><sup>0%</sup>
+                    / <code>371 B</code><sup>0%</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/symfony/ux/tree/dependabot/npm_and_yarn/npm-dev-dependencies-12deed23d8/src/LiveComponent/assets/dist"><b>LiveComponent</b></a></td></tr><tr>
+                <td><a href="https://github.com/symfony/ux/blob/dependabot/npm_and_yarn/npm-dev-dependencies-12deed23d8/src/LiveComponent/assets/dist/live_controller.d.ts"><code>live_controller.d.ts</code></a></td>
+            <td>
+                    <code>7.99 kB</code>
+                    / <code>2.07 kB</code>
+                </td><td>
+                    <code>7.99 kB</code><sup>0%</sup>
+                    / <code>2.07 kB</code><sup>0%</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/symfony/ux/tree/dependabot/npm_and_yarn/npm-dev-dependencies-12deed23d8/src/Map/assets/dist"><b>Map</b></a></td></tr><tr>
+                <td><a href="https://github.com/symfony/ux/blob/dependabot/npm_and_yarn/npm-dev-dependencies-12deed23d8/src/Map/assets/dist/abstract_map_controller.d.ts"><code>abstract_map_controller.d.ts</code></a></td>
+            <td>
+                    <code>7.1 kB</code>
+                    / <code>1.41 kB</code>
+                </td><td>
+                    <code>7.1 kB</code><sup>0%</sup>
+                    / <code>1.41 kB</code><sup>0%</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/symfony/ux/tree/dependabot/npm_and_yarn/npm-dev-dependencies-12deed23d8/src/Map/src/Bridge/Google/assets/dist"><b>Map (Bridge Google)</b></a></td></tr><tr>
+                <td><a href="https://github.com/symfony/ux/blob/dependabot/npm_and_yarn/npm-dev-dependencies-12deed23d8/src/Map/src/Bridge/Google/assets/dist/map_controller.d.ts"><code>map_controller.d.ts</code></a></td>
+            <td>
+                    <code>10.12 kB</code>
+                    / <code>1.89 kB</code>
+                </td><td>
+                    <code>10.12 kB</code><sup>0%</sup>
+                    / <code>1.89 kB</code><sup>0%</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/symfony/ux/tree/dependabot/npm_and_yarn/npm-dev-dependencies-12deed23d8/src/Map/src/Bridge/Leaflet/assets/dist"><b>Map (Bridge Leaflet)</b></a></td></tr><tr>
+                <td><a href="https://github.com/symfony/ux/blob/dependabot/npm_and_yarn/npm-dev-dependencies-12deed23d8/src/Map/src/Bridge/Leaflet/assets/dist/map_controller.d.ts"><code>map_controller.d.ts</code></a></td>
+            <td>
+                    <code>9.51 kB</code>
+                    / <code>1.82 kB</code>
+                </td><td>
+                    <code>9.51 kB</code><sup>0%</sup>
+                    / <code>1.82 kB</code><sup>0%</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/symfony/ux/tree/dependabot/npm_and_yarn/npm-dev-dependencies-12deed23d8/src/React/assets/dist"><b>React</b></a></td></tr><tr>
+                <td><a href="https://github.com/symfony/ux/blob/dependabot/npm_and_yarn/npm-dev-dependencies-12deed23d8/src/React/assets/dist/components.d.ts"><code>components.d.ts</code></a></td>
+            <td>
+                    <code>275 B</code>
+                    / <code>185 B</code>
+                </td><td>
+                    <code>276 B</code><sup>0%</sup>
+                    / <code>186 B</code><sup>+1% 📈</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/symfony/ux/blob/dependabot/npm_and_yarn/npm-dev-dependencies-12deed23d8/src/React/assets/dist/loader.d.ts"><code>loader.d.ts</code></a></td>
+            <td>
+                    <code>466 B</code>
+                    / <code>246 B</code>
+                </td><td>
+                    <code>467 B</code><sup>0%</sup>
+                    / <code>247 B</code><sup>0%</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/symfony/ux/blob/dependabot/npm_and_yarn/npm-dev-dependencies-12deed23d8/src/React/assets/dist/register_controller.d.ts"><code>register_controller.d.ts</code></a></td>
+            <td>
+                    <code>550 B</code>
+                    / <code>317 B</code>
+                </td><td>
+                    <code>551 B</code><sup>0%</sup>
+                    / <code>316 B</code><sup>0%</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/symfony/ux/tree/dependabot/npm_and_yarn/npm-dev-dependencies-12deed23d8/src/Router/assets/dist"><b>Router</b></a></td></tr><tr>
+                <td><a href="https://github.com/symfony/ux/blob/dependabot/npm_and_yarn/npm-dev-dependencies-12deed23d8/src/Router/assets/dist/router_controller.d.ts"><code>router_controller.d.ts</code></a></td>
+            <td>
+                    <code>3.3 kB</code>
+                    / <code>969 B</code>
+                </td><td>
+                    <code>3.3 kB</code><sup>0%</sup>
+                    / <code>970 B</code><sup>0%</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/symfony/ux/tree/dependabot/npm_and_yarn/npm-dev-dependencies-12deed23d8/src/Translator/assets/dist"><b>Translator</b></a></td></tr><tr>
+                <td><a href="https://github.com/symfony/ux/blob/dependabot/npm_and_yarn/npm-dev-dependencies-12deed23d8/src/Translator/assets/dist/translator_controller.d.ts"><code>translator_controller.d.ts</code></a></td>
+            <td>
+                    <code>1.91 kB</code>
+                    / <code>678 B</code>
+                </td><td>
+                    <code>1.91 kB</code><sup>0%</sup>
+                    / <code>678 B</code><sup>0%</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/symfony/ux/tree/dependabot/npm_and_yarn/npm-dev-dependencies-12deed23d8/src/Turbo/assets/dist"><b>Turbo</b></a></td></tr><tr>
+                <td><a href="https://github.com/symfony/ux/blob/dependabot/npm_and_yarn/npm-dev-dependencies-12deed23d8/src/Turbo/assets/dist/mercure_stream_source_element.d.ts"><code>mercure_stream_source_element.d.ts</code></a></td>
+            <td>
+                    <code>9 B</code>
+                    / <code>64 B</code>
+                </td><td>
+                    <code>10 B</code><sup>+11% 📈</sup>
+                    / <code>65 B</code><sup>+2% 📈</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/symfony/ux/tree/dependabot/npm_and_yarn/npm-dev-dependencies-12deed23d8/src/Vue/assets/dist"><b>Vue</b></a></td></tr><tr>
+                <td><a href="https://github.com/symfony/ux/blob/dependabot/npm_and_yarn/npm-dev-dependencies-12deed23d8/src/Vue/assets/dist/register_controller.d.ts"><code>register_controller.d.ts</code></a></td>
+            <td>
+                    <code>435 B</code>
+                    / <code>282 B</code>
+                </td><td>
+                    <code>436 B</code><sup>0%</sup>
+                    / <code>282 B</code><sup>0%</sup>
+                </td></tr></tbody>
+</table>
+
+<!-- Sticky Pull Request Comment -->
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-11-02T15:52:56Z
+
+Reconfigured https://rolldown.rs/reference/InputOptions.experimental#attachdebuginfo
