@@ -86,6 +86,15 @@ final class ReferenceDumperTest extends TestCase
             PHP, $reference);
     }
 
+    public function testAnAliasIsNeverNamedAfterAnotherPropertyOrCategory(): void
+    {
+        $reference = new ReferenceDumper(new StyleValidator(Engine::fromProjectConfig(self::PROJECT)))->dump();
+
+        $this->assertMatchesRegularExpression('/^ \*     gridColumn\?: GridColumnValue\|/m', $reference);
+        $this->assertMatchesRegularExpression('/^ \*     aspectRatio\?: AspectRatioValue\|/m', $reference);
+        $this->assertDoesNotMatchRegularExpression('/^ \*     (?!aspectRatio\?)\w+\?: AspectRatioValue\|/m', $reference);
+    }
+
     public function testTokenNamesThatPhpDocCannotHoldAreLeftToString(): void
     {
         $dumper = new ReferenceDumper(new StyleValidator(Engine::fromProjectConfig(self::projectWithOddTokenNames())));

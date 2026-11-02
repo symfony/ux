@@ -8,15 +8,21 @@ namespace Symfony\UX\Css;
  * @psalm-type AlignContentValue = '-moz-initial'|'baseline'|'center'|'end'|'flex-end'|'flex-start'|'inherit'|'initial'|'normal'|'revert'|'revert-layer'|'space-around'|'space-between'|'space-evenly'|'start'|'stretch'|'unset'|string
  * @psalm-type AlignItemsValue = '-moz-initial'|'anchor-center'|'baseline'|'center'|'end'|'flex-end'|'flex-start'|'inherit'|'initial'|'normal'|'revert'|'revert-layer'|'self-end'|'self-start'|'start'|'stretch'|'unset'|string
  * @psalm-type AlignSelfValue = '-moz-initial'|'anchor-center'|'auto'|'baseline'|'center'|'end'|'flex-end'|'flex-start'|'inherit'|'initial'|'normal'|'revert'|'revert-layer'|'self-end'|'self-start'|'start'|'stretch'|'unset'|string
+ * @psalm-type AlignTracksValue = '-moz-initial'|'baseline'|'center'|'end'|'flex-end'|'flex-start'|'inherit'|'initial'|'normal'|'revert'|'revert-layer'|'space-around'|'space-between'|'space-evenly'|'start'|'stretch'|'unset'|string
  * @psalm-type AlignmentBaselineValue = '-moz-initial'|'alphabetic'|'baseline'|'central'|'ideographic'|'inherit'|'initial'|'mathematical'|'middle'|'revert'|'revert-layer'|'text-after-edge'|'text-before-edge'|'unset'|string
  * @psalm-type AllValue = '-moz-initial'|'inherit'|'initial'|'revert'|'revert-layer'|'unset'|string
+ * @psalm-type AnchorNameValue = '-moz-initial'|'inherit'|'initial'|'none'|'revert'|'revert-layer'|'unset'|string
  * @psalm-type AnchorScopeValue = '-moz-initial'|'all'|'inherit'|'initial'|'none'|'revert'|'revert-layer'|'unset'|string
  * @psalm-type AnimationCompositionValue = '-moz-initial'|'accumulate'|'add'|'inherit'|'initial'|'replace'|'revert'|'revert-layer'|'unset'|string
+ * @psalm-type AnimationDelayValue = '-moz-initial'|'inherit'|'initial'|'revert'|'revert-layer'|'unset'|string
  * @psalm-type AnimationDirectionValue = '-moz-initial'|'alternate'|'alternate-reverse'|'inherit'|'initial'|'normal'|'reverse'|'revert'|'revert-layer'|'unset'|string
  * @psalm-type AnimationDurationValue = '-moz-initial'|'auto'|'inherit'|'initial'|'revert'|'revert-layer'|'unset'|string
  * @psalm-type AnimationFillModeValue = '-moz-initial'|'backwards'|'both'|'forwards'|'inherit'|'initial'|'none'|'revert'|'revert-layer'|'unset'|string
  * @psalm-type AnimationIterationCountValue = '-moz-initial'|'infinite'|'inherit'|'initial'|'revert'|'revert-layer'|'unset'|int|float|string
+ * @psalm-type AnimationNameValue = '-moz-initial'|'inherit'|'initial'|'none'|'revert'|'revert-layer'|'unset'|string
  * @psalm-type AnimationPlayStateValue = '-moz-initial'|'inherit'|'initial'|'paused'|'revert'|'revert-layer'|'running'|'unset'|string
+ * @psalm-type AnimationRangeEndValue = '-moz-initial'|'contain'|'cover'|'entry'|'entry-crossing'|'exit'|'exit-crossing'|'inherit'|'initial'|'normal'|'revert'|'revert-layer'|'unset'|int|float|string
+ * @psalm-type AnimationRangeStartValue = '-moz-initial'|'contain'|'cover'|'entry'|'entry-crossing'|'exit'|'exit-crossing'|'inherit'|'initial'|'normal'|'revert'|'revert-layer'|'unset'|int|float|string
  * @psalm-type AnimationRangeValue = '-moz-initial'|'contain'|'cover'|'entry'|'entry-crossing'|'exit'|'exit-crossing'|'inherit'|'initial'|'normal'|'revert'|'revert-layer'|'unset'|int|float|string
  * @psalm-type AnimationTimelineValue = '-moz-initial'|'auto'|'inherit'|'initial'|'none'|'revert'|'revert-layer'|'unset'|string
  * @psalm-type AnimationTimingFunctionValue = '-moz-initial'|'ease'|'ease-in'|'ease-in-out'|'ease-out'|'inherit'|'initial'|'linear'|'revert'|'revert-layer'|'step-end'|'step-start'|'unset'|string
@@ -25,23 +31,79 @@ namespace Symfony\UX\Css;
  * @psalm-type AspectRatioValue = '-moz-initial'|'auto'|'inherit'|'initial'|'revert'|'revert-layer'|'unset'|int|float|string
  * @psalm-type BackdropFilterValue = 'auto'|string
  * @psalm-type BackfaceVisibilityValue = '-moz-initial'|'hidden'|'inherit'|'initial'|'revert'|'revert-layer'|'unset'|'visible'|string
+ * @psalm-type BackgroundAttachmentValue = '-moz-initial'|'fixed'|'inherit'|'initial'|'local'|'revert'|'revert-layer'|'scroll'|'unset'|string
  * @psalm-type BackgroundBlendModeValue = '-moz-initial'|'color'|'color-burn'|'color-dodge'|'darken'|'difference'|'exclusion'|'hard-light'|'hue'|'inherit'|'initial'|'lighten'|'luminosity'|'multiply'|'normal'|'overlay'|'revert'|'revert-layer'|'saturation'|'screen'|'soft-light'|'unset'|string
  * @psalm-type BackgroundClipValue = '-moz-initial'|'border-area'|'border-box'|'content-box'|'inherit'|'initial'|'padding-box'|'revert'|'revert-layer'|'text'|'unset'|string
+ * @psalm-type BackgroundImageValue = '-moz-initial'|'inherit'|'initial'|'none'|'revert'|'revert-layer'|'unset'|string
  * @psalm-type BackgroundOriginValue = '-moz-initial'|'border-box'|'content-box'|'inherit'|'initial'|'padding-box'|'revert'|'revert-layer'|'unset'|string
+ * @psalm-type BackgroundPositionValue = '-moz-initial'|'bottom'|'center'|'inherit'|'initial'|'left'|'revert'|'revert-layer'|'right'|'top'|'unset'|int|float|string
  * @psalm-type BackgroundPositionXValue = '-moz-initial'|'center'|'inherit'|'initial'|'left'|'revert'|'revert-layer'|'right'|'unset'|'x-end'|'x-start'|int|float|string
  * @psalm-type BackgroundPositionYValue = '-moz-initial'|'bottom'|'center'|'inherit'|'initial'|'revert'|'revert-layer'|'top'|'unset'|'y-end'|'y-start'|int|float|string
+ * @psalm-type BackgroundRepeatValue = '-moz-initial'|'inherit'|'initial'|'no-repeat'|'repeat'|'repeat-x'|'repeat-y'|'revert'|'revert-layer'|'round'|'space'|'unset'|string
+ * @psalm-type BackgroundSizeValue = '-moz-initial'|'auto'|'contain'|'cover'|'inherit'|'initial'|'revert'|'revert-layer'|'unset'|int|float|string
  * @psalm-type BaselineShiftValue = '-moz-initial'|'baseline'|'inherit'|'initial'|'revert'|'revert-layer'|'sub'|'super'|'unset'|int|float|string
+ * @psalm-type BorderBlockEndStyleValue = '-moz-initial'|'dashed'|'dotted'|'double'|'groove'|'hidden'|'inherit'|'initial'|'inset'|'none'|'outset'|'revert'|'revert-layer'|'ridge'|'solid'|'unset'|string
+ * @psalm-type BorderBlockEndValue = '-moz-initial'|'AccentColor'|'AccentColorText'|'ActiveBorder'|'ActiveCaption'|'ActiveText'|'AppWorkspace'|'Background'|'ButtonBorder'|'ButtonFace'|'ButtonHighlight'|'ButtonShadow'|'ButtonText'|'Canvas'|'CanvasText'|'CaptionText'|'Field'|'FieldText'|'GrayText'|'Highlight'|'HighlightText'|'InactiveBorder'|'InactiveCaption'|'InactiveCaptionText'|'InfoBackground'|'InfoText'|'LinkText'|'Mark'|'MarkText'|'Menu'|'MenuText'|'Scrollbar'|'SelectedItem'|'SelectedItemText'|'ThreeDDarkShadow'|'ThreeDFace'|'ThreeDHighlight'|'ThreeDLightShadow'|'ThreeDShadow'|'VisitedText'|'Window'|'WindowFrame'|'WindowText'|'aliceblue'|'antiquewhite'|'aqua'|'aquamarine'|'azure'|'beige'|'bisque'|'black'|'blanchedalmond'|'blue'|'blueviolet'|'brown'|'burlywood'|'cadetblue'|'chartreuse'|'chocolate'|'coral'|'cornflowerblue'|'cornsilk'|'crimson'|'currentColor'|'cyan'|'darkblue'|'darkcyan'|'darkgoldenrod'|'darkgray'|'darkgreen'|'darkgrey'|'darkkhaki'|'darkmagenta'|'darkolivegreen'|'darkorange'|'darkorchid'|'darkred'|'darksalmon'|'darkseagreen'|'darkslateblue'|'darkslategray'|'darkslategrey'|'darkturquoise'|'darkviolet'|'dashed'|'deeppink'|'deepskyblue'|'dimgray'|'dimgrey'|'dodgerblue'|'dotted'|'double'|'firebrick'|'floralwhite'|'forestgreen'|'fuchsia'|'gainsboro'|'ghostwhite'|'gold'|'goldenrod'|'gray'|'green'|'greenyellow'|'grey'|'groove'|'hidden'|'honeydew'|'hotpink'|'indianred'|'indigo'|'inherit'|'initial'|'inset'|'ivory'|'khaki'|'lavender'|'lavenderblush'|'lawngreen'|'lemonchiffon'|'lightblue'|'lightcoral'|'lightcyan'|'lightgoldenrodyellow'|'lightgray'|'lightgreen'|'lightgrey'|'lightpink'|'lightsalmon'|'lightseagreen'|'lightskyblue'|'lightslategray'|'lightslategrey'|'lightsteelblue'|'lightyellow'|'lime'|'limegreen'|'linen'|'magenta'|'maroon'|'medium'|'mediumaquamarine'|'mediumblue'|'mediumorchid'|'mediumpurple'|'mediumseagreen'|'mediumslateblue'|'mediumspringgreen'|'mediumturquoise'|'mediumvioletred'|'midnightblue'|'mintcream'|'mistyrose'|'moccasin'|'navajowhite'|'navy'|'none'|'oldlace'|'olive'|'olivedrab'|'orange'|'orangered'|'orchid'|'outset'|'palegoldenrod'|'palegreen'|'paleturquoise'|'palevioletred'|'papayawhip'|'peachpuff'|'peru'|'pink'|'plum'|'powderblue'|'purple'|'rebeccapurple'|'red'|'revert'|'revert-layer'|'ridge'|'rosybrown'|'royalblue'|'saddlebrown'|'salmon'|'sandybrown'|'seagreen'|'seashell'|'sienna'|'silver'|'skyblue'|'slateblue'|'slategray'|'slategrey'|'snow'|'solid'|'springgreen'|'steelblue'|'tan'|'teal'|'thick'|'thin'|'thistle'|'tomato'|'transparent'|'turquoise'|'unset'|'violet'|'wheat'|'white'|'whitesmoke'|'yellow'|'yellowgreen'|int|float|string
+ * @psalm-type BorderBlockEndWidthValue = '-moz-initial'|'inherit'|'initial'|'medium'|'revert'|'revert-layer'|'thick'|'thin'|'unset'|int|float|string
+ * @psalm-type BorderBlockStartStyleValue = '-moz-initial'|'dashed'|'dotted'|'double'|'groove'|'hidden'|'inherit'|'initial'|'inset'|'none'|'outset'|'revert'|'revert-layer'|'ridge'|'solid'|'unset'|string
+ * @psalm-type BorderBlockStartValue = '-moz-initial'|'AccentColor'|'AccentColorText'|'ActiveBorder'|'ActiveCaption'|'ActiveText'|'AppWorkspace'|'Background'|'ButtonBorder'|'ButtonFace'|'ButtonHighlight'|'ButtonShadow'|'ButtonText'|'Canvas'|'CanvasText'|'CaptionText'|'Field'|'FieldText'|'GrayText'|'Highlight'|'HighlightText'|'InactiveBorder'|'InactiveCaption'|'InactiveCaptionText'|'InfoBackground'|'InfoText'|'LinkText'|'Mark'|'MarkText'|'Menu'|'MenuText'|'Scrollbar'|'SelectedItem'|'SelectedItemText'|'ThreeDDarkShadow'|'ThreeDFace'|'ThreeDHighlight'|'ThreeDLightShadow'|'ThreeDShadow'|'VisitedText'|'Window'|'WindowFrame'|'WindowText'|'aliceblue'|'antiquewhite'|'aqua'|'aquamarine'|'azure'|'beige'|'bisque'|'black'|'blanchedalmond'|'blue'|'blueviolet'|'brown'|'burlywood'|'cadetblue'|'chartreuse'|'chocolate'|'coral'|'cornflowerblue'|'cornsilk'|'crimson'|'currentColor'|'cyan'|'darkblue'|'darkcyan'|'darkgoldenrod'|'darkgray'|'darkgreen'|'darkgrey'|'darkkhaki'|'darkmagenta'|'darkolivegreen'|'darkorange'|'darkorchid'|'darkred'|'darksalmon'|'darkseagreen'|'darkslateblue'|'darkslategray'|'darkslategrey'|'darkturquoise'|'darkviolet'|'dashed'|'deeppink'|'deepskyblue'|'dimgray'|'dimgrey'|'dodgerblue'|'dotted'|'double'|'firebrick'|'floralwhite'|'forestgreen'|'fuchsia'|'gainsboro'|'ghostwhite'|'gold'|'goldenrod'|'gray'|'green'|'greenyellow'|'grey'|'groove'|'hidden'|'honeydew'|'hotpink'|'indianred'|'indigo'|'inherit'|'initial'|'inset'|'ivory'|'khaki'|'lavender'|'lavenderblush'|'lawngreen'|'lemonchiffon'|'lightblue'|'lightcoral'|'lightcyan'|'lightgoldenrodyellow'|'lightgray'|'lightgreen'|'lightgrey'|'lightpink'|'lightsalmon'|'lightseagreen'|'lightskyblue'|'lightslategray'|'lightslategrey'|'lightsteelblue'|'lightyellow'|'lime'|'limegreen'|'linen'|'magenta'|'maroon'|'medium'|'mediumaquamarine'|'mediumblue'|'mediumorchid'|'mediumpurple'|'mediumseagreen'|'mediumslateblue'|'mediumspringgreen'|'mediumturquoise'|'mediumvioletred'|'midnightblue'|'mintcream'|'mistyrose'|'moccasin'|'navajowhite'|'navy'|'none'|'oldlace'|'olive'|'olivedrab'|'orange'|'orangered'|'orchid'|'outset'|'palegoldenrod'|'palegreen'|'paleturquoise'|'palevioletred'|'papayawhip'|'peachpuff'|'peru'|'pink'|'plum'|'powderblue'|'purple'|'rebeccapurple'|'red'|'revert'|'revert-layer'|'ridge'|'rosybrown'|'royalblue'|'saddlebrown'|'salmon'|'sandybrown'|'seagreen'|'seashell'|'sienna'|'silver'|'skyblue'|'slateblue'|'slategray'|'slategrey'|'snow'|'solid'|'springgreen'|'steelblue'|'tan'|'teal'|'thick'|'thin'|'thistle'|'tomato'|'transparent'|'turquoise'|'unset'|'violet'|'wheat'|'white'|'whitesmoke'|'yellow'|'yellowgreen'|int|float|string
+ * @psalm-type BorderBlockStartWidthValue = '-moz-initial'|'inherit'|'initial'|'medium'|'revert'|'revert-layer'|'thick'|'thin'|'unset'|int|float|string
+ * @psalm-type BorderBlockStyleValue = '-moz-initial'|'dashed'|'dotted'|'double'|'groove'|'hidden'|'inherit'|'initial'|'inset'|'none'|'outset'|'revert'|'revert-layer'|'ridge'|'solid'|'unset'|string
+ * @psalm-type BorderBlockValue = '-moz-initial'|'AccentColor'|'AccentColorText'|'ActiveBorder'|'ActiveCaption'|'ActiveText'|'AppWorkspace'|'Background'|'ButtonBorder'|'ButtonFace'|'ButtonHighlight'|'ButtonShadow'|'ButtonText'|'Canvas'|'CanvasText'|'CaptionText'|'Field'|'FieldText'|'GrayText'|'Highlight'|'HighlightText'|'InactiveBorder'|'InactiveCaption'|'InactiveCaptionText'|'InfoBackground'|'InfoText'|'LinkText'|'Mark'|'MarkText'|'Menu'|'MenuText'|'Scrollbar'|'SelectedItem'|'SelectedItemText'|'ThreeDDarkShadow'|'ThreeDFace'|'ThreeDHighlight'|'ThreeDLightShadow'|'ThreeDShadow'|'VisitedText'|'Window'|'WindowFrame'|'WindowText'|'aliceblue'|'antiquewhite'|'aqua'|'aquamarine'|'azure'|'beige'|'bisque'|'black'|'blanchedalmond'|'blue'|'blueviolet'|'brown'|'burlywood'|'cadetblue'|'chartreuse'|'chocolate'|'coral'|'cornflowerblue'|'cornsilk'|'crimson'|'currentColor'|'cyan'|'darkblue'|'darkcyan'|'darkgoldenrod'|'darkgray'|'darkgreen'|'darkgrey'|'darkkhaki'|'darkmagenta'|'darkolivegreen'|'darkorange'|'darkorchid'|'darkred'|'darksalmon'|'darkseagreen'|'darkslateblue'|'darkslategray'|'darkslategrey'|'darkturquoise'|'darkviolet'|'dashed'|'deeppink'|'deepskyblue'|'dimgray'|'dimgrey'|'dodgerblue'|'dotted'|'double'|'firebrick'|'floralwhite'|'forestgreen'|'fuchsia'|'gainsboro'|'ghostwhite'|'gold'|'goldenrod'|'gray'|'green'|'greenyellow'|'grey'|'groove'|'hidden'|'honeydew'|'hotpink'|'indianred'|'indigo'|'inherit'|'initial'|'inset'|'ivory'|'khaki'|'lavender'|'lavenderblush'|'lawngreen'|'lemonchiffon'|'lightblue'|'lightcoral'|'lightcyan'|'lightgoldenrodyellow'|'lightgray'|'lightgreen'|'lightgrey'|'lightpink'|'lightsalmon'|'lightseagreen'|'lightskyblue'|'lightslategray'|'lightslategrey'|'lightsteelblue'|'lightyellow'|'lime'|'limegreen'|'linen'|'magenta'|'maroon'|'medium'|'mediumaquamarine'|'mediumblue'|'mediumorchid'|'mediumpurple'|'mediumseagreen'|'mediumslateblue'|'mediumspringgreen'|'mediumturquoise'|'mediumvioletred'|'midnightblue'|'mintcream'|'mistyrose'|'moccasin'|'navajowhite'|'navy'|'none'|'oldlace'|'olive'|'olivedrab'|'orange'|'orangered'|'orchid'|'outset'|'palegoldenrod'|'palegreen'|'paleturquoise'|'palevioletred'|'papayawhip'|'peachpuff'|'peru'|'pink'|'plum'|'powderblue'|'purple'|'rebeccapurple'|'red'|'revert'|'revert-layer'|'ridge'|'rosybrown'|'royalblue'|'saddlebrown'|'salmon'|'sandybrown'|'seagreen'|'seashell'|'sienna'|'silver'|'skyblue'|'slateblue'|'slategray'|'slategrey'|'snow'|'solid'|'springgreen'|'steelblue'|'tan'|'teal'|'thick'|'thin'|'thistle'|'tomato'|'transparent'|'turquoise'|'unset'|'violet'|'wheat'|'white'|'whitesmoke'|'yellow'|'yellowgreen'|int|float|string
+ * @psalm-type BorderBlockWidthValue = '-moz-initial'|'inherit'|'initial'|'medium'|'revert'|'revert-layer'|'thick'|'thin'|'unset'|int|float|string
+ * @psalm-type BorderBottomLeftRadiusValue = '-moz-initial'|'inherit'|'initial'|'revert'|'revert-layer'|'unset'|int|float|string
+ * @psalm-type BorderBottomRightRadiusValue = '-moz-initial'|'inherit'|'initial'|'revert'|'revert-layer'|'unset'|int|float|string
+ * @psalm-type BorderBottomStyleValue = '-moz-initial'|'dashed'|'dotted'|'double'|'groove'|'hidden'|'inherit'|'initial'|'inset'|'none'|'outset'|'revert'|'revert-layer'|'ridge'|'solid'|'unset'|string
+ * @psalm-type BorderBottomValue = '-moz-initial'|'AccentColor'|'AccentColorText'|'ActiveBorder'|'ActiveCaption'|'ActiveText'|'AppWorkspace'|'Background'|'ButtonBorder'|'ButtonFace'|'ButtonHighlight'|'ButtonShadow'|'ButtonText'|'Canvas'|'CanvasText'|'CaptionText'|'Field'|'FieldText'|'GrayText'|'Highlight'|'HighlightText'|'InactiveBorder'|'InactiveCaption'|'InactiveCaptionText'|'InfoBackground'|'InfoText'|'LinkText'|'Mark'|'MarkText'|'Menu'|'MenuText'|'Scrollbar'|'SelectedItem'|'SelectedItemText'|'ThreeDDarkShadow'|'ThreeDFace'|'ThreeDHighlight'|'ThreeDLightShadow'|'ThreeDShadow'|'VisitedText'|'Window'|'WindowFrame'|'WindowText'|'aliceblue'|'antiquewhite'|'aqua'|'aquamarine'|'azure'|'beige'|'bisque'|'black'|'blanchedalmond'|'blue'|'blueviolet'|'brown'|'burlywood'|'cadetblue'|'chartreuse'|'chocolate'|'coral'|'cornflowerblue'|'cornsilk'|'crimson'|'currentColor'|'cyan'|'darkblue'|'darkcyan'|'darkgoldenrod'|'darkgray'|'darkgreen'|'darkgrey'|'darkkhaki'|'darkmagenta'|'darkolivegreen'|'darkorange'|'darkorchid'|'darkred'|'darksalmon'|'darkseagreen'|'darkslateblue'|'darkslategray'|'darkslategrey'|'darkturquoise'|'darkviolet'|'dashed'|'deeppink'|'deepskyblue'|'dimgray'|'dimgrey'|'dodgerblue'|'dotted'|'double'|'firebrick'|'floralwhite'|'forestgreen'|'fuchsia'|'gainsboro'|'ghostwhite'|'gold'|'goldenrod'|'gray'|'green'|'greenyellow'|'grey'|'groove'|'hidden'|'honeydew'|'hotpink'|'indianred'|'indigo'|'inherit'|'initial'|'inset'|'ivory'|'khaki'|'lavender'|'lavenderblush'|'lawngreen'|'lemonchiffon'|'lightblue'|'lightcoral'|'lightcyan'|'lightgoldenrodyellow'|'lightgray'|'lightgreen'|'lightgrey'|'lightpink'|'lightsalmon'|'lightseagreen'|'lightskyblue'|'lightslategray'|'lightslategrey'|'lightsteelblue'|'lightyellow'|'lime'|'limegreen'|'linen'|'magenta'|'maroon'|'medium'|'mediumaquamarine'|'mediumblue'|'mediumorchid'|'mediumpurple'|'mediumseagreen'|'mediumslateblue'|'mediumspringgreen'|'mediumturquoise'|'mediumvioletred'|'midnightblue'|'mintcream'|'mistyrose'|'moccasin'|'navajowhite'|'navy'|'none'|'oldlace'|'olive'|'olivedrab'|'orange'|'orangered'|'orchid'|'outset'|'palegoldenrod'|'palegreen'|'paleturquoise'|'palevioletred'|'papayawhip'|'peachpuff'|'peru'|'pink'|'plum'|'powderblue'|'purple'|'rebeccapurple'|'red'|'revert'|'revert-layer'|'ridge'|'rosybrown'|'royalblue'|'saddlebrown'|'salmon'|'sandybrown'|'seagreen'|'seashell'|'sienna'|'silver'|'skyblue'|'slateblue'|'slategray'|'slategrey'|'snow'|'solid'|'springgreen'|'steelblue'|'tan'|'teal'|'thick'|'thin'|'thistle'|'tomato'|'transparent'|'turquoise'|'unset'|'violet'|'wheat'|'white'|'whitesmoke'|'yellow'|'yellowgreen'|int|float|string
+ * @psalm-type BorderBottomWidthValue = '-moz-initial'|'inherit'|'initial'|'medium'|'revert'|'revert-layer'|'thick'|'thin'|'unset'|int|float|string
  * @psalm-type BorderCollapseValue = '-moz-initial'|'collapse'|'inherit'|'initial'|'revert'|'revert-layer'|'separate'|'unset'|string
+ * @psalm-type BorderEndEndRadiusValue = '-moz-initial'|'inherit'|'initial'|'revert'|'revert-layer'|'unset'|int|float|string
+ * @psalm-type BorderEndStartRadiusValue = '-moz-initial'|'inherit'|'initial'|'revert'|'revert-layer'|'unset'|int|float|string
+ * @psalm-type BorderImageOutsetValue = '-moz-initial'|'inherit'|'initial'|'revert'|'revert-layer'|'unset'|int|float|string
  * @psalm-type BorderImageRepeatValue = '-moz-initial'|'inherit'|'initial'|'repeat'|'revert'|'revert-layer'|'round'|'space'|'stretch'|'unset'|string
+ * @psalm-type BorderImageSliceValue = '-moz-initial'|'inherit'|'initial'|'revert'|'revert-layer'|'unset'|int|float|string
+ * @psalm-type BorderImageSourceValue = '-moz-initial'|'inherit'|'initial'|'none'|'revert'|'revert-layer'|'unset'|string
  * @psalm-type BorderImageValue = '-moz-initial'|'inherit'|'initial'|'none'|'repeat'|'revert'|'revert-layer'|'round'|'space'|'stretch'|'unset'|int|float|string
+ * @psalm-type BorderImageWidthValue = '-moz-initial'|'auto'|'inherit'|'initial'|'revert'|'revert-layer'|'unset'|int|float|string
+ * @psalm-type BorderInlineEndStyleValue = '-moz-initial'|'dashed'|'dotted'|'double'|'groove'|'hidden'|'inherit'|'initial'|'inset'|'none'|'outset'|'revert'|'revert-layer'|'ridge'|'solid'|'unset'|string
+ * @psalm-type BorderInlineEndValue = '-moz-initial'|'AccentColor'|'AccentColorText'|'ActiveBorder'|'ActiveCaption'|'ActiveText'|'AppWorkspace'|'Background'|'ButtonBorder'|'ButtonFace'|'ButtonHighlight'|'ButtonShadow'|'ButtonText'|'Canvas'|'CanvasText'|'CaptionText'|'Field'|'FieldText'|'GrayText'|'Highlight'|'HighlightText'|'InactiveBorder'|'InactiveCaption'|'InactiveCaptionText'|'InfoBackground'|'InfoText'|'LinkText'|'Mark'|'MarkText'|'Menu'|'MenuText'|'Scrollbar'|'SelectedItem'|'SelectedItemText'|'ThreeDDarkShadow'|'ThreeDFace'|'ThreeDHighlight'|'ThreeDLightShadow'|'ThreeDShadow'|'VisitedText'|'Window'|'WindowFrame'|'WindowText'|'aliceblue'|'antiquewhite'|'aqua'|'aquamarine'|'azure'|'beige'|'bisque'|'black'|'blanchedalmond'|'blue'|'blueviolet'|'brown'|'burlywood'|'cadetblue'|'chartreuse'|'chocolate'|'coral'|'cornflowerblue'|'cornsilk'|'crimson'|'currentColor'|'cyan'|'darkblue'|'darkcyan'|'darkgoldenrod'|'darkgray'|'darkgreen'|'darkgrey'|'darkkhaki'|'darkmagenta'|'darkolivegreen'|'darkorange'|'darkorchid'|'darkred'|'darksalmon'|'darkseagreen'|'darkslateblue'|'darkslategray'|'darkslategrey'|'darkturquoise'|'darkviolet'|'dashed'|'deeppink'|'deepskyblue'|'dimgray'|'dimgrey'|'dodgerblue'|'dotted'|'double'|'firebrick'|'floralwhite'|'forestgreen'|'fuchsia'|'gainsboro'|'ghostwhite'|'gold'|'goldenrod'|'gray'|'green'|'greenyellow'|'grey'|'groove'|'hidden'|'honeydew'|'hotpink'|'indianred'|'indigo'|'inherit'|'initial'|'inset'|'ivory'|'khaki'|'lavender'|'lavenderblush'|'lawngreen'|'lemonchiffon'|'lightblue'|'lightcoral'|'lightcyan'|'lightgoldenrodyellow'|'lightgray'|'lightgreen'|'lightgrey'|'lightpink'|'lightsalmon'|'lightseagreen'|'lightskyblue'|'lightslategray'|'lightslategrey'|'lightsteelblue'|'lightyellow'|'lime'|'limegreen'|'linen'|'magenta'|'maroon'|'medium'|'mediumaquamarine'|'mediumblue'|'mediumorchid'|'mediumpurple'|'mediumseagreen'|'mediumslateblue'|'mediumspringgreen'|'mediumturquoise'|'mediumvioletred'|'midnightblue'|'mintcream'|'mistyrose'|'moccasin'|'navajowhite'|'navy'|'none'|'oldlace'|'olive'|'olivedrab'|'orange'|'orangered'|'orchid'|'outset'|'palegoldenrod'|'palegreen'|'paleturquoise'|'palevioletred'|'papayawhip'|'peachpuff'|'peru'|'pink'|'plum'|'powderblue'|'purple'|'rebeccapurple'|'red'|'revert'|'revert-layer'|'ridge'|'rosybrown'|'royalblue'|'saddlebrown'|'salmon'|'sandybrown'|'seagreen'|'seashell'|'sienna'|'silver'|'skyblue'|'slateblue'|'slategray'|'slategrey'|'snow'|'solid'|'springgreen'|'steelblue'|'tan'|'teal'|'thick'|'thin'|'thistle'|'tomato'|'transparent'|'turquoise'|'unset'|'violet'|'wheat'|'white'|'whitesmoke'|'yellow'|'yellowgreen'|int|float|string
+ * @psalm-type BorderInlineEndWidthValue = '-moz-initial'|'inherit'|'initial'|'medium'|'revert'|'revert-layer'|'thick'|'thin'|'unset'|int|float|string
+ * @psalm-type BorderInlineStartStyleValue = '-moz-initial'|'dashed'|'dotted'|'double'|'groove'|'hidden'|'inherit'|'initial'|'inset'|'none'|'outset'|'revert'|'revert-layer'|'ridge'|'solid'|'unset'|string
+ * @psalm-type BorderInlineStartValue = '-moz-initial'|'AccentColor'|'AccentColorText'|'ActiveBorder'|'ActiveCaption'|'ActiveText'|'AppWorkspace'|'Background'|'ButtonBorder'|'ButtonFace'|'ButtonHighlight'|'ButtonShadow'|'ButtonText'|'Canvas'|'CanvasText'|'CaptionText'|'Field'|'FieldText'|'GrayText'|'Highlight'|'HighlightText'|'InactiveBorder'|'InactiveCaption'|'InactiveCaptionText'|'InfoBackground'|'InfoText'|'LinkText'|'Mark'|'MarkText'|'Menu'|'MenuText'|'Scrollbar'|'SelectedItem'|'SelectedItemText'|'ThreeDDarkShadow'|'ThreeDFace'|'ThreeDHighlight'|'ThreeDLightShadow'|'ThreeDShadow'|'VisitedText'|'Window'|'WindowFrame'|'WindowText'|'aliceblue'|'antiquewhite'|'aqua'|'aquamarine'|'azure'|'beige'|'bisque'|'black'|'blanchedalmond'|'blue'|'blueviolet'|'brown'|'burlywood'|'cadetblue'|'chartreuse'|'chocolate'|'coral'|'cornflowerblue'|'cornsilk'|'crimson'|'currentColor'|'cyan'|'darkblue'|'darkcyan'|'darkgoldenrod'|'darkgray'|'darkgreen'|'darkgrey'|'darkkhaki'|'darkmagenta'|'darkolivegreen'|'darkorange'|'darkorchid'|'darkred'|'darksalmon'|'darkseagreen'|'darkslateblue'|'darkslategray'|'darkslategrey'|'darkturquoise'|'darkviolet'|'dashed'|'deeppink'|'deepskyblue'|'dimgray'|'dimgrey'|'dodgerblue'|'dotted'|'double'|'firebrick'|'floralwhite'|'forestgreen'|'fuchsia'|'gainsboro'|'ghostwhite'|'gold'|'goldenrod'|'gray'|'green'|'greenyellow'|'grey'|'groove'|'hidden'|'honeydew'|'hotpink'|'indianred'|'indigo'|'inherit'|'initial'|'inset'|'ivory'|'khaki'|'lavender'|'lavenderblush'|'lawngreen'|'lemonchiffon'|'lightblue'|'lightcoral'|'lightcyan'|'lightgoldenrodyellow'|'lightgray'|'lightgreen'|'lightgrey'|'lightpink'|'lightsalmon'|'lightseagreen'|'lightskyblue'|'lightslategray'|'lightslategrey'|'lightsteelblue'|'lightyellow'|'lime'|'limegreen'|'linen'|'magenta'|'maroon'|'medium'|'mediumaquamarine'|'mediumblue'|'mediumorchid'|'mediumpurple'|'mediumseagreen'|'mediumslateblue'|'mediumspringgreen'|'mediumturquoise'|'mediumvioletred'|'midnightblue'|'mintcream'|'mistyrose'|'moccasin'|'navajowhite'|'navy'|'none'|'oldlace'|'olive'|'olivedrab'|'orange'|'orangered'|'orchid'|'outset'|'palegoldenrod'|'palegreen'|'paleturquoise'|'palevioletred'|'papayawhip'|'peachpuff'|'peru'|'pink'|'plum'|'powderblue'|'purple'|'rebeccapurple'|'red'|'revert'|'revert-layer'|'ridge'|'rosybrown'|'royalblue'|'saddlebrown'|'salmon'|'sandybrown'|'seagreen'|'seashell'|'sienna'|'silver'|'skyblue'|'slateblue'|'slategray'|'slategrey'|'snow'|'solid'|'springgreen'|'steelblue'|'tan'|'teal'|'thick'|'thin'|'thistle'|'tomato'|'transparent'|'turquoise'|'unset'|'violet'|'wheat'|'white'|'whitesmoke'|'yellow'|'yellowgreen'|int|float|string
+ * @psalm-type BorderInlineStartWidthValue = '-moz-initial'|'inherit'|'initial'|'medium'|'revert'|'revert-layer'|'thick'|'thin'|'unset'|int|float|string
+ * @psalm-type BorderInlineStyleValue = '-moz-initial'|'dashed'|'dotted'|'double'|'groove'|'hidden'|'inherit'|'initial'|'inset'|'none'|'outset'|'revert'|'revert-layer'|'ridge'|'solid'|'unset'|string
+ * @psalm-type BorderInlineValue = '-moz-initial'|'AccentColor'|'AccentColorText'|'ActiveBorder'|'ActiveCaption'|'ActiveText'|'AppWorkspace'|'Background'|'ButtonBorder'|'ButtonFace'|'ButtonHighlight'|'ButtonShadow'|'ButtonText'|'Canvas'|'CanvasText'|'CaptionText'|'Field'|'FieldText'|'GrayText'|'Highlight'|'HighlightText'|'InactiveBorder'|'InactiveCaption'|'InactiveCaptionText'|'InfoBackground'|'InfoText'|'LinkText'|'Mark'|'MarkText'|'Menu'|'MenuText'|'Scrollbar'|'SelectedItem'|'SelectedItemText'|'ThreeDDarkShadow'|'ThreeDFace'|'ThreeDHighlight'|'ThreeDLightShadow'|'ThreeDShadow'|'VisitedText'|'Window'|'WindowFrame'|'WindowText'|'aliceblue'|'antiquewhite'|'aqua'|'aquamarine'|'azure'|'beige'|'bisque'|'black'|'blanchedalmond'|'blue'|'blueviolet'|'brown'|'burlywood'|'cadetblue'|'chartreuse'|'chocolate'|'coral'|'cornflowerblue'|'cornsilk'|'crimson'|'currentColor'|'cyan'|'darkblue'|'darkcyan'|'darkgoldenrod'|'darkgray'|'darkgreen'|'darkgrey'|'darkkhaki'|'darkmagenta'|'darkolivegreen'|'darkorange'|'darkorchid'|'darkred'|'darksalmon'|'darkseagreen'|'darkslateblue'|'darkslategray'|'darkslategrey'|'darkturquoise'|'darkviolet'|'dashed'|'deeppink'|'deepskyblue'|'dimgray'|'dimgrey'|'dodgerblue'|'dotted'|'double'|'firebrick'|'floralwhite'|'forestgreen'|'fuchsia'|'gainsboro'|'ghostwhite'|'gold'|'goldenrod'|'gray'|'green'|'greenyellow'|'grey'|'groove'|'hidden'|'honeydew'|'hotpink'|'indianred'|'indigo'|'inherit'|'initial'|'inset'|'ivory'|'khaki'|'lavender'|'lavenderblush'|'lawngreen'|'lemonchiffon'|'lightblue'|'lightcoral'|'lightcyan'|'lightgoldenrodyellow'|'lightgray'|'lightgreen'|'lightgrey'|'lightpink'|'lightsalmon'|'lightseagreen'|'lightskyblue'|'lightslategray'|'lightslategrey'|'lightsteelblue'|'lightyellow'|'lime'|'limegreen'|'linen'|'magenta'|'maroon'|'medium'|'mediumaquamarine'|'mediumblue'|'mediumorchid'|'mediumpurple'|'mediumseagreen'|'mediumslateblue'|'mediumspringgreen'|'mediumturquoise'|'mediumvioletred'|'midnightblue'|'mintcream'|'mistyrose'|'moccasin'|'navajowhite'|'navy'|'none'|'oldlace'|'olive'|'olivedrab'|'orange'|'orangered'|'orchid'|'outset'|'palegoldenrod'|'palegreen'|'paleturquoise'|'palevioletred'|'papayawhip'|'peachpuff'|'peru'|'pink'|'plum'|'powderblue'|'purple'|'rebeccapurple'|'red'|'revert'|'revert-layer'|'ridge'|'rosybrown'|'royalblue'|'saddlebrown'|'salmon'|'sandybrown'|'seagreen'|'seashell'|'sienna'|'silver'|'skyblue'|'slateblue'|'slategray'|'slategrey'|'snow'|'solid'|'springgreen'|'steelblue'|'tan'|'teal'|'thick'|'thin'|'thistle'|'tomato'|'transparent'|'turquoise'|'unset'|'violet'|'wheat'|'white'|'whitesmoke'|'yellow'|'yellowgreen'|int|float|string
+ * @psalm-type BorderInlineWidthValue = '-moz-initial'|'inherit'|'initial'|'medium'|'revert'|'revert-layer'|'thick'|'thin'|'unset'|int|float|string
+ * @psalm-type BorderLeftStyleValue = '-moz-initial'|'dashed'|'dotted'|'double'|'groove'|'hidden'|'inherit'|'initial'|'inset'|'none'|'outset'|'revert'|'revert-layer'|'ridge'|'solid'|'unset'|string
+ * @psalm-type BorderLeftValue = '-moz-initial'|'AccentColor'|'AccentColorText'|'ActiveBorder'|'ActiveCaption'|'ActiveText'|'AppWorkspace'|'Background'|'ButtonBorder'|'ButtonFace'|'ButtonHighlight'|'ButtonShadow'|'ButtonText'|'Canvas'|'CanvasText'|'CaptionText'|'Field'|'FieldText'|'GrayText'|'Highlight'|'HighlightText'|'InactiveBorder'|'InactiveCaption'|'InactiveCaptionText'|'InfoBackground'|'InfoText'|'LinkText'|'Mark'|'MarkText'|'Menu'|'MenuText'|'Scrollbar'|'SelectedItem'|'SelectedItemText'|'ThreeDDarkShadow'|'ThreeDFace'|'ThreeDHighlight'|'ThreeDLightShadow'|'ThreeDShadow'|'VisitedText'|'Window'|'WindowFrame'|'WindowText'|'aliceblue'|'antiquewhite'|'aqua'|'aquamarine'|'azure'|'beige'|'bisque'|'black'|'blanchedalmond'|'blue'|'blueviolet'|'brown'|'burlywood'|'cadetblue'|'chartreuse'|'chocolate'|'coral'|'cornflowerblue'|'cornsilk'|'crimson'|'currentColor'|'cyan'|'darkblue'|'darkcyan'|'darkgoldenrod'|'darkgray'|'darkgreen'|'darkgrey'|'darkkhaki'|'darkmagenta'|'darkolivegreen'|'darkorange'|'darkorchid'|'darkred'|'darksalmon'|'darkseagreen'|'darkslateblue'|'darkslategray'|'darkslategrey'|'darkturquoise'|'darkviolet'|'dashed'|'deeppink'|'deepskyblue'|'dimgray'|'dimgrey'|'dodgerblue'|'dotted'|'double'|'firebrick'|'floralwhite'|'forestgreen'|'fuchsia'|'gainsboro'|'ghostwhite'|'gold'|'goldenrod'|'gray'|'green'|'greenyellow'|'grey'|'groove'|'hidden'|'honeydew'|'hotpink'|'indianred'|'indigo'|'inherit'|'initial'|'inset'|'ivory'|'khaki'|'lavender'|'lavenderblush'|'lawngreen'|'lemonchiffon'|'lightblue'|'lightcoral'|'lightcyan'|'lightgoldenrodyellow'|'lightgray'|'lightgreen'|'lightgrey'|'lightpink'|'lightsalmon'|'lightseagreen'|'lightskyblue'|'lightslategray'|'lightslategrey'|'lightsteelblue'|'lightyellow'|'lime'|'limegreen'|'linen'|'magenta'|'maroon'|'medium'|'mediumaquamarine'|'mediumblue'|'mediumorchid'|'mediumpurple'|'mediumseagreen'|'mediumslateblue'|'mediumspringgreen'|'mediumturquoise'|'mediumvioletred'|'midnightblue'|'mintcream'|'mistyrose'|'moccasin'|'navajowhite'|'navy'|'none'|'oldlace'|'olive'|'olivedrab'|'orange'|'orangered'|'orchid'|'outset'|'palegoldenrod'|'palegreen'|'paleturquoise'|'palevioletred'|'papayawhip'|'peachpuff'|'peru'|'pink'|'plum'|'powderblue'|'purple'|'rebeccapurple'|'red'|'revert'|'revert-layer'|'ridge'|'rosybrown'|'royalblue'|'saddlebrown'|'salmon'|'sandybrown'|'seagreen'|'seashell'|'sienna'|'silver'|'skyblue'|'slateblue'|'slategray'|'slategrey'|'snow'|'solid'|'springgreen'|'steelblue'|'tan'|'teal'|'thick'|'thin'|'thistle'|'tomato'|'transparent'|'turquoise'|'unset'|'violet'|'wheat'|'white'|'whitesmoke'|'yellow'|'yellowgreen'|int|float|string
+ * @psalm-type BorderLeftWidthValue = '-moz-initial'|'inherit'|'initial'|'medium'|'revert'|'revert-layer'|'thick'|'thin'|'unset'|int|float|string
+ * @psalm-type BorderRadiusValue = '-moz-initial'|'inherit'|'initial'|'revert'|'revert-layer'|'unset'|int|float|string
+ * @psalm-type BorderRightStyleValue = '-moz-initial'|'dashed'|'dotted'|'double'|'groove'|'hidden'|'inherit'|'initial'|'inset'|'none'|'outset'|'revert'|'revert-layer'|'ridge'|'solid'|'unset'|string
+ * @psalm-type BorderRightValue = '-moz-initial'|'AccentColor'|'AccentColorText'|'ActiveBorder'|'ActiveCaption'|'ActiveText'|'AppWorkspace'|'Background'|'ButtonBorder'|'ButtonFace'|'ButtonHighlight'|'ButtonShadow'|'ButtonText'|'Canvas'|'CanvasText'|'CaptionText'|'Field'|'FieldText'|'GrayText'|'Highlight'|'HighlightText'|'InactiveBorder'|'InactiveCaption'|'InactiveCaptionText'|'InfoBackground'|'InfoText'|'LinkText'|'Mark'|'MarkText'|'Menu'|'MenuText'|'Scrollbar'|'SelectedItem'|'SelectedItemText'|'ThreeDDarkShadow'|'ThreeDFace'|'ThreeDHighlight'|'ThreeDLightShadow'|'ThreeDShadow'|'VisitedText'|'Window'|'WindowFrame'|'WindowText'|'aliceblue'|'antiquewhite'|'aqua'|'aquamarine'|'azure'|'beige'|'bisque'|'black'|'blanchedalmond'|'blue'|'blueviolet'|'brown'|'burlywood'|'cadetblue'|'chartreuse'|'chocolate'|'coral'|'cornflowerblue'|'cornsilk'|'crimson'|'currentColor'|'cyan'|'darkblue'|'darkcyan'|'darkgoldenrod'|'darkgray'|'darkgreen'|'darkgrey'|'darkkhaki'|'darkmagenta'|'darkolivegreen'|'darkorange'|'darkorchid'|'darkred'|'darksalmon'|'darkseagreen'|'darkslateblue'|'darkslategray'|'darkslategrey'|'darkturquoise'|'darkviolet'|'dashed'|'deeppink'|'deepskyblue'|'dimgray'|'dimgrey'|'dodgerblue'|'dotted'|'double'|'firebrick'|'floralwhite'|'forestgreen'|'fuchsia'|'gainsboro'|'ghostwhite'|'gold'|'goldenrod'|'gray'|'green'|'greenyellow'|'grey'|'groove'|'hidden'|'honeydew'|'hotpink'|'indianred'|'indigo'|'inherit'|'initial'|'inset'|'ivory'|'khaki'|'lavender'|'lavenderblush'|'lawngreen'|'lemonchiffon'|'lightblue'|'lightcoral'|'lightcyan'|'lightgoldenrodyellow'|'lightgray'|'lightgreen'|'lightgrey'|'lightpink'|'lightsalmon'|'lightseagreen'|'lightskyblue'|'lightslategray'|'lightslategrey'|'lightsteelblue'|'lightyellow'|'lime'|'limegreen'|'linen'|'magenta'|'maroon'|'medium'|'mediumaquamarine'|'mediumblue'|'mediumorchid'|'mediumpurple'|'mediumseagreen'|'mediumslateblue'|'mediumspringgreen'|'mediumturquoise'|'mediumvioletred'|'midnightblue'|'mintcream'|'mistyrose'|'moccasin'|'navajowhite'|'navy'|'none'|'oldlace'|'olive'|'olivedrab'|'orange'|'orangered'|'orchid'|'outset'|'palegoldenrod'|'palegreen'|'paleturquoise'|'palevioletred'|'papayawhip'|'peachpuff'|'peru'|'pink'|'plum'|'powderblue'|'purple'|'rebeccapurple'|'red'|'revert'|'revert-layer'|'ridge'|'rosybrown'|'royalblue'|'saddlebrown'|'salmon'|'sandybrown'|'seagreen'|'seashell'|'sienna'|'silver'|'skyblue'|'slateblue'|'slategray'|'slategrey'|'snow'|'solid'|'springgreen'|'steelblue'|'tan'|'teal'|'thick'|'thin'|'thistle'|'tomato'|'transparent'|'turquoise'|'unset'|'violet'|'wheat'|'white'|'whitesmoke'|'yellow'|'yellowgreen'|int|float|string
+ * @psalm-type BorderRightWidthValue = '-moz-initial'|'inherit'|'initial'|'medium'|'revert'|'revert-layer'|'thick'|'thin'|'unset'|int|float|string
+ * @psalm-type BorderStartEndRadiusValue = '-moz-initial'|'inherit'|'initial'|'revert'|'revert-layer'|'unset'|int|float|string
+ * @psalm-type BorderStartStartRadiusValue = '-moz-initial'|'inherit'|'initial'|'revert'|'revert-layer'|'unset'|int|float|string
+ * @psalm-type BorderStyleValue = '-moz-initial'|'dashed'|'dotted'|'double'|'groove'|'hidden'|'inherit'|'initial'|'inset'|'none'|'outset'|'revert'|'revert-layer'|'ridge'|'solid'|'unset'|string
+ * @psalm-type BorderTopLeftRadiusValue = '-moz-initial'|'inherit'|'initial'|'revert'|'revert-layer'|'unset'|int|float|string
+ * @psalm-type BorderTopRightRadiusValue = '-moz-initial'|'inherit'|'initial'|'revert'|'revert-layer'|'unset'|int|float|string
+ * @psalm-type BorderTopStyleValue = '-moz-initial'|'dashed'|'dotted'|'double'|'groove'|'hidden'|'inherit'|'initial'|'inset'|'none'|'outset'|'revert'|'revert-layer'|'ridge'|'solid'|'unset'|string
+ * @psalm-type BorderTopValue = '-moz-initial'|'AccentColor'|'AccentColorText'|'ActiveBorder'|'ActiveCaption'|'ActiveText'|'AppWorkspace'|'Background'|'ButtonBorder'|'ButtonFace'|'ButtonHighlight'|'ButtonShadow'|'ButtonText'|'Canvas'|'CanvasText'|'CaptionText'|'Field'|'FieldText'|'GrayText'|'Highlight'|'HighlightText'|'InactiveBorder'|'InactiveCaption'|'InactiveCaptionText'|'InfoBackground'|'InfoText'|'LinkText'|'Mark'|'MarkText'|'Menu'|'MenuText'|'Scrollbar'|'SelectedItem'|'SelectedItemText'|'ThreeDDarkShadow'|'ThreeDFace'|'ThreeDHighlight'|'ThreeDLightShadow'|'ThreeDShadow'|'VisitedText'|'Window'|'WindowFrame'|'WindowText'|'aliceblue'|'antiquewhite'|'aqua'|'aquamarine'|'azure'|'beige'|'bisque'|'black'|'blanchedalmond'|'blue'|'blueviolet'|'brown'|'burlywood'|'cadetblue'|'chartreuse'|'chocolate'|'coral'|'cornflowerblue'|'cornsilk'|'crimson'|'currentColor'|'cyan'|'darkblue'|'darkcyan'|'darkgoldenrod'|'darkgray'|'darkgreen'|'darkgrey'|'darkkhaki'|'darkmagenta'|'darkolivegreen'|'darkorange'|'darkorchid'|'darkred'|'darksalmon'|'darkseagreen'|'darkslateblue'|'darkslategray'|'darkslategrey'|'darkturquoise'|'darkviolet'|'dashed'|'deeppink'|'deepskyblue'|'dimgray'|'dimgrey'|'dodgerblue'|'dotted'|'double'|'firebrick'|'floralwhite'|'forestgreen'|'fuchsia'|'gainsboro'|'ghostwhite'|'gold'|'goldenrod'|'gray'|'green'|'greenyellow'|'grey'|'groove'|'hidden'|'honeydew'|'hotpink'|'indianred'|'indigo'|'inherit'|'initial'|'inset'|'ivory'|'khaki'|'lavender'|'lavenderblush'|'lawngreen'|'lemonchiffon'|'lightblue'|'lightcoral'|'lightcyan'|'lightgoldenrodyellow'|'lightgray'|'lightgreen'|'lightgrey'|'lightpink'|'lightsalmon'|'lightseagreen'|'lightskyblue'|'lightslategray'|'lightslategrey'|'lightsteelblue'|'lightyellow'|'lime'|'limegreen'|'linen'|'magenta'|'maroon'|'medium'|'mediumaquamarine'|'mediumblue'|'mediumorchid'|'mediumpurple'|'mediumseagreen'|'mediumslateblue'|'mediumspringgreen'|'mediumturquoise'|'mediumvioletred'|'midnightblue'|'mintcream'|'mistyrose'|'moccasin'|'navajowhite'|'navy'|'none'|'oldlace'|'olive'|'olivedrab'|'orange'|'orangered'|'orchid'|'outset'|'palegoldenrod'|'palegreen'|'paleturquoise'|'palevioletred'|'papayawhip'|'peachpuff'|'peru'|'pink'|'plum'|'powderblue'|'purple'|'rebeccapurple'|'red'|'revert'|'revert-layer'|'ridge'|'rosybrown'|'royalblue'|'saddlebrown'|'salmon'|'sandybrown'|'seagreen'|'seashell'|'sienna'|'silver'|'skyblue'|'slateblue'|'slategray'|'slategrey'|'snow'|'solid'|'springgreen'|'steelblue'|'tan'|'teal'|'thick'|'thin'|'thistle'|'tomato'|'transparent'|'turquoise'|'unset'|'violet'|'wheat'|'white'|'whitesmoke'|'yellow'|'yellowgreen'|int|float|string
+ * @psalm-type BorderTopWidthValue = '-moz-initial'|'inherit'|'initial'|'medium'|'revert'|'revert-layer'|'thick'|'thin'|'unset'|int|float|string
+ * @psalm-type BorderValue = '-moz-initial'|'AccentColor'|'AccentColorText'|'ActiveBorder'|'ActiveCaption'|'ActiveText'|'AppWorkspace'|'Background'|'ButtonBorder'|'ButtonFace'|'ButtonHighlight'|'ButtonShadow'|'ButtonText'|'Canvas'|'CanvasText'|'CaptionText'|'Field'|'FieldText'|'GrayText'|'Highlight'|'HighlightText'|'InactiveBorder'|'InactiveCaption'|'InactiveCaptionText'|'InfoBackground'|'InfoText'|'LinkText'|'Mark'|'MarkText'|'Menu'|'MenuText'|'Scrollbar'|'SelectedItem'|'SelectedItemText'|'ThreeDDarkShadow'|'ThreeDFace'|'ThreeDHighlight'|'ThreeDLightShadow'|'ThreeDShadow'|'VisitedText'|'Window'|'WindowFrame'|'WindowText'|'aliceblue'|'antiquewhite'|'aqua'|'aquamarine'|'azure'|'beige'|'bisque'|'black'|'blanchedalmond'|'blue'|'blueviolet'|'brown'|'burlywood'|'cadetblue'|'chartreuse'|'chocolate'|'coral'|'cornflowerblue'|'cornsilk'|'crimson'|'currentColor'|'cyan'|'darkblue'|'darkcyan'|'darkgoldenrod'|'darkgray'|'darkgreen'|'darkgrey'|'darkkhaki'|'darkmagenta'|'darkolivegreen'|'darkorange'|'darkorchid'|'darkred'|'darksalmon'|'darkseagreen'|'darkslateblue'|'darkslategray'|'darkslategrey'|'darkturquoise'|'darkviolet'|'dashed'|'deeppink'|'deepskyblue'|'dimgray'|'dimgrey'|'dodgerblue'|'dotted'|'double'|'firebrick'|'floralwhite'|'forestgreen'|'fuchsia'|'gainsboro'|'ghostwhite'|'gold'|'goldenrod'|'gray'|'green'|'greenyellow'|'grey'|'groove'|'hidden'|'honeydew'|'hotpink'|'indianred'|'indigo'|'inherit'|'initial'|'inset'|'ivory'|'khaki'|'lavender'|'lavenderblush'|'lawngreen'|'lemonchiffon'|'lightblue'|'lightcoral'|'lightcyan'|'lightgoldenrodyellow'|'lightgray'|'lightgreen'|'lightgrey'|'lightpink'|'lightsalmon'|'lightseagreen'|'lightskyblue'|'lightslategray'|'lightslategrey'|'lightsteelblue'|'lightyellow'|'lime'|'limegreen'|'linen'|'magenta'|'maroon'|'medium'|'mediumaquamarine'|'mediumblue'|'mediumorchid'|'mediumpurple'|'mediumseagreen'|'mediumslateblue'|'mediumspringgreen'|'mediumturquoise'|'mediumvioletred'|'midnightblue'|'mintcream'|'mistyrose'|'moccasin'|'navajowhite'|'navy'|'none'|'oldlace'|'olive'|'olivedrab'|'orange'|'orangered'|'orchid'|'outset'|'palegoldenrod'|'palegreen'|'paleturquoise'|'palevioletred'|'papayawhip'|'peachpuff'|'peru'|'pink'|'plum'|'powderblue'|'purple'|'rebeccapurple'|'red'|'revert'|'revert-layer'|'ridge'|'rosybrown'|'royalblue'|'saddlebrown'|'salmon'|'sandybrown'|'seagreen'|'seashell'|'sienna'|'silver'|'skyblue'|'slateblue'|'slategray'|'slategrey'|'snow'|'solid'|'springgreen'|'steelblue'|'tan'|'teal'|'thick'|'thin'|'thistle'|'tomato'|'transparent'|'turquoise'|'unset'|'violet'|'wheat'|'white'|'whitesmoke'|'yellow'|'yellowgreen'|int|float|string
+ * @psalm-type BorderWidthValue = '-moz-initial'|'inherit'|'initial'|'medium'|'revert'|'revert-layer'|'thick'|'thin'|'unset'|int|float|string
  * @psalm-type BoxAlignValue = '-moz-initial'|'baseline'|'center'|'end'|'inherit'|'initial'|'revert'|'revert-layer'|'start'|'stretch'|'unset'|string
  * @psalm-type BoxDecorationBreakValue = '-moz-initial'|'clone'|'inherit'|'initial'|'revert'|'revert-layer'|'slice'|'unset'|string
  * @psalm-type BoxDirectionValue = '-moz-initial'|'inherit'|'initial'|'normal'|'reverse'|'revert'|'revert-layer'|'unset'|string
+ * @psalm-type BoxFlexGroupValue = '-moz-initial'|'inherit'|'initial'|'revert'|'revert-layer'|'unset'|int|float|string
+ * @psalm-type BoxFlexValue = '-moz-initial'|'inherit'|'initial'|'revert'|'revert-layer'|'unset'|int|float|string
  * @psalm-type BoxLinesValue = '-moz-initial'|'inherit'|'initial'|'multiple'|'revert'|'revert-layer'|'single'|'unset'|string
+ * @psalm-type BoxOrdinalGroupValue = '-moz-initial'|'inherit'|'initial'|'revert'|'revert-layer'|'unset'|int|float|string
  * @psalm-type BoxOrientValue = '-moz-initial'|'block-axis'|'horizontal'|'inherit'|'initial'|'inline-axis'|'revert'|'revert-layer'|'unset'|'vertical'|string
  * @psalm-type BoxPackValue = '-moz-initial'|'center'|'end'|'inherit'|'initial'|'justify'|'revert'|'revert-layer'|'start'|'unset'|string
+ * @psalm-type BoxShadowValue = '-moz-initial'|'inherit'|'initial'|'none'|'revert'|'revert-layer'|'unset'|string
  * @psalm-type BoxSizingValue = '-moz-initial'|'border-box'|'content-box'|'inherit'|'initial'|'revert'|'revert-layer'|'unset'|string
  * @psalm-type BreakAfterValue = '-moz-initial'|'all'|'always'|'auto'|'avoid'|'avoid-column'|'avoid-page'|'avoid-region'|'column'|'inherit'|'initial'|'left'|'page'|'recto'|'region'|'revert'|'revert-layer'|'right'|'unset'|'verso'|string
+ * @psalm-type BreakBeforeValue = '-moz-initial'|'all'|'always'|'auto'|'avoid'|'avoid-column'|'avoid-page'|'avoid-region'|'column'|'inherit'|'initial'|'left'|'page'|'recto'|'region'|'revert'|'revert-layer'|'right'|'unset'|'verso'|string
  * @psalm-type BreakInsideValue = '-moz-initial'|'auto'|'avoid'|'avoid-column'|'avoid-page'|'avoid-region'|'inherit'|'initial'|'revert'|'revert-layer'|'unset'|string
  * @psalm-type BreakpointsToken = 'md'|'sm'|string
  * @psalm-type CaptionSideValue = '-moz-initial'|'bottom'|'inherit'|'initial'|'revert'|'revert-layer'|'top'|'unset'|string
@@ -50,38 +112,76 @@ namespace Symfony\UX\Css;
  * @psalm-type ClearValue = '-moz-initial'|'both'|'inherit'|'initial'|'inline-end'|'inline-start'|'left'|'none'|'revert'|'revert-layer'|'right'|'unset'|string
  * @psalm-type ClipPathValue = '-moz-initial'|'border-box'|'content-box'|'fill-box'|'inherit'|'initial'|'margin-box'|'none'|'padding-box'|'revert'|'revert-layer'|'stroke-box'|'unset'|'view-box'|string
  * @psalm-type ClipRuleValue = '-moz-initial'|'evenodd'|'inherit'|'initial'|'nonzero'|'revert'|'revert-layer'|'unset'|string
+ * @psalm-type ClipValue = '-moz-initial'|'auto'|'inherit'|'initial'|'revert'|'revert-layer'|'unset'|string
+ * @psalm-type ColorInterpolationFiltersValue = '-moz-initial'|'auto'|'inherit'|'initial'|'linearRGB'|'revert'|'revert-layer'|'sRGB'|'unset'|string
  * @psalm-type ColorInterpolationValue = '-moz-initial'|'auto'|'inherit'|'initial'|'linearRGB'|'revert'|'revert-layer'|'sRGB'|'unset'|string
  * @psalm-type ColorPaletteValue = 'blue'|'primary'|string
  * @psalm-type ColorRenderingValue = '-moz-initial'|'auto'|'inherit'|'initial'|'optimizeQuality'|'optimizeSpeed'|'revert'|'revert-layer'|'unset'|string
  * @psalm-type ColorSchemeValue = '-moz-initial'|'dark'|'inherit'|'initial'|'light'|'normal'|'revert'|'revert-layer'|'unset'|string
  * @psalm-type ColorsToken = 'blue.500'|'colorPalette'|'colorPalette.500'|'primary'|string
+ * @psalm-type ColumnCountValue = '-moz-initial'|'auto'|'inherit'|'initial'|'revert'|'revert-layer'|'unset'|int|float|string
  * @psalm-type ColumnFillValue = '-moz-initial'|'auto'|'balance'|'inherit'|'initial'|'revert'|'revert-layer'|'unset'|string
+ * @psalm-type ColumnRuleColorValue = '-moz-initial'|'AccentColor'|'AccentColorText'|'ActiveBorder'|'ActiveCaption'|'ActiveText'|'AppWorkspace'|'Background'|'ButtonBorder'|'ButtonFace'|'ButtonHighlight'|'ButtonShadow'|'ButtonText'|'Canvas'|'CanvasText'|'CaptionText'|'Field'|'FieldText'|'GrayText'|'Highlight'|'HighlightText'|'InactiveBorder'|'InactiveCaption'|'InactiveCaptionText'|'InfoBackground'|'InfoText'|'LinkText'|'Mark'|'MarkText'|'Menu'|'MenuText'|'Scrollbar'|'SelectedItem'|'SelectedItemText'|'ThreeDDarkShadow'|'ThreeDFace'|'ThreeDHighlight'|'ThreeDLightShadow'|'ThreeDShadow'|'VisitedText'|'Window'|'WindowFrame'|'WindowText'|'aliceblue'|'antiquewhite'|'aqua'|'aquamarine'|'azure'|'beige'|'bisque'|'black'|'blanchedalmond'|'blue'|'blueviolet'|'brown'|'burlywood'|'cadetblue'|'chartreuse'|'chocolate'|'coral'|'cornflowerblue'|'cornsilk'|'crimson'|'currentColor'|'cyan'|'darkblue'|'darkcyan'|'darkgoldenrod'|'darkgray'|'darkgreen'|'darkgrey'|'darkkhaki'|'darkmagenta'|'darkolivegreen'|'darkorange'|'darkorchid'|'darkred'|'darksalmon'|'darkseagreen'|'darkslateblue'|'darkslategray'|'darkslategrey'|'darkturquoise'|'darkviolet'|'deeppink'|'deepskyblue'|'dimgray'|'dimgrey'|'dodgerblue'|'firebrick'|'floralwhite'|'forestgreen'|'fuchsia'|'gainsboro'|'ghostwhite'|'gold'|'goldenrod'|'gray'|'green'|'greenyellow'|'grey'|'honeydew'|'hotpink'|'indianred'|'indigo'|'inherit'|'initial'|'ivory'|'khaki'|'lavender'|'lavenderblush'|'lawngreen'|'lemonchiffon'|'lightblue'|'lightcoral'|'lightcyan'|'lightgoldenrodyellow'|'lightgray'|'lightgreen'|'lightgrey'|'lightpink'|'lightsalmon'|'lightseagreen'|'lightskyblue'|'lightslategray'|'lightslategrey'|'lightsteelblue'|'lightyellow'|'lime'|'limegreen'|'linen'|'magenta'|'maroon'|'mediumaquamarine'|'mediumblue'|'mediumorchid'|'mediumpurple'|'mediumseagreen'|'mediumslateblue'|'mediumspringgreen'|'mediumturquoise'|'mediumvioletred'|'midnightblue'|'mintcream'|'mistyrose'|'moccasin'|'navajowhite'|'navy'|'oldlace'|'olive'|'olivedrab'|'orange'|'orangered'|'orchid'|'palegoldenrod'|'palegreen'|'paleturquoise'|'palevioletred'|'papayawhip'|'peachpuff'|'peru'|'pink'|'plum'|'powderblue'|'purple'|'rebeccapurple'|'red'|'revert'|'revert-layer'|'rosybrown'|'royalblue'|'saddlebrown'|'salmon'|'sandybrown'|'seagreen'|'seashell'|'sienna'|'silver'|'skyblue'|'slateblue'|'slategray'|'slategrey'|'snow'|'springgreen'|'steelblue'|'tan'|'teal'|'thistle'|'tomato'|'transparent'|'turquoise'|'unset'|'violet'|'wheat'|'white'|'whitesmoke'|'yellow'|'yellowgreen'|string
+ * @psalm-type ColumnRuleStyleValue = '-moz-initial'|'dashed'|'dotted'|'double'|'groove'|'hidden'|'inherit'|'initial'|'inset'|'none'|'outset'|'revert'|'revert-layer'|'ridge'|'solid'|'unset'|string
+ * @psalm-type ColumnRuleValue = '-moz-initial'|'AccentColor'|'AccentColorText'|'ActiveBorder'|'ActiveCaption'|'ActiveText'|'AppWorkspace'|'Background'|'ButtonBorder'|'ButtonFace'|'ButtonHighlight'|'ButtonShadow'|'ButtonText'|'Canvas'|'CanvasText'|'CaptionText'|'Field'|'FieldText'|'GrayText'|'Highlight'|'HighlightText'|'InactiveBorder'|'InactiveCaption'|'InactiveCaptionText'|'InfoBackground'|'InfoText'|'LinkText'|'Mark'|'MarkText'|'Menu'|'MenuText'|'Scrollbar'|'SelectedItem'|'SelectedItemText'|'ThreeDDarkShadow'|'ThreeDFace'|'ThreeDHighlight'|'ThreeDLightShadow'|'ThreeDShadow'|'VisitedText'|'Window'|'WindowFrame'|'WindowText'|'aliceblue'|'antiquewhite'|'aqua'|'aquamarine'|'azure'|'beige'|'bisque'|'black'|'blanchedalmond'|'blue'|'blueviolet'|'brown'|'burlywood'|'cadetblue'|'chartreuse'|'chocolate'|'coral'|'cornflowerblue'|'cornsilk'|'crimson'|'currentColor'|'cyan'|'darkblue'|'darkcyan'|'darkgoldenrod'|'darkgray'|'darkgreen'|'darkgrey'|'darkkhaki'|'darkmagenta'|'darkolivegreen'|'darkorange'|'darkorchid'|'darkred'|'darksalmon'|'darkseagreen'|'darkslateblue'|'darkslategray'|'darkslategrey'|'darkturquoise'|'darkviolet'|'dashed'|'deeppink'|'deepskyblue'|'dimgray'|'dimgrey'|'dodgerblue'|'dotted'|'double'|'firebrick'|'floralwhite'|'forestgreen'|'fuchsia'|'gainsboro'|'ghostwhite'|'gold'|'goldenrod'|'gray'|'green'|'greenyellow'|'grey'|'groove'|'hidden'|'honeydew'|'hotpink'|'indianred'|'indigo'|'inherit'|'initial'|'inset'|'ivory'|'khaki'|'lavender'|'lavenderblush'|'lawngreen'|'lemonchiffon'|'lightblue'|'lightcoral'|'lightcyan'|'lightgoldenrodyellow'|'lightgray'|'lightgreen'|'lightgrey'|'lightpink'|'lightsalmon'|'lightseagreen'|'lightskyblue'|'lightslategray'|'lightslategrey'|'lightsteelblue'|'lightyellow'|'lime'|'limegreen'|'linen'|'magenta'|'maroon'|'medium'|'mediumaquamarine'|'mediumblue'|'mediumorchid'|'mediumpurple'|'mediumseagreen'|'mediumslateblue'|'mediumspringgreen'|'mediumturquoise'|'mediumvioletred'|'midnightblue'|'mintcream'|'mistyrose'|'moccasin'|'navajowhite'|'navy'|'none'|'oldlace'|'olive'|'olivedrab'|'orange'|'orangered'|'orchid'|'outset'|'palegoldenrod'|'palegreen'|'paleturquoise'|'palevioletred'|'papayawhip'|'peachpuff'|'peru'|'pink'|'plum'|'powderblue'|'purple'|'rebeccapurple'|'red'|'revert'|'revert-layer'|'ridge'|'rosybrown'|'royalblue'|'saddlebrown'|'salmon'|'sandybrown'|'seagreen'|'seashell'|'sienna'|'silver'|'skyblue'|'slateblue'|'slategray'|'slategrey'|'snow'|'solid'|'springgreen'|'steelblue'|'tan'|'teal'|'thick'|'thin'|'thistle'|'tomato'|'transparent'|'turquoise'|'unset'|'violet'|'wheat'|'white'|'whitesmoke'|'yellow'|'yellowgreen'|int|float|string
+ * @psalm-type ColumnRuleWidthValue = '-moz-initial'|'inherit'|'initial'|'medium'|'revert'|'revert-layer'|'thick'|'thin'|'unset'|int|float|string
+ * @psalm-type ColumnSpanValue = '-moz-initial'|'all'|'inherit'|'initial'|'none'|'revert'|'revert-layer'|'unset'|string
+ * @psalm-type ColumnWidthValue = '-moz-initial'|'auto'|'inherit'|'initial'|'revert'|'revert-layer'|'unset'|int|float|string
+ * @psalm-type ColumnsValue = '-moz-initial'|'auto'|'inherit'|'initial'|'revert'|'revert-layer'|'unset'|int|float|string
+ * @psalm-type ContainIntrinsicBlockSizeValue = '-moz-initial'|'inherit'|'initial'|'none'|'revert'|'revert-layer'|'unset'|int|float|string
+ * @psalm-type ContainIntrinsicHeightValue = '-moz-initial'|'inherit'|'initial'|'none'|'revert'|'revert-layer'|'unset'|int|float|string
+ * @psalm-type ContainIntrinsicInlineSizeValue = '-moz-initial'|'inherit'|'initial'|'none'|'revert'|'revert-layer'|'unset'|int|float|string
+ * @psalm-type ContainIntrinsicSizeValue = '-moz-initial'|'inherit'|'initial'|'none'|'revert'|'revert-layer'|'unset'|int|float|string
+ * @psalm-type ContainIntrinsicWidthValue = '-moz-initial'|'inherit'|'initial'|'none'|'revert'|'revert-layer'|'unset'|int|float|string
  * @psalm-type ContainValue = '-moz-initial'|'content'|'inherit'|'initial'|'inline-size'|'layout'|'none'|'paint'|'revert'|'revert-layer'|'size'|'strict'|'style'|'unset'|string
+ * @psalm-type ContainerNameValue = '-moz-initial'|'inherit'|'initial'|'none'|'revert'|'revert-layer'|'unset'|string
  * @psalm-type ContainerTypeValue = '-moz-initial'|'inherit'|'initial'|'inline-size'|'normal'|'revert'|'revert-layer'|'scroll-state'|'size'|'unset'|string
+ * @psalm-type ContainerValue = '-moz-initial'|'inherit'|'initial'|'none'|'revert'|'revert-layer'|'unset'|string
  * @psalm-type ContentValue = '-moz-initial'|'close-quote'|'inherit'|'initial'|'no-close-quote'|'no-open-quote'|'none'|'normal'|'open-quote'|'revert'|'revert-layer'|'unset'|string
  * @psalm-type ContentVisibilityValue = '-moz-initial'|'auto'|'hidden'|'inherit'|'initial'|'revert'|'revert-layer'|'unset'|'visible'|string
+ * @psalm-type CounterIncrementValue = '-moz-initial'|'inherit'|'initial'|'none'|'revert'|'revert-layer'|'unset'|string
+ * @psalm-type CounterResetValue = '-moz-initial'|'inherit'|'initial'|'none'|'revert'|'revert-layer'|'unset'|string
+ * @psalm-type CounterSetValue = '-moz-initial'|'inherit'|'initial'|'none'|'revert'|'revert-layer'|'unset'|string
  * @psalm-type CursorValue = '-moz-grab'|'-moz-initial'|'-moz-zoom-in'|'-moz-zoom-out'|'-webkit-grab'|'-webkit-grabbing'|'-webkit-zoom-in'|'-webkit-zoom-out'|'alias'|'all-scroll'|'auto'|'cell'|'col-resize'|'context-menu'|'copy'|'crosshair'|'default'|'e-resize'|'ew-resize'|'grab'|'grabbing'|'help'|'inherit'|'initial'|'move'|'n-resize'|'ne-resize'|'nesw-resize'|'no-drop'|'none'|'not-allowed'|'ns-resize'|'nw-resize'|'nwse-resize'|'pointer'|'progress'|'revert'|'revert-layer'|'row-resize'|'s-resize'|'se-resize'|'sw-resize'|'text'|'unset'|'vertical-text'|'w-resize'|'wait'|'zoom-in'|'zoom-out'|string
+ * @psalm-type CxValue = '-moz-initial'|'inherit'|'initial'|'revert'|'revert-layer'|'unset'|int|float|string
+ * @psalm-type CyValue = '-moz-initial'|'inherit'|'initial'|'revert'|'revert-layer'|'unset'|int|float|string
+ * @psalm-type DValue = '-moz-initial'|'inherit'|'initial'|'none'|'revert'|'revert-layer'|'unset'|string
  * @psalm-type DirectionValue = '-moz-initial'|'inherit'|'initial'|'ltr'|'revert'|'revert-layer'|'rtl'|'unset'|string
  * @psalm-type DisplayValue = '-moz-initial'|'-ms-flexbox'|'-ms-grid'|'-ms-inline-flexbox'|'-ms-inline-grid'|'-webkit-flex'|'-webkit-inline-flex'|'block'|'contents'|'flex'|'flow'|'flow-root'|'grid'|'inherit'|'initial'|'inline'|'inline-block'|'inline-flex'|'inline-grid'|'inline-list-item'|'inline-table'|'list-item'|'none'|'revert'|'revert-layer'|'ruby'|'ruby-base'|'ruby-base-container'|'ruby-text'|'ruby-text-container'|'run-in'|'table'|'table-caption'|'table-cell'|'table-column'|'table-column-group'|'table-footer-group'|'table-header-group'|'table-row'|'table-row-group'|'unset'|string
  * @psalm-type DominantBaselineValue = '-moz-initial'|'alphabetic'|'auto'|'central'|'hanging'|'ideographic'|'inherit'|'initial'|'mathematical'|'middle'|'revert'|'revert-layer'|'text-bottom'|'text-top'|'unset'|string
  * @psalm-type EmptyCellsValue = '-moz-initial'|'hide'|'inherit'|'initial'|'revert'|'revert-layer'|'show'|'unset'|string
  * @psalm-type FieldSizingValue = '-moz-initial'|'content'|'fixed'|'inherit'|'initial'|'revert'|'revert-layer'|'unset'|string
+ * @psalm-type FillOpacityValue = '-moz-initial'|'inherit'|'initial'|'revert'|'revert-layer'|'unset'|int|float|string
+ * @psalm-type FillRuleValue = '-moz-initial'|'evenodd'|'inherit'|'initial'|'nonzero'|'revert'|'revert-layer'|'unset'|string
+ * @psalm-type FilterValue = 'auto'|string
  * @psalm-type FlexDirectionValue = '-moz-initial'|'column'|'column-reverse'|'inherit'|'initial'|'revert'|'revert-layer'|'row'|'row-reverse'|'unset'|string
  * @psalm-type FlexFlowValue = '-moz-initial'|'column'|'column-reverse'|'inherit'|'initial'|'nowrap'|'revert'|'revert-layer'|'row'|'row-reverse'|'unset'|'wrap'|'wrap-reverse'|string
+ * @psalm-type FlexGrowValue = '-moz-initial'|'inherit'|'initial'|'revert'|'revert-layer'|'unset'|int|float|string
+ * @psalm-type FlexShrinkValue = '-moz-initial'|'inherit'|'initial'|'revert'|'revert-layer'|'unset'|int|float|string
  * @psalm-type FlexValue = '1'|'auto'|'initial'|'none'|string
  * @psalm-type FlexWrapValue = '-moz-initial'|'inherit'|'initial'|'nowrap'|'revert'|'revert-layer'|'unset'|'wrap'|'wrap-reverse'|string
  * @psalm-type FloatValue = 'end'|'start'|string
+ * @psalm-type FloodColorValue = '-moz-initial'|'AccentColor'|'AccentColorText'|'ActiveBorder'|'ActiveCaption'|'ActiveText'|'AppWorkspace'|'Background'|'ButtonBorder'|'ButtonFace'|'ButtonHighlight'|'ButtonShadow'|'ButtonText'|'Canvas'|'CanvasText'|'CaptionText'|'Field'|'FieldText'|'GrayText'|'Highlight'|'HighlightText'|'InactiveBorder'|'InactiveCaption'|'InactiveCaptionText'|'InfoBackground'|'InfoText'|'LinkText'|'Mark'|'MarkText'|'Menu'|'MenuText'|'Scrollbar'|'SelectedItem'|'SelectedItemText'|'ThreeDDarkShadow'|'ThreeDFace'|'ThreeDHighlight'|'ThreeDLightShadow'|'ThreeDShadow'|'VisitedText'|'Window'|'WindowFrame'|'WindowText'|'aliceblue'|'antiquewhite'|'aqua'|'aquamarine'|'azure'|'beige'|'bisque'|'black'|'blanchedalmond'|'blue'|'blueviolet'|'brown'|'burlywood'|'cadetblue'|'chartreuse'|'chocolate'|'coral'|'cornflowerblue'|'cornsilk'|'crimson'|'currentColor'|'cyan'|'darkblue'|'darkcyan'|'darkgoldenrod'|'darkgray'|'darkgreen'|'darkgrey'|'darkkhaki'|'darkmagenta'|'darkolivegreen'|'darkorange'|'darkorchid'|'darkred'|'darksalmon'|'darkseagreen'|'darkslateblue'|'darkslategray'|'darkslategrey'|'darkturquoise'|'darkviolet'|'deeppink'|'deepskyblue'|'dimgray'|'dimgrey'|'dodgerblue'|'firebrick'|'floralwhite'|'forestgreen'|'fuchsia'|'gainsboro'|'ghostwhite'|'gold'|'goldenrod'|'gray'|'green'|'greenyellow'|'grey'|'honeydew'|'hotpink'|'indianred'|'indigo'|'inherit'|'initial'|'ivory'|'khaki'|'lavender'|'lavenderblush'|'lawngreen'|'lemonchiffon'|'lightblue'|'lightcoral'|'lightcyan'|'lightgoldenrodyellow'|'lightgray'|'lightgreen'|'lightgrey'|'lightpink'|'lightsalmon'|'lightseagreen'|'lightskyblue'|'lightslategray'|'lightslategrey'|'lightsteelblue'|'lightyellow'|'lime'|'limegreen'|'linen'|'magenta'|'maroon'|'mediumaquamarine'|'mediumblue'|'mediumorchid'|'mediumpurple'|'mediumseagreen'|'mediumslateblue'|'mediumspringgreen'|'mediumturquoise'|'mediumvioletred'|'midnightblue'|'mintcream'|'mistyrose'|'moccasin'|'navajowhite'|'navy'|'oldlace'|'olive'|'olivedrab'|'orange'|'orangered'|'orchid'|'palegoldenrod'|'palegreen'|'paleturquoise'|'palevioletred'|'papayawhip'|'peachpuff'|'peru'|'pink'|'plum'|'powderblue'|'purple'|'rebeccapurple'|'red'|'revert'|'revert-layer'|'rosybrown'|'royalblue'|'saddlebrown'|'salmon'|'sandybrown'|'seagreen'|'seashell'|'sienna'|'silver'|'skyblue'|'slateblue'|'slategray'|'slategrey'|'snow'|'springgreen'|'steelblue'|'tan'|'teal'|'thistle'|'tomato'|'transparent'|'turquoise'|'unset'|'violet'|'wheat'|'white'|'whitesmoke'|'yellow'|'yellowgreen'|string
+ * @psalm-type FloodOpacityValue = '-moz-initial'|'inherit'|'initial'|'revert'|'revert-layer'|'unset'|int|float|string
  * @psalm-type FocusRingValue = 'inside'|'mixed'|'none'|'outside'|string
+ * @psalm-type FocusVisibleRingValue = 'inside'|'mixed'|'none'|'outside'|string
  * @psalm-type FontFamilyValue = '-apple-system'|'-moz-initial'|'cursive'|'emoji'|'fangsong'|'fantasy'|'inherit'|'initial'|'math'|'monospace'|'revert'|'revert-layer'|'sans-serif'|'serif'|'system-ui'|'ui-monospace'|'ui-rounded'|'ui-sans-serif'|'ui-serif'|'unset'|string
  * @psalm-type FontFeatureSettingsValue = '-moz-initial'|'inherit'|'initial'|'normal'|'revert'|'revert-layer'|'unset'|string
  * @psalm-type FontKerningValue = '-moz-initial'|'auto'|'inherit'|'initial'|'none'|'normal'|'revert'|'revert-layer'|'unset'|string
+ * @psalm-type FontLanguageOverrideValue = '-moz-initial'|'inherit'|'initial'|'normal'|'revert'|'revert-layer'|'unset'|string
+ * @psalm-type FontOpticalSizingValue = '-moz-initial'|'auto'|'inherit'|'initial'|'none'|'revert'|'revert-layer'|'unset'|string
+ * @psalm-type FontPaletteValue = '-moz-initial'|'dark'|'inherit'|'initial'|'light'|'normal'|'revert'|'revert-layer'|'unset'|string
  * @psalm-type FontSizeAdjustValue = '-moz-initial'|'from-font'|'inherit'|'initial'|'none'|'revert'|'revert-layer'|'unset'|int|float|string
  * @psalm-type FontSizeValue = '-moz-initial'|'inherit'|'initial'|'large'|'larger'|'math'|'medium'|'revert'|'revert-layer'|'small'|'smaller'|'unset'|'x-large'|'x-small'|'xx-large'|'xx-small'|'xxx-large'|int|float|string
  * @psalm-type FontSmoothValue = '-moz-initial'|'always'|'auto'|'inherit'|'initial'|'large'|'medium'|'never'|'revert'|'revert-layer'|'small'|'unset'|'x-large'|'x-small'|'xx-large'|'xx-small'|'xxx-large'|int|float|string
  * @psalm-type FontSmoothingValue = 'antialiased'|'subpixel-antialiased'|string
  * @psalm-type FontStretchValue = '-moz-initial'|'condensed'|'expanded'|'extra-condensed'|'extra-expanded'|'inherit'|'initial'|'normal'|'revert'|'revert-layer'|'semi-condensed'|'semi-expanded'|'ultra-condensed'|'ultra-expanded'|'unset'|string
  * @psalm-type FontStyleValue = '-moz-initial'|'inherit'|'initial'|'italic'|'normal'|'oblique'|'revert'|'revert-layer'|'unset'|string
+ * @psalm-type FontSynthesisPositionValue = '-moz-initial'|'auto'|'inherit'|'initial'|'none'|'revert'|'revert-layer'|'unset'|string
+ * @psalm-type FontSynthesisSmallCapsValue = '-moz-initial'|'auto'|'inherit'|'initial'|'none'|'revert'|'revert-layer'|'unset'|string
+ * @psalm-type FontSynthesisStyleValue = '-moz-initial'|'auto'|'inherit'|'initial'|'none'|'revert'|'revert-layer'|'unset'|string
  * @psalm-type FontSynthesisValue = '-moz-initial'|'inherit'|'initial'|'none'|'position'|'revert'|'revert-layer'|'small-caps'|'style'|'unset'|'weight'|string
+ * @psalm-type FontSynthesisWeightValue = '-moz-initial'|'auto'|'inherit'|'initial'|'none'|'revert'|'revert-layer'|'unset'|string
  * @psalm-type FontValue = '-moz-initial'|'caption'|'icon'|'inherit'|'initial'|'menu'|'message-box'|'revert'|'revert-layer'|'small-caption'|'status-bar'|'unset'|string
  * @psalm-type FontVariantAlternatesValue = '-moz-initial'|'historical-forms'|'inherit'|'initial'|'normal'|'revert'|'revert-layer'|'unset'|string
  * @psalm-type FontVariantCapsValue = '-moz-initial'|'all-petite-caps'|'all-small-caps'|'inherit'|'initial'|'normal'|'petite-caps'|'revert'|'revert-layer'|'small-caps'|'titling-caps'|'unicase'|'unset'|string
@@ -91,13 +191,29 @@ namespace Symfony\UX\Css;
  * @psalm-type FontVariantNumericValue = '-moz-initial'|'diagonal-fractions'|'inherit'|'initial'|'lining-nums'|'normal'|'oldstyle-nums'|'ordinal'|'proportional-nums'|'revert'|'revert-layer'|'slashed-zero'|'stacked-fractions'|'tabular-nums'|'unset'|string
  * @psalm-type FontVariantPositionValue = '-moz-initial'|'inherit'|'initial'|'normal'|'revert'|'revert-layer'|'sub'|'super'|'unset'|string
  * @psalm-type FontVariantValue = '-moz-initial'|'all-petite-caps'|'all-small-caps'|'common-ligatures'|'contextual'|'diagonal-fractions'|'discretionary-ligatures'|'full-width'|'historical-forms'|'historical-ligatures'|'inherit'|'initial'|'jis04'|'jis78'|'jis83'|'jis90'|'lining-nums'|'no-common-ligatures'|'no-contextual'|'no-discretionary-ligatures'|'no-historical-ligatures'|'none'|'normal'|'oldstyle-nums'|'ordinal'|'petite-caps'|'proportional-nums'|'proportional-width'|'revert'|'revert-layer'|'ruby'|'simplified'|'slashed-zero'|'small-caps'|'stacked-fractions'|'tabular-nums'|'titling-caps'|'traditional'|'unicase'|'unset'|string
+ * @psalm-type FontVariationSettingsValue = '-moz-initial'|'inherit'|'initial'|'normal'|'revert'|'revert-layer'|'unset'|string
  * @psalm-type FontWeightValue = '-moz-initial'|'bold'|'bolder'|'inherit'|'initial'|'lighter'|'normal'|'revert'|'revert-layer'|'unset'|int|float|string
  * @psalm-type ForcedColorAdjustValue = '-moz-initial'|'auto'|'inherit'|'initial'|'none'|'preserve-parent-color'|'revert'|'revert-layer'|'unset'|string
+ * @psalm-type GlyphOrientationVerticalValue = '-moz-initial'|'auto'|'inherit'|'initial'|'revert'|'revert-layer'|'unset'|int|float|string
  * @psalm-type GradientsToken = 'to-b'|'to-bl'|'to-br'|'to-l'|'to-r'|'to-t'|'to-tl'|'to-tr'|string
+ * @psalm-type GridAreaValue = '-moz-initial'|'auto'|'inherit'|'initial'|'revert'|'revert-layer'|'unset'|int|float|string
  * @psalm-type GridAutoColumnsValue = 'fr'|'max'|'min'|string
  * @psalm-type GridAutoFlowValue = '-moz-initial'|'column'|'dense'|'inherit'|'initial'|'revert'|'revert-layer'|'row'|'unset'|string
+ * @psalm-type GridAutoRowsValue = 'fr'|'max'|'min'|string
+ * @psalm-type GridColumnEndValue = '-moz-initial'|'auto'|'inherit'|'initial'|'revert'|'revert-layer'|'unset'|int|float|string
+ * @psalm-type GridColumnStartValue = '-moz-initial'|'auto'|'inherit'|'initial'|'revert'|'revert-layer'|'unset'|int|float|string
+ * @psalm-type GridColumnValue = '-moz-initial'|'auto'|'inherit'|'initial'|'revert'|'revert-layer'|'unset'|int|float|string
+ * @psalm-type GridRowEndValue = '-moz-initial'|'auto'|'inherit'|'initial'|'revert'|'revert-layer'|'unset'|int|float|string
+ * @psalm-type GridRowStartValue = '-moz-initial'|'auto'|'inherit'|'initial'|'revert'|'revert-layer'|'unset'|int|float|string
+ * @psalm-type GridRowValue = '-moz-initial'|'auto'|'inherit'|'initial'|'revert'|'revert-layer'|'unset'|int|float|string
+ * @psalm-type GridTemplateAreasValue = '-moz-initial'|'inherit'|'initial'|'none'|'revert'|'revert-layer'|'unset'|string
  * @psalm-type GridTemplateColumnsValue = '-moz-initial'|'auto'|'inherit'|'initial'|'max-content'|'min-content'|'none'|'revert'|'revert-layer'|'subgrid'|'unset'|int|float|string
+ * @psalm-type GridTemplateRowsValue = '-moz-initial'|'auto'|'inherit'|'initial'|'max-content'|'min-content'|'none'|'revert'|'revert-layer'|'subgrid'|'unset'|int|float|string
+ * @psalm-type GridTemplateValue = '-moz-initial'|'inherit'|'initial'|'none'|'revert'|'revert-layer'|'unset'|string
+ * @psalm-type GridValue = '-moz-initial'|'inherit'|'initial'|'none'|'revert'|'revert-layer'|'unset'|string
  * @psalm-type HangingPunctuationValue = '-moz-initial'|'allow-end'|'first'|'force-end'|'inherit'|'initial'|'last'|'none'|'revert'|'revert-layer'|'unset'|string
+ * @psalm-type HyphenateCharacterValue = '-moz-initial'|'auto'|'inherit'|'initial'|'revert'|'revert-layer'|'unset'|string
+ * @psalm-type HyphenateLimitCharsValue = '-moz-initial'|'auto'|'inherit'|'initial'|'revert'|'revert-layer'|'unset'|int|float|string
  * @psalm-type HyphensValue = '-moz-initial'|'auto'|'inherit'|'initial'|'manual'|'none'|'revert'|'revert-layer'|'unset'|string
  * @psalm-type ImageOrientationValue = '-moz-initial'|'flip'|'from-image'|'inherit'|'initial'|'revert'|'revert-layer'|'unset'|string
  * @psalm-type ImageRenderingValue = '-moz-crisp-edges'|'-moz-initial'|'-webkit-optimize-contrast'|'auto'|'crisp-edges'|'inherit'|'initial'|'pixelated'|'revert'|'revert-layer'|'smooth'|'unset'|string
@@ -110,60 +226,121 @@ namespace Symfony\UX\Css;
  * @psalm-type JustifyContentValue = '-moz-initial'|'center'|'end'|'flex-end'|'flex-start'|'inherit'|'initial'|'left'|'normal'|'revert'|'revert-layer'|'right'|'space-around'|'space-between'|'space-evenly'|'start'|'stretch'|'unset'|string
  * @psalm-type JustifyItemsValue = '-moz-initial'|'anchor-center'|'baseline'|'center'|'end'|'flex-end'|'flex-start'|'inherit'|'initial'|'left'|'legacy'|'normal'|'revert'|'revert-layer'|'right'|'self-end'|'self-start'|'start'|'stretch'|'unset'|string
  * @psalm-type JustifySelfValue = '-moz-initial'|'anchor-center'|'auto'|'baseline'|'center'|'end'|'flex-end'|'flex-start'|'inherit'|'initial'|'left'|'normal'|'revert'|'revert-layer'|'right'|'self-end'|'self-start'|'start'|'stretch'|'unset'|string
+ * @psalm-type JustifyTracksValue = '-moz-initial'|'center'|'end'|'flex-end'|'flex-start'|'inherit'|'initial'|'left'|'normal'|'revert'|'revert-layer'|'right'|'space-around'|'space-between'|'space-evenly'|'start'|'stretch'|'unset'|string
+ * @psalm-type LetterSpacingValue = '-moz-initial'|'inherit'|'initial'|'normal'|'revert'|'revert-layer'|'unset'|int|float|string
+ * @psalm-type LightingColorValue = '-moz-initial'|'AccentColor'|'AccentColorText'|'ActiveBorder'|'ActiveCaption'|'ActiveText'|'AppWorkspace'|'Background'|'ButtonBorder'|'ButtonFace'|'ButtonHighlight'|'ButtonShadow'|'ButtonText'|'Canvas'|'CanvasText'|'CaptionText'|'Field'|'FieldText'|'GrayText'|'Highlight'|'HighlightText'|'InactiveBorder'|'InactiveCaption'|'InactiveCaptionText'|'InfoBackground'|'InfoText'|'LinkText'|'Mark'|'MarkText'|'Menu'|'MenuText'|'Scrollbar'|'SelectedItem'|'SelectedItemText'|'ThreeDDarkShadow'|'ThreeDFace'|'ThreeDHighlight'|'ThreeDLightShadow'|'ThreeDShadow'|'VisitedText'|'Window'|'WindowFrame'|'WindowText'|'aliceblue'|'antiquewhite'|'aqua'|'aquamarine'|'azure'|'beige'|'bisque'|'black'|'blanchedalmond'|'blue'|'blueviolet'|'brown'|'burlywood'|'cadetblue'|'chartreuse'|'chocolate'|'coral'|'cornflowerblue'|'cornsilk'|'crimson'|'currentColor'|'cyan'|'darkblue'|'darkcyan'|'darkgoldenrod'|'darkgray'|'darkgreen'|'darkgrey'|'darkkhaki'|'darkmagenta'|'darkolivegreen'|'darkorange'|'darkorchid'|'darkred'|'darksalmon'|'darkseagreen'|'darkslateblue'|'darkslategray'|'darkslategrey'|'darkturquoise'|'darkviolet'|'deeppink'|'deepskyblue'|'dimgray'|'dimgrey'|'dodgerblue'|'firebrick'|'floralwhite'|'forestgreen'|'fuchsia'|'gainsboro'|'ghostwhite'|'gold'|'goldenrod'|'gray'|'green'|'greenyellow'|'grey'|'honeydew'|'hotpink'|'indianred'|'indigo'|'inherit'|'initial'|'ivory'|'khaki'|'lavender'|'lavenderblush'|'lawngreen'|'lemonchiffon'|'lightblue'|'lightcoral'|'lightcyan'|'lightgoldenrodyellow'|'lightgray'|'lightgreen'|'lightgrey'|'lightpink'|'lightsalmon'|'lightseagreen'|'lightskyblue'|'lightslategray'|'lightslategrey'|'lightsteelblue'|'lightyellow'|'lime'|'limegreen'|'linen'|'magenta'|'maroon'|'mediumaquamarine'|'mediumblue'|'mediumorchid'|'mediumpurple'|'mediumseagreen'|'mediumslateblue'|'mediumspringgreen'|'mediumturquoise'|'mediumvioletred'|'midnightblue'|'mintcream'|'mistyrose'|'moccasin'|'navajowhite'|'navy'|'oldlace'|'olive'|'olivedrab'|'orange'|'orangered'|'orchid'|'palegoldenrod'|'palegreen'|'paleturquoise'|'palevioletred'|'papayawhip'|'peachpuff'|'peru'|'pink'|'plum'|'powderblue'|'purple'|'rebeccapurple'|'red'|'revert'|'revert-layer'|'rosybrown'|'royalblue'|'saddlebrown'|'salmon'|'sandybrown'|'seagreen'|'seashell'|'sienna'|'silver'|'skyblue'|'slateblue'|'slategray'|'slategrey'|'snow'|'springgreen'|'steelblue'|'tan'|'teal'|'thistle'|'tomato'|'transparent'|'turquoise'|'unset'|'violet'|'wheat'|'white'|'whitesmoke'|'yellow'|'yellowgreen'|string
  * @psalm-type LineBreakValue = '-moz-initial'|'anywhere'|'auto'|'inherit'|'initial'|'loose'|'normal'|'revert'|'revert-layer'|'strict'|'unset'|string
+ * @psalm-type LineClampValue = '-moz-initial'|'inherit'|'initial'|'none'|'revert'|'revert-layer'|'unset'|int|float|string
+ * @psalm-type LineHeightStepValue = '-moz-initial'|'inherit'|'initial'|'revert'|'revert-layer'|'unset'|int|float|string
+ * @psalm-type LineHeightValue = '-moz-initial'|'inherit'|'initial'|'normal'|'revert'|'revert-layer'|'unset'|int|float|string
+ * @psalm-type ListStyleImageValue = '-moz-initial'|'inherit'|'initial'|'none'|'revert'|'revert-layer'|'unset'|string
  * @psalm-type ListStylePositionValue = '-moz-initial'|'inherit'|'initial'|'inside'|'outside'|'revert'|'revert-layer'|'unset'|string
+ * @psalm-type ListStyleTypeValue = '-moz-initial'|'inherit'|'initial'|'none'|'revert'|'revert-layer'|'unset'|string
  * @psalm-type ListStyleValue = '-moz-initial'|'inherit'|'initial'|'inside'|'none'|'outside'|'revert'|'revert-layer'|'unset'|string
  * @psalm-type MarginTrimValue = '-moz-initial'|'all'|'in-flow'|'inherit'|'initial'|'none'|'revert'|'revert-layer'|'unset'|string
+ * @psalm-type MarkerEndValue = '-moz-initial'|'inherit'|'initial'|'none'|'revert'|'revert-layer'|'unset'|string
+ * @psalm-type MarkerMidValue = '-moz-initial'|'inherit'|'initial'|'none'|'revert'|'revert-layer'|'unset'|string
+ * @psalm-type MarkerStartValue = '-moz-initial'|'inherit'|'initial'|'none'|'revert'|'revert-layer'|'unset'|string
+ * @psalm-type MarkerValue = '-moz-initial'|'inherit'|'initial'|'none'|'revert'|'revert-layer'|'unset'|string
  * @psalm-type MaskBorderModeValue = '-moz-initial'|'alpha'|'inherit'|'initial'|'luminance'|'revert'|'revert-layer'|'unset'|string
+ * @psalm-type MaskBorderOutsetValue = '-moz-initial'|'inherit'|'initial'|'revert'|'revert-layer'|'unset'|int|float|string
+ * @psalm-type MaskBorderRepeatValue = '-moz-initial'|'inherit'|'initial'|'repeat'|'revert'|'revert-layer'|'round'|'space'|'stretch'|'unset'|string
+ * @psalm-type MaskBorderSliceValue = '-moz-initial'|'inherit'|'initial'|'revert'|'revert-layer'|'unset'|int|float|string
+ * @psalm-type MaskBorderSourceValue = '-moz-initial'|'inherit'|'initial'|'none'|'revert'|'revert-layer'|'unset'|string
  * @psalm-type MaskBorderValue = '-moz-initial'|'alpha'|'inherit'|'initial'|'luminance'|'none'|'repeat'|'revert'|'revert-layer'|'round'|'space'|'stretch'|'unset'|int|float|string
+ * @psalm-type MaskBorderWidthValue = '-moz-initial'|'auto'|'inherit'|'initial'|'revert'|'revert-layer'|'unset'|int|float|string
  * @psalm-type MaskClipValue = '-moz-initial'|'border-box'|'content-box'|'fill-box'|'inherit'|'initial'|'no-clip'|'padding-box'|'revert'|'revert-layer'|'stroke-box'|'unset'|'view-box'|string
  * @psalm-type MaskCompositeValue = '-moz-initial'|'add'|'exclude'|'inherit'|'initial'|'intersect'|'revert'|'revert-layer'|'subtract'|'unset'|string
+ * @psalm-type MaskImageValue = '-moz-initial'|'inherit'|'initial'|'none'|'revert'|'revert-layer'|'unset'|string
  * @psalm-type MaskModeValue = '-moz-initial'|'alpha'|'inherit'|'initial'|'luminance'|'match-source'|'revert'|'revert-layer'|'unset'|string
  * @psalm-type MaskOriginValue = '-moz-initial'|'border-box'|'content-box'|'fill-box'|'inherit'|'initial'|'padding-box'|'revert'|'revert-layer'|'stroke-box'|'unset'|'view-box'|string
+ * @psalm-type MaskPositionValue = '-moz-initial'|'bottom'|'center'|'inherit'|'initial'|'left'|'revert'|'revert-layer'|'right'|'top'|'unset'|int|float|string
+ * @psalm-type MaskRepeatValue = '-moz-initial'|'inherit'|'initial'|'no-repeat'|'repeat'|'repeat-x'|'repeat-y'|'revert'|'revert-layer'|'round'|'space'|'unset'|string
+ * @psalm-type MaskSizeValue = '-moz-initial'|'auto'|'contain'|'cover'|'inherit'|'initial'|'revert'|'revert-layer'|'unset'|int|float|string
+ * @psalm-type MaskTypeValue = '-moz-initial'|'alpha'|'inherit'|'initial'|'luminance'|'revert'|'revert-layer'|'unset'|string
  * @psalm-type MaskValue = '-moz-initial'|'add'|'alpha'|'border-box'|'bottom'|'center'|'content-box'|'exclude'|'fill-box'|'inherit'|'initial'|'intersect'|'left'|'luminance'|'margin-box'|'match-source'|'no-clip'|'no-repeat'|'none'|'padding-box'|'repeat'|'repeat-x'|'repeat-y'|'revert'|'revert-layer'|'right'|'round'|'space'|'stroke-box'|'subtract'|'top'|'unset'|'view-box'|int|float|string
  * @psalm-type MasonryAutoFlowValue = '-moz-initial'|'definite-first'|'inherit'|'initial'|'next'|'ordered'|'pack'|'revert'|'revert-layer'|'unset'|string
  * @psalm-type MathDepthValue = '-moz-initial'|'auto-add'|'inherit'|'initial'|'revert'|'revert-layer'|'unset'|int|float|string
  * @psalm-type MathShiftValue = '-moz-initial'|'compact'|'inherit'|'initial'|'normal'|'revert'|'revert-layer'|'unset'|string
+ * @psalm-type MathStyleValue = '-moz-initial'|'compact'|'inherit'|'initial'|'normal'|'revert'|'revert-layer'|'unset'|string
+ * @psalm-type MaxLinesValue = '-moz-initial'|'inherit'|'initial'|'none'|'revert'|'revert-layer'|'unset'|int|float|string
  * @psalm-type MixBlendModeValue = '-moz-initial'|'color'|'color-burn'|'color-dodge'|'darken'|'difference'|'exclusion'|'hard-light'|'hue'|'inherit'|'initial'|'lighten'|'luminosity'|'multiply'|'normal'|'overlay'|'plus-darker'|'plus-lighter'|'revert'|'revert-layer'|'saturation'|'screen'|'soft-light'|'unset'|string
  * @psalm-type ObjectFitValue = '-moz-initial'|'contain'|'cover'|'fill'|'inherit'|'initial'|'none'|'revert'|'revert-layer'|'scale-down'|'unset'|string
+ * @psalm-type ObjectPositionValue = '-moz-initial'|'bottom'|'center'|'inherit'|'initial'|'left'|'revert'|'revert-layer'|'right'|'top'|'unset'|int|float|string
  * @psalm-type OffsetAnchorValue = '-moz-initial'|'auto'|'bottom'|'center'|'inherit'|'initial'|'left'|'revert'|'revert-layer'|'right'|'top'|'unset'|int|float|string
+ * @psalm-type OffsetDistanceValue = '-moz-initial'|'inherit'|'initial'|'revert'|'revert-layer'|'unset'|int|float|string
  * @psalm-type OffsetPathValue = '-moz-initial'|'border-box'|'content-box'|'fill-box'|'inherit'|'initial'|'none'|'padding-box'|'revert'|'revert-layer'|'stroke-box'|'unset'|'view-box'|string
  * @psalm-type OffsetPositionValue = '-moz-initial'|'auto'|'bottom'|'center'|'inherit'|'initial'|'left'|'normal'|'revert'|'revert-layer'|'right'|'top'|'unset'|int|float|string
  * @psalm-type OffsetRotateValue = '-moz-initial'|'auto'|'inherit'|'initial'|'reverse'|'revert'|'revert-layer'|'unset'|string
  * @psalm-type OffsetValue = '-moz-initial'|'auto'|'border-box'|'bottom'|'center'|'content-box'|'fill-box'|'inherit'|'initial'|'left'|'none'|'normal'|'padding-box'|'revert'|'revert-layer'|'right'|'stroke-box'|'top'|'unset'|'view-box'|int|float|string
+ * @psalm-type OpacityValue = '-moz-initial'|'inherit'|'initial'|'revert'|'revert-layer'|'unset'|int|float|string
+ * @psalm-type OrderValue = '-moz-initial'|'inherit'|'initial'|'revert'|'revert-layer'|'unset'|int|float|string
+ * @psalm-type OrphansValue = '-moz-initial'|'inherit'|'initial'|'revert'|'revert-layer'|'unset'|int|float|string
  * @psalm-type OutlineStyleValue = '-moz-initial'|'auto'|'dashed'|'dotted'|'double'|'groove'|'inherit'|'initial'|'inset'|'none'|'outset'|'revert'|'revert-layer'|'ridge'|'solid'|'unset'|string
  * @psalm-type OutlineValue = '-moz-initial'|'AccentColor'|'AccentColorText'|'ActiveBorder'|'ActiveCaption'|'ActiveText'|'AppWorkspace'|'Background'|'ButtonBorder'|'ButtonFace'|'ButtonHighlight'|'ButtonShadow'|'ButtonText'|'Canvas'|'CanvasText'|'CaptionText'|'Field'|'FieldText'|'GrayText'|'Highlight'|'HighlightText'|'InactiveBorder'|'InactiveCaption'|'InactiveCaptionText'|'InfoBackground'|'InfoText'|'LinkText'|'Mark'|'MarkText'|'Menu'|'MenuText'|'Scrollbar'|'SelectedItem'|'SelectedItemText'|'ThreeDDarkShadow'|'ThreeDFace'|'ThreeDHighlight'|'ThreeDLightShadow'|'ThreeDShadow'|'VisitedText'|'Window'|'WindowFrame'|'WindowText'|'aliceblue'|'antiquewhite'|'aqua'|'aquamarine'|'auto'|'azure'|'beige'|'bisque'|'black'|'blanchedalmond'|'blue'|'blueviolet'|'brown'|'burlywood'|'cadetblue'|'chartreuse'|'chocolate'|'coral'|'cornflowerblue'|'cornsilk'|'crimson'|'currentColor'|'cyan'|'darkblue'|'darkcyan'|'darkgoldenrod'|'darkgray'|'darkgreen'|'darkgrey'|'darkkhaki'|'darkmagenta'|'darkolivegreen'|'darkorange'|'darkorchid'|'darkred'|'darksalmon'|'darkseagreen'|'darkslateblue'|'darkslategray'|'darkslategrey'|'darkturquoise'|'darkviolet'|'dashed'|'deeppink'|'deepskyblue'|'dimgray'|'dimgrey'|'dodgerblue'|'dotted'|'double'|'firebrick'|'floralwhite'|'forestgreen'|'fuchsia'|'gainsboro'|'ghostwhite'|'gold'|'goldenrod'|'gray'|'green'|'greenyellow'|'grey'|'groove'|'honeydew'|'hotpink'|'indianred'|'indigo'|'inherit'|'initial'|'inset'|'ivory'|'khaki'|'lavender'|'lavenderblush'|'lawngreen'|'lemonchiffon'|'lightblue'|'lightcoral'|'lightcyan'|'lightgoldenrodyellow'|'lightgray'|'lightgreen'|'lightgrey'|'lightpink'|'lightsalmon'|'lightseagreen'|'lightskyblue'|'lightslategray'|'lightslategrey'|'lightsteelblue'|'lightyellow'|'lime'|'limegreen'|'linen'|'magenta'|'maroon'|'medium'|'mediumaquamarine'|'mediumblue'|'mediumorchid'|'mediumpurple'|'mediumseagreen'|'mediumslateblue'|'mediumspringgreen'|'mediumturquoise'|'mediumvioletred'|'midnightblue'|'mintcream'|'mistyrose'|'moccasin'|'navajowhite'|'navy'|'none'|'oldlace'|'olive'|'olivedrab'|'orange'|'orangered'|'orchid'|'outset'|'palegoldenrod'|'palegreen'|'paleturquoise'|'palevioletred'|'papayawhip'|'peachpuff'|'peru'|'pink'|'plum'|'powderblue'|'purple'|'rebeccapurple'|'red'|'revert'|'revert-layer'|'ridge'|'rosybrown'|'royalblue'|'saddlebrown'|'salmon'|'sandybrown'|'seagreen'|'seashell'|'sienna'|'silver'|'skyblue'|'slateblue'|'slategray'|'slategrey'|'snow'|'solid'|'springgreen'|'steelblue'|'tan'|'teal'|'thick'|'thin'|'thistle'|'tomato'|'transparent'|'turquoise'|'unset'|'violet'|'wheat'|'white'|'whitesmoke'|'yellow'|'yellowgreen'|int|float|string
+ * @psalm-type OutlineWidthValue = '-moz-initial'|'inherit'|'initial'|'medium'|'revert'|'revert-layer'|'thick'|'thin'|'unset'|int|float|string
+ * @psalm-type OverflowAnchorValue = '-moz-initial'|'auto'|'inherit'|'initial'|'none'|'revert'|'revert-layer'|'unset'|string
  * @psalm-type OverflowBlockValue = '-moz-initial'|'auto'|'clip'|'hidden'|'inherit'|'initial'|'revert'|'revert-layer'|'scroll'|'unset'|'visible'|string
  * @psalm-type OverflowClipBoxValue = '-moz-initial'|'content-box'|'inherit'|'initial'|'padding-box'|'revert'|'revert-layer'|'unset'|string
  * @psalm-type OverflowClipMarginValue = '-moz-initial'|'border-box'|'content-box'|'inherit'|'initial'|'padding-box'|'revert'|'revert-layer'|'unset'|int|float|string
+ * @psalm-type OverflowInlineValue = '-moz-initial'|'auto'|'clip'|'hidden'|'inherit'|'initial'|'revert'|'revert-layer'|'scroll'|'unset'|'visible'|string
  * @psalm-type OverflowValue = '-moz-hidden-unscrollable'|'-moz-initial'|'auto'|'clip'|'hidden'|'inherit'|'initial'|'overlay'|'revert'|'revert-layer'|'scroll'|'unset'|'visible'|string
  * @psalm-type OverflowWrapValue = '-moz-initial'|'anywhere'|'break-word'|'inherit'|'initial'|'normal'|'revert'|'revert-layer'|'unset'|string
+ * @psalm-type OverflowXValue = '-moz-hidden-unscrollable'|'-moz-initial'|'auto'|'clip'|'hidden'|'inherit'|'initial'|'overlay'|'revert'|'revert-layer'|'scroll'|'unset'|'visible'|string
+ * @psalm-type OverflowYValue = '-moz-hidden-unscrollable'|'-moz-initial'|'auto'|'clip'|'hidden'|'inherit'|'initial'|'overlay'|'revert'|'revert-layer'|'scroll'|'unset'|'visible'|string
+ * @psalm-type OverlayValue = '-moz-initial'|'auto'|'inherit'|'initial'|'none'|'revert'|'revert-layer'|'unset'|string
+ * @psalm-type OverscrollBehaviorBlockValue = '-moz-initial'|'auto'|'contain'|'inherit'|'initial'|'none'|'revert'|'revert-layer'|'unset'|string
+ * @psalm-type OverscrollBehaviorInlineValue = '-moz-initial'|'auto'|'contain'|'inherit'|'initial'|'none'|'revert'|'revert-layer'|'unset'|string
  * @psalm-type OverscrollBehaviorValue = '-moz-initial'|'auto'|'contain'|'inherit'|'initial'|'none'|'revert'|'revert-layer'|'unset'|string
+ * @psalm-type OverscrollBehaviorXValue = '-moz-initial'|'auto'|'contain'|'inherit'|'initial'|'none'|'revert'|'revert-layer'|'unset'|string
+ * @psalm-type OverscrollBehaviorYValue = '-moz-initial'|'auto'|'contain'|'inherit'|'initial'|'none'|'revert'|'revert-layer'|'unset'|string
  * @psalm-type PageBreakAfterValue = '-moz-initial'|'always'|'auto'|'avoid'|'inherit'|'initial'|'left'|'recto'|'revert'|'revert-layer'|'right'|'unset'|'verso'|string
+ * @psalm-type PageBreakBeforeValue = '-moz-initial'|'always'|'auto'|'avoid'|'inherit'|'initial'|'left'|'recto'|'revert'|'revert-layer'|'right'|'unset'|'verso'|string
  * @psalm-type PageBreakInsideValue = '-moz-initial'|'auto'|'avoid'|'inherit'|'initial'|'revert'|'revert-layer'|'unset'|string
+ * @psalm-type PageValue = '-moz-initial'|'auto'|'inherit'|'initial'|'revert'|'revert-layer'|'unset'|string
  * @psalm-type PaintOrderValue = '-moz-initial'|'fill'|'inherit'|'initial'|'markers'|'normal'|'revert'|'revert-layer'|'stroke'|'unset'|string
+ * @psalm-type PerspectiveOriginValue = '-moz-initial'|'bottom'|'center'|'inherit'|'initial'|'left'|'revert'|'revert-layer'|'right'|'top'|'unset'|int|float|string
+ * @psalm-type PerspectiveValue = '-moz-initial'|'inherit'|'initial'|'none'|'revert'|'revert-layer'|'unset'|int|float|string
+ * @psalm-type PlaceContentValue = '-moz-initial'|'baseline'|'center'|'end'|'flex-end'|'flex-start'|'inherit'|'initial'|'normal'|'revert'|'revert-layer'|'space-around'|'space-between'|'space-evenly'|'start'|'stretch'|'unset'|string
+ * @psalm-type PlaceItemsValue = '-moz-initial'|'anchor-center'|'baseline'|'center'|'end'|'flex-end'|'flex-start'|'inherit'|'initial'|'normal'|'revert'|'revert-layer'|'self-end'|'self-start'|'start'|'stretch'|'unset'|string
+ * @psalm-type PlaceSelfValue = '-moz-initial'|'anchor-center'|'auto'|'baseline'|'center'|'end'|'flex-end'|'flex-start'|'inherit'|'initial'|'normal'|'revert'|'revert-layer'|'self-end'|'self-start'|'start'|'stretch'|'unset'|string
  * @psalm-type PointerEventsValue = '-moz-initial'|'all'|'auto'|'fill'|'inherit'|'initial'|'none'|'painted'|'revert'|'revert-layer'|'stroke'|'unset'|'visible'|'visibleFill'|'visiblePainted'|'visibleStroke'|string
+ * @psalm-type PositionAnchorValue = '-moz-initial'|'auto'|'inherit'|'initial'|'revert'|'revert-layer'|'unset'|string
  * @psalm-type PositionAreaValue = '-moz-initial'|'block-end'|'block-start'|'bottom'|'center'|'end'|'inherit'|'initial'|'inline-end'|'inline-start'|'left'|'none'|'revert'|'revert-layer'|'right'|'self-block-end'|'self-block-start'|'self-end'|'self-inline-end'|'self-inline-start'|'self-start'|'span-all'|'span-block-end'|'span-block-start'|'span-bottom'|'span-end'|'span-inline-end'|'span-inline-start'|'span-left'|'span-right'|'span-self-block-end'|'span-self-block-start'|'span-self-end'|'span-self-inline-end'|'span-self-inline-start'|'span-self-start'|'span-start'|'span-top'|'span-x-end'|'span-x-self-end'|'span-x-self-start'|'span-x-start'|'span-y-end'|'span-y-self-end'|'span-y-self-start'|'span-y-start'|'start'|'top'|'unset'|'x-end'|'x-self-end'|'x-self-start'|'x-start'|'y-end'|'y-self-end'|'y-self-start'|'y-start'|string
+ * @psalm-type PositionTryFallbacksValue = '-moz-initial'|'block-end'|'block-start'|'bottom'|'center'|'end'|'flip-block'|'flip-inline'|'flip-start'|'inherit'|'initial'|'inline-end'|'inline-start'|'left'|'none'|'revert'|'revert-layer'|'right'|'self-block-end'|'self-block-start'|'self-end'|'self-inline-end'|'self-inline-start'|'self-start'|'span-all'|'span-block-end'|'span-block-start'|'span-bottom'|'span-end'|'span-inline-end'|'span-inline-start'|'span-left'|'span-right'|'span-self-block-end'|'span-self-block-start'|'span-self-end'|'span-self-inline-end'|'span-self-inline-start'|'span-self-start'|'span-start'|'span-top'|'span-x-end'|'span-x-self-end'|'span-x-self-start'|'span-x-start'|'span-y-end'|'span-y-self-end'|'span-y-self-start'|'span-y-start'|'start'|'top'|'unset'|'x-end'|'x-self-end'|'x-self-start'|'x-start'|'y-end'|'y-self-end'|'y-self-start'|'y-start'|string
  * @psalm-type PositionTryOrderValue = '-moz-initial'|'inherit'|'initial'|'most-block-size'|'most-height'|'most-inline-size'|'most-width'|'normal'|'revert'|'revert-layer'|'unset'|string
  * @psalm-type PositionTryValue = '-moz-initial'|'block-end'|'block-start'|'bottom'|'center'|'end'|'flip-block'|'flip-inline'|'flip-start'|'inherit'|'initial'|'inline-end'|'inline-start'|'left'|'none'|'revert'|'revert-layer'|'right'|'self-block-end'|'self-block-start'|'self-end'|'self-inline-end'|'self-inline-start'|'self-start'|'span-all'|'span-block-end'|'span-block-start'|'span-bottom'|'span-end'|'span-inline-end'|'span-inline-start'|'span-left'|'span-right'|'span-self-block-end'|'span-self-block-start'|'span-self-end'|'span-self-inline-end'|'span-self-inline-start'|'span-self-start'|'span-start'|'span-top'|'span-x-end'|'span-x-self-end'|'span-x-self-start'|'span-x-start'|'span-y-end'|'span-y-self-end'|'span-y-self-start'|'span-y-start'|'start'|'top'|'unset'|'x-end'|'x-self-end'|'x-self-start'|'x-start'|'y-end'|'y-self-end'|'y-self-start'|'y-start'|string
  * @psalm-type PositionValue = '-moz-initial'|'-webkit-sticky'|'absolute'|'fixed'|'inherit'|'initial'|'relative'|'revert'|'revert-layer'|'static'|'sticky'|'unset'|string
  * @psalm-type PositionVisibilityValue = '-moz-initial'|'always'|'anchors-valid'|'anchors-visible'|'inherit'|'initial'|'no-overflow'|'revert'|'revert-layer'|'unset'|string
  * @psalm-type PrintColorAdjustValue = '-moz-initial'|'economy'|'exact'|'inherit'|'initial'|'revert'|'revert-layer'|'unset'|string
+ * @psalm-type QuotesValue = '-moz-initial'|'auto'|'inherit'|'initial'|'none'|'revert'|'revert-layer'|'unset'|string
+ * @psalm-type RValue = '-moz-initial'|'inherit'|'initial'|'revert'|'revert-layer'|'unset'|int|float|string
  * @psalm-type ResizeValue = '-moz-initial'|'block'|'both'|'horizontal'|'inherit'|'initial'|'inline'|'none'|'revert'|'revert-layer'|'unset'|'vertical'|string
  * @psalm-type RotateValue = 'auto'|'auto-3d'|string
  * @psalm-type RubyAlignValue = '-moz-initial'|'center'|'inherit'|'initial'|'revert'|'revert-layer'|'space-around'|'space-between'|'start'|'unset'|string
  * @psalm-type RubyMergeValue = '-moz-initial'|'auto'|'collapse'|'inherit'|'initial'|'revert'|'revert-layer'|'separate'|'unset'|string
  * @psalm-type RubyPositionValue = '-moz-initial'|'alternate'|'inherit'|'initial'|'inter-character'|'over'|'revert'|'revert-layer'|'under'|'unset'|string
+ * @psalm-type RxValue = '-moz-initial'|'inherit'|'initial'|'revert'|'revert-layer'|'unset'|int|float|string
+ * @psalm-type RyValue = '-moz-initial'|'inherit'|'initial'|'revert'|'revert-layer'|'unset'|int|float|string
+ * @psalm-type ScaleValue = 'auto'|string
  * @psalm-type ScrollBehaviorValue = '-moz-initial'|'auto'|'inherit'|'initial'|'revert'|'revert-layer'|'smooth'|'unset'|string
  * @psalm-type ScrollSnapAlignValue = '-moz-initial'|'center'|'end'|'inherit'|'initial'|'none'|'revert'|'revert-layer'|'start'|'unset'|string
  * @psalm-type ScrollSnapCoordinateValue = '-moz-initial'|'bottom'|'center'|'inherit'|'initial'|'left'|'none'|'revert'|'revert-layer'|'right'|'top'|'unset'|int|float|string
+ * @psalm-type ScrollSnapDestinationValue = '-moz-initial'|'bottom'|'center'|'inherit'|'initial'|'left'|'revert'|'revert-layer'|'right'|'top'|'unset'|int|float|string
+ * @psalm-type ScrollSnapPointsXValue = '-moz-initial'|'inherit'|'initial'|'none'|'revert'|'revert-layer'|'unset'|string
+ * @psalm-type ScrollSnapPointsYValue = '-moz-initial'|'inherit'|'initial'|'none'|'revert'|'revert-layer'|'unset'|string
  * @psalm-type ScrollSnapStopValue = '-moz-initial'|'always'|'inherit'|'initial'|'normal'|'revert'|'revert-layer'|'unset'|string
  * @psalm-type ScrollSnapStrictnessValue = 'mandatory'|'proximity'|string
  * @psalm-type ScrollSnapTypeValue = 'both'|'none'|'x'|'y'|string
  * @psalm-type ScrollSnapTypeXValue = '-moz-initial'|'inherit'|'initial'|'mandatory'|'none'|'proximity'|'revert'|'revert-layer'|'unset'|string
+ * @psalm-type ScrollSnapTypeYValue = '-moz-initial'|'inherit'|'initial'|'mandatory'|'none'|'proximity'|'revert'|'revert-layer'|'unset'|string
  * @psalm-type ScrollTimelineAxisValue = '-moz-initial'|'block'|'inherit'|'initial'|'inline'|'revert'|'revert-layer'|'unset'|'x'|'y'|string
+ * @psalm-type ScrollTimelineNameValue = '-moz-initial'|'inherit'|'initial'|'none'|'revert'|'revert-layer'|'unset'|string
+ * @psalm-type ScrollTimelineValue = '-moz-initial'|'inherit'|'initial'|'none'|'revert'|'revert-layer'|'unset'|string
  * @psalm-type ScrollbarGutterValue = '-moz-initial'|'auto'|'inherit'|'initial'|'revert'|'revert-layer'|'stable'|'unset'|string
  * @psalm-type ScrollbarValue = 'hidden'|'visible'|string
+ * @psalm-type ShapeImageThresholdValue = '-moz-initial'|'inherit'|'initial'|'revert'|'revert-layer'|'unset'|int|float|string
+ * @psalm-type ShapeMarginValue = '-moz-initial'|'inherit'|'initial'|'revert'|'revert-layer'|'unset'|int|float|string
  * @psalm-type ShapeOutsideValue = '-moz-initial'|'border-box'|'content-box'|'inherit'|'initial'|'margin-box'|'none'|'padding-box'|'revert'|'revert-layer'|'unset'|string
  * @psalm-type ShapeRenderingValue = '-moz-initial'|'auto'|'crispEdges'|'geometricPrecision'|'inherit'|'initial'|'optimizeSpeed'|'revert'|'revert-layer'|'unset'|string
  * @psalm-type SizesToken = '1/2'|'1/3'|'1/4'|'1/5'|'1/6'|'2/3'|'2/4'|'2/5'|'2/6'|'3/4'|'3/5'|'3/6'|'4/5'|'4/6'|'5/6'|'auto'|'breakpoint-md'|'breakpoint-sm'|'dvh'|'lvh'|'screen'|'svh'|string
@@ -173,8 +350,16 @@ namespace Symfony\UX\Css;
  * @psalm-type SpacingToken = '-md'|'-sm'|'auto'|'md'|'sm'|string
  * @psalm-type SpacingToken2 = '-md'|'-sm'|'md'|'sm'|string
  * @psalm-type SpacingToken3 = '-1/2'|'-1/3'|'-1/4'|'-2/3'|'-2/4'|'-3/4'|'-full'|'-md'|'-sm'|'1/2'|'1/3'|'1/4'|'2/3'|'2/4'|'3/4'|'full'|'md'|'sm'|string
+ * @psalm-type StopColorValue = '-moz-initial'|'AccentColor'|'AccentColorText'|'ActiveBorder'|'ActiveCaption'|'ActiveText'|'AppWorkspace'|'Background'|'ButtonBorder'|'ButtonFace'|'ButtonHighlight'|'ButtonShadow'|'ButtonText'|'Canvas'|'CanvasText'|'CaptionText'|'Field'|'FieldText'|'GrayText'|'Highlight'|'HighlightText'|'InactiveBorder'|'InactiveCaption'|'InactiveCaptionText'|'InfoBackground'|'InfoText'|'LinkText'|'Mark'|'MarkText'|'Menu'|'MenuText'|'Scrollbar'|'SelectedItem'|'SelectedItemText'|'ThreeDDarkShadow'|'ThreeDFace'|'ThreeDHighlight'|'ThreeDLightShadow'|'ThreeDShadow'|'VisitedText'|'Window'|'WindowFrame'|'WindowText'|'aliceblue'|'antiquewhite'|'aqua'|'aquamarine'|'azure'|'beige'|'bisque'|'black'|'blanchedalmond'|'blue'|'blueviolet'|'brown'|'burlywood'|'cadetblue'|'chartreuse'|'chocolate'|'coral'|'cornflowerblue'|'cornsilk'|'crimson'|'currentColor'|'cyan'|'darkblue'|'darkcyan'|'darkgoldenrod'|'darkgray'|'darkgreen'|'darkgrey'|'darkkhaki'|'darkmagenta'|'darkolivegreen'|'darkorange'|'darkorchid'|'darkred'|'darksalmon'|'darkseagreen'|'darkslateblue'|'darkslategray'|'darkslategrey'|'darkturquoise'|'darkviolet'|'deeppink'|'deepskyblue'|'dimgray'|'dimgrey'|'dodgerblue'|'firebrick'|'floralwhite'|'forestgreen'|'fuchsia'|'gainsboro'|'ghostwhite'|'gold'|'goldenrod'|'gray'|'green'|'greenyellow'|'grey'|'honeydew'|'hotpink'|'indianred'|'indigo'|'inherit'|'initial'|'ivory'|'khaki'|'lavender'|'lavenderblush'|'lawngreen'|'lemonchiffon'|'lightblue'|'lightcoral'|'lightcyan'|'lightgoldenrodyellow'|'lightgray'|'lightgreen'|'lightgrey'|'lightpink'|'lightsalmon'|'lightseagreen'|'lightskyblue'|'lightslategray'|'lightslategrey'|'lightsteelblue'|'lightyellow'|'lime'|'limegreen'|'linen'|'magenta'|'maroon'|'mediumaquamarine'|'mediumblue'|'mediumorchid'|'mediumpurple'|'mediumseagreen'|'mediumslateblue'|'mediumspringgreen'|'mediumturquoise'|'mediumvioletred'|'midnightblue'|'mintcream'|'mistyrose'|'moccasin'|'navajowhite'|'navy'|'oldlace'|'olive'|'olivedrab'|'orange'|'orangered'|'orchid'|'palegoldenrod'|'palegreen'|'paleturquoise'|'palevioletred'|'papayawhip'|'peachpuff'|'peru'|'pink'|'plum'|'powderblue'|'purple'|'rebeccapurple'|'red'|'revert'|'revert-layer'|'rosybrown'|'royalblue'|'saddlebrown'|'salmon'|'sandybrown'|'seagreen'|'seashell'|'sienna'|'silver'|'skyblue'|'slateblue'|'slategray'|'slategrey'|'snow'|'springgreen'|'steelblue'|'tan'|'teal'|'thistle'|'tomato'|'transparent'|'turquoise'|'unset'|'violet'|'wheat'|'white'|'whitesmoke'|'yellow'|'yellowgreen'|string
+ * @psalm-type StopOpacityValue = '-moz-initial'|'inherit'|'initial'|'revert'|'revert-layer'|'unset'|int|float|string
+ * @psalm-type StrokeDasharrayValue = '-moz-initial'|'inherit'|'initial'|'none'|'revert'|'revert-layer'|'unset'|int|float|string
+ * @psalm-type StrokeDashoffsetValue = '-moz-initial'|'inherit'|'initial'|'revert'|'revert-layer'|'unset'|int|float|string
  * @psalm-type StrokeLinecapValue = '-moz-initial'|'butt'|'inherit'|'initial'|'revert'|'revert-layer'|'round'|'square'|'unset'|string
  * @psalm-type StrokeLinejoinValue = '-moz-initial'|'arcs'|'bevel'|'inherit'|'initial'|'miter'|'miter-clip'|'revert'|'revert-layer'|'round'|'unset'|string
+ * @psalm-type StrokeMiterlimitValue = '-moz-initial'|'inherit'|'initial'|'revert'|'revert-layer'|'unset'|int|float|string
+ * @psalm-type StrokeOpacityValue = '-moz-initial'|'inherit'|'initial'|'revert'|'revert-layer'|'unset'|int|float|string
+ * @psalm-type StrokeWidthValue = '-moz-initial'|'inherit'|'initial'|'revert'|'revert-layer'|'unset'|int|float|string
+ * @psalm-type TabSizeValue = '-moz-initial'|'inherit'|'initial'|'revert'|'revert-layer'|'unset'|int|float|string
  * @psalm-type TableLayoutValue = '-moz-initial'|'auto'|'fixed'|'inherit'|'initial'|'revert'|'revert-layer'|'unset'|string
  * @psalm-type TextAlignLastValue = '-moz-initial'|'auto'|'center'|'end'|'inherit'|'initial'|'justify'|'left'|'revert'|'revert-layer'|'right'|'start'|'unset'|string
  * @psalm-type TextAlignValue = '-khtml-center'|'-khtml-left'|'-khtml-right'|'-moz-center'|'-moz-initial'|'-moz-left'|'-moz-right'|'-webkit-center'|'-webkit-left'|'-webkit-match-parent'|'-webkit-right'|'center'|'end'|'inherit'|'initial'|'justify'|'left'|'match-parent'|'revert'|'revert-layer'|'right'|'start'|'unset'|string
@@ -196,22 +381,36 @@ namespace Symfony\UX\Css;
  * @psalm-type TextOrientationValue = '-moz-initial'|'inherit'|'initial'|'mixed'|'revert'|'revert-layer'|'sideways'|'sideways-right'|'unset'|'upright'|string
  * @psalm-type TextOverflowValue = '-moz-initial'|'clip'|'ellipsis'|'inherit'|'initial'|'revert'|'revert-layer'|'unset'|string
  * @psalm-type TextRenderingValue = '-moz-initial'|'auto'|'geometricPrecision'|'inherit'|'initial'|'optimizeLegibility'|'optimizeSpeed'|'revert'|'revert-layer'|'unset'|string
+ * @psalm-type TextShadowValue = '-moz-initial'|'inherit'|'initial'|'none'|'revert'|'revert-layer'|'unset'|string
+ * @psalm-type TextSizeAdjustValue = '-moz-initial'|'auto'|'inherit'|'initial'|'none'|'revert'|'revert-layer'|'unset'|string
  * @psalm-type TextSpacingTrimValue = '-moz-initial'|'inherit'|'initial'|'normal'|'revert'|'revert-layer'|'space-all'|'space-first'|'trim-start'|'unset'|string
  * @psalm-type TextTransformValue = '-moz-initial'|'capitalize'|'full-size-kana'|'full-width'|'inherit'|'initial'|'lowercase'|'math-auto'|'none'|'revert'|'revert-layer'|'unset'|'uppercase'|string
+ * @psalm-type TextUnderlineOffsetValue = '-moz-initial'|'auto'|'inherit'|'initial'|'revert'|'revert-layer'|'unset'|int|float|string
  * @psalm-type TextUnderlinePositionValue = '-moz-initial'|'auto'|'from-font'|'inherit'|'initial'|'left'|'revert'|'revert-layer'|'right'|'under'|'unset'|string
  * @psalm-type TextWrapModeValue = '-moz-initial'|'inherit'|'initial'|'nowrap'|'revert'|'revert-layer'|'unset'|'wrap'|string
  * @psalm-type TextWrapStyleValue = '-moz-initial'|'auto'|'balance'|'inherit'|'initial'|'pretty'|'revert'|'revert-layer'|'stable'|'unset'|string
  * @psalm-type TextWrapValue = 'balance'|'nowrap'|'wrap'|string
+ * @psalm-type TimelineScopeValue = '-moz-initial'|'inherit'|'initial'|'none'|'revert'|'revert-layer'|'unset'|string
  * @psalm-type TouchActionValue = '-moz-initial'|'-ms-manipulation'|'-ms-none'|'-ms-pan-x'|'-ms-pan-y'|'-ms-pinch-zoom'|'auto'|'inherit'|'initial'|'manipulation'|'none'|'pan-down'|'pan-left'|'pan-right'|'pan-up'|'pan-x'|'pan-y'|'pinch-zoom'|'revert'|'revert-layer'|'unset'|string
  * @psalm-type TransformBoxValue = '-moz-initial'|'border-box'|'content-box'|'fill-box'|'inherit'|'initial'|'revert'|'revert-layer'|'stroke-box'|'unset'|'view-box'|string
+ * @psalm-type TransformOriginValue = '-moz-initial'|'bottom'|'center'|'inherit'|'initial'|'left'|'revert'|'revert-layer'|'right'|'top'|'unset'|int|float|string
  * @psalm-type TransformStyleValue = '-moz-initial'|'flat'|'inherit'|'initial'|'preserve-3d'|'revert'|'revert-layer'|'unset'|string
+ * @psalm-type TransformValue = '-moz-initial'|'inherit'|'initial'|'none'|'revert'|'revert-layer'|'unset'|string
  * @psalm-type TransitionBehaviorValue = '-moz-initial'|'allow-discrete'|'inherit'|'initial'|'normal'|'revert'|'revert-layer'|'unset'|string
+ * @psalm-type TransitionDelayValue = '-moz-initial'|'inherit'|'initial'|'revert'|'revert-layer'|'unset'|string
+ * @psalm-type TransitionDurationValue = '-moz-initial'|'inherit'|'initial'|'revert'|'revert-layer'|'unset'|string
  * @psalm-type TransitionPropertyValue = 'background'|'colors'|'common'|'position'|'size'|string
+ * @psalm-type TransitionTimingFunctionValue = '-moz-initial'|'ease'|'ease-in'|'ease-in-out'|'ease-out'|'inherit'|'initial'|'linear'|'revert'|'revert-layer'|'step-end'|'step-start'|'unset'|string
  * @psalm-type TransitionValue = 'all'|'background'|'colors'|'common'|'opacity'|'position'|'shadow'|'size'|'transform'|string
+ * @psalm-type TranslateValue = 'auto'|'auto-3d'|string
  * @psalm-type UnicodeBidiValue = '-moz-initial'|'-moz-isolate'|'-moz-isolate-override'|'-moz-plaintext'|'-webkit-isolate'|'-webkit-isolate-override'|'-webkit-plaintext'|'bidi-override'|'embed'|'inherit'|'initial'|'isolate'|'isolate-override'|'normal'|'plaintext'|'revert'|'revert-layer'|'unset'|string
  * @psalm-type UserSelectValue = '-moz-initial'|'-moz-none'|'all'|'auto'|'inherit'|'initial'|'none'|'revert'|'revert-layer'|'text'|'unset'|string
  * @psalm-type VectorEffectValue = '-moz-initial'|'fixed-position'|'inherit'|'initial'|'non-rotation'|'non-scaling-size'|'non-scaling-stroke'|'none'|'revert'|'revert-layer'|'unset'|string
  * @psalm-type VerticalAlignValue = '-moz-initial'|'baseline'|'bottom'|'inherit'|'initial'|'middle'|'revert'|'revert-layer'|'sub'|'super'|'text-bottom'|'text-top'|'top'|'unset'|int|float|string
+ * @psalm-type ViewTimelineAxisValue = '-moz-initial'|'block'|'inherit'|'initial'|'inline'|'revert'|'revert-layer'|'unset'|'x'|'y'|string
+ * @psalm-type ViewTimelineInsetValue = '-moz-initial'|'auto'|'inherit'|'initial'|'revert'|'revert-layer'|'unset'|int|float|string
+ * @psalm-type ViewTimelineNameValue = '-moz-initial'|'inherit'|'initial'|'none'|'revert'|'revert-layer'|'unset'|string
+ * @psalm-type ViewTimelineValue = '-moz-initial'|'inherit'|'initial'|'none'|'revert'|'revert-layer'|'unset'|string
  * @psalm-type ViewTransitionNameValue = '-moz-initial'|'inherit'|'initial'|'match-element'|'none'|'revert'|'revert-layer'|'unset'|string
  * @psalm-type VisibilityValue = '-moz-initial'|'collapse'|'hidden'|'inherit'|'initial'|'revert'|'revert-layer'|'unset'|'visible'|string
  * @psalm-type WebkitAppearanceValue = '-apple-pay-button'|'-moz-initial'|'button'|'button-bevel'|'caret'|'checkbox'|'default-button'|'inherit'|'initial'|'inner-spin-button'|'listbox'|'listitem'|'media-controls-background'|'media-controls-fullscreen-background'|'media-current-time-display'|'media-enter-fullscreen-button'|'media-exit-fullscreen-button'|'media-fullscreen-button'|'media-mute-button'|'media-overlay-play-button'|'media-play-button'|'media-seek-back-button'|'media-seek-forward-button'|'media-slider'|'media-sliderthumb'|'media-time-remaining-display'|'media-toggle-closed-captions-button'|'media-volume-slider'|'media-volume-slider-container'|'media-volume-sliderthumb'|'menulist'|'menulist-button'|'menulist-text'|'menulist-textfield'|'meter'|'none'|'progress-bar'|'progress-bar-value'|'push-button'|'radio'|'revert'|'revert-layer'|'searchfield'|'searchfield-cancel-button'|'searchfield-decoration'|'searchfield-results-button'|'searchfield-results-decoration'|'slider-horizontal'|'slider-vertical'|'sliderthumb-horizontal'|'sliderthumb-vertical'|'square-button'|'textarea'|'textfield'|'unset'|string
@@ -231,9 +430,12 @@ namespace Symfony\UX\Css;
  * @psalm-type WebkitMaskPositionYValue = '-moz-initial'|'bottom'|'center'|'inherit'|'initial'|'revert'|'revert-layer'|'top'|'unset'|int|float|string
  * @psalm-type WebkitMaskRepeatValue = '-moz-initial'|'inherit'|'initial'|'no-repeat'|'repeat'|'repeat-x'|'repeat-y'|'revert'|'revert-layer'|'round'|'space'|'unset'|string
  * @psalm-type WebkitMaskRepeatXValue = '-moz-initial'|'inherit'|'initial'|'no-repeat'|'repeat'|'revert'|'revert-layer'|'round'|'space'|'unset'|string
+ * @psalm-type WebkitMaskRepeatYValue = '-moz-initial'|'inherit'|'initial'|'no-repeat'|'repeat'|'revert'|'revert-layer'|'round'|'space'|'unset'|string
  * @psalm-type WebkitMaskSizeValue = '-moz-initial'|'auto'|'contain'|'cover'|'inherit'|'initial'|'revert'|'revert-layer'|'unset'|int|float|string
  * @psalm-type WebkitMaskValue = '-moz-initial'|'border'|'border-box'|'bottom'|'center'|'content'|'content-box'|'inherit'|'initial'|'left'|'no-repeat'|'none'|'padding'|'padding-box'|'repeat'|'repeat-x'|'repeat-y'|'revert'|'revert-layer'|'right'|'round'|'space'|'text'|'top'|'unset'|int|float|string
  * @psalm-type WebkitOverflowScrollingValue = '-moz-initial'|'auto'|'inherit'|'initial'|'revert'|'revert-layer'|'touch'|'unset'|string
+ * @psalm-type WebkitTapHighlightColorValue = '-moz-initial'|'AccentColor'|'AccentColorText'|'ActiveBorder'|'ActiveCaption'|'ActiveText'|'AppWorkspace'|'Background'|'ButtonBorder'|'ButtonFace'|'ButtonHighlight'|'ButtonShadow'|'ButtonText'|'Canvas'|'CanvasText'|'CaptionText'|'Field'|'FieldText'|'GrayText'|'Highlight'|'HighlightText'|'InactiveBorder'|'InactiveCaption'|'InactiveCaptionText'|'InfoBackground'|'InfoText'|'LinkText'|'Mark'|'MarkText'|'Menu'|'MenuText'|'Scrollbar'|'SelectedItem'|'SelectedItemText'|'ThreeDDarkShadow'|'ThreeDFace'|'ThreeDHighlight'|'ThreeDLightShadow'|'ThreeDShadow'|'VisitedText'|'Window'|'WindowFrame'|'WindowText'|'aliceblue'|'antiquewhite'|'aqua'|'aquamarine'|'azure'|'beige'|'bisque'|'black'|'blanchedalmond'|'blue'|'blueviolet'|'brown'|'burlywood'|'cadetblue'|'chartreuse'|'chocolate'|'coral'|'cornflowerblue'|'cornsilk'|'crimson'|'currentColor'|'cyan'|'darkblue'|'darkcyan'|'darkgoldenrod'|'darkgray'|'darkgreen'|'darkgrey'|'darkkhaki'|'darkmagenta'|'darkolivegreen'|'darkorange'|'darkorchid'|'darkred'|'darksalmon'|'darkseagreen'|'darkslateblue'|'darkslategray'|'darkslategrey'|'darkturquoise'|'darkviolet'|'deeppink'|'deepskyblue'|'dimgray'|'dimgrey'|'dodgerblue'|'firebrick'|'floralwhite'|'forestgreen'|'fuchsia'|'gainsboro'|'ghostwhite'|'gold'|'goldenrod'|'gray'|'green'|'greenyellow'|'grey'|'honeydew'|'hotpink'|'indianred'|'indigo'|'inherit'|'initial'|'ivory'|'khaki'|'lavender'|'lavenderblush'|'lawngreen'|'lemonchiffon'|'lightblue'|'lightcoral'|'lightcyan'|'lightgoldenrodyellow'|'lightgray'|'lightgreen'|'lightgrey'|'lightpink'|'lightsalmon'|'lightseagreen'|'lightskyblue'|'lightslategray'|'lightslategrey'|'lightsteelblue'|'lightyellow'|'lime'|'limegreen'|'linen'|'magenta'|'maroon'|'mediumaquamarine'|'mediumblue'|'mediumorchid'|'mediumpurple'|'mediumseagreen'|'mediumslateblue'|'mediumspringgreen'|'mediumturquoise'|'mediumvioletred'|'midnightblue'|'mintcream'|'mistyrose'|'moccasin'|'navajowhite'|'navy'|'oldlace'|'olive'|'olivedrab'|'orange'|'orangered'|'orchid'|'palegoldenrod'|'palegreen'|'paleturquoise'|'palevioletred'|'papayawhip'|'peachpuff'|'peru'|'pink'|'plum'|'powderblue'|'purple'|'rebeccapurple'|'red'|'revert'|'revert-layer'|'rosybrown'|'royalblue'|'saddlebrown'|'salmon'|'sandybrown'|'seagreen'|'seashell'|'sienna'|'silver'|'skyblue'|'slateblue'|'slategray'|'slategrey'|'snow'|'springgreen'|'steelblue'|'tan'|'teal'|'thistle'|'tomato'|'transparent'|'turquoise'|'unset'|'violet'|'wheat'|'white'|'whitesmoke'|'yellow'|'yellowgreen'|string
+ * @psalm-type WebkitTextStrokeColorValue = '-moz-initial'|'AccentColor'|'AccentColorText'|'ActiveBorder'|'ActiveCaption'|'ActiveText'|'AppWorkspace'|'Background'|'ButtonBorder'|'ButtonFace'|'ButtonHighlight'|'ButtonShadow'|'ButtonText'|'Canvas'|'CanvasText'|'CaptionText'|'Field'|'FieldText'|'GrayText'|'Highlight'|'HighlightText'|'InactiveBorder'|'InactiveCaption'|'InactiveCaptionText'|'InfoBackground'|'InfoText'|'LinkText'|'Mark'|'MarkText'|'Menu'|'MenuText'|'Scrollbar'|'SelectedItem'|'SelectedItemText'|'ThreeDDarkShadow'|'ThreeDFace'|'ThreeDHighlight'|'ThreeDLightShadow'|'ThreeDShadow'|'VisitedText'|'Window'|'WindowFrame'|'WindowText'|'aliceblue'|'antiquewhite'|'aqua'|'aquamarine'|'azure'|'beige'|'bisque'|'black'|'blanchedalmond'|'blue'|'blueviolet'|'brown'|'burlywood'|'cadetblue'|'chartreuse'|'chocolate'|'coral'|'cornflowerblue'|'cornsilk'|'crimson'|'currentColor'|'cyan'|'darkblue'|'darkcyan'|'darkgoldenrod'|'darkgray'|'darkgreen'|'darkgrey'|'darkkhaki'|'darkmagenta'|'darkolivegreen'|'darkorange'|'darkorchid'|'darkred'|'darksalmon'|'darkseagreen'|'darkslateblue'|'darkslategray'|'darkslategrey'|'darkturquoise'|'darkviolet'|'deeppink'|'deepskyblue'|'dimgray'|'dimgrey'|'dodgerblue'|'firebrick'|'floralwhite'|'forestgreen'|'fuchsia'|'gainsboro'|'ghostwhite'|'gold'|'goldenrod'|'gray'|'green'|'greenyellow'|'grey'|'honeydew'|'hotpink'|'indianred'|'indigo'|'inherit'|'initial'|'ivory'|'khaki'|'lavender'|'lavenderblush'|'lawngreen'|'lemonchiffon'|'lightblue'|'lightcoral'|'lightcyan'|'lightgoldenrodyellow'|'lightgray'|'lightgreen'|'lightgrey'|'lightpink'|'lightsalmon'|'lightseagreen'|'lightskyblue'|'lightslategray'|'lightslategrey'|'lightsteelblue'|'lightyellow'|'lime'|'limegreen'|'linen'|'magenta'|'maroon'|'mediumaquamarine'|'mediumblue'|'mediumorchid'|'mediumpurple'|'mediumseagreen'|'mediumslateblue'|'mediumspringgreen'|'mediumturquoise'|'mediumvioletred'|'midnightblue'|'mintcream'|'mistyrose'|'moccasin'|'navajowhite'|'navy'|'oldlace'|'olive'|'olivedrab'|'orange'|'orangered'|'orchid'|'palegoldenrod'|'palegreen'|'paleturquoise'|'palevioletred'|'papayawhip'|'peachpuff'|'peru'|'pink'|'plum'|'powderblue'|'purple'|'rebeccapurple'|'red'|'revert'|'revert-layer'|'rosybrown'|'royalblue'|'saddlebrown'|'salmon'|'sandybrown'|'seagreen'|'seashell'|'sienna'|'silver'|'skyblue'|'slateblue'|'slategray'|'slategrey'|'snow'|'springgreen'|'steelblue'|'tan'|'teal'|'thistle'|'tomato'|'transparent'|'turquoise'|'unset'|'violet'|'wheat'|'white'|'whitesmoke'|'yellow'|'yellowgreen'|string
  * @psalm-type WebkitTextStrokeValue = '-moz-initial'|'AccentColor'|'AccentColorText'|'ActiveBorder'|'ActiveCaption'|'ActiveText'|'AppWorkspace'|'Background'|'ButtonBorder'|'ButtonFace'|'ButtonHighlight'|'ButtonShadow'|'ButtonText'|'Canvas'|'CanvasText'|'CaptionText'|'Field'|'FieldText'|'GrayText'|'Highlight'|'HighlightText'|'InactiveBorder'|'InactiveCaption'|'InactiveCaptionText'|'InfoBackground'|'InfoText'|'LinkText'|'Mark'|'MarkText'|'Menu'|'MenuText'|'Scrollbar'|'SelectedItem'|'SelectedItemText'|'ThreeDDarkShadow'|'ThreeDFace'|'ThreeDHighlight'|'ThreeDLightShadow'|'ThreeDShadow'|'VisitedText'|'Window'|'WindowFrame'|'WindowText'|'aliceblue'|'antiquewhite'|'aqua'|'aquamarine'|'azure'|'beige'|'bisque'|'black'|'blanchedalmond'|'blue'|'blueviolet'|'brown'|'burlywood'|'cadetblue'|'chartreuse'|'chocolate'|'coral'|'cornflowerblue'|'cornsilk'|'crimson'|'currentColor'|'cyan'|'darkblue'|'darkcyan'|'darkgoldenrod'|'darkgray'|'darkgreen'|'darkgrey'|'darkkhaki'|'darkmagenta'|'darkolivegreen'|'darkorange'|'darkorchid'|'darkred'|'darksalmon'|'darkseagreen'|'darkslateblue'|'darkslategray'|'darkslategrey'|'darkturquoise'|'darkviolet'|'deeppink'|'deepskyblue'|'dimgray'|'dimgrey'|'dodgerblue'|'firebrick'|'floralwhite'|'forestgreen'|'fuchsia'|'gainsboro'|'ghostwhite'|'gold'|'goldenrod'|'gray'|'green'|'greenyellow'|'grey'|'honeydew'|'hotpink'|'indianred'|'indigo'|'inherit'|'initial'|'ivory'|'khaki'|'lavender'|'lavenderblush'|'lawngreen'|'lemonchiffon'|'lightblue'|'lightcoral'|'lightcyan'|'lightgoldenrodyellow'|'lightgray'|'lightgreen'|'lightgrey'|'lightpink'|'lightsalmon'|'lightseagreen'|'lightskyblue'|'lightslategray'|'lightslategrey'|'lightsteelblue'|'lightyellow'|'lime'|'limegreen'|'linen'|'magenta'|'maroon'|'mediumaquamarine'|'mediumblue'|'mediumorchid'|'mediumpurple'|'mediumseagreen'|'mediumslateblue'|'mediumspringgreen'|'mediumturquoise'|'mediumvioletred'|'midnightblue'|'mintcream'|'mistyrose'|'moccasin'|'navajowhite'|'navy'|'oldlace'|'olive'|'olivedrab'|'orange'|'orangered'|'orchid'|'palegoldenrod'|'palegreen'|'paleturquoise'|'palevioletred'|'papayawhip'|'peachpuff'|'peru'|'pink'|'plum'|'powderblue'|'purple'|'rebeccapurple'|'red'|'revert'|'revert-layer'|'rosybrown'|'royalblue'|'saddlebrown'|'salmon'|'sandybrown'|'seagreen'|'seashell'|'sienna'|'silver'|'skyblue'|'slateblue'|'slategray'|'slategrey'|'snow'|'springgreen'|'steelblue'|'tan'|'teal'|'thistle'|'tomato'|'transparent'|'turquoise'|'unset'|'violet'|'wheat'|'white'|'whitesmoke'|'yellow'|'yellowgreen'|int|float|string
  * @psalm-type WebkitTextStrokeWidthValue = '-moz-initial'|'inherit'|'initial'|'revert'|'revert-layer'|'unset'|int|float|string
  * @psalm-type WebkitTouchCalloutValue = '-moz-initial'|'default'|'inherit'|'initial'|'none'|'revert'|'revert-layer'|'unset'|string
@@ -241,10 +443,13 @@ namespace Symfony\UX\Css;
  * @psalm-type WebkitUserSelectValue = '-moz-initial'|'all'|'auto'|'inherit'|'initial'|'none'|'revert'|'revert-layer'|'text'|'unset'|string
  * @psalm-type WhiteSpaceCollapseValue = '-moz-initial'|'break-spaces'|'collapse'|'inherit'|'initial'|'preserve'|'preserve-breaks'|'preserve-spaces'|'revert'|'revert-layer'|'unset'|string
  * @psalm-type WhiteSpaceValue = '-moz-initial'|'-moz-pre-wrap'|'break-spaces'|'collapse'|'inherit'|'initial'|'normal'|'nowrap'|'pre'|'pre-line'|'pre-wrap'|'preserve'|'preserve-breaks'|'preserve-spaces'|'revert'|'revert-layer'|'unset'|'wrap'|string
+ * @psalm-type WidowsValue = '-moz-initial'|'inherit'|'initial'|'revert'|'revert-layer'|'unset'|int|float|string
  * @psalm-type WillChangeValue = '-moz-initial'|'auto'|'contents'|'inherit'|'initial'|'revert'|'revert-layer'|'scroll-position'|'unset'|string
  * @psalm-type WordBreakValue = '-moz-initial'|'auto-phrase'|'break-all'|'break-word'|'inherit'|'initial'|'keep-all'|'normal'|'revert'|'revert-layer'|'unset'|string
+ * @psalm-type WordSpacingValue = '-moz-initial'|'inherit'|'initial'|'normal'|'revert'|'revert-layer'|'unset'|int|float|string
  * @psalm-type WordWrapValue = '-moz-initial'|'break-word'|'inherit'|'initial'|'normal'|'revert'|'revert-layer'|'unset'|string
  * @psalm-type WritingModeValue = '-moz-initial'|'horizontal-tb'|'inherit'|'initial'|'revert'|'revert-layer'|'sideways-lr'|'sideways-rl'|'unset'|'vertical-lr'|'vertical-rl'|string
+ * @psalm-type ZIndexValue = '-moz-initial'|'auto'|'inherit'|'initial'|'revert'|'revert-layer'|'unset'|int|float|string
  * @psalm-type ZoomValue = '-moz-initial'|'inherit'|'initial'|'normal'|'reset'|'revert'|'revert-layer'|'unset'|int|float|string
  * @psalm-type CssStyles = array{
  *     WebkitAppearance?: WebkitAppearanceValue|array<WebkitAppearanceValue|array<array-key, mixed>>,
@@ -265,13 +470,13 @@ namespace Symfony\UX\Css;
  *     WebkitMaskPositionY?: WebkitMaskPositionYValue|array<WebkitMaskPositionYValue|array<array-key, mixed>>,
  *     WebkitMaskRepeat?: WebkitMaskRepeatValue|array<WebkitMaskRepeatValue|array<array-key, mixed>>,
  *     WebkitMaskRepeatX?: WebkitMaskRepeatXValue|array<WebkitMaskRepeatXValue|array<array-key, mixed>>,
- *     WebkitMaskRepeatY?: WebkitMaskRepeatXValue|array<WebkitMaskRepeatXValue|array<array-key, mixed>>,
+ *     WebkitMaskRepeatY?: WebkitMaskRepeatYValue|array<WebkitMaskRepeatYValue|array<array-key, mixed>>,
  *     WebkitMaskSize?: WebkitMaskSizeValue|array<WebkitMaskSizeValue|array<array-key, mixed>>,
  *     WebkitOverflowScrolling?: WebkitOverflowScrollingValue|array<WebkitOverflowScrollingValue|array<array-key, mixed>>,
- *     WebkitTapHighlightColor?: WebkitBorderBeforeColorValue|array<WebkitBorderBeforeColorValue|array<array-key, mixed>>,
+ *     WebkitTapHighlightColor?: WebkitTapHighlightColorValue|array<WebkitTapHighlightColorValue|array<array-key, mixed>>,
  *     WebkitTextFillColor?: ColorsToken|array<ColorsToken|array<array-key, mixed>>,
  *     WebkitTextStroke?: WebkitTextStrokeValue|array<WebkitTextStrokeValue|array<array-key, mixed>>,
- *     WebkitTextStrokeColor?: WebkitBorderBeforeColorValue|array<WebkitBorderBeforeColorValue|array<array-key, mixed>>,
+ *     WebkitTextStrokeColor?: WebkitTextStrokeColorValue|array<WebkitTextStrokeColorValue|array<array-key, mixed>>,
  *     WebkitTextStrokeWidth?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
  *     WebkitTouchCallout?: WebkitTouchCalloutValue|array<WebkitTouchCalloutValue|array<array-key, mixed>>,
  *     WebkitUserModify?: WebkitUserModifyValue|array<WebkitUserModifyValue|array<array-key, mixed>>,
@@ -280,23 +485,23 @@ namespace Symfony\UX\Css;
  *     alignContent?: AlignContentValue|array<AlignContentValue|array<array-key, mixed>>,
  *     alignItems?: AlignItemsValue|array<AlignItemsValue|array<array-key, mixed>>,
  *     alignSelf?: AlignSelfValue|array<AlignSelfValue|array<array-key, mixed>>,
- *     alignTracks?: AlignContentValue|array<AlignContentValue|array<array-key, mixed>>,
+ *     alignTracks?: AlignTracksValue|array<AlignTracksValue|array<array-key, mixed>>,
  *     alignmentBaseline?: AlignmentBaselineValue|array<AlignmentBaselineValue|array<array-key, mixed>>,
  *     all?: AllValue|array<AllValue|array<array-key, mixed>>,
- *     anchorName?: WebkitMaskImageValue|array<WebkitMaskImageValue|array<array-key, mixed>>,
+ *     anchorName?: AnchorNameValue|array<AnchorNameValue|array<array-key, mixed>>,
  *     anchorScope?: AnchorScopeValue|array<AnchorScopeValue|array<array-key, mixed>>,
  *     animation?: AnimationValue|array<AnimationValue|array<array-key, mixed>>,
  *     animationComposition?: AnimationCompositionValue|array<AnimationCompositionValue|array<array-key, mixed>>,
- *     animationDelay?: AllValue|array<AllValue|array<array-key, mixed>>,
+ *     animationDelay?: AnimationDelayValue|array<AnimationDelayValue|array<array-key, mixed>>,
  *     animationDirection?: AnimationDirectionValue|array<AnimationDirectionValue|array<array-key, mixed>>,
  *     animationDuration?: AnimationDurationValue|array<AnimationDurationValue|array<array-key, mixed>>,
  *     animationFillMode?: AnimationFillModeValue|array<AnimationFillModeValue|array<array-key, mixed>>,
  *     animationIterationCount?: AnimationIterationCountValue|array<AnimationIterationCountValue|array<array-key, mixed>>,
- *     animationName?: WebkitMaskImageValue|array<WebkitMaskImageValue|array<array-key, mixed>>,
+ *     animationName?: AnimationNameValue|array<AnimationNameValue|array<array-key, mixed>>,
  *     animationPlayState?: AnimationPlayStateValue|array<AnimationPlayStateValue|array<array-key, mixed>>,
  *     animationRange?: AnimationRangeValue|array<AnimationRangeValue|array<array-key, mixed>>,
- *     animationRangeEnd?: AnimationRangeValue|array<AnimationRangeValue|array<array-key, mixed>>,
- *     animationRangeStart?: AnimationRangeValue|array<AnimationRangeValue|array<array-key, mixed>>,
+ *     animationRangeEnd?: AnimationRangeEndValue|array<AnimationRangeEndValue|array<array-key, mixed>>,
+ *     animationRangeStart?: AnimationRangeStartValue|array<AnimationRangeStartValue|array<array-key, mixed>>,
  *     animationState?: int|float|string|array<int|float|string|array<array-key, mixed>>,
  *     animationTimeline?: AnimationTimelineValue|array<AnimationTimelineValue|array<array-key, mixed>>,
  *     animationTimingFunction?: AnimationTimingFunctionValue|array<AnimationTimingFunctionValue|array<array-key, mixed>>,
@@ -314,137 +519,137 @@ namespace Symfony\UX\Css;
  *     backdropSepia?: int|float|string|array<int|float|string|array<array-key, mixed>>,
  *     backfaceVisibility?: BackfaceVisibilityValue|array<BackfaceVisibilityValue|array<array-key, mixed>>,
  *     background?: ColorsToken|array<ColorsToken|array<array-key, mixed>>,
- *     backgroundAttachment?: WebkitMaskAttachmentValue|array<WebkitMaskAttachmentValue|array<array-key, mixed>>,
+ *     backgroundAttachment?: BackgroundAttachmentValue|array<BackgroundAttachmentValue|array<array-key, mixed>>,
  *     backgroundBlendMode?: BackgroundBlendModeValue|array<BackgroundBlendModeValue|array<array-key, mixed>>,
  *     backgroundClip?: BackgroundClipValue|array<BackgroundClipValue|array<array-key, mixed>>,
  *     backgroundColor?: ColorsToken|array<ColorsToken|array<array-key, mixed>>,
  *     backgroundConic?: int|float|string|array<int|float|string|array<array-key, mixed>>,
  *     backgroundGradient?: GradientsToken|array<GradientsToken|array<array-key, mixed>>,
- *     backgroundImage?: WebkitMaskImageValue|array<WebkitMaskImageValue|array<array-key, mixed>>,
+ *     backgroundImage?: BackgroundImageValue|array<BackgroundImageValue|array<array-key, mixed>>,
  *     backgroundLinear?: GradientsToken|array<GradientsToken|array<array-key, mixed>>,
  *     backgroundOrigin?: BackgroundOriginValue|array<BackgroundOriginValue|array<array-key, mixed>>,
- *     backgroundPosition?: WebkitMaskPositionValue|array<WebkitMaskPositionValue|array<array-key, mixed>>,
+ *     backgroundPosition?: BackgroundPositionValue|array<BackgroundPositionValue|array<array-key, mixed>>,
  *     backgroundPositionX?: BackgroundPositionXValue|array<BackgroundPositionXValue|array<array-key, mixed>>,
  *     backgroundPositionY?: BackgroundPositionYValue|array<BackgroundPositionYValue|array<array-key, mixed>>,
  *     backgroundRadial?: int|float|string|array<int|float|string|array<array-key, mixed>>,
- *     backgroundRepeat?: WebkitMaskRepeatValue|array<WebkitMaskRepeatValue|array<array-key, mixed>>,
- *     backgroundSize?: WebkitMaskSizeValue|array<WebkitMaskSizeValue|array<array-key, mixed>>,
+ *     backgroundRepeat?: BackgroundRepeatValue|array<BackgroundRepeatValue|array<array-key, mixed>>,
+ *     backgroundSize?: BackgroundSizeValue|array<BackgroundSizeValue|array<array-key, mixed>>,
  *     baselineShift?: BaselineShiftValue|array<BaselineShiftValue|array<array-key, mixed>>,
  *     bg?: ColorsToken|array<ColorsToken|array<array-key, mixed>>,
- *     bgAttachment?: WebkitMaskAttachmentValue|array<WebkitMaskAttachmentValue|array<array-key, mixed>>,
+ *     bgAttachment?: BackgroundAttachmentValue|array<BackgroundAttachmentValue|array<array-key, mixed>>,
  *     bgBlendMode?: BackgroundBlendModeValue|array<BackgroundBlendModeValue|array<array-key, mixed>>,
  *     bgClip?: BackgroundClipValue|array<BackgroundClipValue|array<array-key, mixed>>,
  *     bgColor?: ColorsToken|array<ColorsToken|array<array-key, mixed>>,
  *     bgConic?: int|float|string|array<int|float|string|array<array-key, mixed>>,
  *     bgGradient?: GradientsToken|array<GradientsToken|array<array-key, mixed>>,
- *     bgImage?: WebkitMaskImageValue|array<WebkitMaskImageValue|array<array-key, mixed>>,
+ *     bgImage?: BackgroundImageValue|array<BackgroundImageValue|array<array-key, mixed>>,
  *     bgLinear?: GradientsToken|array<GradientsToken|array<array-key, mixed>>,
  *     bgOrigin?: BackgroundOriginValue|array<BackgroundOriginValue|array<array-key, mixed>>,
- *     bgPosition?: WebkitMaskPositionValue|array<WebkitMaskPositionValue|array<array-key, mixed>>,
+ *     bgPosition?: BackgroundPositionValue|array<BackgroundPositionValue|array<array-key, mixed>>,
  *     bgPositionX?: BackgroundPositionXValue|array<BackgroundPositionXValue|array<array-key, mixed>>,
  *     bgPositionY?: BackgroundPositionYValue|array<BackgroundPositionYValue|array<array-key, mixed>>,
  *     bgRadial?: int|float|string|array<int|float|string|array<array-key, mixed>>,
- *     bgRepeat?: WebkitMaskRepeatValue|array<WebkitMaskRepeatValue|array<array-key, mixed>>,
- *     bgSize?: WebkitMaskSizeValue|array<WebkitMaskSizeValue|array<array-key, mixed>>,
+ *     bgRepeat?: BackgroundRepeatValue|array<BackgroundRepeatValue|array<array-key, mixed>>,
+ *     bgSize?: BackgroundSizeValue|array<BackgroundSizeValue|array<array-key, mixed>>,
  *     blockSize?: SizesToken|array<SizesToken|array<array-key, mixed>>,
  *     blur?: int|float|string|array<int|float|string|array<array-key, mixed>>,
- *     border?: WebkitBorderBeforeValue|array<WebkitBorderBeforeValue|array<array-key, mixed>>,
- *     borderBlock?: WebkitBorderBeforeValue|array<WebkitBorderBeforeValue|array<array-key, mixed>>,
+ *     border?: BorderValue|array<BorderValue|array<array-key, mixed>>,
+ *     borderBlock?: BorderBlockValue|array<BorderBlockValue|array<array-key, mixed>>,
  *     borderBlockColor?: ColorsToken|array<ColorsToken|array<array-key, mixed>>,
- *     borderBlockEnd?: WebkitBorderBeforeValue|array<WebkitBorderBeforeValue|array<array-key, mixed>>,
+ *     borderBlockEnd?: BorderBlockEndValue|array<BorderBlockEndValue|array<array-key, mixed>>,
  *     borderBlockEndColor?: ColorsToken|array<ColorsToken|array<array-key, mixed>>,
- *     borderBlockEndStyle?: WebkitBorderBeforeStyleValue|array<WebkitBorderBeforeStyleValue|array<array-key, mixed>>,
- *     borderBlockEndWidth?: WebkitBorderBeforeWidthValue|array<WebkitBorderBeforeWidthValue|array<array-key, mixed>>,
- *     borderBlockStart?: WebkitBorderBeforeValue|array<WebkitBorderBeforeValue|array<array-key, mixed>>,
+ *     borderBlockEndStyle?: BorderBlockEndStyleValue|array<BorderBlockEndStyleValue|array<array-key, mixed>>,
+ *     borderBlockEndWidth?: BorderBlockEndWidthValue|array<BorderBlockEndWidthValue|array<array-key, mixed>>,
+ *     borderBlockStart?: BorderBlockStartValue|array<BorderBlockStartValue|array<array-key, mixed>>,
  *     borderBlockStartColor?: ColorsToken|array<ColorsToken|array<array-key, mixed>>,
- *     borderBlockStartStyle?: WebkitBorderBeforeStyleValue|array<WebkitBorderBeforeStyleValue|array<array-key, mixed>>,
- *     borderBlockStartWidth?: WebkitBorderBeforeWidthValue|array<WebkitBorderBeforeWidthValue|array<array-key, mixed>>,
- *     borderBlockStyle?: WebkitBorderBeforeStyleValue|array<WebkitBorderBeforeStyleValue|array<array-key, mixed>>,
- *     borderBlockWidth?: WebkitBorderBeforeWidthValue|array<WebkitBorderBeforeWidthValue|array<array-key, mixed>>,
- *     borderBottom?: WebkitBorderBeforeValue|array<WebkitBorderBeforeValue|array<array-key, mixed>>,
+ *     borderBlockStartStyle?: BorderBlockStartStyleValue|array<BorderBlockStartStyleValue|array<array-key, mixed>>,
+ *     borderBlockStartWidth?: BorderBlockStartWidthValue|array<BorderBlockStartWidthValue|array<array-key, mixed>>,
+ *     borderBlockStyle?: BorderBlockStyleValue|array<BorderBlockStyleValue|array<array-key, mixed>>,
+ *     borderBlockWidth?: BorderBlockWidthValue|array<BorderBlockWidthValue|array<array-key, mixed>>,
+ *     borderBottom?: BorderBottomValue|array<BorderBottomValue|array<array-key, mixed>>,
  *     borderBottomColor?: ColorsToken|array<ColorsToken|array<array-key, mixed>>,
- *     borderBottomLeftRadius?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
+ *     borderBottomLeftRadius?: BorderBottomLeftRadiusValue|array<BorderBottomLeftRadiusValue|array<array-key, mixed>>,
  *     borderBottomRadius?: int|float|string|array<int|float|string|array<array-key, mixed>>,
- *     borderBottomRightRadius?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
- *     borderBottomStyle?: WebkitBorderBeforeStyleValue|array<WebkitBorderBeforeStyleValue|array<array-key, mixed>>,
- *     borderBottomWidth?: WebkitBorderBeforeWidthValue|array<WebkitBorderBeforeWidthValue|array<array-key, mixed>>,
+ *     borderBottomRightRadius?: BorderBottomRightRadiusValue|array<BorderBottomRightRadiusValue|array<array-key, mixed>>,
+ *     borderBottomStyle?: BorderBottomStyleValue|array<BorderBottomStyleValue|array<array-key, mixed>>,
+ *     borderBottomWidth?: BorderBottomWidthValue|array<BorderBottomWidthValue|array<array-key, mixed>>,
  *     borderCollapse?: BorderCollapseValue|array<BorderCollapseValue|array<array-key, mixed>>,
  *     borderColor?: ColorsToken|array<ColorsToken|array<array-key, mixed>>,
- *     borderEnd?: WebkitBorderBeforeValue|array<WebkitBorderBeforeValue|array<array-key, mixed>>,
+ *     borderEnd?: BorderInlineEndValue|array<BorderInlineEndValue|array<array-key, mixed>>,
  *     borderEndColor?: ColorsToken|array<ColorsToken|array<array-key, mixed>>,
- *     borderEndEndRadius?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
+ *     borderEndEndRadius?: BorderEndEndRadiusValue|array<BorderEndEndRadiusValue|array<array-key, mixed>>,
  *     borderEndRadius?: int|float|string|array<int|float|string|array<array-key, mixed>>,
- *     borderEndStartRadius?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
- *     borderEndWidth?: WebkitBorderBeforeWidthValue|array<WebkitBorderBeforeWidthValue|array<array-key, mixed>>,
+ *     borderEndStartRadius?: BorderEndStartRadiusValue|array<BorderEndStartRadiusValue|array<array-key, mixed>>,
+ *     borderEndWidth?: BorderInlineEndWidthValue|array<BorderInlineEndWidthValue|array<array-key, mixed>>,
  *     borderImage?: BorderImageValue|array<BorderImageValue|array<array-key, mixed>>,
- *     borderImageOutset?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
+ *     borderImageOutset?: BorderImageOutsetValue|array<BorderImageOutsetValue|array<array-key, mixed>>,
  *     borderImageRepeat?: BorderImageRepeatValue|array<BorderImageRepeatValue|array<array-key, mixed>>,
- *     borderImageSlice?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
- *     borderImageSource?: WebkitMaskImageValue|array<WebkitMaskImageValue|array<array-key, mixed>>,
- *     borderImageWidth?: AspectRatioValue|array<AspectRatioValue|array<array-key, mixed>>,
- *     borderInline?: WebkitBorderBeforeValue|array<WebkitBorderBeforeValue|array<array-key, mixed>>,
+ *     borderImageSlice?: BorderImageSliceValue|array<BorderImageSliceValue|array<array-key, mixed>>,
+ *     borderImageSource?: BorderImageSourceValue|array<BorderImageSourceValue|array<array-key, mixed>>,
+ *     borderImageWidth?: BorderImageWidthValue|array<BorderImageWidthValue|array<array-key, mixed>>,
+ *     borderInline?: BorderInlineValue|array<BorderInlineValue|array<array-key, mixed>>,
  *     borderInlineColor?: ColorsToken|array<ColorsToken|array<array-key, mixed>>,
- *     borderInlineEnd?: WebkitBorderBeforeValue|array<WebkitBorderBeforeValue|array<array-key, mixed>>,
+ *     borderInlineEnd?: BorderInlineEndValue|array<BorderInlineEndValue|array<array-key, mixed>>,
  *     borderInlineEndColor?: ColorsToken|array<ColorsToken|array<array-key, mixed>>,
- *     borderInlineEndStyle?: WebkitBorderBeforeStyleValue|array<WebkitBorderBeforeStyleValue|array<array-key, mixed>>,
- *     borderInlineEndWidth?: WebkitBorderBeforeWidthValue|array<WebkitBorderBeforeWidthValue|array<array-key, mixed>>,
- *     borderInlineStart?: WebkitBorderBeforeValue|array<WebkitBorderBeforeValue|array<array-key, mixed>>,
+ *     borderInlineEndStyle?: BorderInlineEndStyleValue|array<BorderInlineEndStyleValue|array<array-key, mixed>>,
+ *     borderInlineEndWidth?: BorderInlineEndWidthValue|array<BorderInlineEndWidthValue|array<array-key, mixed>>,
+ *     borderInlineStart?: BorderInlineStartValue|array<BorderInlineStartValue|array<array-key, mixed>>,
  *     borderInlineStartColor?: ColorsToken|array<ColorsToken|array<array-key, mixed>>,
- *     borderInlineStartStyle?: WebkitBorderBeforeStyleValue|array<WebkitBorderBeforeStyleValue|array<array-key, mixed>>,
- *     borderInlineStartWidth?: WebkitBorderBeforeWidthValue|array<WebkitBorderBeforeWidthValue|array<array-key, mixed>>,
- *     borderInlineStyle?: WebkitBorderBeforeStyleValue|array<WebkitBorderBeforeStyleValue|array<array-key, mixed>>,
- *     borderInlineWidth?: WebkitBorderBeforeWidthValue|array<WebkitBorderBeforeWidthValue|array<array-key, mixed>>,
- *     borderLeft?: WebkitBorderBeforeValue|array<WebkitBorderBeforeValue|array<array-key, mixed>>,
+ *     borderInlineStartStyle?: BorderInlineStartStyleValue|array<BorderInlineStartStyleValue|array<array-key, mixed>>,
+ *     borderInlineStartWidth?: BorderInlineStartWidthValue|array<BorderInlineStartWidthValue|array<array-key, mixed>>,
+ *     borderInlineStyle?: BorderInlineStyleValue|array<BorderInlineStyleValue|array<array-key, mixed>>,
+ *     borderInlineWidth?: BorderInlineWidthValue|array<BorderInlineWidthValue|array<array-key, mixed>>,
+ *     borderLeft?: BorderLeftValue|array<BorderLeftValue|array<array-key, mixed>>,
  *     borderLeftColor?: ColorsToken|array<ColorsToken|array<array-key, mixed>>,
  *     borderLeftRadius?: int|float|string|array<int|float|string|array<array-key, mixed>>,
- *     borderLeftStyle?: WebkitBorderBeforeStyleValue|array<WebkitBorderBeforeStyleValue|array<array-key, mixed>>,
- *     borderLeftWidth?: WebkitBorderBeforeWidthValue|array<WebkitBorderBeforeWidthValue|array<array-key, mixed>>,
- *     borderRadius?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
- *     borderRight?: WebkitBorderBeforeValue|array<WebkitBorderBeforeValue|array<array-key, mixed>>,
+ *     borderLeftStyle?: BorderLeftStyleValue|array<BorderLeftStyleValue|array<array-key, mixed>>,
+ *     borderLeftWidth?: BorderLeftWidthValue|array<BorderLeftWidthValue|array<array-key, mixed>>,
+ *     borderRadius?: BorderRadiusValue|array<BorderRadiusValue|array<array-key, mixed>>,
+ *     borderRight?: BorderRightValue|array<BorderRightValue|array<array-key, mixed>>,
  *     borderRightColor?: ColorsToken|array<ColorsToken|array<array-key, mixed>>,
  *     borderRightRadius?: int|float|string|array<int|float|string|array<array-key, mixed>>,
- *     borderRightStyle?: WebkitBorderBeforeStyleValue|array<WebkitBorderBeforeStyleValue|array<array-key, mixed>>,
- *     borderRightWidth?: WebkitBorderBeforeWidthValue|array<WebkitBorderBeforeWidthValue|array<array-key, mixed>>,
+ *     borderRightStyle?: BorderRightStyleValue|array<BorderRightStyleValue|array<array-key, mixed>>,
+ *     borderRightWidth?: BorderRightWidthValue|array<BorderRightWidthValue|array<array-key, mixed>>,
  *     borderSpacing?: SpacingToken|array<SpacingToken|array<array-key, mixed>>,
  *     borderSpacingX?: SpacingToken2|array<SpacingToken2|array<array-key, mixed>>,
  *     borderSpacingY?: SpacingToken2|array<SpacingToken2|array<array-key, mixed>>,
- *     borderStart?: WebkitBorderBeforeValue|array<WebkitBorderBeforeValue|array<array-key, mixed>>,
+ *     borderStart?: BorderInlineStartValue|array<BorderInlineStartValue|array<array-key, mixed>>,
  *     borderStartColor?: ColorsToken|array<ColorsToken|array<array-key, mixed>>,
- *     borderStartEndRadius?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
+ *     borderStartEndRadius?: BorderStartEndRadiusValue|array<BorderStartEndRadiusValue|array<array-key, mixed>>,
  *     borderStartRadius?: int|float|string|array<int|float|string|array<array-key, mixed>>,
- *     borderStartStartRadius?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
- *     borderStartWidth?: WebkitBorderBeforeWidthValue|array<WebkitBorderBeforeWidthValue|array<array-key, mixed>>,
- *     borderStyle?: WebkitBorderBeforeStyleValue|array<WebkitBorderBeforeStyleValue|array<array-key, mixed>>,
- *     borderTop?: WebkitBorderBeforeValue|array<WebkitBorderBeforeValue|array<array-key, mixed>>,
+ *     borderStartStartRadius?: BorderStartStartRadiusValue|array<BorderStartStartRadiusValue|array<array-key, mixed>>,
+ *     borderStartWidth?: BorderInlineStartWidthValue|array<BorderInlineStartWidthValue|array<array-key, mixed>>,
+ *     borderStyle?: BorderStyleValue|array<BorderStyleValue|array<array-key, mixed>>,
+ *     borderTop?: BorderTopValue|array<BorderTopValue|array<array-key, mixed>>,
  *     borderTopColor?: ColorsToken|array<ColorsToken|array<array-key, mixed>>,
- *     borderTopLeftRadius?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
+ *     borderTopLeftRadius?: BorderTopLeftRadiusValue|array<BorderTopLeftRadiusValue|array<array-key, mixed>>,
  *     borderTopRadius?: int|float|string|array<int|float|string|array<array-key, mixed>>,
- *     borderTopRightRadius?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
- *     borderTopStyle?: WebkitBorderBeforeStyleValue|array<WebkitBorderBeforeStyleValue|array<array-key, mixed>>,
- *     borderTopWidth?: WebkitBorderBeforeWidthValue|array<WebkitBorderBeforeWidthValue|array<array-key, mixed>>,
- *     borderWidth?: WebkitBorderBeforeWidthValue|array<WebkitBorderBeforeWidthValue|array<array-key, mixed>>,
- *     borderX?: WebkitBorderBeforeValue|array<WebkitBorderBeforeValue|array<array-key, mixed>>,
+ *     borderTopRightRadius?: BorderTopRightRadiusValue|array<BorderTopRightRadiusValue|array<array-key, mixed>>,
+ *     borderTopStyle?: BorderTopStyleValue|array<BorderTopStyleValue|array<array-key, mixed>>,
+ *     borderTopWidth?: BorderTopWidthValue|array<BorderTopWidthValue|array<array-key, mixed>>,
+ *     borderWidth?: BorderWidthValue|array<BorderWidthValue|array<array-key, mixed>>,
+ *     borderX?: BorderInlineValue|array<BorderInlineValue|array<array-key, mixed>>,
  *     borderXColor?: ColorsToken|array<ColorsToken|array<array-key, mixed>>,
- *     borderXWidth?: WebkitBorderBeforeWidthValue|array<WebkitBorderBeforeWidthValue|array<array-key, mixed>>,
- *     borderY?: WebkitBorderBeforeValue|array<WebkitBorderBeforeValue|array<array-key, mixed>>,
+ *     borderXWidth?: BorderInlineWidthValue|array<BorderInlineWidthValue|array<array-key, mixed>>,
+ *     borderY?: BorderBlockValue|array<BorderBlockValue|array<array-key, mixed>>,
  *     borderYColor?: ColorsToken|array<ColorsToken|array<array-key, mixed>>,
- *     borderYWidth?: WebkitBorderBeforeWidthValue|array<WebkitBorderBeforeWidthValue|array<array-key, mixed>>,
+ *     borderYWidth?: BorderBlockWidthValue|array<BorderBlockWidthValue|array<array-key, mixed>>,
  *     bottom?: SpacingToken2|array<SpacingToken2|array<array-key, mixed>>,
  *     boxAlign?: BoxAlignValue|array<BoxAlignValue|array<array-key, mixed>>,
  *     boxDecorationBreak?: BoxDecorationBreakValue|array<BoxDecorationBreakValue|array<array-key, mixed>>,
  *     boxDirection?: BoxDirectionValue|array<BoxDirectionValue|array<array-key, mixed>>,
- *     boxFlex?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
- *     boxFlexGroup?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
+ *     boxFlex?: BoxFlexValue|array<BoxFlexValue|array<array-key, mixed>>,
+ *     boxFlexGroup?: BoxFlexGroupValue|array<BoxFlexGroupValue|array<array-key, mixed>>,
  *     boxLines?: BoxLinesValue|array<BoxLinesValue|array<array-key, mixed>>,
- *     boxOrdinalGroup?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
+ *     boxOrdinalGroup?: BoxOrdinalGroupValue|array<BoxOrdinalGroupValue|array<array-key, mixed>>,
  *     boxOrient?: BoxOrientValue|array<BoxOrientValue|array<array-key, mixed>>,
  *     boxPack?: BoxPackValue|array<BoxPackValue|array<array-key, mixed>>,
- *     boxShadow?: WebkitMaskImageValue|array<WebkitMaskImageValue|array<array-key, mixed>>,
+ *     boxShadow?: BoxShadowValue|array<BoxShadowValue|array<array-key, mixed>>,
  *     boxShadowColor?: ColorsToken|array<ColorsToken|array<array-key, mixed>>,
  *     boxSize?: SizesToken2|array<SizesToken2|array<array-key, mixed>>,
  *     boxSizing?: BoxSizingValue|array<BoxSizingValue|array<array-key, mixed>>,
  *     breakAfter?: BreakAfterValue|array<BreakAfterValue|array<array-key, mixed>>,
- *     breakBefore?: BreakAfterValue|array<BreakAfterValue|array<array-key, mixed>>,
+ *     breakBefore?: BreakBeforeValue|array<BreakBeforeValue|array<array-key, mixed>>,
  *     breakInside?: BreakInsideValue|array<BreakInsideValue|array<array-key, mixed>>,
  *     brightness?: int|float|string|array<int|float|string|array<array-key, mixed>>,
  *     captionSide?: CaptionSideValue|array<CaptionSideValue|array<array-key, mixed>>,
@@ -452,45 +657,45 @@ namespace Symfony\UX\Css;
  *     caretColor?: ColorsToken|array<ColorsToken|array<array-key, mixed>>,
  *     caretShape?: CaretShapeValue|array<CaretShapeValue|array<array-key, mixed>>,
  *     clear?: ClearValue|array<ClearValue|array<array-key, mixed>>,
- *     clip?: AnimationDurationValue|array<AnimationDurationValue|array<array-key, mixed>>,
+ *     clip?: ClipValue|array<ClipValue|array<array-key, mixed>>,
  *     clipPath?: ClipPathValue|array<ClipPathValue|array<array-key, mixed>>,
  *     clipRule?: ClipRuleValue|array<ClipRuleValue|array<array-key, mixed>>,
  *     color?: ColorsToken|array<ColorsToken|array<array-key, mixed>>,
  *     colorInterpolation?: ColorInterpolationValue|array<ColorInterpolationValue|array<array-key, mixed>>,
- *     colorInterpolationFilters?: ColorInterpolationValue|array<ColorInterpolationValue|array<array-key, mixed>>,
+ *     colorInterpolationFilters?: ColorInterpolationFiltersValue|array<ColorInterpolationFiltersValue|array<array-key, mixed>>,
  *     colorPalette?: ColorPaletteValue|array<ColorPaletteValue|array<array-key, mixed>>,
  *     colorRendering?: ColorRenderingValue|array<ColorRenderingValue|array<array-key, mixed>>,
  *     colorScheme?: ColorSchemeValue|array<ColorSchemeValue|array<array-key, mixed>>,
- *     columnCount?: AspectRatioValue|array<AspectRatioValue|array<array-key, mixed>>,
+ *     columnCount?: ColumnCountValue|array<ColumnCountValue|array<array-key, mixed>>,
  *     columnFill?: ColumnFillValue|array<ColumnFillValue|array<array-key, mixed>>,
  *     columnGap?: SpacingToken2|array<SpacingToken2|array<array-key, mixed>>,
- *     columnRule?: WebkitBorderBeforeValue|array<WebkitBorderBeforeValue|array<array-key, mixed>>,
- *     columnRuleColor?: WebkitBorderBeforeColorValue|array<WebkitBorderBeforeColorValue|array<array-key, mixed>>,
- *     columnRuleStyle?: WebkitBorderBeforeStyleValue|array<WebkitBorderBeforeStyleValue|array<array-key, mixed>>,
- *     columnRuleWidth?: WebkitBorderBeforeWidthValue|array<WebkitBorderBeforeWidthValue|array<array-key, mixed>>,
- *     columnSpan?: AnchorScopeValue|array<AnchorScopeValue|array<array-key, mixed>>,
- *     columnWidth?: AspectRatioValue|array<AspectRatioValue|array<array-key, mixed>>,
- *     columns?: AspectRatioValue|array<AspectRatioValue|array<array-key, mixed>>,
+ *     columnRule?: ColumnRuleValue|array<ColumnRuleValue|array<array-key, mixed>>,
+ *     columnRuleColor?: ColumnRuleColorValue|array<ColumnRuleColorValue|array<array-key, mixed>>,
+ *     columnRuleStyle?: ColumnRuleStyleValue|array<ColumnRuleStyleValue|array<array-key, mixed>>,
+ *     columnRuleWidth?: ColumnRuleWidthValue|array<ColumnRuleWidthValue|array<array-key, mixed>>,
+ *     columnSpan?: ColumnSpanValue|array<ColumnSpanValue|array<array-key, mixed>>,
+ *     columnWidth?: ColumnWidthValue|array<ColumnWidthValue|array<array-key, mixed>>,
+ *     columns?: ColumnsValue|array<ColumnsValue|array<array-key, mixed>>,
  *     contain?: ContainValue|array<ContainValue|array<array-key, mixed>>,
- *     containIntrinsicBlockSize?: WebkitLineClampValue|array<WebkitLineClampValue|array<array-key, mixed>>,
- *     containIntrinsicHeight?: WebkitLineClampValue|array<WebkitLineClampValue|array<array-key, mixed>>,
- *     containIntrinsicInlineSize?: WebkitLineClampValue|array<WebkitLineClampValue|array<array-key, mixed>>,
- *     containIntrinsicSize?: WebkitLineClampValue|array<WebkitLineClampValue|array<array-key, mixed>>,
- *     containIntrinsicWidth?: WebkitLineClampValue|array<WebkitLineClampValue|array<array-key, mixed>>,
- *     container?: WebkitMaskImageValue|array<WebkitMaskImageValue|array<array-key, mixed>>,
- *     containerName?: WebkitMaskImageValue|array<WebkitMaskImageValue|array<array-key, mixed>>,
+ *     containIntrinsicBlockSize?: ContainIntrinsicBlockSizeValue|array<ContainIntrinsicBlockSizeValue|array<array-key, mixed>>,
+ *     containIntrinsicHeight?: ContainIntrinsicHeightValue|array<ContainIntrinsicHeightValue|array<array-key, mixed>>,
+ *     containIntrinsicInlineSize?: ContainIntrinsicInlineSizeValue|array<ContainIntrinsicInlineSizeValue|array<array-key, mixed>>,
+ *     containIntrinsicSize?: ContainIntrinsicSizeValue|array<ContainIntrinsicSizeValue|array<array-key, mixed>>,
+ *     containIntrinsicWidth?: ContainIntrinsicWidthValue|array<ContainIntrinsicWidthValue|array<array-key, mixed>>,
+ *     container?: ContainerValue|array<ContainerValue|array<array-key, mixed>>,
+ *     containerName?: ContainerNameValue|array<ContainerNameValue|array<array-key, mixed>>,
  *     containerType?: ContainerTypeValue|array<ContainerTypeValue|array<array-key, mixed>>,
  *     content?: ContentValue|array<ContentValue|array<array-key, mixed>>,
  *     contentVisibility?: ContentVisibilityValue|array<ContentVisibilityValue|array<array-key, mixed>>,
  *     contrast?: int|float|string|array<int|float|string|array<array-key, mixed>>,
  *     cornerShape?: int|float|string|array<int|float|string|array<array-key, mixed>>,
- *     counterIncrement?: WebkitMaskImageValue|array<WebkitMaskImageValue|array<array-key, mixed>>,
- *     counterReset?: WebkitMaskImageValue|array<WebkitMaskImageValue|array<array-key, mixed>>,
- *     counterSet?: WebkitMaskImageValue|array<WebkitMaskImageValue|array<array-key, mixed>>,
+ *     counterIncrement?: CounterIncrementValue|array<CounterIncrementValue|array<array-key, mixed>>,
+ *     counterReset?: CounterResetValue|array<CounterResetValue|array<array-key, mixed>>,
+ *     counterSet?: CounterSetValue|array<CounterSetValue|array<array-key, mixed>>,
  *     cursor?: CursorValue|array<CursorValue|array<array-key, mixed>>,
- *     cx?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
- *     cy?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
- *     d?: WebkitMaskImageValue|array<WebkitMaskImageValue|array<array-key, mixed>>,
+ *     cx?: CxValue|array<CxValue|array<array-key, mixed>>,
+ *     cy?: CyValue|array<CyValue|array<array-key, mixed>>,
+ *     d?: DValue|array<DValue|array<array-key, mixed>>,
  *     debug?: bool|string|array<bool|string|array<array-key, mixed>>,
  *     direction?: DirectionValue|array<DirectionValue|array<array-key, mixed>>,
  *     display?: DisplayValue|array<DisplayValue|array<array-key, mixed>>,
@@ -504,33 +709,33 @@ namespace Symfony\UX\Css;
  *     end?: SpacingToken2|array<SpacingToken2|array<array-key, mixed>>,
  *     fieldSizing?: FieldSizingValue|array<FieldSizingValue|array<array-key, mixed>>,
  *     fill?: ColorsToken|array<ColorsToken|array<array-key, mixed>>,
- *     fillOpacity?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
- *     fillRule?: ClipRuleValue|array<ClipRuleValue|array<array-key, mixed>>,
- *     filter?: BackdropFilterValue|array<BackdropFilterValue|array<array-key, mixed>>,
+ *     fillOpacity?: FillOpacityValue|array<FillOpacityValue|array<array-key, mixed>>,
+ *     fillRule?: FillRuleValue|array<FillRuleValue|array<array-key, mixed>>,
+ *     filter?: FilterValue|array<FilterValue|array<array-key, mixed>>,
  *     flex?: FlexValue|array<FlexValue|array<array-key, mixed>>,
  *     flexBasis?: SizesToken3|array<SizesToken3|array<array-key, mixed>>,
  *     flexDir?: FlexDirectionValue|array<FlexDirectionValue|array<array-key, mixed>>,
  *     flexDirection?: FlexDirectionValue|array<FlexDirectionValue|array<array-key, mixed>>,
  *     flexFlow?: FlexFlowValue|array<FlexFlowValue|array<array-key, mixed>>,
- *     flexGrow?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
- *     flexShrink?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
+ *     flexGrow?: FlexGrowValue|array<FlexGrowValue|array<array-key, mixed>>,
+ *     flexShrink?: FlexShrinkValue|array<FlexShrinkValue|array<array-key, mixed>>,
  *     flexWrap?: FlexWrapValue|array<FlexWrapValue|array<array-key, mixed>>,
  *     float?: FloatValue|array<FloatValue|array<array-key, mixed>>,
- *     floodColor?: WebkitBorderBeforeColorValue|array<WebkitBorderBeforeColorValue|array<array-key, mixed>>,
- *     floodOpacity?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
+ *     floodColor?: FloodColorValue|array<FloodColorValue|array<array-key, mixed>>,
+ *     floodOpacity?: FloodOpacityValue|array<FloodOpacityValue|array<array-key, mixed>>,
  *     focusRing?: FocusRingValue|array<FocusRingValue|array<array-key, mixed>>,
  *     focusRingColor?: ColorsToken|array<ColorsToken|array<array-key, mixed>>,
  *     focusRingOffset?: SpacingToken2|array<SpacingToken2|array<array-key, mixed>>,
  *     focusRingStyle?: int|float|string|array<int|float|string|array<array-key, mixed>>,
  *     focusRingWidth?: int|float|string|array<int|float|string|array<array-key, mixed>>,
- *     focusVisibleRing?: FocusRingValue|array<FocusRingValue|array<array-key, mixed>>,
+ *     focusVisibleRing?: FocusVisibleRingValue|array<FocusVisibleRingValue|array<array-key, mixed>>,
  *     font?: FontValue|array<FontValue|array<array-key, mixed>>,
  *     fontFamily?: FontFamilyValue|array<FontFamilyValue|array<array-key, mixed>>,
  *     fontFeatureSettings?: FontFeatureSettingsValue|array<FontFeatureSettingsValue|array<array-key, mixed>>,
  *     fontKerning?: FontKerningValue|array<FontKerningValue|array<array-key, mixed>>,
- *     fontLanguageOverride?: FontFeatureSettingsValue|array<FontFeatureSettingsValue|array<array-key, mixed>>,
- *     fontOpticalSizing?: AnimationTimelineValue|array<AnimationTimelineValue|array<array-key, mixed>>,
- *     fontPalette?: ColorSchemeValue|array<ColorSchemeValue|array<array-key, mixed>>,
+ *     fontLanguageOverride?: FontLanguageOverrideValue|array<FontLanguageOverrideValue|array<array-key, mixed>>,
+ *     fontOpticalSizing?: FontOpticalSizingValue|array<FontOpticalSizingValue|array<array-key, mixed>>,
+ *     fontPalette?: FontPaletteValue|array<FontPaletteValue|array<array-key, mixed>>,
  *     fontSize?: FontSizeValue|array<FontSizeValue|array<array-key, mixed>>,
  *     fontSizeAdjust?: FontSizeAdjustValue|array<FontSizeAdjustValue|array<array-key, mixed>>,
  *     fontSmooth?: FontSmoothValue|array<FontSmoothValue|array<array-key, mixed>>,
@@ -538,10 +743,10 @@ namespace Symfony\UX\Css;
  *     fontStretch?: FontStretchValue|array<FontStretchValue|array<array-key, mixed>>,
  *     fontStyle?: FontStyleValue|array<FontStyleValue|array<array-key, mixed>>,
  *     fontSynthesis?: FontSynthesisValue|array<FontSynthesisValue|array<array-key, mixed>>,
- *     fontSynthesisPosition?: AnimationTimelineValue|array<AnimationTimelineValue|array<array-key, mixed>>,
- *     fontSynthesisSmallCaps?: AnimationTimelineValue|array<AnimationTimelineValue|array<array-key, mixed>>,
- *     fontSynthesisStyle?: AnimationTimelineValue|array<AnimationTimelineValue|array<array-key, mixed>>,
- *     fontSynthesisWeight?: AnimationTimelineValue|array<AnimationTimelineValue|array<array-key, mixed>>,
+ *     fontSynthesisPosition?: FontSynthesisPositionValue|array<FontSynthesisPositionValue|array<array-key, mixed>>,
+ *     fontSynthesisSmallCaps?: FontSynthesisSmallCapsValue|array<FontSynthesisSmallCapsValue|array<array-key, mixed>>,
+ *     fontSynthesisStyle?: FontSynthesisStyleValue|array<FontSynthesisStyleValue|array<array-key, mixed>>,
+ *     fontSynthesisWeight?: FontSynthesisWeightValue|array<FontSynthesisWeightValue|array<array-key, mixed>>,
  *     fontVariant?: FontVariantValue|array<FontVariantValue|array<array-key, mixed>>,
  *     fontVariantAlternates?: FontVariantAlternatesValue|array<FontVariantAlternatesValue|array<array-key, mixed>>,
  *     fontVariantCaps?: FontVariantCapsValue|array<FontVariantCapsValue|array<array-key, mixed>>,
@@ -550,11 +755,11 @@ namespace Symfony\UX\Css;
  *     fontVariantLigatures?: FontVariantLigaturesValue|array<FontVariantLigaturesValue|array<array-key, mixed>>,
  *     fontVariantNumeric?: FontVariantNumericValue|array<FontVariantNumericValue|array<array-key, mixed>>,
  *     fontVariantPosition?: FontVariantPositionValue|array<FontVariantPositionValue|array<array-key, mixed>>,
- *     fontVariationSettings?: FontFeatureSettingsValue|array<FontFeatureSettingsValue|array<array-key, mixed>>,
+ *     fontVariationSettings?: FontVariationSettingsValue|array<FontVariationSettingsValue|array<array-key, mixed>>,
  *     fontWeight?: FontWeightValue|array<FontWeightValue|array<array-key, mixed>>,
  *     forcedColorAdjust?: ForcedColorAdjustValue|array<ForcedColorAdjustValue|array<array-key, mixed>>,
  *     gap?: SpacingToken2|array<SpacingToken2|array<array-key, mixed>>,
- *     glyphOrientationVertical?: AspectRatioValue|array<AspectRatioValue|array<array-key, mixed>>,
+ *     glyphOrientationVertical?: GlyphOrientationVerticalValue|array<GlyphOrientationVerticalValue|array<array-key, mixed>>,
  *     gradientFrom?: ColorsToken|array<ColorsToken|array<array-key, mixed>>,
  *     gradientFromPosition?: int|float|string|array<int|float|string|array<array-key, mixed>>,
  *     gradientTo?: ColorsToken|array<ColorsToken|array<array-key, mixed>>,
@@ -562,32 +767,32 @@ namespace Symfony\UX\Css;
  *     gradientVia?: ColorsToken|array<ColorsToken|array<array-key, mixed>>,
  *     gradientViaPosition?: int|float|string|array<int|float|string|array<array-key, mixed>>,
  *     grayscale?: int|float|string|array<int|float|string|array<array-key, mixed>>,
- *     grid?: WebkitMaskImageValue|array<WebkitMaskImageValue|array<array-key, mixed>>,
- *     gridArea?: AspectRatioValue|array<AspectRatioValue|array<array-key, mixed>>,
+ *     grid?: GridValue|array<GridValue|array<array-key, mixed>>,
+ *     gridArea?: GridAreaValue|array<GridAreaValue|array<array-key, mixed>>,
  *     gridAutoColumns?: GridAutoColumnsValue|array<GridAutoColumnsValue|array<array-key, mixed>>,
  *     gridAutoFlow?: GridAutoFlowValue|array<GridAutoFlowValue|array<array-key, mixed>>,
- *     gridAutoRows?: GridAutoColumnsValue|array<GridAutoColumnsValue|array<array-key, mixed>>,
- *     gridColumn?: AspectRatioValue|array<AspectRatioValue|array<array-key, mixed>>,
- *     gridColumnEnd?: AspectRatioValue|array<AspectRatioValue|array<array-key, mixed>>,
+ *     gridAutoRows?: GridAutoRowsValue|array<GridAutoRowsValue|array<array-key, mixed>>,
+ *     gridColumn?: GridColumnValue|array<GridColumnValue|array<array-key, mixed>>,
+ *     gridColumnEnd?: GridColumnEndValue|array<GridColumnEndValue|array<array-key, mixed>>,
  *     gridColumnGap?: SpacingToken2|array<SpacingToken2|array<array-key, mixed>>,
- *     gridColumnStart?: AspectRatioValue|array<AspectRatioValue|array<array-key, mixed>>,
+ *     gridColumnStart?: GridColumnStartValue|array<GridColumnStartValue|array<array-key, mixed>>,
  *     gridGap?: SpacingToken2|array<SpacingToken2|array<array-key, mixed>>,
- *     gridRow?: AspectRatioValue|array<AspectRatioValue|array<array-key, mixed>>,
- *     gridRowEnd?: AspectRatioValue|array<AspectRatioValue|array<array-key, mixed>>,
+ *     gridRow?: GridRowValue|array<GridRowValue|array<array-key, mixed>>,
+ *     gridRowEnd?: GridRowEndValue|array<GridRowEndValue|array<array-key, mixed>>,
  *     gridRowGap?: SpacingToken2|array<SpacingToken2|array<array-key, mixed>>,
- *     gridRowStart?: AspectRatioValue|array<AspectRatioValue|array<array-key, mixed>>,
- *     gridTemplate?: WebkitMaskImageValue|array<WebkitMaskImageValue|array<array-key, mixed>>,
- *     gridTemplateAreas?: WebkitMaskImageValue|array<WebkitMaskImageValue|array<array-key, mixed>>,
+ *     gridRowStart?: GridRowStartValue|array<GridRowStartValue|array<array-key, mixed>>,
+ *     gridTemplate?: GridTemplateValue|array<GridTemplateValue|array<array-key, mixed>>,
+ *     gridTemplateAreas?: GridTemplateAreasValue|array<GridTemplateAreasValue|array<array-key, mixed>>,
  *     gridTemplateColumns?: GridTemplateColumnsValue|array<GridTemplateColumnsValue|array<array-key, mixed>>,
- *     gridTemplateRows?: GridTemplateColumnsValue|array<GridTemplateColumnsValue|array<array-key, mixed>>,
+ *     gridTemplateRows?: GridTemplateRowsValue|array<GridTemplateRowsValue|array<array-key, mixed>>,
  *     h?: SizesToken|array<SizesToken|array<array-key, mixed>>,
  *     hangingPunctuation?: HangingPunctuationValue|array<HangingPunctuationValue|array<array-key, mixed>>,
  *     height?: SizesToken|array<SizesToken|array<array-key, mixed>>,
  *     hideBelow?: BreakpointsToken|array<BreakpointsToken|array<array-key, mixed>>,
  *     hideFrom?: BreakpointsToken|array<BreakpointsToken|array<array-key, mixed>>,
  *     hueRotate?: int|float|string|array<int|float|string|array<array-key, mixed>>,
- *     hyphenateCharacter?: AnimationDurationValue|array<AnimationDurationValue|array<array-key, mixed>>,
- *     hyphenateLimitChars?: AspectRatioValue|array<AspectRatioValue|array<array-key, mixed>>,
+ *     hyphenateCharacter?: HyphenateCharacterValue|array<HyphenateCharacterValue|array<array-key, mixed>>,
+ *     hyphenateLimitChars?: HyphenateLimitCharsValue|array<HyphenateLimitCharsValue|array<array-key, mixed>>,
  *     hyphens?: HyphensValue|array<HyphensValue|array<array-key, mixed>>,
  *     imageOrientation?: ImageOrientationValue|array<ImageOrientationValue|array<array-key, mixed>>,
  *     imageRendering?: ImageRenderingValue|array<ImageRenderingValue|array<array-key, mixed>>,
@@ -613,18 +818,18 @@ namespace Symfony\UX\Css;
  *     justifyContent?: JustifyContentValue|array<JustifyContentValue|array<array-key, mixed>>,
  *     justifyItems?: JustifyItemsValue|array<JustifyItemsValue|array<array-key, mixed>>,
  *     justifySelf?: JustifySelfValue|array<JustifySelfValue|array<array-key, mixed>>,
- *     justifyTracks?: JustifyContentValue|array<JustifyContentValue|array<array-key, mixed>>,
+ *     justifyTracks?: JustifyTracksValue|array<JustifyTracksValue|array<array-key, mixed>>,
  *     left?: SpacingToken2|array<SpacingToken2|array<array-key, mixed>>,
- *     letterSpacing?: InitialLetterValue|array<InitialLetterValue|array<array-key, mixed>>,
- *     lightingColor?: WebkitBorderBeforeColorValue|array<WebkitBorderBeforeColorValue|array<array-key, mixed>>,
+ *     letterSpacing?: LetterSpacingValue|array<LetterSpacingValue|array<array-key, mixed>>,
+ *     lightingColor?: LightingColorValue|array<LightingColorValue|array<array-key, mixed>>,
  *     lineBreak?: LineBreakValue|array<LineBreakValue|array<array-key, mixed>>,
- *     lineClamp?: WebkitLineClampValue|array<WebkitLineClampValue|array<array-key, mixed>>,
- *     lineHeight?: InitialLetterValue|array<InitialLetterValue|array<array-key, mixed>>,
- *     lineHeightStep?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
+ *     lineClamp?: LineClampValue|array<LineClampValue|array<array-key, mixed>>,
+ *     lineHeight?: LineHeightValue|array<LineHeightValue|array<array-key, mixed>>,
+ *     lineHeightStep?: LineHeightStepValue|array<LineHeightStepValue|array<array-key, mixed>>,
  *     listStyle?: ListStyleValue|array<ListStyleValue|array<array-key, mixed>>,
- *     listStyleImage?: WebkitMaskImageValue|array<WebkitMaskImageValue|array<array-key, mixed>>,
+ *     listStyleImage?: ListStyleImageValue|array<ListStyleImageValue|array<array-key, mixed>>,
  *     listStylePosition?: ListStylePositionValue|array<ListStylePositionValue|array<array-key, mixed>>,
- *     listStyleType?: WebkitMaskImageValue|array<WebkitMaskImageValue|array<array-key, mixed>>,
+ *     listStyleType?: ListStyleTypeValue|array<ListStyleTypeValue|array<array-key, mixed>>,
  *     m?: SpacingToken|array<SpacingToken|array<array-key, mixed>>,
  *     margin?: SpacingToken|array<SpacingToken|array<array-key, mixed>>,
  *     marginBlock?: SpacingToken|array<SpacingToken|array<array-key, mixed>>,
@@ -642,36 +847,36 @@ namespace Symfony\UX\Css;
  *     marginTrim?: MarginTrimValue|array<MarginTrimValue|array<array-key, mixed>>,
  *     marginX?: SpacingToken|array<SpacingToken|array<array-key, mixed>>,
  *     marginY?: SpacingToken|array<SpacingToken|array<array-key, mixed>>,
- *     marker?: WebkitMaskImageValue|array<WebkitMaskImageValue|array<array-key, mixed>>,
- *     markerEnd?: WebkitMaskImageValue|array<WebkitMaskImageValue|array<array-key, mixed>>,
- *     markerMid?: WebkitMaskImageValue|array<WebkitMaskImageValue|array<array-key, mixed>>,
- *     markerStart?: WebkitMaskImageValue|array<WebkitMaskImageValue|array<array-key, mixed>>,
+ *     marker?: MarkerValue|array<MarkerValue|array<array-key, mixed>>,
+ *     markerEnd?: MarkerEndValue|array<MarkerEndValue|array<array-key, mixed>>,
+ *     markerMid?: MarkerMidValue|array<MarkerMidValue|array<array-key, mixed>>,
+ *     markerStart?: MarkerStartValue|array<MarkerStartValue|array<array-key, mixed>>,
  *     mask?: MaskValue|array<MaskValue|array<array-key, mixed>>,
  *     maskBorder?: MaskBorderValue|array<MaskBorderValue|array<array-key, mixed>>,
  *     maskBorderMode?: MaskBorderModeValue|array<MaskBorderModeValue|array<array-key, mixed>>,
- *     maskBorderOutset?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
- *     maskBorderRepeat?: BorderImageRepeatValue|array<BorderImageRepeatValue|array<array-key, mixed>>,
- *     maskBorderSlice?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
- *     maskBorderSource?: WebkitMaskImageValue|array<WebkitMaskImageValue|array<array-key, mixed>>,
- *     maskBorderWidth?: AspectRatioValue|array<AspectRatioValue|array<array-key, mixed>>,
+ *     maskBorderOutset?: MaskBorderOutsetValue|array<MaskBorderOutsetValue|array<array-key, mixed>>,
+ *     maskBorderRepeat?: MaskBorderRepeatValue|array<MaskBorderRepeatValue|array<array-key, mixed>>,
+ *     maskBorderSlice?: MaskBorderSliceValue|array<MaskBorderSliceValue|array<array-key, mixed>>,
+ *     maskBorderSource?: MaskBorderSourceValue|array<MaskBorderSourceValue|array<array-key, mixed>>,
+ *     maskBorderWidth?: MaskBorderWidthValue|array<MaskBorderWidthValue|array<array-key, mixed>>,
  *     maskClip?: MaskClipValue|array<MaskClipValue|array<array-key, mixed>>,
  *     maskComposite?: MaskCompositeValue|array<MaskCompositeValue|array<array-key, mixed>>,
- *     maskImage?: WebkitMaskImageValue|array<WebkitMaskImageValue|array<array-key, mixed>>,
+ *     maskImage?: MaskImageValue|array<MaskImageValue|array<array-key, mixed>>,
  *     maskMode?: MaskModeValue|array<MaskModeValue|array<array-key, mixed>>,
  *     maskOrigin?: MaskOriginValue|array<MaskOriginValue|array<array-key, mixed>>,
- *     maskPosition?: WebkitMaskPositionValue|array<WebkitMaskPositionValue|array<array-key, mixed>>,
- *     maskRepeat?: WebkitMaskRepeatValue|array<WebkitMaskRepeatValue|array<array-key, mixed>>,
- *     maskSize?: WebkitMaskSizeValue|array<WebkitMaskSizeValue|array<array-key, mixed>>,
- *     maskType?: MaskBorderModeValue|array<MaskBorderModeValue|array<array-key, mixed>>,
+ *     maskPosition?: MaskPositionValue|array<MaskPositionValue|array<array-key, mixed>>,
+ *     maskRepeat?: MaskRepeatValue|array<MaskRepeatValue|array<array-key, mixed>>,
+ *     maskSize?: MaskSizeValue|array<MaskSizeValue|array<array-key, mixed>>,
+ *     maskType?: MaskTypeValue|array<MaskTypeValue|array<array-key, mixed>>,
  *     masonryAutoFlow?: MasonryAutoFlowValue|array<MasonryAutoFlowValue|array<array-key, mixed>>,
  *     mathDepth?: MathDepthValue|array<MathDepthValue|array<array-key, mixed>>,
  *     mathShift?: MathShiftValue|array<MathShiftValue|array<array-key, mixed>>,
- *     mathStyle?: MathShiftValue|array<MathShiftValue|array<array-key, mixed>>,
+ *     mathStyle?: MathStyleValue|array<MathStyleValue|array<array-key, mixed>>,
  *     maxBlockSize?: SizesToken|array<SizesToken|array<array-key, mixed>>,
  *     maxH?: SizesToken|array<SizesToken|array<array-key, mixed>>,
  *     maxHeight?: SizesToken|array<SizesToken|array<array-key, mixed>>,
  *     maxInlineSize?: SizesToken2|array<SizesToken2|array<array-key, mixed>>,
- *     maxLines?: WebkitLineClampValue|array<WebkitLineClampValue|array<array-key, mixed>>,
+ *     maxLines?: MaxLinesValue|array<MaxLinesValue|array<array-key, mixed>>,
  *     maxW?: SizesToken2|array<SizesToken2|array<array-key, mixed>>,
  *     maxWidth?: SizesToken2|array<SizesToken2|array<array-key, mixed>>,
  *     mb?: SpacingToken|array<SpacingToken|array<array-key, mixed>>,
@@ -690,36 +895,36 @@ namespace Symfony\UX\Css;
  *     mx?: SpacingToken|array<SpacingToken|array<array-key, mixed>>,
  *     my?: SpacingToken|array<SpacingToken|array<array-key, mixed>>,
  *     objectFit?: ObjectFitValue|array<ObjectFitValue|array<array-key, mixed>>,
- *     objectPosition?: WebkitMaskPositionValue|array<WebkitMaskPositionValue|array<array-key, mixed>>,
+ *     objectPosition?: ObjectPositionValue|array<ObjectPositionValue|array<array-key, mixed>>,
  *     offset?: OffsetValue|array<OffsetValue|array<array-key, mixed>>,
  *     offsetAnchor?: OffsetAnchorValue|array<OffsetAnchorValue|array<array-key, mixed>>,
- *     offsetDistance?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
+ *     offsetDistance?: OffsetDistanceValue|array<OffsetDistanceValue|array<array-key, mixed>>,
  *     offsetPath?: OffsetPathValue|array<OffsetPathValue|array<array-key, mixed>>,
  *     offsetPosition?: OffsetPositionValue|array<OffsetPositionValue|array<array-key, mixed>>,
  *     offsetRotate?: OffsetRotateValue|array<OffsetRotateValue|array<array-key, mixed>>,
- *     opacity?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
- *     order?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
- *     orphans?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
+ *     opacity?: OpacityValue|array<OpacityValue|array<array-key, mixed>>,
+ *     order?: OrderValue|array<OrderValue|array<array-key, mixed>>,
+ *     orphans?: OrphansValue|array<OrphansValue|array<array-key, mixed>>,
  *     outline?: OutlineValue|array<OutlineValue|array<array-key, mixed>>,
  *     outlineColor?: ColorsToken|array<ColorsToken|array<array-key, mixed>>,
  *     outlineOffset?: SpacingToken2|array<SpacingToken2|array<array-key, mixed>>,
  *     outlineStyle?: OutlineStyleValue|array<OutlineStyleValue|array<array-key, mixed>>,
- *     outlineWidth?: WebkitBorderBeforeWidthValue|array<WebkitBorderBeforeWidthValue|array<array-key, mixed>>,
+ *     outlineWidth?: OutlineWidthValue|array<OutlineWidthValue|array<array-key, mixed>>,
  *     overflow?: OverflowValue|array<OverflowValue|array<array-key, mixed>>,
- *     overflowAnchor?: AnimationTimelineValue|array<AnimationTimelineValue|array<array-key, mixed>>,
+ *     overflowAnchor?: OverflowAnchorValue|array<OverflowAnchorValue|array<array-key, mixed>>,
  *     overflowBlock?: OverflowBlockValue|array<OverflowBlockValue|array<array-key, mixed>>,
  *     overflowClipBox?: OverflowClipBoxValue|array<OverflowClipBoxValue|array<array-key, mixed>>,
  *     overflowClipMargin?: OverflowClipMarginValue|array<OverflowClipMarginValue|array<array-key, mixed>>,
- *     overflowInline?: OverflowBlockValue|array<OverflowBlockValue|array<array-key, mixed>>,
+ *     overflowInline?: OverflowInlineValue|array<OverflowInlineValue|array<array-key, mixed>>,
  *     overflowWrap?: OverflowWrapValue|array<OverflowWrapValue|array<array-key, mixed>>,
- *     overflowX?: OverflowValue|array<OverflowValue|array<array-key, mixed>>,
- *     overflowY?: OverflowValue|array<OverflowValue|array<array-key, mixed>>,
- *     overlay?: AnimationTimelineValue|array<AnimationTimelineValue|array<array-key, mixed>>,
+ *     overflowX?: OverflowXValue|array<OverflowXValue|array<array-key, mixed>>,
+ *     overflowY?: OverflowYValue|array<OverflowYValue|array<array-key, mixed>>,
+ *     overlay?: OverlayValue|array<OverlayValue|array<array-key, mixed>>,
  *     overscrollBehavior?: OverscrollBehaviorValue|array<OverscrollBehaviorValue|array<array-key, mixed>>,
- *     overscrollBehaviorBlock?: OverscrollBehaviorValue|array<OverscrollBehaviorValue|array<array-key, mixed>>,
- *     overscrollBehaviorInline?: OverscrollBehaviorValue|array<OverscrollBehaviorValue|array<array-key, mixed>>,
- *     overscrollBehaviorX?: OverscrollBehaviorValue|array<OverscrollBehaviorValue|array<array-key, mixed>>,
- *     overscrollBehaviorY?: OverscrollBehaviorValue|array<OverscrollBehaviorValue|array<array-key, mixed>>,
+ *     overscrollBehaviorBlock?: OverscrollBehaviorBlockValue|array<OverscrollBehaviorBlockValue|array<array-key, mixed>>,
+ *     overscrollBehaviorInline?: OverscrollBehaviorInlineValue|array<OverscrollBehaviorInlineValue|array<array-key, mixed>>,
+ *     overscrollBehaviorX?: OverscrollBehaviorXValue|array<OverscrollBehaviorXValue|array<array-key, mixed>>,
+ *     overscrollBehaviorY?: OverscrollBehaviorYValue|array<OverscrollBehaviorYValue|array<array-key, mixed>>,
  *     p?: SpacingToken2|array<SpacingToken2|array<array-key, mixed>>,
  *     padding?: SpacingToken2|array<SpacingToken2|array<array-key, mixed>>,
  *     paddingBlock?: SpacingToken2|array<SpacingToken2|array<array-key, mixed>>,
@@ -736,26 +941,26 @@ namespace Symfony\UX\Css;
  *     paddingTop?: SpacingToken2|array<SpacingToken2|array<array-key, mixed>>,
  *     paddingX?: SpacingToken2|array<SpacingToken2|array<array-key, mixed>>,
  *     paddingY?: SpacingToken2|array<SpacingToken2|array<array-key, mixed>>,
- *     page?: AnimationDurationValue|array<AnimationDurationValue|array<array-key, mixed>>,
+ *     page?: PageValue|array<PageValue|array<array-key, mixed>>,
  *     pageBreakAfter?: PageBreakAfterValue|array<PageBreakAfterValue|array<array-key, mixed>>,
- *     pageBreakBefore?: PageBreakAfterValue|array<PageBreakAfterValue|array<array-key, mixed>>,
+ *     pageBreakBefore?: PageBreakBeforeValue|array<PageBreakBeforeValue|array<array-key, mixed>>,
  *     pageBreakInside?: PageBreakInsideValue|array<PageBreakInsideValue|array<array-key, mixed>>,
  *     paintOrder?: PaintOrderValue|array<PaintOrderValue|array<array-key, mixed>>,
  *     pb?: SpacingToken2|array<SpacingToken2|array<array-key, mixed>>,
  *     pe?: SpacingToken2|array<SpacingToken2|array<array-key, mixed>>,
- *     perspective?: WebkitLineClampValue|array<WebkitLineClampValue|array<array-key, mixed>>,
- *     perspectiveOrigin?: WebkitMaskPositionValue|array<WebkitMaskPositionValue|array<array-key, mixed>>,
+ *     perspective?: PerspectiveValue|array<PerspectiveValue|array<array-key, mixed>>,
+ *     perspectiveOrigin?: PerspectiveOriginValue|array<PerspectiveOriginValue|array<array-key, mixed>>,
  *     pl?: SpacingToken2|array<SpacingToken2|array<array-key, mixed>>,
- *     placeContent?: AlignContentValue|array<AlignContentValue|array<array-key, mixed>>,
- *     placeItems?: AlignItemsValue|array<AlignItemsValue|array<array-key, mixed>>,
- *     placeSelf?: AlignSelfValue|array<AlignSelfValue|array<array-key, mixed>>,
+ *     placeContent?: PlaceContentValue|array<PlaceContentValue|array<array-key, mixed>>,
+ *     placeItems?: PlaceItemsValue|array<PlaceItemsValue|array<array-key, mixed>>,
+ *     placeSelf?: PlaceSelfValue|array<PlaceSelfValue|array<array-key, mixed>>,
  *     pointerEvents?: PointerEventsValue|array<PointerEventsValue|array<array-key, mixed>>,
  *     pos?: PositionValue|array<PositionValue|array<array-key, mixed>>,
  *     position?: PositionValue|array<PositionValue|array<array-key, mixed>>,
- *     positionAnchor?: AnimationDurationValue|array<AnimationDurationValue|array<array-key, mixed>>,
+ *     positionAnchor?: PositionAnchorValue|array<PositionAnchorValue|array<array-key, mixed>>,
  *     positionArea?: PositionAreaValue|array<PositionAreaValue|array<array-key, mixed>>,
  *     positionTry?: PositionTryValue|array<PositionTryValue|array<array-key, mixed>>,
- *     positionTryFallbacks?: PositionTryValue|array<PositionTryValue|array<array-key, mixed>>,
+ *     positionTryFallbacks?: PositionTryFallbacksValue|array<PositionTryFallbacksValue|array<array-key, mixed>>,
  *     positionTryOrder?: PositionTryOrderValue|array<PositionTryOrderValue|array<array-key, mixed>>,
  *     positionVisibility?: PositionVisibilityValue|array<PositionVisibilityValue|array<array-key, mixed>>,
  *     pr?: SpacingToken2|array<SpacingToken2|array<array-key, mixed>>,
@@ -764,41 +969,41 @@ namespace Symfony\UX\Css;
  *     pt?: SpacingToken2|array<SpacingToken2|array<array-key, mixed>>,
  *     px?: SpacingToken2|array<SpacingToken2|array<array-key, mixed>>,
  *     py?: SpacingToken2|array<SpacingToken2|array<array-key, mixed>>,
- *     quotes?: AnimationTimelineValue|array<AnimationTimelineValue|array<array-key, mixed>>,
- *     r?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
+ *     quotes?: QuotesValue|array<QuotesValue|array<array-key, mixed>>,
+ *     r?: RValue|array<RValue|array<array-key, mixed>>,
  *     resize?: ResizeValue|array<ResizeValue|array<array-key, mixed>>,
  *     right?: SpacingToken2|array<SpacingToken2|array<array-key, mixed>>,
  *     ring?: OutlineValue|array<OutlineValue|array<array-key, mixed>>,
  *     ringColor?: ColorsToken|array<ColorsToken|array<array-key, mixed>>,
  *     ringOffset?: SpacingToken2|array<SpacingToken2|array<array-key, mixed>>,
- *     ringWidth?: WebkitBorderBeforeWidthValue|array<WebkitBorderBeforeWidthValue|array<array-key, mixed>>,
+ *     ringWidth?: OutlineWidthValue|array<OutlineWidthValue|array<array-key, mixed>>,
  *     rotate?: RotateValue|array<RotateValue|array<array-key, mixed>>,
  *     rotateX?: int|float|string|array<int|float|string|array<array-key, mixed>>,
  *     rotateY?: int|float|string|array<int|float|string|array<array-key, mixed>>,
  *     rotateZ?: int|float|string|array<int|float|string|array<array-key, mixed>>,
- *     rounded?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
+ *     rounded?: BorderRadiusValue|array<BorderRadiusValue|array<array-key, mixed>>,
  *     roundedBottom?: int|float|string|array<int|float|string|array<array-key, mixed>>,
- *     roundedBottomLeft?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
- *     roundedBottomRight?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
+ *     roundedBottomLeft?: BorderBottomLeftRadiusValue|array<BorderBottomLeftRadiusValue|array<array-key, mixed>>,
+ *     roundedBottomRight?: BorderBottomRightRadiusValue|array<BorderBottomRightRadiusValue|array<array-key, mixed>>,
  *     roundedEnd?: int|float|string|array<int|float|string|array<array-key, mixed>>,
- *     roundedEndEnd?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
- *     roundedEndStart?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
+ *     roundedEndEnd?: BorderEndEndRadiusValue|array<BorderEndEndRadiusValue|array<array-key, mixed>>,
+ *     roundedEndStart?: BorderEndStartRadiusValue|array<BorderEndStartRadiusValue|array<array-key, mixed>>,
  *     roundedLeft?: int|float|string|array<int|float|string|array<array-key, mixed>>,
  *     roundedRight?: int|float|string|array<int|float|string|array<array-key, mixed>>,
  *     roundedStart?: int|float|string|array<int|float|string|array<array-key, mixed>>,
- *     roundedStartEnd?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
- *     roundedStartStart?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
+ *     roundedStartEnd?: BorderStartEndRadiusValue|array<BorderStartEndRadiusValue|array<array-key, mixed>>,
+ *     roundedStartStart?: BorderStartStartRadiusValue|array<BorderStartStartRadiusValue|array<array-key, mixed>>,
  *     roundedTop?: int|float|string|array<int|float|string|array<array-key, mixed>>,
- *     roundedTopLeft?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
- *     roundedTopRight?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
+ *     roundedTopLeft?: BorderTopLeftRadiusValue|array<BorderTopLeftRadiusValue|array<array-key, mixed>>,
+ *     roundedTopRight?: BorderTopRightRadiusValue|array<BorderTopRightRadiusValue|array<array-key, mixed>>,
  *     rowGap?: SpacingToken2|array<SpacingToken2|array<array-key, mixed>>,
  *     rubyAlign?: RubyAlignValue|array<RubyAlignValue|array<array-key, mixed>>,
  *     rubyMerge?: RubyMergeValue|array<RubyMergeValue|array<array-key, mixed>>,
  *     rubyPosition?: RubyPositionValue|array<RubyPositionValue|array<array-key, mixed>>,
- *     rx?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
- *     ry?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
+ *     rx?: RxValue|array<RxValue|array<array-key, mixed>>,
+ *     ry?: RyValue|array<RyValue|array<array-key, mixed>>,
  *     saturate?: int|float|string|array<int|float|string|array<array-key, mixed>>,
- *     scale?: BackdropFilterValue|array<BackdropFilterValue|array<array-key, mixed>>,
+ *     scale?: ScaleValue|array<ScaleValue|array<array-key, mixed>>,
  *     scaleX?: int|float|string|array<int|float|string|array<array-key, mixed>>,
  *     scaleY?: int|float|string|array<int|float|string|array<array-key, mixed>>,
  *     scrollBehavior?: ScrollBehaviorValue|array<ScrollBehaviorValue|array<array-key, mixed>>,
@@ -830,48 +1035,48 @@ namespace Symfony\UX\Css;
  *     scrollPaddingY?: SpacingToken2|array<SpacingToken2|array<array-key, mixed>>,
  *     scrollSnapAlign?: ScrollSnapAlignValue|array<ScrollSnapAlignValue|array<array-key, mixed>>,
  *     scrollSnapCoordinate?: ScrollSnapCoordinateValue|array<ScrollSnapCoordinateValue|array<array-key, mixed>>,
- *     scrollSnapDestination?: WebkitMaskPositionValue|array<WebkitMaskPositionValue|array<array-key, mixed>>,
+ *     scrollSnapDestination?: ScrollSnapDestinationValue|array<ScrollSnapDestinationValue|array<array-key, mixed>>,
  *     scrollSnapMargin?: SpacingToken2|array<SpacingToken2|array<array-key, mixed>>,
  *     scrollSnapMarginBottom?: SpacingToken2|array<SpacingToken2|array<array-key, mixed>>,
  *     scrollSnapMarginLeft?: SpacingToken2|array<SpacingToken2|array<array-key, mixed>>,
  *     scrollSnapMarginRight?: SpacingToken2|array<SpacingToken2|array<array-key, mixed>>,
  *     scrollSnapMarginTop?: SpacingToken2|array<SpacingToken2|array<array-key, mixed>>,
- *     scrollSnapPointsX?: WebkitMaskImageValue|array<WebkitMaskImageValue|array<array-key, mixed>>,
- *     scrollSnapPointsY?: WebkitMaskImageValue|array<WebkitMaskImageValue|array<array-key, mixed>>,
+ *     scrollSnapPointsX?: ScrollSnapPointsXValue|array<ScrollSnapPointsXValue|array<array-key, mixed>>,
+ *     scrollSnapPointsY?: ScrollSnapPointsYValue|array<ScrollSnapPointsYValue|array<array-key, mixed>>,
  *     scrollSnapStop?: ScrollSnapStopValue|array<ScrollSnapStopValue|array<array-key, mixed>>,
  *     scrollSnapStrictness?: ScrollSnapStrictnessValue|array<ScrollSnapStrictnessValue|array<array-key, mixed>>,
  *     scrollSnapType?: ScrollSnapTypeValue|array<ScrollSnapTypeValue|array<array-key, mixed>>,
  *     scrollSnapTypeX?: ScrollSnapTypeXValue|array<ScrollSnapTypeXValue|array<array-key, mixed>>,
- *     scrollSnapTypeY?: ScrollSnapTypeXValue|array<ScrollSnapTypeXValue|array<array-key, mixed>>,
- *     scrollTimeline?: WebkitMaskImageValue|array<WebkitMaskImageValue|array<array-key, mixed>>,
+ *     scrollSnapTypeY?: ScrollSnapTypeYValue|array<ScrollSnapTypeYValue|array<array-key, mixed>>,
+ *     scrollTimeline?: ScrollTimelineValue|array<ScrollTimelineValue|array<array-key, mixed>>,
  *     scrollTimelineAxis?: ScrollTimelineAxisValue|array<ScrollTimelineAxisValue|array<array-key, mixed>>,
- *     scrollTimelineName?: WebkitMaskImageValue|array<WebkitMaskImageValue|array<array-key, mixed>>,
+ *     scrollTimelineName?: ScrollTimelineNameValue|array<ScrollTimelineNameValue|array<array-key, mixed>>,
  *     scrollbar?: ScrollbarValue|array<ScrollbarValue|array<array-key, mixed>>,
  *     scrollbarColor?: ColorsToken|array<ColorsToken|array<array-key, mixed>>,
  *     scrollbarGutter?: ScrollbarGutterValue|array<ScrollbarGutterValue|array<array-key, mixed>>,
  *     scrollbarWidth?: SizesToken4|array<SizesToken4|array<array-key, mixed>>,
  *     sepia?: int|float|string|array<int|float|string|array<array-key, mixed>>,
- *     shadow?: WebkitMaskImageValue|array<WebkitMaskImageValue|array<array-key, mixed>>,
+ *     shadow?: BoxShadowValue|array<BoxShadowValue|array<array-key, mixed>>,
  *     shadowColor?: ColorsToken|array<ColorsToken|array<array-key, mixed>>,
- *     shapeImageThreshold?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
- *     shapeMargin?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
+ *     shapeImageThreshold?: ShapeImageThresholdValue|array<ShapeImageThresholdValue|array<array-key, mixed>>,
+ *     shapeMargin?: ShapeMarginValue|array<ShapeMarginValue|array<array-key, mixed>>,
  *     shapeOutside?: ShapeOutsideValue|array<ShapeOutsideValue|array<array-key, mixed>>,
  *     shapeRendering?: ShapeRenderingValue|array<ShapeRenderingValue|array<array-key, mixed>>,
  *     spaceX?: SpacingToken|array<SpacingToken|array<array-key, mixed>>,
  *     spaceY?: SpacingToken|array<SpacingToken|array<array-key, mixed>>,
  *     srOnly?: bool|string|array<bool|string|array<array-key, mixed>>,
  *     start?: SpacingToken2|array<SpacingToken2|array<array-key, mixed>>,
- *     stopColor?: WebkitBorderBeforeColorValue|array<WebkitBorderBeforeColorValue|array<array-key, mixed>>,
- *     stopOpacity?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
+ *     stopColor?: StopColorValue|array<StopColorValue|array<array-key, mixed>>,
+ *     stopOpacity?: StopOpacityValue|array<StopOpacityValue|array<array-key, mixed>>,
  *     stroke?: ColorsToken|array<ColorsToken|array<array-key, mixed>>,
- *     strokeDasharray?: WebkitLineClampValue|array<WebkitLineClampValue|array<array-key, mixed>>,
- *     strokeDashoffset?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
+ *     strokeDasharray?: StrokeDasharrayValue|array<StrokeDasharrayValue|array<array-key, mixed>>,
+ *     strokeDashoffset?: StrokeDashoffsetValue|array<StrokeDashoffsetValue|array<array-key, mixed>>,
  *     strokeLinecap?: StrokeLinecapValue|array<StrokeLinecapValue|array<array-key, mixed>>,
  *     strokeLinejoin?: StrokeLinejoinValue|array<StrokeLinejoinValue|array<array-key, mixed>>,
- *     strokeMiterlimit?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
- *     strokeOpacity?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
- *     strokeWidth?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
- *     tabSize?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
+ *     strokeMiterlimit?: StrokeMiterlimitValue|array<StrokeMiterlimitValue|array<array-key, mixed>>,
+ *     strokeOpacity?: StrokeOpacityValue|array<StrokeOpacityValue|array<array-key, mixed>>,
+ *     strokeWidth?: StrokeWidthValue|array<StrokeWidthValue|array<array-key, mixed>>,
+ *     tabSize?: TabSizeValue|array<TabSizeValue|array<array-key, mixed>>,
  *     tableLayout?: TableLayoutValue|array<TableLayoutValue|array<array-key, mixed>>,
  *     textAlign?: TextAlignValue|array<TextAlignValue|array<array-key, mixed>>,
  *     textAlignLast?: TextAlignLastValue|array<TextAlignLastValue|array<array-key, mixed>>,
@@ -897,30 +1102,30 @@ namespace Symfony\UX\Css;
  *     textOrientation?: TextOrientationValue|array<TextOrientationValue|array<array-key, mixed>>,
  *     textOverflow?: TextOverflowValue|array<TextOverflowValue|array<array-key, mixed>>,
  *     textRendering?: TextRenderingValue|array<TextRenderingValue|array<array-key, mixed>>,
- *     textShadow?: WebkitMaskImageValue|array<WebkitMaskImageValue|array<array-key, mixed>>,
+ *     textShadow?: TextShadowValue|array<TextShadowValue|array<array-key, mixed>>,
  *     textShadowColor?: ColorsToken|array<ColorsToken|array<array-key, mixed>>,
- *     textSizeAdjust?: AnimationTimelineValue|array<AnimationTimelineValue|array<array-key, mixed>>,
+ *     textSizeAdjust?: TextSizeAdjustValue|array<TextSizeAdjustValue|array<array-key, mixed>>,
  *     textSpacingTrim?: TextSpacingTrimValue|array<TextSpacingTrimValue|array<array-key, mixed>>,
  *     textTransform?: TextTransformValue|array<TextTransformValue|array<array-key, mixed>>,
- *     textUnderlineOffset?: AspectRatioValue|array<AspectRatioValue|array<array-key, mixed>>,
+ *     textUnderlineOffset?: TextUnderlineOffsetValue|array<TextUnderlineOffsetValue|array<array-key, mixed>>,
  *     textUnderlinePosition?: TextUnderlinePositionValue|array<TextUnderlinePositionValue|array<array-key, mixed>>,
  *     textWrap?: TextWrapValue|array<TextWrapValue|array<array-key, mixed>>,
  *     textWrapMode?: TextWrapModeValue|array<TextWrapModeValue|array<array-key, mixed>>,
  *     textWrapStyle?: TextWrapStyleValue|array<TextWrapStyleValue|array<array-key, mixed>>,
- *     timelineScope?: WebkitMaskImageValue|array<WebkitMaskImageValue|array<array-key, mixed>>,
+ *     timelineScope?: TimelineScopeValue|array<TimelineScopeValue|array<array-key, mixed>>,
  *     top?: SpacingToken2|array<SpacingToken2|array<array-key, mixed>>,
  *     touchAction?: TouchActionValue|array<TouchActionValue|array<array-key, mixed>>,
- *     transform?: WebkitMaskImageValue|array<WebkitMaskImageValue|array<array-key, mixed>>,
+ *     transform?: TransformValue|array<TransformValue|array<array-key, mixed>>,
  *     transformBox?: TransformBoxValue|array<TransformBoxValue|array<array-key, mixed>>,
- *     transformOrigin?: WebkitMaskPositionValue|array<WebkitMaskPositionValue|array<array-key, mixed>>,
+ *     transformOrigin?: TransformOriginValue|array<TransformOriginValue|array<array-key, mixed>>,
  *     transformStyle?: TransformStyleValue|array<TransformStyleValue|array<array-key, mixed>>,
  *     transition?: TransitionValue|array<TransitionValue|array<array-key, mixed>>,
  *     transitionBehavior?: TransitionBehaviorValue|array<TransitionBehaviorValue|array<array-key, mixed>>,
- *     transitionDelay?: AllValue|array<AllValue|array<array-key, mixed>>,
- *     transitionDuration?: AllValue|array<AllValue|array<array-key, mixed>>,
+ *     transitionDelay?: TransitionDelayValue|array<TransitionDelayValue|array<array-key, mixed>>,
+ *     transitionDuration?: TransitionDurationValue|array<TransitionDurationValue|array<array-key, mixed>>,
  *     transitionProperty?: TransitionPropertyValue|array<TransitionPropertyValue|array<array-key, mixed>>,
- *     transitionTimingFunction?: AnimationTimingFunctionValue|array<AnimationTimingFunctionValue|array<array-key, mixed>>,
- *     translate?: RotateValue|array<RotateValue|array<array-key, mixed>>,
+ *     transitionTimingFunction?: TransitionTimingFunctionValue|array<TransitionTimingFunctionValue|array<array-key, mixed>>,
+ *     translate?: TranslateValue|array<TranslateValue|array<array-key, mixed>>,
  *     translateX?: SpacingToken3|array<SpacingToken3|array<array-key, mixed>>,
  *     translateY?: SpacingToken3|array<SpacingToken3|array<array-key, mixed>>,
  *     translateZ?: SpacingToken3|array<SpacingToken3|array<array-key, mixed>>,
@@ -929,26 +1134,26 @@ namespace Symfony\UX\Css;
  *     userSelect?: UserSelectValue|array<UserSelectValue|array<array-key, mixed>>,
  *     vectorEffect?: VectorEffectValue|array<VectorEffectValue|array<array-key, mixed>>,
  *     verticalAlign?: VerticalAlignValue|array<VerticalAlignValue|array<array-key, mixed>>,
- *     viewTimeline?: WebkitMaskImageValue|array<WebkitMaskImageValue|array<array-key, mixed>>,
- *     viewTimelineAxis?: ScrollTimelineAxisValue|array<ScrollTimelineAxisValue|array<array-key, mixed>>,
- *     viewTimelineInset?: AspectRatioValue|array<AspectRatioValue|array<array-key, mixed>>,
- *     viewTimelineName?: WebkitMaskImageValue|array<WebkitMaskImageValue|array<array-key, mixed>>,
+ *     viewTimeline?: ViewTimelineValue|array<ViewTimelineValue|array<array-key, mixed>>,
+ *     viewTimelineAxis?: ViewTimelineAxisValue|array<ViewTimelineAxisValue|array<array-key, mixed>>,
+ *     viewTimelineInset?: ViewTimelineInsetValue|array<ViewTimelineInsetValue|array<array-key, mixed>>,
+ *     viewTimelineName?: ViewTimelineNameValue|array<ViewTimelineNameValue|array<array-key, mixed>>,
  *     viewTransitionName?: ViewTransitionNameValue|array<ViewTransitionNameValue|array<array-key, mixed>>,
  *     visibility?: VisibilityValue|array<VisibilityValue|array<array-key, mixed>>,
  *     w?: SizesToken2|array<SizesToken2|array<array-key, mixed>>,
  *     whiteSpace?: WhiteSpaceValue|array<WhiteSpaceValue|array<array-key, mixed>>,
  *     whiteSpaceCollapse?: WhiteSpaceCollapseValue|array<WhiteSpaceCollapseValue|array<array-key, mixed>>,
- *     widows?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
+ *     widows?: WidowsValue|array<WidowsValue|array<array-key, mixed>>,
  *     width?: SizesToken2|array<SizesToken2|array<array-key, mixed>>,
  *     willChange?: WillChangeValue|array<WillChangeValue|array<array-key, mixed>>,
  *     wordBreak?: WordBreakValue|array<WordBreakValue|array<array-key, mixed>>,
- *     wordSpacing?: InitialLetterValue|array<InitialLetterValue|array<array-key, mixed>>,
+ *     wordSpacing?: WordSpacingValue|array<WordSpacingValue|array<array-key, mixed>>,
  *     wordWrap?: WordWrapValue|array<WordWrapValue|array<array-key, mixed>>,
  *     writingMode?: WritingModeValue|array<WritingModeValue|array<array-key, mixed>>,
  *     x?: SpacingToken3|array<SpacingToken3|array<array-key, mixed>>,
  *     y?: SpacingToken3|array<SpacingToken3|array<array-key, mixed>>,
  *     z?: SpacingToken3|array<SpacingToken3|array<array-key, mixed>>,
- *     zIndex?: AspectRatioValue|array<AspectRatioValue|array<array-key, mixed>>,
+ *     zIndex?: ZIndexValue|array<ZIndexValue|array<array-key, mixed>>,
  *     zoom?: ZoomValue|array<ZoomValue|array<array-key, mixed>>,
  *     "@/2xl"?: CssStylesNested,
  *     "@/3xl"?: CssStylesNested,
@@ -1096,13 +1301,13 @@ namespace Symfony\UX\Css;
  *     WebkitMaskPositionY?: WebkitMaskPositionYValue|array<WebkitMaskPositionYValue|array<array-key, mixed>>,
  *     WebkitMaskRepeat?: WebkitMaskRepeatValue|array<WebkitMaskRepeatValue|array<array-key, mixed>>,
  *     WebkitMaskRepeatX?: WebkitMaskRepeatXValue|array<WebkitMaskRepeatXValue|array<array-key, mixed>>,
- *     WebkitMaskRepeatY?: WebkitMaskRepeatXValue|array<WebkitMaskRepeatXValue|array<array-key, mixed>>,
+ *     WebkitMaskRepeatY?: WebkitMaskRepeatYValue|array<WebkitMaskRepeatYValue|array<array-key, mixed>>,
  *     WebkitMaskSize?: WebkitMaskSizeValue|array<WebkitMaskSizeValue|array<array-key, mixed>>,
  *     WebkitOverflowScrolling?: WebkitOverflowScrollingValue|array<WebkitOverflowScrollingValue|array<array-key, mixed>>,
- *     WebkitTapHighlightColor?: WebkitBorderBeforeColorValue|array<WebkitBorderBeforeColorValue|array<array-key, mixed>>,
+ *     WebkitTapHighlightColor?: WebkitTapHighlightColorValue|array<WebkitTapHighlightColorValue|array<array-key, mixed>>,
  *     WebkitTextFillColor?: ColorsToken|array<ColorsToken|array<array-key, mixed>>,
  *     WebkitTextStroke?: WebkitTextStrokeValue|array<WebkitTextStrokeValue|array<array-key, mixed>>,
- *     WebkitTextStrokeColor?: WebkitBorderBeforeColorValue|array<WebkitBorderBeforeColorValue|array<array-key, mixed>>,
+ *     WebkitTextStrokeColor?: WebkitTextStrokeColorValue|array<WebkitTextStrokeColorValue|array<array-key, mixed>>,
  *     WebkitTextStrokeWidth?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
  *     WebkitTouchCallout?: WebkitTouchCalloutValue|array<WebkitTouchCalloutValue|array<array-key, mixed>>,
  *     WebkitUserModify?: WebkitUserModifyValue|array<WebkitUserModifyValue|array<array-key, mixed>>,
@@ -1111,23 +1316,23 @@ namespace Symfony\UX\Css;
  *     alignContent?: AlignContentValue|array<AlignContentValue|array<array-key, mixed>>,
  *     alignItems?: AlignItemsValue|array<AlignItemsValue|array<array-key, mixed>>,
  *     alignSelf?: AlignSelfValue|array<AlignSelfValue|array<array-key, mixed>>,
- *     alignTracks?: AlignContentValue|array<AlignContentValue|array<array-key, mixed>>,
+ *     alignTracks?: AlignTracksValue|array<AlignTracksValue|array<array-key, mixed>>,
  *     alignmentBaseline?: AlignmentBaselineValue|array<AlignmentBaselineValue|array<array-key, mixed>>,
  *     all?: AllValue|array<AllValue|array<array-key, mixed>>,
- *     anchorName?: WebkitMaskImageValue|array<WebkitMaskImageValue|array<array-key, mixed>>,
+ *     anchorName?: AnchorNameValue|array<AnchorNameValue|array<array-key, mixed>>,
  *     anchorScope?: AnchorScopeValue|array<AnchorScopeValue|array<array-key, mixed>>,
  *     animation?: AnimationValue|array<AnimationValue|array<array-key, mixed>>,
  *     animationComposition?: AnimationCompositionValue|array<AnimationCompositionValue|array<array-key, mixed>>,
- *     animationDelay?: AllValue|array<AllValue|array<array-key, mixed>>,
+ *     animationDelay?: AnimationDelayValue|array<AnimationDelayValue|array<array-key, mixed>>,
  *     animationDirection?: AnimationDirectionValue|array<AnimationDirectionValue|array<array-key, mixed>>,
  *     animationDuration?: AnimationDurationValue|array<AnimationDurationValue|array<array-key, mixed>>,
  *     animationFillMode?: AnimationFillModeValue|array<AnimationFillModeValue|array<array-key, mixed>>,
  *     animationIterationCount?: AnimationIterationCountValue|array<AnimationIterationCountValue|array<array-key, mixed>>,
- *     animationName?: WebkitMaskImageValue|array<WebkitMaskImageValue|array<array-key, mixed>>,
+ *     animationName?: AnimationNameValue|array<AnimationNameValue|array<array-key, mixed>>,
  *     animationPlayState?: AnimationPlayStateValue|array<AnimationPlayStateValue|array<array-key, mixed>>,
  *     animationRange?: AnimationRangeValue|array<AnimationRangeValue|array<array-key, mixed>>,
- *     animationRangeEnd?: AnimationRangeValue|array<AnimationRangeValue|array<array-key, mixed>>,
- *     animationRangeStart?: AnimationRangeValue|array<AnimationRangeValue|array<array-key, mixed>>,
+ *     animationRangeEnd?: AnimationRangeEndValue|array<AnimationRangeEndValue|array<array-key, mixed>>,
+ *     animationRangeStart?: AnimationRangeStartValue|array<AnimationRangeStartValue|array<array-key, mixed>>,
  *     animationState?: int|float|string|array<int|float|string|array<array-key, mixed>>,
  *     animationTimeline?: AnimationTimelineValue|array<AnimationTimelineValue|array<array-key, mixed>>,
  *     animationTimingFunction?: AnimationTimingFunctionValue|array<AnimationTimingFunctionValue|array<array-key, mixed>>,
@@ -1145,137 +1350,137 @@ namespace Symfony\UX\Css;
  *     backdropSepia?: int|float|string|array<int|float|string|array<array-key, mixed>>,
  *     backfaceVisibility?: BackfaceVisibilityValue|array<BackfaceVisibilityValue|array<array-key, mixed>>,
  *     background?: ColorsToken|array<ColorsToken|array<array-key, mixed>>,
- *     backgroundAttachment?: WebkitMaskAttachmentValue|array<WebkitMaskAttachmentValue|array<array-key, mixed>>,
+ *     backgroundAttachment?: BackgroundAttachmentValue|array<BackgroundAttachmentValue|array<array-key, mixed>>,
  *     backgroundBlendMode?: BackgroundBlendModeValue|array<BackgroundBlendModeValue|array<array-key, mixed>>,
  *     backgroundClip?: BackgroundClipValue|array<BackgroundClipValue|array<array-key, mixed>>,
  *     backgroundColor?: ColorsToken|array<ColorsToken|array<array-key, mixed>>,
  *     backgroundConic?: int|float|string|array<int|float|string|array<array-key, mixed>>,
  *     backgroundGradient?: GradientsToken|array<GradientsToken|array<array-key, mixed>>,
- *     backgroundImage?: WebkitMaskImageValue|array<WebkitMaskImageValue|array<array-key, mixed>>,
+ *     backgroundImage?: BackgroundImageValue|array<BackgroundImageValue|array<array-key, mixed>>,
  *     backgroundLinear?: GradientsToken|array<GradientsToken|array<array-key, mixed>>,
  *     backgroundOrigin?: BackgroundOriginValue|array<BackgroundOriginValue|array<array-key, mixed>>,
- *     backgroundPosition?: WebkitMaskPositionValue|array<WebkitMaskPositionValue|array<array-key, mixed>>,
+ *     backgroundPosition?: BackgroundPositionValue|array<BackgroundPositionValue|array<array-key, mixed>>,
  *     backgroundPositionX?: BackgroundPositionXValue|array<BackgroundPositionXValue|array<array-key, mixed>>,
  *     backgroundPositionY?: BackgroundPositionYValue|array<BackgroundPositionYValue|array<array-key, mixed>>,
  *     backgroundRadial?: int|float|string|array<int|float|string|array<array-key, mixed>>,
- *     backgroundRepeat?: WebkitMaskRepeatValue|array<WebkitMaskRepeatValue|array<array-key, mixed>>,
- *     backgroundSize?: WebkitMaskSizeValue|array<WebkitMaskSizeValue|array<array-key, mixed>>,
+ *     backgroundRepeat?: BackgroundRepeatValue|array<BackgroundRepeatValue|array<array-key, mixed>>,
+ *     backgroundSize?: BackgroundSizeValue|array<BackgroundSizeValue|array<array-key, mixed>>,
  *     baselineShift?: BaselineShiftValue|array<BaselineShiftValue|array<array-key, mixed>>,
  *     bg?: ColorsToken|array<ColorsToken|array<array-key, mixed>>,
- *     bgAttachment?: WebkitMaskAttachmentValue|array<WebkitMaskAttachmentValue|array<array-key, mixed>>,
+ *     bgAttachment?: BackgroundAttachmentValue|array<BackgroundAttachmentValue|array<array-key, mixed>>,
  *     bgBlendMode?: BackgroundBlendModeValue|array<BackgroundBlendModeValue|array<array-key, mixed>>,
  *     bgClip?: BackgroundClipValue|array<BackgroundClipValue|array<array-key, mixed>>,
  *     bgColor?: ColorsToken|array<ColorsToken|array<array-key, mixed>>,
  *     bgConic?: int|float|string|array<int|float|string|array<array-key, mixed>>,
  *     bgGradient?: GradientsToken|array<GradientsToken|array<array-key, mixed>>,
- *     bgImage?: WebkitMaskImageValue|array<WebkitMaskImageValue|array<array-key, mixed>>,
+ *     bgImage?: BackgroundImageValue|array<BackgroundImageValue|array<array-key, mixed>>,
  *     bgLinear?: GradientsToken|array<GradientsToken|array<array-key, mixed>>,
  *     bgOrigin?: BackgroundOriginValue|array<BackgroundOriginValue|array<array-key, mixed>>,
- *     bgPosition?: WebkitMaskPositionValue|array<WebkitMaskPositionValue|array<array-key, mixed>>,
+ *     bgPosition?: BackgroundPositionValue|array<BackgroundPositionValue|array<array-key, mixed>>,
  *     bgPositionX?: BackgroundPositionXValue|array<BackgroundPositionXValue|array<array-key, mixed>>,
  *     bgPositionY?: BackgroundPositionYValue|array<BackgroundPositionYValue|array<array-key, mixed>>,
  *     bgRadial?: int|float|string|array<int|float|string|array<array-key, mixed>>,
- *     bgRepeat?: WebkitMaskRepeatValue|array<WebkitMaskRepeatValue|array<array-key, mixed>>,
- *     bgSize?: WebkitMaskSizeValue|array<WebkitMaskSizeValue|array<array-key, mixed>>,
+ *     bgRepeat?: BackgroundRepeatValue|array<BackgroundRepeatValue|array<array-key, mixed>>,
+ *     bgSize?: BackgroundSizeValue|array<BackgroundSizeValue|array<array-key, mixed>>,
  *     blockSize?: SizesToken|array<SizesToken|array<array-key, mixed>>,
  *     blur?: int|float|string|array<int|float|string|array<array-key, mixed>>,
- *     border?: WebkitBorderBeforeValue|array<WebkitBorderBeforeValue|array<array-key, mixed>>,
- *     borderBlock?: WebkitBorderBeforeValue|array<WebkitBorderBeforeValue|array<array-key, mixed>>,
+ *     border?: BorderValue|array<BorderValue|array<array-key, mixed>>,
+ *     borderBlock?: BorderBlockValue|array<BorderBlockValue|array<array-key, mixed>>,
  *     borderBlockColor?: ColorsToken|array<ColorsToken|array<array-key, mixed>>,
- *     borderBlockEnd?: WebkitBorderBeforeValue|array<WebkitBorderBeforeValue|array<array-key, mixed>>,
+ *     borderBlockEnd?: BorderBlockEndValue|array<BorderBlockEndValue|array<array-key, mixed>>,
  *     borderBlockEndColor?: ColorsToken|array<ColorsToken|array<array-key, mixed>>,
- *     borderBlockEndStyle?: WebkitBorderBeforeStyleValue|array<WebkitBorderBeforeStyleValue|array<array-key, mixed>>,
- *     borderBlockEndWidth?: WebkitBorderBeforeWidthValue|array<WebkitBorderBeforeWidthValue|array<array-key, mixed>>,
- *     borderBlockStart?: WebkitBorderBeforeValue|array<WebkitBorderBeforeValue|array<array-key, mixed>>,
+ *     borderBlockEndStyle?: BorderBlockEndStyleValue|array<BorderBlockEndStyleValue|array<array-key, mixed>>,
+ *     borderBlockEndWidth?: BorderBlockEndWidthValue|array<BorderBlockEndWidthValue|array<array-key, mixed>>,
+ *     borderBlockStart?: BorderBlockStartValue|array<BorderBlockStartValue|array<array-key, mixed>>,
  *     borderBlockStartColor?: ColorsToken|array<ColorsToken|array<array-key, mixed>>,
- *     borderBlockStartStyle?: WebkitBorderBeforeStyleValue|array<WebkitBorderBeforeStyleValue|array<array-key, mixed>>,
- *     borderBlockStartWidth?: WebkitBorderBeforeWidthValue|array<WebkitBorderBeforeWidthValue|array<array-key, mixed>>,
- *     borderBlockStyle?: WebkitBorderBeforeStyleValue|array<WebkitBorderBeforeStyleValue|array<array-key, mixed>>,
- *     borderBlockWidth?: WebkitBorderBeforeWidthValue|array<WebkitBorderBeforeWidthValue|array<array-key, mixed>>,
- *     borderBottom?: WebkitBorderBeforeValue|array<WebkitBorderBeforeValue|array<array-key, mixed>>,
+ *     borderBlockStartStyle?: BorderBlockStartStyleValue|array<BorderBlockStartStyleValue|array<array-key, mixed>>,
+ *     borderBlockStartWidth?: BorderBlockStartWidthValue|array<BorderBlockStartWidthValue|array<array-key, mixed>>,
+ *     borderBlockStyle?: BorderBlockStyleValue|array<BorderBlockStyleValue|array<array-key, mixed>>,
+ *     borderBlockWidth?: BorderBlockWidthValue|array<BorderBlockWidthValue|array<array-key, mixed>>,
+ *     borderBottom?: BorderBottomValue|array<BorderBottomValue|array<array-key, mixed>>,
  *     borderBottomColor?: ColorsToken|array<ColorsToken|array<array-key, mixed>>,
- *     borderBottomLeftRadius?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
+ *     borderBottomLeftRadius?: BorderBottomLeftRadiusValue|array<BorderBottomLeftRadiusValue|array<array-key, mixed>>,
  *     borderBottomRadius?: int|float|string|array<int|float|string|array<array-key, mixed>>,
- *     borderBottomRightRadius?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
- *     borderBottomStyle?: WebkitBorderBeforeStyleValue|array<WebkitBorderBeforeStyleValue|array<array-key, mixed>>,
- *     borderBottomWidth?: WebkitBorderBeforeWidthValue|array<WebkitBorderBeforeWidthValue|array<array-key, mixed>>,
+ *     borderBottomRightRadius?: BorderBottomRightRadiusValue|array<BorderBottomRightRadiusValue|array<array-key, mixed>>,
+ *     borderBottomStyle?: BorderBottomStyleValue|array<BorderBottomStyleValue|array<array-key, mixed>>,
+ *     borderBottomWidth?: BorderBottomWidthValue|array<BorderBottomWidthValue|array<array-key, mixed>>,
  *     borderCollapse?: BorderCollapseValue|array<BorderCollapseValue|array<array-key, mixed>>,
  *     borderColor?: ColorsToken|array<ColorsToken|array<array-key, mixed>>,
- *     borderEnd?: WebkitBorderBeforeValue|array<WebkitBorderBeforeValue|array<array-key, mixed>>,
+ *     borderEnd?: BorderInlineEndValue|array<BorderInlineEndValue|array<array-key, mixed>>,
  *     borderEndColor?: ColorsToken|array<ColorsToken|array<array-key, mixed>>,
- *     borderEndEndRadius?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
+ *     borderEndEndRadius?: BorderEndEndRadiusValue|array<BorderEndEndRadiusValue|array<array-key, mixed>>,
  *     borderEndRadius?: int|float|string|array<int|float|string|array<array-key, mixed>>,
- *     borderEndStartRadius?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
- *     borderEndWidth?: WebkitBorderBeforeWidthValue|array<WebkitBorderBeforeWidthValue|array<array-key, mixed>>,
+ *     borderEndStartRadius?: BorderEndStartRadiusValue|array<BorderEndStartRadiusValue|array<array-key, mixed>>,
+ *     borderEndWidth?: BorderInlineEndWidthValue|array<BorderInlineEndWidthValue|array<array-key, mixed>>,
  *     borderImage?: BorderImageValue|array<BorderImageValue|array<array-key, mixed>>,
- *     borderImageOutset?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
+ *     borderImageOutset?: BorderImageOutsetValue|array<BorderImageOutsetValue|array<array-key, mixed>>,
  *     borderImageRepeat?: BorderImageRepeatValue|array<BorderImageRepeatValue|array<array-key, mixed>>,
- *     borderImageSlice?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
- *     borderImageSource?: WebkitMaskImageValue|array<WebkitMaskImageValue|array<array-key, mixed>>,
- *     borderImageWidth?: AspectRatioValue|array<AspectRatioValue|array<array-key, mixed>>,
- *     borderInline?: WebkitBorderBeforeValue|array<WebkitBorderBeforeValue|array<array-key, mixed>>,
+ *     borderImageSlice?: BorderImageSliceValue|array<BorderImageSliceValue|array<array-key, mixed>>,
+ *     borderImageSource?: BorderImageSourceValue|array<BorderImageSourceValue|array<array-key, mixed>>,
+ *     borderImageWidth?: BorderImageWidthValue|array<BorderImageWidthValue|array<array-key, mixed>>,
+ *     borderInline?: BorderInlineValue|array<BorderInlineValue|array<array-key, mixed>>,
  *     borderInlineColor?: ColorsToken|array<ColorsToken|array<array-key, mixed>>,
- *     borderInlineEnd?: WebkitBorderBeforeValue|array<WebkitBorderBeforeValue|array<array-key, mixed>>,
+ *     borderInlineEnd?: BorderInlineEndValue|array<BorderInlineEndValue|array<array-key, mixed>>,
  *     borderInlineEndColor?: ColorsToken|array<ColorsToken|array<array-key, mixed>>,
- *     borderInlineEndStyle?: WebkitBorderBeforeStyleValue|array<WebkitBorderBeforeStyleValue|array<array-key, mixed>>,
- *     borderInlineEndWidth?: WebkitBorderBeforeWidthValue|array<WebkitBorderBeforeWidthValue|array<array-key, mixed>>,
- *     borderInlineStart?: WebkitBorderBeforeValue|array<WebkitBorderBeforeValue|array<array-key, mixed>>,
+ *     borderInlineEndStyle?: BorderInlineEndStyleValue|array<BorderInlineEndStyleValue|array<array-key, mixed>>,
+ *     borderInlineEndWidth?: BorderInlineEndWidthValue|array<BorderInlineEndWidthValue|array<array-key, mixed>>,
+ *     borderInlineStart?: BorderInlineStartValue|array<BorderInlineStartValue|array<array-key, mixed>>,
  *     borderInlineStartColor?: ColorsToken|array<ColorsToken|array<array-key, mixed>>,
- *     borderInlineStartStyle?: WebkitBorderBeforeStyleValue|array<WebkitBorderBeforeStyleValue|array<array-key, mixed>>,
- *     borderInlineStartWidth?: WebkitBorderBeforeWidthValue|array<WebkitBorderBeforeWidthValue|array<array-key, mixed>>,
- *     borderInlineStyle?: WebkitBorderBeforeStyleValue|array<WebkitBorderBeforeStyleValue|array<array-key, mixed>>,
- *     borderInlineWidth?: WebkitBorderBeforeWidthValue|array<WebkitBorderBeforeWidthValue|array<array-key, mixed>>,
- *     borderLeft?: WebkitBorderBeforeValue|array<WebkitBorderBeforeValue|array<array-key, mixed>>,
+ *     borderInlineStartStyle?: BorderInlineStartStyleValue|array<BorderInlineStartStyleValue|array<array-key, mixed>>,
+ *     borderInlineStartWidth?: BorderInlineStartWidthValue|array<BorderInlineStartWidthValue|array<array-key, mixed>>,
+ *     borderInlineStyle?: BorderInlineStyleValue|array<BorderInlineStyleValue|array<array-key, mixed>>,
+ *     borderInlineWidth?: BorderInlineWidthValue|array<BorderInlineWidthValue|array<array-key, mixed>>,
+ *     borderLeft?: BorderLeftValue|array<BorderLeftValue|array<array-key, mixed>>,
  *     borderLeftColor?: ColorsToken|array<ColorsToken|array<array-key, mixed>>,
  *     borderLeftRadius?: int|float|string|array<int|float|string|array<array-key, mixed>>,
- *     borderLeftStyle?: WebkitBorderBeforeStyleValue|array<WebkitBorderBeforeStyleValue|array<array-key, mixed>>,
- *     borderLeftWidth?: WebkitBorderBeforeWidthValue|array<WebkitBorderBeforeWidthValue|array<array-key, mixed>>,
- *     borderRadius?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
- *     borderRight?: WebkitBorderBeforeValue|array<WebkitBorderBeforeValue|array<array-key, mixed>>,
+ *     borderLeftStyle?: BorderLeftStyleValue|array<BorderLeftStyleValue|array<array-key, mixed>>,
+ *     borderLeftWidth?: BorderLeftWidthValue|array<BorderLeftWidthValue|array<array-key, mixed>>,
+ *     borderRadius?: BorderRadiusValue|array<BorderRadiusValue|array<array-key, mixed>>,
+ *     borderRight?: BorderRightValue|array<BorderRightValue|array<array-key, mixed>>,
  *     borderRightColor?: ColorsToken|array<ColorsToken|array<array-key, mixed>>,
  *     borderRightRadius?: int|float|string|array<int|float|string|array<array-key, mixed>>,
- *     borderRightStyle?: WebkitBorderBeforeStyleValue|array<WebkitBorderBeforeStyleValue|array<array-key, mixed>>,
- *     borderRightWidth?: WebkitBorderBeforeWidthValue|array<WebkitBorderBeforeWidthValue|array<array-key, mixed>>,
+ *     borderRightStyle?: BorderRightStyleValue|array<BorderRightStyleValue|array<array-key, mixed>>,
+ *     borderRightWidth?: BorderRightWidthValue|array<BorderRightWidthValue|array<array-key, mixed>>,
  *     borderSpacing?: SpacingToken|array<SpacingToken|array<array-key, mixed>>,
  *     borderSpacingX?: SpacingToken2|array<SpacingToken2|array<array-key, mixed>>,
  *     borderSpacingY?: SpacingToken2|array<SpacingToken2|array<array-key, mixed>>,
- *     borderStart?: WebkitBorderBeforeValue|array<WebkitBorderBeforeValue|array<array-key, mixed>>,
+ *     borderStart?: BorderInlineStartValue|array<BorderInlineStartValue|array<array-key, mixed>>,
  *     borderStartColor?: ColorsToken|array<ColorsToken|array<array-key, mixed>>,
- *     borderStartEndRadius?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
+ *     borderStartEndRadius?: BorderStartEndRadiusValue|array<BorderStartEndRadiusValue|array<array-key, mixed>>,
  *     borderStartRadius?: int|float|string|array<int|float|string|array<array-key, mixed>>,
- *     borderStartStartRadius?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
- *     borderStartWidth?: WebkitBorderBeforeWidthValue|array<WebkitBorderBeforeWidthValue|array<array-key, mixed>>,
- *     borderStyle?: WebkitBorderBeforeStyleValue|array<WebkitBorderBeforeStyleValue|array<array-key, mixed>>,
- *     borderTop?: WebkitBorderBeforeValue|array<WebkitBorderBeforeValue|array<array-key, mixed>>,
+ *     borderStartStartRadius?: BorderStartStartRadiusValue|array<BorderStartStartRadiusValue|array<array-key, mixed>>,
+ *     borderStartWidth?: BorderInlineStartWidthValue|array<BorderInlineStartWidthValue|array<array-key, mixed>>,
+ *     borderStyle?: BorderStyleValue|array<BorderStyleValue|array<array-key, mixed>>,
+ *     borderTop?: BorderTopValue|array<BorderTopValue|array<array-key, mixed>>,
  *     borderTopColor?: ColorsToken|array<ColorsToken|array<array-key, mixed>>,
- *     borderTopLeftRadius?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
+ *     borderTopLeftRadius?: BorderTopLeftRadiusValue|array<BorderTopLeftRadiusValue|array<array-key, mixed>>,
  *     borderTopRadius?: int|float|string|array<int|float|string|array<array-key, mixed>>,
- *     borderTopRightRadius?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
- *     borderTopStyle?: WebkitBorderBeforeStyleValue|array<WebkitBorderBeforeStyleValue|array<array-key, mixed>>,
- *     borderTopWidth?: WebkitBorderBeforeWidthValue|array<WebkitBorderBeforeWidthValue|array<array-key, mixed>>,
- *     borderWidth?: WebkitBorderBeforeWidthValue|array<WebkitBorderBeforeWidthValue|array<array-key, mixed>>,
- *     borderX?: WebkitBorderBeforeValue|array<WebkitBorderBeforeValue|array<array-key, mixed>>,
+ *     borderTopRightRadius?: BorderTopRightRadiusValue|array<BorderTopRightRadiusValue|array<array-key, mixed>>,
+ *     borderTopStyle?: BorderTopStyleValue|array<BorderTopStyleValue|array<array-key, mixed>>,
+ *     borderTopWidth?: BorderTopWidthValue|array<BorderTopWidthValue|array<array-key, mixed>>,
+ *     borderWidth?: BorderWidthValue|array<BorderWidthValue|array<array-key, mixed>>,
+ *     borderX?: BorderInlineValue|array<BorderInlineValue|array<array-key, mixed>>,
  *     borderXColor?: ColorsToken|array<ColorsToken|array<array-key, mixed>>,
- *     borderXWidth?: WebkitBorderBeforeWidthValue|array<WebkitBorderBeforeWidthValue|array<array-key, mixed>>,
- *     borderY?: WebkitBorderBeforeValue|array<WebkitBorderBeforeValue|array<array-key, mixed>>,
+ *     borderXWidth?: BorderInlineWidthValue|array<BorderInlineWidthValue|array<array-key, mixed>>,
+ *     borderY?: BorderBlockValue|array<BorderBlockValue|array<array-key, mixed>>,
  *     borderYColor?: ColorsToken|array<ColorsToken|array<array-key, mixed>>,
- *     borderYWidth?: WebkitBorderBeforeWidthValue|array<WebkitBorderBeforeWidthValue|array<array-key, mixed>>,
+ *     borderYWidth?: BorderBlockWidthValue|array<BorderBlockWidthValue|array<array-key, mixed>>,
  *     bottom?: SpacingToken2|array<SpacingToken2|array<array-key, mixed>>,
  *     boxAlign?: BoxAlignValue|array<BoxAlignValue|array<array-key, mixed>>,
  *     boxDecorationBreak?: BoxDecorationBreakValue|array<BoxDecorationBreakValue|array<array-key, mixed>>,
  *     boxDirection?: BoxDirectionValue|array<BoxDirectionValue|array<array-key, mixed>>,
- *     boxFlex?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
- *     boxFlexGroup?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
+ *     boxFlex?: BoxFlexValue|array<BoxFlexValue|array<array-key, mixed>>,
+ *     boxFlexGroup?: BoxFlexGroupValue|array<BoxFlexGroupValue|array<array-key, mixed>>,
  *     boxLines?: BoxLinesValue|array<BoxLinesValue|array<array-key, mixed>>,
- *     boxOrdinalGroup?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
+ *     boxOrdinalGroup?: BoxOrdinalGroupValue|array<BoxOrdinalGroupValue|array<array-key, mixed>>,
  *     boxOrient?: BoxOrientValue|array<BoxOrientValue|array<array-key, mixed>>,
  *     boxPack?: BoxPackValue|array<BoxPackValue|array<array-key, mixed>>,
- *     boxShadow?: WebkitMaskImageValue|array<WebkitMaskImageValue|array<array-key, mixed>>,
+ *     boxShadow?: BoxShadowValue|array<BoxShadowValue|array<array-key, mixed>>,
  *     boxShadowColor?: ColorsToken|array<ColorsToken|array<array-key, mixed>>,
  *     boxSize?: SizesToken2|array<SizesToken2|array<array-key, mixed>>,
  *     boxSizing?: BoxSizingValue|array<BoxSizingValue|array<array-key, mixed>>,
  *     breakAfter?: BreakAfterValue|array<BreakAfterValue|array<array-key, mixed>>,
- *     breakBefore?: BreakAfterValue|array<BreakAfterValue|array<array-key, mixed>>,
+ *     breakBefore?: BreakBeforeValue|array<BreakBeforeValue|array<array-key, mixed>>,
  *     breakInside?: BreakInsideValue|array<BreakInsideValue|array<array-key, mixed>>,
  *     brightness?: int|float|string|array<int|float|string|array<array-key, mixed>>,
  *     captionSide?: CaptionSideValue|array<CaptionSideValue|array<array-key, mixed>>,
@@ -1283,45 +1488,45 @@ namespace Symfony\UX\Css;
  *     caretColor?: ColorsToken|array<ColorsToken|array<array-key, mixed>>,
  *     caretShape?: CaretShapeValue|array<CaretShapeValue|array<array-key, mixed>>,
  *     clear?: ClearValue|array<ClearValue|array<array-key, mixed>>,
- *     clip?: AnimationDurationValue|array<AnimationDurationValue|array<array-key, mixed>>,
+ *     clip?: ClipValue|array<ClipValue|array<array-key, mixed>>,
  *     clipPath?: ClipPathValue|array<ClipPathValue|array<array-key, mixed>>,
  *     clipRule?: ClipRuleValue|array<ClipRuleValue|array<array-key, mixed>>,
  *     color?: ColorsToken|array<ColorsToken|array<array-key, mixed>>,
  *     colorInterpolation?: ColorInterpolationValue|array<ColorInterpolationValue|array<array-key, mixed>>,
- *     colorInterpolationFilters?: ColorInterpolationValue|array<ColorInterpolationValue|array<array-key, mixed>>,
+ *     colorInterpolationFilters?: ColorInterpolationFiltersValue|array<ColorInterpolationFiltersValue|array<array-key, mixed>>,
  *     colorPalette?: ColorPaletteValue|array<ColorPaletteValue|array<array-key, mixed>>,
  *     colorRendering?: ColorRenderingValue|array<ColorRenderingValue|array<array-key, mixed>>,
  *     colorScheme?: ColorSchemeValue|array<ColorSchemeValue|array<array-key, mixed>>,
- *     columnCount?: AspectRatioValue|array<AspectRatioValue|array<array-key, mixed>>,
+ *     columnCount?: ColumnCountValue|array<ColumnCountValue|array<array-key, mixed>>,
  *     columnFill?: ColumnFillValue|array<ColumnFillValue|array<array-key, mixed>>,
  *     columnGap?: SpacingToken2|array<SpacingToken2|array<array-key, mixed>>,
- *     columnRule?: WebkitBorderBeforeValue|array<WebkitBorderBeforeValue|array<array-key, mixed>>,
- *     columnRuleColor?: WebkitBorderBeforeColorValue|array<WebkitBorderBeforeColorValue|array<array-key, mixed>>,
- *     columnRuleStyle?: WebkitBorderBeforeStyleValue|array<WebkitBorderBeforeStyleValue|array<array-key, mixed>>,
- *     columnRuleWidth?: WebkitBorderBeforeWidthValue|array<WebkitBorderBeforeWidthValue|array<array-key, mixed>>,
- *     columnSpan?: AnchorScopeValue|array<AnchorScopeValue|array<array-key, mixed>>,
- *     columnWidth?: AspectRatioValue|array<AspectRatioValue|array<array-key, mixed>>,
- *     columns?: AspectRatioValue|array<AspectRatioValue|array<array-key, mixed>>,
+ *     columnRule?: ColumnRuleValue|array<ColumnRuleValue|array<array-key, mixed>>,
+ *     columnRuleColor?: ColumnRuleColorValue|array<ColumnRuleColorValue|array<array-key, mixed>>,
+ *     columnRuleStyle?: ColumnRuleStyleValue|array<ColumnRuleStyleValue|array<array-key, mixed>>,
+ *     columnRuleWidth?: ColumnRuleWidthValue|array<ColumnRuleWidthValue|array<array-key, mixed>>,
+ *     columnSpan?: ColumnSpanValue|array<ColumnSpanValue|array<array-key, mixed>>,
+ *     columnWidth?: ColumnWidthValue|array<ColumnWidthValue|array<array-key, mixed>>,
+ *     columns?: ColumnsValue|array<ColumnsValue|array<array-key, mixed>>,
  *     contain?: ContainValue|array<ContainValue|array<array-key, mixed>>,
- *     containIntrinsicBlockSize?: WebkitLineClampValue|array<WebkitLineClampValue|array<array-key, mixed>>,
- *     containIntrinsicHeight?: WebkitLineClampValue|array<WebkitLineClampValue|array<array-key, mixed>>,
- *     containIntrinsicInlineSize?: WebkitLineClampValue|array<WebkitLineClampValue|array<array-key, mixed>>,
- *     containIntrinsicSize?: WebkitLineClampValue|array<WebkitLineClampValue|array<array-key, mixed>>,
- *     containIntrinsicWidth?: WebkitLineClampValue|array<WebkitLineClampValue|array<array-key, mixed>>,
- *     container?: WebkitMaskImageValue|array<WebkitMaskImageValue|array<array-key, mixed>>,
- *     containerName?: WebkitMaskImageValue|array<WebkitMaskImageValue|array<array-key, mixed>>,
+ *     containIntrinsicBlockSize?: ContainIntrinsicBlockSizeValue|array<ContainIntrinsicBlockSizeValue|array<array-key, mixed>>,
+ *     containIntrinsicHeight?: ContainIntrinsicHeightValue|array<ContainIntrinsicHeightValue|array<array-key, mixed>>,
+ *     containIntrinsicInlineSize?: ContainIntrinsicInlineSizeValue|array<ContainIntrinsicInlineSizeValue|array<array-key, mixed>>,
+ *     containIntrinsicSize?: ContainIntrinsicSizeValue|array<ContainIntrinsicSizeValue|array<array-key, mixed>>,
+ *     containIntrinsicWidth?: ContainIntrinsicWidthValue|array<ContainIntrinsicWidthValue|array<array-key, mixed>>,
+ *     container?: ContainerValue|array<ContainerValue|array<array-key, mixed>>,
+ *     containerName?: ContainerNameValue|array<ContainerNameValue|array<array-key, mixed>>,
  *     containerType?: ContainerTypeValue|array<ContainerTypeValue|array<array-key, mixed>>,
  *     content?: ContentValue|array<ContentValue|array<array-key, mixed>>,
  *     contentVisibility?: ContentVisibilityValue|array<ContentVisibilityValue|array<array-key, mixed>>,
  *     contrast?: int|float|string|array<int|float|string|array<array-key, mixed>>,
  *     cornerShape?: int|float|string|array<int|float|string|array<array-key, mixed>>,
- *     counterIncrement?: WebkitMaskImageValue|array<WebkitMaskImageValue|array<array-key, mixed>>,
- *     counterReset?: WebkitMaskImageValue|array<WebkitMaskImageValue|array<array-key, mixed>>,
- *     counterSet?: WebkitMaskImageValue|array<WebkitMaskImageValue|array<array-key, mixed>>,
+ *     counterIncrement?: CounterIncrementValue|array<CounterIncrementValue|array<array-key, mixed>>,
+ *     counterReset?: CounterResetValue|array<CounterResetValue|array<array-key, mixed>>,
+ *     counterSet?: CounterSetValue|array<CounterSetValue|array<array-key, mixed>>,
  *     cursor?: CursorValue|array<CursorValue|array<array-key, mixed>>,
- *     cx?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
- *     cy?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
- *     d?: WebkitMaskImageValue|array<WebkitMaskImageValue|array<array-key, mixed>>,
+ *     cx?: CxValue|array<CxValue|array<array-key, mixed>>,
+ *     cy?: CyValue|array<CyValue|array<array-key, mixed>>,
+ *     d?: DValue|array<DValue|array<array-key, mixed>>,
  *     debug?: bool|string|array<bool|string|array<array-key, mixed>>,
  *     direction?: DirectionValue|array<DirectionValue|array<array-key, mixed>>,
  *     display?: DisplayValue|array<DisplayValue|array<array-key, mixed>>,
@@ -1335,33 +1540,33 @@ namespace Symfony\UX\Css;
  *     end?: SpacingToken2|array<SpacingToken2|array<array-key, mixed>>,
  *     fieldSizing?: FieldSizingValue|array<FieldSizingValue|array<array-key, mixed>>,
  *     fill?: ColorsToken|array<ColorsToken|array<array-key, mixed>>,
- *     fillOpacity?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
- *     fillRule?: ClipRuleValue|array<ClipRuleValue|array<array-key, mixed>>,
- *     filter?: BackdropFilterValue|array<BackdropFilterValue|array<array-key, mixed>>,
+ *     fillOpacity?: FillOpacityValue|array<FillOpacityValue|array<array-key, mixed>>,
+ *     fillRule?: FillRuleValue|array<FillRuleValue|array<array-key, mixed>>,
+ *     filter?: FilterValue|array<FilterValue|array<array-key, mixed>>,
  *     flex?: FlexValue|array<FlexValue|array<array-key, mixed>>,
  *     flexBasis?: SizesToken3|array<SizesToken3|array<array-key, mixed>>,
  *     flexDir?: FlexDirectionValue|array<FlexDirectionValue|array<array-key, mixed>>,
  *     flexDirection?: FlexDirectionValue|array<FlexDirectionValue|array<array-key, mixed>>,
  *     flexFlow?: FlexFlowValue|array<FlexFlowValue|array<array-key, mixed>>,
- *     flexGrow?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
- *     flexShrink?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
+ *     flexGrow?: FlexGrowValue|array<FlexGrowValue|array<array-key, mixed>>,
+ *     flexShrink?: FlexShrinkValue|array<FlexShrinkValue|array<array-key, mixed>>,
  *     flexWrap?: FlexWrapValue|array<FlexWrapValue|array<array-key, mixed>>,
  *     float?: FloatValue|array<FloatValue|array<array-key, mixed>>,
- *     floodColor?: WebkitBorderBeforeColorValue|array<WebkitBorderBeforeColorValue|array<array-key, mixed>>,
- *     floodOpacity?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
+ *     floodColor?: FloodColorValue|array<FloodColorValue|array<array-key, mixed>>,
+ *     floodOpacity?: FloodOpacityValue|array<FloodOpacityValue|array<array-key, mixed>>,
  *     focusRing?: FocusRingValue|array<FocusRingValue|array<array-key, mixed>>,
  *     focusRingColor?: ColorsToken|array<ColorsToken|array<array-key, mixed>>,
  *     focusRingOffset?: SpacingToken2|array<SpacingToken2|array<array-key, mixed>>,
  *     focusRingStyle?: int|float|string|array<int|float|string|array<array-key, mixed>>,
  *     focusRingWidth?: int|float|string|array<int|float|string|array<array-key, mixed>>,
- *     focusVisibleRing?: FocusRingValue|array<FocusRingValue|array<array-key, mixed>>,
+ *     focusVisibleRing?: FocusVisibleRingValue|array<FocusVisibleRingValue|array<array-key, mixed>>,
  *     font?: FontValue|array<FontValue|array<array-key, mixed>>,
  *     fontFamily?: FontFamilyValue|array<FontFamilyValue|array<array-key, mixed>>,
  *     fontFeatureSettings?: FontFeatureSettingsValue|array<FontFeatureSettingsValue|array<array-key, mixed>>,
  *     fontKerning?: FontKerningValue|array<FontKerningValue|array<array-key, mixed>>,
- *     fontLanguageOverride?: FontFeatureSettingsValue|array<FontFeatureSettingsValue|array<array-key, mixed>>,
- *     fontOpticalSizing?: AnimationTimelineValue|array<AnimationTimelineValue|array<array-key, mixed>>,
- *     fontPalette?: ColorSchemeValue|array<ColorSchemeValue|array<array-key, mixed>>,
+ *     fontLanguageOverride?: FontLanguageOverrideValue|array<FontLanguageOverrideValue|array<array-key, mixed>>,
+ *     fontOpticalSizing?: FontOpticalSizingValue|array<FontOpticalSizingValue|array<array-key, mixed>>,
+ *     fontPalette?: FontPaletteValue|array<FontPaletteValue|array<array-key, mixed>>,
  *     fontSize?: FontSizeValue|array<FontSizeValue|array<array-key, mixed>>,
  *     fontSizeAdjust?: FontSizeAdjustValue|array<FontSizeAdjustValue|array<array-key, mixed>>,
  *     fontSmooth?: FontSmoothValue|array<FontSmoothValue|array<array-key, mixed>>,
@@ -1369,10 +1574,10 @@ namespace Symfony\UX\Css;
  *     fontStretch?: FontStretchValue|array<FontStretchValue|array<array-key, mixed>>,
  *     fontStyle?: FontStyleValue|array<FontStyleValue|array<array-key, mixed>>,
  *     fontSynthesis?: FontSynthesisValue|array<FontSynthesisValue|array<array-key, mixed>>,
- *     fontSynthesisPosition?: AnimationTimelineValue|array<AnimationTimelineValue|array<array-key, mixed>>,
- *     fontSynthesisSmallCaps?: AnimationTimelineValue|array<AnimationTimelineValue|array<array-key, mixed>>,
- *     fontSynthesisStyle?: AnimationTimelineValue|array<AnimationTimelineValue|array<array-key, mixed>>,
- *     fontSynthesisWeight?: AnimationTimelineValue|array<AnimationTimelineValue|array<array-key, mixed>>,
+ *     fontSynthesisPosition?: FontSynthesisPositionValue|array<FontSynthesisPositionValue|array<array-key, mixed>>,
+ *     fontSynthesisSmallCaps?: FontSynthesisSmallCapsValue|array<FontSynthesisSmallCapsValue|array<array-key, mixed>>,
+ *     fontSynthesisStyle?: FontSynthesisStyleValue|array<FontSynthesisStyleValue|array<array-key, mixed>>,
+ *     fontSynthesisWeight?: FontSynthesisWeightValue|array<FontSynthesisWeightValue|array<array-key, mixed>>,
  *     fontVariant?: FontVariantValue|array<FontVariantValue|array<array-key, mixed>>,
  *     fontVariantAlternates?: FontVariantAlternatesValue|array<FontVariantAlternatesValue|array<array-key, mixed>>,
  *     fontVariantCaps?: FontVariantCapsValue|array<FontVariantCapsValue|array<array-key, mixed>>,
@@ -1381,11 +1586,11 @@ namespace Symfony\UX\Css;
  *     fontVariantLigatures?: FontVariantLigaturesValue|array<FontVariantLigaturesValue|array<array-key, mixed>>,
  *     fontVariantNumeric?: FontVariantNumericValue|array<FontVariantNumericValue|array<array-key, mixed>>,
  *     fontVariantPosition?: FontVariantPositionValue|array<FontVariantPositionValue|array<array-key, mixed>>,
- *     fontVariationSettings?: FontFeatureSettingsValue|array<FontFeatureSettingsValue|array<array-key, mixed>>,
+ *     fontVariationSettings?: FontVariationSettingsValue|array<FontVariationSettingsValue|array<array-key, mixed>>,
  *     fontWeight?: FontWeightValue|array<FontWeightValue|array<array-key, mixed>>,
  *     forcedColorAdjust?: ForcedColorAdjustValue|array<ForcedColorAdjustValue|array<array-key, mixed>>,
  *     gap?: SpacingToken2|array<SpacingToken2|array<array-key, mixed>>,
- *     glyphOrientationVertical?: AspectRatioValue|array<AspectRatioValue|array<array-key, mixed>>,
+ *     glyphOrientationVertical?: GlyphOrientationVerticalValue|array<GlyphOrientationVerticalValue|array<array-key, mixed>>,
  *     gradientFrom?: ColorsToken|array<ColorsToken|array<array-key, mixed>>,
  *     gradientFromPosition?: int|float|string|array<int|float|string|array<array-key, mixed>>,
  *     gradientTo?: ColorsToken|array<ColorsToken|array<array-key, mixed>>,
@@ -1393,32 +1598,32 @@ namespace Symfony\UX\Css;
  *     gradientVia?: ColorsToken|array<ColorsToken|array<array-key, mixed>>,
  *     gradientViaPosition?: int|float|string|array<int|float|string|array<array-key, mixed>>,
  *     grayscale?: int|float|string|array<int|float|string|array<array-key, mixed>>,
- *     grid?: WebkitMaskImageValue|array<WebkitMaskImageValue|array<array-key, mixed>>,
- *     gridArea?: AspectRatioValue|array<AspectRatioValue|array<array-key, mixed>>,
+ *     grid?: GridValue|array<GridValue|array<array-key, mixed>>,
+ *     gridArea?: GridAreaValue|array<GridAreaValue|array<array-key, mixed>>,
  *     gridAutoColumns?: GridAutoColumnsValue|array<GridAutoColumnsValue|array<array-key, mixed>>,
  *     gridAutoFlow?: GridAutoFlowValue|array<GridAutoFlowValue|array<array-key, mixed>>,
- *     gridAutoRows?: GridAutoColumnsValue|array<GridAutoColumnsValue|array<array-key, mixed>>,
- *     gridColumn?: AspectRatioValue|array<AspectRatioValue|array<array-key, mixed>>,
- *     gridColumnEnd?: AspectRatioValue|array<AspectRatioValue|array<array-key, mixed>>,
+ *     gridAutoRows?: GridAutoRowsValue|array<GridAutoRowsValue|array<array-key, mixed>>,
+ *     gridColumn?: GridColumnValue|array<GridColumnValue|array<array-key, mixed>>,
+ *     gridColumnEnd?: GridColumnEndValue|array<GridColumnEndValue|array<array-key, mixed>>,
  *     gridColumnGap?: SpacingToken2|array<SpacingToken2|array<array-key, mixed>>,
- *     gridColumnStart?: AspectRatioValue|array<AspectRatioValue|array<array-key, mixed>>,
+ *     gridColumnStart?: GridColumnStartValue|array<GridColumnStartValue|array<array-key, mixed>>,
  *     gridGap?: SpacingToken2|array<SpacingToken2|array<array-key, mixed>>,
- *     gridRow?: AspectRatioValue|array<AspectRatioValue|array<array-key, mixed>>,
- *     gridRowEnd?: AspectRatioValue|array<AspectRatioValue|array<array-key, mixed>>,
+ *     gridRow?: GridRowValue|array<GridRowValue|array<array-key, mixed>>,
+ *     gridRowEnd?: GridRowEndValue|array<GridRowEndValue|array<array-key, mixed>>,
  *     gridRowGap?: SpacingToken2|array<SpacingToken2|array<array-key, mixed>>,
- *     gridRowStart?: AspectRatioValue|array<AspectRatioValue|array<array-key, mixed>>,
- *     gridTemplate?: WebkitMaskImageValue|array<WebkitMaskImageValue|array<array-key, mixed>>,
- *     gridTemplateAreas?: WebkitMaskImageValue|array<WebkitMaskImageValue|array<array-key, mixed>>,
+ *     gridRowStart?: GridRowStartValue|array<GridRowStartValue|array<array-key, mixed>>,
+ *     gridTemplate?: GridTemplateValue|array<GridTemplateValue|array<array-key, mixed>>,
+ *     gridTemplateAreas?: GridTemplateAreasValue|array<GridTemplateAreasValue|array<array-key, mixed>>,
  *     gridTemplateColumns?: GridTemplateColumnsValue|array<GridTemplateColumnsValue|array<array-key, mixed>>,
- *     gridTemplateRows?: GridTemplateColumnsValue|array<GridTemplateColumnsValue|array<array-key, mixed>>,
+ *     gridTemplateRows?: GridTemplateRowsValue|array<GridTemplateRowsValue|array<array-key, mixed>>,
  *     h?: SizesToken|array<SizesToken|array<array-key, mixed>>,
  *     hangingPunctuation?: HangingPunctuationValue|array<HangingPunctuationValue|array<array-key, mixed>>,
  *     height?: SizesToken|array<SizesToken|array<array-key, mixed>>,
  *     hideBelow?: BreakpointsToken|array<BreakpointsToken|array<array-key, mixed>>,
  *     hideFrom?: BreakpointsToken|array<BreakpointsToken|array<array-key, mixed>>,
  *     hueRotate?: int|float|string|array<int|float|string|array<array-key, mixed>>,
- *     hyphenateCharacter?: AnimationDurationValue|array<AnimationDurationValue|array<array-key, mixed>>,
- *     hyphenateLimitChars?: AspectRatioValue|array<AspectRatioValue|array<array-key, mixed>>,
+ *     hyphenateCharacter?: HyphenateCharacterValue|array<HyphenateCharacterValue|array<array-key, mixed>>,
+ *     hyphenateLimitChars?: HyphenateLimitCharsValue|array<HyphenateLimitCharsValue|array<array-key, mixed>>,
  *     hyphens?: HyphensValue|array<HyphensValue|array<array-key, mixed>>,
  *     imageOrientation?: ImageOrientationValue|array<ImageOrientationValue|array<array-key, mixed>>,
  *     imageRendering?: ImageRenderingValue|array<ImageRenderingValue|array<array-key, mixed>>,
@@ -1444,18 +1649,18 @@ namespace Symfony\UX\Css;
  *     justifyContent?: JustifyContentValue|array<JustifyContentValue|array<array-key, mixed>>,
  *     justifyItems?: JustifyItemsValue|array<JustifyItemsValue|array<array-key, mixed>>,
  *     justifySelf?: JustifySelfValue|array<JustifySelfValue|array<array-key, mixed>>,
- *     justifyTracks?: JustifyContentValue|array<JustifyContentValue|array<array-key, mixed>>,
+ *     justifyTracks?: JustifyTracksValue|array<JustifyTracksValue|array<array-key, mixed>>,
  *     left?: SpacingToken2|array<SpacingToken2|array<array-key, mixed>>,
- *     letterSpacing?: InitialLetterValue|array<InitialLetterValue|array<array-key, mixed>>,
- *     lightingColor?: WebkitBorderBeforeColorValue|array<WebkitBorderBeforeColorValue|array<array-key, mixed>>,
+ *     letterSpacing?: LetterSpacingValue|array<LetterSpacingValue|array<array-key, mixed>>,
+ *     lightingColor?: LightingColorValue|array<LightingColorValue|array<array-key, mixed>>,
  *     lineBreak?: LineBreakValue|array<LineBreakValue|array<array-key, mixed>>,
- *     lineClamp?: WebkitLineClampValue|array<WebkitLineClampValue|array<array-key, mixed>>,
- *     lineHeight?: InitialLetterValue|array<InitialLetterValue|array<array-key, mixed>>,
- *     lineHeightStep?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
+ *     lineClamp?: LineClampValue|array<LineClampValue|array<array-key, mixed>>,
+ *     lineHeight?: LineHeightValue|array<LineHeightValue|array<array-key, mixed>>,
+ *     lineHeightStep?: LineHeightStepValue|array<LineHeightStepValue|array<array-key, mixed>>,
  *     listStyle?: ListStyleValue|array<ListStyleValue|array<array-key, mixed>>,
- *     listStyleImage?: WebkitMaskImageValue|array<WebkitMaskImageValue|array<array-key, mixed>>,
+ *     listStyleImage?: ListStyleImageValue|array<ListStyleImageValue|array<array-key, mixed>>,
  *     listStylePosition?: ListStylePositionValue|array<ListStylePositionValue|array<array-key, mixed>>,
- *     listStyleType?: WebkitMaskImageValue|array<WebkitMaskImageValue|array<array-key, mixed>>,
+ *     listStyleType?: ListStyleTypeValue|array<ListStyleTypeValue|array<array-key, mixed>>,
  *     m?: SpacingToken|array<SpacingToken|array<array-key, mixed>>,
  *     margin?: SpacingToken|array<SpacingToken|array<array-key, mixed>>,
  *     marginBlock?: SpacingToken|array<SpacingToken|array<array-key, mixed>>,
@@ -1473,36 +1678,36 @@ namespace Symfony\UX\Css;
  *     marginTrim?: MarginTrimValue|array<MarginTrimValue|array<array-key, mixed>>,
  *     marginX?: SpacingToken|array<SpacingToken|array<array-key, mixed>>,
  *     marginY?: SpacingToken|array<SpacingToken|array<array-key, mixed>>,
- *     marker?: WebkitMaskImageValue|array<WebkitMaskImageValue|array<array-key, mixed>>,
- *     markerEnd?: WebkitMaskImageValue|array<WebkitMaskImageValue|array<array-key, mixed>>,
- *     markerMid?: WebkitMaskImageValue|array<WebkitMaskImageValue|array<array-key, mixed>>,
- *     markerStart?: WebkitMaskImageValue|array<WebkitMaskImageValue|array<array-key, mixed>>,
+ *     marker?: MarkerValue|array<MarkerValue|array<array-key, mixed>>,
+ *     markerEnd?: MarkerEndValue|array<MarkerEndValue|array<array-key, mixed>>,
+ *     markerMid?: MarkerMidValue|array<MarkerMidValue|array<array-key, mixed>>,
+ *     markerStart?: MarkerStartValue|array<MarkerStartValue|array<array-key, mixed>>,
  *     mask?: MaskValue|array<MaskValue|array<array-key, mixed>>,
  *     maskBorder?: MaskBorderValue|array<MaskBorderValue|array<array-key, mixed>>,
  *     maskBorderMode?: MaskBorderModeValue|array<MaskBorderModeValue|array<array-key, mixed>>,
- *     maskBorderOutset?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
- *     maskBorderRepeat?: BorderImageRepeatValue|array<BorderImageRepeatValue|array<array-key, mixed>>,
- *     maskBorderSlice?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
- *     maskBorderSource?: WebkitMaskImageValue|array<WebkitMaskImageValue|array<array-key, mixed>>,
- *     maskBorderWidth?: AspectRatioValue|array<AspectRatioValue|array<array-key, mixed>>,
+ *     maskBorderOutset?: MaskBorderOutsetValue|array<MaskBorderOutsetValue|array<array-key, mixed>>,
+ *     maskBorderRepeat?: MaskBorderRepeatValue|array<MaskBorderRepeatValue|array<array-key, mixed>>,
+ *     maskBorderSlice?: MaskBorderSliceValue|array<MaskBorderSliceValue|array<array-key, mixed>>,
+ *     maskBorderSource?: MaskBorderSourceValue|array<MaskBorderSourceValue|array<array-key, mixed>>,
+ *     maskBorderWidth?: MaskBorderWidthValue|array<MaskBorderWidthValue|array<array-key, mixed>>,
  *     maskClip?: MaskClipValue|array<MaskClipValue|array<array-key, mixed>>,
  *     maskComposite?: MaskCompositeValue|array<MaskCompositeValue|array<array-key, mixed>>,
- *     maskImage?: WebkitMaskImageValue|array<WebkitMaskImageValue|array<array-key, mixed>>,
+ *     maskImage?: MaskImageValue|array<MaskImageValue|array<array-key, mixed>>,
  *     maskMode?: MaskModeValue|array<MaskModeValue|array<array-key, mixed>>,
  *     maskOrigin?: MaskOriginValue|array<MaskOriginValue|array<array-key, mixed>>,
- *     maskPosition?: WebkitMaskPositionValue|array<WebkitMaskPositionValue|array<array-key, mixed>>,
- *     maskRepeat?: WebkitMaskRepeatValue|array<WebkitMaskRepeatValue|array<array-key, mixed>>,
- *     maskSize?: WebkitMaskSizeValue|array<WebkitMaskSizeValue|array<array-key, mixed>>,
- *     maskType?: MaskBorderModeValue|array<MaskBorderModeValue|array<array-key, mixed>>,
+ *     maskPosition?: MaskPositionValue|array<MaskPositionValue|array<array-key, mixed>>,
+ *     maskRepeat?: MaskRepeatValue|array<MaskRepeatValue|array<array-key, mixed>>,
+ *     maskSize?: MaskSizeValue|array<MaskSizeValue|array<array-key, mixed>>,
+ *     maskType?: MaskTypeValue|array<MaskTypeValue|array<array-key, mixed>>,
  *     masonryAutoFlow?: MasonryAutoFlowValue|array<MasonryAutoFlowValue|array<array-key, mixed>>,
  *     mathDepth?: MathDepthValue|array<MathDepthValue|array<array-key, mixed>>,
  *     mathShift?: MathShiftValue|array<MathShiftValue|array<array-key, mixed>>,
- *     mathStyle?: MathShiftValue|array<MathShiftValue|array<array-key, mixed>>,
+ *     mathStyle?: MathStyleValue|array<MathStyleValue|array<array-key, mixed>>,
  *     maxBlockSize?: SizesToken|array<SizesToken|array<array-key, mixed>>,
  *     maxH?: SizesToken|array<SizesToken|array<array-key, mixed>>,
  *     maxHeight?: SizesToken|array<SizesToken|array<array-key, mixed>>,
  *     maxInlineSize?: SizesToken2|array<SizesToken2|array<array-key, mixed>>,
- *     maxLines?: WebkitLineClampValue|array<WebkitLineClampValue|array<array-key, mixed>>,
+ *     maxLines?: MaxLinesValue|array<MaxLinesValue|array<array-key, mixed>>,
  *     maxW?: SizesToken2|array<SizesToken2|array<array-key, mixed>>,
  *     maxWidth?: SizesToken2|array<SizesToken2|array<array-key, mixed>>,
  *     mb?: SpacingToken|array<SpacingToken|array<array-key, mixed>>,
@@ -1521,36 +1726,36 @@ namespace Symfony\UX\Css;
  *     mx?: SpacingToken|array<SpacingToken|array<array-key, mixed>>,
  *     my?: SpacingToken|array<SpacingToken|array<array-key, mixed>>,
  *     objectFit?: ObjectFitValue|array<ObjectFitValue|array<array-key, mixed>>,
- *     objectPosition?: WebkitMaskPositionValue|array<WebkitMaskPositionValue|array<array-key, mixed>>,
+ *     objectPosition?: ObjectPositionValue|array<ObjectPositionValue|array<array-key, mixed>>,
  *     offset?: OffsetValue|array<OffsetValue|array<array-key, mixed>>,
  *     offsetAnchor?: OffsetAnchorValue|array<OffsetAnchorValue|array<array-key, mixed>>,
- *     offsetDistance?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
+ *     offsetDistance?: OffsetDistanceValue|array<OffsetDistanceValue|array<array-key, mixed>>,
  *     offsetPath?: OffsetPathValue|array<OffsetPathValue|array<array-key, mixed>>,
  *     offsetPosition?: OffsetPositionValue|array<OffsetPositionValue|array<array-key, mixed>>,
  *     offsetRotate?: OffsetRotateValue|array<OffsetRotateValue|array<array-key, mixed>>,
- *     opacity?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
- *     order?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
- *     orphans?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
+ *     opacity?: OpacityValue|array<OpacityValue|array<array-key, mixed>>,
+ *     order?: OrderValue|array<OrderValue|array<array-key, mixed>>,
+ *     orphans?: OrphansValue|array<OrphansValue|array<array-key, mixed>>,
  *     outline?: OutlineValue|array<OutlineValue|array<array-key, mixed>>,
  *     outlineColor?: ColorsToken|array<ColorsToken|array<array-key, mixed>>,
  *     outlineOffset?: SpacingToken2|array<SpacingToken2|array<array-key, mixed>>,
  *     outlineStyle?: OutlineStyleValue|array<OutlineStyleValue|array<array-key, mixed>>,
- *     outlineWidth?: WebkitBorderBeforeWidthValue|array<WebkitBorderBeforeWidthValue|array<array-key, mixed>>,
+ *     outlineWidth?: OutlineWidthValue|array<OutlineWidthValue|array<array-key, mixed>>,
  *     overflow?: OverflowValue|array<OverflowValue|array<array-key, mixed>>,
- *     overflowAnchor?: AnimationTimelineValue|array<AnimationTimelineValue|array<array-key, mixed>>,
+ *     overflowAnchor?: OverflowAnchorValue|array<OverflowAnchorValue|array<array-key, mixed>>,
  *     overflowBlock?: OverflowBlockValue|array<OverflowBlockValue|array<array-key, mixed>>,
  *     overflowClipBox?: OverflowClipBoxValue|array<OverflowClipBoxValue|array<array-key, mixed>>,
  *     overflowClipMargin?: OverflowClipMarginValue|array<OverflowClipMarginValue|array<array-key, mixed>>,
- *     overflowInline?: OverflowBlockValue|array<OverflowBlockValue|array<array-key, mixed>>,
+ *     overflowInline?: OverflowInlineValue|array<OverflowInlineValue|array<array-key, mixed>>,
  *     overflowWrap?: OverflowWrapValue|array<OverflowWrapValue|array<array-key, mixed>>,
- *     overflowX?: OverflowValue|array<OverflowValue|array<array-key, mixed>>,
- *     overflowY?: OverflowValue|array<OverflowValue|array<array-key, mixed>>,
- *     overlay?: AnimationTimelineValue|array<AnimationTimelineValue|array<array-key, mixed>>,
+ *     overflowX?: OverflowXValue|array<OverflowXValue|array<array-key, mixed>>,
+ *     overflowY?: OverflowYValue|array<OverflowYValue|array<array-key, mixed>>,
+ *     overlay?: OverlayValue|array<OverlayValue|array<array-key, mixed>>,
  *     overscrollBehavior?: OverscrollBehaviorValue|array<OverscrollBehaviorValue|array<array-key, mixed>>,
- *     overscrollBehaviorBlock?: OverscrollBehaviorValue|array<OverscrollBehaviorValue|array<array-key, mixed>>,
- *     overscrollBehaviorInline?: OverscrollBehaviorValue|array<OverscrollBehaviorValue|array<array-key, mixed>>,
- *     overscrollBehaviorX?: OverscrollBehaviorValue|array<OverscrollBehaviorValue|array<array-key, mixed>>,
- *     overscrollBehaviorY?: OverscrollBehaviorValue|array<OverscrollBehaviorValue|array<array-key, mixed>>,
+ *     overscrollBehaviorBlock?: OverscrollBehaviorBlockValue|array<OverscrollBehaviorBlockValue|array<array-key, mixed>>,
+ *     overscrollBehaviorInline?: OverscrollBehaviorInlineValue|array<OverscrollBehaviorInlineValue|array<array-key, mixed>>,
+ *     overscrollBehaviorX?: OverscrollBehaviorXValue|array<OverscrollBehaviorXValue|array<array-key, mixed>>,
+ *     overscrollBehaviorY?: OverscrollBehaviorYValue|array<OverscrollBehaviorYValue|array<array-key, mixed>>,
  *     p?: SpacingToken2|array<SpacingToken2|array<array-key, mixed>>,
  *     padding?: SpacingToken2|array<SpacingToken2|array<array-key, mixed>>,
  *     paddingBlock?: SpacingToken2|array<SpacingToken2|array<array-key, mixed>>,
@@ -1567,26 +1772,26 @@ namespace Symfony\UX\Css;
  *     paddingTop?: SpacingToken2|array<SpacingToken2|array<array-key, mixed>>,
  *     paddingX?: SpacingToken2|array<SpacingToken2|array<array-key, mixed>>,
  *     paddingY?: SpacingToken2|array<SpacingToken2|array<array-key, mixed>>,
- *     page?: AnimationDurationValue|array<AnimationDurationValue|array<array-key, mixed>>,
+ *     page?: PageValue|array<PageValue|array<array-key, mixed>>,
  *     pageBreakAfter?: PageBreakAfterValue|array<PageBreakAfterValue|array<array-key, mixed>>,
- *     pageBreakBefore?: PageBreakAfterValue|array<PageBreakAfterValue|array<array-key, mixed>>,
+ *     pageBreakBefore?: PageBreakBeforeValue|array<PageBreakBeforeValue|array<array-key, mixed>>,
  *     pageBreakInside?: PageBreakInsideValue|array<PageBreakInsideValue|array<array-key, mixed>>,
  *     paintOrder?: PaintOrderValue|array<PaintOrderValue|array<array-key, mixed>>,
  *     pb?: SpacingToken2|array<SpacingToken2|array<array-key, mixed>>,
  *     pe?: SpacingToken2|array<SpacingToken2|array<array-key, mixed>>,
- *     perspective?: WebkitLineClampValue|array<WebkitLineClampValue|array<array-key, mixed>>,
- *     perspectiveOrigin?: WebkitMaskPositionValue|array<WebkitMaskPositionValue|array<array-key, mixed>>,
+ *     perspective?: PerspectiveValue|array<PerspectiveValue|array<array-key, mixed>>,
+ *     perspectiveOrigin?: PerspectiveOriginValue|array<PerspectiveOriginValue|array<array-key, mixed>>,
  *     pl?: SpacingToken2|array<SpacingToken2|array<array-key, mixed>>,
- *     placeContent?: AlignContentValue|array<AlignContentValue|array<array-key, mixed>>,
- *     placeItems?: AlignItemsValue|array<AlignItemsValue|array<array-key, mixed>>,
- *     placeSelf?: AlignSelfValue|array<AlignSelfValue|array<array-key, mixed>>,
+ *     placeContent?: PlaceContentValue|array<PlaceContentValue|array<array-key, mixed>>,
+ *     placeItems?: PlaceItemsValue|array<PlaceItemsValue|array<array-key, mixed>>,
+ *     placeSelf?: PlaceSelfValue|array<PlaceSelfValue|array<array-key, mixed>>,
  *     pointerEvents?: PointerEventsValue|array<PointerEventsValue|array<array-key, mixed>>,
  *     pos?: PositionValue|array<PositionValue|array<array-key, mixed>>,
  *     position?: PositionValue|array<PositionValue|array<array-key, mixed>>,
- *     positionAnchor?: AnimationDurationValue|array<AnimationDurationValue|array<array-key, mixed>>,
+ *     positionAnchor?: PositionAnchorValue|array<PositionAnchorValue|array<array-key, mixed>>,
  *     positionArea?: PositionAreaValue|array<PositionAreaValue|array<array-key, mixed>>,
  *     positionTry?: PositionTryValue|array<PositionTryValue|array<array-key, mixed>>,
- *     positionTryFallbacks?: PositionTryValue|array<PositionTryValue|array<array-key, mixed>>,
+ *     positionTryFallbacks?: PositionTryFallbacksValue|array<PositionTryFallbacksValue|array<array-key, mixed>>,
  *     positionTryOrder?: PositionTryOrderValue|array<PositionTryOrderValue|array<array-key, mixed>>,
  *     positionVisibility?: PositionVisibilityValue|array<PositionVisibilityValue|array<array-key, mixed>>,
  *     pr?: SpacingToken2|array<SpacingToken2|array<array-key, mixed>>,
@@ -1595,41 +1800,41 @@ namespace Symfony\UX\Css;
  *     pt?: SpacingToken2|array<SpacingToken2|array<array-key, mixed>>,
  *     px?: SpacingToken2|array<SpacingToken2|array<array-key, mixed>>,
  *     py?: SpacingToken2|array<SpacingToken2|array<array-key, mixed>>,
- *     quotes?: AnimationTimelineValue|array<AnimationTimelineValue|array<array-key, mixed>>,
- *     r?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
+ *     quotes?: QuotesValue|array<QuotesValue|array<array-key, mixed>>,
+ *     r?: RValue|array<RValue|array<array-key, mixed>>,
  *     resize?: ResizeValue|array<ResizeValue|array<array-key, mixed>>,
  *     right?: SpacingToken2|array<SpacingToken2|array<array-key, mixed>>,
  *     ring?: OutlineValue|array<OutlineValue|array<array-key, mixed>>,
  *     ringColor?: ColorsToken|array<ColorsToken|array<array-key, mixed>>,
  *     ringOffset?: SpacingToken2|array<SpacingToken2|array<array-key, mixed>>,
- *     ringWidth?: WebkitBorderBeforeWidthValue|array<WebkitBorderBeforeWidthValue|array<array-key, mixed>>,
+ *     ringWidth?: OutlineWidthValue|array<OutlineWidthValue|array<array-key, mixed>>,
  *     rotate?: RotateValue|array<RotateValue|array<array-key, mixed>>,
  *     rotateX?: int|float|string|array<int|float|string|array<array-key, mixed>>,
  *     rotateY?: int|float|string|array<int|float|string|array<array-key, mixed>>,
  *     rotateZ?: int|float|string|array<int|float|string|array<array-key, mixed>>,
- *     rounded?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
+ *     rounded?: BorderRadiusValue|array<BorderRadiusValue|array<array-key, mixed>>,
  *     roundedBottom?: int|float|string|array<int|float|string|array<array-key, mixed>>,
- *     roundedBottomLeft?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
- *     roundedBottomRight?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
+ *     roundedBottomLeft?: BorderBottomLeftRadiusValue|array<BorderBottomLeftRadiusValue|array<array-key, mixed>>,
+ *     roundedBottomRight?: BorderBottomRightRadiusValue|array<BorderBottomRightRadiusValue|array<array-key, mixed>>,
  *     roundedEnd?: int|float|string|array<int|float|string|array<array-key, mixed>>,
- *     roundedEndEnd?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
- *     roundedEndStart?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
+ *     roundedEndEnd?: BorderEndEndRadiusValue|array<BorderEndEndRadiusValue|array<array-key, mixed>>,
+ *     roundedEndStart?: BorderEndStartRadiusValue|array<BorderEndStartRadiusValue|array<array-key, mixed>>,
  *     roundedLeft?: int|float|string|array<int|float|string|array<array-key, mixed>>,
  *     roundedRight?: int|float|string|array<int|float|string|array<array-key, mixed>>,
  *     roundedStart?: int|float|string|array<int|float|string|array<array-key, mixed>>,
- *     roundedStartEnd?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
- *     roundedStartStart?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
+ *     roundedStartEnd?: BorderStartEndRadiusValue|array<BorderStartEndRadiusValue|array<array-key, mixed>>,
+ *     roundedStartStart?: BorderStartStartRadiusValue|array<BorderStartStartRadiusValue|array<array-key, mixed>>,
  *     roundedTop?: int|float|string|array<int|float|string|array<array-key, mixed>>,
- *     roundedTopLeft?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
- *     roundedTopRight?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
+ *     roundedTopLeft?: BorderTopLeftRadiusValue|array<BorderTopLeftRadiusValue|array<array-key, mixed>>,
+ *     roundedTopRight?: BorderTopRightRadiusValue|array<BorderTopRightRadiusValue|array<array-key, mixed>>,
  *     rowGap?: SpacingToken2|array<SpacingToken2|array<array-key, mixed>>,
  *     rubyAlign?: RubyAlignValue|array<RubyAlignValue|array<array-key, mixed>>,
  *     rubyMerge?: RubyMergeValue|array<RubyMergeValue|array<array-key, mixed>>,
  *     rubyPosition?: RubyPositionValue|array<RubyPositionValue|array<array-key, mixed>>,
- *     rx?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
- *     ry?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
+ *     rx?: RxValue|array<RxValue|array<array-key, mixed>>,
+ *     ry?: RyValue|array<RyValue|array<array-key, mixed>>,
  *     saturate?: int|float|string|array<int|float|string|array<array-key, mixed>>,
- *     scale?: BackdropFilterValue|array<BackdropFilterValue|array<array-key, mixed>>,
+ *     scale?: ScaleValue|array<ScaleValue|array<array-key, mixed>>,
  *     scaleX?: int|float|string|array<int|float|string|array<array-key, mixed>>,
  *     scaleY?: int|float|string|array<int|float|string|array<array-key, mixed>>,
  *     scrollBehavior?: ScrollBehaviorValue|array<ScrollBehaviorValue|array<array-key, mixed>>,
@@ -1661,48 +1866,48 @@ namespace Symfony\UX\Css;
  *     scrollPaddingY?: SpacingToken2|array<SpacingToken2|array<array-key, mixed>>,
  *     scrollSnapAlign?: ScrollSnapAlignValue|array<ScrollSnapAlignValue|array<array-key, mixed>>,
  *     scrollSnapCoordinate?: ScrollSnapCoordinateValue|array<ScrollSnapCoordinateValue|array<array-key, mixed>>,
- *     scrollSnapDestination?: WebkitMaskPositionValue|array<WebkitMaskPositionValue|array<array-key, mixed>>,
+ *     scrollSnapDestination?: ScrollSnapDestinationValue|array<ScrollSnapDestinationValue|array<array-key, mixed>>,
  *     scrollSnapMargin?: SpacingToken2|array<SpacingToken2|array<array-key, mixed>>,
  *     scrollSnapMarginBottom?: SpacingToken2|array<SpacingToken2|array<array-key, mixed>>,
  *     scrollSnapMarginLeft?: SpacingToken2|array<SpacingToken2|array<array-key, mixed>>,
  *     scrollSnapMarginRight?: SpacingToken2|array<SpacingToken2|array<array-key, mixed>>,
  *     scrollSnapMarginTop?: SpacingToken2|array<SpacingToken2|array<array-key, mixed>>,
- *     scrollSnapPointsX?: WebkitMaskImageValue|array<WebkitMaskImageValue|array<array-key, mixed>>,
- *     scrollSnapPointsY?: WebkitMaskImageValue|array<WebkitMaskImageValue|array<array-key, mixed>>,
+ *     scrollSnapPointsX?: ScrollSnapPointsXValue|array<ScrollSnapPointsXValue|array<array-key, mixed>>,
+ *     scrollSnapPointsY?: ScrollSnapPointsYValue|array<ScrollSnapPointsYValue|array<array-key, mixed>>,
  *     scrollSnapStop?: ScrollSnapStopValue|array<ScrollSnapStopValue|array<array-key, mixed>>,
  *     scrollSnapStrictness?: ScrollSnapStrictnessValue|array<ScrollSnapStrictnessValue|array<array-key, mixed>>,
  *     scrollSnapType?: ScrollSnapTypeValue|array<ScrollSnapTypeValue|array<array-key, mixed>>,
  *     scrollSnapTypeX?: ScrollSnapTypeXValue|array<ScrollSnapTypeXValue|array<array-key, mixed>>,
- *     scrollSnapTypeY?: ScrollSnapTypeXValue|array<ScrollSnapTypeXValue|array<array-key, mixed>>,
- *     scrollTimeline?: WebkitMaskImageValue|array<WebkitMaskImageValue|array<array-key, mixed>>,
+ *     scrollSnapTypeY?: ScrollSnapTypeYValue|array<ScrollSnapTypeYValue|array<array-key, mixed>>,
+ *     scrollTimeline?: ScrollTimelineValue|array<ScrollTimelineValue|array<array-key, mixed>>,
  *     scrollTimelineAxis?: ScrollTimelineAxisValue|array<ScrollTimelineAxisValue|array<array-key, mixed>>,
- *     scrollTimelineName?: WebkitMaskImageValue|array<WebkitMaskImageValue|array<array-key, mixed>>,
+ *     scrollTimelineName?: ScrollTimelineNameValue|array<ScrollTimelineNameValue|array<array-key, mixed>>,
  *     scrollbar?: ScrollbarValue|array<ScrollbarValue|array<array-key, mixed>>,
  *     scrollbarColor?: ColorsToken|array<ColorsToken|array<array-key, mixed>>,
  *     scrollbarGutter?: ScrollbarGutterValue|array<ScrollbarGutterValue|array<array-key, mixed>>,
  *     scrollbarWidth?: SizesToken4|array<SizesToken4|array<array-key, mixed>>,
  *     sepia?: int|float|string|array<int|float|string|array<array-key, mixed>>,
- *     shadow?: WebkitMaskImageValue|array<WebkitMaskImageValue|array<array-key, mixed>>,
+ *     shadow?: BoxShadowValue|array<BoxShadowValue|array<array-key, mixed>>,
  *     shadowColor?: ColorsToken|array<ColorsToken|array<array-key, mixed>>,
- *     shapeImageThreshold?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
- *     shapeMargin?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
+ *     shapeImageThreshold?: ShapeImageThresholdValue|array<ShapeImageThresholdValue|array<array-key, mixed>>,
+ *     shapeMargin?: ShapeMarginValue|array<ShapeMarginValue|array<array-key, mixed>>,
  *     shapeOutside?: ShapeOutsideValue|array<ShapeOutsideValue|array<array-key, mixed>>,
  *     shapeRendering?: ShapeRenderingValue|array<ShapeRenderingValue|array<array-key, mixed>>,
  *     spaceX?: SpacingToken|array<SpacingToken|array<array-key, mixed>>,
  *     spaceY?: SpacingToken|array<SpacingToken|array<array-key, mixed>>,
  *     srOnly?: bool|string|array<bool|string|array<array-key, mixed>>,
  *     start?: SpacingToken2|array<SpacingToken2|array<array-key, mixed>>,
- *     stopColor?: WebkitBorderBeforeColorValue|array<WebkitBorderBeforeColorValue|array<array-key, mixed>>,
- *     stopOpacity?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
+ *     stopColor?: StopColorValue|array<StopColorValue|array<array-key, mixed>>,
+ *     stopOpacity?: StopOpacityValue|array<StopOpacityValue|array<array-key, mixed>>,
  *     stroke?: ColorsToken|array<ColorsToken|array<array-key, mixed>>,
- *     strokeDasharray?: WebkitLineClampValue|array<WebkitLineClampValue|array<array-key, mixed>>,
- *     strokeDashoffset?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
+ *     strokeDasharray?: StrokeDasharrayValue|array<StrokeDasharrayValue|array<array-key, mixed>>,
+ *     strokeDashoffset?: StrokeDashoffsetValue|array<StrokeDashoffsetValue|array<array-key, mixed>>,
  *     strokeLinecap?: StrokeLinecapValue|array<StrokeLinecapValue|array<array-key, mixed>>,
  *     strokeLinejoin?: StrokeLinejoinValue|array<StrokeLinejoinValue|array<array-key, mixed>>,
- *     strokeMiterlimit?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
- *     strokeOpacity?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
- *     strokeWidth?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
- *     tabSize?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
+ *     strokeMiterlimit?: StrokeMiterlimitValue|array<StrokeMiterlimitValue|array<array-key, mixed>>,
+ *     strokeOpacity?: StrokeOpacityValue|array<StrokeOpacityValue|array<array-key, mixed>>,
+ *     strokeWidth?: StrokeWidthValue|array<StrokeWidthValue|array<array-key, mixed>>,
+ *     tabSize?: TabSizeValue|array<TabSizeValue|array<array-key, mixed>>,
  *     tableLayout?: TableLayoutValue|array<TableLayoutValue|array<array-key, mixed>>,
  *     textAlign?: TextAlignValue|array<TextAlignValue|array<array-key, mixed>>,
  *     textAlignLast?: TextAlignLastValue|array<TextAlignLastValue|array<array-key, mixed>>,
@@ -1728,30 +1933,30 @@ namespace Symfony\UX\Css;
  *     textOrientation?: TextOrientationValue|array<TextOrientationValue|array<array-key, mixed>>,
  *     textOverflow?: TextOverflowValue|array<TextOverflowValue|array<array-key, mixed>>,
  *     textRendering?: TextRenderingValue|array<TextRenderingValue|array<array-key, mixed>>,
- *     textShadow?: WebkitMaskImageValue|array<WebkitMaskImageValue|array<array-key, mixed>>,
+ *     textShadow?: TextShadowValue|array<TextShadowValue|array<array-key, mixed>>,
  *     textShadowColor?: ColorsToken|array<ColorsToken|array<array-key, mixed>>,
- *     textSizeAdjust?: AnimationTimelineValue|array<AnimationTimelineValue|array<array-key, mixed>>,
+ *     textSizeAdjust?: TextSizeAdjustValue|array<TextSizeAdjustValue|array<array-key, mixed>>,
  *     textSpacingTrim?: TextSpacingTrimValue|array<TextSpacingTrimValue|array<array-key, mixed>>,
  *     textTransform?: TextTransformValue|array<TextTransformValue|array<array-key, mixed>>,
- *     textUnderlineOffset?: AspectRatioValue|array<AspectRatioValue|array<array-key, mixed>>,
+ *     textUnderlineOffset?: TextUnderlineOffsetValue|array<TextUnderlineOffsetValue|array<array-key, mixed>>,
  *     textUnderlinePosition?: TextUnderlinePositionValue|array<TextUnderlinePositionValue|array<array-key, mixed>>,
  *     textWrap?: TextWrapValue|array<TextWrapValue|array<array-key, mixed>>,
  *     textWrapMode?: TextWrapModeValue|array<TextWrapModeValue|array<array-key, mixed>>,
  *     textWrapStyle?: TextWrapStyleValue|array<TextWrapStyleValue|array<array-key, mixed>>,
- *     timelineScope?: WebkitMaskImageValue|array<WebkitMaskImageValue|array<array-key, mixed>>,
+ *     timelineScope?: TimelineScopeValue|array<TimelineScopeValue|array<array-key, mixed>>,
  *     top?: SpacingToken2|array<SpacingToken2|array<array-key, mixed>>,
  *     touchAction?: TouchActionValue|array<TouchActionValue|array<array-key, mixed>>,
- *     transform?: WebkitMaskImageValue|array<WebkitMaskImageValue|array<array-key, mixed>>,
+ *     transform?: TransformValue|array<TransformValue|array<array-key, mixed>>,
  *     transformBox?: TransformBoxValue|array<TransformBoxValue|array<array-key, mixed>>,
- *     transformOrigin?: WebkitMaskPositionValue|array<WebkitMaskPositionValue|array<array-key, mixed>>,
+ *     transformOrigin?: TransformOriginValue|array<TransformOriginValue|array<array-key, mixed>>,
  *     transformStyle?: TransformStyleValue|array<TransformStyleValue|array<array-key, mixed>>,
  *     transition?: TransitionValue|array<TransitionValue|array<array-key, mixed>>,
  *     transitionBehavior?: TransitionBehaviorValue|array<TransitionBehaviorValue|array<array-key, mixed>>,
- *     transitionDelay?: AllValue|array<AllValue|array<array-key, mixed>>,
- *     transitionDuration?: AllValue|array<AllValue|array<array-key, mixed>>,
+ *     transitionDelay?: TransitionDelayValue|array<TransitionDelayValue|array<array-key, mixed>>,
+ *     transitionDuration?: TransitionDurationValue|array<TransitionDurationValue|array<array-key, mixed>>,
  *     transitionProperty?: TransitionPropertyValue|array<TransitionPropertyValue|array<array-key, mixed>>,
- *     transitionTimingFunction?: AnimationTimingFunctionValue|array<AnimationTimingFunctionValue|array<array-key, mixed>>,
- *     translate?: RotateValue|array<RotateValue|array<array-key, mixed>>,
+ *     transitionTimingFunction?: TransitionTimingFunctionValue|array<TransitionTimingFunctionValue|array<array-key, mixed>>,
+ *     translate?: TranslateValue|array<TranslateValue|array<array-key, mixed>>,
  *     translateX?: SpacingToken3|array<SpacingToken3|array<array-key, mixed>>,
  *     translateY?: SpacingToken3|array<SpacingToken3|array<array-key, mixed>>,
  *     translateZ?: SpacingToken3|array<SpacingToken3|array<array-key, mixed>>,
@@ -1760,26 +1965,26 @@ namespace Symfony\UX\Css;
  *     userSelect?: UserSelectValue|array<UserSelectValue|array<array-key, mixed>>,
  *     vectorEffect?: VectorEffectValue|array<VectorEffectValue|array<array-key, mixed>>,
  *     verticalAlign?: VerticalAlignValue|array<VerticalAlignValue|array<array-key, mixed>>,
- *     viewTimeline?: WebkitMaskImageValue|array<WebkitMaskImageValue|array<array-key, mixed>>,
- *     viewTimelineAxis?: ScrollTimelineAxisValue|array<ScrollTimelineAxisValue|array<array-key, mixed>>,
- *     viewTimelineInset?: AspectRatioValue|array<AspectRatioValue|array<array-key, mixed>>,
- *     viewTimelineName?: WebkitMaskImageValue|array<WebkitMaskImageValue|array<array-key, mixed>>,
+ *     viewTimeline?: ViewTimelineValue|array<ViewTimelineValue|array<array-key, mixed>>,
+ *     viewTimelineAxis?: ViewTimelineAxisValue|array<ViewTimelineAxisValue|array<array-key, mixed>>,
+ *     viewTimelineInset?: ViewTimelineInsetValue|array<ViewTimelineInsetValue|array<array-key, mixed>>,
+ *     viewTimelineName?: ViewTimelineNameValue|array<ViewTimelineNameValue|array<array-key, mixed>>,
  *     viewTransitionName?: ViewTransitionNameValue|array<ViewTransitionNameValue|array<array-key, mixed>>,
  *     visibility?: VisibilityValue|array<VisibilityValue|array<array-key, mixed>>,
  *     w?: SizesToken2|array<SizesToken2|array<array-key, mixed>>,
  *     whiteSpace?: WhiteSpaceValue|array<WhiteSpaceValue|array<array-key, mixed>>,
  *     whiteSpaceCollapse?: WhiteSpaceCollapseValue|array<WhiteSpaceCollapseValue|array<array-key, mixed>>,
- *     widows?: WebkitTextStrokeWidthValue|array<WebkitTextStrokeWidthValue|array<array-key, mixed>>,
+ *     widows?: WidowsValue|array<WidowsValue|array<array-key, mixed>>,
  *     width?: SizesToken2|array<SizesToken2|array<array-key, mixed>>,
  *     willChange?: WillChangeValue|array<WillChangeValue|array<array-key, mixed>>,
  *     wordBreak?: WordBreakValue|array<WordBreakValue|array<array-key, mixed>>,
- *     wordSpacing?: InitialLetterValue|array<InitialLetterValue|array<array-key, mixed>>,
+ *     wordSpacing?: WordSpacingValue|array<WordSpacingValue|array<array-key, mixed>>,
  *     wordWrap?: WordWrapValue|array<WordWrapValue|array<array-key, mixed>>,
  *     writingMode?: WritingModeValue|array<WritingModeValue|array<array-key, mixed>>,
  *     x?: SpacingToken3|array<SpacingToken3|array<array-key, mixed>>,
  *     y?: SpacingToken3|array<SpacingToken3|array<array-key, mixed>>,
  *     z?: SpacingToken3|array<SpacingToken3|array<array-key, mixed>>,
- *     zIndex?: AspectRatioValue|array<AspectRatioValue|array<array-key, mixed>>,
+ *     zIndex?: ZIndexValue|array<ZIndexValue|array<array-key, mixed>>,
  *     zoom?: ZoomValue|array<ZoomValue|array<array-key, mixed>>,
  *     "@/2xl"?: array<string, mixed>,
  *     "@/3xl"?: array<string, mixed>,
