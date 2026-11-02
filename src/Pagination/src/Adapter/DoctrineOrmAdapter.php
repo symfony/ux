@@ -15,6 +15,8 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Types\Type;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Query\Expr\Join;
+use Doctrine\ORM\Query\Parameter;
+use Doctrine\ORM\Query\Parser;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator as DoctrinePaginator;
 use Symfony\Bridge\Doctrine\Types\AbstractUidType;
@@ -89,6 +91,8 @@ final class DoctrineOrmAdapter implements OffsetAdapterInterface, LookaheadAdapt
             : \sprintf('COUNT(%s)', $alias);
 
         $qb->select($countExpr);
+
+        $this->unbindUnusedParameters($qb);
 
         return (int) $qb->getQuery()->getSingleScalarResult();
     }
@@ -602,5 +606,17 @@ final class DoctrineOrmAdapter implements OffsetAdapterInterface, LookaheadAdapt
         }
 
         return array_values($identifiers);
+    }
+
+    private function unbindUnusedParameters(QueryBuilder $queryBuilder): void
+    {
+        if ($queryBuilder->getParameters()->isEmpty()) {
+            return;
+        }
+
+        $mappings = new Parser($queryBuilder->getQuery())->parse()->getParameterMappings();
+        $queryBuilder->setParameters($queryBuilder->getParameters()->filter(
+            static fn (Parameter $parameter): bool => \array_key_exists($parameter->getName(), $mappings),
+        ));
     }
 }
