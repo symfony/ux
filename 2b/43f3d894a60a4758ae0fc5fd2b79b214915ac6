@@ -1,0 +1,23 @@
+---------------------------------------------------------------------------
+
+by github-actions[bot] at 2026-10-30T12:59:22Z
+
+<h1>📊 Packages dist files size difference</h1>
+
+Thanks for the PR! Here is the difference in size of the packages dist files between the base branch and the PR.
+Please review the changes and make sure they are expected.
+
+<table>
+    <thead><tr><th>File</th><th>Before (Size / Gzip)</th><th>After (Size / Gzip)</th></tr></thead>
+    <tbody><tr><td colspan="3"><a href="https://github.com/ker0x/symfony-ux/tree/turbo-permanent-stream-source/src/Turbo/assets/dist"><b>Turbo</b></a></td></tr><tr>
+                <td><a href="https://github.com/ker0x/symfony-ux/blob/turbo-permanent-stream-source/src/Turbo/assets/dist/mercure_stream_source_element.js"><code>mercure_stream_source_element.js</code></a></td>
+            <td>
+                    <code>1.23 kB</code>
+                    / <code>556 B</code>
+                </td><td>
+                    <code>1.53 kB</code><sup>+25% 📈</sup>
+                    / <code>623 B</code><sup>+12% 📈</sup>
+                </td></tr></tbody>
+</table>
+
+<!-- Sticky Pull Request Comment -->
