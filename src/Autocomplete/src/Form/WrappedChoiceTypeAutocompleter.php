@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\Autocomplete\Form;
 
+use Symfony\Component\Form\ChoiceList\View\ChoiceGroupView;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Contracts\Service\ResetInterface;
@@ -40,6 +41,7 @@ final class WrappedChoiceTypeAutocompleter implements OptionsAwareAutocompleterI
         $form = $this->getForm();
 
         $choices = $this->getChoicesFromForm($form);
+        $choices = $this->orderPreferredChoicesFirst($form, $choices);
 
         // Filter choices by query (case-insensitive string matching on labels)
         if ('' !== $query) {
@@ -85,5 +87,31 @@ final class WrappedChoiceTypeAutocompleter implements OptionsAwareAutocompleterI
     private function getMaxResults(): ?int
     {
         return $this->getForm()->getConfig()->getOption('max_results');
+    }
+
+    /**
+     * @param list<array{text: string, value: mixed}> $choices
+     *
+     * @return list<array{text: string, value: mixed}>
+     */
+    private function orderPreferredChoicesFirst(FormInterface $form, array $choices): array
+    {
+        if (!$form->getConfig()->getOption('preferred_choices')) {
+            return $choices;
+        }
+
+        $choicesByValue = array_column($choices, null, 'value');
+        $preferredChoices = [];
+
+        foreach ($form->createView()->vars['preferred_choices'] ?? [] as $view) {
+            foreach ($view instanceof ChoiceGroupView ? $view->choices : [$view] as $choiceView) {
+                if (isset($choicesByValue[$choiceView->value])) {
+                    $preferredChoices[] = $choicesByValue[$choiceView->value];
+                    unset($choicesByValue[$choiceView->value]);
+                }
+            }
+        }
+
+        return [...$preferredChoices, ...array_values($choicesByValue)];
     }
 }

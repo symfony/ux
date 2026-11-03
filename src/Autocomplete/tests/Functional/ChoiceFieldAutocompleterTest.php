@@ -66,6 +66,23 @@ class ChoiceFieldAutocompleterTest extends KernelTestCase
         ;
     }
 
+    public function testItListsPreferredChoicesFirst(): void
+    {
+        $this->browser()
+            ->throwExceptions()
+            ->get('/test/autocomplete/color_with_preferred_choices_autocomplete_type')
+            ->assertSuccessful()
+            ->assertJsonMatches('results[*].text', ['Pink', 'Blue', 'Red'])
+            ->get('/test/autocomplete/color_with_preferred_choices_autocomplete_type?page=2')
+            ->assertSuccessful()
+            ->assertJsonMatches('results[*].text', ['Green', 'Yellow', 'Orange'])
+            ->assertJsonMatches('next_page', null)
+            ->get('/test/autocomplete/color_with_preferred_choices_autocomplete_type?query=n')
+            ->assertSuccessful()
+            ->assertJsonMatches('results[*].text', ['Pink', 'Green', 'Orange'])
+        ;
+    }
+
     public function testItIsCaseInsensitive(): void
     {
         $this->browser()
