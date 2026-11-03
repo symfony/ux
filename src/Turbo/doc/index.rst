@@ -471,6 +471,14 @@ This renders a minimal HTML document:
         </body>
     </html>
 
+.. caution::
+
+    When a frame navigation is promoted to a page visit with ``data-turbo-action="advance"`` or ``"replace"``, Turbo 8 merges the ``<head>`` and the ``lang`` and ``dir`` attributes of the response into the page.
+    With this minimal layout, the page then loses its ``<title>``, its ``<meta>`` and ``<link>`` tags, and its ``lang`` attribute.
+    Turbo skips this merge when the page has elements marked with ``data-turbo-track`` that the response does not have.
+    With AssetMapper, UX Turbo adds ``data-turbo-track="reload"`` to the importmap scripts, so your app is not affected.
+    With other setups (Webpack Encore for example), add ``data-turbo-track="reload"`` to your script tags, or render the full layout for the frames you promote to a visit.
+
 Turbo Streams
 ~~~~~~~~~~~~~
 
