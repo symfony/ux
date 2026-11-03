@@ -401,6 +401,57 @@ extra option in the default ``query_builder`` of the ``FoodAutocompleteField``::
         }
     }
 
+.. _preferred-choices-in-the-ajax-powered-autocomplete:
+
+Preferred Choices in the Ajax-powered Autocomplete
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. versionadded:: 3.7
+
+    Support for the ``preferred_choices`` option in Ajax-powered fields was added in Autocomplete 3.7.
+
+The Ajax endpoint lists the choices of the ``preferred_choices`` option first, in the order of that option.
+The other results come after them.
+This applies to every page of results and also while the user searches.
+
+Like the other options, ``preferred_choices`` must be set in the autocomplete field class itself, not when adding the field to a form.
+Options passed to ``add()`` are not available during the Ajax call.
+See :ref:`Passing Extra Options to the Ajax-powered Autocomplete <passing-extra-options-to-the-ajax-powered-autocomplete>` for details, and use ``extra_options`` if the preferred choices depend on the form::
+
+    // src/Form/FoodAutocompleteField.php
+    // ...
+
+    #[AsEntityAutocompleteField]
+    class FoodAutocompleteField extends AbstractType
+    {
+        public function __construct(
+            private FoodRepository $foodRepository,
+        ) {
+        }
+
+        public function configureOptions(OptionsResolver $resolver): void
+        {
+            $resolver->setDefaults([
+                // ...
+                'preferred_choices' => function (Options $options) {
+                    return $this->foodRepository->findBy(['favorite' => true]);
+                },
+            ]);
+        }
+
+        public function getParent(): string
+        {
+            return BaseEntityAutocompleteType::class;
+        }
+    }
+
+.. note::
+
+    For fields whose ``getParent()`` returns ``BaseEntityAutocompleteType``, the database query sorts the results.
+    So ``preferred_choices`` must be an array of entities.
+    A callable or a property path is ignored.
+    Fields based on ``AutocompleteChoiceType`` accept every form of ``preferred_choices`` that the ``ChoiceType`` accepts.
+
 Usage in a Form (Ajax with Any Data Source)
 -------------------------------------------
 

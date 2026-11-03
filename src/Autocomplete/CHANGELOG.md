@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 3.7.0
+
+- Support the `preferred_choices` option in Ajax-powered fields: the preferred choices are listed first
+
 ## 3.5
 
 - Add support for Symfony 8.2's standalone `AssetMapperBundle`

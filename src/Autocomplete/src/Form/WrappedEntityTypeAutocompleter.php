@@ -59,7 +59,7 @@ final class WrappedEntityTypeAutocompleter implements OptionsAwareEntityAutocomp
         if ($filterQuery = $this->getFilterQuery()) {
             $filterQuery($queryBuilder, $query, $repository);
 
-            return $queryBuilder;
+            return $this->orderPreferredChoicesFirst($queryBuilder);
         }
 
         // Applying max result limit or not
@@ -67,7 +67,7 @@ final class WrappedEntityTypeAutocompleter implements OptionsAwareEntityAutocomp
 
         // avoid filtering if there is no query
         if (!$query) {
-            return $queryBuilder;
+            return $this->orderPreferredChoicesFirst($queryBuilder);
         }
 
         $this->entitySearchUtil->addSearchClause(
@@ -77,7 +77,7 @@ final class WrappedEntityTypeAutocompleter implements OptionsAwareEntityAutocomp
             $this->getSearchableFields()
         );
 
-        return $queryBuilder;
+        return $this->orderPreferredChoicesFirst($queryBuilder);
     }
 
     public function getLabel(object $entity): string
@@ -177,5 +177,45 @@ final class WrappedEntityTypeAutocompleter implements OptionsAwareEntityAutocomp
         }
 
         return $this->entityMetadata;
+    }
+
+    private function orderPreferredChoicesFirst(QueryBuilder $queryBuilder): QueryBuilder
+    {
+        $preferredChoices = $this->getFormOption('preferred_choices');
+
+        // a callable or a property path cannot be translated into the query
+        if (!is_iterable($preferredChoices) || \is_callable($preferredChoices)) {
+            return $queryBuilder;
+        }
+
+        $entityClass = $this->getEntityClass();
+        $preferredChoices = array_values(array_filter(
+            iterator_to_array($preferredChoices, false),
+            static fn (mixed $choice): bool => $choice instanceof $entityClass,
+        ));
+
+        if (!$preferredChoices) {
+            return $queryBuilder;
+        }
+
+        $rootAlias = $queryBuilder->getRootAliases()[0];
+        $whenClauses = '';
+
+        foreach ($preferredChoices as $position => $preferredChoice) {
+            $whenClauses .= \sprintf(' WHEN %s = :ux_autocomplete_preferred_choice_%d THEN %d', $rootAlias, $position, $position);
+            $queryBuilder->setParameter('ux_autocomplete_preferred_choice_'.$position, $preferredChoice);
+        }
+
+        $orderBy = $queryBuilder->getDQLPart('orderBy');
+
+        $queryBuilder
+            ->addSelect(\sprintf('CASE%s ELSE %d END AS HIDDEN ux_autocomplete_preferred_choices_order', $whenClauses, \count($preferredChoices)))
+            ->orderBy('ux_autocomplete_preferred_choices_order');
+
+        foreach ($orderBy as $orderByPart) {
+            $queryBuilder->addOrderBy($orderByPart);
+        }
+
+        return $queryBuilder;
     }
 }

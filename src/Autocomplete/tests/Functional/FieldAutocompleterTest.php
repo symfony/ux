@@ -63,6 +63,28 @@ class FieldAutocompleterTest extends KernelTestCase
         ;
     }
 
+    public function testItListsPreferredChoicesFirst(): void
+    {
+        CategoryFactory::createOne(['name' => 'foo alpha', 'code' => 'alpha']);
+        CategoryFactory::createOne(['name' => 'foo bravo', 'code' => 'preferred']);
+        CategoryFactory::createOne(['name' => 'bar charlie', 'code' => 'charlie']);
+        CategoryFactory::createOne(['name' => 'bar delta', 'code' => 'preferred']);
+
+        $this->browser()
+            ->throwExceptions()
+            ->get('/test/autocomplete/category_with_preferred_choices_autocomplete_type')
+            ->assertSuccessful()
+            ->assertJsonMatches('results[*].text', ['foo bravo', 'bar delta'])
+            ->get('/test/autocomplete/category_with_preferred_choices_autocomplete_type?page=2')
+            ->assertSuccessful()
+            ->assertJsonMatches('results[*].text', ['bar charlie', 'foo alpha'])
+            ->assertJsonMatches('next_page', null)
+            ->get('/test/autocomplete/category_with_preferred_choices_autocomplete_type?query=foo')
+            ->assertSuccessful()
+            ->assertJsonMatches('results[*].text', ['foo bravo', 'foo alpha'])
+        ;
+    }
+
     public function testItEnforcesSecurity(): void
     {
         CategoryFactory::createMany(3, [
