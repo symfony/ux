@@ -3,6 +3,7 @@
 ## 3.7.0
 
 - Fix the pre-lexer only recognizing one spelling of `{% block %}`, `{% endblock %}` and `{% embed %}` inside a component (whitespace control, extra or missing spaces, named `{% endblock name %}`)
+- Add `<twig:Alert :message />` as a shorthand for `:message="message"` when the prop name matches the variable name
 
 ## 3.6.0
 
