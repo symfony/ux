@@ -147,7 +147,7 @@ final class UXPaginationExtensionTest extends TestCase
         self::assertSame(NavigationMode::Fixed, $paginator->getArgument('$defaultNavigationMode'));
         self::assertSame(7, $paginator->getArgument('$defaultNavigationSize'));
         self::assertSame('ux_pagination.paginator.blog', (string) $container->getAlias(PaginatorInterface::class.' $blogPaginator'));
-        self::assertSame(PaginatorInterface::class.' $blogPaginator', (string) $container->getAlias('.'.PaginatorInterface::class.' $blog'));
+        self::assertSame($paginator, $container->findDefinition('.'.PaginatorInterface::class.' $blog'));
     }
 
     public function testNamedPaginatorInjectionSupportsEveryPublicEntryPoint(): void
