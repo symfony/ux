@@ -1104,6 +1104,9 @@ You can also use the ``turbo_stream_from()`` Twig function directly:
     {{ turbo_stream_from('chat', private: true) }}
     {{ turbo_stream_from('App\\Entity\\Book', transport: 'hub2') }}
 
+Rendering HTML Attributes
+"""""""""""""""""""""""""
+
 .. versionadded:: 3.7
 
     HTML attributes on ``<twig:Turbo:Stream:From>`` and the ``attributes`` argument of ``turbo_stream_from()`` were introduced in Symfony UX 3.7.
@@ -1124,16 +1127,8 @@ If your app does not have it, run ``composer require twig/html-extra``.
 The ``src`` and ``private`` attributes are reserved: ``src`` is built from the topics, and ``private`` comes from the ``private`` argument.
 With a :doc:`custom transport <custom-transport>`, the attributes are rendered only if its stream source renderer supports them.
 
-.. versionadded:: 3.6
-
-    Support for the Mercure protocol 1.0 was introduced in Symfony UX 3.6.
-
-When the hub speaks the Mercure protocol 1.0 (``protocol_version: '1.0'`` in the
-MercureBundle configuration, the default since 0.6), ``turbo_stream_from()``
-subscribes with the query parameters of this protocol, and listening to every
-entity of a class uses a URL Pattern
-(``https://symfony.com/ux-turbo/App%5CEntity%5CBook/:id``). The deprecated
-``turbo_stream_listen()`` function does not support this protocol.
+Keeping the Connection Across Pages
+"""""""""""""""""""""""""""""""""""
 
 By default, each page opens its own connection to the hub, even when it listens to the same topics as the previous page.
 To keep the connection open when Turbo Drive goes from one page to another, give the stream source an ``id`` and mark it as permanent with ``data-turbo-permanent``:
@@ -1145,6 +1140,46 @@ To keep the connection open when Turbo Drive goes from one page to another, give
 Turbo matches permanent elements across pages by their ``id`` only, and keeps the element of the previous page.
 Derive the ``id`` from the topics and from the ``private`` option (e.g. ``private-chat-stream``).
 Otherwise, a page that listens to other topics, or that is not private, keeps the connection of the previous page, with its topics and its credentials.
+
+Granting More Topics to Private Stream Sources
+""""""""""""""""""""""""""""""""""""""""""""""
+
+.. versionadded:: 3.7
+
+    The ``subscribe`` option was introduced in Symfony UX 3.7.
+
+A private stream source sets the Mercure authorization cookie, which grants the topics it listens to.
+The browser keeps one such cookie per hub, so the last page rendered decides what every open page can receive.
+For example, opening a page that listens to ``news`` revokes ``chat`` for a tab still open on a page that listens to ``chat``, as soon as its connection to the hub reconnects.
+To grant the same topics on every page, pass the topics the user can subscribe to in the ``subscribe`` option.
+The cookie grants them in addition to the listened topics:
+
+.. code-block:: html+twig
+
+    <twig:Turbo:Stream:From topics="chat" private :subscribe="['chat', 'news']" />
+
+    {{ turbo_stream_from('news', private: true, subscribe: ['chat', 'news']) }}
+
+The ``subscribe`` option takes the same values as ``topics``, and needs ``private``.
+
+.. note::
+
+    symfony/mercure 0.9 and earlier set the authorization cookie once per request, so a page cannot have two private stream sources for the same hub.
+    With these versions, use a single private stream source that listens to all the topics of the page.
+
+Mercure Protocol 1.0
+""""""""""""""""""""
+
+.. versionadded:: 3.6
+
+    Support for the Mercure protocol 1.0 was introduced in Symfony UX 3.6.
+
+When the hub speaks the Mercure protocol 1.0 (``protocol_version: '1.0'`` in the
+MercureBundle configuration, the default since 0.6), ``turbo_stream_from()``
+subscribes with the query parameters of this protocol, and listening to every
+entity of a class uses a URL Pattern
+(``https://symfony.com/ux-turbo/App%5CEntity%5CBook/:id``). The deprecated
+``turbo_stream_listen()`` function does not support this protocol.
 
 Broadcast Doctrine Entities Update
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
