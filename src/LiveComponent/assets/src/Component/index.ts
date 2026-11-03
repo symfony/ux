@@ -623,9 +623,7 @@ export default class Component {
         }
 
         const closeModal = (modal: HTMLElement | null) => {
-            if (modal) {
-                modal.outerHTML = '';
-            }
+            modal?.remove();
             document.body.style.overflow = 'visible';
         };
 

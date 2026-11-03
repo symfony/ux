@@ -124,6 +124,44 @@ describe('LiveController Error Handling', () => {
         expect(test.element).toHaveTextContent('Original component text');
     });
 
+    it('closing the error modal twice does not throw', async () => {
+        const test = await createTest(
+            {},
+            (data: any) => `
+            <div ${initComponent(data)}>
+                <button data-action="live#action" data-live-action-param="save">Save</button>
+            </div>
+        `
+        );
+
+        test.expectsAjaxCall()
+            .serverWillReturnCustomResponse(500, '<html><body><h1>Boom</h1></body></html>')
+            .expectActionCalled('save');
+
+        getByText(test.element, 'Save').click();
+
+        await waitFor(() => expect(getErrorElement()).not.toBeNull());
+
+        const modal = getErrorElement() as HTMLElement;
+        modal.click();
+
+        // browsers throw when `outerHTML` is set on a detached element, jsdom does not
+        let outerHtmlAssigned = false;
+        Object.defineProperty(modal, 'outerHTML', {
+            configurable: true,
+            get: () => '',
+            set: () => {
+                outerHtmlAssigned = true;
+            },
+        });
+
+        modal.click();
+
+        expect(outerHtmlAssigned).toBe(false);
+
+        expect(getErrorElement()).toBeNull();
+    });
+
     it('triggers response:error hook', async () => {
         const test = await createTest(
             {},
