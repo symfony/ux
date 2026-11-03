@@ -2850,6 +2850,15 @@ If you load this URL in your browser, the ``LiveProp`` value will be initialized
 
     The URL is changed via ``history.replaceState()``. So no new entry is added.
 
+.. caution::
+
+    Symfony UX does not check access on values read from the query string.
+    They only go through the hydration system. On a ``LiveProp`` typed with a
+    Doctrine entity, a URL like ``?post=999`` loads the ``Post`` with the id
+    ``999``, even if the user is not allowed to see it. Check access yourself,
+    for example in a ``#[PostMount]`` hook, which runs after the value from the
+    URL is set.
+
 Supported Data Types
 ~~~~~~~~~~~~~~~~~~~~
 
