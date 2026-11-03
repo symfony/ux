@@ -25,11 +25,9 @@ test('Can display and interact with non-AJAX-based autocomplete field', async ({
 
     await expect(page.locator('css=.ts-wrapper'), 'TomSelect has not been initialized.').toBeVisible();
     await expect(page.locator('css=select[id="form_favorite_fruit"]')).toHaveValue('apple');
+    await expect(page.getByText('⨯')).toHaveCount(0);
 
-    await page.getByText('⨯').click();
-    await expect(page.locator('css=select[id="form_favorite_fruit"]')).toHaveValue('');
-
-    await page.getByRole('combobox', { name: 'Favorite fruit' }).click();
+    await page.locator('css=.ts-control').click();
     await page.getByRole('option', { name: 'Grape' }).filter({ visible: true }).click();
     await expect(page.locator('css=select[id="form_favorite_fruit"]')).toHaveValue('grape');
 });
