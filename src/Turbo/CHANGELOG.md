@@ -4,6 +4,7 @@
 
 - Render the HTML attributes of `<twig:Turbo:Stream:From>` on the `<turbo-mercure-stream-source>` element, and add an `attributes` argument to `turbo_stream_from()`
 - Add a `subscribe` option to `turbo_stream_from()` and `<twig:Turbo:Stream:From>`, to grant a private stream source more topics than the ones it listens to
+- Add the `turbo.mercure.ignore_cookie_domain_errors` option, to render nothing and log a warning instead of failing when the authorization cookie of a private stream source cannot be created for the domain of the page
 
 ## 3.6.0
 

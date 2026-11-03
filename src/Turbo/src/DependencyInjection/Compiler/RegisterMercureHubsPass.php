@@ -13,6 +13,7 @@ namespace Symfony\UX\Turbo\DependencyInjection\Compiler;
 
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\UX\Turbo\Bridge\Mercure\Broadcaster;
 use Symfony\UX\Turbo\Bridge\Mercure\MercureStreamSourceRenderer;
@@ -28,6 +29,8 @@ final class RegisterMercureHubsPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container): void
     {
+        $ignoreCookieDomainErrors = $container->hasParameter('.turbo.mercure.ignore_cookie_domain_errors') && $container->getParameter('.turbo.mercure.ignore_cookie_domain_errors');
+
         foreach ($container->findTaggedServiceIds('mercure.hub') as $hubId => $tags) {
             $name = str_replace('mercure.hub.', '', $hubId);
 
@@ -47,6 +50,9 @@ final class RegisterMercureHubsPass implements CompilerPassInterface
                 ->addArgument(new Reference('twig'))
                 ->addArgument($name)
                 ->addArgument(new Reference($hubId))
+                ->addArgument($ignoreCookieDomainErrors)
+                ->addArgument(new Reference('logger', ContainerInterface::NULL_ON_INVALID_REFERENCE))
+                ->addTag('monolog.logger', ['channel' => 'turbo'])
                 ->addTag('turbo.stream_source_renderer', ['transport' => $name]);
 
             foreach ($tags as $tag) {
