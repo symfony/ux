@@ -700,6 +700,15 @@ final class ComponentExtensionTest extends KernelTestCase
         $this->assertStringContainsString('&lt;scr', $output);
     }
 
+    public function testDynamicAttributeShorthandPassesTheVariableWithTheSameName(): void
+    {
+        $output = self::getContainer()->get(Environment::class)
+            ->createTemplate('<twig:TextField :value />')
+            ->render(['value' => 'Hello']);
+
+        $this->assertStringContainsString('value="Hello"', $output);
+    }
+
     public static function provideUnsafeAttributes(): iterable
     {
         return array_map(static fn ($s) => (array) $s, [

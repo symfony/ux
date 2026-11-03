@@ -97,6 +97,11 @@ final class TwigPreLexerTest extends TestCase
             '<twig:foo><twig:block>x</twig:block></twig:foo>',
             'Expected block name at line 1.',
         ];
+
+        yield 'dynamic_attribute_shorthand_with_a_name_that_is_not_a_variable' => [
+            '<twig:foo :data-message />',
+            'Expected "=" after ":data-message" when parsing the "<twig:foo" syntax at line 1.',
+        ];
     }
 
     public static function getLexTests(): iterable
@@ -114,6 +119,16 @@ final class TwigPreLexerTest extends TestCase
         yield 'component_with_dynamic_attributes' => [
             '<twig:foo dynamic="{{ dynamicVar }}" :otherDynamic="anotherVar" />',
             '{{ component(\'foo\', { dynamic: (dynamicVar), otherDynamic: anotherVar }) }}',
+        ];
+
+        yield 'component_with_dynamic_attribute_shorthand' => [
+            '<twig:foo :message />',
+            '{{ component(\'foo\', { message: message }) }}',
+        ];
+
+        yield 'component_with_dynamic_attribute_shorthand_and_other_attributes' => [
+            '<twig:foo :message :type="kind" bar :user_name></twig:foo>',
+            '{% component \'foo\' with { message: message, type: kind, bar: true, user_name: user_name } %}{% endcomponent %}',
         ];
 
         yield 'component_with_closing_tag' => [

@@ -548,11 +548,17 @@ class TwigPreLexer
             $key = $this->consumeComponentName($message);
 
             // <twig:component someProp> -> someProp: true
+            // <twig:component :someProp> -> someProp: someProp
             if (!$this->check('=')) {
                 $this->consumeWhitespace();
-                // don't allow "<twig:component :someProp>"
                 if ($isAttributeDynamic) {
-                    throw new SyntaxError(\sprintf('Expected "=" after ":%s" when parsing the "<twig:%s" syntax.', $key, $componentName), $this->currentLine());
+                    if (!preg_match('/^[A-Za-z_][A-Za-z0-9_]*$/', $key)) {
+                        throw new SyntaxError(\sprintf('Expected "=" after ":%s" when parsing the "<twig:%s" syntax.', $key, $componentName), $this->currentLine());
+                    }
+
+                    $attributes[] = \sprintf('%s: %s', $key, $key);
+                    $this->consumeWhitespace();
+                    continue;
                 }
 
                 $attributes[] = \sprintf('%s: true', preg_match('/[-:@]/', $key) ? "'$key'" : $key);

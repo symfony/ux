@@ -302,6 +302,21 @@ prefix the attribute with ``:`` or use the normal ``{{ }}`` syntax:
     // null-safe operator (Twig 3.23+)
     <twig:Alert :title="user.profile?.displayName" />
 
+.. versionadded:: 3.7
+
+    The shorthand for dynamic props was added in TwigComponent 3.7.
+
+When a dynamic prop has the same name as the variable you pass, you can omit
+the value. ``:message`` is a shorthand for ``:message="message"``. The name
+must be a valid Twig variable name, so ``:data-message`` is not allowed:
+
+.. code-block:: html+twig
+
+    <twig:Alert :message />
+
+    {# equal to #}
+    <twig:Alert :message="message" />
+
 Boolean props are converted using PHP's type juggling rules. The
 string ``"false"`` is converted to the boolean ``true``.
 
