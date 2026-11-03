@@ -1517,6 +1517,66 @@ final class LiveComponentHydratorTest extends KernelTestCase
             ;
         }];
 
+        yield 'Format-less date prop rejects overflown day' => [static function () {
+            return HydrationTest::create(new class {
+                #[LiveProp(writable: true)]
+                public \DateTime $createdAt;
+
+                public function __construct()
+                {
+                    $this->createdAt = new \DateTime('2024-04-05 10:00:00', new \DateTimeZone('UTC'));
+                }
+            })
+                ->mountWith([
+                    'createdAt' => new \DateTime('2024-04-05 10:00:00', new \DateTimeZone('UTC')),
+                ])
+                ->userUpdatesProps([
+                    'createdAt' => '2026-02-31T12:00:00+00:00',
+                ])
+                ->expectsExceptionDuringHydration(BadRequestHttpException::class, '/invalid date data/i')
+            ;
+        }];
+
+        yield 'Format-less date prop rejects overflown time' => [static function () {
+            return HydrationTest::create(new class {
+                #[LiveProp(writable: true)]
+                public \DateTime $createdAt;
+
+                public function __construct()
+                {
+                    $this->createdAt = new \DateTime('2024-04-05 10:00:00', new \DateTimeZone('UTC'));
+                }
+            })
+                ->mountWith([
+                    'createdAt' => new \DateTime('2024-04-05 10:00:00', new \DateTimeZone('UTC')),
+                ])
+                ->userUpdatesProps([
+                    'createdAt' => '2026-01-01T25:61:00+00:00',
+                ])
+                ->expectsExceptionDuringHydration(BadRequestHttpException::class, '/invalid date data/i')
+            ;
+        }];
+
+        yield 'Date prop with custom format rejects overflown day' => [static function () {
+            return HydrationTest::create(new class {
+                #[LiveProp(writable: true, format: 'Y-m-d')]
+                public \DateTime $createdAt;
+
+                public function __construct()
+                {
+                    $this->createdAt = new \DateTime('2024-04-05 10:00:00', new \DateTimeZone('UTC'));
+                }
+            })
+                ->mountWith([
+                    'createdAt' => new \DateTime('2024-04-05 10:00:00', new \DateTimeZone('UTC')),
+                ])
+                ->userUpdatesProps([
+                    'createdAt' => '2026-02-31',
+                ])
+                ->expectsExceptionDuringHydration(BadRequestHttpException::class, '/invalid date data/i')
+            ;
+        }];
+
         yield 'Format-less DateTimeImmutable prop accepts RFC3339 round-trip' => [static function () {
             return HydrationTest::create(new class {
                 #[LiveProp(writable: true)]
