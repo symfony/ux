@@ -21,6 +21,8 @@ use Symfony\UX\Toolkit\Markdown\Extension\Popover\Node\Popover;
  *
  * Used in the toolkit API Reference props table to move each prop description
  * behind a hoverable help button instead of a dedicated table column.
+ *
+ * @internal
  */
 final class PopoverParser implements InlineParserInterface
 {

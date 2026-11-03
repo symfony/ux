@@ -18,6 +18,9 @@ use Symfony\UX\Toolkit\Markdown\Extension\Alert\Node\Alert;
 use Symfony\UX\Toolkit\Markdown\Extension\Alert\Parser\AlertParser;
 use Symfony\UX\Toolkit\Markdown\Extension\Alert\Renderer\AlertRenderer;
 
+/**
+ * @internal
+ */
 final class AlertExtension implements ExtensionInterface
 {
     public function __construct(

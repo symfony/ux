@@ -15,6 +15,8 @@ namespace Symfony\UX\Toolkit\Doc;
  * A recipe's documentation rendered as HTML, with the table of contents extracted from the same render.
  *
  * @author Hugo Alliaume <hugo@alliau.me>
+ *
+ * @internal
  */
 final class RenderedRecipeDoc
 {

@@ -13,6 +13,9 @@ namespace Symfony\UX\Toolkit\Markdown\Extension\Popover\Node;
 
 use League\CommonMark\Node\Inline\AbstractInline;
 
+/**
+ * @internal
+ */
 final class Popover extends AbstractInline
 {
     public function __construct(

@@ -18,6 +18,9 @@ use Symfony\UX\Toolkit\Markdown\Extension\Popover\Node\Popover;
 use Symfony\UX\Toolkit\Markdown\Extension\Popover\Parser\PopoverParser;
 use Symfony\UX\Toolkit\Markdown\Extension\Popover\Renderer\PopoverRenderer;
 
+/**
+ * @internal
+ */
 final class PopoverExtension implements ExtensionInterface
 {
     public function __construct(

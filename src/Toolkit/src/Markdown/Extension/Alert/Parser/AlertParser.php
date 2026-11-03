@@ -21,6 +21,9 @@ use League\CommonMark\Parser\Cursor;
 use League\CommonMark\Parser\MarkdownParserStateInterface;
 use Symfony\UX\Toolkit\Markdown\Extension\Alert\Node\Alert;
 
+/**
+ * @internal
+ */
 final class AlertParser extends AbstractBlockContinueParser
 {
     private Alert $block;

@@ -21,6 +21,8 @@ namespace Symfony\UX\Toolkit\Markdown;
  * option modelled here. Pure PHP — no league/commonmark dependency.
  *
  * @author Hugo Alliaume <hugo@alliau.me>
+ *
+ * @internal
  */
 final class CodeOptions
 {

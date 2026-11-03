@@ -47,6 +47,8 @@ use Symfony\UX\Toolkit\Recipe\Recipe;
  * generated pieces drop in via `::: installation` (install steps) and `::: api-reference` (props/blocks tables).
  *
  * @author Hugo Alliaume <hugo@alliau.me>
+ *
+ * @internal
  */
 final class RecipeDocRenderer
 {

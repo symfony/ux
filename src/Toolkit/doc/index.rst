@@ -1,9 +1,6 @@
 Symfony UX Toolkit
 ==================
 
-**EXPERIMENTAL** This component is currently experimental and is likely
-to change, or even change drastically.
-
 Symfony UX Toolkit gives you ready-to-use UI recipes for your Symfony
 application. It is part of `the Symfony UX initiative`_.
 
@@ -219,5 +216,20 @@ no override mechanism to learn, no configuration to bend, and no limit to the
 options its author thought of. That is the idea the Toolkit takes from
 `Shadcn UI <https://ui.shadcn.com/>`_, and the reason the files are copied
 rather than shipped in ``vendor/``.
+
+Backward Compatibility promise
+------------------------------
+
+This bundle aims at following the same Backward Compatibility promise as
+the Symfony framework: https://symfony.com/doc/current/contributing/code/bc.html
+
+For the Toolkit, the promise covers the ``ux:install`` command (its arguments
+and options), the ``ux_toolkit`` configuration, and the format of the kit and
+recipe ``manifest.json`` files, including the ``copy-files`` placeholders.
+
+It does not cover the content of the recipes. A recipe can change from one
+version of the Toolkit to the next, and installing it again gives you the new
+version. A recipe you have already installed is your own code, and the Toolkit
+never changes it. See `The Recipe Is Yours, For Worse and For Better`_.
 
 .. _`the Symfony UX initiative`: https://ux.symfony.com/

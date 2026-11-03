@@ -13,6 +13,9 @@ namespace Symfony\UX\Toolkit\Markdown\Extension\Tabs\Node;
 
 use League\CommonMark\Node\Block\AbstractBlock;
 
+/**
+ * @internal
+ */
 final class Tabs extends AbstractBlock
 {
 }

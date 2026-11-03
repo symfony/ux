@@ -21,6 +21,9 @@ use Symfony\UX\Toolkit\Markdown\Extension\Tabs\Parser\TabsParser;
 use Symfony\UX\Toolkit\Markdown\Extension\Tabs\Renderer\TabRenderer;
 use Symfony\UX\Toolkit\Markdown\Extension\Tabs\Renderer\TabsRenderer;
 
+/**
+ * @internal
+ */
 final class TabsExtension implements ExtensionInterface
 {
     public function __construct(

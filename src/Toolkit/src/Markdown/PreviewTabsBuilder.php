@@ -21,6 +21,8 @@ use Symfony\UX\Toolkit\Markdown\Extension\Tabs\Node\Tabs;
  * fenced-code block. The code is put into the nodes verbatim, so it is never re-parsed as markdown.
  *
  * @author Hugo Alliaume <hugo@alliau.me>
+ *
+ * @internal
  */
 final class PreviewTabsBuilder
 {

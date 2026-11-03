@@ -17,6 +17,8 @@ use Symfony\UX\Toolkit\Dependency\DependencyParser;
 
 /**
  * @author Hugo Alliaume <hugo@alliau.me>
+ *
+ * @internal
  */
 final class KitManifest
 {
