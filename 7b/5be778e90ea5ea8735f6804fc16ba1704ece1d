@@ -1,0 +1,31 @@
+---------------------------------------------------------------------------
+
+by github-actions[bot] at 2026-10-20T06:54:45Z
+
+<h1>📊 Packages dist files size difference</h1>
+
+Thanks for the PR! Here is the difference in size of the packages dist files between the base branch and the PR.
+Please review the changes and make sure they are expected.
+
+<table>
+    <thead><tr><th>File</th><th>Before (Size / Gzip)</th><th>After (Size / Gzip)</th></tr></thead>
+    <tbody><tr><td colspan="3"><a href="https://github.com/anthovallet/ux/tree/fix/anthovallet/autocomplete-exclude-selected/src/Autocomplete/assets/dist"><b>Autocomplete</b></a></td></tr><tr>
+                <td><a href="https://github.com/anthovallet/ux/blob/fix/anthovallet/autocomplete-exclude-selected/src/Autocomplete/assets/dist/controller.js"><code>controller.js</code></a></td>
+            <td>
+                    <code>12.63 kB</code>
+                    / <code>3.41 kB</code>
+                </td><td>
+                    <code>13.41 kB</code><sup>+6% 📈</sup>
+                    / <code>3.64 kB</code><sup>+7% 📈</sup>
+                </td></tr></tbody>
+</table>
+
+<!-- Sticky Pull Request Comment -->
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-11-03T20:03:46Z
+
+Thanks @anthovallet for the work on this, and for the clear reproducer. I made two changes while preparing the branch. The `ExcludedValuesAwareAutocompleterInterface` is now `@internal`, because a custom autocompleter can already read `excluded[]` from the current request, so we avoid a new public contract to maintain. The documentation now shows that approach, with a tested example.
+
+The Stimulus controller also sends no `excluded[]` when it would exceed 4000 characters. A very large selection would make the URL longer than what many servers accept, and the dropdown would stay empty. With this limit, the field falls back to its previous behavior in that case. I also rebased the branch on 3.x and merged the reopen logic with the recent stale-options fix.
