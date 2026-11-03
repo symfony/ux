@@ -1,0 +1,23 @@
+---------------------------------------------------------------------------
+
+by github-actions[bot] at 2026-04-27T09:15:44Z
+
+<h1>📊 Packages dist files size difference</h1>
+
+Thanks for the PR! Here is the difference in size of the packages dist files between the base branch and the PR.
+Please review the changes and make sure they are expected.
+
+<table>
+    <thead><tr><th>File</th><th>Before (Size / Gzip)</th><th>After (Size / Gzip)</th></tr></thead>
+    <tbody><tr><td colspan="3"><a href="https://github.com/Amoifr/ux/tree/fix_ux_3496/src/LiveComponent/assets/dist"><b>LiveComponent</b></a></td></tr><tr>
+                <td><a href="https://github.com/Amoifr/ux/blob/fix_ux_3496/src/LiveComponent/assets/dist/live_controller.js"><code>live_controller.js</code></a></td>
+            <td>
+                    <code>92.34 kB</code>
+                    / <code>20.86 kB</code>
+                </td><td>
+                    <code>92.32 kB</code><sup>0%</sup>
+                    / <code>20.85 kB</code><sup>0%</sup>
+                </td></tr></tbody>
+</table>
+
+<!-- Sticky Pull Request Comment -->
