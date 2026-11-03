@@ -16,6 +16,9 @@ use League\CommonMark\Renderer\ChildNodeRendererInterface;
 use League\CommonMark\Renderer\NodeRendererInterface;
 use Symfony\UX\Toolkit\Markdown\Extension\Tabs\Node\Tab;
 
+/**
+ * @internal
+ */
 final class TabRenderer implements NodeRendererInterface
 {
     public function render(Node $node, ChildNodeRendererInterface $childRenderer): string

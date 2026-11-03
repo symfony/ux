@@ -17,6 +17,9 @@ use League\CommonMark\Renderer\ChildNodeRendererInterface;
 use League\CommonMark\Renderer\NodeRendererInterface;
 use Symfony\UX\Toolkit\Markdown\Extension\Popover\Node\Popover;
 
+/**
+ * @internal
+ */
 final class PopoverRenderer implements NodeRendererInterface
 {
     private int $counter = 0;

@@ -13,6 +13,9 @@ namespace Symfony\UX\Toolkit\Markdown\Extension\Alert\Node;
 
 use League\CommonMark\Node\Block\AbstractBlock;
 
+/**
+ * @internal
+ */
 final class Alert extends AbstractBlock
 {
     public function __construct(

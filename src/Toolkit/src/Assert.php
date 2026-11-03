@@ -11,6 +11,9 @@
 
 namespace Symfony\UX\Toolkit;
 
+/**
+ * @internal
+ */
 final class Assert
 {
     /**

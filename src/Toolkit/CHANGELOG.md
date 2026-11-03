@@ -16,6 +16,7 @@
 - Add the `%COMPONENTS_DIR%` and `%CONTROLLERS_DIR%` placeholders in recipe `copy-files` destinations
 - [Common] Add `sortable` recipe
 - [Common] Add `password-visibility` recipe
+- The Toolkit is no longer experimental, and follows the Symfony Backward Compatibility promise
 
 ## 3.6.0
 

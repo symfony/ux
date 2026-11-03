@@ -23,6 +23,8 @@ use Symfony\UX\Toolkit\Markdown\PreviewUrlGenerator;
  * without one, previews degrade to a static, escaped code block.
  *
  * @author Hugo Alliaume <hugo@alliau.me>
+ *
+ * @internal
  */
 final class CodePreviewExtension implements ExtensionInterface
 {

@@ -21,6 +21,8 @@ use Symfony\UX\Toolkit\Markdown\CodeOptions;
  * from a dedicated markdown syntax.
  *
  * @author Hugo Alliaume <hugo@alliau.me>
+ *
+ * @internal
  */
 final class CodePreview extends AbstractBlock
 {

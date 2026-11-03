@@ -21,6 +21,9 @@ use League\CommonMark\Parser\Cursor;
 use League\CommonMark\Parser\MarkdownParserStateInterface;
 use Symfony\UX\Toolkit\Markdown\Extension\Tabs\Node\Tab;
 
+/**
+ * @internal
+ */
 final class TabParser extends AbstractBlockContinueParser
 {
     private Tab $block;

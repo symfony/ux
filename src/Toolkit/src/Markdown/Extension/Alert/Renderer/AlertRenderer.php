@@ -16,6 +16,9 @@ use League\CommonMark\Renderer\ChildNodeRendererInterface;
 use League\CommonMark\Renderer\NodeRendererInterface;
 use Symfony\UX\Toolkit\Markdown\Extension\Alert\Node\Alert;
 
+/**
+ * @internal
+ */
 final class AlertRenderer implements NodeRendererInterface
 {
     public function __construct(

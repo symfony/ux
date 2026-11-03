@@ -17,6 +17,9 @@ use League\CommonMark\Renderer\NodeRendererInterface;
 use Symfony\UX\Toolkit\Markdown\Extension\CodePreview\Node\CodePreview;
 use Symfony\UX\Toolkit\Markdown\PreviewUrlGenerator;
 
+/**
+ * @internal
+ */
 final class CodePreviewRenderer implements NodeRendererInterface
 {
     public function __construct(

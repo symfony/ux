@@ -24,6 +24,8 @@ use Symfony\UX\Toolkit\Markdown\PreviewTabsBuilder;
  * `twig` block with `{"preview": true}`) is turned into a `Tabs(Preview, Code)` block.
  *
  * @author Hugo Alliaume <hugo@alliau.me>
+ *
+ * @internal
  */
 final class FencedCodePreviewExtension implements ExtensionInterface
 {

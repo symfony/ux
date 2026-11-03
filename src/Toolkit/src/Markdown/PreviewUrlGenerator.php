@@ -20,6 +20,8 @@ namespace Symfony\UX\Toolkit\Markdown;
  * a static, non-interactive code block.
  *
  * @author Hugo Alliaume <hugo@alliau.me>
+ *
+ * @internal
  */
 interface PreviewUrlGenerator
 {
