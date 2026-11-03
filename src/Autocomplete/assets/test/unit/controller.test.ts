@@ -1096,6 +1096,30 @@ describe('AutocompleteController', () => {
         });
     });
 
+    it('adds a clear button to a single select with an empty option', async () => {
+        const { container } = await startAutocompleteTest(`
+            <select data-controller="autocomplete">
+                <option value="">Select a dog</option>
+                <option value="1">dog1</option>
+                <option value="2">dog2</option>
+            </select>
+        `);
+
+        expect(container.querySelector('.clear-button')).toBeInTheDocument();
+    });
+
+    it('does not add a clear button to a single select without an empty option', async () => {
+        const { container, tomSelect } = await startAutocompleteTest(`
+            <select data-controller="autocomplete">
+                <option value="1">dog1</option>
+                <option value="2">dog2</option>
+            </select>
+        `);
+
+        expect(tomSelect.items).toEqual(['1']);
+        expect(container.querySelector('.clear-button')).not.toBeInTheDocument();
+    });
+
     it('toggles correctly between disabled and enabled', async () => {
         const { container, tomSelect } = await startAutocompleteTest(`
             <select data-testid="main-element" data-controller="autocomplete">
@@ -1360,6 +1384,7 @@ describe('AutocompleteController', () => {
     it('must disable default plugin "clear_button"', async () => {
         const { tomSelect } = await startAutocompleteTest(`
             <select data-testid='main-element' data-controller='autocomplete'>
+                <option value=''></option>
                 <option value='1'>dog1</option>
                 <option value='2'>dog2</option>
                 <option value='3'>dog3</option>
@@ -1376,6 +1401,7 @@ describe('AutocompleteController', () => {
                 data-controller='autocomplete'
                 data-autocomplete-tom-select-options-value="{&quot;plugins&quot;:{&quot;clear_button&quot;:false}}"
             >
+                <option value=''></option>
                 <option value='1'>dog1</option>
                 <option value='2'>dog2</option>
                 <option value='3'>dog3</option>
@@ -1417,6 +1443,7 @@ describe('AutocompleteController', () => {
     it('adding a plugin should merge it with the common plugins list', async () => {
         const { tomSelect } = await startAutocompleteTest(`
             <select data-testid='main-element' data-controller='autocomplete'>
+                <option value=''></option>
                 <option value='1'>dog1</option>
                 <option value='2'>dog2</option>
                 <option value='3'>dog3</option>
@@ -1433,6 +1460,7 @@ describe('AutocompleteController', () => {
                 data-controller='autocomplete'
                 data-autocomplete-tom-select-options-value="{&quot;plugins&quot;:[&quot;input_autogrow&quot;]}"
             >
+                <option value=''></option>
                 <option value='1'>dog1</option>
                 <option value='2'>dog2</option>
                 <option value='3'>dog3</option>
@@ -1448,6 +1476,7 @@ describe('AutocompleteController', () => {
     it('adding a plugin (with configuration) should merge it with the common plugins list', async () => {
         const { tomSelect } = await startAutocompleteTest(`
             <select data-testid='main-element' data-controller='autocomplete'>
+                <option value=''></option>
                 <option value='1'>dog1</option>
                 <option value='2'>dog2</option>
                 <option value='3'>dog3</option>
@@ -1464,6 +1493,7 @@ describe('AutocompleteController', () => {
                 data-controller='autocomplete'
                 data-autocomplete-tom-select-options-value="{&quot;plugins&quot;:{&quot;input_autogrow&quot;:true}}"
             >
+                <option value=''></option>
                 <option value='1'>dog1</option>
                 <option value='2'>dog2</option>
                 <option value='3'>dog3</option>

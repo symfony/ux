@@ -64,7 +64,8 @@ var controller_default = class extends Controller {
 	#getCommonConfig() {
 		const plugins = {};
 		const isMultiple = !this.selectElement || this.selectElement.multiple;
-		if (!this.formElement.disabled && !isMultiple) plugins.clear_button = { title: "" };
+		const hasEmptyOption = Array.from(this.selectElement?.options ?? []).some((option) => option.value === "");
+		if (!this.formElement.disabled && !isMultiple && hasEmptyOption) plugins.clear_button = { title: "" };
 		if (isMultiple) plugins.remove_button = { title: "" };
 		if (this.urlValue) plugins.virtual_scroll = {};
 		const config = {
