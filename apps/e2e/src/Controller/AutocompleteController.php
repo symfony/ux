@@ -12,6 +12,8 @@
 namespace App\Controller;
 
 use App\Form\FruitAutocompleteField;
+use App\Form\FruitMultipleAutocompleteField;
+use App\Repository\FruitRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\HttpFoundation\Response;
@@ -65,6 +67,21 @@ final class AutocompleteController extends AbstractController
         $form = $formBuilder->getForm();
 
         return $this->render('ux_autocomplete/with_ajax.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
+
+    #[Route('/with-ajax-multiple', name: 'with_ajax_multiple')]
+    public function withAjaxMultiple(FruitRepository $fruitRepository): Response
+    {
+        // 8 of the 10 fruits of the first results page are already selected
+        $formBuilder = $this->createFormBuilder([
+            'favorite_fruits' => $fruitRepository->findBy(['id' => ['apple', 'banana', 'cherry', 'coconut', 'grape', 'kiwi', 'lemon', 'mango']]),
+        ]);
+        $formBuilder->add('favorite_fruits', FruitMultipleAutocompleteField::class);
+        $form = $formBuilder->getForm();
+
+        return $this->render('ux_autocomplete/with_ajax_multiple.html.twig', [
             'form' => $form->createView(),
         ]);
     }

@@ -83,6 +83,37 @@ class ChoiceFieldAutocompleterTest extends KernelTestCase
         ;
     }
 
+    public function testItExcludesTheGivenValuesBeforePaginating(): void
+    {
+        $browser = $this->browser()
+            ->throwExceptions()
+            // max_results = 5, total = 12, 10 once excluded
+            ->get('/test/autocomplete/color_autocomplete_type?'.http_build_query(['excluded' => ['red', 'green']]))
+            ->assertSuccessful()
+            ->assertJsonMatches('results[*].value', ['blue', 'yellow', 'purple', 'orange', 'pink'])
+        ;
+
+        $nextPage = $browser->json()->decoded()['next_page'];
+        $this->assertNotNull($nextPage);
+
+        $browser
+            ->get($nextPage)
+            ->assertSuccessful()
+            ->assertJsonMatches('results[*].value', ['brown', 'black', 'white', 'gray', 'cyan'])
+            ->assertJsonMatches('next_page', null)
+        ;
+    }
+
+    public function testItListsPreferredChoicesFirstOnceTheExcludedValuesAreRemoved(): void
+    {
+        $this->browser()
+            ->throwExceptions()
+            ->get('/test/autocomplete/color_with_preferred_choices_autocomplete_type?'.http_build_query(['excluded' => ['blue']]))
+            ->assertSuccessful()
+            ->assertJsonMatches('results[*].text', ['Pink', 'Red', 'Green'])
+        ;
+    }
+
     public function testItIsCaseInsensitive(): void
     {
         $this->browser()

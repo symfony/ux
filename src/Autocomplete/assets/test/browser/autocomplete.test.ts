@@ -20,6 +20,23 @@ test('Can display and interact with AJAX-based autocomplete field', async ({ pag
     await expect(page.locator('css=select[id="form_favorite_fruit"]')).toHaveValue('grape');
 });
 
+test('Can reach all the options of a multiple AJAX-based autocomplete field, when most of the first ones are selected', async ({
+    page,
+}) => {
+    await page.goto('/ux-autocomplete/with-ajax-multiple');
+
+    await expect(page.locator('css=.ts-wrapper'), 'TomSelect has not been initialized.').toBeVisible();
+
+    // 8 of the 10 fruits of the first results page are already selected, they must be excluded server-side
+    const responsePromise = page.waitForResponse('**/autocomplete/fruit_multiple_autocomplete_field?query=&excluded*');
+    await page.getByRole('combobox', { name: 'Favorite fruits' }).click();
+    await responsePromise;
+
+    // the 11th fruit is reachable without scrolling
+    await page.getByRole('option', { name: 'Peach' }).click();
+    await expect(page.locator('css=select[id="form_favorite_fruits"] option:checked')).toHaveCount(9);
+});
+
 test('Can display and interact with non-AJAX-based autocomplete field', async ({ page }) => {
     await page.goto('/ux-autocomplete/without-ajax');
 

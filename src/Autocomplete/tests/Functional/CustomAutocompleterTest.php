@@ -122,4 +122,35 @@ class CustomAutocompleterTest extends KernelTestCase
             ->assertJsonMatches('length(results)', 2)
         ;
     }
+
+    public function testItExcludesTheValuesReadFromTheRequest(): void
+    {
+        $products = ProductFactory::createMany(3);
+
+        $this->browser()
+            ->throwExceptions()
+            ->get('/test/autocomplete/excluded_values_product?'.http_build_query(['excluded' => [(string) $products[0]->getId()]]))
+            ->assertSuccessful()
+            ->assertJsonMatches('length(results)', 2)
+            ->get('/test/autocomplete/excluded_values_product?excluded='.$products[0]->getId())
+            ->assertSuccessful()
+            ->assertJsonMatches('length(results)', 3)
+        ;
+    }
+
+    public function testItCapsTheValuesReadFromTheRequest(): void
+    {
+        $products = ProductFactory::createMany(3);
+
+        // 500 unknown values, then one which is beyond the limit
+        $excluded = array_map(static fn (int $i) => (string) (100000 + $i), range(1, 500));
+        $excluded[] = (string) $products[0]->getId();
+
+        $this->browser()
+            ->throwExceptions()
+            ->get('/test/autocomplete/excluded_values_product?'.http_build_query(['excluded' => $excluded]))
+            ->assertSuccessful()
+            ->assertJsonMatches('length(results)', 3)
+        ;
+    }
 }

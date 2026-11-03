@@ -883,6 +883,68 @@ interface.
     +       $this->options = $options;
     +   }
 
+Excluding the Already Selected Options
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. versionadded:: 3.7
+
+    The exclusion of the already selected options was added in Autocomplete 3.7.
+
+When the already selected options are hidden from the dropdown (the default
+for a ``multiple`` field, see the ``hideSelected`` option of Tom Select), the
+Stimulus controller sends them to the endpoint in the ``excluded`` query
+parameter, so that the other options remain reachable: the endpoint excludes
+them before paginating the results. To keep the URL short enough for web
+servers, the parameter is not sent when it would exceed 4000 characters, and
+the endpoint ignores the values beyond the first 500.
+
+This works out of the box for the fields declared with ``#[AsEntityAutocompleteField]``
+and ``#[AsAutocompleteField]``. For an entity field, the values are compared to
+the entity identifier, or to the ``choice_value`` property when it is a property
+name (the exclusion is skipped for a ``choice_value`` callback or a composite
+identifier).
+
+In your own autocompleter, read the ``excluded`` query parameter from the
+current request::
+
+    use Doctrine\ORM\EntityRepository;
+    use Doctrine\ORM\QueryBuilder;
+    use Symfony\Component\HttpFoundation\RequestStack;
+
+    class FoodAutocompleter implements EntityAutocompleterInterface
+    {
+        public function __construct(
+            private RequestStack $requestStack,
+        ) {
+        }
+
+        // ...
+
+        public function createFilteredQueryBuilder(EntityRepository $repository, string $query): QueryBuilder
+        {
+            $queryBuilder = $repository->createQueryBuilder('o');
+
+            $excluded = $this->requestStack->getCurrentRequest()?->query->all()['excluded'] ?? [];
+            $excluded = \is_array($excluded) ? array_values(array_filter($excluded, 'is_string')) : [];
+
+            if ($excluded = \array_slice($excluded, 0, 500)) {
+                $queryBuilder
+                    ->andWhere('o.id NOT IN (:excluded)')
+                    ->setParameter('excluded', $excluded)
+                ;
+            }
+
+            return $queryBuilder;
+        }
+    }
+
+.. note::
+
+    The excluded values come from the request and are neither signed nor
+    validated: they can only restrict the results, never widen them. Keep only
+    the strings and cap their number, as the example does, to avoid a query with
+    too many parameters.
+
 .. _manual-stimulus-controller:
 
 Manually using the Stimulus Controller

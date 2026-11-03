@@ -22,6 +22,9 @@ interface OptionDataStructure {
     text: string;
 }
 
+// Keeps the URL under the 8 KB limit of common web servers, together with the other query parameters
+const MAX_EXCLUDED_QUERY_LENGTH = 4000;
+
 export default class extends Controller {
     static values = {
         url: String,
@@ -267,6 +270,8 @@ export default class extends Controller {
         const commonConfig = this.#getCommonConfig();
         const labelField = commonConfig.labelField ?? 'text';
         let loadedQuery = '';
+        let hasSelectionChanged = false;
+        let hasLoadedOptions = false;
         const clearRemoteOptions = (tomSelect: TomSelect): void => {
             tomSelect.clearOptions();
             // Defined by the virtual_scroll plugin
@@ -274,13 +279,21 @@ export default class extends Controller {
                 tomSelect['clearPagination']();
             }
             loadedQuery = '';
+            hasSelectionChanged = false;
+            hasLoadedOptions = false;
         };
 
         const config: RecursivePartial<TomSettings> = this.#mergeConfigs(commonConfig, {
-            firstUrl: (query: string) => {
+            // use 'function' to access the TomSelect instance, also available while it is
+            // being constructed (e.g. when preloading), unlike this.tomSelect
+            firstUrl: function (this: TomSelect, query: string) {
                 const separator = autocompleteEndpointUrl.includes('?') ? '&' : '?';
+                // TomSelect hides the selected options: exclude them server-side too, so that
+                // they are not paginated (the next pages URL keep the same excluded values)
+                const excludedValues = this.settings.hideSelected ? this.items : [];
+                const excluded = excludedValues.map((value) => `&excluded[]=${encodeURIComponent(value)}`).join('');
 
-                return `${autocompleteEndpointUrl}${separator}query=${encodeURIComponent(query)}`;
+                return `${autocompleteEndpointUrl}${separator}query=${encodeURIComponent(query)}${excluded.length <= MAX_EXCLUDED_QUERY_LENGTH ? excluded : ''}`;
             },
             // VERY IMPORTANT: use 'function (query, callback) { ... }' instead of the
             // '(query, callback) => { ... }' syntax because, otherwise,
@@ -293,6 +306,7 @@ export default class extends Controller {
                     .then((json) => {
                         this.setNextUrl(query, json.next_page);
                         loadedQuery = query;
+                        hasLoadedOptions = true;
                         callback(json.results.options || json.results, json.results.optgroups || []);
                     })
                     .catch(() => callback([], []));
@@ -350,21 +364,45 @@ export default class extends Controller {
                     }
                 }
             },
-            // selecting an option or closing the dropdown empties the input without loading its options
+            // selecting an option or closing the dropdown empties the input without loading its options,
+            // and the loaded options were fetched with the previous selection excluded
             onDropdownOpen: () => {
-                if (!this.tomSelect || loadedQuery === '' || this.tomSelect.inputValue() !== '') {
+                if (!this.tomSelect) {
+                    return;
+                }
+
+                const query = this.tomSelect.inputValue();
+                const isStaleSelection = hasSelectionChanged && hasLoadedOptions;
+                const isStaleQuery = loadedQuery !== '' && query === '';
+
+                if (!isStaleSelection && !isStaleQuery) {
                     return;
                 }
 
                 clearRemoteOptions(this.tomSelect);
-                if (this.tomSelect.settings.shouldLoad.call(this.tomSelect, '')) {
-                    this.tomSelect.load('');
+                // the default shouldLoad() rejects short queries until the user typed one, but options were already loaded here
+                if (
+                    (query === '' && null === minCharacterLength) ||
+                    this.tomSelect.settings.shouldLoad.call(this.tomSelect, query)
+                ) {
+                    this.tomSelect.load(query);
                 }
             },
             preload: this.preload,
         });
 
-        return this.#createTomSelect(config);
+        const tomSelect = this.#createTomSelect(config);
+
+        if (tomSelect.settings.hideSelected) {
+            tomSelect.on('item_add', () => {
+                hasSelectionChanged = true;
+            });
+            tomSelect.on('item_remove', () => {
+                hasSelectionChanged = true;
+            });
+        }
+
+        return tomSelect;
     }
 
     private getMaxOptions(): number {
