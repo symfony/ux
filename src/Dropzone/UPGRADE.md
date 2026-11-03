@@ -37,3 +37,9 @@
 - If your field sets `accept` (for example with `'attr' => ['accept' => ...]`), the dropped files are now checked against it, and the files that do not match are left out. Before, only the file picker filtered the files.
 
     The type of a dropped file comes from the operating system and can differ from the one in `accept`: on Windows, a CSV file is often `application/vnd.ms-excel`, so `accept="text/csv"` now leaves out a dropped CSV file that the file picker shows. To fix this, add the extensions next to the MIME types, for example `.csv,text/csv`. To tell the user which files were left out, listen to the `dropzone:reject` event.
+
+- In single-file mode, the controller keeps the file already in the input when it connects, as `multiple` mode does: it no longer empties the input and no longer dispatches `dropzone:clear` then. `dropzone:clear` is now also dispatched in `multiple` mode, when the last file is removed, and in both modes when the form is reset. If a `dropzone:clear` listener expects to run on connect, run that code from your own controller's `connect()` instead.
+
+- The `onMultipleChange()` method of the controller is merged into `onInputChange()`, which now handles both modes. If you call it from a controller that extends the Dropzone one, call `onInputChange()` instead.
+
+- In `multiple` mode, `dropzone:change` is no longer dispatched when a selection adds no file, because every file is already in the list or over `max_files`.
