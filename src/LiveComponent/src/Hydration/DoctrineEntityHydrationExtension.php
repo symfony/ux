@@ -15,6 +15,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\Mapping\MappingException;
 use Doctrine\Persistence\ObjectManager;
+use Symfony\Component\Uid\AbstractUid;
 
 /**
  * Handles hydration of Doctrine entities.
@@ -74,8 +75,12 @@ class DoctrineEntityHydrationExtension implements HydrationExtensionInterface
             ->getIdentifierValues($object)
         ;
 
-        // Dehydrate ID values in case they are other entities
-        $id = array_map(fn ($id) => \is_object($id) && $this->supports($id::class) ? $this->dehydrate($id) : $id, $id);
+        // Dehydrate ID values in case they are other entities or UIDs
+        $id = array_map(fn ($id) => match (true) {
+            $id instanceof AbstractUid => (string) $id,
+            \is_object($id) && $this->supports($id::class) => $this->dehydrate($id),
+            default => $id,
+        }, $id);
 
         switch (\count($id)) {
             case 0:

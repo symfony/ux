@@ -44,6 +44,7 @@ use Symfony\UX\LiveComponent\Tests\Fixtures\Entity\Entity1;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Entity\Entity2;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Entity\ProductFixtureEntity;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Entity\User;
+use Symfony\UX\LiveComponent\Tests\Fixtures\Entity\UuidIdEntity;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Enum\ColorEnum;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Enum\EmptyStringEnum;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Enum\IntEnum;
@@ -810,6 +811,28 @@ final class LiveComponentHydratorTest extends KernelTestCase
                         'item3',
                         $object->products[2]->name
                     );
+                })
+            ;
+        }];
+
+        yield 'Array with objects: (de)hydrates entities with a Uuid identifier' => [static function () {
+            $entity1 = persist(UuidIdEntity::class);
+            $entity2 = persist(UuidIdEntity::class);
+
+            return HydrationTest::create(new class {
+                /**
+                 * @var UuidIdEntity[]
+                 */
+                #[LiveProp]
+                public array $entities = [];
+            })
+                ->mountWith(['entities' => [$entity1, $entity2]])
+                ->assertDehydratesTo([
+                    'entities' => [$entity1->id->toRfc4122(), $entity2->id->toRfc4122()],
+                ])
+                ->assertObjectAfterHydration(static function (object $object) use ($entity1, $entity2) {
+                    self::assertSame($entity1, $object->entities[0]);
+                    self::assertSame($entity2, $object->entities[1]);
                 })
             ;
         }];
