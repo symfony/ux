@@ -1222,15 +1222,13 @@ final class DoctrineOrmAdapterTest extends TestCase
         self::assertNotEmpty($result2->items);
     }
 
-    public function testCursorRejectsNullableScalarField(): void
+    public function testCursorAcceptsNullableScalarField(): void
     {
         $qb = $this->entityManager->createQueryBuilder()
             ->select('b')
             ->from(Book::class, 'b');
 
-        $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Cursor field "rating" must be non-nullable.');
-        $this->adapter->resolveCursorOrder($qb, ['rating'], 'ASC');
+        self::assertSame(['rating', 'id'], $this->adapter->resolveCursorOrder($qb, ['rating'], 'ASC')->getFields());
     }
 
     public function testCursorRejectsUnsupportedDoctrineFieldTypes(): void

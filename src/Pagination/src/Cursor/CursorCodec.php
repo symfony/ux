@@ -97,7 +97,7 @@ final class CursorCodec implements CursorCodecInterface
     /**
      * @param array<mixed> $values
      *
-     * @return list<int|string|float>
+     * @return list<int|string|float|null>
      */
     private function validateValues(array $values): array
     {
@@ -107,7 +107,7 @@ final class CursorCodec implements CursorCodecInterface
 
         $validated = [];
         foreach ($values as $value) {
-            if (!\is_int($value) && !\is_string($value) && !\is_float($value)) {
+            if (null !== $value && !\is_int($value) && !\is_string($value) && !\is_float($value)) {
                 throw new InvalidArgumentException('Invalid cursor value.');
             }
             if (\is_float($value) && !is_finite($value)) {
