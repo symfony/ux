@@ -30,51 +30,56 @@ trait CursorValuesTrait
 {
     /**
      * @param list<string> $fields
+     * @param list<string> $nullableFields fields whose value may be null
      *
-     * @return list<int|string|float>
+     * @return list<int|string|float|null>
      */
-    private function extractCursorValues(mixed $item, array $fields): array
+    private function extractCursorValues(mixed $item, array $fields, array $nullableFields = []): array
     {
         $values = [];
         foreach ($fields as $field) {
-            $values[] = $this->extractSingleCursorValue($item, $field);
+            $values[] = $this->extractSingleCursorValue($item, $field, \in_array($field, $nullableFields, true));
         }
 
         return $values;
     }
 
-    private function extractSingleCursorValue(mixed $item, string $field): int|string|float
+    private function extractSingleCursorValue(mixed $item, string $field, bool $nullable = false): int|string|float|null
     {
         if (\is_object($item)) {
             $getter = 'get'.ucfirst($field);
             if (method_exists($item, $getter)) {
-                return $this->normalizeCursorValue($item->$getter());
+                return $this->normalizeCursorValue($item->$getter(), $nullable);
             }
             // Try is* prefix for booleans
             $isGetter = 'is'.ucfirst($field);
             if (method_exists($item, $isGetter)) {
-                return $this->normalizeCursorValue($item->$isGetter());
+                return $this->normalizeCursorValue($item->$isGetter(), $nullable);
             }
             $publicProperties = get_object_vars($item);
             if (\array_key_exists($field, $publicProperties)) {
-                return $this->normalizeCursorValue($publicProperties[$field]);
+                return $this->normalizeCursorValue($publicProperties[$field], $nullable);
             }
         }
 
         if (\is_array($item) && \array_key_exists($field, $item)) {
-            return $this->normalizeCursorValue($item[$field]);
+            return $this->normalizeCursorValue($item[$field], $nullable);
         }
 
         if (\is_scalar($item) && 'id' === $field) {
-            return $this->normalizeCursorValue($item);
+            return $this->normalizeCursorValue($item, $nullable);
         }
 
         throw new RuntimeException(\sprintf('Cannot extract cursor field "%s" from item of type "%s".', $field, get_debug_type($item)));
     }
 
-    private function normalizeCursorValue(mixed $value): int|string|float
+    private function normalizeCursorValue(mixed $value, bool $nullable = false): int|string|float|null
     {
         if (null === $value) {
+            if ($nullable) {
+                return null;
+            }
+
             throw new RuntimeException('Cursor values must be non-null.');
         }
 
@@ -100,7 +105,7 @@ trait CursorValuesTrait
     }
 
     /**
-     * @param list<list<int|string|float>> $tuples
+     * @param list<list<int|string|float|null>> $tuples
      */
     private function assertUniqueTuples(array $tuples): void
     {
@@ -117,8 +122,8 @@ trait CursorValuesTrait
     /**
      * Lexicographic tuple comparison of normalized cursor values.
      *
-     * @param array<int|string|float> $a
-     * @param array<int|string|float> $b
+     * @param array<int|string|float|null> $a
+     * @param array<int|string|float|null> $b
      */
     private function compareTuples(array $a, array $b): int
     {

@@ -17,12 +17,12 @@ namespace Symfony\UX\Pagination\Cursor;
 interface CursorCodecInterface
 {
     /**
-     * @param list<int|string|float> $values
+     * @param list<int|string|float|null> $values
      */
     public function encode(array $values, bool $pointsForward, string $orderFingerprint, string $context): string;
 
     /**
-     * @return array{values: list<int|string|float>, forward: bool}
+     * @return array{values: list<int|string|float|null>, forward: bool}
      */
     public function decode(string $cursor, string $orderFingerprint, string $context): array;
 }
