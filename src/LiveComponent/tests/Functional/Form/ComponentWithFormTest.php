@@ -443,6 +443,31 @@ class ComponentWithFormTest extends KernelTestCase
         ;
     }
 
+    public function testLiveCollectionTypeDoesNotReuseTheIndexOfARemovedItem(): void
+    {
+        $dehydratedProps = $this->dehydrateComponent($this->mountComponent('form_with_live_collection_type'))->getProps();
+        $removeArgs = ['name' => 'blog_post_form[comments]', 'index' => '0'];
+        $addArgs = ['name' => 'blog_post_form[comments]'];
+
+        $this->browser()
+            ->post('/_components/form_with_live_collection_type/removeCollectionItem', [
+                'body' => ['data' => json_encode(['props' => $dehydratedProps, 'args' => $removeArgs])],
+            ])
+            ->assertStatus(200)
+            ->assertNotContains('<textarea id="blog_post_form_comments_0_content"')
+            ->use(static function (Crawler $crawler) use (&$dehydratedProps) {
+                $div = $crawler->filter('[data-controller="live"]');
+                $dehydratedProps = json_decode($div->attr('data-live-props-value'), true);
+            })
+            ->post('/_components/form_with_live_collection_type/addCollectionItem', [
+                'body' => ['data' => json_encode(['props' => $dehydratedProps, 'args' => $addArgs])],
+            ])
+            ->assertStatus(200)
+            ->assertNotContains('<textarea id="blog_post_form_comments_0_content"')
+            ->assertContains('<textarea id="blog_post_form_comments_1_content"')
+        ;
+    }
+
     public function testDataModelAttributeAutomaticallyAdded(): void
     {
         $dehydrated = $this->dehydrateComponent($this->mountComponent('form_with_collection_type'))->getProps();
