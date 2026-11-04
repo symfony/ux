@@ -1,0 +1,41 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2026-05-14T19:08:20Z
+
+For 3.x, 2.x is not maintained anymore, and please follow the PR template (it's not the first time 😬)
+
+---------------------------------------------------------------------------
+
+by github-actions[bot] at 2026-05-15T10:51:34Z
+
+<h1>📊 Packages dist files size difference</h1>
+
+Thanks for the PR! Here is the difference in size of the packages dist files between the base branch and the PR.
+Please review the changes and make sure they are expected.
+
+<table>
+    <thead><tr><th>File</th><th>Before (Size / Gzip)</th><th>After (Size / Gzip)</th></tr></thead>
+    <tbody><tr><td colspan="3"><a href="https://github.com/Amoifr/ux/tree/fix/live-component-stale-valuestore-on-reconnect/src/LiveComponent/assets/dist"><b>LiveComponent</b></a></td></tr><tr>
+                <td><a href="https://github.com/Amoifr/ux/blob/fix/live-component-stale-valuestore-on-reconnect/src/LiveComponent/assets/dist/live_controller.js"><code>live_controller.js</code></a></td>
+            <td>
+                    <code>92.32 kB</code>
+                    / <code>20.85 kB</code>
+                </td><td>
+                    <code>92.45 kB</code><sup>0%</sup>
+                    / <code>20.88 kB</code><sup>0%</sup>
+                </td></tr></tbody>
+</table>
+
+<!-- Sticky Pull Request Comment -->
+
+---------------------------------------------------------------------------
+
+by Amoifr at 2026-05-15T10:57:11Z
+
+Sorry for the slip @Kocal — rebased onto `3.x` and prepended the Q/A table to the body. I've also saved this as a checklist note on my side so the next PR opens with both right from the start. 🙏
+
+---------------------------------------------------------------------------
+
+by Amoifr at 2026-05-15T10:58:15Z
+
+@Kocal in my defense — I catch on quick, you just have to explain things to me at length 😅
