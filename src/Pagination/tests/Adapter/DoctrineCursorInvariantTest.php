@@ -18,6 +18,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\UX\Pagination\Adapter\DoctrineOrmAdapter;
+use Symfony\UX\Pagination\Cursor\CursorBoundary;
 use Symfony\UX\Pagination\Cursor\CursorCodec;
 use Symfony\UX\Pagination\Cursor\CursorOrder;
 use Symfony\UX\Pagination\Exception\InvalidCursorException;
@@ -201,6 +202,75 @@ final class DoctrineCursorInvariantTest extends TestCase
         yield 'date' => ['printedOn'];
     }
 
+    /**
+     * @param 'ASC'|'DESC' $direction
+     */
+    #[DataProvider('provideDirections')]
+    public function testNullableFieldWalkMatchesTheDatabaseOrder(string $direction): void
+    {
+        $this->createBooksWithNullableRatings(23);
+        $order = CursorOrder::byFields(['rating', 'id'], $direction);
+
+        // NULLs sort where the platform puts them; the walk must follow the same order
+        $expected = array_map(
+            static fn (Book $book) => $book->getId(),
+            $this->bookQueryBuilder()->orderBy('b.rating', $direction)->addOrderBy('b.id', $direction)->getQuery()->getResult(),
+        );
+
+        $forwardPages = [];
+        $cursor = null;
+        $guard = 0;
+        do {
+            $page = $this->adapter->sliceWithCursor($this->bookQueryBuilder(), $cursor, 5, $order);
+            $forwardPages[] = array_map(static fn (Book $book) => $book->getId(), $page->items);
+            $cursor = $page->next;
+            $lastPage = $page;
+        } while (null !== $cursor && ++$guard < 50);
+
+        self::assertSame($expected, array_merge(...$forwardPages));
+
+        $backwardPages = [];
+        $cursor = $lastPage->previous;
+        $guard = 0;
+        while (null !== $cursor && ++$guard < 50) {
+            $page = $this->adapter->sliceWithCursor($this->bookQueryBuilder(), $cursor, 5, $order);
+            $backwardPages[] = array_map(static fn (Book $book) => $book->getId(), $page->items);
+            $cursor = $page->previous;
+        }
+
+        self::assertSame(\array_slice($forwardPages, 0, -1), array_reverse($backwardPages));
+    }
+
+    public static function provideDirections(): iterable
+    {
+        yield 'ascending' => ['ASC'];
+        yield 'descending' => ['DESC'];
+    }
+
+    public function testNullableFieldBoundaryRoundTripsThroughTheCodec(): void
+    {
+        $this->createBooksWithNullableRatings(6);
+        $order = CursorOrder::byFields(['rating', 'id'], 'ASC');
+        $codec = new CursorCodec('secret');
+
+        // Every boundary of a 1-row walk, NULL ones included, survives encoding
+        $ids = [];
+        $cursor = null;
+        $guard = 0;
+        do {
+            $page = $this->adapter->sliceWithCursor($this->bookQueryBuilder(), $cursor, 1, $order);
+            $ids = [...$ids, ...array_map(static fn (Book $book) => $book->getId(), $page->items)];
+            $cursor = null;
+            if (null !== $page->next) {
+                $decoded = $codec->decode($codec->encode($page->next->values, true, 'order', 'context'), 'order', 'context');
+                $cursor = new CursorBoundary($decoded['values'], $decoded['forward']);
+            }
+        } while (null !== $cursor && ++$guard < 50);
+
+        sort($ids);
+        self::assertSame(range(1, 6), $ids);
+    }
+
     public function testExistingOrderIsRejectedEvenWhenCompatible(): void
     {
         $this->createAuthors(8);
@@ -281,6 +351,24 @@ final class DoctrineCursorInvariantTest extends TestCase
             $this->entityManager->persist($author);
         }
         $this->entityManager->flush();
+    }
+
+    private function createBooksWithNullableRatings(int $count): void
+    {
+        new SchemaTool($this->entityManager)->createSchema([
+            $this->entityManager->getClassMetadata(Book::class),
+            $this->entityManager->getClassMetadata(Category::class),
+        ]);
+
+        // Every fourth rating is NULL, the others repeat so that page boundaries fall inside equal values
+        for ($i = 1; $i <= $count; ++$i) {
+            $book = new Book();
+            $book->setTitle('Book '.$i);
+            $book->setRating(0 === $i % 4 ? null : (float) ($i % 3));
+            $this->entityManager->persist($book);
+        }
+        $this->entityManager->flush();
+        $this->entityManager->clear();
     }
 
     private function queryBuilder(): QueryBuilder

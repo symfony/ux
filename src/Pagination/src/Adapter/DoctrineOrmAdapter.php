@@ -12,6 +12,10 @@
 namespace Symfony\UX\Pagination\Adapter;
 
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Platforms\AbstractPlatform;
+use Doctrine\DBAL\Platforms\DB2Platform;
+use Doctrine\DBAL\Platforms\OraclePlatform;
+use Doctrine\DBAL\Platforms\PostgreSQLPlatform;
 use Doctrine\DBAL\Types\Type;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Query\Expr\Join;
@@ -203,6 +207,7 @@ final class DoctrineOrmAdapter implements OffsetAdapterInterface, LookaheadAdapt
         $fields = array_map(static fn ($field) => $alias.'.'.$field, $cursorFields);
         $this->assertNoExistingCursorOrder($qb);
         $forward = $boundary->forward ?? true;
+        $nullableFields = $this->getNullableFieldNames($qb, $cursorFields);
 
         if (null !== $boundary) {
             $values = $boundary->values;
@@ -218,6 +223,7 @@ final class DoctrineOrmAdapter implements OffsetAdapterInterface, LookaheadAdapt
                 $qb,
                 \count($fields),
             );
+            $nullsSortLargest = self::nullsSortLargest($qb->getEntityManager()->getConnection()->getDatabasePlatform());
 
             // Build tuple comparison: (A > x) OR (A = x AND B > y) OR (A = x AND B = y AND C > z)
             $conditions = [];
@@ -225,17 +231,27 @@ final class DoctrineOrmAdapter implements OffsetAdapterInterface, LookaheadAdapt
                 $condition = [];
 
                 for ($j = 0; $j < $i; ++$j) {
-                    $condition[] = \sprintf('%s = :%s_%d', $fields[$j], $parameterPrefix, $j);
+                    $condition[] = null === $values[$j]
+                        ? \sprintf('%s IS NULL', $fields[$j])
+                        : \sprintf('%s = :%s_%d', $fields[$j], $parameterPrefix, $j);
                 }
 
-                $condition[] = \sprintf('%s %s :%s_%d', $fields[$i], $operator, $parameterPrefix, $i);
+                $comparison = $this->cursorComparison($fields[$i], $operator, $parameterPrefix.'_'.$i, $values[$i], \in_array($cursorFields[$i], $nullableFields, true), $nullsSortLargest);
+                if (null === $comparison) {
+                    // No value lies beyond a NULL that sorts last
+                    continue;
+                }
+                $condition[] = $comparison;
 
                 $conditions[] = '('.implode(' AND ', $condition).')';
             }
 
-            $qb->andWhere(implode(' OR ', $conditions));
+            $qb->andWhere([] === $conditions ? '1 = 0' : implode(' OR ', $conditions));
 
             foreach ($values as $index => $value) {
+                if (null === $value) {
+                    continue;
+                }
                 [$value, $type] = $this->normalizeDoctrineCursorParameter($qb, $cursorFields[$index], $value);
                 $qb->setParameter($parameterPrefix.'_'.$index, $value, $type);
             }
@@ -261,8 +277,8 @@ final class DoctrineOrmAdapter implements OffsetAdapterInterface, LookaheadAdapt
             $items = array_reverse($items);
         }
 
-        $firstCursor = [] !== $items ? $this->extractCursorValues($items[0], $cursorFields) : null;
-        $lastCursor = [] !== $items ? $this->extractCursorValues(end($items), $cursorFields) : null;
+        $firstCursor = [] !== $items ? $this->extractCursorValues($items[0], $cursorFields, $nullableFields) : null;
+        $lastCursor = [] !== $items ? $this->extractCursorValues(end($items), $cursorFields, $nullableFields) : null;
 
         if ($forward) {
             // Coming forward: a previous page exists whenever a cursor was used
@@ -277,6 +293,53 @@ final class DoctrineOrmAdapter implements OffsetAdapterInterface, LookaheadAdapt
         }
 
         return new CursorSlice($items, $nextCursor, $previousCursor, $hasNext);
+    }
+
+    /**
+     * The condition keeping the rows strictly beyond the boundary value on one field.
+     *
+     * A NULL sorts where the platform puts it by default: after every value on PostgreSQL,
+     * Oracle and DB2, before every value elsewhere. A comparison with NULL is never true,
+     * so the NULL side of the boundary is spelled out with IS NULL and IS NOT NULL.
+     *
+     * @param '>'|'<' $operator
+     *
+     * @return string|null null when no row can lie beyond the boundary on this field
+     */
+    private function cursorComparison(string $field, string $operator, string $parameter, int|string|float|null $value, bool $nullable, bool $nullsSortLargest): ?string
+    {
+        // Whether the rows beyond the boundary are on the side where NULLs sort
+        $towardNulls = $nullsSortLargest === ('>' === $operator);
+
+        if (null === $value) {
+            return $towardNulls ? null : \sprintf('%s IS NOT NULL', $field);
+        }
+
+        if ($nullable && $towardNulls) {
+            return \sprintf('(%s %s :%s OR %s IS NULL)', $field, $operator, $parameter, $field);
+        }
+
+        return \sprintf('%s %s :%s', $field, $operator, $parameter);
+    }
+
+    private static function nullsSortLargest(AbstractPlatform $platform): bool
+    {
+        return $platform instanceof PostgreSQLPlatform || $platform instanceof OraclePlatform || $platform instanceof DB2Platform;
+    }
+
+    /**
+     * @param list<string> $fields
+     *
+     * @return list<string>
+     */
+    private function getNullableFieldNames(QueryBuilder $queryBuilder, array $fields): array
+    {
+        $metadata = $queryBuilder->getEntityManager()->getClassMetadata($queryBuilder->getRootEntities()[0]);
+
+        return array_values(array_filter(
+            $fields,
+            static fn (string $field): bool => $metadata->hasField($field) && $metadata->getFieldMapping($field)->nullable,
+        ));
     }
 
     private function cursorParameterPrefix(QueryBuilder $queryBuilder, int $count): string
@@ -559,11 +622,6 @@ final class DoctrineOrmAdapter implements OffsetAdapterInterface, LookaheadAdapt
         foreach ($fields as $field) {
             if (!\in_array($field, $validNames, true)) {
                 throw new InvalidArgumentException(\sprintf('Invalid cursor field "%s" for entity "%s". Cursor fields must be mapped scalar fields, not associations.', $field, $entityClass));
-            }
-
-            $mapping = $metadata->getFieldMapping($field);
-            if ($mapping->nullable) {
-                throw new InvalidArgumentException(\sprintf('Cursor field "%s" must be non-nullable.', $field));
             }
         }
     }
