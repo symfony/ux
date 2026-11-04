@@ -18,6 +18,8 @@ use Doctrine\DBAL\Platforms\OraclePlatform;
 use Doctrine\DBAL\Platforms\PostgreSQLPlatform;
 use Doctrine\DBAL\Types\Type;
 use Doctrine\DBAL\Types\Types;
+use Doctrine\ORM\Mapping\ClassMetadata;
+use Doctrine\ORM\Mapping\ToOneOwningSideMapping;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\Query\Parameter;
 use Doctrine\ORM\Query\Parser;
@@ -204,8 +206,8 @@ final class DoctrineOrmAdapter implements OffsetAdapterInterface, LookaheadAdapt
         $qb = clone $source;
         $alias = $this->getMainAlias($qb);
 
-        $fields = array_map(static fn ($field) => $alias.'.'.$field, $cursorFields);
         $this->assertNoExistingCursorOrder($qb);
+        $fields = array_map(fn (string $field): string => $this->cursorFieldExpression($qb, $alias, $field), $cursorFields);
         $forward = $boundary->forward ?? true;
         $nullableFields = $this->getNullableFieldNames($qb, $cursorFields);
 
@@ -277,8 +279,8 @@ final class DoctrineOrmAdapter implements OffsetAdapterInterface, LookaheadAdapt
             $items = array_reverse($items);
         }
 
-        $firstCursor = [] !== $items ? $this->extractCursorValues($items[0], $cursorFields, $nullableFields) : null;
-        $lastCursor = [] !== $items ? $this->extractCursorValues(end($items), $cursorFields, $nullableFields) : null;
+        $firstCursor = [] !== $items ? $this->extractOrmCursorValues($qb, $items[0], $cursorFields, $nullableFields) : null;
+        $lastCursor = [] !== $items ? $this->extractOrmCursorValues($qb, end($items), $cursorFields, $nullableFields) : null;
 
         if ($forward) {
             // Coming forward: a previous page exists whenever a cursor was used
@@ -334,12 +336,148 @@ final class DoctrineOrmAdapter implements OffsetAdapterInterface, LookaheadAdapt
      */
     private function getNullableFieldNames(QueryBuilder $queryBuilder, array $fields): array
     {
-        $metadata = $queryBuilder->getEntityManager()->getClassMetadata($queryBuilder->getRootEntities()[0]);
-
         return array_values(array_filter(
             $fields,
-            static fn (string $field): bool => $metadata->hasField($field) && $metadata->getFieldMapping($field)->nullable,
+            fn (string $field): bool => $this->resolveFieldPath($queryBuilder, $field)['nullable'],
         ));
+    }
+
+    /**
+     * Resolves a cursor field: a mapped field of the root entity, or one reached through
+     * single-valued associations ("author.name").
+     *
+     * @return array{associations: list<string>, field: string, metadata: ClassMetadata<object>, nullable: bool}
+     */
+    private function resolveFieldPath(QueryBuilder $queryBuilder, string $path): array
+    {
+        $entityClass = $queryBuilder->getRootEntities()[0];
+        $metadata = $queryBuilder->getEntityManager()->getClassMetadata($entityClass);
+        $steps = explode('.', $path);
+        $field = array_pop($steps);
+        $nullable = false;
+
+        foreach ($steps as $association) {
+            if (!$metadata->hasAssociation($association) || !$metadata->isSingleValuedAssociation($association)) {
+                throw new InvalidArgumentException(\sprintf('Invalid cursor field "%s" for entity "%s". "%s" is not a single-valued association of "%s".', $path, $entityClass, $association, $metadata->getName()));
+            }
+
+            // An inverse side or a nullable join column may leave the association empty
+            $mapping = $metadata->getAssociationMapping($association);
+            $nullable = $nullable || !$mapping instanceof ToOneOwningSideMapping || array_any(
+                $mapping->joinColumns,
+                static fn ($joinColumn): bool => false !== $joinColumn->nullable,
+            );
+
+            $metadata = $queryBuilder->getEntityManager()->getClassMetadata($metadata->getAssociationTargetClass($association));
+        }
+
+        if (!\in_array($field, $metadata->getFieldNames(), true)) {
+            throw new InvalidArgumentException(\sprintf('Invalid cursor field "%s" for entity "%s". Cursor fields must be mapped scalar fields, not associations.', $path, $entityClass));
+        }
+
+        return [
+            'associations' => $steps,
+            'field' => $field,
+            'metadata' => $metadata,
+            'nullable' => $nullable || $metadata->getFieldMapping($field)->nullable,
+        ];
+    }
+
+    /**
+     * The DQL path of a cursor field, joining its associations unless the query already does.
+     */
+    private function cursorFieldExpression(QueryBuilder $queryBuilder, string $rootAlias, string $path): string
+    {
+        $resolved = $this->resolveFieldPath($queryBuilder, $path);
+        $alias = $rootAlias;
+
+        foreach ($resolved['associations'] as $association) {
+            $alias = $this->findJoinAlias($queryBuilder, $alias.'.'.$association) ?? $this->addCursorJoin($queryBuilder, $alias.'.'.$association);
+        }
+
+        return $alias.'.'.$resolved['field'];
+    }
+
+    private function findJoinAlias(QueryBuilder $queryBuilder, string $join): ?string
+    {
+        /** @var array<string, list<Join>> $joinParts */
+        $joinParts = $queryBuilder->getDQLPart('join');
+        foreach ($joinParts as $joins) {
+            foreach ($joins as $existing) {
+                if ($join === $existing->getJoin() && null !== $existing->getAlias() && '' !== $existing->getAlias()) {
+                    return $existing->getAlias();
+                }
+            }
+        }
+
+        return null;
+    }
+
+    private function addCursorJoin(QueryBuilder $queryBuilder, string $join): string
+    {
+        $aliases = $queryBuilder->getAllAliases();
+        $index = 0;
+        while (\in_array($alias = 'ux_pagination_join_'.$index, $aliases, true)) {
+            ++$index;
+        }
+
+        // A LEFT JOIN keeps the rows whose association is empty; to-one joins never duplicate rows
+        $queryBuilder->leftJoin($join, $alias);
+
+        return $alias;
+    }
+
+    /**
+     * @param list<string> $fields
+     * @param list<string> $nullableFields
+     *
+     * @return list<int|string|float|null>
+     */
+    private function extractOrmCursorValues(QueryBuilder $queryBuilder, mixed $item, array $fields, array $nullableFields): array
+    {
+        $values = [];
+        foreach ($fields as $field) {
+            $nullable = \in_array($field, $nullableFields, true);
+            if (!str_contains($field, '.')) {
+                $values[] = $this->extractSingleCursorValue($item, $field, $nullable);
+                continue;
+            }
+
+            $values[] = $this->normalizeCursorValue($this->readAssociationPath($queryBuilder, $item, $field), $nullable);
+        }
+
+        return $values;
+    }
+
+    private function readAssociationPath(QueryBuilder $queryBuilder, mixed $item, string $path): mixed
+    {
+        if (!\is_object($item)) {
+            throw new RuntimeException(\sprintf('Cannot extract cursor field "%s" from item of type "%s".', $path, get_debug_type($item)));
+        }
+
+        $entityManager = $queryBuilder->getEntityManager();
+        $metadata = $entityManager->getClassMetadata($queryBuilder->getRootEntities()[0]);
+        $value = $item;
+
+        foreach (explode('.', $path) as $step) {
+            if (null === $value) {
+                return null;
+            }
+            if (!\is_object($value)) {
+                throw new RuntimeException(\sprintf('Cannot extract cursor field "%s" from item of type "%s".', $path, get_debug_type($item)));
+            }
+
+            $value = $metadata->getFieldValue($value, $step);
+            if ($metadata->hasAssociation($step)) {
+                $metadata = $entityManager->getClassMetadata($metadata->getAssociationTargetClass($step));
+                // A related entity the query did not select is an uninitialized proxy
+                if (\is_object($value)) {
+                    $entityManager->initializeObject($value);
+                }
+            }
+        }
+
+        return $value;
     }
 
     private function cursorParameterPrefix(QueryBuilder $queryBuilder, int $count): string
@@ -371,9 +509,9 @@ final class DoctrineOrmAdapter implements OffsetAdapterInterface, LookaheadAdapt
      */
     private function normalizeDoctrineCursorParameter(QueryBuilder $queryBuilder, string $field, int|string|float $value): array
     {
-        $entity = $queryBuilder->getRootEntities()[0];
         $entityManager = $queryBuilder->getEntityManager();
-        $type = $entityManager->getClassMetadata($entity)->getTypeOfField($field);
+        $resolved = $this->resolveFieldPath($queryBuilder, $field);
+        $type = $resolved['metadata']->getTypeOfField($resolved['field']);
 
         // Symfony UID types (uuid, ulid): the cursor carries the string form, bound back as a UID
         // so the database compares it in its own storage format.
@@ -614,15 +752,8 @@ final class DoctrineOrmAdapter implements OffsetAdapterInterface, LookaheadAdapt
      */
     private function validateFieldNames(QueryBuilder $queryBuilder, array $fields): void
     {
-        $entityClass = $queryBuilder->getRootEntities()[0];
-
-        $metadata = $queryBuilder->getEntityManager()->getClassMetadata($entityClass);
-        $validNames = $metadata->getFieldNames();
-
         foreach ($fields as $field) {
-            if (!\in_array($field, $validNames, true)) {
-                throw new InvalidArgumentException(\sprintf('Invalid cursor field "%s" for entity "%s". Cursor fields must be mapped scalar fields, not associations.', $field, $entityClass));
-            }
+            $this->resolveFieldPath($queryBuilder, $field);
         }
     }
 

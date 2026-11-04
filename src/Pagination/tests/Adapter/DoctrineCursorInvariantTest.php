@@ -271,6 +271,44 @@ final class DoctrineCursorInvariantTest extends TestCase
         self::assertSame(range(1, 6), $ids);
     }
 
+    /**
+     * @param 'ASC'|'DESC' $direction
+     */
+    #[DataProvider('provideDirections')]
+    public function testAssociationFieldWalkMatchesTheDatabaseOrder(string $direction): void
+    {
+        $this->createBooksWithAuthors(23);
+        $order = CursorOrder::byFields(['author.name', 'id'], $direction);
+
+        $expected = array_map(
+            static fn (Book $book) => $book->getId(),
+            $this->bookQueryBuilder()->leftJoin('b.author', 'a')->orderBy('a.name', $direction)->addOrderBy('b.id', $direction)->getQuery()->getResult(),
+        );
+
+        $forwardPages = [];
+        $cursor = null;
+        $guard = 0;
+        do {
+            $page = $this->adapter->sliceWithCursor($this->bookQueryBuilder(), $cursor, 5, $order);
+            $forwardPages[] = array_map(static fn (Book $book) => $book->getId(), $page->items);
+            $cursor = $page->next;
+            $lastPage = $page;
+        } while (null !== $cursor && ++$guard < 50);
+
+        self::assertSame($expected, array_merge(...$forwardPages));
+
+        $backwardPages = [];
+        $cursor = $lastPage->previous;
+        $guard = 0;
+        while (null !== $cursor && ++$guard < 50) {
+            $page = $this->adapter->sliceWithCursor($this->bookQueryBuilder(), $cursor, 5, $order);
+            $backwardPages[] = array_map(static fn (Book $book) => $book->getId(), $page->items);
+            $cursor = $page->previous;
+        }
+
+        self::assertSame(\array_slice($forwardPages, 0, -1), array_reverse($backwardPages));
+    }
+
     public function testExistingOrderIsRejectedEvenWhenCompatible(): void
     {
         $this->createAuthors(8);
@@ -365,6 +403,32 @@ final class DoctrineCursorInvariantTest extends TestCase
             $book = new Book();
             $book->setTitle('Book '.$i);
             $book->setRating(0 === $i % 4 ? null : (float) ($i % 3));
+            $this->entityManager->persist($book);
+        }
+        $this->entityManager->flush();
+        $this->entityManager->clear();
+    }
+
+    private function createBooksWithAuthors(int $count): void
+    {
+        new SchemaTool($this->entityManager)->createSchema([
+            $this->entityManager->getClassMetadata(Book::class),
+            $this->entityManager->getClassMetadata(Category::class),
+        ]);
+
+        // Four authors, two of them sharing a name, and every fifth book without one
+        $authors = [];
+        foreach (['Cleo', 'Ann', 'Bob', 'Ann'] as $name) {
+            $author = new Author();
+            $author->setName($name);
+            $this->entityManager->persist($author);
+            $authors[] = $author;
+        }
+
+        for ($i = 1; $i <= $count; ++$i) {
+            $book = new Book();
+            $book->setTitle('Book '.$i);
+            $book->setAuthor(0 === $i % 5 ? null : $authors[$i % 4]);
             $this->entityManager->persist($book);
         }
         $this->entityManager->flush();

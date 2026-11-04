@@ -3,6 +3,7 @@
 ## 3.8.0
 
 - Support nullable Doctrine ORM cursor fields; `NULL` sorts where the database platform puts it by default
+- Support Doctrine ORM cursor fields reached through single-valued associations (`author.name`)
 
 ## 3.7.0
 

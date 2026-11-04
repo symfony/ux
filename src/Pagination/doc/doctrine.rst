@@ -82,9 +82,15 @@ first page should also serve the cursor boundary predicate.
 Cursor restrictions
 -------------------
 
-Cursor fields must be mapped scalar fields on the root entity.
-Associations, unmapped aliases and invalid field names are rejected
-against ORM metadata. Supported Doctrine types include
+Cursor fields must be mapped scalar fields of the root entity, or of an
+entity reached through single-valued associations: ``author.name`` orders
+books by their author's name. Collection-valued associations, unmapped
+aliases and invalid field names are rejected against ORM metadata.
+
+The adapter joins such an association itself, with a ``LEFT JOIN`` so that
+rows without one are kept, unless the query already joins it: then it orders
+through the query's join. An empty association, or one that is only optional
+in the mapping, makes the field nullable (see below). Supported Doctrine types include
 small, regular and big integers, string, GUID, float, decimal, boolean,
 ``date``, ``datetime`` and ``datetimetz`` fields, and the ``uuid`` and ``ulid``
 types of ``symfony/doctrine-bridge``. A UID is compared in its database
