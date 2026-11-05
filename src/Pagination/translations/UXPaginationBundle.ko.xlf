@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+    <file source-language="en" target-language="ko" datatype="plaintext" original="UXPaginationBundle">
+        <header>
+            <tool tool-id="symfony" tool-name="Symfony"/>
+        </header>
+        <body>
+            <trans-unit id="1">
+                <source>Showing %start%-%end% of %total%</source>
+                <target>총 %total%건 중 %start%-%end% 표시</target>
+            </trans-unit>
+            <trans-unit id="2">
+                <source>Showing %start%-%end%</source>
+                <target>%start%-%end% 표시</target>
+            </trans-unit>
+            <trans-unit id="3">
+                <source>No items</source>
+                <target>항목 없음</target>
+            </trans-unit>
+            <trans-unit id="4">
+                <source>Showing %count% item|Showing %count% items</source>
+                <target>%count%건 표시 중</target>
+            </trans-unit>
+            <trans-unit id="5">
+                <source>Showing %count% item (last page)|Showing %count% items (last page)</source>
+                <target>%count%건 표시 중 (마지막 페이지)</target>
+            </trans-unit>
+            <trans-unit id="6">
+                <source>Previous</source>
+                <target>이전</target>
+            </trans-unit>
+            <trans-unit id="7">
+                <source>Next</source>
+                <target>다음</target>
+            </trans-unit>
+            <trans-unit id="8">
+                <source>Previous page</source>
+                <target>이전 페이지</target>
+            </trans-unit>
+            <trans-unit id="9">
+                <source>Next page</source>
+                <target>다음 페이지</target>
+            </trans-unit>
+            <trans-unit id="10">
+                <source>Go to page %page%</source>
+                <target>%page%페이지로 이동</target>
+            </trans-unit>
+            <trans-unit id="11">
+                <source>Pagination</source>
+                <target>페이지네이션</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>
