@@ -192,6 +192,17 @@ jobs:
                       exit 1;
                   fi
 
+            - name: Check all translations are in sync
+              if: always()
+              run: |
+                  php .github/sync-translations.php
+
+                  if ! git diff --quiet -- 'src/*/translations/*.xlf'; then
+                      echo "Some translations are out of sync, run 'php .github/sync-translations.php' and commit the result:";
+                      git --no-pager diff -- 'src/*/translations/*.xlf';
+                      exit 1;
+                  fi
+
     code-format-js:
         name: JavaScript Formatting
         runs-on: ubuntu-latest
