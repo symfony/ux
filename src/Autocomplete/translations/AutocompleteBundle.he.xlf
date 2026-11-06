@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+    <file source-language="en" target-language="he" datatype="plaintext" original="AutocompleteBundle">
+        <header>
+            <tool tool-id="symfony" tool-name="Symfony"/>
+        </header>
+        <body>
+            <trans-unit id="1">
+                <source>Loading more results...</source>
+                <target state="needs-review-translation">טוען תוצאות נוספות...</target>
+            </trans-unit>
+            <trans-unit id="2">
+                <source>No results found</source>
+                <target state="needs-review-translation">לא נמצאו תוצאות</target>
+            </trans-unit>
+            <trans-unit id="3">
+                <source>No more results</source>
+                <target state="needs-review-translation">אין תוצאות נוספות</target>
+            </trans-unit>
+            <trans-unit id="4">
+                <source>Add %placeholder%...</source>
+                <target state="needs-review-translation">הוספת %placeholder%...</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>
