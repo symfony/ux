@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+    <file source-language="en" target-language="fi" datatype="plaintext" original="AutocompleteBundle">
+        <header>
+            <tool tool-id="symfony" tool-name="Symfony"/>
+        </header>
+        <body>
+            <trans-unit id="1">
+                <source>Loading more results...</source>
+                <target>Ladataan lisää tuloksia...</target>
+            </trans-unit>
+            <trans-unit id="2">
+                <source>No results found</source>
+                <target>Ei tuloksia</target>
+            </trans-unit>
+            <trans-unit id="3">
+                <source>No more results</source>
+                <target>Ei enempää tuloksia</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

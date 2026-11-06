@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+    <file source-language="en" target-language="fr" datatype="plaintext" original="AutocompleteBundle">
+        <header>
+            <tool tool-id="symfony" tool-name="Symfony"/>
+        </header>
+        <body>
+            <trans-unit id="1">
+                <source>Loading more results...</source>
+                <target>Chargement d'autres résultats...</target>
+            </trans-unit>
+            <trans-unit id="2">
+                <source>No results found</source>
+                <target>Aucun résultat trouvé</target>
+            </trans-unit>
+            <trans-unit id="3">
+                <source>No more results</source>
+                <target>Aucun autre résultat trouvé</target>
+            </trans-unit>
+            <trans-unit id="4">
+                <source>Add %placeholder%...</source>
+                <target>Ajouter %placeholder%...</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>
