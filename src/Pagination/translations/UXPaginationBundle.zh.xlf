@@ -7,47 +7,47 @@
         <body>
             <trans-unit id="1">
                 <source>Showing %start%-%end% of %total%</source>
-                <target>显示第 %start%-%end% 条，共 %total% 条</target>
+                <target state="needs-review-translation">显示第 %start%-%end% 条，共 %total% 条</target>
             </trans-unit>
             <trans-unit id="2">
                 <source>Showing %start%-%end%</source>
-                <target>显示第 %start%-%end% 条</target>
+                <target state="needs-review-translation">显示第 %start%-%end% 条</target>
             </trans-unit>
             <trans-unit id="3">
                 <source>No items</source>
-                <target>无数据</target>
+                <target state="needs-review-translation">无数据</target>
             </trans-unit>
             <trans-unit id="4">
                 <source>Showing %count% item|Showing %count% items</source>
-                <target>显示 %count% 条数据</target>
+                <target state="needs-review-translation">显示 %count% 条数据</target>
             </trans-unit>
             <trans-unit id="5">
                 <source>Showing %count% item (last page)|Showing %count% items (last page)</source>
-                <target>显示 %count% 条数据（最后一页）</target>
+                <target state="needs-review-translation">显示 %count% 条数据（最后一页）</target>
             </trans-unit>
             <trans-unit id="6">
                 <source>Previous</source>
-                <target>上一页</target>
+                <target state="needs-review-translation">上一页</target>
             </trans-unit>
             <trans-unit id="7">
                 <source>Next</source>
-                <target>下一页</target>
+                <target state="needs-review-translation">下一页</target>
             </trans-unit>
             <trans-unit id="8">
                 <source>Previous page</source>
-                <target>上一页</target>
+                <target state="needs-review-translation">上一页</target>
             </trans-unit>
             <trans-unit id="9">
                 <source>Next page</source>
-                <target>下一页</target>
+                <target state="needs-review-translation">下一页</target>
             </trans-unit>
             <trans-unit id="10">
                 <source>Go to page %page%</source>
-                <target>转到第 %page% 页</target>
+                <target state="needs-review-translation">转到第 %page% 页</target>
             </trans-unit>
             <trans-unit id="11">
                 <source>Pagination</source>
-                <target>分页</target>
+                <target state="needs-review-translation">分页</target>
             </trans-unit>
         </body>
     </file>

@@ -7,47 +7,47 @@
         <body>
             <trans-unit id="1">
                 <source>Showing %start%-%end% of %total%</source>
-                <target>Toont %start%-%end% van %total%</target>
+                <target state="needs-review-translation">Toont %start%-%end% van %total%</target>
             </trans-unit>
             <trans-unit id="2">
                 <source>Showing %start%-%end%</source>
-                <target>Toont %start%-%end%</target>
+                <target state="needs-review-translation">Toont %start%-%end%</target>
             </trans-unit>
             <trans-unit id="3">
                 <source>No items</source>
-                <target>Geen items</target>
+                <target state="needs-review-translation">Geen items</target>
             </trans-unit>
             <trans-unit id="4">
                 <source>Showing %count% item|Showing %count% items</source>
-                <target>Toont %count% item|Toont %count% items</target>
+                <target state="needs-review-translation">Toont %count% item|Toont %count% items</target>
             </trans-unit>
             <trans-unit id="5">
                 <source>Showing %count% item (last page)|Showing %count% items (last page)</source>
-                <target>Toont %count% item (laatste pagina)|Toont %count% items (laatste pagina)</target>
+                <target state="needs-review-translation">Toont %count% item (laatste pagina)|Toont %count% items (laatste pagina)</target>
             </trans-unit>
             <trans-unit id="6">
                 <source>Previous</source>
-                <target>Vorige</target>
+                <target state="needs-review-translation">Vorige</target>
             </trans-unit>
             <trans-unit id="7">
                 <source>Next</source>
-                <target>Volgende</target>
+                <target state="needs-review-translation">Volgende</target>
             </trans-unit>
             <trans-unit id="8">
                 <source>Previous page</source>
-                <target>Vorige pagina</target>
+                <target state="needs-review-translation">Vorige pagina</target>
             </trans-unit>
             <trans-unit id="9">
                 <source>Next page</source>
-                <target>Volgende pagina</target>
+                <target state="needs-review-translation">Volgende pagina</target>
             </trans-unit>
             <trans-unit id="10">
                 <source>Go to page %page%</source>
-                <target>Ga naar pagina %page%</target>
+                <target state="needs-review-translation">Ga naar pagina %page%</target>
             </trans-unit>
             <trans-unit id="11">
                 <source>Pagination</source>
-                <target>Paginering</target>
+                <target state="needs-review-translation">Paginering</target>
             </trans-unit>
         </body>
     </file>

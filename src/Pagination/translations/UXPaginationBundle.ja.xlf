@@ -7,47 +7,47 @@
         <body>
             <trans-unit id="1">
                 <source>Showing %start%-%end% of %total%</source>
-                <target>%total%件中 %start%-%end%件を表示</target>
+                <target state="needs-review-translation">%total%件中 %start%-%end%件を表示</target>
             </trans-unit>
             <trans-unit id="2">
                 <source>Showing %start%-%end%</source>
-                <target>%start%-%end%件を表示</target>
+                <target state="needs-review-translation">%start%-%end%件を表示</target>
             </trans-unit>
             <trans-unit id="3">
                 <source>No items</source>
-                <target>項目なし</target>
+                <target state="needs-review-translation">項目なし</target>
             </trans-unit>
             <trans-unit id="4">
                 <source>Showing %count% item|Showing %count% items</source>
-                <target>%count%件を表示中</target>
+                <target state="needs-review-translation">%count%件を表示中</target>
             </trans-unit>
             <trans-unit id="5">
                 <source>Showing %count% item (last page)|Showing %count% items (last page)</source>
-                <target>%count%件を表示中（最終ページ）</target>
+                <target state="needs-review-translation">%count%件を表示中（最終ページ）</target>
             </trans-unit>
             <trans-unit id="6">
                 <source>Previous</source>
-                <target>前へ</target>
+                <target state="needs-review-translation">前へ</target>
             </trans-unit>
             <trans-unit id="7">
                 <source>Next</source>
-                <target>次へ</target>
+                <target state="needs-review-translation">次へ</target>
             </trans-unit>
             <trans-unit id="8">
                 <source>Previous page</source>
-                <target>前のページ</target>
+                <target state="needs-review-translation">前のページ</target>
             </trans-unit>
             <trans-unit id="9">
                 <source>Next page</source>
-                <target>次のページ</target>
+                <target state="needs-review-translation">次のページ</target>
             </trans-unit>
             <trans-unit id="10">
                 <source>Go to page %page%</source>
-                <target>%page%ページへ移動</target>
+                <target state="needs-review-translation">%page%ページへ移動</target>
             </trans-unit>
             <trans-unit id="11">
                 <source>Pagination</source>
-                <target>ページネーション</target>
+                <target state="needs-review-translation">ページネーション</target>
             </trans-unit>
         </body>
     </file>
