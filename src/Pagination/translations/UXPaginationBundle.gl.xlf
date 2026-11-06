@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+    <file source-language="en" target-language="gl" datatype="plaintext" original="UXPaginationBundle">
+        <header>
+            <tool tool-id="symfony" tool-name="Symfony"/>
+        </header>
+        <body>
+            <trans-unit id="1">
+                <source>Showing %start%-%end% of %total%</source>
+                <target state="needs-review-translation">Amosando %start%-%end% de %total%</target>
+            </trans-unit>
+            <trans-unit id="2">
+                <source>Showing %start%-%end%</source>
+                <target state="needs-review-translation">Amosando %start%-%end%</target>
+            </trans-unit>
+            <trans-unit id="3">
+                <source>No items</source>
+                <target state="needs-review-translation">Non hai elementos</target>
+            </trans-unit>
+            <trans-unit id="4">
+                <source>Showing %count% item|Showing %count% items</source>
+                <target state="needs-review-translation">Amosando %count% elemento|Amosando %count% elementos</target>
+            </trans-unit>
+            <trans-unit id="5">
+                <source>Showing %count% item (last page)|Showing %count% items (last page)</source>
+                <target state="needs-review-translation">Amosando %count% elemento (última páxina)|Amosando %count% elementos (última páxina)</target>
+            </trans-unit>
+            <trans-unit id="6">
+                <source>Previous</source>
+                <target state="needs-review-translation">Anterior</target>
+            </trans-unit>
+            <trans-unit id="7">
+                <source>Next</source>
+                <target state="needs-review-translation">Seguinte</target>
+            </trans-unit>
+            <trans-unit id="8">
+                <source>Previous page</source>
+                <target state="needs-review-translation">Páxina anterior</target>
+            </trans-unit>
+            <trans-unit id="9">
+                <source>Next page</source>
+                <target state="needs-review-translation">Páxina seguinte</target>
+            </trans-unit>
+            <trans-unit id="10">
+                <source>Go to page %page%</source>
+                <target state="needs-review-translation">Ir á páxina %page%</target>
+            </trans-unit>
+            <trans-unit id="11">
+                <source>Pagination</source>
+                <target state="needs-review-translation">Paxinación</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

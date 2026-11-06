@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+    <file source-language="en" target-language="he" datatype="plaintext" original="UXPaginationBundle">
+        <header>
+            <tool tool-id="symfony" tool-name="Symfony"/>
+        </header>
+        <body>
+            <trans-unit id="1">
+                <source>Showing %start%-%end% of %total%</source>
+                <target state="needs-review-translation">מוצגים %start%-%end% מתוך %total%</target>
+            </trans-unit>
+            <trans-unit id="2">
+                <source>Showing %start%-%end%</source>
+                <target state="needs-review-translation">מוצגים %start%-%end%</target>
+            </trans-unit>
+            <trans-unit id="3">
+                <source>No items</source>
+                <target state="needs-review-translation">אין פריטים</target>
+            </trans-unit>
+            <trans-unit id="4">
+                <source>Showing %count% item|Showing %count% items</source>
+                <target state="needs-review-translation">מוצג %count% פריט|מוצגים %count% פריטים</target>
+            </trans-unit>
+            <trans-unit id="5">
+                <source>Showing %count% item (last page)|Showing %count% items (last page)</source>
+                <target state="needs-review-translation">מוצג %count% פריט (עמוד אחרון)|מוצגים %count% פריטים (עמוד אחרון)</target>
+            </trans-unit>
+            <trans-unit id="6">
+                <source>Previous</source>
+                <target state="needs-review-translation">הקודם</target>
+            </trans-unit>
+            <trans-unit id="7">
+                <source>Next</source>
+                <target state="needs-review-translation">הבא</target>
+            </trans-unit>
+            <trans-unit id="8">
+                <source>Previous page</source>
+                <target state="needs-review-translation">העמוד הקודם</target>
+            </trans-unit>
+            <trans-unit id="9">
+                <source>Next page</source>
+                <target state="needs-review-translation">העמוד הבא</target>
+            </trans-unit>
+            <trans-unit id="10">
+                <source>Go to page %page%</source>
+                <target state="needs-review-translation">מעבר לעמוד %page%</target>
+            </trans-unit>
+            <trans-unit id="11">
+                <source>Pagination</source>
+                <target state="needs-review-translation">עימוד</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>
