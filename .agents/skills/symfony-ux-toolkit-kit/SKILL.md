@@ -217,6 +217,7 @@ symfony serve -d
 Rules:
 - Use the `%COMPONENTS_DIR%` and `%CONTROLLERS_DIR%` placeholders in `copy-files` destinations, never a literal one like `"assets/": "assets/"`, because a literal destination ignores the directories the application configures for `ux:install` (enforced by `CopyFilesPlaceholderChecker`).
 - Drop `assets/controllers/` from `copy-files` if no Stimulus controller.
+- Never install a file that a component recipe already installs: a block shipping its own `DatePicker.html.twig` replaces the `date-picker` component, so name it after the block, e.g. `SidebarDatePicker.html.twig` (enforced by `CopyFilesOverwriteChecker`). Blocks may share files with each other, as an application installs one of them.
 - Add `"symfony/ux-icons"` to `composer` whenever templates use `<twig:ux:icon>`.
 - Bump `twig/html-extra` to `^3.24.0` for `html_attr_type` / `tailwind_classes`. The `tailwind_classes` class-merge idiom also needs `tales-from-a-dev/twig-tailwind-extra:^1.3.0` and `symfony/ux-twig-component:^3.5` (enforced by `ComposerSymbolChecker`).
 - Declare `dependencies.recipe` only for recipes required by the **component templates** themselves (e.g. `toggle-group` depends on `toggle`). Do NOT declare recipe deps for components used only in examples — examples are demo files, not shipped dependencies.
