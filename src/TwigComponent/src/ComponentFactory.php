@@ -20,6 +20,7 @@ use Symfony\Contracts\Service\ResetInterface;
 use Symfony\UX\TwigComponent\Event\PostMountEvent;
 use Symfony\UX\TwigComponent\Event\PreMountEvent;
 use Twig\Environment;
+use Twig\Extra\Html\HtmlAttr\MergeableInterface;
 use Twig\Runtime\EscaperRuntime;
 
 /**
@@ -150,7 +151,7 @@ final class ComponentFactory implements ResetInterface
         unset($data[$attributesVar]);
 
         foreach ($data as $key => $value) {
-            if ($value instanceof \Stringable) {
+            if ($value instanceof \Stringable && !$value instanceof MergeableInterface) {
                 $data[$key] = (string) $value;
             }
         }

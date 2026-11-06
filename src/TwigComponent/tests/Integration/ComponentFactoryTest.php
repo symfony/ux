@@ -20,6 +20,8 @@ use Symfony\UX\TwigComponent\Tests\Fixtures\Component\ComponentA;
 use Symfony\UX\TwigComponent\Tests\Fixtures\Component\ComponentB;
 use Symfony\UX\TwigComponent\Tests\Fixtures\Component\ComponentC;
 use Symfony\UX\TwigComponent\Tests\Fixtures\Component\WithSlots;
+use Symfony\UX\TwigComponent\Tests\Fixtures\MergeableExtension;
+use Twig\Extra\Html\HtmlAttr\MergeableInterface;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
@@ -103,6 +105,19 @@ final class ComponentFactoryTest extends KernelTestCase
         }])->getAttributes()->all();
 
         self::assertSame(['data-item-id-param' => 'test'], $attributes);
+    }
+
+    public function testMergeableObjectPassedToComponentIsKeptAsIs(): void
+    {
+        if (!interface_exists(MergeableInterface::class)) {
+            $this->markTestSkipped('Test requires Twig HTML extra >= 3.24.');
+        }
+
+        $mergeable = MergeableExtension::mergeableTokens('c');
+
+        $attributes = $this->factory()->create('component_a', ['propB' => 'B', 'data-foo' => $mergeable])->getAttributes()->all();
+
+        self::assertSame($mergeable, $attributes['data-foo']);
     }
 
     public function testTwigComponentServiceTagWithoutKeyUsesShortClassName(): void
