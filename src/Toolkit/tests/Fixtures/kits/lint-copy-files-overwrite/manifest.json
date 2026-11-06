@@ -1,0 +1,7 @@
+{
+    "$schema": "../../../../schema-kit-v1.json",
+    "name": "Lint Copy Files Overwrite",
+    "description": "Kit whose recipes install the same files, for lint tests.",
+    "license": "MIT",
+    "homepage": "https://example.com/lint-copy-files-overwrite"
+}

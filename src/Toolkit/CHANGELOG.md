@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 3.7.1
+
+- [Shadcn] Fix installing the `sidebar-12` or `sidebar-15` block silently replacing the `<twig:DatePicker>` component of the `date-picker` recipe, or the other way around
+
 ## 3.7.0
 
 - [Shadcn] Add `message-scroller` recipe
