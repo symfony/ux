@@ -129,7 +129,10 @@ final class LiveComponentHydrator
         }
 
         if (0 !== \count($attributes->all())) {
-            $dehydratedProps->addPropValue(self::ATTRIBUTES_KEY, $attributes->all());
+            $dehydratedProps->addPropValue(self::ATTRIBUTES_KEY, array_map(
+                static fn (mixed $value): mixed => $value instanceof \Stringable ? (string) $value : $value,
+                $attributes->all(),
+            ));
         }
 
         $checksum = $this->calculateChecksum(
