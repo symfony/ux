@@ -55,6 +55,7 @@ use Symfony\UX\LiveComponent\Tests\LiveComponentTestHelper;
 use Symfony\UX\TwigComponent\ComponentAttributes;
 use Symfony\UX\TwigComponent\ComponentMetadata;
 use Twig\Environment;
+use Twig\Extra\Html\HtmlAttr\MergeableInterface;
 use Twig\Runtime\EscaperRuntime;
 use Zenstruck\Foundry\Test\Factories;
 use Zenstruck\Foundry\Test\ResetDatabase;
@@ -2261,6 +2262,40 @@ final class LiveComponentHydratorTest extends KernelTestCase
         $actualAttributes = $this->hydrateComponent($this->getComponent('with_attributes'), $mounted->getName(), $dehydratedProps);
 
         $this->assertSame($attributes, $actualAttributes->all());
+    }
+
+    public function testStringableAttributesAreDehydratedAsStrings(): void
+    {
+        if (!interface_exists(MergeableInterface::class)) {
+            $this->markTestSkipped('Test requires Twig HTML extra >= 3.24.');
+        }
+
+        $mergeable = new class implements \Stringable, MergeableInterface {
+            public function __toString(): string
+            {
+                return 'foo';
+            }
+
+            public function mergeInto(mixed $previous): mixed
+            {
+                return $this;
+            }
+
+            public function appendFrom(mixed $newValue): mixed
+            {
+                return $this;
+            }
+        };
+
+        $mounted = $this->mountComponent('with_attributes', ['class' => $mergeable], false);
+
+        $dehydratedProps = $this->dehydrateComponent($mounted)->getProps();
+
+        $this->assertSame(['class' => 'foo'], $dehydratedProps['@attributes']);
+
+        $actualAttributes = $this->hydrateComponent($this->getComponent('with_attributes'), $mounted->getName(), $dehydratedProps);
+
+        $this->assertSame(['class' => 'foo'], $actualAttributes->all());
     }
 
     public function testCanDehydrateAndHydrateComponentsWithEmptyAttributes(): void

@@ -885,6 +885,17 @@ final class ComponentExtensionTest extends KernelTestCase
         $this->assertStringContainsString('data-foo="a b c"', $output);
     }
 
+    public function testCallerMergeableValueIsMergedIntoAPlainDefault(): void
+    {
+        if (!interface_exists(MergeableInterface::class)) {
+            $this->markTestSkipped('Test requires Twig HTML extra >= 3.24.');
+        }
+
+        $output = self::getContainer()->get(Environment::class)->render('mergeable_caller.html.twig');
+
+        $this->assertStringContainsString('data-foo="a b c"', $output);
+    }
+
     public function testComponentIsRemovedFromTheStackWhenItsPreRenderFails(): void
     {
         try {
