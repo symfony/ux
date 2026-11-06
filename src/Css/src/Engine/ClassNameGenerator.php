@@ -120,6 +120,16 @@ final class ClassNameGenerator
      */
     public function generate(array $styles): string
     {
+        return implode(' ', array_keys($this->classes($styles)));
+    }
+
+    /**
+     * @param array<array-key, mixed> $styles
+     *
+     * @return array<string, string> the merge key of each class, indexed by class
+     */
+    public function classes(array $styles): array
+    {
         if (\array_key_exists('base', $styles)) {
             $base = $styles['base'];
             unset($styles['base']);
@@ -128,10 +138,10 @@ final class ClassNameGenerator
             }
         }
 
-        $classNames = [];
-        $this->walk($this->normalize($styles), [], $classNames);
+        $classes = [];
+        $this->walk($this->normalize($styles), [], $classes);
 
-        return implode(' ', array_keys($classNames));
+        return $classes;
     }
 
     /**
@@ -174,26 +184,27 @@ final class ClassNameGenerator
     }
 
     /**
-     * @param array<string, mixed> $styles
-     * @param list<string>         $path
-     * @param array<string, true>  $classNames
+     * @param array<string, mixed>  $styles
+     * @param list<string>          $path
+     * @param array<string, string> $classes
      */
-    private function walk(array $styles, array $path, array &$classNames): void
+    private function walk(array $styles, array $path, array &$classes): void
     {
         foreach ($styles as $key => $value) {
             $keyPath = [...$path, (string) $key];
             if (\is_array($value)) {
-                $this->walk($value, $keyPath, $classNames);
+                $this->walk($value, $keyPath, $classes);
             } elseif (null !== $value) {
-                $classNames[$this->toClassName($keyPath, $value)] = true;
+                $this->addClass($keyPath, $value, $classes);
             }
         }
     }
 
     /**
-     * @param list<string> $path
+     * @param list<string>          $path
+     * @param array<string, string> $classes
      */
-    private function toClassName(array $path, mixed $value): string
+    private function addClass(array $path, mixed $value, array &$classes): void
     {
         if (!\is_string($value) && !\is_int($value) && !\is_float($value) && !\is_bool($value)) {
             $message = \sprintf(
@@ -237,7 +248,7 @@ final class ClassNameGenerator
             }
         }
 
-        return $prefix.$className.($important ? '!' : '');
+        $classes[$prefix.$className.($important ? '!' : '')] ??= $prefix.($this->shorthands[$property] ?? $property);
     }
 
     private function propertyPrefix(string $property): string

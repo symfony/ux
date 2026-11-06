@@ -1,8 +1,9 @@
 The css() function
 ==================
 
-``css()`` takes one hash of styles and returns a string of class names. Use it
-wherever a class name goes:
+``css()`` takes one hash of styles. It returns a list of class names
+(``Symfony\UX\Css\CssClassList``) that prints as a string. Use it wherever a
+class name goes:
 
 .. code-block:: html+twig
 
@@ -119,6 +120,63 @@ Style                                  Class name
 
 The same style always gives the same class, in every template, so the CSS
 file holds each rule once.
+
+Overriding the classes of a component
+-------------------------------------
+
+A Twig component can let its caller override some of its styles. For this, the
+component sets its classes with ``css()`` as the default of its ``class``
+attribute:
+
+.. code-block:: html+twig
+
+    {# templates/components/Button.html.twig #}
+    <button {{ attributes.defaults({ class: css({ px: '3', color: 'primary' }) }) }}>
+        {% block content %}{% endblock %}
+    </button>
+
+The caller passes its own ``css()`` result as the ``class`` of the component:
+
+.. code-block:: html+twig
+
+    <twig:Button class="{{ css({ px: '5' }) }}">Save</twig:Button>
+
+    {# renders <button class="c_primary px_5"> #}
+
+The ``px`` of the caller replaces the ``px`` of the component. Two classes
+match when they have the same conditions, in the same order, and the same CSS
+property, after resolving shorthands. So ``hover:p_lg`` replaces ``hover:p_md``,
+but ``p_lg`` does not. ``md:hover:p_lg`` does not replace ``hover:md:p_md``
+either, because the conditions are not in the same order. ``p`` (``padding``)
+does not replace ``px`` (``paddingInline``), so both classes stay.
+
+Only the result of ``css()`` is merged. A plain string is never parsed or
+deduplicated. ``class="px_5"`` and ``class="card {{ css({ px: '5' }) }}"`` are
+appended to the classes of the component, and the stylesheet decides which rule
+wins.
+
+.. note::
+
+    The override needs ``symfony/ux-twig-component`` 3.8 or later. With an
+    older version, the component turns the ``css()`` value of the caller into a
+    string, and the classes of both sides are present.
+
+.. warning::
+
+    When a LiveComponent is rendered again, it gets the ``class`` of its caller
+    back as a string, not as a list of classes. The classes are then appended
+    instead of merged: ``px_3`` and ``px_5`` are present together again.
+
+``css()`` no longer returns a string. ``html_classes()`` refuses its result,
+and the ``variants`` of ``html_cva()`` silently ignore it. Append an empty
+string to get the string: ``css({ px: '5' }) ~ ''``.
+
+For the same reason, a ``css()`` call is always truthy, even ``css(null)`` or
+``css({})``, so ``{% if css(x) %}``, ``css(x) ? a : b`` and ``css(x) ?: 'b'``
+no longer test for an empty result. ``'p_md' in css(...)``,
+``css(...) starts with 'p_'``, ``css(...) ends with 'md'`` and
+``css(...) is same as('p_md')`` are false. Append an empty string first:
+``(css(...) ~ '') is not empty`` or ``'p_md' in (css(...) ~ '')``.
 
 The CSS layers
 --------------

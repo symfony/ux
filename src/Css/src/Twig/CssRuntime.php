@@ -12,6 +12,7 @@
 namespace Symfony\UX\Css\Twig;
 
 use Psr\Log\LoggerInterface;
+use Symfony\UX\Css\CssClassList;
 use Symfony\UX\Css\Engine\ClassNameGenerator;
 use Symfony\UX\Css\Validation\StyleValidator;
 
@@ -47,35 +48,43 @@ final class CssRuntime
     /**
      * @param CssStyles|null $styles
      */
-    public function css(?array $styles): string
+    public function css(?array $styles): CssClassList
     {
-        if (null === $styles) {
-            return '';
-        }
+        return new CssClassList(null === $styles ? [] : $this->classes($styles));
+    }
+
+    /**
+     * @param array<string, string> $classes the classes of the part of the hash known when the template compiled, mapped to their merge key
+     * @param CssStyles             $styles  the rest of the hash
+     */
+    public function append(array $classes, array $styles): CssClassList
+    {
+        return new CssClassList([...$classes, ...$this->classes($styles)]);
+    }
+
+    /**
+     * @param CssStyles $styles
+     *
+     * @return array<string, string>
+     */
+    private function classes(array $styles): array
+    {
         if (null !== $this->validator) {
             ($this->validator)()->validate($styles);
         }
 
-        $classes = $this->generator->generate($styles);
-        $this->logClassesWithoutCss($classes);
+        $classes = $this->generator->classes($styles);
+        $this->logClassesWithoutCss(array_keys($classes));
 
         return $classes;
     }
 
     /**
-     * @param string    $classes the classes of the part of the hash known when the template compiled
-     * @param CssStyles $styles  the rest of the hash
+     * @param list<string|int> $classes
      */
-    public function append(string $classes, array $styles): string
+    private function logClassesWithoutCss(array $classes): void
     {
-        $dynamic = $this->css($styles);
-
-        return '' === $dynamic ? $classes : ('' === $classes ? $dynamic : $classes.' '.$dynamic);
-    }
-
-    private function logClassesWithoutCss(string $classes): void
-    {
-        if (null === $this->logger || null === $this->classesFile || '' === $classes) {
+        if (null === $this->logger || null === $this->classesFile || [] === $classes) {
             return;
         }
 
@@ -91,7 +100,7 @@ final class CssRuntime
             $this->knownClassesTime = $time;
         }
 
-        foreach (explode(' ', $classes) as $class) {
+        foreach ($classes as $class) {
             if (!isset($this->knownClasses[$class])) {
                 $message = \sprintf('No CSS was generated for "%s"; use it in a template or cover it with ux_css.static_css.', $class);
                 $this->logger->warning($message);

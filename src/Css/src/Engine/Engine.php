@@ -125,12 +125,30 @@ final class Engine
      */
     public function classNames(array $styles): string
     {
+        return implode(' ', array_keys($this->classes($styles)));
+    }
+
+    /**
+     * The classes of a style hash, each with the key under which a later class of the same property replaces it.
+     *
+     * @param array<array-key, mixed> $styles
+     *
+     * @return array<string, string> the merge key of each class, indexed by class
+     */
+    public function classes(array $styles): array
+    {
         $classes = [];
         foreach ($this->decoder()->decode($this->encoder()->encode($styles)) as $style) {
-            $classes[$style->htmlClass] = true;
+            $prefix = '';
+            foreach ($this->conditions()->finalize($style->entry->conditions) as $condition) {
+                $prefix .= $condition.':';
+            }
+
+            $property = $this->utilities()->resolveShorthand($style->entry->property);
+            $classes[$style->htmlClass] ??= $prefix.$property;
         }
 
-        return implode(' ', array_keys($classes));
+        return $classes;
     }
 
     public function tokenCss(): TokenCss

@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\Css\Twig;
 
+use Symfony\UX\Css\CssClassList;
 use Twig\Compiler;
 use Twig\Node\Expression\AbstractExpression;
 use Twig\Node\Expression\ArrayExpression;
@@ -28,7 +29,7 @@ use Twig\Node\Nodes;
 final class CssExpression extends AbstractExpression
 {
     /**
-     * @param list<AbstractExpression> $parts each one gives a space-separated list of classes
+     * @param list<AbstractExpression> $parts each one gives an array of classes mapped to their merge key
      */
     public function __construct(array $parts, ?ArrayExpression $dynamic, int $lineno)
     {
@@ -44,18 +45,19 @@ final class CssExpression extends AbstractExpression
     {
         if ($this->hasNode('dynamic')) {
             $compiler->raw('$this->env->getRuntime(')->string(CssRuntime::class)->raw(')->append(');
+        } else {
+            $compiler->raw('new \\'.CssClassList::class.'(');
         }
 
-        $parts = iterator_to_array($this->getNode('parts'));
-        if ([] === $parts) {
-            $compiler->string('');
+        $compiler->raw('[');
+        foreach (array_values(iterator_to_array($this->getNode('parts'))) as $index => $part) {
+            $compiler->raw(0 === $index ? '...(' : ', ...(')->subcompile($part)->raw(')');
         }
-        foreach (array_values($parts) as $index => $part) {
-            $compiler->raw(0 === $index ? '(' : '." ".(')->subcompile($part)->raw(')');
-        }
+        $compiler->raw(']');
 
         if ($this->hasNode('dynamic')) {
-            $compiler->raw(', ')->subcompile($this->getNode('dynamic'))->raw(')');
+            $compiler->raw(', ')->subcompile($this->getNode('dynamic'));
         }
+        $compiler->raw(')');
     }
 }
