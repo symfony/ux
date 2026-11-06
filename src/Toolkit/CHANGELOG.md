@@ -2,6 +2,8 @@
 
 ## 3.7.1
 
+- Fix `ux:install` not prefixing `data-controller` and `data-action` values written as a Twig expression (array, ternary, concatenation) when `controllers.subdirectory` is set, which left the `questionnaire` recipe inert, broke the scroll buttons of `message-scroller`, and broke keyboard navigation, closing on Escape or on outside click, and date selection in the `calendar`, `combobox`, `date-picker` and `popover` recipes
+- [Shadcn] Fix `calendar` and `message-scroller` controllers hardcoding their Stimulus identifier in `dataset` accesses, which duplicated hidden inputs in `multiple` calendars and left `message-scroller` without its current anchor link and with ever-growing spacers when installed in a subdirectory
 - [Shadcn] Fix installing the `sidebar-12` or `sidebar-15` block silently replacing the `<twig:DatePicker>` component of the `date-picker` recipe, or the other way around
 
 ## 3.7.0

@@ -14,9 +14,6 @@
 {%- do provide('questionnaire.defaultItem', defaultItem) -%}
 {%- do provide('questionnaire.interactive', interactive) -%}
 {# A `div` never receives the `submit` event of the form it is nested in, so that action is dropped. #}
-{%- set _questionnaire_actions = as == 'form'
-    ? 'keydown->questionnaire#onKeyDown submit->questionnaire#onSubmit change->questionnaire#onAnswerChange input->questionnaire#onAnswerInput'
-    : 'keydown->questionnaire#onKeyDown change->questionnaire#onAnswerChange input->questionnaire#onAnswerInput' -%}
 <{{ as }}
     id="{{ id }}"
     data-slot="questionnaire"
@@ -27,7 +24,10 @@
     {{ attributes.defaults({
         class: 'flex w-full min-w-0 flex-col gap-4'|tailwind_classes,
         'data-controller': interactive ? 'questionnaire' : false,
-        'data-action': interactive ? _questionnaire_actions : false,
+        'data-action': interactive ? (as == 'form'
+            ? 'keydown->questionnaire#onKeyDown submit->questionnaire#onSubmit change->questionnaire#onAnswerChange input->questionnaire#onAnswerInput'
+            : 'keydown->questionnaire#onKeyDown change->questionnaire#onAnswerChange input->questionnaire#onAnswerInput'
+        ) : false,
     }) }}
 >
     {##- The questionnaire structure, typically includes `Questionnaire:Progress`, `Questionnaire:Item` and `Questionnaire:Actions`. -#}

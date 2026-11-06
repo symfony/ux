@@ -95,12 +95,67 @@ final class StimulusIdentifierRewriter
             $contents,
         );
 
+        $contents = $this->rewriteExpressions($contents);
+
         // stimulus_controller('dialog', stimulus_action('dialog', stimulus_target('dialog' and getControllerForElementAndIdentifier(element, 'dialog'
         return preg_replace_callback(
             '/(\bstimulus_(?:controller|action|target)\(\s*|\bgetControllerForElementAndIdentifier\([^,()]*,\s*)([\'"])([\w-]+)\2/',
             fn (array $matches): string => $matches[1].$matches[2].$this->prefixIdentifier($matches[3]).$matches[2],
             $contents,
         );
+    }
+
+    /**
+     * Rewrites the strings of the Twig expressions given to "data-controller" and "data-action" in a hash,
+     * e.g. ['click->dialog#open']|join(' '), interactive ? 'dialog' : false or ('click->dialog#' ~ method).
+     */
+    private function rewriteExpressions(string $contents): string
+    {
+        preg_match_all('/([\'"])data-(controller|action)\1\s*:\s*(?![\'"\s])/', $contents, $matches, \PREG_OFFSET_CAPTURE | \PREG_SET_ORDER);
+
+        foreach (array_reverse($matches) as $match) {
+            $start = $match[0][1] + \strlen($match[0][0]);
+            $length = $this->findExpressionLength($contents, $start);
+            $rewrite = 'controller' === $match[2][0] ? $this->rewriteControllers(...) : $this->rewriteActions(...);
+
+            $expression = preg_replace_callback(
+                '/([\'"])((?:\\\\.|(?!\1).)*)\1/s',
+                static fn (array $string): string => $string[1].$rewrite($string[2]).$string[1],
+                substr($contents, $start, $length),
+            );
+            $contents = substr_replace($contents, $expression, $start, $length);
+        }
+
+        return $contents;
+    }
+
+    /**
+     * The length of the expression starting at the offset, which ends with the entry of its hash.
+     */
+    private function findExpressionLength(string $contents, int $offset): int
+    {
+        $depth = 0;
+        for ($i = $offset, $length = \strlen($contents); $i < $length; ++$i) {
+            $char = $contents[$i];
+
+            if ('\'' === $char || '"' === $char) {
+                while (++$i < $length && $char !== $contents[$i]) {
+                    if ('\\' === $contents[$i]) {
+                        ++$i;
+                    }
+                }
+            } elseif (str_contains('([{', $char)) {
+                ++$depth;
+            } elseif (str_contains(')]}', $char)) {
+                if (0 === $depth--) {
+                    break;
+                }
+            } elseif (',' === $char && 0 === $depth) {
+                break;
+            }
+        }
+
+        return $i - $offset;
     }
 
     private function rewriteControllers(string $controllers): string
