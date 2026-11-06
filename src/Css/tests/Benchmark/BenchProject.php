@@ -31,7 +31,7 @@ final class BenchProject
     private readonly string $dir;
     private readonly TestKernel $kernel;
 
-    public function __construct(int $templates = 0, bool $debug = false)
+    public function __construct(int $templates = 0, bool $debug = false, bool $withTwigComponent = false)
     {
         $this->dir = sys_get_temp_dir().'/ux_css_bench_'.uniqid();
         $filesystem = new Filesystem();
@@ -44,7 +44,7 @@ final class BenchProject
             touch($path, time() - 60);
         }
 
-        $this->kernel = new TestKernel(self::CONFIG, 'test', $debug, $this->dir);
+        $this->kernel = new TestKernel(self::CONFIG, 'test', $debug, $this->dir, null, $withTwigComponent);
         $this->kernel->boot();
     }
 

@@ -16,6 +16,7 @@ use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\UX\Css\CssClassList;
 use Symfony\UX\Css\Engine\CssEscaper;
 use Symfony\UX\Css\Tests\Fixtures\TestKernel;
 use Symfony\UX\Css\Twig\CssRuntime;
@@ -47,6 +48,78 @@ final class CssFunctionTest extends KernelTestCase
         $this->assertSame('<div class="p_md c_primary hover:c_fg"></div>', $html);
         $this->assertStringContainsString('"p_md c_primary hover:c_fg"', $compiled);
         $this->assertStringNotContainsString('CssRuntime', $compiled);
+    }
+
+    public static function provideEveryKindOfCall(): iterable
+    {
+        yield 'static hash' => ["css({ p: 'md', color: 'primary' })", 'p_md c_primary'];
+        yield 'ternary of values' => ["css({ p: 'md', color: active ? 'primary' : 'fg' })", 'p_md c_primary'];
+        yield 'ternary of hashes' => ["css(active ? { color: 'primary' } : { p: 'lg' })", 'c_primary'];
+        yield 'set constant' => ['css(styles)', 'c_primary p_md'];
+        yield 'dynamic hash' => ['css(dynamic)', 'p_md hover:c_fg'];
+        yield 'hash with a spread' => ["css({ ...dynamic, color: 'primary' })", 'p_md hover:c_fg c_primary'];
+        yield 'null' => ['css(null)', 'EMPTY'];
+        yield 'empty hash' => ['css({})', 'EMPTY'];
+    }
+
+    #[DataProvider('provideEveryKindOfCall')]
+    public function testEveryCallReturnsAClassList(string $call, string $expected): void
+    {
+        $template = "{% set styles = { color: 'primary', p: 'md' } %}{% set list = ".$call." %}{{ list.value ?? 'EMPTY' }}";
+        $context = ['active' => true, 'dynamic' => ['p' => 'md', '_hover' => ['color' => 'fg']]];
+
+        $html = $this->render($template, $context);
+
+        $this->assertSame($expected, $html);
+    }
+
+    public static function providePrintedCalls(): iterable
+    {
+        yield 'static hash' => ["{{ css({ p: 'md', color: 'primary' }) }}"];
+        yield 'ternary of values' => ["{{ css({ p: 'md', color: active ? 'primary' : 'fg' }) }}"];
+        yield 'ternary of hashes' => ["{{ css(active ? { color: 'primary' } : { p: 'lg' }) }}"];
+        yield 'class that needs escaping' => ["{{ css({ w: '[a&b]' }) }}"];
+        yield 'without autoescaping' => ["{% autoescape false %}{{ css({ p: 'md', color: 'primary' }) }}{% endautoescape %}"];
+    }
+
+    #[DataProvider('providePrintedCalls')]
+    public function testAPrintedCallBuildsNoClassList(string $template): void
+    {
+        $compiled = $this->compile($template);
+
+        $this->assertStringNotContainsString('CssClassList', $compiled);
+    }
+
+    public static function provideClassListsThatDropClasses(): iterable
+    {
+        yield 'repeated class' => ["{{ css({ p: 'md', padding: active ? 'md' : 'lg' }) }}"];
+        yield 'empty branch' => ["{{ css({ p: 'md', color: active ? null : 'primary' }) }}"];
+    }
+
+    #[DataProvider('provideClassListsThatDropClasses')]
+    public function testAPrintedCallPrintsTheClassesOfItsClassList(string $template): void
+    {
+        $html = $this->render($template, ['active' => true]);
+
+        $this->assertSame('p_md', $html);
+    }
+
+    public function testTwoClassListsMergeThroughHtmlAttrMerge(): void
+    {
+        $template = "{{ html_attr({ class: css({ p: 'md', color: 'primary' }) }|html_attr_merge({ class: css({ padding: 'lg' }) })) }}";
+
+        $html = $this->render($template);
+
+        $this->assertStringContainsString('class="c_primary p_lg"', $html);
+    }
+
+    public function testAConditionalOverrideKeepsTheBaseValue(): void
+    {
+        $template = "{{ html_attr({ class: css({ p: 'md', color: 'primary' }) }|html_attr_merge({ class: css({ _hover: { p: 'lg' } }) })) }}";
+
+        $html = $this->render($template);
+
+        $this->assertStringContainsString('class="p_md c_primary hover:p_lg"', $html);
     }
 
     public function testATernaryWithConstantBranchesCompilesToBothClassLists(): void
@@ -206,6 +279,10 @@ final class CssFunctionTest extends KernelTestCase
         yield 'flat' => ['{ display: \'flex\', alignItems: \'center\', gap: \'md\', p: \'lg\', color: \'primary\' }', ['display' => 'flex', 'alignItems' => 'center', 'gap' => 'md', 'p' => 'lg', 'color' => 'primary']];
         yield 'conditions' => ['{ color: \'fg\', _hover: { color: \'primary\', bg: \'fg\' }, _dark: { _focus: { color: \'primary\' } } }', ['color' => 'fg', '_hover' => ['color' => 'primary', 'bg' => 'fg'], '_dark' => ['_focus' => ['color' => 'primary']]]];
         yield 'responsive' => ['{ p: { base: \'md\', md: \'lg\' }, lg: { display: \'grid\' } }', ['p' => ['base' => 'md', 'md' => 'lg'], 'lg' => ['display' => 'grid']]];
+        yield 'important and shorthand' => ['{ p: \'md!\', _hover: { padding: \'lg\' } }', ['p' => 'md!', '_hover' => ['padding' => 'lg']]];
+        yield 'selector' => ['{ \'&:hover\': { color: \'fg\' } }', ['&:hover' => ['color' => 'fg']]];
+        yield 'at-rule' => ['{ \'@media (min-width: 1px)\': { p: \'md\' } }', ['@media (min-width: 1px)' => ['p' => 'md']]];
+        yield 'breakpoint under a condition' => ['{ _hover: { md: { p: \'lg\' } } }', ['_hover' => ['md' => ['p' => 'lg']]]];
         yield 'numbers' => ['{ zIndex: 10, opacity: 0.5, flexGrow: 1 }', ['zIndex' => 10, 'opacity' => 0.5, 'flexGrow' => 1]];
     }
 
@@ -216,6 +293,15 @@ final class CssFunctionTest extends KernelTestCase
         $staticClasses = $this->render('{{ css('.$hash.') }}');
 
         $this->assertSame($dynamicClasses, $staticClasses);
+    }
+
+    #[DataProvider('provideRealisticHashes')]
+    public function testBothProducersGiveTheSameMergeKeys(string $hash, array $styles): void
+    {
+        $engineClasses = self::getContainer()->get('ux_css.engine')->classes($styles);
+        $runtimeClasses = self::getContainer()->get('ux_css.class_name_generator')->classes($styles);
+
+        $this->assertSame($engineClasses, $runtimeClasses);
     }
 
     public static function provideValuesWrittenDifferentlyByPandaRuntime(): iterable
@@ -474,7 +560,8 @@ final class CssFunctionTest extends KernelTestCase
         $twig = new Environment(new ArrayLoader(['sandboxed.html.twig' => $template]));
         $twig->addExtension(self::getContainer()->get('ux_css.twig.extension'));
         $twig->addRuntimeLoader(new FactoryRuntimeLoader([CssRuntime::class => static fn () => $runtime]));
-        $twig->addExtension(new SandboxExtension(new SecurityPolicy([], ['escape'], [], [], $allowedFunctions), true));
+        $allowedMethods = [CssClassList::class => ['__toString']];
+        $twig->addExtension(new SandboxExtension(new SecurityPolicy([], ['escape'], $allowedMethods, [], $allowedFunctions), true));
 
         return $twig;
     }
