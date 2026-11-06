@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+    <file source-language="en" target-language="uz" datatype="plaintext" original="AutocompleteBundle">
+        <header>
+            <tool tool-id="symfony" tool-name="Symfony"/>
+        </header>
+        <body>
+            <trans-unit id="1">
+                <source>Loading more results...</source>
+                <target state="needs-review-translation">Ko'proq natijalar yuklanmoqda...</target>
+            </trans-unit>
+            <trans-unit id="2">
+                <source>No results found</source>
+                <target state="needs-review-translation">Hech narsa topilmadi</target>
+            </trans-unit>
+            <trans-unit id="3">
+                <source>No more results</source>
+                <target state="needs-review-translation">Boshqa natijalar yo'q</target>
+            </trans-unit>
+            <trans-unit id="4">
+                <source>Add %placeholder%...</source>
+                <target state="needs-review-translation">%placeholder% qo'shish...</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>
