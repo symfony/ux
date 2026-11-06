@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 3.8
+
+- Keep `MergeableInterface` values passed to a component as objects, so `attributes.defaults()` merges them
+
 ## 3.7.0
 
 - Fix the pre-lexer only recognizing one spelling of `{% block %}`, `{% endblock %}` and `{% embed %}` inside a component (whitespace control, extra or missing spaces, named `{% endblock name %}`)

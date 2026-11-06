@@ -20,6 +20,8 @@ use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigura
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\Kernel;
 use Symfony\UX\Css\UXCssBundle;
+use Symfony\UX\TwigComponent\TwigComponentBundle;
+use Twig\Extra\Html\HtmlExtension;
 
 final class TestKernel extends Kernel implements CompilerPassInterface
 {
@@ -36,6 +38,7 @@ final class TestKernel extends Kernel implements CompilerPassInterface
         bool $debug = true,
         private readonly ?string $projectDir = null,
         private ?string $buildDir = null,
+        private readonly bool $withTwigComponent = false,
     ) {
         parent::__construct($environment, $debug);
     }
@@ -55,6 +58,10 @@ final class TestKernel extends Kernel implements CompilerPassInterface
         yield new FrameworkBundle();
         yield new TwigBundle();
         yield new UXCssBundle();
+
+        if ($this->withTwigComponent) {
+            yield new TwigComponentBundle();
+        }
     }
 
     public function getProjectDir(): string
@@ -75,7 +82,7 @@ final class TestKernel extends Kernel implements CompilerPassInterface
     protected function getContainerClass(): string
     {
         // a config change rebuilds the container in the same cache directory, as a YAML change does in an application
-        return parent::getContainerClass().hash('xxh32', serialize($this->uxCssConfig));
+        return parent::getContainerClass().hash('xxh32', serialize([$this->uxCssConfig, $this->withTwigComponent]));
     }
 
     public function getLogDir(): string
@@ -94,7 +101,11 @@ final class TestKernel extends Kernel implements CompilerPassInterface
         $container->extension('framework', $framework);
         $container->extension('twig', ['default_path' => $templates, 'strict_variables' => true]);
         $container->extension('ux_css', $this->uxCssConfig);
+        if ($this->withTwigComponent) {
+            $container->extension('twig_component', ['defaults' => [], 'anonymous_template_directory' => 'components/']);
+        }
         $container->services()->set('logger', TestLogger::class)->public();
+        $container->services()->set(HtmlExtension::class)->tag('twig.extension');
     }
 
     public function process(ContainerBuilder $container): void

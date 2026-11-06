@@ -144,6 +144,24 @@ final class ClassNameGeneratorTest extends TestCase
         $this->assertSame('pd-d_flex hover:pd-c_red md:pd-p_4', $classNames);
     }
 
+    public function testItMapsEachClassToItsMergeKey(): void
+    {
+        $config = self::CONFIG;
+        $config['utilities']['padding'] = ['className' => 'p', 'shorthand' => 'p'];
+        $config['utilities']['paddingInline'] = ['className' => 'px', 'shorthand' => 'px'];
+        $generator = ClassNameGenerator::fromPandaConfig($config);
+        $styles = ['p' => 'md', 'color' => ['base' => 'primary', '_hover' => 'fg'], 'md' => ['px' => 'lg']];
+
+        $classes = $generator->classes($styles);
+        $importantClasses = $generator->classes(['padding' => 'md!']);
+
+        $this->assertSame(
+            ['p_md' => 'padding', 'c_primary' => 'color', 'hover:c_fg' => 'hover:color', 'md:px_lg' => 'md:paddingInline'],
+            $classes,
+        );
+        $this->assertSame(['p_md!' => 'padding'], $importantClasses);
+    }
+
     public function testHashedClassNamesAreNotSupported(): void
     {
         $this->expectException(UnsupportedStyleException::class);
