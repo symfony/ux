@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+    <file source-language="en" target-language="my" datatype="plaintext" original="UXPaginationBundle">
+        <header>
+            <tool tool-id="symfony" tool-name="Symfony"/>
+        </header>
+        <body>
+            <trans-unit id="1">
+                <source>Showing %start%-%end% of %total%</source>
+                <target state="needs-review-translation">%total% ခုအနက် %start%-%end% ကို ပြသနေသည်</target>
+            </trans-unit>
+            <trans-unit id="2">
+                <source>Showing %start%-%end%</source>
+                <target state="needs-review-translation">%start%-%end% ကို ပြသနေသည်</target>
+            </trans-unit>
+            <trans-unit id="3">
+                <source>No items</source>
+                <target state="needs-review-translation">အရာများ မရှိပါ</target>
+            </trans-unit>
+            <trans-unit id="4">
+                <source>Showing %count% item|Showing %count% items</source>
+                <target state="needs-review-translation">%count% ခု ပြသနေသည်</target>
+            </trans-unit>
+            <trans-unit id="5">
+                <source>Showing %count% item (last page)|Showing %count% items (last page)</source>
+                <target state="needs-review-translation">%count% ခု ပြသနေသည် (နောက်ဆုံး စာမျက်နှာ)</target>
+            </trans-unit>
+            <trans-unit id="6">
+                <source>Previous</source>
+                <target state="needs-review-translation">ယခင်</target>
+            </trans-unit>
+            <trans-unit id="7">
+                <source>Next</source>
+                <target state="needs-review-translation">နောက်</target>
+            </trans-unit>
+            <trans-unit id="8">
+                <source>Previous page</source>
+                <target state="needs-review-translation">ယခင် စာမျက်နှာ</target>
+            </trans-unit>
+            <trans-unit id="9">
+                <source>Next page</source>
+                <target state="needs-review-translation">နောက် စာမျက်နှာ</target>
+            </trans-unit>
+            <trans-unit id="10">
+                <source>Go to page %page%</source>
+                <target state="needs-review-translation">စာမျက်နှာ %page% သို့ သွားရန်</target>
+            </trans-unit>
+            <trans-unit id="11">
+                <source>Pagination</source>
+                <target state="needs-review-translation">စာမျက်နှာ ခွဲခြင်း</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>
