@@ -595,7 +595,8 @@ export default class extends Controller {
             this.#currentAnchorId = currentId;
 
             for (const link of this.anchorLinkTargets) {
-                const isCurrent = null !== currentId && link.dataset.messageScrollerIdParam === currentId;
+                const isCurrent =
+                    null !== currentId && link.getAttribute(`data-${this.identifier}-id-param`) === currentId;
 
                 link.setAttribute('aria-current', isCurrent ? 'location' : 'false');
             }
@@ -659,7 +660,7 @@ export default class extends Controller {
     #keepSpacerLast() {
         if (!this.hasSpacerTarget) {
             const spacer = document.createElement('div');
-            spacer.dataset.messageScrollerTarget = 'spacer';
+            spacer.setAttribute(`data-${this.identifier}-target`, 'spacer');
             spacer.setAttribute('aria-hidden', 'true');
             spacer.hidden = true;
             this.#spacerHeight = 0;

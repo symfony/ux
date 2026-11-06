@@ -164,6 +164,43 @@ final class StimulusIdentifierRewriterTest extends KernelTestCase
             TWIG));
     }
 
+    public function testPrefixesTheControllersAndActionsOfAnExpression(): void
+    {
+        $rewriter = new StimulusIdentifierRewriter(self::IDENTIFIERS, 'ui--');
+
+        $this->assertSame(<<<'TWIG'
+            {{ attributes.defaults({
+                'data-controller': interactive ? 'ui--popover' : false,
+                'data-action': [
+                    'popover:open@window->ui--popover#handleGroupOpen',
+                    "keydown.esc@window->ui--popover#handleEscape",
+                    'ui--calendar:select->ui--dialog#close live#update',
+                ]|join(' ')|html_attr_type('sst'),
+            }) }}
+            <button {{ attributes.defaults({'data-action': ('click->ui--dialog#' ~ (open ? 'close' : 'open'))|html_attr_type('sst'), 'data-ui--dialog-target': 'trigger'}) }}></button>
+            <div {{ attributes.defaults({
+                'data-controller': [interactive ? 'ui--tabs', 'live']|join(' '),
+                'data-action': interactive ? (as == 'form' ? 'submit->ui--tabs#open' : 'click->ui--tabs#open') : false,
+                'data-state': 'closed',
+            }) }}></div>
+            TWIG, $rewriter->rewrite(<<<'TWIG'
+            {{ attributes.defaults({
+                'data-controller': interactive ? 'popover' : false,
+                'data-action': [
+                    'popover:open@window->popover#handleGroupOpen',
+                    "keydown.esc@window->popover#handleEscape",
+                    'calendar:select->dialog#close live#update',
+                ]|join(' ')|html_attr_type('sst'),
+            }) }}
+            <button {{ attributes.defaults({'data-action': ('click->dialog#' ~ (open ? 'close' : 'open'))|html_attr_type('sst'), 'data-dialog-target': 'trigger'}) }}></button>
+            <div {{ attributes.defaults({
+                'data-controller': [interactive ? 'tabs', 'live']|join(' '),
+                'data-action': interactive ? (as == 'form' ? 'submit->tabs#open' : 'click->tabs#open') : false,
+                'data-state': 'closed',
+            }) }}></div>
+            TWIG));
+    }
+
     public function testLeavesEverythingElseUntouched(): void
     {
         $rewriter = new StimulusIdentifierRewriter(self::IDENTIFIERS, 'ui--');

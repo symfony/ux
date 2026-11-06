@@ -336,7 +336,7 @@ export default class extends Controller {
             const button = cell.querySelector('button');
             button.textContent = this.#format('day', timestamp);
             button.dataset.day = date;
-            button.dataset.calendarDateParam = date;
+            button.setAttribute(`data-${this.identifier}-date-param`, date);
             button.dataset.selectedSingle = String('range' !== this.modeValue && selected);
             button.dataset.rangeStart = String(rangeStart);
             button.dataset.rangeMiddle = String(rangeMiddle);
@@ -407,7 +407,7 @@ export default class extends Controller {
             input.type = 'hidden';
             input.name = `${this.nameValue}[]`;
             input.value = date;
-            input.dataset.calendarTarget = 'input';
+            input.setAttribute(`data-${this.identifier}-target`, 'input');
             this.element.append(input);
         }
     }

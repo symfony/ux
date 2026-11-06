@@ -89,6 +89,12 @@ final class SubDirectoryInstallationTest extends KernelTestCase
                     $unresolved[] = \sprintf('%s: controller "%s" in %s', $file->getRelativePathname(), $identifier, $reference);
                 }
             }
+
+            // "dataset.calendarDateParam" still reads "data-calendar-date-param" once the identifier is "ui--calendar"
+            preg_match_all('/\bdataset\.[a-z]\w*(?:Target|[A-Z]\w*(?:Value|Param|Class|Outlet))\b/', $contents, $matches);
+            foreach ($matches[0] as $reference) {
+                $unresolved[] = \sprintf('%s: %s', $file->getRelativePathname(), $reference);
+            }
         }
 
         $this->assertSame([], array_values(array_unique($unresolved)));
@@ -142,12 +148,20 @@ final class SubDirectoryInstallationTest extends KernelTestCase
             }
         }
 
-        preg_match_all('/data-action[\'"]?\s*(?:=|:|,)\s*([\'"])(.*?)\1/s', $contents, $matches);
-        foreach ($matches[2] as $value) {
-            preg_match_all('/(?:^|\s|->)([a-z][a-z0-9-]*)#/', $value, $descriptors);
-            foreach ($descriptors[1] as $identifier) {
-                yield 'data-action "'.$value.'"' => $identifier;
+        // 'data-controller': interactive ? 'dialog' : false
+        preg_match_all('/[\'"]data-controller[\'"]\s*:\s*(?![\'"])([^,}]*)/', $contents, $matches);
+        foreach ($matches[1] as $expression) {
+            preg_match_all('/([\'"])([a-z][a-z0-9-]*)\1/', $expression, $strings);
+            foreach ($strings[2] as $identifier) {
+                yield 'data-controller "'.trim($expression).'"' => $identifier;
             }
+        }
+
+        // "click->dialog#open" wherever it is written, as the value of an attribute or of a variable
+        $code = preg_replace(['/\{#.*?#\}/s', '/\/\*.*?\*\//s', '/(?<![:\w])\/\/[^\n]*/'], '', $contents);
+        preg_match_all('/(?:->|[\s\'"(\[])([a-z][a-z0-9-]*)#(?=[\w\'"])/', $code, $matches);
+        foreach ($matches[1] as $i => $identifier) {
+            yield 'action "'.trim($matches[0][$i]).'"' => $identifier;
         }
 
         // "data-bs-target" belongs to Bootstrap, not to a Stimulus controller
