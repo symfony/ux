@@ -17,6 +17,10 @@
                 <source>No more results</source>
                 <target>Nema više rezultata</target>
             </trans-unit>
+            <trans-unit id="4">
+                <source>Add %placeholder%...</source>
+                <target state="needs-review-translation">Dodaj %placeholder%...</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

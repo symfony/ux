@@ -17,6 +17,10 @@
                 <source>No more results</source>
                 <target>Nu mai sunt alte rezultate</target>
             </trans-unit>
+            <trans-unit id="4">
+                <source>Add %placeholder%...</source>
+                <target state="needs-review-translation">Adaugă %placeholder%...</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

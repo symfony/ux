@@ -17,6 +17,10 @@
                 <source>No more results</source>
                 <target>نتیجه دیگری وجود ندارد</target>
             </trans-unit>
+            <trans-unit id="4">
+                <source>Add %placeholder%...</source>
+                <target state="needs-review-translation">افزودن %placeholder%...</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
