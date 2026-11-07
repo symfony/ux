@@ -1,5 +1,6 @@
 import { Controller } from '@hotwired/stimulus';
 
+/* stimulusFetch: 'lazy' */
 /**
  * @value  autoClose  Delay in milliseconds after which the element removes itself once connected.
  * @target timerbar   Element whose width animates down to 0 over the close delay to visualize the countdown. It is hidden until a delayed or automatic close starts.

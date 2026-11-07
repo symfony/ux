@@ -1,6 +1,7 @@
 import { Controller } from '@hotwired/stimulus';
 import { Dropdown } from 'flowbite';
 
+/* stimulusFetch: 'lazy' */
 export default class extends Controller {
     dropdown = null;
     static targets = ['trigger', 'content'];

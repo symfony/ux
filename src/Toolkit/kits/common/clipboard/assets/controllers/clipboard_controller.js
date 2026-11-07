@@ -1,5 +1,6 @@
 import { Controller } from '@hotwired/stimulus';
 
+/* stimulusFetch: 'lazy' */
 /**
  * @value      source           Text to copy to the clipboard; when set, it takes precedence over the `source` target.
  * @value      successDuration  How long, in milliseconds, the success feedback stays active after a copy. Defaults to 2000.

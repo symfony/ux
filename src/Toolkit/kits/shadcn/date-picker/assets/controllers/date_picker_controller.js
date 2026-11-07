@@ -1,5 +1,6 @@
 import { Controller } from '@hotwired/stimulus';
 
+/* stimulusFetch: 'lazy' */
 /**
  * Glue between the `Popover` and the `Calendar` composing the `DatePicker`.
  *

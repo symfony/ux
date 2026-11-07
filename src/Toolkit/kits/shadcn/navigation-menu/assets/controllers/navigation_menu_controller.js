@@ -2,6 +2,7 @@ import { Controller } from '@hotwired/stimulus';
 
 const FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
+/* stimulusFetch: 'lazy' */
 export default class extends Controller {
     static targets = ['item', 'trigger', 'content', 'viewport', 'viewportPositioner'];
     static values = {

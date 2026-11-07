@@ -1,5 +1,6 @@
 import { Controller } from '@hotwired/stimulus';
 
+/* stimulusFetch: 'lazy' */
 /**
  * @target output  The form control reflecting the calendar selection.
  * @action update  Writes the calendar selection into the output target.

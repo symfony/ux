@@ -1,5 +1,6 @@
 import { Controller } from '@hotwired/stimulus';
 
+/* stimulusFetch: 'lazy' */
 export default class extends Controller {
     static targets = ['copyIcon', 'copiedIcon', 'favoriteIcon'];
     static values = { copiedDuration: { type: Number, default: 2000 } };

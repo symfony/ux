@@ -4,6 +4,7 @@ const LONG_PRESS_DELAY = 700;
 const LONG_PRESS_TOLERANCE = 10;
 const VIEWPORT_MARGIN = 8;
 
+/* stimulusFetch: 'lazy' */
 export default class extends Controller {
     static targets = ['trigger', 'content', 'item'];
 

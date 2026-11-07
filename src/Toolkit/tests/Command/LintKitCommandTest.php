@@ -69,11 +69,14 @@ class LintKitCommandTest extends TestCase
             ⚠️ js.import.undeclared (assets/controllers/widget_controller.js)
                 JS import "lodash" is not declared in dependencies.npm or dependencies.importmap.
 
+            ⚠️ stimulus.controller.eager (assets/controllers/widget_controller.js)
+                Stimulus controller is loaded on every page. Add the "/* stimulusFetch: 'lazy' */" annotation to load it only when the page uses it.
+
             ⚠️ stimulus.controller.missing (components/Widget.html.twig)
                 Template references Stimulus controller "undeclared-widget" but no matching file "assets/controllers/undeclared_widget_controller.js" was found in the recipe.
             TXT, $output);
 
-        self::assertStringContainsString('[ERROR] 3 error(s), 3 warning(s).', $output);
+        self::assertStringContainsString('[ERROR] 3 error(s), 4 warning(s).', $output);
     }
 
     public function testWarningsOnlyExitsSuccessfullyByDefault(): void

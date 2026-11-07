@@ -1,5 +1,6 @@
 import { Controller } from '@hotwired/stimulus';
 
+/* stimulusFetch: 'lazy' */
 /**
  * @value  copiedDuration  How long, in milliseconds, a copy button shows its "Copied" state.
  * @target content         The `pre` element holding the code.

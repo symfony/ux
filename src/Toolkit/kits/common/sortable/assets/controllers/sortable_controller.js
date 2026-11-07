@@ -1,6 +1,7 @@
 import { Controller } from '@hotwired/stimulus';
 import Sortable from 'sortablejs';
 
+/* stimulusFetch: 'lazy' */
 /**
  * @value  animation     How long, in milliseconds, the items take to slide into their new place while sorting; 0 disables the animation.
  * @value  handle        CSS selector of the drag handle inside each item; when omitted, an item is dragged from anywhere.

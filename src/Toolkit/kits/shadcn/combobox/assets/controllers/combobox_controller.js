@@ -1,5 +1,6 @@
 import { Controller } from '@hotwired/stimulus';
 
+/* stimulusFetch: 'lazy' */
 /**
  * Behavior of the `Combobox` component: filtering, keyboard navigation, single and multiple
  * selection, and the hidden inputs carrying the selection on form submission.

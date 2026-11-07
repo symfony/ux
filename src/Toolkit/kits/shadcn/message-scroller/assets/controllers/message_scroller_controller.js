@@ -11,6 +11,7 @@ const FREE_SCROLLING = 'free-scrolling';
 const ANCHORED = 'anchored';
 const SETTLING_JUMP = 'settling-jump';
 
+/* stimulusFetch: 'lazy' */
 /**
  * Scroll behavior of a chat transcript: it opens at a chosen position, settles a new turn near the top,
  * follows a streamed reply only while the reader stays at the end, and keeps the reader's place when

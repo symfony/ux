@@ -1,6 +1,7 @@
 import { Controller } from '@hotwired/stimulus';
 import { Dismiss } from 'flowbite';
 
+/* stimulusFetch: 'lazy' */
 export default class extends Controller {
     alert = null;
     static targets = ['alert'];

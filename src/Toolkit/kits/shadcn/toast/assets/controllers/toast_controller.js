@@ -7,6 +7,7 @@ const EXIT_FALLBACK_MS = 600;
 
 let sequence = 0;
 
+/* stimulusFetch: 'lazy' */
 /**
  * Stacked toast notifications. The controller only publishes geometry, as custom properties
  * (`--toast-index`, `--toast-height`, `--toast-offset-y`, ...) and state attributes

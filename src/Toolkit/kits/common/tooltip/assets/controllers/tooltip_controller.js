@@ -5,6 +5,7 @@ let sequence = 0;
 
 const OPPOSITE_SIDE = { top: 'bottom', right: 'left', bottom: 'top', left: 'right' };
 
+/* stimulusFetch: 'lazy' */
 /**
  * @value  content    The text shown inside the tooltip; falls back to the element's `title` when omitted. Any `title` is removed regardless, so the browser's native tooltip never competes with this one.
  * @value  placement  Preferred side of the trigger: `top` (default), `bottom`, `left` or `right`. Flips and shifts to stay in view.

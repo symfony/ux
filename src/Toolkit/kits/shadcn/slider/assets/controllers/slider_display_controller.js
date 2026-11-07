@@ -1,5 +1,6 @@
 import { Controller } from '@hotwired/stimulus';
 
+/* stimulusFetch: 'lazy' */
 /**
  * @value  separator  The string used to join the thumb values shown in the output.
  * @target output     The element whose text content displays the slider's current values.

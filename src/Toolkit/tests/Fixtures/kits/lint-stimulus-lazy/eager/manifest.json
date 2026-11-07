@@ -1,0 +1,9 @@
+{
+    "$schema": "../../../../../schema-kit-recipe-v1.json",
+    "type": "component",
+    "name": "eager",
+    "description": "Stimulus controller lazy-loading scenario.",
+    "copy-files": {
+        "assets/": "assets/"
+    }
+}

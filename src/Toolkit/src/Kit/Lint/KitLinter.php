@@ -24,6 +24,7 @@ use Symfony\UX\Toolkit\Kit\Lint\Checker\MissingRecipeManifestChecker;
 use Symfony\UX\Toolkit\Kit\Lint\Checker\RecipeReferenceChecker;
 use Symfony\UX\Toolkit\Kit\Lint\Checker\StimulusControllerChecker;
 use Symfony\UX\Toolkit\Kit\Lint\Checker\StimulusControllerDocChecker;
+use Symfony\UX\Toolkit\Kit\Lint\Checker\StimulusControllerLazyChecker;
 
 /**
  * Runs every registered {@see KitCheckerInterface} against a kit and aggregates issues.
@@ -52,6 +53,7 @@ final class KitLinter
             new RecipeReferenceChecker(),
             new StimulusControllerChecker(),
             new StimulusControllerDocChecker(),
+            new StimulusControllerLazyChecker(),
             new JsImportChecker(),
             new ComposerSymbolChecker(),
             new ComponentDocChecker(),

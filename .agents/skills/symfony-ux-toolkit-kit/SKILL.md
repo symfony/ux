@@ -432,6 +432,7 @@ Checks:
 ```js
 import { Controller } from '@hotwired/stimulus';
 
+/* stimulusFetch: 'lazy' */
 /**
  * @value  open     Whether the component is open on initial render.
  * @target trigger  The element that toggles the component and reflects its expanded state.
@@ -453,6 +454,7 @@ export default class extends Controller {
 ```
 
 - ESM, default export, `@hotwired/stimulus`.
+- **Lazy-loaded**: put `/* stimulusFetch: 'lazy' */` above `export default class` (above its docblock when it has one). Without it, StimulusBundle loads the installed controller and its dependencies on every page, even on pages that never render the component (enforced by `StimulusControllerLazyChecker`).
 - Sync ARIA from JS on state changes (`aria-expanded`, `data-state`).
 - Respect transitions: `if (el.getAnimations().length > 0) el.addEventListener('transitionend', ..., { once: true });`.
 - Naming: `<recipe>_controller.js`, controller identifier `<recipe>` (kebab-case in Twig).
@@ -590,6 +592,7 @@ describeRecipe('shadcn/popover', () => {
 - [ ] Trigger/Close sub-components use `<recipe>_<role>_attrs` (no wrapping `<button>`)
 - [ ] `data-action` Stimulus actions piped through `|html_attr_type('sst')` when concatenable
 - [ ] Inter-recipe deps declared in `manifest.json` `dependencies.recipe`
+- [ ] Every Stimulus controller is lazy-loaded with `/* stimulusFetch: 'lazy' */`
 - [ ] No orphan snapshot files after rework/rename (deletions made by `bin/update_toolkit_tests.sh` committed)
 - [ ] Every shipped file ends with trailing newline (`.html.twig`, `.json`, `.js`, `.css`, `.md`)
 

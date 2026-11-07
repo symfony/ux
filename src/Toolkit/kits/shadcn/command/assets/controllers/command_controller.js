@@ -2,6 +2,7 @@ import { Controller } from '@hotwired/stimulus';
 
 let instances = 0;
 
+/* stimulusFetch: 'lazy' */
 export default class extends Controller {
     static targets = ['input', 'list', 'item', 'group', 'separator', 'empty'];
 

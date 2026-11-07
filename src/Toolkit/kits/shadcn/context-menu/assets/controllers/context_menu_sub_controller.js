@@ -2,6 +2,7 @@ import { Controller } from '@hotwired/stimulus';
 
 const VIEWPORT_MARGIN = 8;
 
+/* stimulusFetch: 'lazy' */
 export default class extends Controller {
     static targets = ['trigger', 'content'];
 

@@ -1,5 +1,6 @@
 import { Controller } from '@hotwired/stimulus';
 
+/* stimulusFetch: 'lazy' */
 /**
  * @target  input   Password field that the controller switches between `password` and `text`. It goes back to `password` when its form is submitted or reset, and when the page is left.
  * @target  show    Elements shown while the password is hidden, like an "eye" icon or a "Show" label.

@@ -3,6 +3,7 @@ import { Controller } from '@hotwired/stimulus';
 const STATE_EXPANDED = 'expanded';
 const STATE_COLLAPSED = 'collapsed';
 
+/* stimulusFetch: 'lazy' */
 /**
  * Expand/collapse behavior for the `Sidebar` component: cookie persistence,
  * an off-canvas mode on mobile and a keyboard shortcut.

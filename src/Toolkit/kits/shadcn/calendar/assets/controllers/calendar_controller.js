@@ -2,6 +2,7 @@ import { Controller } from '@hotwired/stimulus';
 
 const DAY = 86400000;
 
+/* stimulusFetch: 'lazy' */
 /**
  * Month navigation and date selection for the `Calendar` component.
  *

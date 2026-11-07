@@ -2,6 +2,7 @@ import { Controller } from '@hotwired/stimulus';
 
 const LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
+/* stimulusFetch: 'lazy' */
 export default class extends Controller {
     static targets = [
         'item',

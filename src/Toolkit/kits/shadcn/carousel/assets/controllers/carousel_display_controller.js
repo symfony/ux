@@ -1,5 +1,6 @@
 import { Controller } from '@hotwired/stimulus';
 
+/* stimulusFetch: 'lazy' */
 /**
  * @value  template  The output text, where `%index%` and `%count%` are replaced by the current slide number and the total number of slides.
  * @target output    The element whose text content displays the carousel position.

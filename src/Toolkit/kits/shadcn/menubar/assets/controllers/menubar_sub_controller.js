@@ -1,5 +1,6 @@
 import { Controller } from '@hotwired/stimulus';
 
+/* stimulusFetch: 'lazy' */
 export default class extends Controller {
     static values = {
         openDelay: { type: Number, default: 0 },

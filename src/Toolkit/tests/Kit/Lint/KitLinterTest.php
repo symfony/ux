@@ -24,6 +24,7 @@ use Symfony\UX\Toolkit\Kit\Lint\Checker\JsImportChecker;
 use Symfony\UX\Toolkit\Kit\Lint\Checker\MissingRecipeManifestChecker;
 use Symfony\UX\Toolkit\Kit\Lint\Checker\RecipeReferenceChecker;
 use Symfony\UX\Toolkit\Kit\Lint\Checker\StimulusControllerChecker;
+use Symfony\UX\Toolkit\Kit\Lint\Checker\StimulusControllerLazyChecker;
 use Symfony\UX\Toolkit\Kit\Lint\KitLinter;
 use Symfony\UX\Toolkit\Kit\Lint\LintIssue;
 use Symfony\UX\Toolkit\Kit\Lint\LintReport;
@@ -165,6 +166,38 @@ class KitLinterTest extends TestCase
         ));
         $this->assertCount(1, $missingDepIssues, 'A controller not shipped by any declared recipe dependency must still be reported.');
         $this->assertStringContainsString('not-shipped-anywhere', $missingDepIssues[0]->message);
+    }
+
+    /**
+     * @return iterable<string, array{string, ?string}>
+     */
+    public static function provideStimulusLazyCases(): iterable
+    {
+        yield 'lazy annotation' => ['lazy', null];
+        yield 'preserved comment annotation' => ['preserved-comment', null];
+        yield 'file that is not a controller' => ['helper', null];
+        yield 'no annotation' => ['eager', 'assets/controllers/eager_controller.js'];
+        yield 'line comment annotation' => ['line-comment', 'assets/controllers/line_comment_controller.js'];
+        yield 'controller in a subdirectory' => ['nested', 'assets/controllers/forms/nested_controller.js'];
+    }
+
+    #[DataProvider('provideStimulusLazyCases')]
+    public function testStimulusControllerLazyChecker(string $recipe, ?string $expectedFile): void
+    {
+        $kit = $this->loadFixtureKit('lint-stimulus-lazy');
+        $issues = $this->findRecipeIssues(new KitLinter([new StimulusControllerLazyChecker()])->lint($kit), $recipe);
+
+        if (null === $expectedFile) {
+            $this->assertSame([], $issues, \sprintf('Recipe "%s" must produce no issue.', $recipe));
+
+            return;
+        }
+
+        $this->assertCount(1, $issues, \sprintf('Recipe "%s" must produce exactly one issue.', $recipe));
+        $this->assertSame('stimulus.controller.eager', $issues[0]->category);
+        $this->assertSame(LintSeverity::Warning, $issues[0]->severity);
+        $this->assertSame($expectedFile, $issues[0]->file);
+        $this->assertStringContainsString("/* stimulusFetch: 'lazy' */", $issues[0]->message);
     }
 
     /**

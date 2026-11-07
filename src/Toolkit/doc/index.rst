@@ -54,6 +54,10 @@ diff between your file and the recipe file is shown before the question, so you
 can see exactly what would change. When the file is identical to the recipe, it
 is left as is and no question is asked.
 
+Stimulus controllers are installed with the ``/* stimulusFetch: 'lazy' */`` annotation.
+A controller and its dependencies are only loaded when an element of the page uses it, so a page without the component does not download them.
+Remove the annotation from the installed file to load the controller on every page instead.
+
 A recipe can depend on other recipes and on packages, and the two are handled
 differently:
 

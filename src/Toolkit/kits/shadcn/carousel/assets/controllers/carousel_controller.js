@@ -2,6 +2,7 @@ import { Controller } from '@hotwired/stimulus';
 import EmblaCarousel from 'embla-carousel';
 import Autoplay from 'embla-carousel-autoplay';
 
+/* stimulusFetch: 'lazy' */
 export default class extends Controller {
     static targets = ['viewport', 'previous', 'next'];
 
