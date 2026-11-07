@@ -1,0 +1,11 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2026-11-07T16:36:32Z
+
+Thanks a lot for the PR, Romain!
+
+I pushed one small change: a sentence and a link to the Reprise documentation.
+
+If an app builds its assets with Reprise (Vite or Rsbuild), Stimulus controllers are loaded by Reprise, not by StimulusBundle. Those users need the Reprise docs to set up lazy controllers.
+
+Merging now.
