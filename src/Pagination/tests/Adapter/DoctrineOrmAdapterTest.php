@@ -12,6 +12,7 @@
 namespace Symfony\UX\Pagination\Tests\Adapter;
 
 use Doctrine\DBAL\Logging\Middleware;
+use Doctrine\Deprecations\Deprecation;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Query\QueryException;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -291,6 +292,35 @@ final class DoctrineOrmAdapterTest extends TestCase
 
         $results = $this->adapter->slice($qb, 15, 10);
         self::assertCount(5, $results); // Only 5 left
+    }
+
+    public function testCursorOrderUsesSortDirectionWhereDoctrineDeprecatesAString(): void
+    {
+        for ($i = 1; $i <= 3; ++$i) {
+            $author = new Author();
+            $author->setName('Author '.$i);
+            $this->entityManager->persist($author);
+        }
+        $this->entityManager->flush();
+
+        $qb = $this->entityManager->createQueryBuilder()
+            ->select('a')
+            ->from(Author::class, 'a');
+        $order = CursorOrder::byFields(['id'], 'DESC');
+
+        Deprecation::enableTrackingDeprecations();
+
+        try {
+            $forward = $this->adapter->sliceWithCursor($qb, null, 2, $order);
+            $backward = $this->adapter->sliceWithCursor($qb, new CursorBoundary([1], false), 2, $order);
+
+            self::assertSame(0, Deprecation::getTriggeredDeprecations()['https://github.com/doctrine/orm/issues/11313'] ?? 0);
+        } finally {
+            Deprecation::disable();
+        }
+
+        self::assertSame(['Author 3', 'Author 2'], array_map(static fn (Author $author): string => $author->getName(), $forward->items));
+        self::assertSame(['Author 3', 'Author 2'], array_map(static fn (Author $author): string => $author->getName(), $backward->items));
     }
 
     public function testSliceWithToOneJoinExecutesOneQuery(): void

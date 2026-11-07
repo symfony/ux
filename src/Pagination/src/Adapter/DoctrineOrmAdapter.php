@@ -37,6 +37,8 @@ final class DoctrineOrmAdapter implements OffsetAdapterInterface, LookaheadAdapt
 {
     use CursorValuesTrait;
 
+    private static ?bool $acceptsSortDirection = null;
+
     public function supports(mixed $source): bool
     {
         return $source instanceof QueryBuilder;
@@ -244,8 +246,9 @@ final class DoctrineOrmAdapter implements OffsetAdapterInterface, LookaheadAdapt
         // Backward navigation queries in reverse order, then restores display order
         $queryDirection = $forward ? $direction : ('ASC' === $direction ? 'DESC' : 'ASC');
         $qb->resetDQLPart('orderBy');
+        $sortDirection = self::sortDirection($queryDirection);
         foreach ($fields as $field) {
-            $qb->addOrderBy($field, $queryDirection);
+            $qb->addOrderBy($field, $sortDirection);
         }
 
         // Fetch limit + 1 to detect an adjacent page
@@ -606,6 +609,38 @@ final class DoctrineOrmAdapter implements OffsetAdapterInterface, LookaheadAdapt
         }
 
         return array_values($identifiers);
+    }
+
+    /**
+     * Doctrine ORM 3.7+ takes PHP 8.6's SortDirection (symfony/polyfill-php86 before 8.6) and deprecates a string direction; older versions only take the string.
+     *
+     * @param 'ASC'|'DESC' $direction
+     */
+    private static function sortDirection(string $direction): string|\SortDirection
+    {
+        if (!self::acceptsSortDirection()) {
+            return $direction;
+        }
+
+        return 'ASC' === $direction ? \SortDirection::Ascending : \SortDirection::Descending;
+    }
+
+    private static function acceptsSortDirection(): bool
+    {
+        if (null !== self::$acceptsSortDirection) {
+            return self::$acceptsSortDirection;
+        }
+
+        $type = new \ReflectionParameter([QueryBuilder::class, 'addOrderBy'], 'order')->getType();
+        $types = $type instanceof \ReflectionUnionType ? $type->getTypes() : [$type];
+
+        foreach ($types as $namedType) {
+            if ($namedType instanceof \ReflectionNamedType && \SortDirection::class === $namedType->getName()) {
+                return self::$acceptsSortDirection = true;
+            }
+        }
+
+        return self::$acceptsSortDirection = false;
     }
 
     private function unbindUnusedParameters(QueryBuilder $queryBuilder): void
