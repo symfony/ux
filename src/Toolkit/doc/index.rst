@@ -70,6 +70,31 @@ differently:
     matched case-insensitively, and when a name does not exist, the command
     suggests the closest ones it knows.
 
+Loading the Stimulus Controllers
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The Stimulus controllers copied by a recipe are eager loaded by default, like
+any other controller of your application: they are downloaded on every page,
+even on pages that do not use them.
+
+To load a controller only when an element using it appears on the page, add the
+``stimulusFetch`` comment on top of its class. The file is yours, so you can
+edit it like any other controller:
+
+.. code-block:: javascript
+
+    // assets/controllers/dialog_controller.js
+    import { Controller } from '@hotwired/stimulus';
+
+    /* stimulusFetch: 'lazy' */
+    export default class extends Controller {
+        // ...
+    }
+
+See `Lazy Stimulus Controllers`_ in the StimulusBundle documentation for more
+details. If you build your assets with Reprise (Vite or Rsbuild), controllers
+are loaded by Reprise instead, so see the `Reprise Stimulus documentation`_.
+
 Choosing a Kit
 --------------
 
@@ -233,3 +258,5 @@ version. A recipe you have already installed is your own code, and the Toolkit
 never changes it. See `The Recipe Is Yours, For Worse and For Better`_.
 
 .. _`the Symfony UX initiative`: https://ux.symfony.com/
+.. _`Lazy Stimulus Controllers`: https://symfony.com/bundles/StimulusBundle/current/index.html#lazy-stimulus-controllers
+.. _`Reprise Stimulus documentation`: https://symfony.com/bundles/reprise/current/index.html#symfony-ux-stimulus-controllers
