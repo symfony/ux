@@ -142,6 +142,91 @@ Align the pagination links with Bootstrap flexbox utilities through the `align` 
 </div>
 ```
 
+## Server Rendered
+
+The examples above render static links. To paginate real data, pair the components with [Symfony UX Pagination](https://symfony.com/bundles/ux-pagination/current/index.html): it reads the current page from the request, fetches the matching slice of your query and generates the page URLs, while an application theme built with the `Pagination` components renders the navigation.
+
+Install the bundle:
+
+```bash
+composer require symfony/ux-pagination
+```
+
+Paginate a query in your controller:
+
+```php
+// src/Controller/ProductController.php
+use Symfony\UX\Pagination\PaginatorInterface;
+
+#[Route('/products', name: 'product_index')]
+public function index(ProductRepository $products, PaginatorInterface $paginator): Response
+{
+    $pagination = $paginator
+        ->query($products->createQueryBuilder('product')->orderBy('product.name'))
+        ->perPage(20)
+        ->paginate();
+
+    return $this->render('product/index.html.twig', [
+        'products' => $pagination,
+    ]);
+}
+```
+
+Create a theme that renders the pagination result with the `Pagination` components:
+
+```twig
+{# templates/pagination/bootstrap.html.twig #}
+{% if pagination.hasPrevious() or pagination.hasNext() %}
+    <twig:Pagination ariaLabel="{{ 'Pagination'|trans({}, 'UXPaginationBundle') }}" {{ ...attributes }}>
+        <twig:Pagination:Item
+            href="{{ pagination.previousUrl }}"
+            label="{{ 'Previous'|trans({}, 'UXPaginationBundle') }}"
+            :disabled="not pagination.hasPrevious()"
+        />
+        {% for link in numbered ? pagination.pages : [] %}
+            {% if link.isGap %}
+                <twig:Pagination:Item label="…" disabled />
+            {% else %}
+                <twig:Pagination:Item
+                    href="{{ link.url }}"
+                    label="{{ link.page }}"
+                    ariaLabel="{{ 'Go to page %page%'|trans({'%page%': link.page}, 'UXPaginationBundle') }}"
+                    :active="link.isCurrent"
+                />
+            {% endif %}
+        {% endfor %}
+        <twig:Pagination:Item
+            href="{{ pagination.nextUrl }}"
+            label="{{ 'Next'|trans({}, 'UXPaginationBundle') }}"
+            :disabled="not pagination.hasNext()"
+        />
+    </twig:Pagination>
+{% endif %}
+```
+
+Select it as the default theme:
+
+```yaml
+# config/packages/ux_pagination.yaml
+ux_pagination:
+    theme: 'pagination/bootstrap.html.twig'
+```
+
+Then render the items and the navigation:
+
+```twig
+{# templates/product/index.html.twig #}
+{% for product in products %}
+    <article>{{ product.name }}</article>
+{% endfor %}
+
+{{ ux_pagination(products) }}
+```
+
+The theme receives the pagination result as `pagination`. Numbered results expose their pages through `pagination.pages`, where each entry is a page link (`page`, `url`, `isCurrent`) or a gap (`isGap`). Lookahead and cursor results set `numbered` to `false`, so the same theme renders only their previous and next links.
+
+The `attributes` option of `ux_pagination()` is spread onto `Pagination`. `Pagination:Item` renders its own link, so `link_attributes` and the [LiveComponent integration](https://symfony.com/bundles/ux-pagination/current/live-component.html) that relies on them are not supported: use the built-in `@UXPagination/theme/bootstrap.html.twig` theme when you need them.
+
 ## API Reference
 
 ::: api-reference
