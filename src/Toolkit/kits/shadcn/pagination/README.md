@@ -170,6 +170,89 @@ To enable RTL support, set the `dir="rtl"` attribute on the root element.
 </div>
 ```
 
+## UX Pagination Integration
+
+The examples above only render static links. [Symfony UX Pagination](https://symfony.com/bundles/ux-pagination/current/index.html) paginates real data: it reads the current page from the request, fetches the matching slice of a query and generates the page URLs. Its `ux_pagination()` Twig function renders the navigation through a theme. Write that theme with this recipe's `Pagination` components, so the navigation matches your kit.
+
+Create a theme that renders the pagination result with the `Pagination` components:
+
+```twig
+{# templates/pagination/shadcn.html.twig #}
+{% if pagination.hasPrevious() or pagination.hasNext() %}
+    <twig:Pagination aria-label="{{ 'Pagination'|trans({}, 'UXPaginationBundle') }}" {{ ...attributes }}>
+        <twig:Pagination:Content {{ ...navigation_attributes }}>
+            <twig:Pagination:Item>
+                {% if pagination.hasPrevious() %}
+                    <twig:Pagination:Previous
+                        href="{{ pagination.previousUrl }}"
+                        rel="prev"
+                        text="{{ 'Previous'|trans({}, 'UXPaginationBundle') }}"
+                        aria-label="{{ 'Previous page'|trans({}, 'UXPaginationBundle') }}"
+                        {{ ...link_attributes.previous }}
+                    />
+                {% else %}
+                    <twig:Pagination:Previous
+                        aria-disabled="true"
+                        class="pointer-events-none opacity-50"
+                        text="{{ 'Previous'|trans({}, 'UXPaginationBundle') }}"
+                        aria-label="{{ 'Previous page'|trans({}, 'UXPaginationBundle') }}"
+                    />
+                {% endif %}
+            </twig:Pagination:Item>
+            {% for link in numbered ? pagination.pages : [] %}
+                <twig:Pagination:Item>
+                    {% if link.isGap %}
+                        <twig:Pagination:Ellipsis />
+                    {% elseif link.isCurrent %}
+                        <twig:Pagination:Link href="{{ link.url }}" active>{{ link.page }}</twig:Pagination:Link>
+                    {% else %}
+                        <twig:Pagination:Link
+                            href="{{ link.url }}"
+                            aria-label="{{ 'Go to page %page%'|trans({'%page%': link.page}, 'UXPaginationBundle') }}"
+                            {{ ...link_attributes.pages[link.page]|default({}) }}
+                        >{{ link.page }}</twig:Pagination:Link>
+                    {% endif %}
+                </twig:Pagination:Item>
+            {% endfor %}
+            <twig:Pagination:Item>
+                {% if pagination.hasNext() %}
+                    <twig:Pagination:Next
+                        href="{{ pagination.nextUrl }}"
+                        rel="next"
+                        text="{{ 'Next'|trans({}, 'UXPaginationBundle') }}"
+                        aria-label="{{ 'Next page'|trans({}, 'UXPaginationBundle') }}"
+                        {{ ...link_attributes.next }}
+                    />
+                {% else %}
+                    <twig:Pagination:Next
+                        aria-disabled="true"
+                        class="pointer-events-none opacity-50"
+                        text="{{ 'Next'|trans({}, 'UXPaginationBundle') }}"
+                        aria-label="{{ 'Next page'|trans({}, 'UXPaginationBundle') }}"
+                    />
+                {% endif %}
+            </twig:Pagination:Item>
+        </twig:Pagination:Content>
+    </twig:Pagination>
+{% endif %}
+```
+
+Select it as the default theme:
+
+```yaml
+# config/packages/ux_pagination.yaml
+ux_pagination:
+    theme: 'pagination/shadcn.html.twig'
+```
+
+Pass the result of a Symfony UX Pagination paginator (here `products`) to `ux_pagination()`:
+
+```twig
+{{ ux_pagination(products) }}
+```
+
+The theme also handles lookahead and cursor results, which only render the previous and next links. The `attributes`, `navigation_attributes` and `link_attributes` options of `ux_pagination()` reach the components, so the [LiveComponent integration](https://symfony.com/bundles/ux-pagination/current/live-component.html) works.
+
 ## Accessibility
 
 - `Pagination` renders `role="navigation"` with `aria-label="pagination"`, so it is announced as a named landmark. Pass your own `aria-label` to replace it, for instance with a more specific label when the page holds several paginated lists.
