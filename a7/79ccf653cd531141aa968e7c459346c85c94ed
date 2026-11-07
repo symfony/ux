@@ -1,0 +1,9 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2026-11-07T22:28:06Z
+
+Thanks for the PR, Simon. While reviewing it, I found a problem with the option normalizer on `csrf_token_manager`: `FormTypeCsrfExtension` only applies the configured `csrf_token_id` when the option is the exact manager it was given. With the wrapper, the id fell back to the form name, which is not stateless, so a live re-render rendered a session token and the next regular submit of that form failed with the same downgrade error (422).
+
+I pushed two changes. The branch now decorates the manager passed to `form.type_extension.csrf`, so token ids stay the same, and a test checks that the re-render still renders the `csrf-token` placeholder. During a live request, the decorator also accepts only the stateless token instead of any token, because accepting any token would have stopped validating session tokens in live requests, and a test checks that an invalid session token is still rejected there.
+
+I also moved the CHANGELOG entry to 3.7.2, since 3.7.1 is released.
