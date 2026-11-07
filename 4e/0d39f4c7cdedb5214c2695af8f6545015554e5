@@ -1,0 +1,9 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2026-11-07T10:20:44Z
+
+Thanks for the PR, @norkunas. I rebased it onto 3.x and amended three small changes into the commit:
+
+- The docblock said Doctrine ORM 3.6+, but 3.6.9 still declares `string|null $order` on `addOrderBy()`. `SortDirection` and the deprecation only arrive in 3.7.0, so it now says 3.7+.
+- I removed the `enum_exists()` guard. ORM 3.7+ requires `symfony/polyfill-php86`, so the enum exists whenever `addOrderBy()` declares `SortDirection`. The reflection check stays, because an `enum_exists()` check alone would throw a `TypeError` on ORM 3.0-3.6 when the polyfill is installed. The return type is also now `string|\SortDirection` instead of `string|\UnitEnum`.
+- I verified that the Pagination suite passes on ORM 3.8.x-dev, on ORM 3.6.9 with the polyfill, and on ORM 3.6.9 without it.
