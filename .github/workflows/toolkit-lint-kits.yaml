@@ -11,10 +11,12 @@ on:
         paths:
             - 'src/Toolkit/**'
             - '.github/workflows/toolkit-lint-kits.yaml'
+            - '!src/Toolkit/doc/**'
     pull_request:
         paths:
             - 'src/Toolkit/**'
             - '.github/workflows/toolkit-lint-kits.yaml'
+            - '!src/Toolkit/doc/**'
 
 concurrency:
     group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
