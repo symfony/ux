@@ -1,0 +1,15 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2026-11-07T21:45:11Z
+
+I pushed a few fixes:
+
+The READMEs said lookahead and cursor results set `numbered` to `false`. That is wrong for lookahead: its results set `numbered` to `true` with an empty `pagination.pages`, because the total is unknown. Only cursor results set `numbered` to `false`. The rendered output was already right, only the explanation was wrong, so I fixed the sentence in the three READMEs.
+
+Shadcn: the kit's `Pagination:Previous` and `Pagination:Next` hardcode `aria-label="Go to previous page"` and `"Go to next page"`. That English label overrides the translated visible text for screen readers. The theme now passes `aria-label` with the bundle's `Previous page` and `Next page` messages, so every label comes from the `UXPaginationBundle` domain.
+
+Bootstrap: the kit components render their own `<ul>`, so `navigation_attributes` is ignored too, not only `link_attributes`. The README now says so.
+
+Flowbite: the kit's `Previous` and `Next` components have no text prop, so their labels stay in English. I left the snippet as is and corrected the PR description, which said every theme translates its labels.
+
+I renamed the README section from "Server Rendered" to "UX Pagination Integration" and shortened its intro. The static examples above it are server-rendered too, so the old title did not describe what the section covers. I also removed the install and controller steps, which the linked bundle documentation covers.
