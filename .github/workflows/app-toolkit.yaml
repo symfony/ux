@@ -12,6 +12,7 @@ on:
             - 'src/Icons/**'
             - 'src/Toolkit/**'
             - 'src/TwigComponent/**'
+            - '!src/*/doc/**'
     pull_request:
         paths:
             - '.github/workflows/app-toolkit.yaml'
@@ -21,6 +22,7 @@ on:
             - 'src/Icons/**'
             - 'src/Toolkit/**'
             - 'src/TwigComponent/**'
+            - '!src/*/doc/**'
 
 concurrency:
     group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
