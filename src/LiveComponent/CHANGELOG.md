@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 3.7.2
+
+- Accept the stateless CSRF token of forms submitted during a live request, already protected by its required `X-Requested-With` header
+
 ## 3.6
 
 - Export the `ComponentHooks` TypeScript type, to type hook callbacks defined outside of `Component.on()`

@@ -15,6 +15,7 @@ use Symfony\Component\DependencyInjection\Argument\IteratorArgument;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
+use Symfony\UX\LiveComponent\Form\LiveRequestCsrfTokenManager;
 use Symfony\UX\LiveComponent\Hydration\DoctrineEntityHydrationExtension;
 use Symfony\UX\LiveComponent\LiveComponentBundle;
 
@@ -32,6 +33,15 @@ final class OptionalDependencyPass implements CompilerPassInterface
                 ->setArguments([new IteratorArgument([new Reference('doctrine')])]) // TODO: add support for multiple entity managers
                 ->addTag(LiveComponentBundle::HYDRATION_EXTENSION_TAG)
             ;
+        }
+
+        if ($container->hasDefinition('form.type_extension.csrf')) {
+            // replaced at the source: FormTypeCsrfExtension applies its default token id only to the manager it was given
+            $csrfExtension = $container->getDefinition('form.type_extension.csrf');
+            $container->register('ux.live_component.form.csrf_token_manager', LiveRequestCsrfTokenManager::class)
+                ->setArguments([$csrfExtension->getArgument(0), new Reference('request_stack')])
+            ;
+            $csrfExtension->replaceArgument(0, new Reference('ux.live_component.form.csrf_token_manager'));
         }
 
         if ($container->hasDefinition('test.client')) {
