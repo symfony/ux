@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 3.8
+
+- Skip the CSRF token validation of forms submitted during a live request, already protected by its required `X-Requested-With` header
+
 ## 3.6
 
 - Export the `ComponentHooks` TypeScript type, to type hook callbacks defined outside of `Component.on()`
