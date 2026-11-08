@@ -632,7 +632,8 @@ describe('AutocompleteController', () => {
         // wait for the MutationObserver to flush these changes
         await shortDelay(10);
 
-        expect(selectElement.value).toBe('');
+        const newSelectElement = getByTestId(container, 'main-element') as HTMLSelectElement;
+        expect(newSelectElement.value).toBe('');
     });
 
     it('connect with ajax URL on an input element', async () => {
@@ -1567,6 +1568,83 @@ describe('AutocompleteController', () => {
             expect(selectElement.className).not.toContain('tomselected');
         });
         expect(getSelectedValues()).toEqual(['2', '3']);
+    });
+
+    it('preserves a selected option loaded from the server when the element is moved on single select', async () => {
+        const { container, tomSelect } = await startAutocompleteTest(`
+            <div data-testid="entry">
+                <select
+                    data-testid="main-element"
+                    data-controller="autocomplete"
+                    data-autocomplete-url-value="/path/to/autocomplete"
+                >
+                    <option value="">Select a food</option>
+                </select>
+            </div>
+        `);
+        fetchMock.mockResponseOnce(JSON.stringify({ results: [{ value: 3, text: 'salad' }] }));
+        userEvent.click(tomSelect.control_input);
+        await waitFor(() => {
+            expect(container.querySelectorAll('.option[data-selectable]')).toHaveLength(1);
+        });
+        tomSelect.addItem('3');
+        let reconnected = false;
+        container.addEventListener('autocomplete:connect', () => {
+            reconnected = true;
+        });
+
+        const entry = getByTestId(container, 'entry');
+        entry.remove();
+        container.appendChild(entry);
+        await waitFor(() => {
+            expect(reconnected).toBe(true);
+        });
+
+        const selectElement = getByTestId(container, 'main-element') as HTMLSelectElement;
+        expect(selectElement.value).toBe('3');
+        expect(container.querySelector('.ts-control .item')).toHaveTextContent('salad');
+    });
+
+    it('preserves the selected options loaded from the server when the element is moved on multiple select', async () => {
+        const { container, tomSelect } = await startAutocompleteTest(`
+            <div data-testid="entry">
+                <select
+                    multiple
+                    data-testid="main-element"
+                    data-controller="autocomplete"
+                    data-autocomplete-url-value="/path/to/autocomplete"
+                ></select>
+            </div>
+        `);
+        const results = [
+            { value: 1, text: 'pizza' },
+            { value: 2, text: 'popcorn' },
+            { value: 3, text: 'salad' },
+        ];
+        fetchMock.mockResponseOnce(JSON.stringify({ results }));
+        userEvent.click(tomSelect.control_input);
+        await waitFor(() => {
+            expect(container.querySelectorAll('.option[data-selectable]')).toHaveLength(3);
+        });
+        tomSelect.addItem('1');
+        tomSelect.addItem('3');
+        let reconnected = false;
+        container.addEventListener('autocomplete:connect', () => {
+            reconnected = true;
+        });
+
+        const entry = getByTestId(container, 'entry');
+        entry.remove();
+        container.appendChild(entry);
+        await waitFor(() => {
+            expect(reconnected).toBe(true);
+        });
+
+        const selectElement = getByTestId(container, 'main-element') as HTMLSelectElement;
+        const selectedValues = Array.from(selectElement.selectedOptions).map((option) => option.value);
+        expect(selectedValues.sort()).toEqual(['1', '3']);
+        const items = Array.from(container.querySelectorAll('.ts-control .item'));
+        expect(items.map((item) => item.getAttribute('data-value'))).toEqual(['1', '3']);
     });
 
     it('does not trigger a reset when the style of "multiple" attribute changes', async () => {

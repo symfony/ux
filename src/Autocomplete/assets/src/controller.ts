@@ -113,7 +113,9 @@ export default class extends Controller {
         // TomSelect.destroy() resets the element to its original HTML. This
         // causes the selected value to be lost. We store it.
         let currentSelectedValues: string[] = [];
+        let currentHtml = '';
         if (this.selectElement) {
+            currentHtml = this.selectElement.innerHTML;
             if (this.selectElement.multiple) {
                 // For multiple selects, store the array of selected values
                 currentSelectedValues = Array.from(this.selectElement.options)
@@ -129,6 +131,7 @@ export default class extends Controller {
         this.tomSelect = undefined;
 
         if (this.selectElement) {
+            this.selectElement.innerHTML = currentHtml;
             if (this.selectElement.multiple) {
                 // Restore selections for multiple selects
                 Array.from(this.selectElement.options).forEach((option) => {
