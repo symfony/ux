@@ -46,13 +46,16 @@ var controller_default = class extends Controller {
 		this.stopMutationObserver();
 		if (!this.tomSelect) return;
 		let currentSelectedValues = [];
+		let currentHtml = "";
 		if (this.selectElement) {
+			currentHtml = this.selectElement.innerHTML;
 			if (this.selectElement.multiple) currentSelectedValues = Array.from(this.selectElement.options).filter((option) => option.selected).map((option) => option.value);
 			else currentSelectedValues = [this.selectElement.value];
 		}
 		this.tomSelect.destroy();
 		this.tomSelect = void 0;
 		if (this.selectElement) {
+			this.selectElement.innerHTML = currentHtml;
 			if (this.selectElement.multiple) Array.from(this.selectElement.options).forEach((option) => {
 				option.selected = currentSelectedValues.includes(option.value);
 			});
