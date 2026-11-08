@@ -18,11 +18,16 @@ use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\UX\Css\Engine\CssEscaper;
 use Symfony\UX\Css\Tests\Fixtures\TestKernel;
+use Symfony\UX\Css\Twig\CssRuntime;
 use Twig\Environment;
 use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
+use Twig\Extension\SandboxExtension;
 use Twig\Loader\ArrayLoader;
 use Twig\Loader\ChainLoader;
+use Twig\RuntimeLoader\FactoryRuntimeLoader;
+use Twig\Sandbox\SecurityNotAllowedFunctionError;
+use Twig\Sandbox\SecurityPolicy;
 use Twig\Source;
 
 final class CssFunctionTest extends KernelTestCase
@@ -288,6 +293,80 @@ final class CssFunctionTest extends KernelTestCase
         $this->assertSame('<div class="w_[a&amp;b&gt;c]"></div>', $html);
     }
 
+    public static function provideCallsPrintedWithoutTheEscaper(): iterable
+    {
+        yield 'constant hash' => ["<div class=\"{{ css({ p: 'md', color: 'primary', _hover: { color: 'fg' } }) }}\"></div>"];
+        yield 'ternary values' => ["{{ css({ p: 'md', color: active ? 'primary' : 'fg', _hover: { color: active ? 'fg' : 'primary' } }) }}"];
+        yield 'ternary of hashes' => ["{{ css(active ? { color: 'primary' } : { p: 'lg' }) }}"];
+        yield 'hash set once' => ["{% set styles = { color: 'primary', p: 'md' } %}{{ css(styles) }}"];
+        yield 'calls in a ternary' => ["{{ active ? css({ p: 'md' }) : css({ p: 'lg' }) }}"];
+    }
+
+    #[DataProvider('provideCallsPrintedWithoutTheEscaper')]
+    public function testClassesKnownWhenTheTemplateCompilesArePrintedWithoutTheEscaper(string $template): void
+    {
+        $compiled = $this->compile($template);
+
+        $this->assertStringNotContainsString('->escape(', $compiled);
+    }
+
+    public static function provideCallsEscapedAtRuntime(): iterable
+    {
+        yield 'dynamic part' => ["{{ css({ p: 'md', color: color }) }}"];
+        yield 'dynamic hash' => ['{{ css(styles) }}'];
+        yield 'js strategy' => ["{% autoescape 'js' %}{{ css({ p: 'md', _hover: { color: 'fg' } }) }}{% endautoescape %}"];
+        yield 'class with an ampersand' => ["{{ css({ w: '[a&b>c]' }) }}"];
+        yield 'class with quotes' => ["{{ css({ _before: { content: '\"\"' } }) }}"];
+        yield 'class with a non-ASCII character' => ["{{ css({ fontFamily: 'Gärten' }) }}"];
+        yield 'ternary branch with an ampersand' => ["{{ css({ p: 'md', w: active ? '[a&b]' : '[10px]' }) }}"];
+    }
+
+    #[DataProvider('provideCallsEscapedAtRuntime')]
+    public function testOtherCallsAreEscapedAtRuntime(string $template): void
+    {
+        $compiled = $this->compile($template);
+
+        $this->assertStringContainsString('->escape(', $compiled);
+    }
+
+    public function testAHashWithSeveralTernariesPrintsEveryPart(): void
+    {
+        $template = "{{ css({ p: 'md', color: active ? 'primary' : 'fg', _hover: { color: active ? 'fg' : 'primary' } }) }}";
+
+        $whenActive = $this->render($template, ['active' => true]);
+        $whenInactive = $this->render($template, ['active' => false]);
+
+        $this->assertSame('p_md c_primary hover:c_fg', $whenActive);
+        $this->assertSame('p_md c_fg hover:c_primary', $whenInactive);
+    }
+
+    public function testATernaryBranchThatNeedsEscapingIsEscaped(): void
+    {
+        $template = "<div class=\"{{ css({ p: 'md', w: active ? '[a&b]' : '[10px]' }) }}\"></div>";
+
+        $html = $this->render($template, ['active' => true]);
+
+        $this->assertSame('<div class="p_md w_[a&amp;b]"></div>', $html);
+    }
+
+    public function testTheSandboxChecksACallResolvedWhenTheTemplateCompiles(): void
+    {
+        $twig = self::sandboxedTwig("{{ css({ p: 'md' }) }}", []);
+
+        $this->expectException(SecurityNotAllowedFunctionError::class);
+
+        $twig->render('sandboxed.html.twig');
+    }
+
+    public function testASandboxThatAllowsCssRendersIt(): void
+    {
+        $twig = self::sandboxedTwig("{{ css({ p: 'md', color: color }) }}", ['css']);
+
+        $html = $twig->render('sandboxed.html.twig', ['color' => 'fg']);
+
+        $this->assertSame('p_md c_fg', $html);
+    }
+
     public static function provideInvalidTemplates(): iterable
     {
         yield 'unknown property' => ["\n\n{{ css({ colr: 'primary' }) }}", 'Unknown property "colr". Did you mean "color"?', 3];
@@ -384,5 +463,19 @@ final class CssFunctionTest extends KernelTestCase
     private static function twig(): Environment
     {
         return self::getContainer()->get('twig');
+    }
+
+    /**
+     * @param list<string> $allowedFunctions
+     */
+    private static function sandboxedTwig(string $template, array $allowedFunctions): Environment
+    {
+        $runtime = self::getContainer()->get('ux_css.twig.runtime');
+        $twig = new Environment(new ArrayLoader(['sandboxed.html.twig' => $template]));
+        $twig->addExtension(self::getContainer()->get('ux_css.twig.extension'));
+        $twig->addRuntimeLoader(new FactoryRuntimeLoader([CssRuntime::class => static fn () => $runtime]));
+        $twig->addExtension(new SandboxExtension(new SecurityPolicy([], ['escape'], [], [], $allowedFunctions), true));
+
+        return $twig;
     }
 }

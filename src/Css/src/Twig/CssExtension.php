@@ -29,7 +29,7 @@ final class CssExtension extends AbstractExtension
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('css', [CssRuntime::class, 'css']),
+            new TwigFunction('css', [CssRuntime::class, 'css'], ['is_safe_callback' => CssExpression::safeFor(...)]),
         ];
     }
 
