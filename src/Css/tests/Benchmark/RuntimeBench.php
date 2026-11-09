@@ -63,6 +63,7 @@ final class RuntimeBench
     private BenchProject $project;
     private Environment $twig;
     private CssRuntime $runtime;
+    private int $values = 0;
 
     public function setUp(): void
     {
@@ -111,5 +112,13 @@ final class RuntimeBench
         $classes = ['d_flex' => 'display', 'ai_center' => 'alignItems', 'p_4' => 'padding'];
 
         $this->runtime->append($classes, ['color' => 'blue.500']);
+    }
+
+    #[Bench\Assert('mode(variant.time.avg) < 15 microseconds')]
+    public function benchDynamicPartWithANewValue(): void
+    {
+        $classes = ['d_flex' => 'display', 'ai_center' => 'alignItems', 'p_4' => 'padding'];
+
+        $this->runtime->append($classes, ['w' => \sprintf('[%dpx]', ++$this->values)]);
     }
 }

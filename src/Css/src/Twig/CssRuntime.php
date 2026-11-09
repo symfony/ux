@@ -28,6 +28,16 @@ use Symfony\UX\Css\Validation\StyleValidator;
 final class CssRuntime
 {
     /**
+     * How many style hashes keep their classes in memory before the cache starts over.
+     */
+    private const CACHED_HASHES = 1000;
+
+    /**
+     * @var array<string, array<string, string>> the classes of the last hashes, by serialized hash
+     */
+    private array $cache = [];
+
+    /**
      * @var array<string, true>
      */
     private array $knownClasses = [];
@@ -73,10 +83,34 @@ final class CssRuntime
             ($this->validator)()->validate($styles);
         }
 
-        $classes = $this->generator->classes($styles);
+        $classes = $this->generatedClasses($styles);
         $this->logClassesWithoutCss(array_keys($classes));
 
         return $classes;
+    }
+
+    /**
+     * @param CssStyles $styles
+     *
+     * @return array<string, string>
+     */
+    private function generatedClasses(array $styles): array
+    {
+        try {
+            $key = serialize($styles);
+        } catch (\Exception) {
+            // a value that cannot be serialized, like a closure, is for the generator to refuse
+            return $this->generator->classes($styles);
+        }
+
+        if (isset($this->cache[$key])) {
+            return $this->cache[$key];
+        }
+        if (\count($this->cache) >= self::CACHED_HASHES) {
+            $this->cache = [];
+        }
+
+        return $this->cache[$key] = $this->generator->classes($styles);
     }
 
     /**
