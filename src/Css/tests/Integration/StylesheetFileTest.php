@@ -278,6 +278,22 @@ final class StylesheetFileTest extends TestCase
         $this->assertSame([$expected], $messages);
     }
 
+    public function testADynamicClassWithoutCssIsLoggedAtEachRender(): void
+    {
+        $kernel = $this->bootKernel();
+        $kernel->handle(Request::create('/'));
+        $logger = $this->service($kernel, 'logger');
+        $logger->cleanLogs();
+        $template = $this->service($kernel, 'twig')->createTemplate('{{ css({ color: color }) }}');
+
+        $template->render(['color' => 'fg']);
+        $template->render(['color' => 'fg']);
+
+        $messages = array_column($logger->cleanLogs(), 1);
+        $expected = 'No CSS was generated for "c_fg"; use it in a template or cover it with ux_css.static_css.';
+        $this->assertSame([$expected, $expected], $messages);
+    }
+
     private function bootKernel(
         bool $debug = true,
         array $config = self::CONFIG,

@@ -332,6 +332,16 @@ final class CssFunctionTest extends KernelTestCase
         $this->assertSame('<div class="content_&quot;&gt;&lt;script&gt;"></div>', $html);
     }
 
+    public function testAFunctionAsADynamicValueIsRefused(): void
+    {
+        self::bootKernel(['debug' => false]);
+
+        $this->expectException(RuntimeError::class);
+        $this->expectExceptionMessage('The value of "color" must be a string, a number or a boolean, "Closure" given.');
+
+        $this->render('{{ css({ color: color }) }}', ['color' => static fn (): string => 'fg']);
+    }
+
     public function testACssStringIsEscapedInTheClassAttributeAndMatchesItsSelector(): void
     {
         $template = '<div class="{{ css({ _before: { content: \'""\' } }) }}"></div>';
