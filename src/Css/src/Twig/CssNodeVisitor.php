@@ -30,6 +30,7 @@ use Twig\Node\Expression\Variable\ContextVariable;
 use Twig\Node\ModuleNode;
 use Twig\Node\Node;
 use Twig\Node\Nodes;
+use Twig\Node\PrintNode;
 use Twig\Node\SetNode;
 use Twig\Node\WithNode;
 use Twig\NodeVisitor\NodeVisitorInterface;
@@ -115,8 +116,12 @@ final class CssNodeVisitor implements NodeVisitorInterface
 
         try {
             $this->visibleConstants = $this->constantsInScope();
+            $resolved = $this->resolve($node);
+            if ($resolved instanceof CssExpression && end($this->ancestors) instanceof PrintNode) {
+                $resolved->printAsString();
+            }
 
-            return $this->resolve($node);
+            return $resolved;
         } catch (\Throwable $e) {
             throw new CssSyntaxError($e->getMessage(), $node->getTemplateLine(), $node->getSourceContext(), $e);
         }
@@ -136,7 +141,7 @@ final class CssNodeVisitor implements NodeVisitorInterface
         $hash = reset($arguments);
         if ($hash instanceof Node && self::isHash($constant = $this->visibleConstant($hash))) {
             ($this->validator)()->validate($constant);
-            $classes = new ConstantExpression($this->classNames($constant), $node->getTemplateLine());
+            $classes = new ConstantExpression($this->classes($constant), $node->getTemplateLine());
 
             return new CssExpression($node->getAttribute('twig_callable'), [$classes], null, $node->getTemplateLine());
         }
@@ -158,13 +163,13 @@ final class CssNodeVisitor implements NodeVisitorInterface
 
         $parts = [];
         if ([] !== $static) {
-            $parts[] = new ConstantExpression($this->classNames($static), $node->getTemplateLine());
+            $parts[] = new ConstantExpression($this->classes($static), $node->getTemplateLine());
         }
         foreach ($ternaries as [$path, $test, $left, $right]) {
             $parts[] = new ConditionalTernary(
                 $test,
-                new ConstantExpression($this->classNames(self::nest($path, $left)), $node->getTemplateLine()),
-                new ConstantExpression($this->classNames(self::nest($path, $right)), $node->getTemplateLine()),
+                new ConstantExpression($this->classes(self::nest($path, $left)), $node->getTemplateLine()),
+                new ConstantExpression($this->classes(self::nest($path, $right)), $node->getTemplateLine()),
                 $node->getTemplateLine(),
             );
         }
@@ -191,8 +196,8 @@ final class CssNodeVisitor implements NodeVisitorInterface
         $line = $node->getTemplateLine();
         $ternary = new ConditionalTernary(
             $test,
-            new ConstantExpression($this->classNames($left), $line),
-            new ConstantExpression($this->classNames($right), $line),
+            new ConstantExpression($this->classes($left), $line),
+            new ConstantExpression($this->classes($right), $line),
             $line,
         );
 
@@ -264,13 +269,16 @@ final class CssNodeVisitor implements NodeVisitorInterface
         $validator->validate(self::keys($dynamic));
     }
 
-    private function classNames(array $styles): string
+    /**
+     * @return array<string, string> each class mapped to its merge key
+     */
+    private function classes(array $styles): array
     {
         if (null !== $this->collector) {
             ($this->collector)($styles);
         }
 
-        return ($this->engine)()->classNames($styles);
+        return ($this->engine)()->classes($styles);
     }
 
     private function visibleConstant(Node $node): mixed
