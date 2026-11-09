@@ -138,7 +138,7 @@ final class CssNodeVisitor implements NodeVisitorInterface
             ($this->validator)()->validate($constant);
             $classes = new ConstantExpression($this->classNames($constant), $node->getTemplateLine());
 
-            return new CssExpression([$classes], null, $node->getTemplateLine());
+            return new CssExpression($node->getAttribute('twig_callable'), [$classes], null, $node->getTemplateLine());
         }
         if (false !== $hash && null !== ($branches = self::constantBranches($hash))) {
             return $this->resolveTernaryOfHashes($node, ...$branches) ?? $node;
@@ -171,7 +171,7 @@ final class CssNodeVisitor implements NodeVisitorInterface
 
         $dynamicHash = [] !== iterator_to_array($dynamic) ? $dynamic : null;
 
-        return new CssExpression($parts, $dynamicHash, $node->getTemplateLine());
+        return new CssExpression($node->getAttribute('twig_callable'), $parts, $dynamicHash, $node->getTemplateLine());
     }
 
     private function resolveTernaryOfHashes(
@@ -196,7 +196,7 @@ final class CssNodeVisitor implements NodeVisitorInterface
             $line,
         );
 
-        return new CssExpression([$ternary], null, $line);
+        return new CssExpression($node->getAttribute('twig_callable'), [$ternary], null, $line);
     }
 
     /**
