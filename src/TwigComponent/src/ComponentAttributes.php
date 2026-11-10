@@ -62,7 +62,8 @@ final class ComponentAttributes implements \Stringable, \IteratorAggregate, \Cou
                 continue;
             }
 
-            if (null === $value = HtmlExtension::htmlAttrValue($key, $value)) {
+            // htmlAttrValue() returns strings as they are
+            if (!\is_string($value) && null === $value = HtmlExtension::htmlAttrValue($key, $value)) {
                 continue;
             }
 
