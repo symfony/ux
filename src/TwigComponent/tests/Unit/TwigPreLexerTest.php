@@ -399,6 +399,14 @@ final class TwigPreLexerTest extends TestCase
             '<twig:foo text="Hello {{ name }}, I\'m Theo!"/>',
             "{{ component('foo', { text: 'Hello '~(name)~', I\'m Theo!' }) }}",
         ];
+        yield 'component_with_nested_hash_in_argument' => [
+            '<twig:foo class="{{ css({lg: {p: \'4\'}}) }}"/>',
+            "{{ component('foo', { class: (css({lg: {p: '4'}})) }) }}",
+        ];
+        yield 'component_with_double_close_inside_string_in_argument' => [
+            '<twig:foo text="{{ \'}}\' }}"/>',
+            "{{ component('foo', { text: ('}}') }) }}",
+        ];
         yield 'component_where_entire_default_block_is_embedded_component' => [
             <<<EOF
                 <twig:foo>
@@ -820,6 +828,16 @@ final class TwigPreLexerTest extends TestCase
             "{{ 'it\\'s }}' }} {{ component('Alert') }}",
         ];
 
+        yield 'ignore_component_tag_inside_string_after_nested_hash_in_output_expression' => [
+            "{{ format({a: {b: 1}}, '<twig:Alert/>') }} <twig:Alert/>",
+            "{{ format({a: {b: 1}}, '<twig:Alert/>') }} {{ component('Alert') }}",
+        ];
+
+        yield 'ignore_closing_tag_inside_string_after_nested_hash_in_block' => [
+            "<twig:foo>{{ format({a: {b: 1}}, '</twig:foo>') }}</twig:foo>",
+            "{% component 'foo' %}{% block content %}{{ format({a: {b: 1}}, '</twig:foo>') }}{% endblock %}{% endcomponent %}",
+        ];
+
         yield 'output_expression_inside_component_opens_default_block' => [
             '<twig:Foo>{{ bar }}</twig:Foo>',
             "{% component 'Foo' %}{% block content %}{{ bar }}{% endblock %}{% endcomponent %}",
@@ -894,6 +912,10 @@ final class TwigPreLexerTest extends TestCase
         yield 'component_attr_spreading_with_content3' => [
             '<twig:foobar bar="baz" {{ ...attr }}>content</twig:foobar>',
             '{% component \'foobar\' with { bar: \'baz\', ...attr } %}{% block content %}content{% endblock %}{% endcomponent %}',
+        ];
+        yield 'component_attr_spreading_nested_hash' => [
+            '<twig:foobar bar="baz" {{ ...{data: {id: 1}} }} />',
+            '{{ component(\'foobar\', { bar: \'baz\', ...{data: {id: 1}} }) }}',
         ];
         yield 'component_with_comment_line' => [
             "<twig:foo \n   # bar  \n />",

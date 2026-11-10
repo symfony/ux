@@ -528,7 +528,7 @@ class TwigPreLexer
             if ($this->check('{{...') || $this->check('{{ ...')) {
                 $this->consume('{{...');
                 $this->consume('{{ ...');
-                $attributes[] = '...'.trim($this->consumeUntil('}}'));
+                $attributes[] = '...'.trim($this->consumeTwigExpressionContent('}}'));
                 $this->consume('}}');
 
                 continue;
@@ -680,15 +680,17 @@ class TwigPreLexer
     /**
      * Consumes the body of a Twig output expression or tag (between `{{` and `}}`, or `{%` and `%}`).
      *
-     * String literals and `#` inline comments are skipped, so a closing delimiter inside them does not end the expression early.
+     * String literals and `#` inline comments are skipped, and the closing delimiter only counts outside of hashes,
+     * so a closing delimiter inside them, like the `}}` of `{a: {b: 1}}`, does not end the expression early.
      */
     private function consumeTwigExpressionContent(string $closingDelimiter): string
     {
         $start = $this->position;
-        $stopChars = "\"'#".$closingDelimiter[0];
+        $stopChars = "\"'#{}".$closingDelimiter[0];
+        $openHashes = 0;
 
         while (($this->position += strcspn($this->input, $stopChars, $this->position)) < $this->length) {
-            if ($this->check($closingDelimiter)) {
+            if (0 === $openHashes && $this->check($closingDelimiter)) {
                 return substr($this->input, $start, $this->position - $start);
             }
 
@@ -702,6 +704,12 @@ class TwigPreLexer
             if ('#' === $char) {
                 $this->consumeUntil("\n");
                 continue;
+            }
+
+            if ('{' === $char) {
+                ++$openHashes;
+            } elseif ('}' === $char && $openHashes > 0) {
+                --$openHashes;
             }
 
             ++$this->position;
@@ -751,7 +759,7 @@ class TwigPreLexer
                 // consume the entire {{ }} block
                 $this->consume('{{');
                 $this->consumeWhitespace();
-                $parts[] = \sprintf('(%s)', rtrim($this->consumeUntil('}}')));
+                $parts[] = \sprintf('(%s)', rtrim($this->consumeTwigExpressionContent('}}')));
                 $this->expectAndConsumeChar('}');
                 $this->expectAndConsumeChar('}');
 
