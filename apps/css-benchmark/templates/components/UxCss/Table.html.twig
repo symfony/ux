@@ -1,0 +1,10 @@
+<div class="{{ css({position: 'relative', w: 'full', overflowX: 'auto'}) }}" data-slot="table-container">
+    <table
+        {{ attributes.defaults({
+            class: css({w: 'full', captionSide: 'bottom', fontSize: 'sm'}),
+        }) }}
+    >
+        {##- The table structure, typically includes `Table:Header`, `Table:Body`, and optionally `Table:Footer`. -#}
+        {%- block content %}{% endblock -%}
+    </table>
+</div>

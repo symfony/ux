@@ -1,0 +1,14 @@
+<tr
+    data-slot="table-row"
+    {{ attributes.defaults({
+        class: css({
+            borderBottomWidth: '1px', transition: 'colors',
+            _hover: {bg: 'muted/50'},
+            '&:has([aria-expanded=true])': {bg: 'muted/50'},
+            '&[data-state=selected]': {bg: 'muted'},
+        }),
+    }) }}
+>
+    {##- The row cells, typically `Table:Cell` or `Table:Head` components. -#}
+    {%- block content %}{% endblock -%}
+</tr>

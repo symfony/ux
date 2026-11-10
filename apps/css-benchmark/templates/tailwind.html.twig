@@ -1,0 +1,105 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}Tailwind CSS{% endblock %}
+
+{% block body %}
+<main class="flex flex-col gap-6 p-6">
+    <header class="flex items-center justify-between gap-4">
+        <div class="flex flex-col gap-1">
+            <h1 class="text-2xl font-semibold tracking-tight">Dashboard</h1>
+            <p class="text-sm text-muted-foreground">What happened on the blog this month.</p>
+        </div>
+        <div class="flex items-center gap-2">
+            <twig:Tailwind:Button variant="outline">Export</twig:Tailwind:Button>
+            <twig:Tailwind:Button>New post</twig:Tailwind:Button>
+        </div>
+    </header>
+
+    <twig:Tailwind:Alert>
+        <twig:Tailwind:Alert:Title>Heads up</twig:Tailwind:Alert:Title>
+        <twig:Tailwind:Alert:Description>Three drafts are waiting for a review.</twig:Tailwind:Alert:Description>
+    </twig:Tailwind:Alert>
+
+    <section class="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        {% for stat in stats %}
+            <twig:Tailwind:Card>
+                <twig:Tailwind:Card:Header>
+                    <twig:Tailwind:Card:Description>{{ stat.label }}</twig:Tailwind:Card:Description>
+                    <twig:Tailwind:Card:Title class="text-2xl">{{ stat.value }}</twig:Tailwind:Card:Title>
+                    <twig:Tailwind:Card:Action>
+                        <twig:Tailwind:Badge variant="outline">{{ stat.trend }}</twig:Tailwind:Badge>
+                    </twig:Tailwind:Card:Action>
+                </twig:Tailwind:Card:Header>
+                <twig:Tailwind:Card:Footer class="text-sm text-muted-foreground">{{ stat.note }}</twig:Tailwind:Card:Footer>
+            </twig:Tailwind:Card>
+        {% endfor %}
+    </section>
+
+    <section class="grid gap-4 lg:grid-cols-3">
+        <twig:Tailwind:Card class="lg:col-span-2">
+            <twig:Tailwind:Card:Header>
+                <twig:Tailwind:Card:Title>Recent posts</twig:Tailwind:Card:Title>
+                <twig:Tailwind:Card:Description>The last posts written by the team.</twig:Tailwind:Card:Description>
+            </twig:Tailwind:Card:Header>
+            <twig:Tailwind:Card:Content>
+                <twig:Tailwind:Table>
+                    <twig:Tailwind:Table:Header>
+                        <twig:Tailwind:Table:Row>
+                            <twig:Tailwind:Table:Head><span class="sr-only">Select</span></twig:Tailwind:Table:Head>
+                            <twig:Tailwind:Table:Head>Author</twig:Tailwind:Table:Head>
+                            <twig:Tailwind:Table:Head>Title</twig:Tailwind:Table:Head>
+                            <twig:Tailwind:Table:Head>Status</twig:Tailwind:Table:Head>
+                            <twig:Tailwind:Table:Head class="text-end">Actions</twig:Tailwind:Table:Head>
+                        </twig:Tailwind:Table:Row>
+                    </twig:Tailwind:Table:Header>
+                    <twig:Tailwind:Table:Body>
+                        {% for post in posts %}
+                            <twig:Tailwind:Table:Row>
+                                <twig:Tailwind:Table:Cell><twig:Tailwind:Checkbox aria-label="Select {{ post.title }}" /></twig:Tailwind:Table:Cell>
+                                <twig:Tailwind:Table:Cell>
+                                    <div class="flex items-center gap-2">
+                                        <twig:Tailwind:Avatar size="sm"><twig:Tailwind:Avatar:Fallback>{{ post.initials }}</twig:Tailwind:Avatar:Fallback></twig:Tailwind:Avatar>
+                                        <span class="font-medium">{{ post.author }}</span>
+                                    </div>
+                                </twig:Tailwind:Table:Cell>
+                                <twig:Tailwind:Table:Cell>{{ post.title }}</twig:Tailwind:Table:Cell>
+                                <twig:Tailwind:Table:Cell>
+                                    <twig:Tailwind:Badge variant="{{ post.status == 'published' ? 'default' : (post.status == 'draft' ? 'secondary' : 'destructive') }}">{{ post.status }}</twig:Tailwind:Badge>
+                                </twig:Tailwind:Table:Cell>
+                                <twig:Tailwind:Table:Cell class="text-end">
+                                    <twig:Tailwind:Button variant="ghost" size="icon-sm" aria-label="Edit">E</twig:Tailwind:Button>
+                                    <twig:Tailwind:Button variant="ghost" size="icon-sm" aria-label="Delete">D</twig:Tailwind:Button>
+                                </twig:Tailwind:Table:Cell>
+                            </twig:Tailwind:Table:Row>
+                        {% endfor %}
+                    </twig:Tailwind:Table:Body>
+                </twig:Tailwind:Table>
+            </twig:Tailwind:Card:Content>
+        </twig:Tailwind:Card>
+
+        <twig:Tailwind:Card>
+            <twig:Tailwind:Card:Header>
+                <twig:Tailwind:Card:Title>Quick post</twig:Tailwind:Card:Title>
+            </twig:Tailwind:Card:Header>
+            <twig:Tailwind:Card:Content>
+                <form class="flex flex-col gap-4">
+                    {% for field in fields %}
+                        <div class="flex flex-col gap-2">
+                            <twig:Tailwind:Label for="{{ field.id }}">{{ field.label }}</twig:Tailwind:Label>
+                            <twig:Tailwind:Input id="{{ field.id }}" placeholder="{{ field.placeholder }}" />
+                        </div>
+                    {% endfor %}
+                    <twig:Tailwind:Separator />
+                    <div class="flex items-center justify-end gap-2">
+                        <twig:Tailwind:Button variant="secondary" size="sm">Cancel</twig:Tailwind:Button>
+                        <twig:Tailwind:Button size="sm">Publish</twig:Tailwind:Button>
+                    </div>
+                </form>
+            </twig:Tailwind:Card:Content>
+            <twig:Tailwind:Card:Footer>
+                <twig:Tailwind:Button variant="link" size="sm">See the drafts</twig:Tailwind:Button>
+            </twig:Tailwind:Card:Footer>
+        </twig:Tailwind:Card>
+    </section>
+</main>
+{% endblock %}

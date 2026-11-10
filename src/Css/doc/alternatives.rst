@@ -31,6 +31,28 @@ Tailwind needs a build step. Its standalone CLI runs without Node.js, and the
 `TailwindBundle`_ of SymfonyCasts runs it for AssetMapper. With ``css()``, PHP
 writes the CSS file: there is no binary to download and no watcher to start.
 
+The `benchmark app`_ of the Symfony UX repository renders the same dashboard
+twice, with 364 components each time. The first version uses the shadcn
+recipes of the UX Toolkit, which merge Tailwind classes with ``html_cva()``
+and the ``tailwind_classes`` filter. The second uses their twins written with
+``css()``.
+
+In the ``prod`` environment, served by FrankenPHP with OPcache and class
+preloading, both pages serve about the same number of requests per second
+(median of 5 rounds):
+
+===============  ============  =========
+FrankenPHP mode  Tailwind CSS  ``css()``
+===============  ============  =========
+Classic          467           465
+Worker           535           546
+===============  ============  =========
+
+These numbers were measured in November 2026 on an Apple M1 Pro. They vary by
+up to 3.7% from one round to the next, so classic mode is a tie, and worker
+mode is slightly in favor of ``css()``. Only the rendering of the HTML is
+measured, not building the CSS.
+
 What Tailwind does better:
 
 * editor support: the Tailwind CSS IntelliSense extension for VS Code, and
@@ -101,6 +123,7 @@ configuration, ``css()`` gives the same class names and the same CSS as Panda.
 
 .. _`Tailwind CSS`: https://tailwindcss.com/
 .. _`TailwindBundle`: https://symfony.com/bundles/TailwindBundle/current/index.html
+.. _`benchmark app`: https://github.com/symfony/ux/tree/3.x/apps/css-benchmark
 .. _`UnoCSS`: https://unocss.dev/
 .. _`Bootstrap`: https://getbootstrap.com/
 .. _`Panda CSS`: https://panda-css.com/

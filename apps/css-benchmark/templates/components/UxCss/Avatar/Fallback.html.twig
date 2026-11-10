@@ -1,0 +1,12 @@
+<span
+    data-slot="avatar-fallback"
+    {{ attributes.defaults({
+        class: css({
+            bg: 'muted', color: 'muted.foreground', rounded: 'full', display: 'flex', boxSize: 'full', alignItems: 'center', justifyContent: 'center', fontSize: 'sm',
+            '[data-slot=avatar][data-size=sm] &': {fontSize: 'xs'},
+        }),
+    }) }}
+>
+    {##- The fallback content displayed when no image is available, typically initials. -#}
+    {%- block content %}{% endblock -%}
+</span>

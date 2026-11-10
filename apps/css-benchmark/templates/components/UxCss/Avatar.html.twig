@@ -1,0 +1,21 @@
+{%- props
+    ## 'default'|'sm'|'lg' The avatar size.
+    size = 'default'
+-%}
+
+<span
+    data-slot="avatar"
+    data-size="{{ size }}"
+    {{ attributes.defaults({
+        class: css({
+            boxSize: '8', rounded: 'full', position: 'relative', display: 'flex', flexShrink: '0', userSelect: 'none',
+            '&[data-size=lg]': {boxSize: '10'},
+            '&[data-size=sm]': {boxSize: '6'},
+            _after: {content: '""', position: 'absolute', inset: '0', rounded: 'full', borderWidth: '1px', borderColor: 'border', mixBlendMode: 'darken'},
+            _dark: {_after: {mixBlendMode: 'lighten'}},
+        }),
+    }) }}
+>
+    {##- The avatar content, typically an image or `Avatar:Fallback`. -#}
+    {%- block content %}{% endblock -%}
+</span>

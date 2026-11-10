@@ -1,0 +1,31 @@
+{
+    "name": "symfony/ux-css-benchmark-app",
+    "description": "Renders the same dashboard styled with UX CSS and with Tailwind CSS, to compare their rendering time",
+    "type": "project",
+    "license": "MIT",
+    "minimum-stability": "beta",
+    "require": {
+        "php": ">=8.4",
+        "symfony/console": "8.2.*",
+        "symfony/framework-bundle": "8.2.*",
+        "symfony/runtime": "8.2.*",
+        "symfony/twig-bundle": "8.2.*",
+        "symfony/ux-css": "3.x-dev",
+        "symfony/ux-icons": "3.x-dev",
+        "symfony/ux-twig-component": "3.x-dev",
+        "tales-from-a-dev/twig-tailwind-extra": "^1.5",
+        "twig/extra-bundle": "^3.24|^4.0",
+        "twig/html-extra": "^3.24|^4.0"
+    },
+    "config": {
+        "allow-plugins": {
+            "symfony/runtime": true
+        },
+        "sort-packages": true
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    }
+}

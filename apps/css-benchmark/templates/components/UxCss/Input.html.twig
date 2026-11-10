@@ -1,0 +1,20 @@
+<input
+    data-slot="{{ attributes.render('data-slot')|default('input') }}"
+    {{ attributes.defaults({
+        class: css({
+            h: '8', w: 'full', minW: '0', rounded: 'lg', borderWidth: '1px', borderColor: 'input', bg: 'transparent', px: '2.5', py: '1',
+            fontSize: 'md', transition: 'colors', outline: 'none',
+            _file: {display: 'inline-flex', h: '6', borderWidth: '0', bg: 'transparent', fontSize: 'sm', fontWeight: 'medium', color: 'foreground'},
+            _placeholder: {color: 'muted.foreground'},
+            _focusVisible: {borderColor: 'ring', boxShadow: '[0 0 0 3px color-mix(in oklab, var(--ring) 50%, transparent)]'},
+            _disabled: {pointerEvents: 'none', cursor: 'not-allowed', bg: 'input/50', opacity: '0.5'},
+            _invalid: {borderColor: 'destructive', boxShadow: '[0 0 0 3px color-mix(in oklab, var(--destructive) 20%, transparent)]'},
+            md: {fontSize: 'sm'},
+            _dark: {
+                bg: 'input/30',
+                _disabled: {bg: 'input/80'},
+                _invalid: {borderColor: 'destructive/50', boxShadow: '[0 0 0 3px color-mix(in oklab, var(--destructive) 40%, transparent)]'},
+            },
+        }),
+    }) }}
+>

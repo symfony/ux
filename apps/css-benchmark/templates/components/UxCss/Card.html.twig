@@ -1,0 +1,23 @@
+{%- props
+    ## 'default'|'sm' Size variant of the card.
+    size = 'default'
+-%}
+<div
+    data-slot="card"
+    data-size="{{ size }}"
+    {{ attributes.defaults({
+        class: css({
+            display: 'flex', flexDirection: 'column', '--card-spacing': '[token(spacing.4)]', gap: '[var(--card-spacing)]', overflow: 'hidden', rounded: 'xl', bg: 'card', py: '[var(--card-spacing)]',
+            fontSize: 'sm', color: 'card.foreground',
+            boxShadow: '[0 0 0 1px color-mix(in oklab, var(--foreground) 10%, transparent)]',
+            '&:has([data-slot=card-footer])': {pb: '0'},
+            '&:has(> img:first-child)': {pt: '0'},
+            '&[data-size=sm]': {'--card-spacing': '[token(spacing.3)]', '&:has([data-slot=card-footer])': {pb: '0'}},
+            '& > img:first-child': {roundedTop: 'xl'},
+            '& > img:last-child': {roundedBottom: 'xl'},
+        }),
+    }) }}
+>
+    {##- The card content, typically includes `Card:Header`, `Card:Content`, and/or `Card:Footer`. -#}
+    {%- block content %}{% endblock -%}
+</div>

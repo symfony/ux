@@ -1,0 +1,9 @@
+<div
+    data-slot="card-content"
+    {{ attributes.defaults({
+        class: 'px-(--card-spacing)'|tailwind_classes,
+    }) }}
+>
+    {##- The main content area of the card. -#}
+    {%- block content %}{% endblock -%}
+</div>

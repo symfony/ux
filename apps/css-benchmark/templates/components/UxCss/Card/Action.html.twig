@@ -1,0 +1,9 @@
+<div
+    data-slot="card-action"
+    {{ attributes.defaults({
+        class: css({gridColumnStart: '2', gridRow: 'span 2', gridRowStart: '1', alignSelf: 'start', justifySelf: 'end'}),
+    }) }}
+>
+    {##- The action area placed in the top-right corner of the card header. -#}
+    {%- block content %}{% endblock -%}
+</div>

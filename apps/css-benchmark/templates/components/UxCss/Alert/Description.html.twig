@@ -1,0 +1,14 @@
+<div
+    data-slot="alert-description"
+    {{ attributes.defaults({
+        class: css({
+            fontSize: 'sm', textWrap: 'balance', color: 'muted.foreground',
+            md: {textWrap: '[pretty]'},
+            '& a': {textDecoration: 'underline', textUnderlineOffset: '3px', _hover: {color: 'foreground'}},
+            '& p:not(:last-child)': {mb: '4'},
+        }),
+    }) }}
+>
+    {##- The descriptive text of the alert. -#}
+    {%- block content %}{% endblock -%}
+</div>

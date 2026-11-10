@@ -1,0 +1,240 @@
+#!/usr/bin/env bash
+# Loads the Tailwind CSS and UX CSS pages with ab, served by FrankenPHP in classic then worker mode, and writes RESULTS.md.
+# Each round loads both pages, in an order that alternates from one round to the next.
+#
+# Usage: bin/bench [rounds] [requests per page and round] [concurrency]
+#        bin/bench 5 2000 4
+
+set -euo pipefail
+cd "$(dirname "$0")/.."
+export LC_ALL=C
+
+rounds=${1:-5}
+requests=${2:-2000}
+concurrency=${3:-4}
+warmup=500
+port=8180
+frankenphp=var/frankenphp/frankenphp
+pages=(tailwind ux-css)
+modes=(classic worker)
+out=var/bench
+results=RESULTS.md
+
+if [ ! -x "$frankenphp" ]; then
+    echo "FrankenPHP is missing: run bin/install-frankenphp first." >&2
+    exit 1
+fi
+if [ ! -d vendor ]; then
+    echo "The dependencies are missing: run composer install first." >&2
+    exit 1
+fi
+command -v ab > /dev/null || { echo "ab (ApacheBench) is missing." >&2; exit 1; }
+
+export APP_ENV=prod APP_DEBUG=0 PORT=$port
+
+server=
+stop_server() {
+    if [ -n "$server" ]; then
+        kill "$server" 2> /dev/null || true
+        wait "$server" 2> /dev/null || true
+        server=
+    fi
+}
+cleanup() {
+    stop_server
+    composer dump-autoload --quiet
+}
+trap cleanup EXIT
+
+start_server() {
+    local config=
+    if [ "$1" = worker ]; then
+        config="worker ./public/index.php"
+    fi
+    FRANKENPHP_CONFIG=$config "$frankenphp" run --config Caddyfile > "var/log/frankenphp-$1.log" 2>&1 &
+    server=$!
+    for _ in $(seq 100); do
+        if curl -fs -o /dev/null "http://127.0.0.1:$port/ux-css"; then
+            return
+        fi
+        sleep 0.2
+    done
+    echo "FrankenPHP did not start, see var/log/frankenphp-$1.log." >&2
+    exit 1
+}
+
+# Two responses of a page must be identical, in every mode, or the rounds would not measure the same work.
+check_pages() {
+    for page in "${pages[@]}"; do
+        local first="$out/$page.html" second="$out/$page.$1.html" status
+        status=$(curl -s -o "$second" -w '%{http_code}' "http://127.0.0.1:$port/$page")
+        if [ "$status" != 200 ]; then
+            echo "/$page answered HTTP $status in $1 mode, see var/log/frankenphp-$1.log." >&2
+            exit 1
+        fi
+        if [ ! -f "$first" ]; then
+            cp "$second" "$first"
+        elif ! cmp -s "$first" "$second"; then
+            echo "/$page renders differently between two requests ($1 mode): diff $first $second" >&2
+            exit 1
+        fi
+    done
+}
+
+load() {
+    ab -q -k -c "$concurrency" -n "$1" "http://127.0.0.1:$port/$2"
+}
+
+mkdir -p "$out" var/log
+rm -f "$out"/*.html "$out/rounds.tsv"
+
+echo "Preparing the app for production"
+composer dump-autoload --quiet --no-dev --classmap-authoritative
+"$frankenphp" php-cli bin/console cache:clear --quiet
+
+for mode in "${modes[@]}"; do
+    echo "FrankenPHP in $mode mode"
+    start_server "$mode"
+    check_pages "$mode"
+    for page in "${pages[@]}"; do
+        load "$warmup" "$page" > /dev/null
+    done
+    for round in $(seq "$rounds"); do
+        order=("${pages[@]}")
+        if [ $((round % 2)) = 0 ]; then
+            order=(ux-css tailwind)
+        fi
+        for page in "${order[@]}"; do
+            report=$(load "$requests" "$page")
+            awk -v mode="$mode" -v page="$page" -v round="$round" '
+                /^Requests per second/ { rps = $4 }
+                /^Failed requests/ { failed = $3 }
+                /^Non-2xx responses/ { non2xx = $3 }
+                $1 == "50%" { p50 = $2 }
+                $1 == "95%" { p95 = $2 }
+                $1 == "99%" { p99 = $2 }
+                END { printf "%s\t%s\t%s\t%s\t%s\t%s\t%s\t%d\n", mode, page, round, rps, p50, p95, p99, failed + non2xx }
+            ' <<< "$report" | tee -a "$out/rounds.tsv" | awk -F'\t' '{ printf "  round %s %-8s %8s req/s  p50 %s ms  p95 %s ms  p99 %s ms  errors %s\n", $3, $2, $4, $5, $6, $7, $8 }'
+        done
+    done
+    stop_server
+done
+
+page_stats() {
+    local file="$out/$1.html"
+    local size attributes classes unique
+    size=$(wc -c < "$file" | tr -d ' ')
+    attributes=$(grep -oE 'class="[^"]*"' "$file" | wc -l | tr -d ' ')
+    classes=$(grep -oE 'class="[^"]*"' "$file" | sed -E 's/^class="//; s/"$//' | awk '{ n += NF } END { print n }')
+    unique=$(grep -oE 'class="[^"]*"' "$file" | sed -E 's/^class="//; s/"$//' | tr -s ' ' '\n' | sort -u | grep -c .)
+    printf '| %s | %s KB | %s | %s | %s |\n' "$2" "$(awk -v b="$size" 'BEGIN { printf "%.1f", b / 1024 }')" "$attributes" "$classes" "$unique"
+}
+
+# Pads the cells of the Markdown tables like oxfmt, so that RESULTS.md passes the formatting check of the repository.
+align_tables() {
+    awk '
+        function flush(    r, c, cell, line) {
+            for (r = 1; r <= rows; r++) {
+                line = "|"
+                for (c = 1; c <= cols; c++) {
+                    cell = separator[r] ? sprintf("%" width[c] "s", "") : cells[r, c]
+                    if (separator[r]) gsub(/ /, "-", cell)
+                    line = line " " sprintf("%-" width[c] "s", cell) " |"
+                }
+                print line
+            }
+            rows = 0
+            delete width
+        }
+        /^\|/ {
+            rows++
+            cols = split($0, parts, "|") - 2
+            separator[rows] = $0 ~ /^\|(-+\|)+$/
+            for (c = 1; c <= cols; c++) {
+                cell = parts[c + 1]
+                gsub(/^ +| +$/, "", cell)
+                cells[rows, c] = cell
+                if (!(c in width)) width[c] = 3
+                if (!separator[rows] && length(cell) > width[c]) width[c] = length(cell)
+            }
+            next
+        }
+        rows { flush() }
+        { print }
+        END { if (rows) flush() }
+    '
+}
+
+cpu=$(sysctl -n machdep.cpu.brand_string 2> /dev/null || awk -F': ' '/^model name/ { print $2; exit }' /proc/cpuinfo)
+
+{
+    echo "# Results"
+    echo
+    echo "Written by \`bin/bench $rounds $requests $concurrency\` on $(date -u '+%Y-%m-%d %H:%M UTC'), from symfony/ux $(git rev-parse --short HEAD)$(git diff --quiet HEAD -- ../../src ":(exclude,glob)../../src/**/composer.json" ":(exclude,glob)../../src/**/doc/**" || echo ' with uncommitted changes')."
+    echo
+    echo "- $("$frankenphp" version | awk '{ print $1, $2, "with", $3, $4 }'), static binary, opcache and preloading on (see \`php.ini\`)"
+    echo "- Symfony $(composer show symfony/framework-bundle 2> /dev/null | awk '/^versions/ { print $4 }' | tr -d 'v'), Twig $(composer show twig/twig 2> /dev/null | awk '/^versions/ { print $4 }' | tr -d 'v'), tales-from-a-dev/twig-tailwind-extra $(composer show tales-from-a-dev/twig-tailwind-extra 2> /dev/null | awk '/^versions/ { print $4 }' | tr -d 'v'), \`prod\` environment"
+    echo "- $cpu, $(getconf _NPROCESSORS_ONLN) cores, $(uname -sr); \`ab\` runs on the same machine"
+    echo "- \`ab -k -c $concurrency\`: $warmup warmup requests per page, then $rounds rounds of $requests requests per page"
+    echo
+    echo "## The pages"
+    echo
+    echo "| Page | HTML | \`class\` attributes | Classes | Unique classes |"
+    echo "|---|---|---|---|---|"
+    page_stats tailwind 'Tailwind CSS (`/tailwind`)'
+    page_stats ux-css 'UX CSS (`/ux-css`)'
+    echo
+    echo "## Requests per second"
+    echo
+    echo "The range covers the $rounds rounds; the latencies are the medians of the rounds."
+    echo
+    awk -F'\t' '
+        function median(values, count,    i, j, tmp) {
+            for (i = 2; i <= count; i++) {
+                tmp = values[i]
+                for (j = i - 1; j >= 1 && values[j] > tmp; j--) values[j + 1] = values[j]
+                values[j + 1] = tmp
+            }
+            return count % 2 ? values[(count + 1) / 2] : (values[count / 2] + values[count / 2 + 1]) / 2
+        }
+        function stat(key, column,    i, values, count) {
+            count = 0
+            for (i = 1; i <= n[key]; i++) values[++count] = data[key, i, column]
+            return median(values, count)
+        }
+        {
+            key = $1 SUBSEP $2
+            i = ++n[key]
+            for (c = 4; c <= 8; c++) data[key, i, c] = $c
+            if (!(key in low) || $4 < low[key]) low[key] = $4
+            if (!(key in high) || $4 > high[key]) high[key] = $4
+            errors[key] += $8
+        }
+        END {
+            print "| Mode | Page | req/s (median) | req/s (range) | p50 | p95 | p99 | Errors |"
+            print "|---|---|---|---|---|---|---|---|"
+            split("classic worker", modes, " ")
+            split("tailwind ux-css", pages, " ")
+            names["tailwind"] = "Tailwind CSS"
+            names["ux-css"] = "UX CSS"
+            for (m = 1; m <= 2; m++) {
+                for (p = 1; p <= 2; p++) {
+                    key = modes[m] SUBSEP pages[p]
+                    rps[key] = stat(key, 4)
+                    printf "| %s | %s | %.1f | %.1f-%.1f | %g ms | %g ms | %g ms | %d |\n", modes[m], names[pages[p]], rps[key], low[key], high[key], stat(key, 5), stat(key, 6), stat(key, 7), errors[key]
+                }
+            }
+            print ""
+            for (m = 1; m <= 2; m++) {
+                tailwind = modes[m] SUBSEP "tailwind"
+                css = modes[m] SUBSEP "ux-css"
+                noise = (high[tailwind] - low[tailwind]) / rps[tailwind]
+                if ((high[css] - low[css]) / rps[css] > noise) noise = (high[css] - low[css]) / rps[css]
+                printf "- %s mode: UX CSS serves %+.1f%% requests per second compared to Tailwind CSS; the rounds of a page spread over up to %.1f%%.\n", modes[m], (rps[css] / rps[tailwind] - 1) * 100, noise * 100
+            }
+        }
+    ' "$out/rounds.tsv"
+} | align_tables > "$results"
+
+echo
+cat "$results"

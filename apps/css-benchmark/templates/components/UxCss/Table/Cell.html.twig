@@ -1,0 +1,9 @@
+<td
+    data-slot="table-cell"
+    {{ attributes.defaults({
+        class: css({p: '2', verticalAlign: 'middle', whiteSpace: 'nowrap', '&:has([role=checkbox])': {pe: '0'}}),
+    }) }}
+>
+    {##- The cell content. -#}
+    {%- block content %}{% endblock -%}
+</td>

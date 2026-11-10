@@ -1,0 +1,33 @@
+<div
+    data-slot="checkbox"
+    class="{{ css({position: 'relative', display: 'grid', boxSize: '4', flexShrink: '0', gridTemplateColumns: '1', '[data-slot=field]:has(:disabled) &': {opacity: '0.5'}}) }}"
+>
+    <input
+        type="checkbox"
+        {{ attributes.defaults({class: css({
+            gridColumnStart: '1', gridRowStart: '1', appearance: 'none', boxSize: '4', rounded: '[4px]', borderWidth: '1px', borderColor: 'input',
+            bg: 'transparent', transition: 'colors', outline: 'none',
+            _focusVisible: {borderColor: 'ring', boxShadow: '[0 0 0 3px color-mix(in oklab, var(--ring) 50%, transparent)]'},
+            _checked: {borderColor: 'primary', bg: 'primary'},
+            _disabled: {cursor: 'not-allowed', opacity: '0.5'},
+            _invalid: {borderColor: 'destructive', boxShadow: '[0 0 0 3px color-mix(in oklab, var(--destructive) 20%, transparent)]'},
+            _dark: {
+                bg: 'input/30',
+                _checked: {borderColor: 'primary', bg: 'primary'},
+                _invalid: {borderColor: 'destructive/50', boxShadow: '[0 0 0 3px color-mix(in oklab, var(--destructive) 40%, transparent)]'},
+            },
+            '@media (forced-colors: active)': {appearance: 'auto'},
+        })}) }}
+    />
+    <span
+        data-slot="checkbox-indicator"
+        class="{{ css({
+            pointerEvents: 'none', gridColumnStart: '1', gridRowStart: '1', display: 'flex', alignItems: 'center', justifyContent: 'center',
+            color: 'primary.foreground', opacity: '0', transition: '[none]',
+            '[data-slot=checkbox]:has(:checked) &': {opacity: '1'},
+            '[data-slot=checkbox]:has(:disabled) &': {color: 'primary.foreground/50'},
+        }) }}"
+    >
+        <twig:ux:icon name="lucide:check" class="{{ css({boxSize: '3.5'}) }}" />
+    </span>
+</div>

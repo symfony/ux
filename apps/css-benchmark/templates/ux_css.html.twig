@@ -1,0 +1,105 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}UX CSS{% endblock %}
+
+{% block body %}
+<main class="{{ css({display: 'flex', flexDirection: 'column', gap: '6', p: '6'}) }}">
+    <header class="{{ css({display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '4'}) }}">
+        <div class="{{ css({display: 'flex', flexDirection: 'column', gap: '1'}) }}">
+            <h1 class="{{ css({fontSize: '2xl', fontWeight: 'semibold', letterSpacing: 'tight'}) }}">Dashboard</h1>
+            <p class="{{ css({fontSize: 'sm', color: 'muted.foreground'}) }}">What happened on the blog this month.</p>
+        </div>
+        <div class="{{ css({display: 'flex', alignItems: 'center', gap: '2'}) }}">
+            <twig:UxCss:Button variant="outline">Export</twig:UxCss:Button>
+            <twig:UxCss:Button>New post</twig:UxCss:Button>
+        </div>
+    </header>
+
+    <twig:UxCss:Alert>
+        <twig:UxCss:Alert:Title>Heads up</twig:UxCss:Alert:Title>
+        <twig:UxCss:Alert:Description>Three drafts are waiting for a review.</twig:UxCss:Alert:Description>
+    </twig:UxCss:Alert>
+
+    <section class="{{ css({display: 'grid', gap: '4', md: {gridTemplateColumns: 'repeat(2, minmax(0, 1fr))'}, lg: {gridTemplateColumns: 'repeat(4, minmax(0, 1fr))'}}) }}">
+        {% for stat in stats %}
+            <twig:UxCss:Card>
+                <twig:UxCss:Card:Header>
+                    <twig:UxCss:Card:Description>{{ stat.label }}</twig:UxCss:Card:Description>
+                    <twig:UxCss:Card:Title class="{{ css({fontSize: '2xl'}) }}">{{ stat.value }}</twig:UxCss:Card:Title>
+                    <twig:UxCss:Card:Action>
+                        <twig:UxCss:Badge variant="outline">{{ stat.trend }}</twig:UxCss:Badge>
+                    </twig:UxCss:Card:Action>
+                </twig:UxCss:Card:Header>
+                <twig:UxCss:Card:Footer class="{{ css({fontSize: 'sm', color: 'muted.foreground'}) }}">{{ stat.note }}</twig:UxCss:Card:Footer>
+            </twig:UxCss:Card>
+        {% endfor %}
+    </section>
+
+    <section class="{{ css({display: 'grid', gap: '4', lg: {gridTemplateColumns: 'repeat(3, minmax(0, 1fr))'}}) }}">
+        <twig:UxCss:Card :class="css({lg: {gridColumn: 'span 2 / span 2'}})">
+            <twig:UxCss:Card:Header>
+                <twig:UxCss:Card:Title>Recent posts</twig:UxCss:Card:Title>
+                <twig:UxCss:Card:Description>The last posts written by the team.</twig:UxCss:Card:Description>
+            </twig:UxCss:Card:Header>
+            <twig:UxCss:Card:Content>
+                <twig:UxCss:Table>
+                    <twig:UxCss:Table:Header>
+                        <twig:UxCss:Table:Row>
+                            <twig:UxCss:Table:Head><span class="{{ css({srOnly: true}) }}">Select</span></twig:UxCss:Table:Head>
+                            <twig:UxCss:Table:Head>Author</twig:UxCss:Table:Head>
+                            <twig:UxCss:Table:Head>Title</twig:UxCss:Table:Head>
+                            <twig:UxCss:Table:Head>Status</twig:UxCss:Table:Head>
+                            <twig:UxCss:Table:Head class="{{ css({textAlign: 'end'}) }}">Actions</twig:UxCss:Table:Head>
+                        </twig:UxCss:Table:Row>
+                    </twig:UxCss:Table:Header>
+                    <twig:UxCss:Table:Body>
+                        {% for post in posts %}
+                            <twig:UxCss:Table:Row>
+                                <twig:UxCss:Table:Cell><twig:UxCss:Checkbox aria-label="Select {{ post.title }}" /></twig:UxCss:Table:Cell>
+                                <twig:UxCss:Table:Cell>
+                                    <div class="{{ css({display: 'flex', alignItems: 'center', gap: '2'}) }}">
+                                        <twig:UxCss:Avatar size="sm"><twig:UxCss:Avatar:Fallback>{{ post.initials }}</twig:UxCss:Avatar:Fallback></twig:UxCss:Avatar>
+                                        <span class="{{ css({fontWeight: 'medium'}) }}">{{ post.author }}</span>
+                                    </div>
+                                </twig:UxCss:Table:Cell>
+                                <twig:UxCss:Table:Cell>{{ post.title }}</twig:UxCss:Table:Cell>
+                                <twig:UxCss:Table:Cell>
+                                    <twig:UxCss:Badge variant="{{ post.status == 'published' ? 'default' : (post.status == 'draft' ? 'secondary' : 'destructive') }}">{{ post.status }}</twig:UxCss:Badge>
+                                </twig:UxCss:Table:Cell>
+                                <twig:UxCss:Table:Cell class="{{ css({textAlign: 'end'}) }}">
+                                    <twig:UxCss:Button variant="ghost" size="icon-sm" aria-label="Edit">E</twig:UxCss:Button>
+                                    <twig:UxCss:Button variant="ghost" size="icon-sm" aria-label="Delete">D</twig:UxCss:Button>
+                                </twig:UxCss:Table:Cell>
+                            </twig:UxCss:Table:Row>
+                        {% endfor %}
+                    </twig:UxCss:Table:Body>
+                </twig:UxCss:Table>
+            </twig:UxCss:Card:Content>
+        </twig:UxCss:Card>
+
+        <twig:UxCss:Card>
+            <twig:UxCss:Card:Header>
+                <twig:UxCss:Card:Title>Quick post</twig:UxCss:Card:Title>
+            </twig:UxCss:Card:Header>
+            <twig:UxCss:Card:Content>
+                <form class="{{ css({display: 'flex', flexDirection: 'column', gap: '4'}) }}">
+                    {% for field in fields %}
+                        <div class="{{ css({display: 'flex', flexDirection: 'column', gap: '2'}) }}">
+                            <twig:UxCss:Label for="{{ field.id }}">{{ field.label }}</twig:UxCss:Label>
+                            <twig:UxCss:Input id="{{ field.id }}" placeholder="{{ field.placeholder }}" />
+                        </div>
+                    {% endfor %}
+                    <twig:UxCss:Separator />
+                    <div class="{{ css({display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '2'}) }}">
+                        <twig:UxCss:Button variant="secondary" size="sm">Cancel</twig:UxCss:Button>
+                        <twig:UxCss:Button size="sm">Publish</twig:UxCss:Button>
+                    </div>
+                </form>
+            </twig:UxCss:Card:Content>
+            <twig:UxCss:Card:Footer>
+                <twig:UxCss:Button variant="link" size="sm">See the drafts</twig:UxCss:Button>
+            </twig:UxCss:Card:Footer>
+        </twig:UxCss:Card>
+    </section>
+</main>
+{% endblock %}
