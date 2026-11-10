@@ -1,0 +1,13 @@
+<div
+    data-slot="alert-title"
+    {{ attributes.defaults({
+        class: css({
+            fontWeight: 'medium',
+            '[data-slot=alert]:has(> svg) &': {gridColumnStart: '2'},
+            '& a': {textDecoration: 'underline', textUnderlineOffset: '3px', _hover: {color: 'foreground'}},
+        }),
+    }) }}
+>
+    {##- The title text of the alert. -#}
+    {%- block content %}{% endblock -%}
+</div>

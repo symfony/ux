@@ -1,0 +1,12 @@
+<th
+    data-slot="table-head"
+    {{ attributes.defaults({
+        class: css({
+            h: '10', px: '2', textAlign: 'start', verticalAlign: 'middle', fontWeight: 'medium', whiteSpace: 'nowrap', color: 'foreground',
+            '&:has([role=checkbox])': {pe: '0'},
+        }),
+    }) }}
+>
+    {##- The header cell content. -#}
+    {%- block content %}{% endblock -%}
+</th>

@@ -1,0 +1,11 @@
+<div
+    data-slot="card-footer"
+    {{ attributes.defaults({
+        class: css({
+            display: 'flex', alignItems: 'center', roundedBottom: 'xl', borderTopWidth: '1px', bg: 'muted/50', p: '[var(--card-spacing)]',
+        }),
+    }) }}
+>
+    {##- The footer area, typically contains actions or additional information. -#}
+    {%- block content %}{% endblock -%}
+</div>

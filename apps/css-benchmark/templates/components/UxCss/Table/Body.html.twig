@@ -1,0 +1,9 @@
+<tbody
+    data-slot="table-body"
+    {{ attributes.defaults({
+        class: css({'& tr:last-child': {borderWidth: '0'}}),
+    }) }}
+>
+    {##- The table body rows, typically `Table:Row` components. -#}
+    {%- block content %}{% endblock -%}
+</tbody>

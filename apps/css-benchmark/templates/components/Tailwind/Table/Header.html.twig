@@ -1,0 +1,9 @@
+<thead
+    data-slot="table-header"
+    {{ attributes.defaults({
+        class: '[&_tr]:border-b'|tailwind_classes,
+    }) }}
+>
+    {##- The header row(s), typically a `Table:Row` with `Table:Head` cells. -#}
+    {%- block content %}{% endblock -%}
+</thead>

@@ -1,0 +1,14 @@
+{
+	auto_https off
+	admin off
+
+	frankenphp {
+		{$FRANKENPHP_CONFIG}
+	}
+}
+
+http://127.0.0.1:{$PORT:8180} {
+	bind 127.0.0.1
+	root public/
+	php_server
+}

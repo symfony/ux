@@ -1,0 +1,13 @@
+<label
+    data-slot="{{ attributes.render('data-slot')|default('label') }}"
+    {{ attributes.defaults({
+        class: css({
+            display: 'flex', alignItems: 'center', gap: '2', fontSize: 'sm', lineHeight: 'none', fontWeight: 'medium', userSelect: 'none',
+            '.group[data-disabled=true] &': {pointerEvents: 'none', opacity: '0.5'},
+            _peerDisabled: {cursor: 'not-allowed', opacity: '0.5'},
+        }),
+    }) }}
+>
+    {##- The label text for a form control. -#}
+    {%- block content %}{% endblock -%}
+</label>

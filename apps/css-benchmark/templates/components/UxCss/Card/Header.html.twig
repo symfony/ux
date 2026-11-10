@@ -1,0 +1,15 @@
+<div
+    data-slot="card-header"
+    {{ attributes.defaults({
+        class: css({
+            containerType: 'inline-size', containerName: 'card-header',
+            display: 'grid', gridAutoRows: '[min-content]', alignItems: 'start', gap: '1', roundedTop: 'xl', px: '[var(--card-spacing)]',
+            '&:has([data-slot=card-action])': {gridTemplateColumns: '1fr auto'},
+            '&:has([data-slot=card-description])': {gridTemplateRows: 'auto auto'},
+            '&.border-b': {pb: '[var(--card-spacing)]'},
+        }),
+    }) }}
+>
+    {##- The header area, typically contains `Card:Title`, `Card:Description`, and `Card:Action`. -#}
+    {%- block content %}{% endblock -%}
+</div>

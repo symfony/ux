@@ -1,0 +1,12 @@
+<div
+    data-slot="card-title"
+    {{ attributes.defaults({
+        class: css({
+            fontSize: 'md', lineHeight: 'snug', fontWeight: 'medium',
+            '[data-slot=card][data-size=sm] &': {fontSize: 'sm'},
+        }),
+    }) }}
+>
+    {##- The title text of the card. -#}
+    {%- block content %}{% endblock -%}
+</div>

@@ -1,0 +1,19 @@
+{%- props
+    ## 'horizontal'|'vertical' The separator orientation.
+    orientation = 'horizontal',
+    ## boolean Whether the separator is purely decorative (not semantic).
+    decorative = true
+-%}
+<div
+    data-slot="{{ attributes.render('data-slot')|default('separator') }}"
+    data-orientation="{{ orientation }}"
+    role="{{ decorative ? 'none' : 'separator' }}"
+    {{ not decorative ? 'aria-orientation="' ~ orientation ~ '"' }}
+    {{ attributes.defaults({
+        class: css({
+            flexShrink: '0', bg: 'border',
+            '&[data-orientation=horizontal]': {h: '[1px]', w: 'full'},
+            '&[data-orientation=vertical]': {w: '[1px]', alignSelf: 'stretch'},
+        }),
+    }) }}
+></div>

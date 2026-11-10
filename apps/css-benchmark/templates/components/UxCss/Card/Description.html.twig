@@ -1,0 +1,9 @@
+<div
+    data-slot="card-description"
+    {{ attributes.defaults({
+        class: css({fontSize: 'sm', color: 'muted.foreground'}),
+    }) }}
+>
+    {##- The descriptive text of the card. -#}
+    {%- block content %}{% endblock -%}
+</div>

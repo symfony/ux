@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+# Downloads the standalone FrankenPHP binary to var/frankenphp/ and checks its SHA-256 against the GitHub release.
+#
+# Usage: bin/install-frankenphp [version]
+
+set -euo pipefail
+cd "$(dirname "$0")/.."
+
+version=${1:-1.13.5}
+case "$(uname -s)-$(uname -m)" in
+    Darwin-arm64) asset=frankenphp-mac-arm64 ;;
+    Linux-x86_64) asset=frankenphp-linux-x86_64 ;;
+    Linux-aarch64) asset=frankenphp-linux-aarch64 ;;
+    *)
+        echo "FrankenPHP publishes no static binary for $(uname -s) $(uname -m)." >&2
+        exit 1
+        ;;
+esac
+
+release="https://api.github.com/repos/php/frankenphp/releases/tags/v$version"
+digest=$(curl -fsSL "$release" | jq -r --arg asset "$asset" '.assets[] | select(.name == $asset) | .digest')
+if [[ "$digest" != sha256:* ]]; then
+    echo "No SHA-256 digest found for $asset in FrankenPHP v$version." >&2
+    exit 1
+fi
+
+target=var/frankenphp/frankenphp
+mkdir -p var/frankenphp
+curl -fL --progress-bar -o "$target.download" "https://github.com/php/frankenphp/releases/download/v$version/$asset"
+
+actual=$(shasum -a 256 "$target.download" | awk '{print $1}')
+if [ "sha256:$actual" != "$digest" ]; then
+    echo "SHA-256 mismatch for $asset: expected $digest, got sha256:$actual." >&2
+    exit 1
+fi
+
+chmod +x "$target.download"
+mv "$target.download" "$target"
+"$target" version

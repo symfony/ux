@@ -1,0 +1,9 @@
+<div
+    data-slot="card-content"
+    {{ attributes.defaults({
+        class: css({px: '[var(--card-spacing)]'}),
+    }) }}
+>
+    {##- The main content area of the card. -#}
+    {%- block content %}{% endblock -%}
+</div>
