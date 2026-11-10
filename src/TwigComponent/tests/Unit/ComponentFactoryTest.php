@@ -13,15 +13,24 @@ namespace Symfony\UX\TwigComponent\Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\EventDispatcher\CompiledEventDispatcher;
 use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\PropertyAccess\Exception\InvalidTypeException;
+use Symfony\Component\PropertyAccess\PropertyAccessor;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
+use Symfony\Component\PropertyInfo\Attribute\WithAccessors;
+use Symfony\Component\PropertyInfo\Extractor\ReflectionExtractor;
+use Symfony\Component\PropertyInfo\PropertyWriteInfo;
+use Symfony\Component\PropertyInfo\PropertyWriteInfoExtractorInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\UX\TwigComponent\ComponentFactory;
 use Symfony\UX\TwigComponent\ComponentMetadata;
 use Symfony\UX\TwigComponent\ComponentTemplateFinderInterface;
+use Symfony\UX\TwigComponent\DependencyInjection\Compiler\TwigComponentPass;
 use Symfony\UX\TwigComponent\Event\PreMountEvent;
 use Twig\Environment;
+use Twig\Loader\ArrayLoader;
 
 /**
  * @author Simon André <smn.andre@gmail.com>
@@ -149,5 +158,310 @@ class ComponentFactoryTest extends TestCase
         $this->assertFalse($hasListeners);
         // a thawed dispatcher dispatches like a compiled one, only its state tells them apart
         $this->assertNull((fn () => $this->dispatcher)->call($dispatcher));
+    }
+
+    public function testMountWritesAPublicPropertyWithoutThePropertyAccessor(): void
+    {
+        $component = new class {
+            public string $title = '';
+        };
+        $accessorWriteInfoExtractor = new class(new ReflectionExtractor()) implements PropertyWriteInfoExtractorInterface {
+            public array $adderRemoverContexts = [];
+
+            public function __construct(private ReflectionExtractor $extractor)
+            {
+            }
+
+            public function getWriteInfo(string $class, string $property, array $context = []): ?PropertyWriteInfo
+            {
+                $this->adderRemoverContexts[] = $context['enable_adder_remover_extraction'];
+
+                return $this->extractor->getWriteInfo($class, $property, $context);
+            }
+        };
+        $accessor = new PropertyAccessor(PropertyAccessor::MAGIC_GET | PropertyAccessor::MAGIC_SET, PropertyAccessor::THROW_ON_INVALID_PROPERTY_PATH, null, null, $accessorWriteInfoExtractor);
+
+        $this->mountWithAccessor($component, ['title' => 'Hello'], $accessor);
+
+        $this->assertSame('Hello', $component->title);
+        // isWritable() asks for the write info of an array value; setValue() would ask for the one of a string
+        $this->assertSame([true], $accessorWriteInfoExtractor->adderRemoverContexts);
+    }
+
+    public function testMountPrefersASetterOverAPublicProperty(): void
+    {
+        $component = new class {
+            public string $title = '';
+
+            public function setTitle(string $title): void
+            {
+                $this->title = strtoupper($title);
+            }
+        };
+
+        $this->mountWithAccessor($component, ['title' => 'Hello']);
+
+        $this->assertSame('HELLO', $component->title);
+    }
+
+    public function testMountPrefersASetterOverASnakeCasePublicProperty(): void
+    {
+        $component = new class {
+            public string $first_name = '';
+
+            public function setFirstName(string $firstName): void
+            {
+                $this->first_name = strtoupper($firstName);
+            }
+        };
+
+        $this->mountWithAccessor($component, ['first_name' => 'Hello']);
+
+        $this->assertSame('HELLO', $component->first_name);
+    }
+
+    public function testMountPrefersAMethodNamedAfterAPublicProperty(): void
+    {
+        $component = new class {
+            public string $title = '';
+
+            public function title(string $title): void
+            {
+                $this->title = strtoupper($title);
+            }
+        };
+
+        $this->mountWithAccessor($component, ['title' => 'Hello']);
+
+        $this->assertSame('HELLO', $component->title);
+    }
+
+    public function testMountPrefersTheSetterOfTheWithAccessorsAttribute(): void
+    {
+        if (!class_exists(WithAccessors::class)) {
+            $this->markTestSkipped('The "WithAccessors" attribute is not available.');
+        }
+
+        $component = new class {
+            #[WithAccessors(setter: 'changeTitle')]
+            public string $title = '';
+
+            public function changeTitle(string $title): void
+            {
+                $this->title = strtoupper($title);
+            }
+        };
+
+        $this->mountWithAccessor($component, ['title' => 'Hello']);
+
+        $this->assertSame('HELLO', $component->title);
+    }
+
+    public function testMountRunsTheMagicSetterOnceWhenItFails(): void
+    {
+        $component = new class {
+            public int $calls = 0;
+
+            public int $count;
+
+            public function __construct()
+            {
+                unset($this->count);
+            }
+
+            public function __set(string $name, mixed $value): void
+            {
+                ++$this->calls;
+                $this->count = $value;
+            }
+        };
+
+        try {
+            $this->mountWithAccessor($component, ['count' => 'many']);
+            $this->fail('The write should fail.');
+        } catch (InvalidTypeException) {
+        }
+
+        $this->assertSame(1, $component->calls);
+    }
+
+    public function testMountUsesTheAdderAndRemoverForAnIterableValue(): void
+    {
+        $component = new class {
+            public array $tags = ['old'];
+
+            public function addTag(string $tag): void
+            {
+                $this->tags[] = strtoupper($tag);
+            }
+
+            public function removeTag(string $tag): void
+            {
+                $this->tags = array_values(array_diff($this->tags, [$tag]));
+            }
+        };
+
+        $this->mountWithAccessor($component, ['tags' => ['a', 'b']]);
+
+        $this->assertSame(['A', 'B'], $component->tags);
+    }
+
+    public function testMountThrowsTheInvalidTypeExceptionOfThePropertyAccessor(): void
+    {
+        $component = new class {
+            public int $count = 0;
+        };
+
+        $this->expectException(InvalidTypeException::class);
+        $this->expectExceptionMessage('Expected argument of type "int", "string" given at property path "count".');
+
+        $this->mountWithAccessor($component, ['count' => 'many']);
+    }
+
+    public function testMountConvertsADateTimeForADateTimeImmutableProperty(): void
+    {
+        $component = new class {
+            public ?\DateTimeImmutable $date = null;
+        };
+
+        $this->mountWithAccessor($component, ['date' => new \DateTime('2024-01-02 03:04:05')]);
+
+        $this->assertInstanceOf(\DateTimeImmutable::class, $component->date);
+        $this->assertSame('2024-01-02 03:04:05', $component->date->format('Y-m-d H:i:s'));
+    }
+
+    public function testMountRunsTheSetHookOfAPropertyOnceWhenItFails(): void
+    {
+        $component = new class {
+            public int $calls = 0;
+
+            public int $count = 0 {
+                set(int|string $value) {
+                    ++$this->calls;
+                    $this->count = $value;
+                }
+            }
+        };
+
+        try {
+            $this->mountWithAccessor($component, ['count' => 'many']);
+            $this->fail('The write should fail.');
+        } catch (\TypeError|InvalidTypeException) {
+        }
+
+        $this->assertSame(1, $component->calls);
+    }
+
+    public function testMountWritesThroughADecoratedPropertyAccessor(): void
+    {
+        $component = new class {
+            public string $title = '';
+        };
+        $accessor = $this->createMock(PropertyAccessorInterface::class);
+        $accessor->method('isWritable')->willReturn(true);
+        $accessor->expects($this->once())->method('setValue')->with($component, 'title', 'Hello');
+
+        $this->mountWithAccessor($component, ['title' => 'Hello'], $accessor);
+    }
+
+    public function testMountWritesThroughThePropertyAccessorForAnotherClassThanTheOneOfTheMetadata(): void
+    {
+        $parent = new class {
+            public string $title = '';
+        };
+        $component = new class {
+            public string $title = '';
+
+            public function setTitle(string $title): void
+            {
+                $this->title = strtoupper($title);
+            }
+        };
+        $metadata = $this->createMetadata($parent);
+
+        $this->createFactoryWithAccessor()->mountFromObject($component, ['title' => 'Hello'], $metadata);
+
+        $this->assertSame('HELLO', $component->title);
+    }
+
+    public function testMountWritesAPropertyWithAnIterableThenWithAScalar(): void
+    {
+        $component = new class {
+            public array|string $tags = [];
+
+            public function addTag(string $tag): void
+            {
+                $this->tags[] = strtoupper($tag);
+            }
+
+            public function removeTag(string $tag): void
+            {
+            }
+        };
+        $factory = $this->createFactoryWithAccessor();
+        $metadata = $this->createMetadata($component);
+
+        $factory->mountFromObject($component, ['tags' => ['a']], $metadata);
+        $this->assertSame(['A'], $component->tags);
+
+        $factory->mountFromObject($component, ['tags' => 'b'], $metadata);
+        $this->assertSame('b', $component->tags);
+    }
+
+    public function testMountRethrowsATypeErrorThatIsNotAboutTheTypeOfTheValue(): void
+    {
+        $component = new class {
+            public mixed $value;
+
+            public function __construct()
+            {
+                $this->value = new class {
+                    public function __destruct()
+                    {
+                        throw new \TypeError('Thrown by a destructor.');
+                    }
+                };
+            }
+        };
+
+        $this->expectException(\TypeError::class);
+        $this->expectExceptionMessage('Thrown by a destructor.');
+
+        $this->mountWithAccessor($component, ['value' => 'new']);
+    }
+
+    private function mountWithAccessor(object $component, array $data, ?PropertyAccessorInterface $accessor = null): void
+    {
+        $this->createFactoryWithAccessor($accessor)->mountFromObject($component, $data, $this->createMetadata($component));
+    }
+
+    private function createMetadata(object $component): ComponentMetadata
+    {
+        $container = new ContainerBuilder();
+        $container->setParameter('ux.twig_component.component_defaults', []);
+        $container->register('ux.twig_component.component_factory');
+        $container->register('ux.twig_component.component_properties');
+        $container->register('ux.twig_component.command.debug');
+        $container->register('foo', $component::class)
+            ->addTag('twig.component', ['key' => 'foo', 'template' => 'foo.html.twig']);
+
+        new TwigComponentPass()->process($container);
+
+        $config = $container->getDefinition('ux.twig_component.component_factory')->getArgument(4);
+
+        return new ComponentMetadata($config['foo']);
+    }
+
+    private function createFactoryWithAccessor(?PropertyAccessorInterface $accessor = null): ComponentFactory
+    {
+        return new ComponentFactory(
+            $this->createStub(ComponentTemplateFinderInterface::class),
+            $this->createStub(ContainerInterface::class),
+            $accessor ?? new PropertyAccessor(),
+            new EventDispatcher(),
+            [],
+            [],
+            new Environment(new ArrayLoader()),
+        );
     }
 }

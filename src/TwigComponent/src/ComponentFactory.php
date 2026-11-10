@@ -15,6 +15,7 @@ use Psr\Container\ContainerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\CompiledEventDispatcher;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface as IntrospectableEventDispatcherInterface;
+use Symfony\Component\PropertyAccess\PropertyAccessor;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\Contracts\Service\ResetInterface;
 use Symfony\UX\TwigComponent\Event\PostMountEvent;
@@ -133,10 +134,15 @@ final class ComponentFactory implements ResetInterface
             $this->mount($component, $data, $componentMetadata);
 
             if (!$componentMetadata->isAnonymous()) {
+                // A decorated or replaced accessor must keep receiving every write
+                $isDefaultAccessor = PropertyAccessor::class === $this->propertyAccessor::class;
+                $isMetadataClass = $component::class === $componentMetadata->get('class');
+                $directWrites = $isDefaultAccessor && $isMetadataClass ? $componentMetadata->getDirectWrites() : [];
+
                 // set data that wasn't set in mount on the component directly
                 foreach ($data as $property => $value) {
                     if ($this->writableProperties[$componentMetadata->getName()][$property] ??= $this->propertyAccessor->isWritable($component, $property)) {
-                        $this->propertyAccessor->setValue($component, $property, $value);
+                        $this->writeProperty($component, $property, $value, isset($directWrites[$property]));
                         unset($data[$property]);
                     }
                 }
@@ -319,5 +325,23 @@ final class ComponentFactory implements ResetInterface
         $this->mountMethods = [];
         $this->writableProperties = [];
         $this->metadata = [];
+    }
+
+    private function writeProperty(object $component, string|int $property, mixed $value, bool $direct): void
+    {
+        if ($direct) {
+            try {
+                $component->$property = $value;
+
+                return;
+            } catch (\TypeError $e) {
+                // For a value of the wrong type, the accessor converts DateTime objects or throws its own exception
+                if (!str_starts_with($e->getMessage(), 'Cannot assign ')) {
+                    throw $e;
+                }
+            }
+        }
+
+        $this->propertyAccessor->setValue($component, $property, $value);
     }
 }
