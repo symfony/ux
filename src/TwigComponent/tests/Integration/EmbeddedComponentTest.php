@@ -189,6 +189,14 @@ final class EmbeddedComponentTest extends KernelTestCase
         );
     }
 
+    public function testOuterBlocksCanBePassedDownALongChainOfComponents(): void
+    {
+        $this->assertStringContainsStringIgnoringIndentation(
+            '<leaf>1[2[3[4[5[6[7[8[top]]]]]]]]</leaf>',
+            self::render('embedded_component_blocks_outer_blocks_long_chain.html.twig'),
+        );
+    }
+
     private function assertStringContainsStringIgnoringIndentation(string $needle, string $haystack): void
     {
         $needle = trim(preg_replace('#(\s+)#u', '', $needle));
