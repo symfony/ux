@@ -18,8 +18,12 @@ final class ComputedPropertiesProxy
 {
     private array $cache = [];
 
-    /** @var array<string, string> */
-    private array $methods = [];
+    /**
+     * The method called for each name, by component class.
+     *
+     * @var array<class-string, array<string, string>>
+     */
+    private static array $methods = [];
 
     /**
      * @internal
@@ -43,20 +47,27 @@ final class ComputedPropertiesProxy
             return $this->component[$name];
         }
 
-        $method = $this->methods[$name] ??= $this->normalizeMethod($name);
+        $method = self::$methods[$this->component::class][$name] ??= $this->normalizeMethod($name);
 
         if (\array_key_exists($method, $this->cache)) {
             return $this->cache[$method];
-        }
-
-        if (new \ReflectionMethod($this->component, $method)->getNumberOfRequiredParameters()) {
-            throw new \LogicException('Cannot use computed methods for methods with required parameters.');
         }
 
         return $this->cache[$method] = $this->component->$method();
     }
 
     private function normalizeMethod(string $name): string
+    {
+        $method = $this->findMethod($name);
+
+        if (new \ReflectionMethod($this->component, $method)->getNumberOfRequiredParameters()) {
+            throw new \LogicException('Cannot use computed methods for methods with required parameters.');
+        }
+
+        return $method;
+    }
+
+    private function findMethod(string $name): string
     {
         if (method_exists($this->component, $name)) {
             return $name;
