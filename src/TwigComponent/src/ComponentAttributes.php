@@ -28,6 +28,11 @@ final class ComponentAttributes implements \Stringable, \IteratorAggregate, \Cou
     private const ALPINE_REGEX = '#^x-([a-z]+):[^:]+$#';
     private const VUE_REGEX = '#^v-([a-z]+):[^:]+$#';
 
+    /**
+     * The characters the "html_attr_relaxed" escaping strategy leaves untouched.
+     */
+    private const SAFE_NAME_CHARS = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789,.-_:@[]';
+
     /** @var array<string,true> */
     private array $rendered = [];
 
@@ -57,11 +62,15 @@ final class ComponentAttributes implements \Stringable, \IteratorAggregate, \Cou
                 continue;
             }
 
-            if (null === $value = HtmlExtension::htmlAttrValue($key, $value)) {
+            // htmlAttrValue() returns strings as they are
+            if (!\is_string($value) && null === $value = HtmlExtension::htmlAttrValue($key, $value)) {
                 continue;
             }
 
-            $attributes .= ' '.$this->escaper->escape($key, 'html_attr_relaxed').'="'.$this->escaper->escape($value).'"';
+            // Most names only hold safe characters: checking them is much cheaper than running the escaper on them
+            $name = \strlen($key) === strspn($key, self::SAFE_NAME_CHARS) ? $key : $this->escaper->escape($key, 'html_attr_relaxed');
+
+            $attributes .= ' '.$name.'="'.$this->escaper->escape($value).'"';
         }
 
         return $attributes;
