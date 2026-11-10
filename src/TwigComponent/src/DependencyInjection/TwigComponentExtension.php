@@ -28,6 +28,7 @@ use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 use Symfony\Component\DependencyInjection\Parameter;
 use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Component\PropertyInfo\PropertyWriteInfoExtractorInterface;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 use Symfony\UX\TwigComponent\CacheWarmer\TwigComponentCacheWarmer;
 use Symfony\UX\TwigComponent\Command\TwigComponentDebugCommand;
@@ -89,6 +90,7 @@ final class TwigComponentExtension extends Extension implements ConfigurationInt
                 new AbstractArgument(\sprintf('Added in %s.', TwigComponentPass::class)),
                 new Reference('twig'),
                 new AbstractArgument(\sprintf('Added in %s.', ComponentListenerScopesPass::class)),
+                new Reference(PropertyWriteInfoExtractorInterface::class, ContainerInterface::NULL_ON_INVALID_REFERENCE),
             ])
             ->addTag('kernel.reset', ['method' => 'reset'])
         ;

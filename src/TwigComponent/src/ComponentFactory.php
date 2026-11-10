@@ -15,7 +15,11 @@ use Psr\Container\ContainerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\CompiledEventDispatcher;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface as IntrospectableEventDispatcherInterface;
+use Symfony\Component\PropertyAccess\PropertyAccessor;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
+use Symfony\Component\PropertyInfo\Extractor\ReflectionExtractor;
+use Symfony\Component\PropertyInfo\PropertyWriteInfo;
+use Symfony\Component\PropertyInfo\PropertyWriteInfoExtractorInterface;
 use Symfony\Contracts\Service\ResetInterface;
 use Symfony\UX\TwigComponent\Event\PostMountEvent;
 use Symfony\UX\TwigComponent\Event\PreMountEvent;
@@ -32,6 +36,8 @@ final class ComponentFactory implements ResetInterface
 {
     private array $mountMethods = [];
     private array $writableProperties = [];
+    /** @var array<class-string, array<array-key, array<int, bool>>> */
+    private array $directlyWritableProperties = [];
     private ?EscaperRuntime $escaper = null;
 
     /** @var array<string, ComponentMetadata> */
@@ -51,6 +57,13 @@ final class ComponentFactory implements ResetInterface
     private readonly bool $countsRuntimeListeners;
 
     /**
+     * Set when props can be written without the property accessor.
+     *
+     * It is the write info extractor the property accessor uses, so both pick the same mutator.
+     */
+    private readonly ?PropertyWriteInfoExtractorInterface $writeInfoExtractor;
+
+    /**
      * @param array<string, array>                                                       $config
      * @param array<class-string, string>                                                $classMap
      * @param array<class-string, array{0: string|null, 1: array<string, true>, 2: int}> $listenerScopes For the events whose listeners all only act on some components:
@@ -65,7 +78,10 @@ final class ComponentFactory implements ResetInterface
         private readonly array $classMap,
         private readonly Environment $twig,
         private readonly array $listenerScopes = [],
+        ?PropertyWriteInfoExtractorInterface $writeInfoExtractor = null,
     ) {
+        // A decorated or replaced accessor must keep receiving every write
+        $this->writeInfoExtractor = PropertyAccessor::class === $propertyAccessor::class ? $writeInfoExtractor : null;
         $this->introspectableDispatcher = $eventDispatcher instanceof IntrospectableEventDispatcherInterface ? $eventDispatcher : null;
         $this->countsRuntimeListeners = !$eventDispatcher instanceof CompiledEventDispatcher;
     }
@@ -136,7 +152,7 @@ final class ComponentFactory implements ResetInterface
                 // set data that wasn't set in mount on the component directly
                 foreach ($data as $property => $value) {
                     if ($this->writableProperties[$componentMetadata->getName()][$property] ??= $this->propertyAccessor->isWritable($component, $property)) {
-                        $this->propertyAccessor->setValue($component, $property, $value);
+                        $this->writeProperty($component, $property, $value);
                         unset($data[$property]);
                     }
                 }
@@ -318,6 +334,55 @@ final class ComponentFactory implements ResetInterface
     {
         $this->mountMethods = [];
         $this->writableProperties = [];
+        $this->directlyWritableProperties = [];
         $this->metadata = [];
+    }
+
+    private function writeProperty(object $component, string|int $property, mixed $value): void
+    {
+        $iterable = is_iterable($value);
+        if ($this->directlyWritableProperties[$component::class][$property][(int) $iterable] ??= $this->isDirectlyWritable($component::class, $property, $iterable)) {
+            try {
+                $component->$property = $value;
+
+                return;
+            } catch (\TypeError $e) {
+                // For a value of the wrong type, the accessor converts DateTime objects or throws its own exception
+                if (!str_starts_with($e->getMessage(), 'Cannot assign ')) {
+                    throw $e;
+                }
+            }
+        }
+
+        $this->propertyAccessor->setValue($component, $property, $value);
+    }
+
+    /**
+     * Whether writing the property directly gives the same result as the property accessor.
+     *
+     * The write info is asked with the context the accessor uses, so the extractor decides which mutator wins.
+     * Magic methods are not allowed, so only a declared property can be found.
+     * Properties with hooks and classes with __set() are excluded, because a write that fails because of the type of the value is done again by the accessor.
+     */
+    private function isDirectlyWritable(string $class, string|int $property, bool $iterable): bool
+    {
+        if (null === $this->writeInfoExtractor || \is_int($property) || method_exists($class, '__set')) {
+            return false;
+        }
+
+        $writeInfo = $this->writeInfoExtractor->getWriteInfo($class, $property, [
+            'enable_getter_setter_extraction' => true,
+            'enable_magic_methods_extraction' => ReflectionExtractor::DISALLOW_MAGIC_METHODS,
+            'enable_constructor_extraction' => false,
+            'enable_adder_remover_extraction' => $iterable,
+        ]);
+
+        if (PropertyWriteInfo::TYPE_PROPERTY !== $writeInfo?->getType() || PropertyWriteInfo::VISIBILITY_PUBLIC !== $writeInfo->getVisibility() || $property !== $writeInfo->getName() || $writeInfo->isStatic()) {
+            return false;
+        }
+
+        $reflectionClass = new \ReflectionClass($class);
+
+        return $reflectionClass->hasProperty($property) && !$reflectionClass->getProperty($property)->hasHooks();
     }
 }
