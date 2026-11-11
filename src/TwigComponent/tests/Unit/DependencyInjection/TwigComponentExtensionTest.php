@@ -14,7 +14,10 @@ namespace Symfony\UX\TwigComponent\Tests\Unit\DependencyInjection;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\TwigBundle\DependencyInjection\Compiler\SafeClassPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
+use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Component\PropertyInfo\PropertyWriteInfoExtractorInterface;
 use Symfony\UX\TwigComponent\ComponentAttributes;
 use Symfony\UX\TwigComponent\DependencyInjection\TwigComponentExtension;
 use Symfony\UX\TwigComponent\Twig\TwigEnvironmentConfigurator;
@@ -154,6 +157,23 @@ class TwigComponentExtensionTest extends TestCase
         $cache = $container->getDefinition('ux.twig_component.component_properties')->getArgument(2);
 
         $this->assertSame('cache.ux.twig_component', (string) $cache);
+    }
+
+    public function testComponentFactoryGetsTheWriteInfoExtractorWhenItExists(): void
+    {
+        $container = $this->createContainer();
+        $container->registerExtension(new TwigComponentExtension());
+        $container->loadFromExtension('twig_component', [
+            'defaults' => [],
+            'anonymous_template_directory' => 'components/',
+        ]);
+        $this->compileContainer($container);
+
+        $extractor = $container->getDefinition('ux.twig_component.component_factory')->getArgument(8);
+
+        $this->assertInstanceOf(Reference::class, $extractor);
+        $this->assertSame(PropertyWriteInfoExtractorInterface::class, (string) $extractor);
+        $this->assertSame(ContainerInterface::NULL_ON_INVALID_REFERENCE, $extractor->getInvalidBehavior());
     }
 
     private function createContainer()
