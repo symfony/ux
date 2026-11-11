@@ -16,6 +16,7 @@ use Doctrine\Deprecations\Deprecation;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Query\QueryException;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\AbstractLogger;
 use Symfony\Component\Uid\Ulid;
@@ -1222,15 +1223,64 @@ final class DoctrineOrmAdapterTest extends TestCase
         self::assertNotEmpty($result2->items);
     }
 
-    public function testCursorRejectsNullableScalarField(): void
+    public function testCursorAcceptsNullableScalarField(): void
     {
         $qb = $this->entityManager->createQueryBuilder()
             ->select('b')
             ->from(Book::class, 'b');
 
-        $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Cursor field "rating" must be non-nullable.');
-        $this->adapter->resolveCursorOrder($qb, ['rating'], 'ASC');
+        self::assertSame(['rating', 'id'], $this->adapter->resolveCursorOrder($qb, ['rating'], 'ASC')->getFields());
+    }
+
+    public function testCursorAcceptsFieldOfSingleValuedAssociation(): void
+    {
+        $qb = $this->entityManager->createQueryBuilder()
+            ->select('b')
+            ->from(Book::class, 'b');
+
+        self::assertSame(['author.name', 'id'], $this->adapter->resolveCursorOrder($qb, ['author.name'], 'ASC')->getFields());
+    }
+
+    /**
+     * @param list<string> $fields
+     */
+    #[DataProvider('provideInvalidAssociationPaths')]
+    public function testCursorRejectsInvalidAssociationPath(array $fields, string $message): void
+    {
+        $qb = $this->entityManager->createQueryBuilder()
+            ->select('b')
+            ->from(Book::class, 'b');
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage($message);
+        $this->adapter->resolveCursorOrder($qb, $fields, 'ASC');
+    }
+
+    public static function provideInvalidAssociationPaths(): iterable
+    {
+        yield 'collection-valued association' => [['categories.name'], '"categories" is not a single-valued association of "'.Book::class.'"'];
+        yield 'unknown association' => [['publisher.name'], '"publisher" is not a single-valued association of "'.Book::class.'"'];
+        yield 'unmapped field of the association' => [['author.missing'], 'Invalid cursor field "author.missing"'];
+        yield 'association itself' => [['author'], 'Invalid cursor field "author"'];
+    }
+
+    public function testCursorFieldReusesTheJoinOfTheQuery(): void
+    {
+        $this->entityManager->persist($author = new Author()->setName('Ann'));
+        $this->entityManager->persist(new Book()->setTitle('Book')->setAuthor($author));
+        $this->entityManager->flush();
+
+        $qb = $this->entityManager->createQueryBuilder()
+            ->select('b')
+            ->from(Book::class, 'b')
+            ->innerJoin('b.author', 'a');
+        $order = $this->adapter->resolveCursorOrder($qb, ['author.name'], 'ASC');
+
+        $this->queryCollector->reset();
+        $this->adapter->sliceWithCursor($qb, null, 10, $order);
+
+        self::assertCount(1, $this->queryCollector->queries());
+        self::assertSame(1, substr_count(strtoupper($this->queryCollector->queries()[0]), ' JOIN '));
     }
 
     public function testCursorRejectsUnsupportedDoctrineFieldTypes(): void
