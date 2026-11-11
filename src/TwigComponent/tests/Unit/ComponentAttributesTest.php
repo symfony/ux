@@ -16,6 +16,7 @@ use PHPUnit\Framework\TestCase;
 use Symfony\UX\StimulusBundle\Dto\StimulusAttributes;
 use Symfony\UX\TwigComponent\ComponentAttributes;
 use Twig\Environment;
+use Twig\Error\RuntimeError;
 use Twig\Extra\Html\HtmlAttr\AttributeValueInterface;
 use Twig\Extra\Html\HtmlAttr\InlineStyle;
 use Twig\Extra\Html\HtmlAttr\MergeableInterface;
@@ -446,6 +447,41 @@ final class ComponentAttributesTest extends TestCase
         $this->assertSame(' foo="'.$expected.'"', (string) $attributes);
     }
 
+    public function testRendersIntegerName(): void
+    {
+        $attributes = new ComponentAttributes([0 => 'foo'], new EscaperRuntime());
+
+        $this->assertSame(' 0="foo"', (string) $attributes);
+    }
+
+    public function testThrowsOnInvalidUtf8Name(): void
+    {
+        $attributes = new ComponentAttributes(["\xC3" => 'foo'], new EscaperRuntime());
+
+        $this->expectException(RuntimeError::class);
+        $this->expectExceptionMessage('The string to escape is not a valid UTF-8 string.');
+
+        (string) $attributes;
+    }
+
+    public function testEscapeNameWithAnotherCharset(): void
+    {
+        $attributes = new ComponentAttributes(["data-\xE9" => 'foo'], new EscaperRuntime('ISO-8859-1'));
+
+        $this->assertSame(' data-&#x00E9;="foo"', (string) $attributes);
+    }
+
+    public function testRendersStringValuesAsIs(): void
+    {
+        $attributes = new ComponentAttributes([
+            'aria-hidden' => 'true',
+            'data-config' => '{"a":1}',
+            'style' => 'color:red',
+        ], new EscaperRuntime());
+
+        $this->assertSame(' aria-hidden="true" data-config="{&quot;a&quot;:1}" style="color:red"', (string) $attributes);
+    }
+
     public static function nameProvider(): iterable
     {
         // Should not escape
@@ -462,6 +498,14 @@ final class ComponentAttributesTest extends TestCase
         yield 'scripts' => ['><script>', '&gt;&lt;script&gt;'];
         yield 'single quote' => ["'", '&#x27;'];
         yield 'unicode' => ['data-🚀', 'data-&#x1F680;'];
+        yield 'space' => ['foo bar', 'foo&#x20;bar'];
+        yield 'equals sign' => ['foo=bar', 'foo&#x3D;bar'];
+        yield 'slash' => ['foo/bar', 'foo&#x2F;bar'];
+        yield 'unsafe character after safe ones' => ['data-foo_bar.baz:qux@[0]"', 'data-foo_bar.baz:qux@[0]&quot;'];
+        yield 'tab' => ["foo\tbar", 'foo&#x09;bar'];
+        yield 'null byte' => ["\0", '&#xFFFD;'];
+        yield 'delete' => ["\x7F", '&#xFFFD;'];
+        yield 'only safe characters' => ['a,b.c-d_e@f[g]', 'a,b.c-d_e@f[g]'];
     }
 
     public static function valueProvider(): iterable
