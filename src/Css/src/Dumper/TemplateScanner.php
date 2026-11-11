@@ -16,7 +16,7 @@ use Twig\Environment;
 use Twig\Error\Error;
 
 /**
- * Parses a template, without compiling it to PHP, to collect the style hashes of its css() calls.
+ * Parses a template, without compiling it to PHP, to collect the style hashes of its css() and cva() calls.
  *
  * @author Hugo Alliaume <hugo@alliau.me>
  *
@@ -31,14 +31,15 @@ final class TemplateScanner
     }
 
     /**
-     * @return array{path: string, styles: list<array<array-key, mixed>>} the file of the template (empty when it has none) and the style hashes of its css() calls
+     * @return array{path: string, styles: list<array<array-key, mixed>>} the file of the template (empty when it has none) and the style hashes of its css() and cva() calls
      *
-     * @throws Error when the template cannot be parsed or a css() call is invalid
+     * @throws Error when the template cannot be parsed or a css() or cva() call is invalid
      */
     public function scan(string $name): array
     {
         $source = $this->twig->getLoader()->getSourceContext($name);
-        if (!str_contains($source->getCode(), 'css(')) {
+        $code = $source->getCode();
+        if (!str_contains($code, 'css(') && !str_contains($code, 'cva(')) {
             return ['path' => $source->getPath(), 'styles' => []];
         }
 

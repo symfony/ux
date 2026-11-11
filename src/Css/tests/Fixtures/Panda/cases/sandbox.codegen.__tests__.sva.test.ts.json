@@ -41,6 +41,95 @@
       }
     },
     {
+      "id": "react::sandbox/codegen/__tests__/sva.test.ts::sva > base styles::codegen-cva::1",
+      "kind": "codegen-cva",
+      "config": "codegen-react",
+      "source": {
+        "file": "sandbox/codegen/__tests__/sva.test.ts",
+        "test": "sva > base styles",
+        "line": 41
+      },
+      "inputs": {
+        "config": {
+          "className": "root",
+          "base": {
+            "borderRadius": "md",
+            "fontWeight": "semibold",
+            "h": "10",
+            "px": "4"
+          },
+          "variants": {
+            "visual": {
+              "solid": {
+                "bg": {
+                  "base": "colorPalette.500",
+                  "_dark": "colorPalette.300"
+                },
+                "color": {
+                  "base": "white",
+                  "_dark": "gray.800"
+                }
+              },
+              "outline": {
+                "border": "1px solid",
+                "color": {
+                  "base": "colorPalette.600",
+                  "_dark": "colorPalette.200"
+                },
+                "borderColor": "currentColor"
+              },
+              "unstyled": {}
+            }
+          },
+          "defaultVariants": {
+            "visual": "unstyled"
+          },
+          "compoundVariants": []
+        },
+        "props": null
+      },
+      "expected": {
+        "className": "bdr_md fw_semibold h_10 px_4"
+      }
+    },
+    {
+      "id": "react::sandbox/codegen/__tests__/sva.test.ts::sva > base styles::codegen-cva::2",
+      "kind": "codegen-cva",
+      "config": "codegen-react",
+      "source": {
+        "file": "sandbox/codegen/__tests__/sva.test.ts",
+        "test": "sva > base styles",
+        "line": 41
+      },
+      "inputs": {
+        "config": {
+          "className": "icon",
+          "base": {
+            "fontSize": "2xl"
+          },
+          "variants": {
+            "visual": {
+              "solid": {
+                "color": "white"
+              },
+              "outline": {
+                "border": "1px solid"
+              },
+              "unstyled": {}
+            }
+          },
+          "defaultVariants": {
+            "visual": "unstyled"
+          },
+          "compoundVariants": []
+        },
+        "props": null
+      },
+      "expected": {
+        "className": "fs_2xl"
+      }
+    },
+    {
       "id": "react::sandbox/codegen/__tests__/sva.test.ts::sva > outline variant styles::1",
       "kind": "codegen-css",
       "config": "codegen-react",
@@ -82,6 +171,99 @@
           "border": "1px solid"
         }
       ],
+      "expected": {
+        "className": "fs_2xl bd_1px_solid"
+      }
+    },
+    {
+      "id": "react::sandbox/codegen/__tests__/sva.test.ts::sva > outline variant styles::codegen-cva::1",
+      "kind": "codegen-cva",
+      "config": "codegen-react",
+      "source": {
+        "file": "sandbox/codegen/__tests__/sva.test.ts",
+        "test": "sva > outline variant styles",
+        "line": 65
+      },
+      "inputs": {
+        "config": {
+          "className": "root",
+          "base": {
+            "borderRadius": "md",
+            "fontWeight": "semibold",
+            "h": "10",
+            "px": "4"
+          },
+          "variants": {
+            "visual": {
+              "solid": {
+                "bg": {
+                  "base": "colorPalette.500",
+                  "_dark": "colorPalette.300"
+                },
+                "color": {
+                  "base": "white",
+                  "_dark": "gray.800"
+                }
+              },
+              "outline": {
+                "border": "1px solid",
+                "color": {
+                  "base": "colorPalette.600",
+                  "_dark": "colorPalette.200"
+                },
+                "borderColor": "currentColor"
+              },
+              "unstyled": {}
+            }
+          },
+          "defaultVariants": {
+            "visual": "unstyled"
+          },
+          "compoundVariants": []
+        },
+        "props": {
+          "visual": "outline"
+        }
+      },
+      "expected": {
+        "className": "bdr_md fw_semibold h_10 px_4 bd_1px_solid c_colorPalette.600 dark:c_colorPalette.200 bd-c_currentColor"
+      }
+    },
+    {
+      "id": "react::sandbox/codegen/__tests__/sva.test.ts::sva > outline variant styles::codegen-cva::2",
+      "kind": "codegen-cva",
+      "config": "codegen-react",
+      "source": {
+        "file": "sandbox/codegen/__tests__/sva.test.ts",
+        "test": "sva > outline variant styles",
+        "line": 65
+      },
+      "inputs": {
+        "config": {
+          "className": "icon",
+          "base": {
+            "fontSize": "2xl"
+          },
+          "variants": {
+            "visual": {
+              "solid": {
+                "color": "white"
+              },
+              "outline": {
+                "border": "1px solid"
+              },
+              "unstyled": {}
+            }
+          },
+          "defaultVariants": {
+            "visual": "unstyled"
+          },
+          "compoundVariants": []
+        },
+        "props": {
+          "visual": "outline"
+        }
+      },
       "expected": {
         "className": "fs_2xl bd_1px_solid"
       }
@@ -130,6 +312,99 @@
           "color": "white"
         }
       ],
+      "expected": {
+        "className": "fs_2xl c_white"
+      }
+    },
+    {
+      "id": "react::sandbox/codegen/__tests__/sva.test.ts::sva > solid variant styles::codegen-cva::1",
+      "kind": "codegen-cva",
+      "config": "codegen-react",
+      "source": {
+        "file": "sandbox/codegen/__tests__/sva.test.ts",
+        "test": "sva > solid variant styles",
+        "line": 52
+      },
+      "inputs": {
+        "config": {
+          "className": "root",
+          "base": {
+            "borderRadius": "md",
+            "fontWeight": "semibold",
+            "h": "10",
+            "px": "4"
+          },
+          "variants": {
+            "visual": {
+              "solid": {
+                "bg": {
+                  "base": "colorPalette.500",
+                  "_dark": "colorPalette.300"
+                },
+                "color": {
+                  "base": "white",
+                  "_dark": "gray.800"
+                }
+              },
+              "outline": {
+                "border": "1px solid",
+                "color": {
+                  "base": "colorPalette.600",
+                  "_dark": "colorPalette.200"
+                },
+                "borderColor": "currentColor"
+              },
+              "unstyled": {}
+            }
+          },
+          "defaultVariants": {
+            "visual": "unstyled"
+          },
+          "compoundVariants": []
+        },
+        "props": {
+          "visual": "solid"
+        }
+      },
+      "expected": {
+        "className": "bdr_md fw_semibold h_10 px_4 bg_colorPalette.500 dark:bg_colorPalette.300 c_white dark:c_gray.800"
+      }
+    },
+    {
+      "id": "react::sandbox/codegen/__tests__/sva.test.ts::sva > solid variant styles::codegen-cva::2",
+      "kind": "codegen-cva",
+      "config": "codegen-react",
+      "source": {
+        "file": "sandbox/codegen/__tests__/sva.test.ts",
+        "test": "sva > solid variant styles",
+        "line": 52
+      },
+      "inputs": {
+        "config": {
+          "className": "icon",
+          "base": {
+            "fontSize": "2xl"
+          },
+          "variants": {
+            "visual": {
+              "solid": {
+                "color": "white"
+              },
+              "outline": {
+                "border": "1px solid"
+              },
+              "unstyled": {}
+            }
+          },
+          "defaultVariants": {
+            "visual": "unstyled"
+          },
+          "compoundVariants": []
+        },
+        "props": {
+          "visual": "solid"
+        }
+      },
       "expected": {
         "className": "fs_2xl c_white"
       }

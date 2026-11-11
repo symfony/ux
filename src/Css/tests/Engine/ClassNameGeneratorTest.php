@@ -168,4 +168,67 @@ final class ClassNameGeneratorTest extends TestCase
 
         ClassNameGenerator::fromPandaConfig(['hash' => true] + self::CONFIG);
     }
+
+    public function testMergeKeepsASingleHashAsIs(): void
+    {
+        $this->assertSame(['px' => '3'], $this->mergeGenerator()->merge(['px' => '3'], []));
+    }
+
+    public function testMergeNormalizesShorthandsBeforeMerging(): void
+    {
+        $merged = $this->mergeGenerator()->merge(['px' => '3', 'fontWeight' => 'bold'], ['paddingInline' => '5']);
+
+        $this->assertSame(['paddingInline' => '5', 'fontWeight' => 'bold'], $merged);
+    }
+
+    public function testMergeReplacesANestedHashWithAScalar(): void
+    {
+        $merged = $this->mergeGenerator()->merge(['color' => ['base' => 'a', '_hover' => 'b']], ['color' => 'c']);
+
+        $this->assertSame(['color' => 'c'], $merged);
+    }
+
+    public function testMergeMergesNestedHashes(): void
+    {
+        $merged = $this->mergeGenerator()->merge(['_hover' => ['color' => 'a']], ['_hover' => ['bg' => 'b']]);
+
+        $this->assertSame(['_hover' => ['color' => 'a', 'background' => 'b']], $merged);
+    }
+
+    public function testMergeTurnsResponsiveListsIntoBreakpoints(): void
+    {
+        $merged = $this->mergeGenerator()->merge(['p' => ['1', '2']], ['p' => ['base' => '3']]);
+
+        $this->assertSame(['padding' => ['base' => '3', 'sm' => '2']], $merged);
+    }
+
+    public function testMergeKeepsTheFirstPositionOfAReplacedKey(): void
+    {
+        $merged = $this->mergeGenerator()->merge(['px' => '1', 'py' => '2'], ['px' => '3']);
+
+        $this->assertSame(['paddingInline', 'paddingBlock'], array_keys($merged));
+    }
+
+    public function testMergeDropsNullsAndEmptyHashes(): void
+    {
+        $generator = $this->mergeGenerator();
+
+        $this->assertSame(['color' => 'a'], $generator->merge(['color' => 'a'], ['color' => null]));
+        $this->assertSame(['color' => 'a'], $generator->merge([], ['color' => 'a']));
+        $this->assertSame([], $generator->merge());
+    }
+
+    public function testMergeSkipsPrototypeKeys(): void
+    {
+        $merged = $this->mergeGenerator()->merge(['color' => 'a'], ['__proto__' => 'x', 'bg' => 'b']);
+
+        $this->assertSame(['color' => 'a', 'background' => 'b'], $merged);
+    }
+
+    private function mergeGenerator(): ClassNameGenerator
+    {
+        $shorthands = ['px' => 'paddingInline', 'py' => 'paddingBlock', 'p' => 'padding', 'bg' => 'background'];
+
+        return new ClassNameGenerator([], $shorthands, ['_hover'], ['base', 'sm', 'md']);
+    }
 }

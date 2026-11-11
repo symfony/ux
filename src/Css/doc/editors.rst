@@ -77,6 +77,10 @@ read PHPDoc array shapes can use it:
 * Symfony Language Tools does the same since version 0.24.0, when it can run
   its dynamic analysis of the project.
 
+The ``cva()`` function declares its ``base`` argument with ``CssStyles``, and
+each of its other arguments with its own type. Symfony Language Tools 0.24
+does not complete the hashes of ``variants`` yet.
+
 Static analysis
 ---------------
 

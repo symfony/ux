@@ -13,7 +13,9 @@ namespace Symfony\UX\Css\Twig;
 
 use Psr\Log\LoggerInterface;
 use Symfony\UX\Css\CssClassList;
+use Symfony\UX\Css\Cva;
 use Symfony\UX\Css\Engine\ClassNameGenerator;
+use Symfony\UX\Css\Engine\CvaRecipe;
 use Symfony\UX\Css\Validation\StyleValidator;
 
 /**
@@ -44,6 +46,16 @@ final class CssRuntime
     private int|false $knownClassesTime = false;
 
     /**
+     * @var array<string, Cva>
+     */
+    private array $compiledCvas = [];
+
+    /**
+     * @var array<string, array<string, array<string, string>>> the classes of each cva() recipe, by recipe id then key
+     */
+    private array $cvaCache = [];
+
+    /**
      * @param (\Closure(): StyleValidator)|null $validator   validates the dynamic hashes, in debug only
      * @param string|null                       $classesFile lists the classes that have CSS, in debug only
      */
@@ -70,6 +82,55 @@ final class CssRuntime
     public function append(array $classes, array $styles): CssClassList
     {
         return new CssClassList([...$classes, ...$this->classes($styles)]);
+    }
+
+    /**
+     * @param CssStyles                                  $base
+     * @param array<string, array<array-key, CssStyles>> $variants
+     * @param list<array{css?: CssStyles}>               $compoundVariants
+     * @param array<string, string|int|float|bool>       $defaultVariants
+     */
+    public function cva(array $base = [], array $variants = [], array $compoundVariants = [], array $defaultVariants = []): Cva
+    {
+        $config = array_filter([
+            'base' => $base,
+            'variants' => $variants,
+            'compoundVariants' => $compoundVariants,
+            'defaultVariants' => $defaultVariants,
+        ]);
+
+        return new Cva(CvaRecipe::fromConfig($config), [], $this, null !== $this->validator);
+    }
+
+    /**
+     * @param array<array-key, mixed>              $config
+     * @param array<string, array<string, string>> $classes the precomputed classes by CvaRecipe::key()
+     *
+     * @internal
+     */
+    public function compiledCva(array $config, string $id, array $classes): Cva
+    {
+        return $this->compiledCvas[$id] ??= new Cva(CvaRecipe::fromConfig($config), $classes, $this, null !== $this->validator);
+    }
+
+    /**
+     * @param array<array-key, mixed> $props
+     *
+     * @return array<string, string>
+     *
+     * @internal
+     */
+    public function cvaClasses(CvaRecipe $recipe, array $props, string $key): array
+    {
+        $id = $recipe->id();
+        if (isset($this->cvaCache[$id][$key])) {
+            return $this->cvaCache[$id][$key];
+        }
+
+        $classes = $this->generator->classes($recipe->resolve($props, $this->generator));
+        $this->logClassesWithoutCss(array_keys($classes));
+
+        return $this->cvaCache[$id][$key] = $classes;
     }
 
     /**

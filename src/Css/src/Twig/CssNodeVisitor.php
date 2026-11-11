@@ -11,10 +11,12 @@
 
 namespace Symfony\UX\Css\Twig;
 
+use Symfony\UX\Css\Engine\CvaRecipe;
 use Symfony\UX\Css\Engine\Engine;
 use Symfony\UX\Css\Exception\InvalidStyleException;
 use Symfony\UX\Css\Validation\StyleValidator;
 use Twig\Environment;
+use Twig\Error\SyntaxError;
 use Twig\Node\BlockNode;
 use Twig\Node\BodyNode;
 use Twig\Node\Expression\AbstractExpression;
@@ -34,9 +36,10 @@ use Twig\Node\PrintNode;
 use Twig\Node\SetNode;
 use Twig\Node\WithNode;
 use Twig\NodeVisitor\NodeVisitorInterface;
+use Twig\Util\CallableArgumentsExtractor;
 
 /**
- * Replaces each css() call by its classes when the template compiles, and hands every style hash it resolves to a collector.
+ * Replaces each css() call by its classes, and reads each cva() config, when the template compiles, and hands every style hash it resolves to a collector.
  *
  * A constant value, a ternary whose branches are constants or hashes of constants, a variable set once to a constant
  * before the call in the same body, and a nested hash of those are resolved;
@@ -48,6 +51,12 @@ use Twig\NodeVisitor\NodeVisitorInterface;
  */
 final class CssNodeVisitor implements NodeVisitorInterface
 {
+    private const PRECOMPUTED_COMBINATIONS = 256;
+    private const UNKNOWN_CVA_CONFIG = 'The cva() config must be known when the template compiles: write it as a hash of constants, or of variables set once to a constant before the call.';
+    private const CVA_ARGUMENTS = ['base', 'variants', 'compoundVariants', 'defaultVariants'];
+    private const CVA_AT_MOST_FOUR = 'cva() takes at most four arguments: base, variants, compoundVariants, defaultVariants.';
+    private const CVA_NAMED_ARGUMENTS = 'cva() takes named arguments, like cva(base: {...}, variants: {...}).';
+
     private ?\Closure $collector = null;
 
     /**
@@ -66,7 +75,7 @@ final class CssNodeVisitor implements NodeVisitorInterface
     private \WeakMap $constants;
 
     /**
-     * @var array<string, mixed> the constants the css() call being resolved can see
+     * @var array<string, mixed> the constants the css() or cva() call being resolved can see
      */
     private array $visibleConstants = [];
 
@@ -110,18 +119,23 @@ final class CssNodeVisitor implements NodeVisitorInterface
     public function leaveNode(Node $node, Environment $env): ?Node
     {
         array_pop($this->ancestors);
-        if (!$node instanceof FunctionExpression || 'css' !== $node->getAttribute('name')) {
+        if (!$node instanceof FunctionExpression || !\in_array($node->getAttribute('name'), ['css', 'cva'], true)) {
             return $node;
         }
 
         try {
             $this->visibleConstants = $this->constantsInScope();
+            if ('cva' === $node->getAttribute('name')) {
+                return $this->resolveCva($node);
+            }
             $resolved = $this->resolve($node);
             if ($resolved instanceof CssExpression && end($this->ancestors) instanceof PrintNode) {
                 $resolved->printAsString();
             }
 
             return $resolved;
+        } catch (SyntaxError $e) {
+            throw $e;
         } catch (\Throwable $e) {
             throw new CssSyntaxError($e->getMessage(), $node->getTemplateLine(), $node->getSourceContext(), $e);
         }
@@ -274,11 +288,82 @@ final class CssNodeVisitor implements NodeVisitorInterface
      */
     private function classes(array $styles): array
     {
+        $this->collect($styles);
+
+        return ($this->engine)()->classes($styles);
+    }
+
+    /**
+     * @param array<array-key, mixed> $styles
+     */
+    private function collect(array $styles): void
+    {
         if (null !== $this->collector) {
             ($this->collector)($styles);
         }
+    }
 
-        return ($this->engine)()->classes($styles);
+    private function resolveCva(FunctionExpression $node): CvaExpression
+    {
+        // @internal in Twig, but it gives Twig's own mapping of named and positional arguments, with the same API from 3.24 to 4.x
+        $extractor = new CallableArgumentsExtractor($node, $node->getAttribute('twig_callable'));
+        $arguments = array_values($extractor->extractArguments($node->getNode('arguments')));
+        if (\count($arguments) > \count(self::CVA_ARGUMENTS)) {
+            throw new InvalidStyleException(self::CVA_AT_MOST_FOUR);
+        }
+        if (($arguments[0] ?? null) instanceof ArrayExpression) {
+            foreach ($arguments[0]->getKeyValuePairs() as ['key' => $key]) {
+                if ($key instanceof ConstantExpression && \in_array($key->getAttribute('value'), self::CVA_ARGUMENTS, true)) {
+                    throw new InvalidStyleException(self::CVA_NAMED_ARGUMENTS);
+                }
+            }
+        }
+
+        $config = [];
+        foreach ($arguments as $position => $argument) {
+            $value = $this->configValue($argument);
+            if ([] !== $value) {
+                $config[self::CVA_ARGUMENTS[$position]] = $value;
+            }
+        }
+
+        $recipe = CvaRecipe::fromConfig($config);
+        $validator = ($this->validator)();
+        foreach ($recipe->styles() as $styles) {
+            $validator->validate($styles);
+            $this->collect($styles);
+        }
+
+        $generator = ($this->engine)()->classNameGenerator();
+        $table = [];
+        foreach ($recipe->combinations(self::PRECOMPUTED_COMBINATIONS) ?? [] as $props) {
+            $table[$recipe->key($props)] = $generator->classes($recipe->resolve($props, $generator));
+        }
+
+        return new CvaExpression($node->getAttribute('twig_callable'), $config, $recipe->id(), $table, $node->getTemplateLine());
+    }
+
+    private function configValue(Node $node): mixed
+    {
+        if ($node instanceof ArrayExpression) {
+            $value = [];
+            foreach ($node->getKeyValuePairs() as ['key' => $key, 'value' => $item]) {
+                if ($item instanceof SpreadUnary || !$key instanceof ConstantExpression) {
+                    throw new InvalidStyleException(self::UNKNOWN_CVA_CONFIG);
+                }
+                $value[$key->getAttribute('value')] = $this->configValue($item);
+            }
+
+            return $value;
+        }
+        if (self::isConstant($node)) {
+            return self::constant($node);
+        }
+        if ($node instanceof ContextVariable && \array_key_exists($node->getAttribute('name'), $this->visibleConstants)) {
+            return $this->visibleConstants[$node->getAttribute('name')];
+        }
+
+        throw new InvalidStyleException(self::UNKNOWN_CVA_CONFIG);
     }
 
     private function visibleConstant(Node $node): mixed

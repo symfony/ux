@@ -77,6 +77,7 @@ Change `PANDA_COMMIT` in `tools/panda-golden/record.mjs`, then run the recorder 
 The benchmarks live in `tests/Benchmark/` and run with [PHPBench](https://phpbench.readthedocs.io/). They measure:
 
 - `css()` at runtime, for a flat hash, a hash with conditions, a responsive hash, and the dynamic part of a hash;
+- `cva()` at runtime, with its precomputed table and without it (the memoized path);
 - loading the class name tables from the container;
 - compiling a template with 100 `css()` calls, next to the same template without `css()`;
 - generating the CSS of 1000 hashes;

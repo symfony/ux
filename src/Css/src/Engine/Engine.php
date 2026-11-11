@@ -29,6 +29,7 @@ final class Engine
     private ?StyleEncoder $encoder = null;
     private ?StyleDecoder $decoder = null;
     private ?Stylesheet $stylesheet = null;
+    private ?ClassNameGenerator $classNameGenerator = null;
 
     /**
      * @param array<string, mixed>                                                                      $config     a Panda config
@@ -149,6 +150,14 @@ final class Engine
         }
 
         return $classes;
+    }
+
+    /**
+     * The generator of the runtime, built from the same config.
+     */
+    public function classNameGenerator(): ClassNameGenerator
+    {
+        return $this->classNameGenerator ??= ClassNameGenerator::fromPandaConfig($this->config);
     }
 
     public function tokenCss(): TokenCss

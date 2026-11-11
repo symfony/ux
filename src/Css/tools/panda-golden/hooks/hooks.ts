@@ -3,6 +3,7 @@ import { record } from './record';
 
 const cssInputs = new WeakMap<object, unknown[]>();
 const otherCalls = new WeakMap<object, string[]>();
+const cvaConfigs = new WeakMap<object, unknown[]>();
 
 const snapshot = (value: unknown): unknown => {
     try {
@@ -15,10 +16,12 @@ const snapshot = (value: unknown): unknown => {
 export const goldenClone = (processor: object): void => {
     cssInputs.delete(processor);
     otherCalls.delete(processor);
+    cvaConfigs.delete(processor);
 };
 
-export const goldenOtherCall = (processor: object, method: string): void => {
+export const goldenOtherCall = (processor: object, method: string, config?: unknown): void => {
     otherCalls.set(processor, [...new Set([...(otherCalls.get(processor) ?? []), method])]);
+    if (method === 'cva') cvaConfigs.set(processor, [...(cvaConfigs.get(processor) ?? []), snapshot(config)]);
 };
 
 export const goldenCssCall = (processor: object, styles: unknown): void => {
@@ -35,6 +38,14 @@ export const goldenToCss = (processor: any, options: unknown, css: string): stri
             otherCalls: otherCalls.get(processor) ?? [],
             options: options ?? null,
             classNames: Array.from(processor.decoder.classNames.keys()),
+            css,
+        });
+    } else if (cvaConfigs.has(processor) && otherCalls.get(processor)?.length === 1) {
+        record('cva-css', {
+            userConfig: describeFunctions(processor.context.__goldenUserConfig),
+            resolvedConfig: processor.context.__goldenUserConfig ? toJson(processor.context.config) : null,
+            configs: cvaConfigs.get(processor),
+            options: options ?? null,
             css,
         });
     }

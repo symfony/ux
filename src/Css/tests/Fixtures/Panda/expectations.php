@@ -11,6 +11,7 @@
 
 return [
     'passing' => [
+        'fixture::packages/core/__tests__/atomic-recipe.test.ts::Atomic recipe > should work::cva-css::1',
         'fixture::packages/core/__tests__/atomic-rule.test.ts::atomic / with basic style object > respect color mode::1',
         'fixture::packages/core/__tests__/atomic-rule.test.ts::atomic / with basic style object > respect important syntax::1',
         'fixture::packages/core/__tests__/atomic-rule.test.ts::atomic / with basic style object > should resolve responsive array with gaps::1',
@@ -83,6 +84,7 @@ return [
         'fixture::packages/core/__tests__/rule-processor.test.ts::multi-block conditions (object syntax with @slot) > stacking two multi-block conditions produces cartesian product of blocks::1',
         'fixture::packages/core/__tests__/rule-processor.test.ts::rule processor > css - boolean utility::1',
         'fixture::packages/core/__tests__/rule-processor.test.ts::rule processor > css - boolean utility::2',
+        'fixture::packages/core/__tests__/rule-processor.test.ts::rule processor > cva - boolean variant::cva-css::1',
         'fixture::packages/core/__tests__/rule-processor.test.ts::rule processor > simple::1',
         'fixture::packages/core/__tests__/static-css.test.ts::static-css > arbitrary condition or selector::1',
         'fixture::packages/core/__tests__/static-css.test.ts::static-css > container query::1',
@@ -192,8 +194,11 @@ return [
         'react::sandbox/codegen/__tests__/css.test.ts::css > using inline token helper - in value::1',
         'react::sandbox/codegen/__tests__/css.test.ts::css > utility prop::1',
         'react::sandbox/codegen/__tests__/cva.test.ts::cva > base styles::1',
+        'react::sandbox/codegen/__tests__/cva.test.ts::cva > base styles::codegen-cva::1',
         'react::sandbox/codegen/__tests__/cva.test.ts::cva > outline variant styles::1',
+        'react::sandbox/codegen/__tests__/cva.test.ts::cva > outline variant styles::codegen-cva::1',
         'react::sandbox/codegen/__tests__/cva.test.ts::cva > solid variant styles::1',
+        'react::sandbox/codegen/__tests__/cva.test.ts::cva > solid variant styles::codegen-cva::1',
         'react::sandbox/codegen/__tests__/frameworks/react.style-context.test.tsx::style context - react > default props::1',
         'react::sandbox/codegen/__tests__/frameworks/react.style-context.test.tsx::style context - react > default props::2',
         'react::sandbox/codegen/__tests__/frameworks/react.style-context.test.tsx::style context - react > forwardProps::1',
