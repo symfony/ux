@@ -22,6 +22,7 @@ final class BlockStack
 {
     private const OUTER_BLOCK_PREFIX = 'outer__';
     public const OUTER_BLOCK_FALLBACK_NAME = self::OUTER_BLOCK_PREFIX.'block_fallback';
+    private const BACKTRACE_LIMIT = 32;
 
     /**
      * @var array<string, array<int, array<int, string>>>
@@ -67,10 +68,17 @@ final class BlockStack
 
     public function __call(string $name, array $arguments)
     {
-        $callingEmbeddedTemplateIndex = $this->findCallingEmbeddedTemplateIndex();
-        $hostEmbeddedTemplateIndex = $this->findHostEmbeddedTemplateIndexFromCaller();
+        // Both templates are usually among the innermost frames, so a short backtrace is enough
+        $backtrace = debug_backtrace(\DEBUG_BACKTRACE_IGNORE_ARGS | \DEBUG_BACKTRACE_PROVIDE_OBJECT, self::BACKTRACE_LIMIT);
+        [$callingEmbeddedTemplateIndex, $hostEmbeddedTemplateIndex] = self::findCallingAndHostEmbeddedTemplateIndexes($backtrace);
 
-        return $this->stack[$name][$callingEmbeddedTemplateIndex][$hostEmbeddedTemplateIndex] ?? self::OUTER_BLOCK_FALLBACK_NAME;
+        // Only the whole call stack can tell whether the host is further up or missing
+        if (null === $hostEmbeddedTemplateIndex && self::BACKTRACE_LIMIT === \count($backtrace)) {
+            [$callingEmbeddedTemplateIndex, $hostEmbeddedTemplateIndex] = self::findCallingAndHostEmbeddedTemplateIndexes(debug_backtrace(\DEBUG_BACKTRACE_IGNORE_ARGS | \DEBUG_BACKTRACE_PROVIDE_OBJECT));
+        }
+
+        // If the component is not an embedded one, use index 0, so the fallback content (aka nothing) is used.
+        return $this->stack[$name][$callingEmbeddedTemplateIndex ?? 0][$hostEmbeddedTemplateIndex ?? 0] ?? self::OUTER_BLOCK_FALLBACK_NAME;
     }
 
     private function findHostEmbeddedTemplateIndex(?Template $caller): int
@@ -98,21 +106,15 @@ final class BlockStack
         return 0;
     }
 
-    private function findCallingEmbeddedTemplateIndex(): int
+    /**
+     * @param list<array<string, mixed>> $backtrace
+     *
+     * @return array{?int, ?int} The index of the template calling outerBlocks, and the index of the embedded template
+     *                           that has the outer block definition, each null when the given frames do not hold it
+     */
+    private static function findCallingAndHostEmbeddedTemplateIndexes(array $backtrace): array
     {
-        $backtrace = debug_backtrace(\DEBUG_BACKTRACE_IGNORE_ARGS | \DEBUG_BACKTRACE_PROVIDE_OBJECT);
-
-        foreach ($backtrace as $trace) {
-            if (isset($trace['object']) && $trace['object'] instanceof Template) {
-                return self::getTemplateIndexFromTemplateClassname($trace['object']::class);
-            }
-        }
-    }
-
-    private function findHostEmbeddedTemplateIndexFromCaller(): int
-    {
-        $backtrace = debug_backtrace(\DEBUG_BACKTRACE_IGNORE_ARGS | \DEBUG_BACKTRACE_PROVIDE_OBJECT);
-
+        $callingEmbeddedTemplateIndex = null;
         $blockCallerStack = [];
         $renderer = null;
 
@@ -120,6 +122,7 @@ final class BlockStack
             if (isset($trace['object']) && $trace['object'] instanceof Template) {
                 $classname = $trace['object']::class;
                 $templateIndex = self::getTemplateIndexFromTemplateClassname($classname);
+                $callingEmbeddedTemplateIndex ??= $templateIndex;
                 if (null === $renderer) {
                     if ($templateIndex) {
                         // This class is an embedded template.
@@ -142,12 +145,11 @@ final class BlockStack
 
                 // This is the first template that's not part of the callstack,
                 // so it's the template that has the outer block definition.
-                return $templateIndex;
+                return [$callingEmbeddedTemplateIndex, $templateIndex];
             }
         }
 
-        // If the component is not an embedded one, just return 0, so the fallback content (aka nothing) is used.
-        return 0;
+        return [$callingEmbeddedTemplateIndex, null];
     }
 
     private static function getTemplateIndexFromTemplateClassname(string $classname): int
