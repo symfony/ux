@@ -1411,6 +1411,108 @@
       }
     },
     {
+      "id": "fixture::packages/core/__tests__/rule-processor.test.ts::rule processor > cva - boolean variant::cva-css::1",
+      "kind": "cva-css",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/rule-processor.test.ts",
+        "test": "rule processor > cva - boolean variant",
+        "line": 19
+      },
+      "userConfig": null,
+      "inputs": {
+        "config": {
+          "base": {
+            "color": "#fff"
+          },
+          "variants": {
+            "checked": {
+              "true": {
+                "display": "block"
+              },
+              "false": {
+                "display": "none"
+              }
+            }
+          }
+        }
+      },
+      "options": null,
+      "expected": {
+        "css": "@layer utilities {\n  .c_\\#fff {\n    color: #fff;\n}\n\n  .d_block {\n    display: block;\n}\n\n  .d_none {\n    display: none;\n}\n}"
+      }
+    },
+    {
+      "id": "fixture::packages/core/__tests__/rule-processor.test.ts::rule processor > cva::cva-css::1",
+      "kind": "cva-css",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/rule-processor.test.ts",
+        "test": "rule processor > cva",
+        "line": 19
+      },
+      "userConfig": null,
+      "inputs": {
+        "config": {
+          "base": {
+            "display": "inline-flex",
+            "alignItems": "center",
+            "justifyContent": "center"
+          },
+          "variants": {
+            "size": {
+              "sm": {
+                "textStyle": "headline.h1",
+                "height": "2.5rem",
+                "minWidth": "2.5rem",
+                "padding": "0 0.5rem"
+              },
+              "md": {
+                "height": "3rem",
+                "minWidth": "3rem",
+                "padding": "0 0.75rem"
+              }
+            },
+            "variant": {
+              "solid": {
+                "backgroundColor": "blue",
+                "color": "white",
+                "_hover": {
+                  "backgroundColor": "darkblue"
+                },
+                "&[data-disabled]": {
+                  "backgroundColor": "gray",
+                  "color": "black"
+                }
+              },
+              "outline": {
+                "backgroundColor": "transparent",
+                "border": "1px solid blue",
+                "color": "blue",
+                "_hover": {
+                  "backgroundColor": "blue",
+                  "color": "white"
+                },
+                "&[data-disabled]": {
+                  "backgroundColor": "transparent",
+                  "border": "1px solid gray",
+                  "color": "gray"
+                }
+              }
+            }
+          },
+          "defaultVariants": {
+            "size": "md",
+            "variant": "solid"
+          }
+        }
+      },
+      "options": null,
+      "expected": {
+        "css": "@layer utilities {\n  @layer compositions {\n    .textStyle_headline\\.h1 {\n      font-size: 2rem;\n      font-weight: var(--font-weights-bold);\n}\n}\n\n  .p_0_0\\.5rem {\n    padding: 0 0.5rem;\n}\n\n  .p_0_0\\.75rem {\n    padding: 0 0.75rem;\n}\n\n  .bd_1px_solid_blue {\n    border: 1px solid blue;\n}\n\n  .d_inline-flex {\n    display: inline-flex;\n}\n\n  .ai_center {\n    align-items: center;\n}\n\n  .jc_center {\n    justify-content: center;\n}\n\n  .bg-c_blue {\n    background-color: blue;\n}\n\n  .c_white {\n    color: var(--colors-white);\n}\n\n  .bg-c_transparent {\n    background-color: var(--colors-transparent);\n}\n\n  .c_blue {\n    color: blue;\n}\n\n  .h_2\\.5rem {\n    height: 2.5rem;\n}\n\n  .min-w_2\\.5rem {\n    min-width: 2.5rem;\n}\n\n  .h_3rem {\n    height: 3rem;\n}\n\n  .min-w_3rem {\n    min-width: 3rem;\n}\n\n  .\\[\\&\\[data-disabled\\]\\]\\:bd_1px_solid_gray[data-disabled] {\n    border: 1px solid gray;\n}\n\n  .\\[\\&\\[data-disabled\\]\\]\\:bg-c_gray[data-disabled] {\n    background-color: gray;\n}\n\n  .\\[\\&\\[data-disabled\\]\\]\\:c_black[data-disabled] {\n    color: var(--colors-black);\n}\n\n  .\\[\\&\\[data-disabled\\]\\]\\:bg-c_transparent[data-disabled] {\n    background-color: var(--colors-transparent);\n}\n\n  .\\[\\&\\[data-disabled\\]\\]\\:c_gray[data-disabled] {\n    color: gray;\n}\n\n  .hover\\:bg-c_darkblue:is(:hover, [data-hover]) {\n    background-color: darkblue;\n}\n\n  .hover\\:bg-c_blue:is(:hover, [data-hover]) {\n    background-color: blue;\n}\n\n  .hover\\:c_white:is(:hover, [data-hover]) {\n    color: var(--colors-white);\n}\n}"
+      }
+    },
+    {
       "id": "fixture::packages/core/__tests__/rule-processor.test.ts::rule processor > mixed together::1",
       "kind": "rule-processor",
       "config": "fixture",

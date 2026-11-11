@@ -90,6 +90,7 @@ Write styles
 * :doc:`editors` covers the types generated for editors and static analysis.
 * :doc:`dynamic-styles` covers values only known at runtime and
   ``static_css``.
+* :doc:`cva` writes the variants of a component with style hashes.
 
 Ship it
 -------

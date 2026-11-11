@@ -34,6 +34,16 @@ final class TwigComponentTest extends TestCase
         new Filesystem()->mkdir($components);
         $button = '<button {{ attributes.defaults({ class: css({ p: \'md\', color: \'primary\' }) }) }}></button>';
         file_put_contents($components.'/Button.html.twig', $button);
+        $badge = <<<'TWIG'
+            {% props size = 'sm' %}
+            {% set badge = cva(
+                base: { color: 'primary' },
+                variants: { size: { sm: { px: 'md' }, lg: { px: 'lg' } } },
+                defaultVariants: { size: 'sm' },
+            ) %}
+            <span {{ attributes.defaults({ class: badge.apply({ size: size }) }) }}></span>
+            TWIG;
+        file_put_contents($components.'/Badge.html.twig', $badge);
     }
 
     protected function tearDown(): void
@@ -74,6 +84,27 @@ final class TwigComponentTest extends TestCase
         $html = $this->render('<twig:Button />');
 
         $this->assertStringContainsString('class="p_md c_primary"', $html);
+    }
+
+    public function testACvaComponentRendersItsVariantClasses(): void
+    {
+        $html = $this->render('<twig:Badge size="lg" />');
+
+        $this->assertStringContainsString('class="c_primary px_lg"', $html);
+    }
+
+    public function testACvaComponentWithoutPropsRendersItsDefaultVariant(): void
+    {
+        $html = $this->render('<twig:Badge />');
+
+        $this->assertStringContainsString('class="c_primary px_md"', $html);
+    }
+
+    public function testTheCallerClassListWinsOverACvaVariant(): void
+    {
+        $html = $this->render('<twig:Badge size="lg" class="{{ css({ px: \'md\' }) }}" />');
+
+        $this->assertStringContainsString('class="c_primary px_md"', $html);
     }
 
     private function render(string $template, array $context = []): string

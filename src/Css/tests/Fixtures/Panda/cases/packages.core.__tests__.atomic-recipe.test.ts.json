@@ -1,0 +1,52 @@
+{
+  "source": "packages/core/__tests__/atomic-recipe.test.ts",
+  "cases": [
+    {
+      "id": "fixture::packages/core/__tests__/atomic-recipe.test.ts::Atomic recipe > should work::cva-css::1",
+      "kind": "cva-css",
+      "config": "fixture",
+      "source": {
+        "file": "packages/core/__tests__/atomic-recipe.test.ts",
+        "test": "Atomic recipe > should work",
+        "line": 6
+      },
+      "userConfig": null,
+      "inputs": {
+        "config": {
+          "base": {
+            "fontSize": "lg"
+          },
+          "variants": {
+            "size": {
+              "sm": {
+                "padding": "2",
+                "borderRadius": "sm"
+              },
+              "md": {
+                "padding": "4",
+                "borderRadius": "md"
+              }
+            },
+            "variant": {
+              "primary": {
+                "color": "white",
+                "backgroundColor": "blue.500"
+              },
+              "danger": {
+                "color": "white",
+                "backgroundColor": "red.500",
+                "_hover": {
+                  "color": "green"
+                }
+              }
+            }
+          }
+        }
+      },
+      "options": null,
+      "expected": {
+        "css": "@layer utilities {\n  .p_2 {\n    padding: var(--spacing-2);\n}\n\n  .p_4 {\n    padding: var(--spacing-4);\n}\n\n  .bdr_sm {\n    border-radius: var(--radii-sm);\n}\n\n  .bdr_md {\n    border-radius: var(--radii-md);\n}\n\n  .fs_lg {\n    font-size: var(--font-sizes-lg);\n}\n\n  .c_white {\n    color: var(--colors-white);\n}\n\n  .bg-c_blue\\.500 {\n    background-color: var(--colors-blue-500);\n}\n\n  .bg-c_red\\.500 {\n    background-color: var(--colors-red-500);\n}\n\n  .hover\\:c_green:is(:hover, [data-hover]) {\n    color: green;\n}\n}"
+      }
+    }
+  ]
+}

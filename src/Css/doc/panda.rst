@@ -42,6 +42,11 @@ What differs on purpose
 * When the default value of a semantic color uses the ``/`` opacity syntax,
   its values for other conditions, such as ``_dark``, are kept. Panda drops
   them.
+* In ``cva()``, a variant set to ``null``, such as a component prop left
+  empty, uses the default variant. In Panda, only ``undefined`` does. See
+  :doc:`cva`.
+* ``cva()`` takes four named arguments, ``base``, ``variants``,
+  ``compoundVariants`` and ``defaultVariants``, instead of one config hash.
 * In ``static_css``, ``*`` also works on a shorthand, such as ``p``.
 * The generated file only declares the layers it writes: ``tokens`` and
   ``utilities``, plus ``reset`` with ``preflight``. Panda declares its five
@@ -57,7 +62,8 @@ Not supported yet
 
 These features of Panda CSS have no equivalent yet:
 
-* recipes and slot recipes (``cva``), and patterns (``stack``, ``grid``...);
+* recipes from the configuration, slot recipes (``sva``), and patterns
+  (``stack``, ``grid``...);
 * text styles, layer styles and animation styles;
 * themes, and the ``hash`` option for class names;
 * global CSS, keyframes and custom utilities in the configuration;

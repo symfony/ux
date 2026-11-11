@@ -30,6 +30,7 @@ final class CssExtension extends AbstractExtension
     {
         return [
             new TwigFunction('css', [CssRuntime::class, 'css'], ['is_safe_callback' => CssExpression::safeFor(...)]),
+            new TwigFunction('cva', [CssRuntime::class, 'cva']),
         ];
     }
 

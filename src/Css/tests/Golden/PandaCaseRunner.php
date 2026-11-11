@@ -12,6 +12,7 @@
 namespace Symfony\UX\Css\Tests\Golden;
 
 use Symfony\UX\Css\Engine\ClassNameGenerator;
+use Symfony\UX\Css\Engine\CvaRecipe;
 use Symfony\UX\Css\Engine\Engine;
 use Symfony\UX\Css\Engine\Preset\BaseTransforms;
 use Symfony\UX\Css\Engine\StaticCss;
@@ -43,6 +44,9 @@ final class PandaCaseRunner
         if ('codegen-css' === $case->kind) {
             return $this->generateClassNames($case);
         }
+        if ('codegen-cva' === $case->kind) {
+            return $this->generateCvaClassNames($case);
+        }
 
         $config = $this->loader->configFor($case);
         if ('template-literal' === ($config['syntax'] ?? null)) {
@@ -72,6 +76,9 @@ final class PandaCaseRunner
         $inputs = $case->inputs;
         if ('static-css' === $case->kind) {
             $inputs = new StaticCss($engine)->styles($case->inputs[0]['css'] ?? []);
+        }
+        if ('cva-css' === $case->kind) {
+            $inputs = $this->cvaRecipe($case->inputs['config'])->styles();
         }
 
         $entries = [];
@@ -104,11 +111,39 @@ final class PandaCaseRunner
             throw new OutOfScopeException('Merging several style objects in one css() call is out of v1.');
         }
 
-        $generator = $this->classNameGenerators[$case->config] ??= ClassNameGenerator::fromPandaConfig(
+        return $this->classNameGenerator($case)->generate($styles[0] ?? []);
+    }
+
+    private function generateCvaClassNames(PandaCase $case): string
+    {
+        $props = $case->inputs['props'] ?? [];
+        if (\in_array(null, $props, true)) {
+            throw new OutOfScopeException('A null variant prop falls back to the default variant in Twig, which has no undefined: Panda only does that for undefined.');
+        }
+
+        $generator = $this->classNameGenerator($case);
+        $styles = $this->cvaRecipe($case->inputs['config'])->resolve($props, $generator);
+
+        return $generator->generate($styles);
+    }
+
+    /**
+     * @param array<string, mixed> $config
+     */
+    private function cvaRecipe(array $config): CvaRecipe
+    {
+        if (\array_key_exists('className', $config)) {
+            throw new OutOfScopeException('This config is an sva() slot recipe, sva() is out of v1.');
+        }
+
+        return CvaRecipe::fromConfig($config);
+    }
+
+    private function classNameGenerator(PandaCase $case): ClassNameGenerator
+    {
+        return $this->classNameGenerators[$case->config] ??= ClassNameGenerator::fromPandaConfig(
             $this->loader->config($case->config),
         );
-
-        return $generator->generate($styles[0] ?? []);
     }
 
     /**

@@ -58,13 +58,13 @@ const instrumentPanda = () => {
         "import type { CssOptions, Stylesheet } from '@pandacss/core'\nimport { goldenClone, goldenCssCall, goldenOtherCall, goldenToCss } from '../../../golden/hooks'\n"
     );
     replaceOnce(ruleProcessor, '  clone() {\n', '  clone() {\n    goldenClone(this)\n');
-    for (const signature of [
-        'cva(recipeConfig: RecipeDefinition<any>): AtomicRecipeRule {\n',
-        'sva(recipeConfig: SlotRecipeDefinition<string, any>): AtomicRecipeRule {\n',
-        'recipe(name: string, variants: Record<string, any> = {}): RecipeVariantsRule | undefined {\n',
+    for (const [signature, config] of [
+        ['cva(recipeConfig: RecipeDefinition<any>): AtomicRecipeRule {\n', ', recipeConfig'],
+        ['sva(recipeConfig: SlotRecipeDefinition<string, any>): AtomicRecipeRule {\n', ''],
+        ['recipe(name: string, variants: Record<string, any> = {}): RecipeVariantsRule | undefined {\n', ''],
     ]) {
         const method = signature.slice(0, signature.indexOf('('));
-        replaceOnce(ruleProcessor, `  ${signature}`, `  ${signature}    goldenOtherCall(this, '${method}')\n`);
+        replaceOnce(ruleProcessor, `  ${signature}`, `  ${signature}    goldenOtherCall(this, '${method}'${config})\n`);
     }
     replaceOnce(
         ruleProcessor,
@@ -179,6 +179,11 @@ const recordCodegenScenarios = () => {
             join(sandboxDir, outdir, 'css/css.mjs'),
             'export const css = (...styles) => cssFn(mergeCss(...styles))',
             'export const css = (...styles) => {\n  const className = cssFn(mergeCss(...styles))\n  globalThis.__goldenCssHook?.(styles, className)\n  return className\n}'
+        );
+        replaceOnce(
+            join(sandboxDir, outdir, 'css/cva.mjs'),
+            '  function cvaFn(props) {\n    return css(resolve(props))\n  }',
+            '  function cvaFn(props) {\n    const className = css(resolve(props))\n    globalThis.__goldenCvaHook?.(config, props, className)\n    return className\n  }'
         );
         run(join(sandboxDir, 'node_modules/.bin/vitest'), ['run', '--config', 'vitest.golden.config.ts'], {
             cwd: sandboxDir,
@@ -318,6 +323,23 @@ const toCase = (record, id) => {
                 ...(expectsTypeError(record.callSite) ? { expectTypeError: true } : {}),
                 ...(record.undefinedValues ? { undefinedValues: true } : {}),
             };
+        case 'codegen-cva':
+            return {
+                ...base,
+                inputs: { config: json.config, props: json.props },
+                expected: { className: json.className },
+                ...(expectsTypeError(record.callSite) ? { expectTypeError: true } : {}),
+            };
+        case 'cva-css':
+            return {
+                ...base,
+                userConfig: json.userConfig,
+                ...configPatch(json),
+                inputs: { config: json.configs[0] },
+                options: json.options,
+                expected: { css: json.css },
+                ...(json.configs.length > 1 ? { unsupported: `${json.configs.length} cva() calls` } : {}),
+            };
         default:
             throw new Error(`Unknown record kind "${record.kind}".`);
     }
@@ -338,10 +360,12 @@ const writeFixtures = () => {
     const ordinals = new Map();
     for (const record of records) {
         const file = relative(pandaDir, record.testPath);
-        const key = `${record.scenario}::${file}::${record.testName}`;
+        // cva() records count apart: cvaFn calls css(), so sharing the counter would renumber the css() cases
+        const kind = ['codegen-cva', 'cva-css'].includes(record.kind) ? `::${record.kind}` : '';
+        const key = `${record.scenario}::${file}::${record.testName}${kind}`;
         const ordinal = (ordinals.get(key) ?? 0) + 1;
         ordinals.set(key, ordinal);
-        const id = `${record.scenario}::${file}::${record.testName}::${ordinal}`;
+        const id = `${key}::${ordinal}`;
         byFile.set(file, [...(byFile.get(file) ?? []), toCase(record, id)]);
     }
 

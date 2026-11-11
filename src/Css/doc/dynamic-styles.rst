@@ -63,7 +63,8 @@ per call.
 The CSS of these classes must exist. The bundle writes the CSS of the styles
 it finds in the templates, but it cannot guess the values of a variable. A
 class computed at runtime has CSS only if the same style is written somewhere
-in a template, or if ``static_css`` lists it.
+in a template, or if ``static_css`` lists it. The variants of :doc:`cva` do not
+need it: their CSS is written when the template compiles.
 
 Listing values with static_css
 ------------------------------

@@ -145,6 +145,51 @@ final class ClassNameGenerator
     }
 
     /**
+     * @param array<array-key, mixed> ...$styles
+     *
+     * @return array<array-key, mixed>
+     */
+    public function merge(array ...$styles): array
+    {
+        $styles = array_values(array_filter($styles, static fn (array $style): bool => [] !== $style && !array_is_list($style)));
+
+        if ([] === $styles) {
+            return [];
+        }
+        if (1 === \count($styles)) {
+            return $styles[0];
+        }
+
+        $merged = [];
+        foreach ($styles as $style) {
+            $merged = $this->mergeProps($merged, $this->normalize($style));
+        }
+
+        return $merged;
+    }
+
+    /**
+     * @param array<array-key, mixed> $base
+     * @param array<array-key, mixed> $override
+     *
+     * @return array<array-key, mixed>
+     */
+    private function mergeProps(array $base, array $override): array
+    {
+        foreach ($override as $key => $value) {
+            if (\in_array($key, ['__proto__', 'constructor', 'prototype'], true)) {
+                continue;
+            }
+
+            $base[$key] = \is_array($value) && \is_array($base[$key] ?? null)
+                ? $this->mergeProps($base[$key], $value)
+                : $value;
+        }
+
+        return $base;
+    }
+
+    /**
      * @param array<array-key, mixed> $styles
      *
      * @return array<string, mixed>

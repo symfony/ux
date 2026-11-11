@@ -53,6 +53,9 @@
         "symfony/process": "^7.4|^8.0",
         "symfony/ux-twig-component": "^3.5"
     },
+    "conflict": {
+        "symfony/ux-twig-component": ">=2.16,<3.0"
+    },
     "extra": {
         "thanks": {
             "name": "symfony/ux",

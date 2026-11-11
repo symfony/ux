@@ -14,8 +14,8 @@ namespace Symfony\UX\Css\Tests\Golden;
 final class PandaCase
 {
     /**
-     * @param list<mixed>          $inputs
-     * @param array<string, mixed> $expected
+     * @param array<array-key, mixed> $inputs
+     * @param array<string, mixed>    $expected
      */
     public function __construct(
         public readonly string $id,
@@ -69,7 +69,7 @@ final class PandaCase
 
     public function expectedOutput(): string
     {
-        return 'codegen-css' === $this->kind ? $this->expected['className'] : $this->expected['css'];
+        return \in_array($this->kind, ['codegen-css', 'codegen-cva'], true) ? $this->expected['className'] : $this->expected['css'];
     }
 
     public function sourceLocation(): string
