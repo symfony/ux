@@ -35,17 +35,18 @@ The `benchmark app`_ of the Symfony UX repository renders the same dashboard
 twice, with 364 components each time. The first version uses the shadcn
 recipes of the UX Toolkit, which merge Tailwind classes with ``html_cva()``
 and the ``tailwind_classes`` filter. The second uses their twins written with
-``css()``.
+``css()`` and ``cva()``.
 
 In the ``prod`` environment, served by FrankenPHP with OPcache and class
-preloading, both pages serve about the same number of requests per second
-(median of 5 rounds):
+preloading, the UX CSS page serves about 6% more requests per second in
+classic mode, and about the same in worker mode (the 1.5% difference is
+smaller than the spread of the rounds). Median of 5 rounds:
 
 ===============  ============  =========
-FrankenPHP mode  Tailwind CSS  ``css()``
+FrankenPHP mode  Tailwind CSS  UX CSS
 ===============  ============  =========
-Classic          467           465
-Worker           535           546
+Classic          469           497
+Worker           537           545
 ===============  ============  =========
 
 These numbers were measured in November 2026 on an Apple M1 Pro. They vary by

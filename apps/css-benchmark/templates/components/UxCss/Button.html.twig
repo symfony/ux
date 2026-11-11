@@ -6,73 +6,77 @@
     ## 'button'|'a' The HTML tag to render; use `a` when the button navigates.
     as = 'button'
 -%}
-{%- set base = {
-    display: 'inline-flex', flexShrink: '0', alignItems: 'center', justifyContent: 'center',
-    rounded: 'lg', borderWidth: '1px', borderColor: 'transparent', bgClip: 'padding-box',
-    fontSize: 'sm', fontWeight: 'medium', whiteSpace: 'nowrap', transition: 'all', outline: 'none', userSelect: 'none',
-    _focusVisible: {borderColor: 'ring', boxShadow: '[0 0 0 3px color-mix(in oklab, var(--ring) 50%, transparent)]'},
-    '&:active:not([aria-haspopup])': {transform: 'translateY(1px)'},
-    _disabled: {pointerEvents: 'none', opacity: '0.5'},
-    _invalid: {
-        borderColor: 'destructive',
-        boxShadow: '[0 0 0 3px color-mix(in oklab, var(--destructive) 20%, transparent)]',
-        _dark: {borderColor: 'destructive/50', boxShadow: '[0 0 0 3px color-mix(in oklab, var(--destructive) 40%, transparent)]'},
+{%- set style = cva(
+    base: {
+        display: 'inline-flex', flexShrink: '0', alignItems: 'center', justifyContent: 'center',
+        rounded: 'lg', borderWidth: '1px', borderColor: 'transparent', bgClip: 'padding-box',
+        fontSize: 'sm', fontWeight: 'medium', whiteSpace: 'nowrap', transition: 'all', outline: 'none', userSelect: 'none',
+        _focusVisible: {borderColor: 'ring', boxShadow: '[0 0 0 3px color-mix(in oklab, var(--ring) 50%, transparent)]'},
+        '&:active:not([aria-haspopup])': {transform: 'translateY(1px)'},
+        _disabled: {pointerEvents: 'none', opacity: '0.5'},
+        _invalid: {
+            borderColor: 'destructive',
+            boxShadow: '[0 0 0 3px color-mix(in oklab, var(--destructive) 20%, transparent)]',
+            _dark: {borderColor: 'destructive/50', boxShadow: '[0 0 0 3px color-mix(in oklab, var(--destructive) 40%, transparent)]'},
+        },
+        '& svg': {pointerEvents: 'none', flexShrink: '0'},
+        '& svg:not([class*=size_])': {boxSize: '4'},
     },
-    '& svg': {pointerEvents: 'none', flexShrink: '0'},
-    '& svg:not([class*=size_])': {boxSize: '4'},
-} -%}
-{%- set variants = {
-    default: {bg: 'primary', color: 'primary.foreground', _hover: {bg: 'primary/80'}},
-    outline: {
-        borderColor: 'border', bg: 'background',
-        _hover: {bg: 'muted', color: 'foreground'},
-        _expanded: {bg: 'muted', color: 'foreground'},
-        _dark: {borderColor: 'input', bg: 'input/30', _hover: {bg: 'input/50'}},
+    variants: {
+        variant: {
+            default: {bg: 'primary', color: 'primary.foreground', _hover: {bg: 'primary/80'}},
+            outline: {
+                borderColor: 'border', bg: 'background',
+                _hover: {bg: 'muted', color: 'foreground'},
+                _expanded: {bg: 'muted', color: 'foreground'},
+                _dark: {borderColor: 'input', bg: 'input/30', _hover: {bg: 'input/50'}},
+            },
+            secondary: {
+                bg: 'secondary', color: 'secondary.foreground',
+                _hover: {bg: '[color-mix(in oklch, var(--secondary), var(--foreground) 5%)]'},
+                _expanded: {bg: 'secondary', color: 'secondary.foreground'},
+            },
+            ghost: {
+                _hover: {bg: 'muted', color: 'foreground'},
+                _expanded: {bg: 'muted', color: 'foreground'},
+                _dark: {_hover: {bg: 'muted/50'}},
+            },
+            destructive: {
+                bg: 'destructive/10', color: 'destructive',
+                _hover: {bg: 'destructive/20'},
+                _focusVisible: {borderColor: 'destructive/40', boxShadow: '[0 0 0 3px color-mix(in oklab, var(--destructive) 20%, transparent)]'},
+                _dark: {bg: 'destructive/20', _hover: {bg: 'destructive/30'}, _focusVisible: {boxShadow: '[0 0 0 3px color-mix(in oklab, var(--destructive) 40%, transparent)]'}},
+            },
+            link: {color: 'primary', textUnderlineOffset: '4px', _hover: {textDecoration: 'underline'}},
+        },
+        size: {
+            default: {h: '8', gap: '1.5', px: '2.5', '&:has([data-icon=inline-end])': {pe: '2'}, '&:has([data-icon=inline-start])': {ps: '2'}},
+            xs: {
+                h: '6', gap: '1', rounded: '[min(var(--radii-md), 10px)]', px: '2', fontSize: 'xs',
+                '[data-slot=button-group] &': {rounded: 'lg'},
+                '&:has([data-icon=inline-end])': {pe: '1.5'}, '&:has([data-icon=inline-start])': {ps: '1.5'},
+                '& svg:not([class*=size_])': {boxSize: '3'},
+            },
+            sm: {
+                h: '7', gap: '1', rounded: '[min(var(--radii-md), 12px)]', px: '2.5', fontSize: '[0.8rem]',
+                '[data-slot=button-group] &': {rounded: 'lg'},
+                '&:has([data-icon=inline-end])': {pe: '1.5'}, '&:has([data-icon=inline-start])': {ps: '1.5'},
+                '& svg:not([class*=size_])': {boxSize: '3.5'},
+            },
+            lg: {h: '9', gap: '1.5', px: '2.5', '&:has([data-icon=inline-end])': {pe: '2'}, '&:has([data-icon=inline-start])': {ps: '2'}},
+            icon: {boxSize: '8'},
+            'icon-xs': {boxSize: '6', rounded: '[min(var(--radii-md), 10px)]', '[data-slot=button-group] &': {rounded: 'lg'}, '& svg:not([class*=size_])': {boxSize: '3'}},
+            'icon-sm': {boxSize: '7', rounded: '[min(var(--radii-md), 12px)]', '[data-slot=button-group] &': {rounded: 'lg'}},
+            'icon-lg': {boxSize: '9'},
+        },
     },
-    secondary: {
-        bg: 'secondary', color: 'secondary.foreground',
-        _hover: {bg: '[color-mix(in oklch, var(--secondary), var(--foreground) 5%)]'},
-        _expanded: {bg: 'secondary', color: 'secondary.foreground'},
-    },
-    ghost: {
-        _hover: {bg: 'muted', color: 'foreground'},
-        _expanded: {bg: 'muted', color: 'foreground'},
-        _dark: {_hover: {bg: 'muted/50'}},
-    },
-    destructive: {
-        bg: 'destructive/10', color: 'destructive',
-        _hover: {bg: 'destructive/20'},
-        _focusVisible: {borderColor: 'destructive/40', boxShadow: '[0 0 0 3px color-mix(in oklab, var(--destructive) 20%, transparent)]'},
-        _dark: {bg: 'destructive/20', _hover: {bg: 'destructive/30'}, _focusVisible: {boxShadow: '[0 0 0 3px color-mix(in oklab, var(--destructive) 40%, transparent)]'}},
-    },
-    link: {color: 'primary', textUnderlineOffset: '4px', _hover: {textDecoration: 'underline'}},
-} -%}
-{%- set sizes = {
-    default: {h: '8', gap: '1.5', px: '2.5', '&:has([data-icon=inline-end])': {pe: '2'}, '&:has([data-icon=inline-start])': {ps: '2'}},
-    xs: {
-        h: '6', gap: '1', rounded: '[min(var(--radii-md), 10px)]', px: '2', fontSize: 'xs',
-        '[data-slot=button-group] &': {rounded: 'lg'},
-        '&:has([data-icon=inline-end])': {pe: '1.5'}, '&:has([data-icon=inline-start])': {ps: '1.5'},
-        '& svg:not([class*=size_])': {boxSize: '3'},
-    },
-    sm: {
-        h: '7', gap: '1', rounded: '[min(var(--radii-md), 12px)]', px: '2.5', fontSize: '[0.8rem]',
-        '[data-slot=button-group] &': {rounded: 'lg'},
-        '&:has([data-icon=inline-end])': {pe: '1.5'}, '&:has([data-icon=inline-start])': {ps: '1.5'},
-        '& svg:not([class*=size_])': {boxSize: '3.5'},
-    },
-    lg: {h: '9', gap: '1.5', px: '2.5', '&:has([data-icon=inline-end])': {pe: '2'}, '&:has([data-icon=inline-start])': {ps: '2'}},
-    icon: {boxSize: '8'},
-    'icon-xs': {boxSize: '6', rounded: '[min(var(--radii-md), 10px)]', '[data-slot=button-group] &': {rounded: 'lg'}, '& svg:not([class*=size_])': {boxSize: '3'}},
-    'icon-sm': {boxSize: '7', rounded: '[min(var(--radii-md), 12px)]', '[data-slot=button-group] &': {rounded: 'lg'}},
-    'icon-lg': {boxSize: '9'},
-} -%}
+) -%}
 <{{ as }}
     data-slot="{{ attributes.render('data-slot')|default('button') }}"
     data-variant="{{ variant }}"
     data-size="{{ size }}"
     {{ attributes.defaults({
-        class: css({...base, ...variants[variant], ...sizes[size]}),
+        class: style.apply({variant: variant, size: size}),
         type: as == 'button' ? 'button' : false,
     }) }}
 >
