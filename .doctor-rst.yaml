@@ -94,3 +94,8 @@ rules:
     yaml_instead_of_yml_suffix: ~
     yarn_dev_option_at_the_end: ~
 #    yarn_dev_option_not_at_the_end: ~
+
+whitelist:
+    regex:
+        # the apps/ directory of this repository, which the "replacement" rule would rename to "applications"
+        - '/github\.com\/symfony\/ux\/(tree|blob)\/[^\/]+\/apps\//'
