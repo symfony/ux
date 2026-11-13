@@ -1,0 +1,7 @@
+ux_upload:
+    storage: local
+    temp_dir: '%kernel.project_dir%/var/uploads/tmp'
+    local_storage:
+        directory: '%kernel.project_dir%/var/uploads/storage'
+    # This demo has no firewall, so Security cannot attribute an upload to anyone.
+    allow_anonymous: true

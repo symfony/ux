@@ -1,0 +1,170 @@
+{# Symfony UX Upload form theme. Applications can import it with "use" and override any public block. #}
+
+{% block ux_upload_row %}
+    {{ block('form_row') }}
+{% endblock %}
+
+{% block ux_upload_widget %}
+    {% set controller = 'symfony/ux-upload/upload' %}
+    {% set root_class = ('ux-upload ux-upload--' ~ layout ~ (show_preview ? ' ux-upload--previews' : '') ~ ' ' ~ (upload_attr.class ?? ''))|trim %}
+    {% set controller_attr = {}|merge(stimulus_controller(controller, stimulus_values)) %}
+    {% set controller_attr = controller_attr|merge({
+        'data-controller': ((upload_attr['data-controller'] ?? '') ~ ' ' ~ controller_attr['data-controller'])|trim,
+    }) %}
+    {% set upload_attr = upload_attr|merge(controller_attr)|merge({
+        class: root_class,
+        'data-ux-upload-layout': layout,
+        'data-ux-upload-disabled': disabled ? 'true' : false,
+    }) %}
+
+    <div{% with {attr: upload_attr} %}{{ block('attributes') }}{% endwith %}>
+        {% if layout == 'dropzone' and show_preview %}
+            <div {{ stimulus_target(controller, 'list') }} class="ux-upload__list" role="list">
+                {% with {dropzone_list_item: true} %}{{ block('ux_upload_picker') }}{% endwith %}
+            </div>
+        {% else %}
+            {{ block('ux_upload_picker') }}
+            <div {{ stimulus_target(controller, 'list') }} class="ux-upload__list" role="list"></div>
+        {% endif %}
+
+        {{ block('ux_upload_summary') }}
+        {{ block('ux_upload_client_errors') }}
+        <div {{ stimulus_target(controller, 'announce') }} class="ux-upload__sr-only" aria-live="assertive" aria-atomic="true"></div>
+        {{ block('ux_upload_start') }}
+        {{ block('ux_upload_item') }}
+    </div>
+{% endblock %}
+
+{% block ux_upload_picker %}
+    <div
+        {{ stimulus_target(controller, 'dropzone') }}
+        class="ux-upload__dropzone"
+        {% if dropzone_list_item|default(false) %}role="listitem"{% endif %}
+        {{ stimulus_action(controller, 'dragover', 'dragover')
+            |stimulus_action(controller, 'dragleave', 'dragleave')
+            |stimulus_action(controller, 'drop', 'drop')
+            |stimulus_action(controller, 'paste', 'paste') }}
+    >
+        {% if layout == 'dropzone' %}
+            <span class="ux-upload__dropzone-icon" aria-hidden="true">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M7.5 7.5 12 3m0 0 4.5 4.5M12 3v13.5" />
+                </svg>
+            </span>
+
+            <span class="ux-upload__instruction">{{ label_drop_files }}</span>
+        {% endif %}
+        {% if help_text %}
+            <span class="ux-upload__help">{{ help_text }}</span>
+        {% endif %}
+
+        <input
+            {{ stimulus_target(controller, 'result') }}
+            type="hidden"
+            id="{{ id }}_token"
+            name="{{ full_name }}"
+            value="{{ value }}"
+        >
+
+        {% set input_attr = attr|filter((value, name) => name not in ['id', 'name', 'type', 'value', 'multiple', 'required', 'disabled']) %}
+        {% set input_class = ('ux-upload__input ' ~ (input_attr.class ?? ''))|trim %}
+        {% set input_stimulus_attr = {}|merge(stimulus_target(controller, 'input')|stimulus_action(controller, 'selectFiles', 'change')) %}
+        {% set input_stimulus_attr = input_stimulus_attr|merge({
+            'data-action': ((input_attr['data-action'] ?? '') ~ ' ' ~ input_stimulus_attr['data-action'])|trim,
+        }) %}
+        {% set input_attr = input_attr|merge(input_stimulus_attr)|merge({
+            class: input_class,
+            accept: allowed_types ? allowed_types|join(',') : (input_attr.accept ?? false),
+            'aria-label': layout == 'dropzone' ? label_dropzone_aria : (input_attr['aria-label'] ?? false),
+        }) %}
+
+        <input type="file" id="{{ id }}"{% with {attr: input_attr} %}{{ block('attributes') }}{% endwith %}{% if multiple %} multiple{% endif %}{% if required %} required{% endif %}{% if disabled %} disabled{% endif %}>
+    </div>
+{% endblock %}
+
+{% block ux_upload_item %}
+    <template {{ stimulus_target(controller, 'template') }}>
+        <div class="ux-upload__item" data-ux-upload-item data-status="pending" role="listitem">
+            {{ block('ux_upload_visual') }}
+
+            <div class="ux-upload__metadata">
+                <span class="ux-upload__name" data-ux-upload-name></span>
+                <span class="ux-upload__size" data-ux-upload-size></span>
+            </div>
+
+            {{ block('ux_upload_progress') }}
+
+            <span class="ux-upload__status" data-ux-upload-status aria-live="polite">{{ label_pending }}</span>
+
+            {{ block('ux_upload_actions') }}
+        </div>
+    </template>
+{% endblock %}
+
+{% block ux_upload_visual %}
+    <div class="ux-upload__visual">
+        {% if show_preview %}
+            <img class="ux-upload__preview" data-ux-upload-preview alt="" hidden>
+        {% endif %}
+        <span class="ux-upload__file-icon" data-ux-upload-file-icon aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M14.25 2.25H6.75A2.25 2.25 0 0 0 4.5 4.5v15a2.25 2.25 0 0 0 2.25 2.25h10.5a2.25 2.25 0 0 0 2.25-2.25V7.5l-5.25-5.25Z" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M14.25 2.25V7.5h5.25" />
+            </svg>
+        </span>
+        <span class="ux-upload__percent" data-ux-upload-percent>0%</span>
+    </div>
+{% endblock %}
+
+{% block ux_upload_progress %}
+    <div class="ux-upload__progress" data-ux-upload-progress role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+        <span class="ux-upload__progress-bar" data-ux-upload-progress-bar></span>
+    </div>
+{% endblock %}
+
+{% block ux_upload_actions %}
+    <div class="ux-upload__actions">
+        <button type="button" class="ux-upload__pause" data-ux-upload-action="pause" aria-label="{{ label_pause }}" {{ stimulus_action(controller, 'pause') }} hidden{% if disabled %} disabled{% endif %}>{{ label_pause }}</button>
+        <button type="button" class="ux-upload__resume" data-ux-upload-action="resume" aria-label="{{ label_resume }}" {{ stimulus_action(controller, 'resumeUpload') }} hidden{% if disabled %} disabled{% endif %}>{{ label_resume }}</button>
+        <button type="button" class="ux-upload__cancel" data-ux-upload-action="cancel" aria-label="{{ label_cancel }}" {{ stimulus_action(controller, 'cancel') }}{% if disabled %} disabled{% endif %}>{{ label_cancel }}</button>
+        <button type="button" class="ux-upload__remove" data-ux-upload-action="remove" aria-label="{{ label_remove }}" {{ stimulus_action(controller, 'remove') }} hidden{% if disabled %} disabled{% endif %}>{{ label_remove }}</button>
+        <button type="button" class="ux-upload__retry" data-ux-upload-action="retry" aria-label="{{ label_retry }}" {{ stimulus_action(controller, 'retry') }} hidden{% if disabled %} disabled{% endif %}>{{ label_retry }}</button>
+    </div>
+{% endblock %}
+
+{% block ux_upload_summary %}
+    <div {{ stimulus_target(controller, 'summary') }} class="ux-upload__summary" aria-live="polite" hidden>
+        <span {{ stimulus_target(controller, 'summaryText') }} class="ux-upload__summary-text"></span>
+        <span
+            {{ stimulus_target(controller, 'summaryProgress') }}
+            class="ux-upload__summary-progress"
+            role="progressbar"
+            aria-valuemin="0"
+            aria-valuemax="100"
+            hidden
+        >
+            <span {{ stimulus_target(controller, 'summaryProgressBar') }} class="ux-upload__summary-progress-bar"></span>
+        </span>
+    </div>
+{% endblock %}
+
+{% block ux_upload_client_errors %}
+    <div {{ stimulus_target(controller, 'error') }} class="ux-upload__errors" role="alert" aria-live="assertive" hidden></div>
+
+    <template {{ stimulus_target(controller, 'errorTemplate') }}>
+        <div class="ux-upload__error"></div>
+    </template>
+{% endblock %}
+
+{% block ux_upload_start %}
+    {% if not auto_upload %}
+        <button
+            type="button"
+            class="ux-upload__start"
+            {{ stimulus_target(controller, 'start') }}
+            {{ stimulus_action(controller, 'startAll') }}
+            hidden
+            {% if disabled %}disabled{% endif %}
+        >{{ label_upload }}</button>
+    {% endif %}
+{% endblock %}

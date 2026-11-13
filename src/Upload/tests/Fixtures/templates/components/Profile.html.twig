@@ -1,0 +1,20 @@
+<div{{ attributes.defaults(stimulus_controller('symfony/ux-upload/live-upload', {property: 'picture'})) }}>
+    <p class="profile-name">{{ firstName }} {{ lastName }}</p>
+
+    {% set picture = this.pictureUpload %}
+    {% if picture %}
+        <p class="profile-picture" data-path="{{ picture.path }}">{{ picture.filename }} ({{ picture.size }} bytes)</p>
+        <button type="button" data-action="live#action" data-live-action-param="clearUpload" data-live-property-param="picture">Remove</button>
+    {% else %}
+        <p class="profile-picture-empty">No picture yet</p>
+    {% endif %}
+
+    {#
+        In a real app the upload widget lives inside this root element. When it
+        finishes, it dispatches "symfony--ux-upload--upload:complete" with the
+        signed token; the live-upload bridge controller on this root picks it up
+        and calls applyUpload('picture', token). For example:
+
+        {{ form_widget(uploadForm.picture) }}
+    #}
+</div>
