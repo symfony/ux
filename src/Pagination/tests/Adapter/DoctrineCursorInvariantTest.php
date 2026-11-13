@@ -271,6 +271,86 @@ final class DoctrineCursorInvariantTest extends TestCase
         self::assertSame(range(1, 6), $ids);
     }
 
+    /**
+     * @param list<array{float|null, int|null}> $values
+     * @param 'ASC'|'DESC'                      $direction
+     */
+    #[DataProvider('provideMultipleNullableFields')]
+    public function testMultipleNullableFieldsRoundTripThroughTheCodec(array $values, string $direction, int $perPage): void
+    {
+        new SchemaTool($this->entityManager)->createSchema([
+            $this->entityManager->getClassMetadata(Book::class),
+            $this->entityManager->getClassMetadata(Category::class),
+        ]);
+
+        foreach ($values as $index => [$rating, $reviewCount]) {
+            $book = new Book();
+            $book->setTitle('Book '.$index);
+            $book->setRating($rating);
+            $book->setReviewCount($reviewCount);
+            $this->entityManager->persist($book);
+        }
+        $this->entityManager->flush();
+        $this->entityManager->clear();
+
+        $doctrineDirection = self::doctrineSortDirection($direction);
+        $expected = array_map(
+            static fn (Book $book) => $book->getId(),
+            $this->bookQueryBuilder()
+                ->orderBy('b.rating', $doctrineDirection)
+                ->addOrderBy('b.reviewCount', $doctrineDirection)
+                ->addOrderBy('b.id', $doctrineDirection)
+                ->getQuery()->getResult(),
+        );
+        self::assertCount(\count($values), $expected);
+        $expectedPages = array_chunk($expected, $perPage);
+
+        $paginator = new Paginator([$this->adapter], cursorCodec: new CursorCodec('test-secret'));
+        $builder = $paginator->cursor($this->bookQueryBuilder())
+            ->orderBy(['rating', 'reviewCount'], $direction)
+            ->perPage($perPage);
+        $pagination = $builder->paginate();
+
+        foreach ($expectedPages as $index => $expectedPage) {
+            self::assertSame($expectedPage, array_map(static fn (Book $book) => $book->getId(), $pagination->getItems()));
+            $nextCursor = $pagination->getNextCursor();
+            if ($index === \count($expectedPages) - 1) {
+                self::assertNull($nextCursor);
+            } else {
+                self::assertNotNull($nextCursor);
+                $pagination = $builder->cursor($nextCursor)->paginate();
+            }
+        }
+
+        foreach (array_reverse(\array_slice($expectedPages, 0, -1)) as $expectedPage) {
+            $previousCursor = $pagination->getPreviousCursor();
+            self::assertNotNull($previousCursor);
+            $pagination = $builder->cursor($previousCursor)->paginate();
+            self::assertSame($expectedPage, array_map(static fn (Book $book) => $book->getId(), $pagination->getItems()));
+        }
+        self::assertNull($pagination->getPreviousCursor());
+    }
+
+    public static function provideMultipleNullableFields(): iterable
+    {
+        $mixed = [];
+        foreach ([null, 0.0, 1.0] as $rating) {
+            foreach ([null, 0, 2] as $reviewCount) {
+                // Duplicate tuples force the appended identifier to break ties
+                $mixed[] = [$rating, $reviewCount];
+                $mixed[] = [$rating, $reviewCount];
+            }
+        }
+
+        foreach (['mixed' => $mixed, 'all null' => array_fill(0, 8, [null, null])] as $name => $values) {
+            foreach (['ASC', 'DESC'] as $direction) {
+                foreach ([1, 3] as $perPage) {
+                    yield $name.' '.$direction.' page size '.$perPage => [$values, $direction, $perPage];
+                }
+            }
+        }
+    }
+
     public function testExistingOrderIsRejectedEvenWhenCompatible(): void
     {
         $this->createAuthors(8);
@@ -341,6 +421,23 @@ final class DoctrineCursorInvariantTest extends TestCase
         );
 
         self::assertCount(2, $decoded['values']);
+    }
+
+    /**
+     * @param 'ASC'|'DESC' $direction
+     */
+    private static function doctrineSortDirection(string $direction): string|\SortDirection
+    {
+        $type = new \ReflectionParameter([QueryBuilder::class, 'addOrderBy'], 'order')->getType();
+        $types = $type instanceof \ReflectionUnionType ? $type->getTypes() : [$type];
+
+        foreach ($types as $namedType) {
+            if ($namedType instanceof \ReflectionNamedType && \SortDirection::class === $namedType->getName()) {
+                return 'ASC' === $direction ? \SortDirection::Ascending : \SortDirection::Descending;
+            }
+        }
+
+        return $direction;
     }
 
     private function createAuthors(int $count): void

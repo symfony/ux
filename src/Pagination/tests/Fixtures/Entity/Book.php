@@ -33,6 +33,9 @@ class Book
     #[ORM\Column(type: 'float', nullable: true)]
     private ?float $rating = null;
 
+    #[ORM\Column(type: 'integer', nullable: true)]
+    private ?int $reviewCount = null;
+
     #[ORM\Column(type: 'datetime_immutable')]
     private \DateTimeImmutable $publishedAt;
 
@@ -106,6 +109,18 @@ class Book
     public function setRating(?float $rating): self
     {
         $this->rating = $rating;
+
+        return $this;
+    }
+
+    public function getReviewCount(): ?int
+    {
+        return $this->reviewCount;
+    }
+
+    public function setReviewCount(?int $reviewCount): self
+    {
+        $this->reviewCount = $reviewCount;
 
         return $this;
     }
