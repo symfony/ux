@@ -1,4 +1,143 @@
 import { Controller } from "@hotwired/stimulus";
+interface InitResponse {
+  uploadId: string;
+  uploadUrl: string;
+  config: UploadConfig;
+  resumeToken?: string;
+}
+interface UploadConfig {
+  chunkSize: number;
+  totalChunks: number;
+  compression: boolean;
+  parallel: number;
+}
+interface ProgressResponse {
+  progress: {
+    storedChunks: number;
+    chunkIndices: number[];
+    percentComplete: number;
+  } | null;
+}
+interface PublicMetadata {
+  filename: string;
+  mimeType: string;
+  size: number;
+}
+interface CompleteResponse {
+  success: boolean;
+  uploadId?: string;
+  token: string;
+  meta: PublicMetadata;
+}
+interface UploadResult {
+  uploadId?: string;
+  token: string;
+  metadata: PublicMetadata;
+}
+interface UploadError {
+  success: false;
+  error: string;
+}
+interface UploadSpeed {
+  bytesPerSecond: number;
+  remainingMs: number;
+}
+interface UploaderEvents {
+  onInit?: (uploadId: string, file: File, resumable: boolean) => void;
+  onDirectProgress?: (file: File, percent: number, speed?: UploadSpeed) => void;
+  onProgress?: (uploadId: string, percent: number, chunkIndex: number, speed?: UploadSpeed) => void;
+  onComplete?: (uploadId: string, result: UploadResult) => void;
+  onError?: (uploadId: string, error: Error) => void;
+  onChunkComplete?: (uploadId: string, chunkIndex: number, totalChunks: number) => void;
+}
+type IntegrityAlgorithm = 'sha256' | 'sha384' | 'sha512';
+type UploaderFetch = (input: RequestInfo | URL, init?: RequestInit) => Promise<Response>;
+type UploaderXhrFactory = () => XMLHttpRequest;
+interface UploaderOptions {
+  initUrl: string;
+  directUrl?: string;
+  directUploadThreshold?: number;
+  removeUrl?: string;
+  events?: UploaderEvents;
+  uploader?: string;
+  csrfToken?: string | null;
+  integrityAlgorithm?: IntegrityAlgorithm;
+  policyToken?: string | null;
+  compression?: boolean;
+  credentials?: RequestCredentials;
+  headers?: Record<string, string>;
+  fetch?: UploaderFetch;
+  xhr?: UploaderXhrFactory;
+}
+export declare class UploadCancelledError extends Error {
+  constructor();
+}
+export declare class UploadSuspendedError extends Error {
+  constructor();
+}
+export declare class Uploader {
+  private resumeStore;
+  private abortControllers;
+  private uploadUrls;
+  private uploadFingerprints;
+  private abortReasons;
+  private pauseFlags;
+  private pauseResolvers;
+  private speedSamples;
+  private uploadFileSizes;
+  private initUrl;
+  private directUrl?;
+  private directUploadThreshold;
+  private removeUrl;
+  private events;
+  private uploaderName;
+  private csrfToken;
+  private integrityAlgorithm;
+  private policyToken;
+  private compressionEnabled;
+  private credentials?;
+  private headers;
+  private fetcher;
+  private fileAbortControllers;
+  private xhrFactory;
+  private useXhrForDirect;
+  constructor(options: UploaderOptions);
+  constructor(initUrl: string, events?: UploaderEvents, uploaderName?: string, csrfToken?: string | null, integrityAlgorithm?: IntegrityAlgorithm, policyToken?: string | null, compressionEnabled?: boolean);
+  upload(file: File): Promise<UploadResult>;
+  usesDirectUpload(file: File): boolean;
+  cancelFile(file: File): void;
+  cancel(uploadId: string): void;
+  suspend(uploadId: string): void;
+  remove(token: string): Promise<void>;
+  pause(uploadId: string): void;
+  resume(uploadId: string): void;
+  isPaused(uploadId: string): boolean;
+  private initializeUpload;
+  private uploadDirect;
+  private uploadDirectWithXhr;
+  private uploadDirectWithFetch;
+  private parseDirectResponse;
+  private readDirectError;
+  private resumeUpload;
+  private fingerprint;
+  private checkResume;
+  private uploadChunks;
+  private uploadChunk;
+  private completeUpload;
+  private request;
+  private isCompressionSupported;
+  private isAlreadyCompressed;
+  private compress;
+  private recordSpeedSample;
+  private computeFileHash;
+  private digestBuffer;
+  private sleep;
+  private throwIfAborted;
+  private waitIfPaused;
+  private resumeIfPaused;
+}
+export declare function extractFilesFromClipboard(event: ClipboardEvent): File[];
+export declare function renameAnonymousFile(file: File): File;
 export default class export_default extends Controller<HTMLElement> {
   static targets: string[];
   static values: {
@@ -202,57 +341,18 @@ export default class export_default extends Controller<HTMLElement> {
   connect(): void;
   disconnect(): void;
   private hydrate;
-  /**
-   * Handle file selection from input
-   */
   selectFiles(event: Event): void;
-  /**
-   * Trigger file input click
-   */
   browse(event?: Event): void;
-  /**
-   * Handle paste (e.g. screenshot from clipboard)
-   */
   paste(event: ClipboardEvent): void;
-  /**
-   * Handle keyboard activation on the dropzone
-   */
   keydown(event: KeyboardEvent): void;
-  /**
-   * Handle file drop
-   */
   drop(event: DragEvent): void;
-  /**
-   * Handle dragover
-   */
   dragover(event: DragEvent): void;
-  /**
-   * Handle dragleave
-   */
   dragleave(event: DragEvent): void;
-  /**
-   * Cancel a specific upload
-   */
   cancel(event: Event): void;
-  /**
-   * Remove a completed/cancelled upload from the list
-   */
   remove(event: Event): Promise<void>;
-  /**
-   * Retry a failed upload
-   */
   retry(event: Event): void;
-  /**
-   * Pause an in-progress upload
-   */
   pause(event: Event): void;
-  /**
-   * Resume a paused upload
-   */
   resumeUpload(event: Event): void;
-  /**
-   * Start all pending uploads (used when autoUpload is false)
-   */
   startAll(): void;
   private resolveFileId;
   private createEvents;
@@ -288,3 +388,4 @@ export default class export_default extends Controller<HTMLElement> {
   private showImagePreview;
   private showFileTypeIcon;
 }
+export type { CompleteResponse, InitResponse, IntegrityAlgorithm, ProgressResponse, UploadConfig, UploadError, UploadResult, UploadSpeed, UploaderEvents, UploaderFetch, UploaderOptions, UploaderXhrFactory };

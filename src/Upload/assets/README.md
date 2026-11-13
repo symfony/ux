@@ -4,45 +4,22 @@ JavaScript assets of the [symfony/ux-upload](https://packagist.org/packages/symf
 
 ## Installation
 
-This npm package is reserved for advanced users who need to install JavaScript
-dependencies separately from PHP dependencies.
+This npm package is **reserved for advanced users** who want to decouple their JavaScript dependencies from their PHP dependencies (e.g., when building Docker images, running JavaScript-only pipelines, etc.).
 
-Install the PHP package first:
+We **strongly recommend not installing this package directly**, but instead install the PHP package [symfony/ux-upload](https://packagist.org/packages/symfony/ux-upload) in your Symfony application with [Flex](https://github.com/symfony/flex) enabled.
 
-```shell
-composer require symfony/ux-upload
-```
-
-When installing this package directly, keep its version identical to the PHP
-package version:
+If you still want to install this package directly, please make sure its version exactly matches [symfony/ux-upload](https://packagist.org/packages/symfony/ux-upload) PHP package version:
 
 ```shell
 composer require symfony/ux-upload:X.Y.Z
 npm add @symfony/ux-upload@X.Y.Z
 ```
 
-## Optional styles
-
-The package does not import CSS automatically. Choose a layout in the Symfony
-form and import the corresponding standalone stylesheet when needed:
-
-```php
-$builder->add('document', FileUploadType::class, [
-    'layout' => 'compact', // or "dropzone"
-    'show_preview' => true,
-]);
-```
-
-```js
-import '@symfony/ux-upload/compact.css';
-// or: import '@symfony/ux-upload/dropzone.css';
-```
-
-The HTML remains usable without either stylesheet. The package form theme owns
-the markup and exposes composable Twig blocks; the Stimulus controller only
-manages upload behavior and state.
+**Tip:** Your `package.json` file will be automatically modified by [Flex](https://github.com/symfony/flex) when installing or upgrading a PHP package. To prevent this behavior, ensure to **use at least Flex 1.22.0 or 2.5.0**, and run `composer config --json "extra.symfony/flex.synchronize_package_json" false`.
 
 ## Resources
 
 - [Documentation](https://symfony.com/bundles/ux-upload/current/index.html)
-- [Issue tracker and pull requests](https://github.com/symfony/ux)
+- [Report issues](https://github.com/symfony/ux/issues) and
+  [send Pull Requests](https://github.com/symfony/ux/pulls)
+  in the [main Symfony UX repository](https://github.com/symfony/ux)

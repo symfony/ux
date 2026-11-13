@@ -1,9 +1,9 @@
 /**
- * Tests for clipboard extraction utilities (paste-utils.ts)
+ * Tests for clipboard extraction utilities (paste_utils.ts)
  */
 
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { extractFilesFromClipboard, renameAnonymousFile } from '../../src/paste-utils';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { extractFilesFromClipboard, renameAnonymousFile } from '../../src/paste_utils';
 
 /**
  * Helper: build a minimal ClipboardEvent with files on clipboardData.files.

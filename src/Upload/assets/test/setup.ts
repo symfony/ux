@@ -2,7 +2,7 @@
  * Vitest test setup
  */
 
-import { vi } from 'vitest';
+import { beforeEach, vi } from 'vitest';
 
 // Mock fetch globally
 global.fetch = vi.fn();

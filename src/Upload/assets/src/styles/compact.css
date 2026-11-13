@@ -1,5 +1,3 @@
-@import './base.css';
-
 @layer ux-upload {
     .ux-upload--compact .ux-upload__dropzone {
         display: grid;

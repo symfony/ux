@@ -3,7 +3,7 @@
  */
 
 import type { InitResponse, UploadConfig, CompleteResponse, UploadResult, ProgressResponse } from './types';
-import { ResumeStore } from './resume-store';
+import { ResumeStore } from './resume_store';
 
 export interface UploadSpeed {
     bytesPerSecond: number;

@@ -87,8 +87,7 @@
                 "enabled": true,
                 "fetch": "eager",
                 "autoimport": {
-                    "@symfony/ux-upload/dist/compact.min.css": true,
-                    "@symfony/ux-upload/dist/dropzone.min.css": false
+                    "@symfony/ux-upload/dist/style.min.css": true
                 }
             },
             "live-upload": {

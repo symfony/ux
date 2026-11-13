@@ -11,11 +11,30 @@ import {
     UploadCancelledError,
     UploadSuspendedError,
 } from './uploader';
-import { PreviewCache } from './preview-cache';
+import { PreviewCache } from './preview_cache';
 import { getFileIconCategory } from './icons';
-import { extractFilesFromClipboard } from './paste-utils';
+import { extractFilesFromClipboard } from './paste_utils';
 import { formatSize, formatSpeed, formatEta } from './format';
 import type { TokenEntry, UploadResult } from './types';
+
+export { Uploader, UploadCancelledError, UploadSuspendedError } from './uploader';
+export type {
+    IntegrityAlgorithm,
+    UploadSpeed,
+    UploaderEvents,
+    UploaderFetch,
+    UploaderOptions,
+    UploaderXhrFactory,
+} from './uploader';
+export type {
+    InitResponse,
+    UploadConfig,
+    ProgressResponse,
+    CompleteResponse,
+    UploadResult,
+    UploadError,
+} from './types';
+export { extractFilesFromClipboard, renameAnonymousFile } from './paste_utils';
 
 const INTEGRITY_ALGORITHMS: readonly IntegrityAlgorithm[] = ['sha256', 'sha384', 'sha512'];
 

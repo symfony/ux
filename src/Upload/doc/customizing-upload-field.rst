@@ -6,7 +6,7 @@ UX Upload separates behavior, markup and presentation:
 - ``FileUploadType`` options select capabilities and a semantic layout;
 - the bundle form theme defines all markup through composable Twig blocks;
 - Stimulus updates state, text and accessibility attributes;
-- optional stylesheets provide ready-to-use visual treatments.
+- an optional stylesheet provides ready-to-use visual treatments.
 
 No stylesheet is loaded automatically.
 
@@ -27,10 +27,10 @@ Start with the result you want:
         Symfony form theme.
     * - Get a ready-to-use upload field
       - Keep ``'layout' => 'compact'`` and load
-        ``@symfony/ux-upload/dist/compact.min.css``.
+        ``@symfony/ux-upload/dist/style.min.css``.
     * - Build a drop area or image gallery
       - Set ``'layout' => 'dropzone'``, optionally enable ``show_preview`` and
-        ``multiple``, then load ``@symfony/ux-upload/dist/dropzone.min.css``.
+        ``multiple``, then load ``@symfony/ux-upload/dist/style.min.css``.
     * - Integrate an application design system
       - Load no package stylesheet, import the bundle form theme with Twig
         ``use``, override only the necessary blocks and preserve the
@@ -65,16 +65,11 @@ only updates upload state.
 Optional Styles
 ---------------
 
-UX Upload publishes two standalone Baseline 2026 stylesheets:
+UX Upload publishes one stylesheet, ``@symfony/ux-upload/dist/style.min.css``.
+It styles both layouts; the ``layout`` option of the field selects which rules
+apply.
 
-================  ==================================================
-Layout            AssetMapper path
-================  ==================================================
-Compact field     ``@symfony/ux-upload/dist/compact.min.css``
-Drop area         ``@symfony/ux-upload/dist/dropzone.min.css``
-================  ==================================================
-
-Enable one explicitly in ``assets/controllers.json``:
+Enable it explicitly in ``assets/controllers.json``:
 
 .. code-block:: json
 
@@ -85,24 +80,19 @@ Enable one explicitly in ``assets/controllers.json``:
                     "enabled": true,
                     "fetch": "eager",
                     "autoimport": {
-                        "@symfony/ux-upload/dist/compact.min.css": true,
-                        "@symfony/ux-upload/dist/dropzone.min.css": false
+                        "@symfony/ux-upload/dist/style.min.css": true
                     }
                 }
             }
         }
     }
 
-Keep both entries and switch their boolean values when changing the global
-style. To load a style only on selected pages, leave both values ``false`` and
+To load the stylesheet only on selected pages, leave the value ``false`` and
 use AssetMapper directly:
 
 .. code-block:: html+twig
 
-    <link rel="stylesheet" href="{{ asset('@symfony/ux-upload/dist/dropzone.min.css') }}">
-
-The npm package also exports ``@symfony/ux-upload/compact.css`` and
-``@symfony/ux-upload/dropzone.css``. Importing neither is supported.
+    <link rel="stylesheet" href="{{ asset('@symfony/ux-upload/dist/style.min.css') }}">
 
 .. _ux-upload-css-custom-properties:
 
@@ -134,11 +124,11 @@ modes can override the properties inside their own theme scope.
 Browser Support
 ~~~~~~~~~~~~~~~
 
-The optional stylesheets target Baseline Widely available, like the other
-Symfony UX packages. They use cascade layers, ``color-mix()`` and ``:has()``.
+The optional stylesheet targets Baseline Widely available, like the other
+Symfony UX packages. It uses cascade layers, ``color-mix()`` and ``:has()``.
 These features affect only
 the ready-to-use presentation. The field keeps a visible native file input and
-remains usable when the stylesheets are not loaded or when an application
+remains usable when the stylesheet is not loaded or when an application
 provides its own CSS for older browsers.
 
 Overriding Twig Markup

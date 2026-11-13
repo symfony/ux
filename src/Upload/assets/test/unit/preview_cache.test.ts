@@ -1,9 +1,9 @@
 /**
- * Tests for PreviewCache (preview-cache.ts)
+ * Tests for PreviewCache (preview_cache.ts)
  */
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { PreviewCache } from '../../src/preview-cache';
+import { PreviewCache } from '../../src/preview_cache';
 
 // Minimal CacheStorage mock
 function createMockCaches() {
