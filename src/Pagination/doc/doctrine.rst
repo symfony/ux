@@ -91,11 +91,18 @@ types of ``symfony/doctrine-bridge``. A UID is compared in its database
 storage format, which follows creation time for ULIDs and UUIDv7 (a UUIDv4
 order is deterministic but arbitrary).
 
-A nullable field keeps the database platform's ``NULL`` order: ``NULL``
-sorts after every value on PostgreSQL, Oracle and DB2, and before every
-value on MySQL, MariaDB, SQLite and SQL Server. The cursor boundary
-predicate follows the same order, so the ``ORDER BY`` stays a plain column
-order that an index on the field can serve.
+A nullable field keeps the database platform's default ``NULL`` order:
+
+==================================  ==============  ==============
+Database                            ``ASC``         ``DESC``
+==================================  ==============  ==============
+PostgreSQL, Oracle, DB2             ``NULL`` last   ``NULL`` first
+MySQL, MariaDB, SQLite, SQL Server  ``NULL`` first  ``NULL`` last
+==================================  ==============  ==============
+
+The cursor boundary predicate follows the same order in both navigation
+directions, so the ``ORDER BY`` stays a plain column order that an index
+on the field can serve.
 
 The adapter appends every missing entity identifier field to make the
 effective order deterministic. The direction passed to ``orderBy()``
