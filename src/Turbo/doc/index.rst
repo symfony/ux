@@ -718,8 +718,24 @@ Stream Messages and Actions
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 To render ``<turbo-stream>`` elements in templates, Symfony UX Turbo provides
-a set of ``<twig:Turbo:Stream:*>`` Twig components. The ``target`` attribute
-accepts a CSS selector (e.g. ``#task_42``, ``.tasks``).
+a set of ``<twig:Turbo:Stream:*>`` Twig components. ``Remove``, ``Replace``, ``Update``, ``Before``, ``After``, ``Append`` and ``Prepend`` designate the element(s) they act on in one of two ways:
+
+* ``target`` accepts a CSS selector (e.g. ``#task_42``, ``.tasks``) and is rendered as the ``targets`` attribute;
+* ``id`` accepts the id of a single element and is rendered as the ``target`` attribute.
+
+A CSS selector cannot start with a digit, so ``target="#{{ task.id }}"`` breaks when the id is a number, a UUID or a ULID.
+Use ``id`` for such ids:
+
+.. code-block:: html+twig
+
+    <twig:Turbo:Stream:Remove id="{{ task.id }}" />
+
+    {# output: #}
+    <turbo-stream action="remove" target="3f0c252d-88d4-449e-b5a9-dd793e393354"></turbo-stream>
+
+.. versionadded:: 3.8
+
+    The ``id`` prop of the ``<twig:Turbo:Stream:*>`` components was introduced in Symfony UX 3.8.
 
 Remove
 """"""

@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 3.8
+
+- Add an `id` prop to the `<twig:Turbo:Stream:*>` components, rendered as the `target` attribute, to designate an element by its id, even one starting with a digit
+- [BC BREAK] An `id` passed to `<twig:Turbo:Stream:Append>`, `Prepend`, `Before`, `After`, `Update`, `Replace` and `Remove` is now the target of the stream, no longer an HTML attribute of the `<turbo-stream>` element
+
 ## 3.7.0
 
 - Render the HTML attributes of `<twig:Turbo:Stream:From>` on the `<turbo-mercure-stream-source>` element, and add an `attributes` argument to `turbo_stream_from()`
