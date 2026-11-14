@@ -130,6 +130,7 @@ declare abstract class export_default$1<MapOptions, BridgeMapOptions, BridgeMap,
   protected circles: Map<string, BridgeCircle>;
   protected rectangles: Map<string, BridgeRectangle>;
   protected infoWindows: Array<BridgeInfoWindow>;
+  private infoWindowsByElement;
   private isConnected;
   private createMarker;
   private createPolygon;
