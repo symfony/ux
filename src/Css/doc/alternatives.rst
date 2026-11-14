@@ -38,21 +38,21 @@ and the ``tailwind_classes`` filter. The second uses their twins written with
 ``css()`` and ``cva()``.
 
 In the ``prod`` environment, served by FrankenPHP with OPcache and class
-preloading, the UX CSS page serves about 6% more requests per second in
-classic mode, and about the same in worker mode (the 1.5% difference is
-smaller than the spread of the rounds). Median of 5 rounds:
+preloading, the UX CSS page serves 4.5% more requests per second than the
+Tailwind CSS page in classic mode, and 5.0% more in worker mode. Median of 5
+rounds:
 
 ===============  ============  =========
 FrankenPHP mode  Tailwind CSS  UX CSS
 ===============  ============  =========
-Classic          469           497
-Worker           537           545
+Classic          487           509
+Worker           545           572
 ===============  ============  =========
 
-These numbers were measured in November 2026 on an Apple M1 Pro. They vary by
-up to 3.7% from one round to the next, so classic mode is a tie, and worker
-mode is slightly in favor of ``css()``. Only the rendering of the HTML is
-measured, not building the CSS.
+These numbers were measured in November 2026 on an Apple M1 Pro. The 5 rounds
+of a page vary by up to 3.3%. The lead of ``css()`` is small, but it is above
+this variation. Only the HTML rendering is measured, not the building of the
+CSS.
 
 What Tailwind does better:
 

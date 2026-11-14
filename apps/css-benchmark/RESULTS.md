@@ -1,6 +1,6 @@
 # Results
 
-Written by `bin/bench 5 2000 4` on 2026-11-11 09:45 UTC, from symfony/ux 940ffe1370b.
+Written by `bin/bench 5 2000 4` on 2026-11-14 21:48 UTC, from symfony/ux 321ef6c0017.
 
 - FrankenPHP v1.13.5 with PHP 8.5.12, static binary, opcache and preloading on (see `php.ini`)
 - Symfony 8.2.0-BETA1, Twig 3.30.0, tales-from-a-dev/twig-tailwind-extra 1.5.0, `prod` environment
@@ -20,10 +20,10 @@ The range covers the 5 rounds; the latencies are the medians of the rounds.
 
 | Mode    | Page         | req/s (median) | req/s (range) | p50  | p95  | p99   | Errors |
 | ------- | ------------ | -------------- | ------------- | ---- | ---- | ----- | ------ |
-| classic | Tailwind CSS | 469.3          | 467.8-477.6   | 8 ms | 9 ms | 10 ms | 0      |
-| classic | UX CSS       | 496.6          | 488.3-497.5   | 8 ms | 9 ms | 9 ms  | 0      |
-| worker  | Tailwind CSS | 536.6          | 531.8-537.1   | 7 ms | 8 ms | 9 ms  | 0      |
-| worker  | UX CSS       | 544.9          | 542.4-553.6   | 7 ms | 8 ms | 8 ms  | 0      |
+| classic | Tailwind CSS | 487.2          | 478.8-494.7   | 8 ms | 9 ms | 10 ms | 0      |
+| classic | UX CSS       | 509.2          | 500.5-513.3   | 8 ms | 9 ms | 9 ms  | 0      |
+| worker  | Tailwind CSS | 544.5          | 537.8-547.7   | 7 ms | 8 ms | 8 ms  | 0      |
+| worker  | UX CSS       | 571.9          | 568.4-574.9   | 7 ms | 8 ms | 8 ms  | 0      |
 
-- classic mode: UX CSS serves +5.8% requests per second compared to Tailwind CSS; the rounds of a page spread over up to 2.1%.
-- worker mode: UX CSS serves +1.5% requests per second compared to Tailwind CSS; the rounds of a page spread over up to 2.1%.
+- classic mode: UX CSS serves +4.5% requests per second compared to Tailwind CSS; the rounds of a page spread over up to 3.3%.
+- worker mode: UX CSS serves +5.0% requests per second compared to Tailwind CSS; the rounds of a page spread over up to 1.8%.
