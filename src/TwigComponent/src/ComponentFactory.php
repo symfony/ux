@@ -30,7 +30,8 @@ use Twig\Runtime\EscaperRuntime;
  */
 final class ComponentFactory implements ResetInterface
 {
-    private array $mountMethods = [];
+    /** @var array<class-string, array<string, \ReflectionParameter|null>> The parameters of each mount() method, null when the parameter has no default value */
+    private array $mountParameters = [];
     private array $writableProperties = [];
     private ?EscaperRuntime $escaper = null;
 
@@ -225,22 +226,34 @@ final class ComponentFactory implements ResetInterface
             return;
         }
 
-        $mount = $this->mountMethods[$component::class] ??= new \ReflectionClass($component)->getMethod('mount');
-
         $parameters = [];
-        foreach ($mount->getParameters() as $refParameter) {
-            if (\array_key_exists($name = $refParameter->getName(), $data)) {
+        foreach ($this->mountParameters[$component::class] ??= self::readMountParameters($component) as $name => $refParameter) {
+            if (\array_key_exists($name, $data)) {
                 $parameters[] = $data[$name];
                 // remove the data element so it isn't used to set the property directly.
                 unset($data[$name]);
-            } elseif ($refParameter->isDefaultValueAvailable()) {
+            } elseif (null !== $refParameter) {
+                // kept lazy: a default value built with "new" must not be shared between mounts
                 $parameters[] = $refParameter->getDefaultValue();
             } else {
                 throw new \LogicException(\sprintf('"%s" has a required $%s parameter. Make sure to pass it or give it a default value.', $component::class.'::mount()', $name));
             }
         }
 
-        $mount->invoke($component, ...$parameters);
+        $component->mount(...$parameters);
+    }
+
+    /**
+     * @return array<string, \ReflectionParameter|null>
+     */
+    private static function readMountParameters(object $component): array
+    {
+        $parameters = [];
+        foreach (new \ReflectionClass($component)->getMethod('mount')->getParameters() as $refParameter) {
+            $parameters[$refParameter->getName()] = $refParameter->isDefaultValueAvailable() ? $refParameter : null;
+        }
+
+        return $parameters;
     }
 
     private function preMount(object $component, array &$data, ComponentMetadata $componentMetadata, bool $dispatch): void
@@ -316,7 +329,7 @@ final class ComponentFactory implements ResetInterface
 
     public function reset(): void
     {
-        $this->mountMethods = [];
+        $this->mountParameters = [];
         $this->writableProperties = [];
         $this->metadata = [];
     }
