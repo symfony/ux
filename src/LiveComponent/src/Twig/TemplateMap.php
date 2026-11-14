@@ -26,6 +26,11 @@ final class TemplateMap
      */
     private readonly array $map;
 
+    /**
+     * @var array<string, string> Map of <template name> => <obscured name>, filled on demand
+     */
+    private array $obscuredNames = [];
+
     public function __construct(string $cacheFile)
     {
         $this->map = PhpArrayAdapter::create($cacheFile, new NullAdapter())->getItem('map')->get();
@@ -38,10 +43,14 @@ final class TemplateMap
 
     public function obscuredName(string $templateName): string
     {
+        if (isset($this->obscuredNames[$templateName])) {
+            return $this->obscuredNames[$templateName];
+        }
+
         if (false === $obscuredName = array_search($templateName, $this->map, true)) {
             throw new \RuntimeException(\sprintf('Cannot find a match for template "%s". Cache may be corrupt.', $templateName));
         }
 
-        return $obscuredName;
+        return $this->obscuredNames[$templateName] = $obscuredName;
     }
 }
