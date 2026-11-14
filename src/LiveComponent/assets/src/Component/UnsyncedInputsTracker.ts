@@ -90,7 +90,7 @@ export default class {
  */
 export class UnsyncedInputContainer {
     private unsyncedModelFields: Map<string, HTMLElement>;
-    private unsyncedNonModelFields: Array<HTMLElement> = [];
+    private unsyncedNonModelFields: Set<HTMLElement> = new Set();
     private unsyncedModelNames: Array<string> = [];
 
     constructor() {
@@ -107,7 +107,7 @@ export class UnsyncedInputContainer {
             return;
         }
 
-        this.unsyncedNonModelFields.push(element);
+        this.unsyncedNonModelFields.add(element);
     }
 
     /**
