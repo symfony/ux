@@ -1451,23 +1451,14 @@ var UnsyncedInputContainer = class {
 	}
 };
 function getDeepData(data, propertyPath) {
-	const { currentLevelData, finalKey } = parseDeepData(data, propertyPath);
-	if (currentLevelData === void 0) return;
-	return currentLevelData[finalKey];
-}
-const parseDeepData = (data, propertyPath) => {
-	const finalData = JSON.parse(JSON.stringify(data));
-	let currentLevelData = finalData;
 	const parts = propertyPath.split(".");
+	let currentLevelData = data;
 	for (let i = 0; i < parts.length - 1; i++) currentLevelData = currentLevelData[parts[i]];
-	const finalKey = parts[parts.length - 1];
-	return {
-		currentLevelData,
-		finalData,
-		finalKey,
-		parts
-	};
-};
+	if (currentLevelData === void 0) return;
+	const value = currentLevelData[parts[parts.length - 1]];
+	if (typeof value !== "object" || value === null) return value;
+	return JSON.parse(JSON.stringify(value));
+}
 var ValueStore_default = class {
 	props = {};
 	dirtyProps = {};
