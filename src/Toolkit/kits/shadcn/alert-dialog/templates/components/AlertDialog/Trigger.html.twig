@@ -1,4 +1,7 @@
+{%- set _alertDialog_id = inject('alertDialog.id') -%}
 {%- set alert_dialog_trigger_attrs = {
+    command: 'show-modal',
+    commandfor: _alertDialog_id,
     'data-action': 'click->alert-dialog#open'|html_attr_type('sst'),
     'data-alert-dialog-target': 'trigger',
     'aria-haspopup': 'dialog',
