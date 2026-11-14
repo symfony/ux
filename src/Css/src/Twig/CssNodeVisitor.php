@@ -106,7 +106,6 @@ final class CssNodeVisitor implements NodeVisitorInterface
             if ([] !== $this->ancestors && !self::isChildOf($node, end($this->ancestors))) {
                 $this->ancestors = [];
             }
-            $this->assignments[$node] = self::countAssignments($node);
         }
         if ($node instanceof SetNode) {
             $this->recordConstant($node);
@@ -410,7 +409,12 @@ final class CssNodeVisitor implements NodeVisitorInterface
             }
         }
         $scope = self::scopeOf($this->ancestors, false);
-        if (null === $module || null === $scope || 1 !== (($this->assignments[$module] ?? [])[$name] ?? 0)) {
+        if (null === $module || null === $scope) {
+            return;
+        }
+        // walking the module for its assignments is only worth it once a template has a set
+        $assignments = $this->assignments[$module] ??= self::countAssignments($module);
+        if (1 !== ($assignments[$name] ?? 0)) {
             return;
         }
 
