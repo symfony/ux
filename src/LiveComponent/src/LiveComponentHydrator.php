@@ -53,6 +53,16 @@ final class LiveComponentHydrator
     public const CHECKSUM_SLOT_PROPS_FROM_PARENT = 'propsFromParent';
 
     /**
+     * @var array<class-string, list<string>|null>
+     */
+    private array $objectProperties = [];
+
+    /**
+     * @var array<class-string, array<string, LivePropMetadata>>
+     */
+    private array $objectPropMetadata = [];
+
+    /**
      * @param iterable<HydrationExtensionInterface> $hydrationExtensions
      */
     public function __construct(
@@ -615,13 +625,39 @@ final class LiveComponentHydrator
         }
 
         $dehydratedObjectValues = [];
-        foreach (new PropertyInfoExtractor([new ReflectionExtractor()])->getProperties($classType) as $property) {
+        foreach ($this->objectPropertiesFor($classType) as $property) {
             $propertyValue = $this->propertyAccessor->getValue($value, $property);
-            $propMetadata = $this->liveComponentMetadataFactory->createLivePropMetadata($classType, $property, new \ReflectionProperty($classType, $property), new LiveProp());
+            $propMetadata = $this->objectPropMetadataFor($classType, $property);
             $dehydratedObjectValues[$property] = $this->dehydrateValue($propertyValue, $propMetadata, $parentObject);
         }
 
         return $dehydratedObjectValues;
+    }
+
+    /**
+     * The property list of a dehydrated object depends on its class only.
+     */
+    private function objectPropertiesFor(string $classType): ?array
+    {
+        if (!isset($this->objectProperties[$classType])) {
+            $extractor = new PropertyInfoExtractor([new ReflectionExtractor()]);
+            $this->objectProperties[$classType] = $extractor->getProperties($classType);
+        }
+
+        return $this->objectProperties[$classType];
+    }
+
+    /**
+     * The metadata of a dehydrated object property depends on its class and name only.
+     */
+    private function objectPropMetadataFor(string $classType, string $property): LivePropMetadata
+    {
+        if (!isset($this->objectPropMetadata[$classType][$property])) {
+            $reflectionProperty = new \ReflectionProperty($classType, $property);
+            $this->objectPropMetadata[$classType][$property] = $this->liveComponentMetadataFactory->createLivePropMetadata($classType, $property, $reflectionProperty, new LiveProp());
+        }
+
+        return $this->objectPropMetadata[$classType][$property];
     }
 
     private function hydrateObjectValue(mixed $value, string $className, bool $allowsNull, ?string $dateFormat, string $componentClassForError, string $propertyPathForError, object $component): ?object
@@ -686,8 +722,7 @@ final class LiveComponentHydrator
                 if (!\is_string($propertyName) || !$reflectionClass->hasProperty($propertyName)) {
                     throw new HydrationException(\sprintf('The property "%s" does not exist on the object "%s".', $propertyName, $className));
                 }
-                $property = $reflectionClass->getProperty($propertyName);
-                $propMetadata = $this->liveComponentMetadataFactory->createLivePropMetadata($className, $propertyName, $property, new LiveProp());
+                $propMetadata = $this->objectPropMetadataFor($className, $propertyName);
                 $this->propertyAccessor->setValue($object, $propertyName, $this->hydrateValue($propertyValue, $propMetadata, $component));
             }
 
