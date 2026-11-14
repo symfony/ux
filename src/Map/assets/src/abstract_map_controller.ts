@@ -240,6 +240,14 @@ export default abstract class<
 
     private infoWindowsByElement = new WeakMap<object, Array<BridgeInfoWindow>>();
     private isConnected = false;
+    // Stimulus calls the `*ValueChanged()` hooks with the parsed values before `connect()`, which reuses them
+    private initialValues: {
+        markers?: typeof this.markersValue;
+        polygons?: typeof this.polygonsValue;
+        polylines?: typeof this.polylinesValue;
+        circles?: typeof this.circlesValue;
+        rectangles?: typeof this.rectanglesValue;
+    } = {};
     private createMarker: ({
         definition,
     }: {
@@ -291,23 +299,24 @@ export default abstract class<
         );
 
         this.map = this.doCreateMap({ definition: mapDefinition });
-        const markerDefinitions = this.markersValue;
+        const markerDefinitions = this.initialValues.markers ?? this.markersValue;
         this.resolveMarkerIcons(markerDefinitions);
         markerDefinitions.forEach((definition) => {
             this.createMarker({ definition });
         });
-        this.polygonsValue.forEach((definition) => {
+        (this.initialValues.polygons ?? this.polygonsValue).forEach((definition) => {
             this.createPolygon({ definition });
         });
-        this.polylinesValue.forEach((definition) => {
+        (this.initialValues.polylines ?? this.polylinesValue).forEach((definition) => {
             this.createPolyline({ definition });
         });
-        this.circlesValue.forEach((definition) => {
+        (this.initialValues.circles ?? this.circlesValue).forEach((definition) => {
             this.createCircle({ definition });
         });
-        this.rectanglesValue.forEach((definition) => {
+        (this.initialValues.rectangles ?? this.rectanglesValue).forEach((definition) => {
             this.createRectangle({ definition });
         });
+        this.initialValues = {};
 
         if (this.fitBoundsToMarkersValue) {
             this.doFitBoundsToMarkers();
@@ -362,12 +371,14 @@ export default abstract class<
 
     public abstract maxZoomValueChanged(): void;
 
-    public markersValueChanged(): void {
+    public markersValueChanged(value?: typeof this.markersValue): void {
         if (!this.isConnected) {
+            this.initialValues.markers = value;
+
             return;
         }
 
-        const markerDefinitions = this.markersValue;
+        const markerDefinitions = value ?? this.markersValue;
         this.resolveMarkerIcons(markerDefinitions);
         this.onDrawChanged(this.markers, markerDefinitions, this.createMarker, this.doRemoveMarker);
 
@@ -376,36 +387,49 @@ export default abstract class<
         }
     }
 
-    public polygonsValueChanged(): void {
+    public polygonsValueChanged(value?: typeof this.polygonsValue): void {
         if (!this.isConnected) {
+            this.initialValues.polygons = value;
+
             return;
         }
 
-        this.onDrawChanged(this.polygons, this.polygonsValue, this.createPolygon, this.doRemovePolygon);
+        this.onDrawChanged(this.polygons, value ?? this.polygonsValue, this.createPolygon, this.doRemovePolygon);
     }
 
-    public polylinesValueChanged(): void {
+    public polylinesValueChanged(value?: typeof this.polylinesValue): void {
         if (!this.isConnected) {
+            this.initialValues.polylines = value;
+
             return;
         }
 
-        this.onDrawChanged(this.polylines, this.polylinesValue, this.createPolyline, this.doRemovePolyline);
+        this.onDrawChanged(this.polylines, value ?? this.polylinesValue, this.createPolyline, this.doRemovePolyline);
     }
 
-    public circlesValueChanged(): void {
+    public circlesValueChanged(value?: typeof this.circlesValue): void {
         if (!this.isConnected) {
+            this.initialValues.circles = value;
+
             return;
         }
 
-        this.onDrawChanged(this.circles, this.circlesValue, this.createCircle, this.doRemoveCircle);
+        this.onDrawChanged(this.circles, value ?? this.circlesValue, this.createCircle, this.doRemoveCircle);
     }
 
-    public rectanglesValueChanged(): void {
+    public rectanglesValueChanged(value?: typeof this.rectanglesValue): void {
         if (!this.isConnected) {
+            this.initialValues.rectangles = value;
+
             return;
         }
 
-        this.onDrawChanged(this.rectangles, this.rectanglesValue, this.createRectangle, this.doRemoveRectangle);
+        this.onDrawChanged(
+            this.rectangles,
+            value ?? this.rectanglesValue,
+            this.createRectangle,
+            this.doRemoveRectangle
+        );
     }
 
     //endregion
