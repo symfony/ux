@@ -39,6 +39,18 @@ final class DeterministicTwigIdCalculatorTest extends KernelTestCase
         $this->assertStringContainsString('Deterministic Id Line3: "live-136007865-0"', $rendered);
     }
 
+    public function testUsesTheTemplateBeingRenderedNotTheIncludingOne(): void
+    {
+        /** @var Environment $twig */
+        $twig = self::getContainer()->get('twig');
+
+        $rendered = $twig->render('includes_deterministic_id.html.twig');
+
+        $this->assertStringContainsString('Deterministic Id Line1-1: "live-3860148629-0"', $rendered);
+        $this->assertStringContainsString('Deterministic Id Line1-2: "live-3860148629-1"', $rendered);
+        $this->assertStringContainsString('Deterministic Id Line3: "live-136007865-0"', $rendered);
+    }
+
     public function testIsResetBetweenRequests(): void
     {
         /** @var Environment $twig */

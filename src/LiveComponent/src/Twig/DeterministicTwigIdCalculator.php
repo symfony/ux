@@ -13,7 +13,6 @@ namespace Symfony\UX\LiveComponent\Twig;
 
 use Symfony\UX\TwigComponent\ComponentStack;
 use Symfony\UX\TwigComponent\MountedComponent;
-use Twig\Error\Error;
 use Twig\Template;
 
 /**
@@ -24,6 +23,11 @@ use Twig\Template;
 class DeterministicTwigIdCalculator
 {
     private array $lineAndFileCounts = [];
+
+    /**
+     * @var array<class-string<Template>, string>
+     */
+    private array $templateFiles = [];
 
     private ?MountedComponent $rootComponent = null;
 
@@ -145,41 +149,36 @@ class DeterministicTwigIdCalculator
             //
         }
 
-        $r = new \ReflectionObject($template);
-        $file = $r->getFileName();
-
         // START CHANGE
-        // $exceptions = [$e = $this];
-        $exceptions = [new Error('')];
-        // not other exceptions to check
-        /*
-        while ($e = $e->getPrevious()) {
-            $exceptions[] = $e;
+        // the compiled file of a class never changes within a process
+        $class = $template::class;
+        if (!isset($this->templateFiles[$class])) {
+            $r = new \ReflectionObject($template);
+            $this->templateFiles[$class] = $r->getFileName();
         }
-        */
+        $file = $this->templateFiles[$class];
         // END CHANGE
 
-        while ($e = array_pop($exceptions)) {
-            $traces = $e->getTrace();
-            array_unshift($traces, ['file' => $e->getFile(), 'line' => $e->getLine()]);
+        // START CHANGE
+        // the backtrace captured above holds the same frames as the exception Twig builds here,
+        // so it is scanned again instead of capturing the stack a second time
+        foreach ($backtrace as $trace) {
+            if (!isset($trace['file']) || !isset($trace['line']) || $file != $trace['file']) {
+                continue;
+            }
+            // END CHANGE
 
-            while ($trace = array_shift($traces)) {
-                if (!isset($trace['file']) || !isset($trace['line']) || $file != $trace['file']) {
-                    continue;
-                }
+            foreach ($template->getDebugInfo() as $codeLine => $templateLine) {
+                if ($codeLine <= $trace['line']) {
+                    // update template line
+                    // START CHANGE
+                    // set local variable
+                    $lineno = $templateLine;
 
-                foreach ($template->getDebugInfo() as $codeLine => $templateLine) {
-                    if ($codeLine <= $trace['line']) {
-                        // update template line
-                        // START CHANGE
-                        // set local variable
-                        $lineno = $templateLine;
-
-                        // return the values
-                        return ['name' => $name, 'line' => $lineno];
-                        // return;
-                        // END CHANGE
-                    }
+                    // return the values
+                    return ['name' => $name, 'line' => $lineno];
+                    // return;
+                    // END CHANGE
                 }
             }
         }
