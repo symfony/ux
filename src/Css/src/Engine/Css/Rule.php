@@ -35,12 +35,19 @@ final class Rule extends Container
      */
     public function selectors(): array
     {
+        if (!str_contains($this->selector, ',')) {
+            $selector = trim($this->selector);
+
+            return '' === $selector ? [] : [$selector];
+        }
+
         $selectors = [];
         $current = '';
         $depth = 0;
         $quote = null;
         $escaped = false;
-        foreach (preg_split('//u', $this->selector, -1, \PREG_SPLIT_NO_EMPTY) as $char) {
+        // byte by byte: a UTF-8 sequence never holds a byte this loop looks at
+        foreach (str_split($this->selector) as $char) {
             if ($escaped) {
                 $escaped = false;
             } elseif ('\\' === $char) {
