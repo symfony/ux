@@ -3,7 +3,13 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import type { BackendInterface } from '../../src/Backend/Backend';
 import BackendRequest from '../../src/Backend/BackendRequest';
 import Component from '../../src/Component';
-import { findComponents, getComponent, registerComponent, resetRegistry } from '../../src/ComponentRegistry';
+import {
+    findChildren,
+    findComponents,
+    getComponent,
+    registerComponent,
+    resetRegistry,
+} from '../../src/ComponentRegistry';
 import { noopElementDriver } from '../tools';
 
 const createComponent = (element: HTMLElement, name = 'foo-component'): Component => {
@@ -111,5 +117,24 @@ describe('ComponentRegistry', () => {
 
         const components = findComponents(component2, false, null);
         expect(components).toEqual([component1, component2]);
+    });
+
+    it('findChildren returns every nested component, not only the direct ones', () => {
+        document.body.innerHTML =
+            '<div id="parent"><div id="child"><div id="grandchild"></div></div></div><div id="sibling"></div>';
+        const parent = createComponent(document.getElementById('parent') as HTMLElement);
+        const child = createComponent(document.getElementById('child') as HTMLElement);
+        const grandchild = createComponent(document.getElementById('grandchild') as HTMLElement);
+        const sibling = createComponent(document.getElementById('sibling') as HTMLElement);
+
+        registerComponent(parent);
+        registerComponent(child);
+        registerComponent(grandchild);
+        registerComponent(sibling);
+
+        expect(findChildren(parent)).toEqual([child, grandchild]);
+        expect(findChildren(child)).toEqual([grandchild]);
+        expect(findChildren(grandchild)).toEqual([]);
+        expect(findChildren(sibling)).toEqual([]);
     });
 });

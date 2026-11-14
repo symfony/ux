@@ -187,12 +187,6 @@ const findChildren = (currentComponent) => {
 	componentMapByComponent.forEach((componentName, component) => {
 		if (currentComponent === component) return;
 		if (!currentComponent.element.contains(component.element)) return;
-		let foundChildComponent = false;
-		componentMapByComponent.forEach((childComponentName, childComponent) => {
-			if (foundChildComponent) return;
-			if (childComponent === component) return;
-			if (childComponent.element.contains(component.element)) foundChildComponent = true;
-		});
 		children.push(component);
 	});
 	return children;
