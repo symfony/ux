@@ -5,6 +5,60 @@ import { strtr } from '../utils';
  * @see https://github.com/symfony/symfony/blob/015d5015e353ee5448bf7c350de0db4a03f8e13a/src/Symfony/Contracts/Translation/TranslatorTrait.php
  */
 
+type PluralPart =
+    | { kind: 'set'; numbers: Array<number>; message: string }
+    | {
+          kind: 'interval';
+          left: number;
+          right: number;
+          leftInclusive: boolean;
+          rightInclusive: boolean;
+          message: string;
+      }
+    | { kind: 'standard'; message: string };
+
+const intervalRegex =
+    /^(?<interval>({\s*(-?\d+(\.\d+)?[\s*,\s*\-?\d+(.\d+)?]*)\s*})|(?<left_delimiter>[[\]])\s*(?<left>-Inf|-?\d+(\.\d+)?)\s*,\s*(?<right>\+?Inf|-?\d+(\.\d+)?)\s*(?<right_delimiter>[[\]]))\s*(?<message>.*?)$/s;
+const standardRuleRegex = /^\w+:\s*(.*?)$/;
+const onlyPipesRegex = /^\|+$/;
+const escapedPipeRegex = /\|\|/g;
+const partsRegex = /(?:\|\||[^|])+/g;
+
+const pluralParts = new Map<string, Array<PluralPart>>();
+
+function parsePluralParts(id: string): Array<PluralPart> {
+    const parts = onlyPipesRegex.test(id) ? id.split('|') : id.match(partsRegex) || [];
+
+    return parts.map((rawPart): PluralPart => {
+        const part = rawPart.trim().replace(escapedPipeRegex, '|');
+        const matches = part.match(intervalRegex);
+
+        if (!matches) {
+            const ruleMatch = part.match(standardRuleRegex);
+
+            return { kind: 'standard', message: ruleMatch ? ruleMatch[1] : part };
+        }
+
+        /**
+         * @type {interval: string, left_delimiter: string, left: string, right_delimiter: string, right: string, message: string}
+         */
+        const matchGroups: { [p: string]: string } = matches.groups || {};
+
+        if (matches[2]) {
+            return { kind: 'set', numbers: matches[3].split(',').map(Number), message: matchGroups.message };
+        }
+
+        return {
+            kind: 'interval',
+            left: '-Inf' === matchGroups.left ? Number.NEGATIVE_INFINITY : Number(matchGroups.left),
+            right: ['Inf', '+Inf'].includes(matchGroups.right) ? Number.POSITIVE_INFINITY : Number(matchGroups.right),
+            leftInclusive: '[' === matchGroups.left_delimiter,
+            rightInclusive: ']' === matchGroups.right_delimiter,
+            message: matchGroups.message,
+        };
+    });
+}
+
 /**
  * Translates the given message.
  *
@@ -58,48 +112,27 @@ export function format(id: string, parameters: Record<string, string | number | 
 
     const number = Number(parameters['%count%']);
 
-    let parts: Array<string> = [];
-    if (/^\|+$/.test(id)) {
-        parts = id.split('|');
-    } else {
-        parts = id.match(/(?:\|\||[^|])+/g) || [];
+    let parts = pluralParts.get(id);
+    if (parts === undefined) {
+        parts = parsePluralParts(id);
+        pluralParts.set(id, parts);
     }
 
-    const intervalRegex =
-        /^(?<interval>({\s*(-?\d+(\.\d+)?[\s*,\s*\-?\d+(.\d+)?]*)\s*})|(?<left_delimiter>[[\]])\s*(?<left>-Inf|-?\d+(\.\d+)?)\s*,\s*(?<right>\+?Inf|-?\d+(\.\d+)?)\s*(?<right_delimiter>[[\]]))\s*(?<message>.*?)$/s;
-
     const standardRules: Array<string> = [];
-    for (let part of parts) {
-        part = part.trim().replace(/\|\|/g, '|');
-
-        const matches = part.match(intervalRegex);
-        if (matches) {
-            /**
-             * @type {interval: string, left_delimiter: string, left: string, right_delimiter: string, right: string, message: string}
-             */
-            const matchGroups: { [p: string]: string } = matches.groups || {};
-            if (matches[2]) {
-                for (const n of matches[3].split(',')) {
-                    if (number === Number(n)) {
-                        return strtr(matchGroups.message, parameters);
-                    }
-                }
-            } else {
-                const leftNumber = '-Inf' === matchGroups.left ? Number.NEGATIVE_INFINITY : Number(matchGroups.left);
-                const rightNumber = ['Inf', '+Inf'].includes(matchGroups.right)
-                    ? Number.POSITIVE_INFINITY
-                    : Number(matchGroups.right);
-
-                if (
-                    ('[' === matchGroups.left_delimiter ? number >= leftNumber : number > leftNumber) &&
-                    (']' === matchGroups.right_delimiter ? number <= rightNumber : number < rightNumber)
-                ) {
-                    return strtr(matchGroups.message, parameters);
-                }
+    for (const part of parts) {
+        if ('set' === part.kind) {
+            if (part.numbers.includes(number)) {
+                return strtr(part.message, parameters);
+            }
+        } else if ('interval' === part.kind) {
+            if (
+                (part.leftInclusive ? number >= part.left : number > part.left) &&
+                (part.rightInclusive ? number <= part.right : number < part.right)
+            ) {
+                return strtr(part.message, parameters);
             }
         } else {
-            const ruleMatch = part.match(/^\w+:\s*(.*?)$/);
-            standardRules.push(ruleMatch ? ruleMatch[1] : part);
+            standardRules.push(part.message);
         }
     }
 

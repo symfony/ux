@@ -211,4 +211,15 @@ describe('Formatter', () => {
     ])('#%# test choose', (expected, id, number, locale = 'en') => {
         expect(format(id, { '%count%': number }, locale)).toBe(expected);
     });
+
+    test('repeated calls on the same message follow the count', () => {
+        const message = '{0} There are no apples|{1} There is one apple|]1,Inf] There are %count% apples';
+
+        for (let i = 0; i < 3; ++i) {
+            expect(format(message, { '%count%': 0 }, 'en')).toBe('There are no apples');
+            expect(format(message, { '%count%': 1 }, 'en')).toBe('There is one apple');
+            expect(format(message, { '%count%': 10 }, 'en')).toBe('There are 10 apples');
+            expect(format(message, { '%count%': 10, '%foo%': 'bar' }, 'fr')).toBe('There are 10 apples');
+        }
+    });
 });
