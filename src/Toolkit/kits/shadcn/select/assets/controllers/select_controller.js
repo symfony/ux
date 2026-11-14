@@ -1,5 +1,9 @@
 import { Controller } from '@hotwired/stimulus';
 
+// The native path needs both: a popover without anchor positioning would be centred by the browser.
+const native = HTMLElement.prototype.hasOwnProperty('popover') && CSS.supports('position-area', 'block-end');
+let anchors = 0;
+
 export default class extends Controller {
     static targets = [
         'trigger',
@@ -19,6 +23,7 @@ export default class extends Controller {
 
     _typeahead = '';
     _typeaheadTimeout = null;
+    #anchor = `--select-${++anchors}`;
 
     connect() {
         this._onOutsideClick = this._onOutsideClick.bind(this);
@@ -32,6 +37,35 @@ export default class extends Controller {
     disconnect() {
         document.removeEventListener('click', this._onOutsideClick, true);
         window.clearTimeout(this._typeaheadTimeout);
+        this._setState(false);
+    }
+
+    contentTargetConnected(content) {
+        if (!native) {
+            return;
+        }
+        this.#connectNative(content);
+        content.addEventListener('beforetoggle', this.#onBeforeToggle);
+    }
+
+    contentTargetDisconnected(content) {
+        if (!native) {
+            return;
+        }
+        content.removeEventListener('beforetoggle', this.#onBeforeToggle);
+        content.removeAttribute('popover');
+        for (const property of [
+            'position-anchor',
+            'translate',
+            'position-try-fallbacks',
+            'top',
+            'left',
+            'right',
+            'transform-origin',
+        ]) {
+            content.style.removeProperty(property);
+        }
+        this.element.style.removeProperty('anchor-name');
     }
 
     toggle(event) {
@@ -44,8 +78,18 @@ export default class extends Controller {
     }
 
     open({ focus = true } = {}) {
-        this._setState(true);
-        this._position();
+        if (native && this.hasContentTarget) {
+            const content = this.contentTarget;
+            this.#connectNative(content);
+            if (!content.matches(':popover-open')) {
+                content.showPopover();
+                this._position();
+                this.#placeTransformOrigin(content);
+            }
+        } else {
+            this._setState(true);
+            this._position();
+        }
         document.addEventListener('click', this._onOutsideClick, true);
 
         requestAnimationFrame(() =>
@@ -60,7 +104,11 @@ export default class extends Controller {
     }
 
     close({ focus = true } = {}) {
-        this._setState(false);
+        if (native && this.hasContentTarget && this.contentTarget.matches(':popover-open')) {
+            this.contentTarget.hidePopover();
+        } else {
+            this._setState(false);
+        }
         document.removeEventListener('click', this._onOutsideClick, true);
 
         if (focus && this.hasTriggerTarget) {
@@ -94,6 +142,12 @@ export default class extends Controller {
 
     onTriggerKeydown(event) {
         switch (event.key) {
+            case 'Escape':
+                if (this.element.dataset.state === 'open') {
+                    event.preventDefault();
+                    this.close();
+                }
+                break;
             case 'ArrowDown':
             case 'ArrowUp':
             case 'Enter':
@@ -264,8 +318,50 @@ export default class extends Controller {
         const overflowTop = margin - topInWindow;
         const overflowBottom = topInWindow + content.offsetHeight - (window.innerHeight - margin);
         const shift = overflowTop > 0 ? overflowTop : overflowBottom > 0 ? -overflowBottom : 0;
+        if (content.matches('[popover]')) {
+            // In the top layer, the same offset applies from the top of the root, through anchor().
+            content.style.translate = 'none';
+            content.style.positionTryFallbacks = 'none';
+            content.style.top = `calc(anchor(top) + ${top + shift}px)`;
+            const rtl = 'rtl' === getComputedStyle(content).direction;
+            content.style.left = rtl ? 'auto' : 'anchor(left)';
+            content.style.right = rtl ? 'anchor(right)' : 'auto';
+
+            return;
+        }
         content.style.top = `${top + shift}px`;
     }
+
+    // Idempotent, as a Turbo morph strips what it sets.
+    #connectNative(content) {
+        if ('manual' !== content.popover) {
+            // Without a transition, so a closed popup goes straight to `display: none`.
+            content.style.transition = 'none';
+            // `manual`: the browser's light dismiss would also close it on a click elsewhere in the root.
+            content.popover = 'manual';
+            content.getBoundingClientRect();
+            content.style.removeProperty('transition');
+        }
+        content.style.positionAnchor = this.#anchor;
+        this.element.style.setProperty('anchor-name', this.#anchor);
+    }
+
+    // The browser can flip the popup to the other side of its anchor, so it grows from the edge next to it.
+    #placeTransformOrigin(content) {
+        const box = content.getBoundingClientRect();
+        const anchor = this.element.getBoundingClientRect();
+        const x = Math.min(Math.max((anchor.left + anchor.width / 2 - box.left) / box.width, 0), 1);
+        const y = Math.min(Math.max((anchor.top + anchor.height / 2 - box.top) / box.height, 0), 1);
+        content.style.transformOrigin = `${x * 100}% ${y * 100}%`;
+    }
+
+    // Updates the state before the browser shows or hides the popup, so the exit transition can play.
+    #onBeforeToggle = (event) => {
+        if ('closed' === event.newState) {
+            this.#placeTransformOrigin(event.target);
+        }
+        this._setState('open' === event.newState);
+    };
 
     _scrollSelectedIntoView() {
         if (this.hasViewportTarget) {

@@ -1,4 +1,27 @@
-import { describeRecipe, expect, test, testState } from '../../../../assets/test/browser/fixtures';
+import type { Locator, Page } from '@playwright/test';
+import { describeRecipe, expect, isUnderPointer, test, testState } from '../../../../assets/test/browser/fixtures';
+
+// `clip` rather than `hidden`, which the focus moving into the list would scroll.
+async function clipSelect(select: Locator): Promise<void> {
+    await select.evaluate((element) => {
+        const box = element.parentElement!;
+        box.style.overflow = 'clip';
+        box.style.minHeight = '0';
+        box.style.height = `${element.getBoundingClientRect().bottom - box.getBoundingClientRect().top + 4}px`;
+    });
+}
+
+async function pinToBottom(select: Locator): Promise<void> {
+    await select.evaluate((element) => {
+        Object.assign(element.style, { position: 'fixed', bottom: '16px', left: '16px', width: '200px' });
+    });
+}
+
+async function settle(page: Page): Promise<void> {
+    await page
+        .locator('[data-slot="select-content"][data-state="open"]')
+        .evaluate((element) => Promise.all(element.getAnimations().map((animation) => animation.finished)));
+}
 
 describeRecipe('shadcn/select', () => {
     testState('opens on click and focuses the first item', {
@@ -314,5 +337,323 @@ describeRecipe('shadcn/select', () => {
             'aria-disabled',
             'true'
         );
+    });
+
+    test('closes the popper popup on a second click on the trigger', async ({ page, gotoExample }) => {
+        // The popper popup leaves the trigger uncovered, unlike the item-aligned one.
+        await gotoExample('shadcn/select/align-item-with-trigger');
+        const trigger = page.getByRole('combobox', { name: 'Popper' });
+        await trigger.click();
+        await expect(page.getByRole('listbox')).toBeVisible();
+
+        await trigger.click();
+
+        await expect(page.getByRole('listbox')).toBeHidden();
+        await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+    });
+
+    test('shows the item-aligned popup outside an ancestor that hides its overflow', async ({ page, gotoExample }) => {
+        await gotoExample('shadcn/select/default');
+        await clipSelect(page.locator('[data-slot="select"]'));
+
+        await page.getByRole('combobox').click();
+
+        await expect(page.getByRole('option', { name: 'Apple', exact: true })).toBeFocused();
+        expect(await isUnderPointer(page.getByRole('option', { name: 'Pineapple', exact: true }))).toBe(true);
+    });
+
+    test('shows the popper popup outside an ancestor that hides its overflow', async ({ page, gotoExample }) => {
+        await gotoExample('shadcn/select/align-item-with-trigger');
+        await clipSelect(page.locator('[data-slot="select"]').last());
+
+        await page.getByRole('combobox', { name: 'Popper' }).click();
+
+        await expect(page.getByRole('option', { name: 'Banana', exact: true })).toBeFocused();
+        expect(await isUnderPointer(page.getByRole('option', { name: 'Pineapple', exact: true }))).toBe(true);
+    });
+
+    test('lines the item-aligned popup up with the start of its trigger', async ({ page, gotoExample }) => {
+        await gotoExample('shadcn/select/align-item-with-trigger');
+        const trigger = page.getByRole('combobox', { name: 'Item aligned' });
+
+        await trigger.click();
+
+        await expect(page.getByRole('option', { name: 'Banana', exact: true })).toBeFocused();
+        await settle(page);
+        const triggerBox = (await trigger.boundingBox())!;
+        const listboxBox = (await page.getByRole('listbox').boundingBox())!;
+        expect(Math.abs(listboxBox.x - triggerBox.x)).toBeLessThanOrEqual(1);
+    });
+
+    test('lines the item-aligned popup up with the start of its trigger in right-to-left', async ({
+        page,
+        gotoExample,
+    }) => {
+        await gotoExample('shadcn/select/rtl');
+        const trigger = page.getByRole('combobox').first();
+
+        await trigger.click();
+
+        await expect(page.getByRole('option', { name: 'تفاح', exact: true })).toBeFocused();
+        await settle(page);
+        const triggerBox = (await trigger.boundingBox())!;
+        const listboxBox = (await page.getByRole('listbox').boundingBox())!;
+        expect(Math.abs(listboxBox.x + listboxBox.width - (triggerBox.x + triggerBox.width))).toBeLessThanOrEqual(1);
+    });
+
+    test('flips the popper popup above its trigger when there is no room below', async ({ page, gotoExample }) => {
+        await gotoExample('shadcn/select/align-item-with-trigger');
+        await pinToBottom(page.locator('[data-slot="select"]').last());
+        const trigger = page.getByRole('combobox', { name: 'Popper' });
+
+        await trigger.click();
+
+        await expect(page.getByRole('option', { name: 'Banana', exact: true })).toBeFocused();
+        await settle(page);
+        const triggerBox = (await trigger.boundingBox())!;
+        const listboxBox = (await page.getByRole('listbox').boundingBox())!;
+        expect(listboxBox.y + listboxBox.height).toBeLessThanOrEqual(triggerBox.y);
+        expect(listboxBox.y).toBeGreaterThanOrEqual(0);
+    });
+
+    test('hides its closed popup as soon as it connects', async ({ page, gotoExample }) => {
+        // Stretches the transitions, so a closed popup would stay on screen while turning into a popover.
+        await page.addInitScript(() => {
+            document.addEventListener('DOMContentLoaded', () => {
+                const style = document.createElement('style');
+                style.textContent = '[data-slot][data-slot] { transition-duration: 10s; }';
+                document.head.append(style);
+            });
+        });
+        await gotoExample('shadcn/select/align-item-with-trigger');
+
+        const displayed = await page.evaluate(() =>
+            [...document.querySelectorAll('[data-slot="select-content"]')].map(
+                (content) => getComputedStyle(content).display
+            )
+        );
+
+        expect(displayed).toEqual(['none', 'none']);
+    });
+
+    test('opens the popper popup against its root, as without anchor positioning', async ({ page, gotoExample }) => {
+        await gotoExample('shadcn/select/align-item-with-trigger');
+        const root = page.locator('[data-slot="select"]').last();
+        await root.evaluate((element) => {
+            element.style.paddingInlineStart = '40px';
+        });
+
+        await page.getByRole('combobox', { name: 'Popper' }).click();
+
+        await expect(page.getByRole('option', { name: 'Banana', exact: true })).toBeFocused();
+        await settle(page);
+        const rootBox = (await root.boundingBox())!;
+        const listboxBox = (await page.getByRole('listbox').boundingBox())!;
+        expect(Math.abs(listboxBox.x - rootBox.x)).toBeLessThanOrEqual(1);
+    });
+
+    test('moves the focus past the select on Tab', async ({ page, gotoExample }) => {
+        await gotoExample('shadcn/select/default');
+        await page.locator('[data-slot="select"]').evaluate((select) => {
+            const next = document.createElement('button');
+            next.textContent = 'After the select';
+            select.after(next);
+        });
+        await page.getByRole('combobox').click();
+        await expect(page.getByRole('option', { name: 'Apple', exact: true })).toBeFocused();
+
+        await page.keyboard.press('Tab');
+
+        await expect(page.getByRole('button', { name: 'After the select' })).toBeFocused();
+        await expect(page.getByRole('combobox')).toHaveAttribute('aria-expanded', 'false');
+    });
+
+    test('stays open while another popover opens', async ({ page, gotoExample }) => {
+        await gotoExample('shadcn/select/default');
+        await page.getByRole('combobox').click();
+        await expect(page.getByRole('listbox')).toBeVisible();
+
+        await page.evaluate(() => {
+            const other = document.createElement('div');
+            other.popover = 'auto';
+            other.textContent = 'Another popover';
+            document.body.append(other);
+            other.showPopover();
+        });
+
+        await expect(page.getByRole('combobox')).toHaveAttribute('aria-expanded', 'true');
+    });
+
+    test('closes on Escape while its trigger has the focus', async ({ page, gotoExample }) => {
+        await gotoExample('shadcn/select/default');
+        const trigger = page.getByRole('combobox');
+        await page.locator('[data-slot="select"]').evaluate((select) => {
+            select.dataset.selectOpenValue = 'true';
+            // Moving the root reconnects the controller, which opens it without moving the focus.
+            select.parentElement!.append(select);
+        });
+        await expect(trigger).toHaveAttribute('aria-expanded', 'true');
+        await trigger.focus();
+
+        await page.keyboard.press('Escape');
+
+        await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+        await expect(trigger).toBeFocused();
+    });
+
+    test('stays open on a click inside its root, outside the trigger and the popup', async ({ page, gotoExample }) => {
+        await gotoExample('shadcn/select/align-item-with-trigger');
+        const root = page.locator('[data-slot="select"]').last();
+        await root.evaluate((element) => {
+            const label = document.createElement('span');
+            label.textContent = 'Inside the root';
+            element.prepend(label);
+        });
+        const trigger = page.getByRole('combobox', { name: 'Popper' });
+        await trigger.click();
+        await expect(page.getByRole('listbox')).toBeVisible();
+
+        await page.getByText('Inside the root').click();
+
+        await expect(trigger).toHaveAttribute('aria-expanded', 'true');
+    });
+
+    test('grows the popper popup from the edge next to its trigger once flipped above it', async ({
+        page,
+        gotoExample,
+    }) => {
+        await gotoExample('shadcn/select/align-item-with-trigger');
+        await pinToBottom(page.locator('[data-slot="select"]').last());
+
+        await page.getByRole('combobox', { name: 'Popper' }).click();
+
+        const listbox = page.locator('[data-slot="select-content"][data-state="open"]');
+        await expect(listbox).toBeVisible();
+        const origin = await listbox.evaluate((element) => ({
+            y: parseFloat(getComputedStyle(element).transformOrigin.split(' ')[1]),
+            height: element.offsetHeight,
+        }));
+        expect(Math.abs(origin.y - origin.height)).toBeLessThanOrEqual(1);
+    });
+
+    test('reflects a popup hidden by something else', async ({ page, gotoExample }) => {
+        await gotoExample('shadcn/select/default');
+        const trigger = page.getByRole('combobox');
+        await trigger.click();
+        const content = page.locator('[data-slot="select-content"]');
+        await expect(content).toBeVisible();
+
+        await content.evaluate((element) => element.hidePopover());
+
+        await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+        await expect(page.locator('[data-slot="select"]')).toHaveAttribute('data-state', 'closed');
+    });
+
+    test('opens again after a morph strips what the controller set', async ({ page, gotoExample }) => {
+        await gotoExample('shadcn/select/default');
+        const content = page.locator('[data-slot="select-content"]');
+        await page.locator('[data-slot="select"]').evaluate((select) => {
+            const content = select.querySelector<HTMLElement>('[data-slot="select-content"]')!;
+            content.removeAttribute('popover');
+            content.removeAttribute('style');
+            select.removeAttribute('style');
+        });
+
+        await page.getByRole('combobox').click();
+
+        await expect(content).toBeVisible();
+        await expect(content).toHaveAttribute('popover', 'manual');
+        await expect(page.getByRole('option', { name: 'Apple', exact: true })).toBeFocused();
+    });
+
+    test('cleans up when its content is removed, and still toggles', async ({ page, gotoExample }) => {
+        await gotoExample('shadcn/select/default');
+        const root = page.locator('[data-slot="select"]');
+        await root.evaluate((element) => {
+            element.querySelector('[data-slot="select-content"]')!.remove();
+            // Moving the root disconnects and reconnects the controller.
+            element.parentElement!.append(element);
+        });
+        const trigger = page.getByRole('combobox');
+
+        await trigger.click();
+
+        await expect(trigger).toHaveAttribute('aria-expanded', 'true');
+        await expect(root).not.toHaveAttribute('style', /anchor-name/);
+    });
+
+    test('closes once its controller disconnects', async ({ page, gotoExample }) => {
+        await gotoExample('shadcn/select/default');
+        await page.getByRole('combobox').click();
+        const content = page.locator('[data-slot="select-content"]');
+        await expect(content).toBeVisible();
+
+        const root = page.locator('[data-slot="select"]');
+        await root.evaluate((element) => {
+            element.removeAttribute('data-controller');
+        });
+
+        await expect(content).toBeHidden();
+        await expect(root).toHaveAttribute('data-state', 'closed');
+    });
+
+    test.describe('without anchor positioning', () => {
+        test.beforeEach(async ({ page }) => {
+            await page.addInitScript(() => {
+                const supports = CSS.supports.bind(CSS);
+                CSS.supports = (...args: [string, string?]) =>
+                    args[0].startsWith('position-area') ? false : supports(...(args as [string]));
+            });
+        });
+
+        test('opens in place and closes on Escape or on a click outside', async ({ page, gotoExample }) => {
+            await gotoExample('shadcn/select/default');
+            const trigger = page.getByRole('combobox');
+            const listbox = page.getByRole('listbox');
+
+            await trigger.click();
+
+            await expect(listbox).toBeVisible();
+            await expect(listbox).not.toHaveAttribute('popover');
+            await expect(page.getByRole('option', { name: 'Apple', exact: true })).toBeFocused();
+
+            await page.keyboard.press('Escape');
+
+            await expect(listbox).toBeHidden();
+            await expect(trigger).toBeFocused();
+
+            await trigger.click();
+            await expect(listbox).toBeVisible();
+
+            await page.mouse.click(10, 10);
+
+            await expect(listbox).toBeHidden();
+            await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+        });
+
+        test('closes on Escape while its trigger has the focus', async ({ page, gotoExample }) => {
+            await gotoExample('shadcn/select/default');
+            const trigger = page.getByRole('combobox');
+            await page.locator('[data-slot="select"]').evaluate((select) => {
+                select.dataset.selectOpenValue = 'true';
+                select.parentElement!.append(select);
+            });
+            await expect(trigger).toHaveAttribute('aria-expanded', 'true');
+            await trigger.focus();
+
+            await page.keyboard.press('Escape');
+
+            await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+        });
+
+        test('clips the popup in an ancestor that hides its overflow', async ({ page, gotoExample }) => {
+            await gotoExample('shadcn/select/default');
+            await clipSelect(page.locator('[data-slot="select"]'));
+
+            await page.getByRole('combobox').click();
+
+            await expect(page.getByRole('option', { name: 'Apple', exact: true })).toBeFocused();
+            expect(await isUnderPointer(page.getByRole('option', { name: 'Pineapple', exact: true }))).toBe(false);
+        });
     });
 });
