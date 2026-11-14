@@ -22,6 +22,13 @@ abstract class Elements
 {
     private \SplObjectStorage $elements;
 
+    /**
+     * Built on the first removal by id, then kept up to date.
+     *
+     * @var array<string, array<int, Element>>|null
+     */
+    private ?array $elementsById = null;
+
     public function __construct(
         array $elements,
     ) {
@@ -33,20 +40,33 @@ abstract class Elements
 
     public function add(Element $element): static
     {
-        $this->elements[$element] = $element->id ?? $this->elements->getHash($element);
+        $this->elements->offsetSet($element);
+
+        if (null !== $this->elementsById && null !== $element->id) {
+            $this->elementsById[$element->id][spl_object_id($element)] = $element;
+        }
 
         return $this;
     }
 
     private function getElementById(string $id): ?Element
     {
-        foreach ($this->elements as $element) {
-            if ($element->id === $id) {
-                return $element;
+        if (null === $this->elementsById) {
+            $this->elementsById = [];
+            foreach ($this->elements as $element) {
+                if (null !== $element->id) {
+                    $this->elementsById[$element->id][spl_object_id($element)] = $element;
+                }
             }
         }
 
-        return null;
+        if (!isset($this->elementsById[$id])) {
+            return null;
+        }
+
+        $elements = $this->elementsById[$id];
+
+        return $elements[array_key_first($elements)];
     }
 
     public function remove(Element|string $elementOrId): static
@@ -59,6 +79,13 @@ abstract class Elements
 
         if (null !== $element && $this->elements->offsetExists($element)) {
             unset($this->elements[$element]);
+
+            if (null !== $this->elementsById && null !== $element->id) {
+                unset($this->elementsById[$element->id][spl_object_id($element)]);
+                if ([] === ($this->elementsById[$element->id] ?? null)) {
+                    unset($this->elementsById[$element->id]);
+                }
+            }
         }
 
         return $this;
@@ -67,6 +94,7 @@ abstract class Elements
     public function removeAll(): static
     {
         $this->elements->removeAll($this->elements);
+        $this->elementsById = null;
 
         return $this;
     }
