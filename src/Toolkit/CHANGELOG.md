@@ -6,6 +6,7 @@
 - [Shadcn] Use the native invoker commands (`command` and `commandfor`), `closedby="any"` and the native `<dialog>` centering in `dialog`
 - [Shadcn] Use the native invoker commands (`command` and `commandfor`) and `closedby="any"` in `sheet`
 - [Shadcn] Use the native invoker commands (`command` and `commandfor`) and `closedby="any"` in `drawer`
+- [Shadcn] Render the closed panels of `accordion` with `hidden="until-found"`, so find-in-page and fragment links open them where supported
 
 ## 3.7.1
 

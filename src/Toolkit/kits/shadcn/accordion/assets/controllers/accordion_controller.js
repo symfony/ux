@@ -30,6 +30,21 @@ export default class extends Controller {
     }
 
     /**
+     * Open the item whose closed panel holds a find-in-page match or a fragment target.
+     * @param {Event} event
+     */
+    reveal(event) {
+        const item = event.currentTarget.closest('[data-accordion-target="item"]');
+
+        if (!item || this.#isDisabled(item) || item.dataset.open === 'true') {
+            return;
+        }
+
+        // Skip the transitions, so the browser scrolls to the match in its final position.
+        this.#openItem(item, false);
+    }
+
+    /**
      * Handle keyboard navigation for accessibility.
      * @param {KeyboardEvent} event
      */
@@ -75,13 +90,14 @@ export default class extends Controller {
     /**
      * Open an accordion item.
      * @param {HTMLElement} item
+     * @param {boolean} animate
      */
-    #openItem(item) {
+    #openItem(item, animate = true) {
         // If not multiple, close other open items first
         if (!this.multipleValue) {
             for (const otherItem of this.itemTargets) {
                 if (otherItem !== item && otherItem.dataset.open === 'true') {
-                    this.#closeItem(otherItem);
+                    this.#closeItem(otherItem, animate);
                 }
             }
         }
@@ -100,24 +116,30 @@ export default class extends Controller {
         // Update trigger ARIA
         trigger.setAttribute('aria-expanded', 'true');
 
-        // Remove hidden class and prepare for animation
-        content.classList.remove('hidden');
+        content.removeAttribute('hidden');
         content.setAttribute('aria-hidden', 'false');
         content.dataset.open = 'true';
         delete content.dataset.closed;
 
-        // Force reflow to ensure the transition starts from 0fr
-        content.offsetHeight;
-
-        // Apply open state with CSS Grid
-        content.style.gridTemplateRows = '1fr';
+        if (animate) {
+            // Force reflow to ensure the transition starts from 0fr
+            content.getBoundingClientRect();
+            content.style.gridTemplateRows = '1fr';
+        } else {
+            content.style.transition = 'none';
+            content.style.gridTemplateRows = '1fr';
+            // Commit the open state before the transition comes back
+            content.getBoundingClientRect();
+            content.style.transition = '';
+        }
     }
 
     /**
      * Close an accordion item.
      * @param {HTMLElement} item
+     * @param {boolean} animate
      */
-    #closeItem(item) {
+    #closeItem(item, animate = true) {
         const trigger = item.querySelector('[data-accordion-target="trigger"]');
         const content = item.querySelector('[data-accordion-target="content"]');
 
@@ -140,17 +162,33 @@ export default class extends Controller {
         // Apply closed state with CSS Grid
         content.style.gridTemplateRows = '0fr';
 
-        // Hide after transition completes
-        const onTransitionEnd = (event) => {
-            // Only react to grid-template-rows transition
-            if (event.propertyName === 'grid-template-rows') {
+        // Hide at the end of the transition, or at once when none runs
+        const transition =
+            animate &&
+            content.getAnimations().find((animation) => animation.transitionProperty === 'grid-template-rows');
+        if (!transition) {
+            this.#hideContent(item, content);
+            return;
+        }
+
+        transition.finished.then(
+            () => {
                 if (item.dataset.closed === 'true') {
-                    content.classList.add('hidden');
+                    this.#hideContent(item, content);
                 }
-                content.removeEventListener('transitionend', onTransitionEnd);
-            }
-        };
-        content.addEventListener('transitionend', onTransitionEnd);
+            },
+            // Reopened before the end of the transition
+            () => {}
+        );
+    }
+
+    /**
+     * Hide the panel of a closed item.
+     * @param {HTMLElement} item
+     * @param {HTMLElement} content
+     */
+    #hideContent(item, content) {
+        content.setAttribute('hidden', this.#isDisabled(item) ? '' : 'until-found');
     }
 
     /**
