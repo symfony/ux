@@ -149,6 +149,9 @@ class TranslationsDumper
                 if ($includedDomains && !\in_array($domain, $includedDomains, true)) {
                     continue;
                 }
+
+                $intlDomain = $domain.MessageCatalogueInterface::INTL_DOMAIN_SUFFIX;
+
                 foreach ($catalogue->all($domain) as $id => $message) {
                     // Filter by keys patterns
                     if ($excludeKeysRegex && preg_match($excludeKeysRegex, $id)) {
@@ -158,9 +161,7 @@ class TranslationsDumper
                         continue;
                     }
 
-                    $realDomain = $catalogue->has($id, $domain.MessageCatalogueInterface::INTL_DOMAIN_SUFFIX)
-                        ? $domain.MessageCatalogueInterface::INTL_DOMAIN_SUFFIX
-                        : $domain;
+                    $realDomain = $catalogue->has($id, $intlDomain) ? $intlDomain : $domain;
 
                     $translations[$id] ??= [];
                     $translations[$id][$realDomain] ??= [];
@@ -183,16 +184,28 @@ class TranslationsDumper
         $locales = [];
 
         foreach ($translationsByDomainAndLocale as $domain => $translationsByLocale) {
+            $isIntlDomain = str_ends_with($domain, MessageCatalogueInterface::INTL_DOMAIN_SUFFIX);
+            $lastLocale = array_key_last($translationsByLocale);
+
             foreach ($translationsByLocale as $locale => $translation) {
+                // only the last locale is printed, and extracting a non-ICU message cannot fail
+                if (!$isIntlDomain && $locale !== $lastLocale) {
+                    $locales[] = $locale;
+                    continue;
+                }
+
                 try {
-                    $parameters = str_ends_with($domain, MessageCatalogueInterface::INTL_DOMAIN_SUFFIX)
+                    $parameters = $isIntlDomain
                         ? $this->intlMessageParametersExtractor->extract($translation)
                         : $this->messageParametersExtractor->extract($translation);
                 } catch (\Throwable $e) {
                     throw new \Exception(\sprintf('Error while extracting parameters from message "%s" in domain "%s" and locale "%s".', $translation, $domain, $locale), previous: $e);
                 }
 
-                $parametersTypes[$domain] = $this->typeScriptMessageParametersPrinter->print($parameters);
+                if ($locale === $lastLocale) {
+                    $parametersTypes[$domain] = $this->typeScriptMessageParametersPrinter->print($parameters);
+                }
+
                 $locales[] = $locale;
             }
         }
