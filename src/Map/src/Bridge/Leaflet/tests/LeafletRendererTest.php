@@ -192,6 +192,24 @@ class LeafletRendererTest extends RendererTestCase
                 ->addMarker(new Marker(position: new Point(45.8566, 2.3522), title: 'Dijon', icon: Icon::svg('<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24">...</svg>'))),
         ];
 
+        yield 'markers sharing the same UX icon' => [
+            'renderer' => new LeafletRenderer(
+                new StimulusHelper(null),
+                new UxIconRenderer(new class implements IconRendererInterface {
+                    public function renderIcon(string $name, array $attributes = []): string
+                    {
+                        return \sprintf('<svg xmlns="http://www.w3.org/2000/svg" width="%s" height="%s">%s</svg>', $attributes['width'], $attributes['height'], $name);
+                    }
+                })),
+            'map' => new Map()
+                ->center(new Point(48.8566, 2.3522))
+                ->zoom(12)
+                ->addMarker(new Marker(position: new Point(48.8566, 2.3522), title: 'Paris', icon: Icon::ux('fa:map-marker')->width(32)->height(32)))
+                ->addMarker(new Marker(position: new Point(45.7640, 4.8357), title: 'Lyon', icon: Icon::ux('fa:map-marker')->width(32)->height(32)))
+                ->addMarker(new Marker(position: new Point(45.8566, 2.3522), title: 'Dijon', icon: Icon::ux('fa:map-marker')->width(24)->height(24)))
+                ->addMarker(new Marker(position: new Point(44.8378, -0.5792), title: 'Bordeaux', icon: Icon::ux('fa:home')->width(32)->height(32))),
+        ];
+
         yield 'with map extra data' => [
             'renderer' => new LeafletRenderer(new StimulusHelper(null), new UxIconRenderer(null)),
             'map' => new Map()

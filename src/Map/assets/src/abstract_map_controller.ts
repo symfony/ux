@@ -199,6 +199,7 @@ export default abstract class<
         rectangles: Array,
         options: Object,
         extra: Object,
+        icons: Array,
     };
 
     declare centerValue: Point | null;
@@ -213,6 +214,7 @@ export default abstract class<
     declare rectanglesValue: Array<RectangleDefinition<BridgeRectangleOptions, BridgeInfoWindowOptions>>;
     declare optionsValue: MapOptions;
     declare extraValue: Record<string, unknown>;
+    declare iconsValue: Array<string>;
 
     declare hasCenterValue: boolean;
     declare hasZoomValue: boolean;
@@ -226,6 +228,7 @@ export default abstract class<
     declare hasRectanglesValue: boolean;
     declare hasOptionsValue: boolean;
     declare hasExtraValue: boolean;
+    declare hasIconsValue: boolean;
 
     protected map: BridgeMap;
     protected markers = new Map<Identifier, BridgeMarker>();
@@ -287,7 +290,9 @@ export default abstract class<
         );
 
         this.map = this.doCreateMap({ definition: mapDefinition });
-        this.markersValue.forEach((definition) => {
+        const markerDefinitions = this.markersValue;
+        this.resolveMarkerIcons(markerDefinitions);
+        markerDefinitions.forEach((definition) => {
             this.createMarker({ definition });
         });
         this.polygonsValue.forEach((definition) => {
@@ -354,7 +359,9 @@ export default abstract class<
             return;
         }
 
-        this.onDrawChanged(this.markers, this.markersValue, this.createMarker, this.doRemoveMarker);
+        const markerDefinitions = this.markersValue;
+        this.resolveMarkerIcons(markerDefinitions);
+        this.onDrawChanged(this.markers, markerDefinitions, this.createMarker, this.doRemoveMarker);
 
         if (this.fitBoundsToMarkersValue) {
             this.doFitBoundsToMarkers();
@@ -456,6 +463,27 @@ export default abstract class<
     //endregion
 
     //region Private APIs
+    // a marker references its UX Icon SVG by index in the `icons` value; an inline SVG is still accepted
+    private resolveMarkerIcons(
+        definitions: Array<MarkerDefinition<BridgeMarkerOptions, BridgeInfoWindowOptions>>
+    ): void {
+        if (!this.hasIconsValue) {
+            return;
+        }
+
+        const icons = this.iconsValue;
+        for (const { icon } of definitions) {
+            if (icon?.type !== IconTypes.UxIcon) {
+                continue;
+            }
+
+            const reference: unknown = icon._generated_html;
+            if (typeof reference === 'number') {
+                icon._generated_html = icons[reference];
+            }
+        }
+    }
+
     private createDrawingFactory(
         type: 'marker',
         draws: typeof this.markers,
