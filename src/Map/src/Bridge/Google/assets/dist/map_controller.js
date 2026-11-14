@@ -149,6 +149,15 @@ let _loading = false;
 let _loaded = false;
 let _onLoadedCallbacks = [];
 const parser = new DOMParser();
+const parsedSvgs = /* @__PURE__ */ new Map();
+function createSvgElement(html) {
+	let parsed = parsedSvgs.get(html);
+	if (void 0 === parsed) {
+		parsed = parser.parseFromString(html, "image/svg+xml").documentElement;
+		parsedSvgs.set(html, parsed);
+	}
+	return parsed.cloneNode(true);
+}
 var map_controller_default = class extends abstract_map_controller_default {
 	async connect() {
 		const onLoaded = () => super.connect();
@@ -346,8 +355,8 @@ var map_controller_default = class extends abstract_map_controller_default {
 	}
 	doCreateIcon({ definition, element }) {
 		const { type, width, height } = definition;
-		if (type === IconTypes.Svg) element.content = parser.parseFromString(definition.html, "image/svg+xml").documentElement;
-		else if (type === IconTypes.UxIcon) element.content = parser.parseFromString(definition._generated_html, "image/svg+xml").documentElement;
+		if (type === IconTypes.Svg) element.content = createSvgElement(definition.html);
+		else if (type === IconTypes.UxIcon) element.content = createSvgElement(definition._generated_html);
 		else if (type === IconTypes.Url) {
 			const icon = document.createElement("img");
 			icon.width = width;
