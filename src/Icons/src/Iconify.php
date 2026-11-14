@@ -16,6 +16,7 @@ use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\HttpClient\ScopingHttpClient;
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
+use Symfony\Contracts\HttpClient\ResponseInterface;
 use Symfony\UX\Icons\Exception\HttpClientNotInstalledException;
 use Symfony\UX\Icons\Exception\IconNotFoundException;
 
@@ -41,6 +42,11 @@ final class Iconify
     private \ArrayObject $sets;
     private int $maxIconsQueryLength;
 
+    /**
+     * @var array<string, ResponseInterface>
+     */
+    private array $pendingIcons = [];
+
     public function __construct(
         private CacheInterface $cache,
         private IconFactory $iconFactory,
@@ -56,13 +62,26 @@ final class Iconify
         return $this->sets()[$prefix] ?? throw new \RuntimeException(\sprintf('The icon prefix "%s" does not exist on iconify.design.', $prefix));
     }
 
+    /**
+     * Responses are lazy: requests started in a row run concurrently.
+     */
+    public function prefetchIcon(string $prefix, string $name): void
+    {
+        if (isset($this->pendingIcons[$key = $prefix.':'.$name]) || !isset($this->sets()[$prefix])) {
+            return;
+        }
+
+        $this->pendingIcons[$key] = $this->http()->request('GET', \sprintf('/%s.json?icons=%s', $prefix, $name));
+    }
+
     public function fetchIcon(string $prefix, string $name): Icon
     {
         if (!isset($this->sets()[$prefix])) {
             throw new IconNotFoundException(\sprintf('The icon "%s:%s" does not exist on iconify.design.', $prefix, $name));
         }
 
-        $response = $this->http()->request('GET', \sprintf('/%s.json?icons=%s', $prefix, $name));
+        $response = $this->pendingIcons[$key = $prefix.':'.$name] ?? $this->http()->request('GET', \sprintf('/%s.json?icons=%s', $prefix, $name));
+        unset($this->pendingIcons[$key]);
 
         if (200 !== $response->getStatusCode()) {
             throw new IconNotFoundException(\sprintf('The icon "%s:%s" does not exist on iconify.design.', $prefix, $name));
