@@ -16,7 +16,10 @@ use Symfony\UX\TwigComponent\Twig\ComponentNode;
 use Twig\Compiler;
 use Twig\Environment;
 use Twig\Loader\ArrayLoader;
+use Twig\Node\Expression\AbstractExpression;
+use Twig\Node\Expression\ArrayExpression;
 use Twig\Node\Expression\ConstantExpression;
+use Twig\Node\Expression\Variable\ContextVariable;
 
 final class ComponentNodeTest extends TestCase
 {
@@ -65,15 +68,34 @@ final class ComponentNodeTest extends TestCase
         $this->assertStringNotContainsString('yield from ', $source);
     }
 
-    private static function compile(array $options = []): string
+    public function testCompilesAQuotedNameAndLiteralPropsWithoutRuntimeConversion(): void
+    {
+        $source = self::compile(props: new ArrayExpression([new ConstantExpression('size', 1), new ConstantExpression('sm', 1)], 1));
+
+        $this->assertStringContainsString("= 'Alert';", $source);
+        $this->assertStringNotContainsString('is_scalar', $source);
+        $this->assertStringNotContainsString('CoreExtension::toArray', $source);
+    }
+
+    public function testKeepsTheRuntimeConversionForADynamicNameAndDynamicProps(): void
+    {
+        $name = new ContextVariable('componentName', 1);
+        $name->setExplicitParentheses();
+        $source = self::compile(name: $name, props: new ContextVariable('componentProps', 1));
+
+        $this->assertStringContainsString('is_scalar', $source);
+        $this->assertStringContainsString('CoreExtension::toArray', $source);
+    }
+
+    private static function compile(array $options = [], ?AbstractExpression $name = null, ?AbstractExpression $props = null): string
     {
         $compiler = new Compiler(new Environment(new ArrayLoader([]), $options));
 
         $compiler->compile(new ComponentNode(
-            new ConstantExpression('Alert', 1),
+            $name ?? new ConstantExpression('Alert', 1),
             'embedded_template',
             0,
-            null,
+            $props,
             false,
             1,
         ));

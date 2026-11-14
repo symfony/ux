@@ -16,6 +16,8 @@ use Twig\Compiler;
 use Twig\Environment;
 use Twig\Error\SyntaxError;
 use Twig\Node\Expression\AbstractExpression;
+use Twig\Node\Expression\ArrayExpression;
+use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\NameExpression;
 use Twig\Node\Expression\Variable\ContextVariable;
 use Twig\Node\Node;
@@ -68,6 +70,10 @@ final class ComponentNode extends Node implements NodeOutputInterface
             $compiler
                 ->write(\sprintf('$%s = %s;', $componentName, var_export($componentExpression->getAttribute('name'), true)))
                 ->raw("\n");
+        } elseif ($componentExpression instanceof ConstantExpression && \is_string($constantName = $componentExpression->getAttribute('value'))) {
+            $compiler
+                ->write(\sprintf('$%s = %s;', $componentName, var_export($constantName, true)))
+                ->raw("\n");
         } else {
             $componentNameValue = $compiler->getVarName();
             $compiler
@@ -101,12 +107,20 @@ final class ComponentNode extends Node implements NodeOutputInterface
 
         // Compile props once: Twig 3.24+ null-safe chains are stateful when compiled.
         $props = $compiler->getVarName();
-        $compiler
-            ->write(\sprintf('$%s = ', $props))
-            ->raw('Twig\Extension\CoreExtension::toArray')
-            ->raw('(');
-        $this->writeProps($compiler)
-            ->raw(");\n");
+        $compiler->write(\sprintf('$%s = ', $props));
+
+        // An array literal, or no props at all, needs no conversion at runtime
+        if (!$this->hasNode('props') || $this->getNode('props') instanceof ArrayExpression) {
+            $this->writeProps($compiler);
+        } else {
+            $compiler
+                ->raw('Twig\Extension\CoreExtension::toArray')
+                ->raw('(');
+            $this->writeProps($compiler)
+                ->raw(')');
+        }
+
+        $compiler->raw(";\n");
 
         /*
          * Block 1) PreCreateForRender handling
