@@ -1421,7 +1421,7 @@ var UnsyncedInputsTracker_default = class {
 };
 var UnsyncedInputContainer = class {
 	unsyncedModelFields;
-	unsyncedNonModelFields = [];
+	unsyncedNonModelFields = /* @__PURE__ */ new Set();
 	unsyncedModelNames = [];
 	constructor() {
 		this.unsyncedModelFields = /* @__PURE__ */ new Map();
@@ -1432,7 +1432,7 @@ var UnsyncedInputContainer = class {
 			if (!this.unsyncedModelNames.includes(modelName)) this.unsyncedModelNames.push(modelName);
 			return;
 		}
-		this.unsyncedNonModelFields.push(element);
+		this.unsyncedNonModelFields.add(element);
 	}
 	resetUnsyncedFields() {
 		this.unsyncedModelFields.forEach((value, key) => {
