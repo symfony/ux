@@ -10,6 +10,53 @@ interface ElementLoadingDirectives {
     directives: Directive[];
 }
 
+interface LoadingModifiers {
+    delay: number;
+    targetedActions: string[];
+    targetedModels: string[];
+}
+
+const validModifiers: Map<
+    string,
+    (modifier: DirectiveModifier, directive: Directive, isLoading: boolean, modifiers: LoadingModifiers) => void
+> = new Map();
+validModifiers.set('delay', (modifier, _directive, isLoading, modifiers) => {
+    if (!isLoading) {
+        return;
+    }
+    modifiers.delay = modifier.value ? Number.parseInt(modifier.value) : 200;
+});
+validModifiers.set('action', (modifier, directive, _isLoading, modifiers) => {
+    if (!modifier.value) {
+        throw new Error(
+            `The "action" in data-loading must have an action name - e.g. action(foo). It's missing for "${directive.getString()}"`
+        );
+    }
+    modifiers.targetedActions.push(modifier.value);
+});
+validModifiers.set('model', (modifier, directive, _isLoading, modifiers) => {
+    if (!modifier.value) {
+        throw new Error(
+            `The "model" in data-loading must have an action name - e.g. model(foo). It's missing for "${directive.getString()}"`
+        );
+    }
+    modifiers.targetedModels.push(modifier.value);
+});
+
+const parsedDirectives: WeakMap<Element, { raw: string; directives: Directive[] }> = new WeakMap();
+
+const getDirectives = (element: Element, raw: string): Directive[] => {
+    const cached = parsedDirectives.get(element);
+    if (cached && cached.raw === raw) {
+        return cached.directives;
+    }
+
+    const directives = parseDirectives(raw);
+    parsedDirectives.set(element, { raw, directives });
+
+    return directives;
+};
+
 export default class implements PluginInterface {
     attachToComponent(component: Component): void {
         component.on('loading.state:started', (element: HTMLElement, request: BackendRequest) => {
@@ -65,39 +112,12 @@ export default class implements PluginInterface {
     ) {
         const finalAction = parseLoadingAction(directive.action, isLoading);
 
-        const targetedActions: string[] = [];
-        const targetedModels: string[] = [];
-        let delay = 0;
-
-        const validModifiers: Map<string, (modifier: DirectiveModifier) => void> = new Map();
-        validModifiers.set('delay', (modifier: DirectiveModifier) => {
-            if (!isLoading) {
-                return;
-            }
-            delay = modifier.value ? Number.parseInt(modifier.value) : 200;
-        });
-        validModifiers.set('action', (modifier: DirectiveModifier) => {
-            if (!modifier.value) {
-                throw new Error(
-                    `The "action" in data-loading must have an action name - e.g. action(foo). It's missing for "${directive.getString()}"`
-                );
-            }
-            targetedActions.push(modifier.value);
-        });
-        validModifiers.set('model', (modifier: DirectiveModifier) => {
-            if (!modifier.value) {
-                throw new Error(
-                    `The "model" in data-loading must have an action name - e.g. model(foo). It's missing for "${directive.getString()}"`
-                );
-            }
-            targetedModels.push(modifier.value);
-        });
+        const modifiers: LoadingModifiers = { delay: 0, targetedActions: [], targetedModels: [] };
 
         directive.modifiers.forEach((modifier) => {
-            if (validModifiers.has(modifier.name)) {
-                // variable is entirely to make ts happy
-                const callable = validModifiers.get(modifier.name) ?? (() => {});
-                callable(modifier);
+            const callable = validModifiers.get(modifier.name);
+            if (callable) {
+                callable(modifier, directive, isLoading, modifiers);
 
                 return;
             }
@@ -106,6 +126,8 @@ export default class implements PluginInterface {
                 `Unknown modifier "${modifier.name}" used in data-loading="${directive.getString()}". Available modifiers are: ${Array.from(validModifiers.keys()).join(', ')}.`
             );
         });
+
+        const { delay, targetedActions, targetedModels } = modifiers;
 
         // if loading is being activated + action modifier, only apply if the action is on the request
         if (
@@ -193,7 +215,7 @@ export default class implements PluginInterface {
             }
 
             // use "show" if the attribute is empty
-            const directives = parseDirectives(element.dataset.loading || 'show');
+            const directives = getDirectives(element, element.dataset.loading || 'show');
 
             loadingDirectives.push({
                 element,
