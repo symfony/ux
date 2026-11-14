@@ -12,7 +12,9 @@
 namespace Symfony\UX\Css\Tests\Integration;
 
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\UX\Css\DependencyInjection\Compiler\ReferenceDumpPass;
 use Symfony\UX\Css\DependencyInjection\PandaConfigConverter;
 use Symfony\UX\Css\Engine\Engine;
 use Symfony\UX\Css\Reference\ReferenceDumper;
@@ -92,6 +94,68 @@ final class ReferenceFileTest extends TestCase
         $this->bootKernel();
 
         $this->assertFileDoesNotExist($this->referencePath());
+    }
+
+    public function testASecondContainerBuildDoesNotGenerateTheReferenceAgain(): void
+    {
+        $container = $this->containerBuilder(self::CONFIG);
+        new ReferenceDumpPass()->process($container);
+        $decoy = $this->replaceReferenceWithADecoy();
+
+        new ReferenceDumpPass()->process($this->containerBuilder(self::CONFIG));
+
+        $this->assertStringEqualsFile($this->referencePath(), $decoy);
+    }
+
+    public function testADeletedReferenceIsGeneratedAgain(): void
+    {
+        new ReferenceDumpPass()->process($this->containerBuilder(self::CONFIG));
+        unlink($this->referencePath());
+
+        new ReferenceDumpPass()->process($this->containerBuilder(self::CONFIG));
+
+        $this->assertStringEqualsFile($this->referencePath(), self::expectedReference(self::CONFIG));
+    }
+
+    public function testAChangedConfigGeneratesTheReferenceAgain(): void
+    {
+        new ReferenceDumpPass()->process($this->containerBuilder(self::CONFIG));
+        $this->replaceReferenceWithADecoy();
+        $config = ['tokens' => ['colors' => ['red' => '#f00', 'teal' => '#0ff'], 'spacing' => ['md' => '1rem']]];
+
+        new ReferenceDumpPass()->process($this->containerBuilder($config));
+
+        $this->assertStringContainsString("'teal'", file_get_contents($this->referencePath()));
+    }
+
+    /**
+     * @param array<string, mixed> $config
+     */
+    private function containerBuilder(array $config): ContainerBuilder
+    {
+        $defaults = ['semantic_tokens' => [], 'conditions' => [], 'breakpoints' => []];
+        $container = new ContainerBuilder();
+        $container->register('ux_css.engine', Engine::class)->setArguments([PandaConfigConverter::convert($config + $defaults)]);
+        $container->register('ux_css.validator', StyleValidator::class)->setArguments([null, true, true]);
+        $container->setParameter('kernel.project_dir', $this->projectDir);
+        $container->setParameter('kernel.build_dir', $this->projectDir.'/build');
+
+        return $container;
+    }
+
+    /**
+     * Keeps the size and the modification time of the reference, so that only a skipped generation leaves it in place.
+     */
+    private function replaceReferenceWithADecoy(): string
+    {
+        $path = $this->referencePath();
+        $decoy = str_repeat('x', \strlen(file_get_contents($path)));
+        $modifiedAt = filemtime($path);
+        file_put_contents($path, $decoy);
+        touch($path, $modifiedAt);
+        clearstatcache();
+
+        return $decoy;
     }
 
     private function bootKernel(bool $debug = true, array $config = self::CONFIG): void
