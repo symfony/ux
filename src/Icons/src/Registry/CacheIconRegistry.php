@@ -43,8 +43,11 @@ final class CacheIconRegistry implements IconRegistryInterface, ResetInterface
             throw new IconNotFoundException(\sprintf('The icon name "%s" is not valid.', $name));
         }
 
+        // The name is valid, so this is Icon::nameToId() without its second isValidName() call
+        $id = str_replace(':', '--', $name);
+
         return $this->icons[$name] = $this->cache->get(
-            Icon::nameToId($name),
+            $id,
             fn () => $this->inner->get($name),
             beta: $refresh ? \INF : null,
         );
