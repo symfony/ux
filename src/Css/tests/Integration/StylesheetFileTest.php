@@ -211,6 +211,20 @@ final class StylesheetFileTest extends TestCase
         $this->assertFileDoesNotExist($this->stylesheetPath());
     }
 
+    public function testTheAssetMapperDevServerAnswersTheStylesheetWithoutReadingTheTemplatesAgain(): void
+    {
+        $kernel = $this->bootKernel();
+        $kernel->handle(Request::create('/'));
+        $before = $this->readStylesheet();
+        $publicPath = $this->service($kernel, 'asset_mapper')->getAsset('ux_css/styles.css')->publicPath;
+        $this->writeTemplate('card.html.twig', '<div class="{{ css({ color: \'fg\' }) }}"></div>', time());
+
+        $response = $kernel->handle(Request::create($publicPath));
+
+        $this->assertSame(200, $response->getStatusCode());
+        $this->assertSame($before, $this->readStylesheet());
+    }
+
     public function testADeletedTemplateLosesItsRules(): void
     {
         $kernel = $this->bootKernel();
