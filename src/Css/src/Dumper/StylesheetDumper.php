@@ -117,8 +117,10 @@ final class StylesheetDumper
      */
     public function dump(): void
     {
-        // forgets the templates compiled for another config
-        $this->loadIndex();
+        if ($this->debug) {
+            // forgets the templates compiled for another config
+            $this->loadIndex();
+        }
 
         $index = [];
         foreach ($this->templateNames() as $name) {
