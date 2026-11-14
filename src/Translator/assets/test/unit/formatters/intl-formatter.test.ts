@@ -55,6 +55,11 @@ describe('Intl Formatter', () => {
         expect(parameters).toEqual({ '%name%': 'Fab' });
     });
 
+    test('a renamed parameter wins over an already clean one', () => {
+        expect(formatIntl('Hello {name}', { '%name%': 'a', name: 'b' }, 'en')).toEqual('Hello a');
+        expect(formatIntl('Hello {name}', { name: 'b', '%name%': 'a' }, 'en')).toEqual('Hello a');
+    });
+
     test('format with HTML inside', () => {
         expect(formatIntl('Hello <b>{name}</b>', { name: 'Fab' }, 'en')).toEqual('Hello <b>Fab</b>');
         expect(formatIntl('Hello {name}', { name: '<b>Fab</b>' }, 'en')).toEqual('Hello <b>Fab</b>');
@@ -67,5 +72,29 @@ describe('Intl Formatter', () => {
 
     test('format with a locale with script and region subcodes', () => {
         expect(formatIntl('{count, plural, other {# 則留言}}', { count: 2 }, 'zh_Hant_TW')).toEqual('2 則留言');
+    });
+
+    test('the same message formats per locale', () => {
+        const plural = '{count, plural, one {# élément} other {# éléments}}';
+
+        expect(formatIntl(plural, { count: 1 }, 'fr')).toEqual('1 élément');
+        expect(formatIntl(plural, { count: 0 }, 'fr')).toEqual('0 élément');
+        expect(formatIntl(plural, { count: 0 }, 'en')).toEqual('0 éléments');
+        expect(formatIntl(plural, { count: 1 }, 'en')).toEqual('1 élément');
+
+        expect(formatIntl('{n, number}', { n: 1234.5 }, 'fr')).toEqual('1 234,5');
+        expect(formatIntl('{n, number}', { n: 1234.5 }, 'en')).toEqual('1,234.5');
+    });
+
+    test('repeated calls on the same message are stable', () => {
+        for (let i = 0; i < 3; ++i) {
+            expect(formatIntl('Hello {name}', { name: 'Fab' }, 'en')).toEqual('Hello Fab');
+            expect(formatIntl('Hello {name}', { name: 'Hugo' }, 'en')).toEqual('Hello Hugo');
+        }
+    });
+
+    test('an invalid message throws on every call', () => {
+        expect(() => formatIntl('{count, plural, one {#}', { count: 1 }, 'en')).toThrow();
+        expect(() => formatIntl('{count, plural, one {#}', { count: 1 }, 'en')).toThrow();
     });
 });

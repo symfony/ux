@@ -1,4 +1,29 @@
-import { IntlMessageFormat } from 'intl-messageformat';
+import { type Formatters, IntlMessageFormat } from 'intl-messageformat';
+
+const instances = new Map<string, Map<string, IntlMessageFormat>>();
+
+function memoize<TArgs extends unknown[], TResult>(create: (...args: TArgs) => TResult): (...args: TArgs) => TResult {
+    const cache = new Map<string, TResult>();
+
+    return (...args: TArgs): TResult => {
+        const key = JSON.stringify(args);
+
+        let value = cache.get(key);
+        if (value === undefined) {
+            value = create(...args);
+            cache.set(key, value);
+        }
+
+        return value;
+    };
+}
+
+// intl-messageformat memoizes the Intl.* objects per instance: without these, each message builds its own
+const formatters: Formatters = {
+    getNumberFormat: memoize((locales, options) => new Intl.NumberFormat(locales, options)),
+    getDateTimeFormat: memoize((locales, options) => new Intl.DateTimeFormat(locales, options)),
+    getPluralRules: memoize((locales, options) => new Intl.PluralRules(locales, options)),
+};
 
 /**
  * @private
@@ -12,16 +37,33 @@ export function formatIntl(id: string, parameters: Record<string, string | numbe
         return '';
     }
 
-    const intlMessage = new IntlMessageFormat(id, [locale.replaceAll('_', '-')], undefined, { ignoreTag: true });
+    let instancesByMessage = instances.get(locale);
+    if (instancesByMessage === undefined) {
+        instancesByMessage = new Map();
+        instances.set(locale, instancesByMessage);
+    }
 
-    parameters = { ...parameters };
+    let intlMessage = instancesByMessage.get(id);
+    if (intlMessage === undefined) {
+        intlMessage = new IntlMessageFormat(id, [locale.replaceAll('_', '-')], undefined, {
+            ignoreTag: true,
+            formatters,
+        });
+        instancesByMessage.set(id, intlMessage);
+    }
 
-    Object.entries(parameters).forEach(([key, value]) => {
+    let values = parameters;
+
+    for (const key of Object.keys(parameters)) {
         if (key.includes('%') || key.includes('{')) {
-            delete parameters[key];
-            parameters[key.replace(/[%{} ]/g, '').trim()] = value;
-        }
-    });
+            if (values === parameters) {
+                values = { ...parameters };
+            }
 
-    return intlMessage.format(parameters) as string;
+            delete values[key];
+            values[key.replace(/[%{} ]/g, '').trim()] = parameters[key];
+        }
+    }
+
+    return intlMessage.format(values) as string;
 }
