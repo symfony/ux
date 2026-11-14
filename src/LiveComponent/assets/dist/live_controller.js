@@ -2380,13 +2380,14 @@ var LiveControllerDefault = class LiveControllerDefault extends Controller {
 		callback: (event) => this.handleChangeEvent(event)
 	}];
 	pendingFiles = {};
+	isComponentFresh = false;
 	static backendFactory = (controller) => new Backend_default(controller.urlValue, controller.requestMethodValue, controller.fetchCredentialsValue);
 	initialize() {
 		this.mutationObserver = new MutationObserver(this.onMutations.bind(this));
 		this.createComponent();
 	}
 	connect() {
-		if (JSON.stringify(this.propsValue) !== JSON.stringify(this.component.valueStore.getOriginalProps())) this.createComponent();
+		if (!this.isComponentFresh && JSON.stringify(this.propsValue) !== JSON.stringify(this.component.valueStore.getOriginalProps())) this.createComponent();
 		this.connectComponent();
 		this.mutationObserver.observe(this.element, { attributes: true });
 	}
@@ -2510,8 +2511,10 @@ var LiveControllerDefault = class LiveControllerDefault extends Controller {
 		].forEach((plugin) => {
 			this.component.addPlugin(plugin);
 		});
+		this.isComponentFresh = true;
 	}
 	connectComponent() {
+		this.isComponentFresh = false;
 		this.component.connect();
 		this.mutationObserver.observe(this.element, { attributes: true });
 		this.elementEventListeners.forEach(({ event, callback }) => {
