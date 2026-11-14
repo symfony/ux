@@ -12,6 +12,7 @@
 namespace Symfony\UX\Translator\Intl;
 
 use Symfony\Component\String\AbstractString;
+use Symfony\Component\String\UnicodeString;
 
 use function Symfony\Component\String\s;
 
@@ -25,6 +26,10 @@ final class IntlMessageParser
     private readonly AbstractString $message;
     // Minor optimization, this avoid a lot of calls to `$this->message->length()`
     private readonly int $messageLength;
+    /**
+     * @var array<int, int>
+     */
+    private readonly array $codePoints;
 
     private Position $position;
     private bool $ignoreTag;
@@ -35,6 +40,8 @@ final class IntlMessageParser
     ) {
         $this->message = s($message);
         $this->messageLength = $this->message->length();
+        // A UnicodeString normalizes its content, and every offset below refers to that form.
+        $this->codePoints = $this->message instanceof UnicodeString ? self::codePoints($this->message->toString()) : [];
         $this->position = new Position(0, 1, 1);
         $this->ignoreTag = true;
         $this->requiresOtherClause = true;
@@ -144,7 +151,7 @@ final class IntlMessageParser
             }
 
             $parseUnquotedResult = $this->tryParseUnquoted($nestingLevel, $parentArgType);
-            if ($parseUnquotedResult) {
+            if (null !== $parseUnquotedResult) {
                 $value .= $parseUnquotedResult;
                 continue;
             }
@@ -254,24 +261,42 @@ final class IntlMessageParser
         int $nestingLevel,
         string $parentArgType,
     ): ?string {
-        if ($this->isEOF()) {
+        $startOffset = $this->position->offset;
+        $offset = $startOffset;
+        $line = $this->position->line;
+        $column = $this->position->column;
+        $stopsAtPound = 'plural' === $parentArgType || 'selectordinal' === $parentArgType;
+
+        while (null !== ($ch = $this->codePoints[$offset] ?? null)) {
+            if (
+                60 === $ch /* `<` */
+                || 123 === $ch /* `{` */
+                || ($stopsAtPound && 35 === $ch /* `#` */)
+                || (125 === $ch /* `}` */ && $nestingLevel > 0)
+                // The caller already declined to parse a quote at the first character.
+                || (39 === $ch /* `'` */ && $offset > $startOffset)
+            ) {
+                break;
+            }
+
+            if (10 === $ch /* `\n` */) {
+                ++$line;
+                $column = 1;
+            } else {
+                ++$column;
+            }
+            ++$offset;
+        }
+
+        if ($offset === $startOffset) {
             return null;
         }
-        $ch = $this->char();
 
-        if (
-            60 === $ch /* `<` */
-            || 123 === $ch /* `{` */
-            || (35 === $ch /* `#` */
-                && ('plural' === $parentArgType || 'selectordinal' === $parentArgType))
-            || (125 === $ch /* `}` */ && $nestingLevel > 0)
-        ) {
-            return null;
-        }
+        $this->position->offset = $offset;
+        $this->position->line = $line;
+        $this->position->column = $column;
 
-        $this->bump();
-
-        return Utils::fromCodePoint($ch);
+        return Utils::fromCodePoint(...\array_slice($this->codePoints, $startOffset, $offset - $startOffset));
     }
 
     /**
@@ -372,7 +397,18 @@ final class IntlMessageParser
         $startingPosition = clone $this->position;
 
         $startOffset = $this->position->offset;
-        $value = Utils::matchIdentifierAtIndex($this->message, $startOffset);
+        $offset = $startOffset;
+        $codePoints = [];
+        while (null !== ($code = $this->codePoints[$offset] ?? null)) {
+            if (Utils::isWhiteSpace($code) || Utils::isPatternSyntax($code)) {
+                break;
+            }
+
+            $codePoints[] = $code;
+            $offset += $code >= 0x10000 ? 2 : 1;
+        }
+
+        $value = Utils::fromCodePoint(...$codePoints);
         $endOffset = $startOffset + s($value)->length();
 
         $this->bumpTo($endOffset);
@@ -887,12 +923,28 @@ final class IntlMessageParser
             throw new \OutOfBoundsException();
         }
 
-        $code = $this->message->codePointsAt($offset)[0] ?? null;
+        // The fallback is only reached for a message that is not valid UTF-8.
+        $code = $this->codePoints[$offset] ?? $this->message->codePointsAt($offset)[0] ?? null;
         if (null === $code) {
             throw new \Exception("Offset {$offset} is at invalid UTF-16 code unit boundary.");
         }
 
         return $code;
+    }
+
+    /**
+     * The first code point of each grapheme cluster, indexed by the offsets the parser walks on.
+     *
+     * @return array<int, int>
+     */
+    private static function codePoints(string $message): array
+    {
+        // A CR is excluded because "\r\n" is a single grapheme cluster.
+        if (!preg_match('/[^\x00-\x7f]|\r/', $message)) {
+            return '' === $message ? [] : array_values(unpack('C*', $message));
+        }
+
+        return array_map(static fn (string $cluster): int => mb_ord($cluster, 'UTF-8'), grapheme_str_split($message));
     }
 
     /**
@@ -939,6 +991,17 @@ final class IntlMessageParser
      */
     private function bumpIf(string $prefix): bool
     {
+        // Every caller passes a single ASCII character.
+        if (1 === \strlen($prefix)) {
+            if (($this->codePoints[$this->position->offset] ?? null) !== \ord($prefix)) {
+                return false;
+            }
+
+            $this->bump();
+
+            return true;
+        }
+
         if ($this->message->slice($this->position->offset)->startsWith($prefix)) {
             for ($i = 0, $len = \strlen($prefix); $i < $len; ++$i) {
                 $this->bump();
@@ -1016,8 +1079,7 @@ final class IntlMessageParser
         }
 
         $code = $this->char();
-        $nextCodes = $this->message->codePointsAt($this->position->offset + ($code >= 0x10000 ? 2 : 1));
 
-        return $nextCodes[0] ?? null;
+        return $this->codePoints[$this->position->offset + ($code >= 0x10000 ? 2 : 1)] ?? null;
     }
 }
