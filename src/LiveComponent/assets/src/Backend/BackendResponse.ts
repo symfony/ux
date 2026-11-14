@@ -71,17 +71,27 @@ export default class {
         // the file may hold bytes that are not valid UTF-8, so the body is split
         // as bytes and only the HTML side is decoded
         const buffer = await this.response.arrayBuffer();
-        const splitAt = Number.parseInt(htmlLength, 10);
+        const splitAt = clampToBuffer(Number.parseInt(htmlLength, 10), buffer.byteLength);
 
-        this.body = new TextDecoder().decode(buffer.slice(0, splitAt));
+        // views rather than slices: the two halves are read, never kept
+        this.body = new TextDecoder().decode(new Uint8Array(buffer, 0, splitAt));
         this.download = {
             // the filename is percent-encoded: headers carry ASCII only
             filename: decodeFilename(this.response.headers.get('X-Live-Download-Filename')),
-            blob: new Blob([buffer.slice(splitAt)], {
+            blob: new Blob([new Uint8Array(buffer, splitAt)], {
                 type: this.response.headers.get('X-Live-Download-Type') ?? 'application/octet-stream',
             }),
         };
     }
+}
+
+/** A view cannot be built out of bounds, where ArrayBuffer.slice() clamps silently. */
+function clampToBuffer(offset: number, byteLength: number): number {
+    if (Number.isNaN(offset)) {
+        return 0;
+    }
+
+    return offset < 0 ? Math.max(byteLength + offset, 0) : Math.min(offset, byteLength);
 }
 
 function decodeFilename(value: string | null): string {

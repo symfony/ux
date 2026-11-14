@@ -128,14 +128,18 @@ var BackendResponse_default = class {
 			return;
 		}
 		const buffer = await this.response.arrayBuffer();
-		const splitAt = Number.parseInt(htmlLength, 10);
-		this.body = new TextDecoder().decode(buffer.slice(0, splitAt));
+		const splitAt = clampToBuffer(Number.parseInt(htmlLength, 10), buffer.byteLength);
+		this.body = new TextDecoder().decode(new Uint8Array(buffer, 0, splitAt));
 		this.download = {
 			filename: decodeFilename(this.response.headers.get("X-Live-Download-Filename")),
-			blob: new Blob([buffer.slice(splitAt)], { type: this.response.headers.get("X-Live-Download-Type") ?? "application/octet-stream" })
+			blob: new Blob([new Uint8Array(buffer, splitAt)], { type: this.response.headers.get("X-Live-Download-Type") ?? "application/octet-stream" })
 		};
 	}
 };
+function clampToBuffer(offset, byteLength) {
+	if (Number.isNaN(offset)) return 0;
+	return offset < 0 ? Math.max(byteLength + offset, 0) : Math.min(offset, byteLength);
+}
 function decodeFilename(value) {
 	if (!value) return "download";
 	try {
