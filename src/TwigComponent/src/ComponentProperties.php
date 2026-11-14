@@ -12,6 +12,7 @@
 namespace Symfony\UX\TwigComponent;
 
 use Symfony\Component\Cache\Adapter\AdapterInterface;
+use Symfony\Component\PropertyAccess\PropertyAccessor;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
 
@@ -32,6 +33,13 @@ final class ComponentProperties
      */
     private array $classMetadata;
 
+    /**
+     * Whether exposed properties can be read without the property accessor.
+     *
+     * A decorated or replaced accessor must keep receiving every read.
+     */
+    private readonly bool $directReads;
+
     public function __construct(
         private readonly PropertyAccessorInterface $propertyAccessor,
         ?array $classMetadata = [],
@@ -40,6 +48,7 @@ final class ComponentProperties
         $cacheItem = $this->cache?->getItem(self::CACHE_KEY);
 
         $this->classMetadata = $cacheItem?->isHit() ? $cacheItem->get() + $classMetadata : $classMetadata;
+        $this->directReads = PropertyAccessor::class === $propertyAccessor::class;
     }
 
     /**
@@ -52,7 +61,15 @@ final class ComponentProperties
         $properties = $publicProps ? get_object_vars($component) : [];
 
         foreach ($metadata['properties'] as $propertyName => $property) {
-            $value = $property['getter'] ? $component->{$property['getter']}() : $this->propertyAccessor->getValue($component, $propertyName);
+            if ($property['getter']) {
+                $value = $component->{$property['getter']}();
+            } elseif (($property['direct'] ?? false) && isset($component->$propertyName)) {
+                // isset() is false for null and for an uninitialized property: both are left to the accessor, which reports them as it always did
+                $value = $component->$propertyName;
+            } else {
+                $value = $this->propertyAccessor->getValue($component, $propertyName);
+            }
+
             if ($property['destruct'] ?? false) {
                 $properties = [...$properties, ...$value];
             } else {
@@ -91,6 +108,7 @@ final class ComponentProperties
      *   properties: array<string, array{
      *     name?: string,
      *     getter?: string,
+     *     direct?: bool,
      *     destruct?: bool
      *   }>,
      *   methods: array<string, array{
@@ -130,6 +148,9 @@ final class ComponentProperties
                     'name' => $attribute->name ?? $property->name,
                     'getter' => $attribute->getter ? rtrim($attribute->getter, '()') : null,
                 ];
+                if (!$attribute->getter && $this->isDirectlyReadable($refClass, $property)) {
+                    $properties[$property->name]['direct'] = true;
+                }
                 if ($attribute->destruct) {
                     unset($properties[$property->name]['name']);
                     $properties[$property->name]['destruct'] = true;
@@ -155,5 +176,27 @@ final class ComponentProperties
             'properties' => $properties,
             'methods' => $methods,
         ];
+    }
+
+    /**
+     * Whether reading the property directly gives the same value as the property accessor.
+     *
+     * The accessor looks for an accessor method before falling back to the property, so a class that declares one must keep going through it.
+     */
+    private function isDirectlyReadable(\ReflectionClass $class, \ReflectionProperty $property): bool
+    {
+        if (!$this->directReads || !$property->isPublic() || $property->isStatic() || $property->hasHooks()) {
+            return false;
+        }
+
+        $camelized = '' === ltrim($property->name, '_') ? $property->name : str_replace(' ', '', ucwords(str_replace('_', ' ', $property->name)));
+
+        foreach (['get'.$camelized, lcfirst($camelized), 'is'.$camelized, 'has'.$camelized, 'can'.$camelized] as $method) {
+            if ($class->hasMethod($method)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }
