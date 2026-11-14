@@ -11,7 +11,7 @@
     {{ attributes.defaults({
         class: 'relative inline-block'|tailwind_classes,
         'data-controller': 'hover-card',
-        'data-action': 'mouseenter->hover-card#show mouseleave->hover-card#hide',
+        'data-action': 'mouseenter->hover-card#show mouseleave->hover-card#hide keydown.esc@window->hover-card#handleEscape',
     }) }}
 >
     {##- The hover card structure, typically a `HoverCard:Trigger` and `HoverCard:Content`. -#}

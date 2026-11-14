@@ -117,6 +117,7 @@ To enable RTL support, set the `dir="rtl"` attribute on the root element.
 - `HoverCard:Content` renders `role="tooltip"`. Point the trigger at it with `aria-describedby` so the content is announced when the trigger takes focus.
 - Treat the content as supplementary. A hover card is dismissed as soon as focus or the pointer leaves, so anything essential belongs in the page rather than inside it.
 - Avoid putting interactive elements inside the card. `role="tooltip"` does not support them, and they are hard to reach before the card closes.
+- In browsers with the [Popover API](https://developer.mozilla.org/en-US/docs/Web/API/Popover_API) and [anchor positioning](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_anchor_positioning), the content is shown in the top layer, so an ancestor that hides its overflow does not clip it, and it flips to the other side of the trigger when there is no room. Other browsers show it beside the trigger, inside its parent.
 - Keep `openDelay` and `closeDelay` generous enough that the card does not flicker when the pointer crosses the trigger.
 
 ## API Reference

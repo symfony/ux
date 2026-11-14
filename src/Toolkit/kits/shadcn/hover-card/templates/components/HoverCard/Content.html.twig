@@ -2,14 +2,15 @@
     ## 'bottom'|'top'|'left'|'right' The side where the content appears.
     side = 'bottom'
 -%}
+{#- `anchor()` insets rather than `position-area`, which Firefox misplaces in right-to-left: https://bugzil.la/2019601 -#}
 {%- set style = html_cva(
-    base: 'invisible opacity-0 in-data-[state=open]:visible in-data-[state=open]:opacity-100 transition-opacity duration-100 absolute z-50 w-64 rounded-lg bg-popover p-2.5 text-sm text-popover-foreground shadow-md ring-1 ring-foreground/10 outline-hidden ',
+    base: 'invisible opacity-0 in-data-[state=open]:visible in-data-[state=open]:opacity-100 transition-opacity duration-100 absolute z-50 w-64 rounded-lg bg-popover p-2.5 text-sm text-popover-foreground shadow-md ring-1 ring-foreground/10 outline-hidden overflow-visible [&[popover]:not(:popover-open)]:hidden [&[popover]]:inset-auto starting:open:opacity-0',
     variants: {
         side: {
-            bottom: 'left-1/2 top-full mt-2 -translate-x-1/2',
-            top: 'left-1/2 top-auto bottom-full mb-2 mt-0 -translate-x-1/2',
-            left: 'top-1/2 left-auto right-full -translate-y-1/2 translate-x-0 mt-0 mr-2',
-            right: 'top-1/2 left-full -translate-y-1/2 translate-x-0 mt-0 ml-2',
+            bottom: 'left-1/2 top-full mt-2 -translate-x-1/2 [&[popover]]:top-[anchor(bottom)] [&[popover]]:left-[anchor(center)] [&[popover]]:-translate-x-1/2 [&[popover]]:[position-try-fallbacks:flip-block]',
+            top: 'left-1/2 top-auto bottom-full mb-2 mt-0 -translate-x-1/2 [&[popover]]:bottom-[anchor(top)] [&[popover]]:left-[anchor(center)] [&[popover]]:-translate-x-1/2 [&[popover]]:[position-try-fallbacks:flip-block]',
+            left: 'top-1/2 left-auto right-full -translate-y-1/2 translate-x-0 mt-0 mr-2 [&[popover]]:right-[anchor(left)] [&[popover]]:[align-self:anchor-center] [&[popover]]:[position-try-fallbacks:flip-block,flip-inline,flip-block_flip-inline] [&[popover]]:translate-none',
+            right: 'top-1/2 left-full -translate-y-1/2 translate-x-0 mt-0 ml-2 [&[popover]]:left-[anchor(right)] [&[popover]]:[align-self:anchor-center] [&[popover]]:[position-try-fallbacks:flip-block,flip-inline,flip-block_flip-inline] [&[popover]]:translate-none',
         },
     },
     default_variant: {
@@ -20,6 +21,7 @@
     role="tooltip"
     data-side="{{ side }}"
     data-slot="hover-card-content"
+    data-hover-card-target="content"
     {{ attributes.defaults({
         class: style.apply({side: side})|tailwind_classes,
     }) }}
