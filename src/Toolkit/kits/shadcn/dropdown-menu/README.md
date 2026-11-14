@@ -97,6 +97,8 @@ A menu triggered by a button, providing a list of actions or links.
 </twig:DropdownMenu>
 ```
 
+To make the menu as wide as its trigger, give `DropdownMenu:Content` the `w-(--dropdown-menu-trigger-width)` class rather than `w-full`, which no longer follows the trigger in the top layer.
+
 ## Examples
 
 ### Basic
@@ -742,6 +744,7 @@ To enable RTL support, set the `dir="rtl"` attribute on the root element.
 - `ArrowDown` and `ArrowUp` move between items and wrap around, `Home` and `End` jump to the first and last, and `Escape` closes the menu and returns focus to the trigger. Disabled items are skipped.
 - `DropdownMenu:Separator` renders `role="separator"`, and `DropdownMenu:Group` renders `role="group"`. Label a group with `aria-labelledby` pointing at its `DropdownMenu:Label`.
 - A disabled item renders `aria-disabled="true"` rather than being removed, so its presence stays discoverable.
+- In browsers with the [Popover API](https://developer.mozilla.org/en-US/docs/Web/API/Popover_API) and [anchor positioning](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_anchor_positioning), the menu and its submenus open in the top layer, so no ancestor clips them. They flip to the other side of their trigger when there is no room.
 - `DropdownMenu:Shortcut` shows the key combination visually. It is announced as part of the item text, so keep it short.
 
 ## API Reference
