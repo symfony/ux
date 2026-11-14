@@ -230,7 +230,8 @@ final class UXCssBundle extends AbstractBundle
             $services
                 ->set('ux_css.stylesheet_listener', StylesheetListener::class)
                     ->args([service('ux_css.stylesheet_dumper')])
-                    ->tag('kernel.event_listener', ['event' => 'kernel.request', 'priority' => 64]);
+                    // below the AssetMapper dev server (35), so that only page requests list the templates again
+                    ->tag('kernel.event_listener', ['event' => 'kernel.request', 'priority' => 34]);
         }
     }
 
