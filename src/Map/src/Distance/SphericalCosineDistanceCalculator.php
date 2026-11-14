@@ -29,10 +29,10 @@ final class SphericalCosineDistanceCalculator implements DistanceCalculatorInter
 
     public function calculateDistance(Point $point1, Point $point2): float
     {
-        $lat1Rad = deg2rad($point1->getLatitude());
-        $lat2Rad = deg2rad($point2->getLatitude());
-        $lng1Rad = deg2rad($point1->getLongitude());
-        $lng2Rad = deg2rad($point2->getLongitude());
+        $lat1Rad = deg2rad($point1->latitude);
+        $lat2Rad = deg2rad($point2->latitude);
+        $lng1Rad = deg2rad($point1->longitude);
+        $lng2Rad = deg2rad($point2->longitude);
 
         $cosDistance = sin($lat1Rad) * sin($lat2Rad) + cos($lat1Rad) * cos($lat2Rad) * cos($lng2Rad - $lng1Rad);
 

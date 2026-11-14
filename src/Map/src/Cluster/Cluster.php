@@ -42,8 +42,8 @@ final class Cluster implements \Countable, \IteratorAggregate
     public function addPoint(Point $point): void
     {
         $this->points[] = $point;
-        $this->sumLat += $point->getLatitude();
-        $this->sumLng += $point->getLongitude();
+        $this->sumLat += $point->latitude;
+        $this->sumLng += $point->longitude;
         ++$this->count;
     }
 

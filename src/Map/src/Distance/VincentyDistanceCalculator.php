@@ -34,10 +34,10 @@ final class VincentyDistanceCalculator implements DistanceCalculatorInterface
 
     public function calculateDistance(Point $point1, Point $point2): float
     {
-        $phi1 = deg2rad($point1->getLatitude());
-        $phi2 = deg2rad($point2->getLatitude());
-        $lambda1 = deg2rad($point1->getLongitude());
-        $lambda2 = deg2rad($point2->getLongitude());
+        $phi1 = deg2rad($point1->latitude);
+        $phi2 = deg2rad($point2->latitude);
+        $lambda1 = deg2rad($point1->longitude);
+        $lambda2 = deg2rad($point2->longitude);
 
         $L = $lambda2 - $lambda1;
         $U1 = atan((1 - self::F) * tan($phi1));

@@ -49,8 +49,8 @@ final class GridClusteringAlgorithm implements ClusteringAlgorithmInterface
         $cells = [];
 
         foreach ($points as $point) {
-            $lng = $point->getLongitude();
-            $lat = $point->getLatitude();
+            $lng = $point->longitude;
+            $lat = $point->latitude;
             $gridX = (int) (($lng + 180) * $invGridSize);
             $gridY = (int) (($lat + 90) * $invGridSize);
             $key = ($gridX << 16) | $gridY;

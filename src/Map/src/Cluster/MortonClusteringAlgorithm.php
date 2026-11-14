@@ -43,8 +43,8 @@ final class MortonClusteringAlgorithm implements ClusteringAlgorithmInterface
         $clustersMap = [];
 
         foreach ($points as $point) {
-            $xNorm = ($point->getLatitude() + 180) / 360;
-            $yNorm = ($point->getLongitude() + 90) / 180;
+            $xNorm = ($point->latitude + 180) / 360;
+            $yNorm = ($point->longitude + 90) / 180;
 
             $x = (int) floor($xNorm * $resolution);
             $y = (int) floor($yNorm * $resolution);
