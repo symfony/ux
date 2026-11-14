@@ -118,11 +118,11 @@ final class TwigComponentPass implements CompilerPassInterface
     /**
      * @param class-string $component
      *
-     * @return array{preMount: string[], mount: string[], postMount: string[]}
+     * @return array{preMount: string[], mount: string[], postMount: string[], mount_parameters: array<string, bool>}
      */
     private function getMountMethods(string $component): array
     {
-        $preMount = $mount = $postMount = [];
+        $preMount = $mount = $postMount = $mountParameters = [];
         foreach (new \ReflectionClass($component)->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
             foreach ($method->getAttributes(PreMount::class) as $attribute) {
                 $preMount[$method->getName()] = $attribute->newInstance()->priority;
@@ -132,6 +132,9 @@ final class TwigComponentPass implements CompilerPassInterface
             }
             if ('mount' === $method->getName()) {
                 $mount['mount'] = 0;
+                foreach ($method->getParameters() as $parameter) {
+                    $mountParameters[$parameter->getName()] = $parameter->isDefaultValueAvailable();
+                }
             }
         }
 
@@ -143,6 +146,7 @@ final class TwigComponentPass implements CompilerPassInterface
             'pre_mount' => array_keys($preMount),
             'mount' => array_keys($mount),
             'post_mount' => array_keys($postMount),
+            'mount_parameters' => $mountParameters,
         ];
     }
 

@@ -95,6 +95,15 @@ final class ComponentFactoryTest extends KernelTestCase
         $this->createComponent('component_c');
     }
 
+    public function testObjectDefaultValueOfAMountParameterIsNotSharedBetweenMounts(): void
+    {
+        $first = $this->createComponent('object_default_mount');
+        $second = $this->createComponent('object_default_mount');
+
+        self::assertInstanceOf(\stdClass::class, $first->fresh);
+        self::assertNotSame($first->fresh, $second->fresh);
+    }
+
     public function testStringableObjectCanBePassedToComponent(): void
     {
         $attributes = $this->factory()->create('component_a', ['propB' => 'B', 'data-item-id-param' => new class {

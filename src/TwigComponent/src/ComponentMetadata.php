@@ -115,6 +115,16 @@ final class ComponentMetadata
         return $this->config['direct_writes'] ?? [];
     }
 
+    /**
+     * @return array<string, bool>|null The parameters of the mount() method, true when the parameter has a default value
+     *
+     * @internal
+     */
+    public function getMountParameters(): ?array
+    {
+        return $this->config['mount_parameters'] ?? null;
+    }
+
     public function get(string $key, mixed $default = null): mixed
     {
         return $this->config[$key] ?? $default;

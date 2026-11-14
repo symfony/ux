@@ -430,6 +430,62 @@ class ComponentFactoryTest extends TestCase
         $this->mountWithAccessor($component, ['value' => 'new']);
     }
 
+    public function testThePassListsTheParametersOfTheMountMethod(): void
+    {
+        $component = new class {
+            public function mount(string $required, int $optional = 1): void
+            {
+            }
+        };
+
+        $metadata = $this->createMetadata($component);
+
+        $this->assertSame(['required' => false, 'optional' => true], $metadata->getMountParameters());
+    }
+
+    public function testMountReadsTheParametersOfAComponentTheMetadataDoesNotDescribe(): void
+    {
+        $component = new class {
+            public array $mounted = [];
+
+            public function mount(string $required, int $optional = 1): void
+            {
+                $this->mounted = [$required, $optional];
+            }
+        };
+        $metadata = new ComponentMetadata(['key' => 'foo', 'class' => $component::class, 'service_id' => 'foo', 'mount' => ['mount']]);
+        $factory = $this->createFactoryWithAccessor();
+
+        $factory->mountFromObject($component, ['required' => 'a'], $metadata);
+        $this->assertSame(['a', 1], $component->mounted);
+
+        $factory->mountFromObject($component, ['required' => 'b', 'optional' => 2], $metadata);
+        $this->assertSame(['b', 2], $component->mounted);
+    }
+
+    public function testMountReadsTheParametersOfAnotherClassThanTheOneOfTheMetadata(): void
+    {
+        $described = new class {
+            public function mount(string $title): void
+            {
+            }
+        };
+        $component = new class {
+            public array $mounted = [];
+
+            public function mount(int $count, string $label = 'none'): void
+            {
+                $this->mounted = [$count, $label];
+            }
+        };
+        $metadata = $this->createMetadata($described);
+
+        $mounted = $this->createFactoryWithAccessor()->mountFromObject($component, ['count' => 3, 'title' => 'kept'], $metadata);
+
+        $this->assertSame([3, 'none'], $component->mounted);
+        $this->assertSame('kept', $mounted->getAttributes()->all()['title']);
+    }
+
     private function mountWithAccessor(object $component, array $data, ?PropertyAccessorInterface $accessor = null): void
     {
         $this->createFactoryWithAccessor($accessor)->mountFromObject($component, $data, $this->createMetadata($component));
