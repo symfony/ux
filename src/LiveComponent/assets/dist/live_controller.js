@@ -2219,6 +2219,7 @@ var PollingDirector_default = class {
 		this.pollingIntervals.forEach((interval) => {
 			clearInterval(interval);
 		});
+		this.pollingIntervals = [];
 	}
 	clearPolling() {
 		this.stopAllPolling();
