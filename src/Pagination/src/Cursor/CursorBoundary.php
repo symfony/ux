@@ -17,7 +17,7 @@ namespace Symfony\UX\Pagination\Cursor;
 final class CursorBoundary
 {
     /**
-     * @param list<int|string|float> $values
+     * @param list<int|string|float|null> $values
      */
     public function __construct(
         public readonly array $values,
@@ -26,7 +26,7 @@ final class CursorBoundary
     }
 
     /**
-     * @return list<int|string|float>
+     * @return list<int|string|float|null>
      */
     public function getValues(): array
     {
