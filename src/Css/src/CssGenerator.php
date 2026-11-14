@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\Css;
 
+use Symfony\UX\Css\Engine\AtomicStyle;
 use Symfony\UX\Css\Engine\Engine;
 use Symfony\UX\Css\Engine\StyleEntry;
 
@@ -29,18 +30,22 @@ final class CssGenerator
     }
 
     /**
+     * The stylesheet of these hashes, and the classes it has rules for.
+     *
      * @param iterable<array<array-key, mixed>> $styles the hashes given to css()
      *
-     * @return list<string> the classes the stylesheet of these hashes has rules for
+     * @return array{string, list<string>}
      */
-    public function classNames(iterable $styles): array
+    public function generateWithClassNames(iterable $styles, bool $compact = false): array
     {
+        $atomicStyles = $this->engine->decoder()->decode($this->entries($styles));
+
         $classes = [];
-        foreach ($this->engine->decoder()->decode($this->entries($styles)) as $style) {
+        foreach ($atomicStyles as $style) {
             $classes[$style->htmlClass] = true;
         }
 
-        return array_map(strval(...), array_keys($classes));
+        return [$this->render($atomicStyles, $compact), array_map(strval(...), array_keys($classes))];
     }
 
     /**
@@ -48,8 +53,15 @@ final class CssGenerator
      */
     public function generate(iterable $styles, bool $compact = false): string
     {
+        return $this->render($this->engine->decoder()->decode($this->entries($styles)), $compact);
+    }
+
+    /**
+     * @param list<AtomicStyle> $atomicStyles
+     */
+    private function render(array $atomicStyles, bool $compact): string
+    {
         $stylesheet = $this->engine->stylesheet();
-        $atomicStyles = $this->engine->decoder()->decode($this->entries($styles));
         $preflight = $this->engine->hasPreflight();
         $reset = $preflight ? $this->engine->resetCss()->nodes() : [];
         $root = $stylesheet->build($atomicStyles, $this->engine->tokenCss()->nodes(), $reset);

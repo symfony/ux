@@ -165,11 +165,13 @@ final class StylesheetDumper
         }
 
         if ($this->debug && null !== $this->classesFile) {
-            $classes = json_encode($this->generator->classNames($styles), \JSON_THROW_ON_ERROR);
-            $this->filesystem->dumpFile($this->classesFile, $classes);
+            [$stylesheet, $classNames] = $this->generator->generateWithClassNames($styles, !$this->debug);
+            $this->filesystem->dumpFile($this->classesFile, json_encode($classNames, \JSON_THROW_ON_ERROR));
+        } else {
+            $stylesheet = $this->generator->generate($styles, !$this->debug);
         }
 
-        $css = self::HEADER.$this->generator->generate($styles, !$this->debug);
+        $css = self::HEADER.$stylesheet;
         if (!is_file($this->stylesheetFile) || file_get_contents($this->stylesheetFile) !== $css) {
             $this->filesystem->dumpFile($this->stylesheetFile, $css);
         }
