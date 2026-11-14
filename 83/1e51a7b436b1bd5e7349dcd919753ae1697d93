@@ -1,0 +1,63 @@
+---------------------------------------------------------------------------
+
+by github-actions[bot] at 2026-11-14T19:28:04Z
+
+<h1>📊 Packages dist files size difference</h1>
+
+Thanks for the PR! Here is the difference in size of the packages dist files between the base branch and the PR.
+Please review the changes and make sure they are expected.
+
+<table>
+    <thead><tr><th>File</th><th>Before (Size / Gzip)</th><th>After (Size / Gzip)</th></tr></thead>
+    <tbody><tr><td colspan="3"><a href="https://github.com/Kocal/symfony-ux/tree/perf/map-reuse-parsed-values/src/Map/assets/dist"><b>Map</b></a></td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/perf/map-reuse-parsed-values/src/Map/assets/dist/abstract_map_controller.d.ts"><code>abstract_map_controller.d.ts</code></a></td>
+            <td>
+                    <code>7.25 kB</code>
+                    / <code>1.44 kB</code>
+                </td><td>
+                    <code>7.43 kB</code><sup>+3% 📈</sup>
+                    / <code>1.48 kB</code><sup>+3% 📈</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/perf/map-reuse-parsed-values/src/Map/assets/dist/abstract_map_controller.js"><code>abstract_map_controller.js</code></a></td>
+            <td>
+                    <code>5.97 kB</code>
+                    / <code>1.59 kB</code>
+                </td><td>
+                    <code>6.49 kB</code><sup>+9% 📈</sup>
+                    / <code>1.68 kB</code><sup>+6% 📈</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/Kocal/symfony-ux/tree/perf/map-reuse-parsed-values/src/Map/src/Bridge/Google/assets/dist"><b>Map (Bridge Google)</b></a></td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/perf/map-reuse-parsed-values/src/Map/src/Bridge/Google/assets/dist/map_controller.d.ts"><code>map_controller.d.ts</code></a></td>
+            <td>
+                    <code>10.26 kB</code>
+                    / <code>1.92 kB</code>
+                </td><td>
+                    <code>10.45 kB</code><sup>+2% 📈</sup>
+                    / <code>1.97 kB</code><sup>+2% 📈</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/perf/map-reuse-parsed-values/src/Map/src/Bridge/Google/assets/dist/map_controller.js"><code>map_controller.js</code></a></td>
+            <td>
+                    <code>12.78 kB</code>
+                    / <code>3.24 kB</code>
+                </td><td>
+                    <code>13.29 kB</code><sup>+4% 📈</sup>
+                    / <code>3.33 kB</code><sup>+3% 📈</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/Kocal/symfony-ux/tree/perf/map-reuse-parsed-values/src/Map/src/Bridge/Leaflet/assets/dist"><b>Map (Bridge Leaflet)</b></a></td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/perf/map-reuse-parsed-values/src/Map/src/Bridge/Leaflet/assets/dist/map_controller.d.ts"><code>map_controller.d.ts</code></a></td>
+            <td>
+                    <code>9.65 kB</code>
+                    / <code>1.86 kB</code>
+                </td><td>
+                    <code>9.84 kB</code><sup>+2% 📈</sup>
+                    / <code>1.89 kB</code><sup>+2% 📈</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/perf/map-reuse-parsed-values/src/Map/src/Bridge/Leaflet/assets/dist/map_controller.js"><code>map_controller.js</code></a></td>
+            <td>
+                    <code>12.71 kB</code>
+                    / <code>3.51 kB</code>
+                </td><td>
+                    <code>13.22 kB</code><sup>+4% 📈</sup>
+                    / <code>3.61 kB</code><sup>+3% 📈</sup>
+                </td></tr></tbody>
+</table>
+
+<!-- Sticky Pull Request Comment -->
