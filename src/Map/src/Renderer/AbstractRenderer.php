@@ -87,36 +87,37 @@ abstract class AbstractRenderer implements RendererInterface
 
     private function getMapAttributes(Map $map): array
     {
-        $computeId = static fn (array $array) => hash('xxh3', json_encode($array, \JSON_THROW_ON_ERROR));
+        // the "@id" is appended to the JSON of the element, so that StimulusAttributes does not encode it again
+        $encode = static function (array $element, ?string $id = null): string {
+            $json = json_encode($element, \JSON_THROW_ON_ERROR);
+
+            return substr($json, 0, -1).',"@id":"'.($id ?? hash('xxh3', $json)).'"}';
+        };
 
         $attrs = $map->toArray();
         $icons = [];
+        $generatedIcons = [];
 
         foreach ($attrs['markers'] as $key => $marker) {
+            $id = null;
             if (isset($marker['icon']['type']) && IconType::UxIcon->value === $marker['icon']['type']) {
-                $generatedHtml = $this->uxIconRenderer->render($marker['icon']['name'], [
-                    'width' => $marker['icon']['width'],
-                    'height' => $marker['icon']['height'],
+                $id = hash('xxh3', json_encode($marker, \JSON_THROW_ON_ERROR));
+                $icon = $marker['icon'];
+                $iconKey = $icon['name'].'|'.$icon['width'].'|'.$icon['height'];
+                $generatedHtml = $generatedIcons[$iconKey] ??= $this->uxIconRenderer->render($icon['name'], [
+                    'width' => $icon['width'],
+                    'height' => $icon['height'],
                 ]);
                 // Markers overwhelmingly share the same icon, so each SVG is written once and referenced by its index.
-                $attrs['markers'][$key]['icon']['_generated_html'] = $icons[$generatedHtml] ??= \count($icons);
+                $marker['icon']['_generated_html'] = $icons[$generatedHtml] ??= \count($icons);
             }
-            $attrs['markers'][$key]['@id'] = $computeId($marker);
-        }
-        foreach ($attrs['polygons'] as $key => $polygon) {
-            $attrs['polygons'][$key]['@id'] = $computeId($polygon);
-        }
 
-        foreach ($attrs['polylines'] as $key => $polyline) {
-            $attrs['polylines'][$key]['@id'] = $computeId($polyline);
+            $attrs['markers'][$key] = $encode($marker, $id);
         }
+        $attrs['markers'] = new JsonList($attrs['markers']);
 
-        foreach ($attrs['circles'] as $key => $circle) {
-            $attrs['circles'][$key]['@id'] = $computeId($circle);
-        }
-
-        foreach ($attrs['rectangles'] as $key => $rectangle) {
-            $attrs['rectangles'][$key]['@id'] = $computeId($rectangle);
+        foreach (['polygons', 'polylines', 'circles', 'rectangles'] as $type) {
+            $attrs[$type] = new JsonList(array_map($encode, $attrs[$type]));
         }
 
         if ([] !== $icons) {
