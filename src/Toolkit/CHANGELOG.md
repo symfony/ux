@@ -3,6 +3,7 @@
 ## 3.8.0
 
 - [Shadcn] Use the native invoker commands (`command` and `commandfor`) and the native `<dialog>` centering in `alert-dialog`
+- [Shadcn] Use the native invoker commands (`command` and `commandfor`), `closedby="any"` and the native `<dialog>` centering in `dialog`
 
 ## 3.7.1
 

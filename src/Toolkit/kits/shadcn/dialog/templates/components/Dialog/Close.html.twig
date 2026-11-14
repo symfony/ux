@@ -1,5 +1,8 @@
+{%- set _dialog_id = inject('dialog.id') -%}
 {%- set dialog_close_attrs = {
     'data-slot': 'dialog-close',
+    command: 'close',
+    commandfor: _dialog_id,
     'data-action': 'click->dialog#close'|html_attr_type('sst'),
 } -%}
 {##- The close trigger element (e.g., a `Button`) that closes the dialog when clicked. -#}

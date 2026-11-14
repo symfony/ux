@@ -1,5 +1,8 @@
+{%- set _dialog_id = inject('dialog.id') -%}
 {%- set dialog_trigger_attrs = {
     'data-slot': 'dialog-trigger',
+    command: 'show-modal',
+    commandfor: _dialog_id,
     'data-action': 'click->dialog#open'|html_attr_type('sst'),
     'data-dialog-target': 'trigger',
     'aria-haspopup': 'dialog',

@@ -187,6 +187,28 @@ describeRecipe('shadcn/sheet', () => {
         await expect(page.locator('dialog[data-side="right"]')).not.toHaveAttribute('data-closing');
     });
 
+    test('slides out when Escape closes it while nothing inside holds the focus', async ({ page, gotoExample }) => {
+        await gotoExample('shadcn/sheet/default');
+        const trigger = page.getByRole('button', { name: 'Open', exact: true });
+        await trigger.click();
+        const dialog = page.locator('[data-slot="sheet-content"]');
+        await expect(dialog).toBeVisible();
+        await dialog.evaluate((element) => {
+            new MutationObserver(() => {
+                if (element.hasAttribute('data-closing')) {
+                    element.dataset.exitPlayed = '';
+                }
+            }).observe(element, { attributeFilter: ['data-closing'] });
+        });
+        await page.evaluate(() => (document.activeElement as HTMLElement).blur());
+
+        await page.keyboard.press('Escape');
+
+        await expect(dialog).toBeHidden();
+        await expect(dialog).toHaveAttribute('data-exit-played');
+        await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+    });
+
     test('leaves the top layer as soon as it closes', async ({ page, gotoExample }) => {
         await gotoExample('shadcn/sheet/default');
         await page.getByRole('button', { name: 'Open', exact: true }).click();
