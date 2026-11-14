@@ -24,6 +24,13 @@ use Twig\Error\RuntimeError;
  */
 final class Cva
 {
+    private const CACHED_PROPS = 1000;
+
+    /**
+     * @var array<string, array<string, string>> the classes of the last prop combinations, by serialized props
+     */
+    private array $cache = [];
+
     /**
      * @param array<string, array<string, string>> $classes the precomputed classes (class mapped to its merge key), by CvaRecipe::key()
      *
@@ -48,8 +55,37 @@ final class Cva
             throw new RuntimeError($message);
         }
 
-        $key = $this->recipe->key($props);
+        return new CssClassList($this->cachedClasses($props));
+    }
 
-        return new CssClassList($this->classes[$key] ?? $this->runtime->cvaClasses($this->recipe, $props, $key));
+    /**
+     * @param array<array-key, mixed> $props
+     *
+     * @return array<string, string>
+     */
+    private function cachedClasses(array $props): array
+    {
+        try {
+            $cacheKey = serialize($props);
+        } catch (\Exception) {
+            // a value that cannot be serialized, like a closure, is for the recipe to refuse
+            $cacheKey = null;
+        }
+
+        if (null !== $cacheKey && isset($this->cache[$cacheKey])) {
+            return $this->cache[$cacheKey];
+        }
+
+        $key = $this->recipe->key($props);
+        $classes = $this->classes[$key] ?? $this->runtime->cvaClasses($this->recipe, $props, $key);
+        if (null === $cacheKey) {
+            return $classes;
+        }
+
+        if (\count($this->cache) >= self::CACHED_PROPS) {
+            $this->cache = [];
+        }
+
+        return $this->cache[$cacheKey] = $classes;
     }
 }
