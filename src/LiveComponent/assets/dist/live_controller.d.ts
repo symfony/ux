@@ -234,6 +234,7 @@ export default class LiveControllerDefault extends Controller<HTMLElement> imple
   pendingActionTriggerModelElement: HTMLElement | null;
   private elementEventListeners;
   private pendingFiles;
+  private isComponentFresh;
   static backendFactory: (controller: LiveControllerDefault) => BackendInterface;
   initialize(): void;
   connect(): void;

@@ -83,6 +83,7 @@ export default class LiveControllerDefault extends Controller<HTMLElement> imple
         { event: 'change', callback: (event) => this.handleChangeEvent(event) },
     ];
     private pendingFiles: { [key: string]: HTMLInputElement } = {};
+    private isComponentFresh = false;
 
     static backendFactory: (controller: LiveControllerDefault) => BackendInterface = (controller) =>
         new Backend(controller.urlValue, controller.requestMethodValue, controller.fetchCredentialsValue);
@@ -95,7 +96,10 @@ export default class LiveControllerDefault extends Controller<HTMLElement> imple
 
     connect() {
         // Stimulus reuses this controller when its element reconnects, so the props may have changed since initialize()
-        if (JSON.stringify(this.propsValue) !== JSON.stringify(this.component.valueStore.getOriginalProps())) {
+        if (
+            !this.isComponentFresh &&
+            JSON.stringify(this.propsValue) !== JSON.stringify(this.component.valueStore.getOriginalProps())
+        ) {
             this.createComponent();
         }
 
@@ -319,9 +323,12 @@ export default class LiveControllerDefault extends Controller<HTMLElement> imple
         plugins.forEach((plugin) => {
             this.component.addPlugin(plugin);
         });
+
+        this.isComponentFresh = true;
     }
 
     private connectComponent() {
+        this.isComponentFresh = false;
         this.component.connect();
         this.mutationObserver.observe(this.element, {
             attributes: true,
