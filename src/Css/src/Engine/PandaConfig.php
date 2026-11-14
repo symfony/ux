@@ -26,13 +26,19 @@ final class PandaConfig
     private const PRESET = __DIR__.'/../../resources/panda-preset.json';
 
     /**
+     * @var array<string, mixed>|null
+     */
+    private static ?array $preset = null;
+
+    /**
      * @param array{conditions?: array<string, string|list<string>>, theme?: array<string, mixed>, preflight?: bool|array{scope: string, level: string}} $project
      *
      * @return array<string, mixed>
      */
     public static function create(array $project): array
     {
-        $preset = json_decode(file_get_contents(self::PRESET), true, flags: \JSON_THROW_ON_ERROR);
+        // the callers never mutate it, and PHP copies the arrays taken out of it on write
+        $preset = self::$preset ??= json_decode(file_get_contents(self::PRESET), true, flags: \JSON_THROW_ON_ERROR);
 
         return [
             ...$preset,
