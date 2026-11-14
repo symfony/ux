@@ -21,12 +21,14 @@ export function strtr(string: string, replacePairs: Record<string, string | numb
         return string;
     }
 
-    const pattern = keys.map((from) => from.replace(SPECIAL_CHARS_REGEX, '\\$1')).join('|');
+    // a NUL character is not expected in a parameter name
+    const cacheKey = keys.length === 1 ? keys[0] : keys.join('\u0000');
 
-    let regex = compiledPatterns.get(pattern);
+    let regex = compiledPatterns.get(cacheKey);
     if (regex === undefined) {
+        const pattern = keys.map((from) => from.replace(SPECIAL_CHARS_REGEX, '\\$1')).join('|');
         regex = new RegExp(pattern, 'g');
-        compiledPatterns.set(pattern, regex);
+        compiledPatterns.set(cacheKey, regex);
     }
 
     return string.replace(regex, (matched) => replacePairs[matched].toString());

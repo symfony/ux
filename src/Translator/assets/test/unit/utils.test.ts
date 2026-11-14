@@ -42,6 +42,12 @@ text & @()`,
         expect(strtr(string, replacePairs)).toEqual(expected);
     });
 
+    test('strtr does not mix two key sets with the same concatenation', () => {
+        expect(strtr('a|b', { 'a|b': 'X' })).toEqual('X');
+        expect(strtr('a|b', { a: 'X', b: 'Y' })).toEqual('X|Y');
+        expect(strtr('a|b', { 'a|b': 'X' })).toEqual('X');
+    });
+
     test('strtr reuses its compiled pattern across calls', () => {
         const replacePairs = { '%name%': 'Hugo', '%count%': '2' };
 
