@@ -79,15 +79,23 @@ export default class {
     private onMutations(mutations: MutationRecord[]): void {
         // keyed by the Element the mutation occurred on, with an array of attribute string names
         const handledAttributeMutations: WeakMap<Element, string[]> = new WeakMap();
+        // the DOM does not move while a batch is processed
+        const shouldTrackElement: Map<Element, boolean> = new Map();
         for (const mutation of mutations) {
             const element = mutation.target as Element;
 
-            // ignore mutations that are not inside this component - e.g. inside a child
-            if (!this.shouldTrackChangeCallback(element)) {
+            if (this.isElementAddedByTranslation(element)) {
                 continue;
             }
 
-            if (this.isElementAddedByTranslation(element)) {
+            let isTracked = shouldTrackElement.get(element);
+            if (isTracked === undefined) {
+                // ignore mutations that are not inside this component - e.g. inside a child
+                isTracked = this.shouldTrackChangeCallback(element);
+                shouldTrackElement.set(element, isTracked);
+            }
+
+            if (!isTracked) {
                 continue;
             }
 

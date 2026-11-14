@@ -1248,10 +1248,16 @@ var ExternalMutationTracker_default = class {
 	}
 	onMutations(mutations) {
 		const handledAttributeMutations = /* @__PURE__ */ new WeakMap();
+		const shouldTrackElement = /* @__PURE__ */ new Map();
 		for (const mutation of mutations) {
 			const element = mutation.target;
-			if (!this.shouldTrackChangeCallback(element)) continue;
 			if (this.isElementAddedByTranslation(element)) continue;
+			let isTracked = shouldTrackElement.get(element);
+			if (isTracked === void 0) {
+				isTracked = this.shouldTrackChangeCallback(element);
+				shouldTrackElement.set(element, isTracked);
+			}
+			if (!isTracked) continue;
 			let isChangeInAddedElement = false;
 			for (const addedElement of this.addedElements) if (addedElement.contains(element)) {
 				isChangeInAddedElement = true;
