@@ -38,8 +38,8 @@ final class IntlMessageParametersExtractor implements ExtractorInterface
 
         $nodes = $ast['val'];
 
-        while ([] !== $nodes) {
-            $node = array_shift($nodes);
+        for ($index = 0; isset($nodes[$index]); ++$index) {
+            $node = $nodes[$index];
 
             switch ($node['type']) {
                 case Type::LITERAL:
