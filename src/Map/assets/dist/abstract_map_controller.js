@@ -30,6 +30,7 @@ var abstract_map_controller_default = class extends Controller {
 	infoWindows = [];
 	infoWindowsByElement = /* @__PURE__ */ new WeakMap();
 	isConnected = false;
+	initialValues = {};
 	createMarker;
 	createPolygon;
 	createPolyline;
@@ -52,23 +53,24 @@ var abstract_map_controller_default = class extends Controller {
 		this.createCircle = this.createDrawingFactory("circle", this.circles, this.doCreateCircle.bind(this));
 		this.createRectangle = this.createDrawingFactory("rectangle", this.rectangles, this.doCreateRectangle.bind(this));
 		this.map = this.doCreateMap({ definition: mapDefinition });
-		const markerDefinitions = this.markersValue;
+		const markerDefinitions = this.initialValues.markers ?? this.markersValue;
 		this.resolveMarkerIcons(markerDefinitions);
 		markerDefinitions.forEach((definition) => {
 			this.createMarker({ definition });
 		});
-		this.polygonsValue.forEach((definition) => {
+		(this.initialValues.polygons ?? this.polygonsValue).forEach((definition) => {
 			this.createPolygon({ definition });
 		});
-		this.polylinesValue.forEach((definition) => {
+		(this.initialValues.polylines ?? this.polylinesValue).forEach((definition) => {
 			this.createPolyline({ definition });
 		});
-		this.circlesValue.forEach((definition) => {
+		(this.initialValues.circles ?? this.circlesValue).forEach((definition) => {
 			this.createCircle({ definition });
 		});
-		this.rectanglesValue.forEach((definition) => {
+		(this.initialValues.rectangles ?? this.rectanglesValue).forEach((definition) => {
 			this.createRectangle({ definition });
 		});
+		this.initialValues = {};
 		if (this.fitBoundsToMarkersValue) this.doFitBoundsToMarkers();
 		this.dispatchEvent("connect", {
 			map: this.map,
@@ -102,28 +104,43 @@ var abstract_map_controller_default = class extends Controller {
 		else this.infoWindowsByElement.set(element, [infoWindow]);
 		return infoWindow;
 	}
-	markersValueChanged() {
-		if (!this.isConnected) return;
-		const markerDefinitions = this.markersValue;
+	markersValueChanged(value) {
+		if (!this.isConnected) {
+			this.initialValues.markers = value;
+			return;
+		}
+		const markerDefinitions = value ?? this.markersValue;
 		this.resolveMarkerIcons(markerDefinitions);
 		this.onDrawChanged(this.markers, markerDefinitions, this.createMarker, this.doRemoveMarker);
 		if (this.fitBoundsToMarkersValue) this.doFitBoundsToMarkers();
 	}
-	polygonsValueChanged() {
-		if (!this.isConnected) return;
-		this.onDrawChanged(this.polygons, this.polygonsValue, this.createPolygon, this.doRemovePolygon);
+	polygonsValueChanged(value) {
+		if (!this.isConnected) {
+			this.initialValues.polygons = value;
+			return;
+		}
+		this.onDrawChanged(this.polygons, value ?? this.polygonsValue, this.createPolygon, this.doRemovePolygon);
 	}
-	polylinesValueChanged() {
-		if (!this.isConnected) return;
-		this.onDrawChanged(this.polylines, this.polylinesValue, this.createPolyline, this.doRemovePolyline);
+	polylinesValueChanged(value) {
+		if (!this.isConnected) {
+			this.initialValues.polylines = value;
+			return;
+		}
+		this.onDrawChanged(this.polylines, value ?? this.polylinesValue, this.createPolyline, this.doRemovePolyline);
 	}
-	circlesValueChanged() {
-		if (!this.isConnected) return;
-		this.onDrawChanged(this.circles, this.circlesValue, this.createCircle, this.doRemoveCircle);
+	circlesValueChanged(value) {
+		if (!this.isConnected) {
+			this.initialValues.circles = value;
+			return;
+		}
+		this.onDrawChanged(this.circles, value ?? this.circlesValue, this.createCircle, this.doRemoveCircle);
 	}
-	rectanglesValueChanged() {
-		if (!this.isConnected) return;
-		this.onDrawChanged(this.rectangles, this.rectanglesValue, this.createRectangle, this.doRemoveRectangle);
+	rectanglesValueChanged(value) {
+		if (!this.isConnected) {
+			this.initialValues.rectangles = value;
+			return;
+		}
+		this.onDrawChanged(this.rectangles, value ?? this.rectanglesValue, this.createRectangle, this.doRemoveRectangle);
 	}
 	resolveMarkerIcons(definitions) {
 		if (!this.hasIconsValue) return;

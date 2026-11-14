@@ -131,6 +131,7 @@ export default abstract class export_default<MapOptions, BridgeMapOptions, Bridg
   protected infoWindows: Array<BridgeInfoWindow>;
   private infoWindowsByElement;
   private isConnected;
+  private initialValues;
   private createMarker;
   private createPolygon;
   private createPolyline;
@@ -146,11 +147,11 @@ export default abstract class export_default<MapOptions, BridgeMapOptions, Bridg
   abstract zoomValueChanged(): void;
   abstract minZoomValueChanged(): void;
   abstract maxZoomValueChanged(): void;
-  markersValueChanged(): void;
-  polygonsValueChanged(): void;
-  polylinesValueChanged(): void;
-  circlesValueChanged(): void;
-  rectanglesValueChanged(): void;
+  markersValueChanged(value?: typeof this.markersValue): void;
+  polygonsValueChanged(value?: typeof this.polygonsValue): void;
+  polylinesValueChanged(value?: typeof this.polylinesValue): void;
+  circlesValueChanged(value?: typeof this.circlesValue): void;
+  rectanglesValueChanged(value?: typeof this.rectanglesValue): void;
   protected abstract doCreateMap({ definition }: {
     definition: MapDefinition<MapOptions, BridgeMapOptions>;
   }): BridgeMap;
