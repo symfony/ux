@@ -79,37 +79,74 @@ final class Optimizer
 
     private function discardDuplicates(Container $container): void
     {
-        $index = \count($container->nodes) - 1;
+        $this->discardDuplicateDeclarations($container);
+
+        $nodes = $container->nodes;
+        $rulesOfSelector = [];
+        $rankOfRule = [];
+        foreach ($nodes as $node) {
+            if ($node instanceof Rule) {
+                $rankOfRule[spl_object_id($node)] = \count($rulesOfSelector[$node->selector] ?? []);
+                $rulesOfSelector[$node->selector][] = $node;
+            }
+        }
+
+        $index = \count($nodes) - 1;
         while ($index >= 0) {
-            $last = $container->nodes[$index--] ?? null;
-            if (null === $last || null === $last->parent) {
+            $last = $nodes[$index--];
+            if (null === $last->parent) {
                 continue;
             }
             if ($last instanceof Container) {
                 $this->discardDuplicates($last);
             }
             if ($last instanceof Rule) {
-                $this->dedupeRule($last, $container);
-            } elseif (($last instanceof AtRule && 'layer' !== $last->name) || $last instanceof Declaration) {
+                $this->dedupeRule($last, $rulesOfSelector[$last->selector], $rankOfRule[spl_object_id($last)]);
+            } elseif ($last instanceof AtRule && 'layer' !== $last->name) {
                 $this->dedupeNode($last, $container);
             }
         }
     }
 
-    private function dedupeRule(Rule $last, Container $container): void
+    private function discardDuplicateDeclarations(Container $container): void
     {
-        $index = $container->indexOf($last) - 1;
+        $lastOfKey = [];
+        $duplicates = [];
+        foreach ($container->nodes as $node) {
+            if (!$node instanceof Declaration) {
+                continue;
+            }
+            $key = $node->property."\0".$node->value."\0".trim($node->before)."\0".($node->important ? '1' : '0');
+            if (isset($lastOfKey[$key])) {
+                $duplicates[] = $lastOfKey[$key];
+            }
+            $lastOfKey[$key] = $node;
+        }
+
+        foreach ($duplicates as $duplicate) {
+            $duplicate->remove();
+        }
+    }
+
+    /**
+     * @param list<Rule> $rulesOfSelector every sibling rule sharing the selector of $last, in document order
+     * @param int        $rank            the offset of $last in $rulesOfSelector
+     */
+    private function dedupeRule(Rule $last, array $rulesOfSelector, int $rank): void
+    {
+        $index = $rank - 1;
         while ($index >= 0) {
-            $node = $container->nodes[$index--] ?? null;
-            if ($node instanceof Rule && $node->selector === $last->selector) {
-                foreach ($last->nodes as $child) {
-                    if ($child instanceof Declaration) {
-                        $this->dedupeNode($child, $node);
-                    }
+            $node = $rulesOfSelector[$index--];
+            if (null === $node->parent) {
+                continue;
+            }
+            foreach ($last->nodes as $child) {
+                if ($child instanceof Declaration) {
+                    $this->dedupeNode($child, $node);
                 }
-                if ([] === $node->nodes) {
-                    $node->remove();
-                }
+            }
+            if ([] === $node->nodes) {
+                $node->remove();
             }
         }
     }
