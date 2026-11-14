@@ -1,7 +1,7 @@
 // @ts-expect-error
 import { Idiomorph } from 'idiomorph/dist/idiomorph.esm.js';
 import { cloneHTMLElement, getModelDirectiveFromElement, setValueOnElement } from './dom_utils';
-import { normalizeAttributesForComparison } from './normalize_attributes_for_comparison';
+import { areNodesEqualAfterNormalization } from './normalize_attributes_for_comparison';
 import type ExternalMutationTracker from './Rendering/ExternalMutationTracker';
 
 const syncAttributes = (fromEl: Element, toEl: Element): void => {
@@ -225,13 +225,7 @@ export function executeMorphdom(
                         if (fromEl.nodeName.toUpperCase() !== 'OPTION' && fromEl.isEqualNode(toEl)) {
                             // the nodes are equal, but the "value" on some might differ
                             // lets try to quickly compare a bit more deeply
-                            const normalizedFromEl = cloneHTMLElement(fromEl);
-                            normalizeAttributesForComparison(normalizedFromEl);
-
-                            const normalizedToEl = cloneHTMLElement(toEl);
-                            normalizeAttributesForComparison(normalizedToEl);
-
-                            if (normalizedFromEl.isEqualNode(normalizedToEl)) {
+                            if (areNodesEqualAfterNormalization(fromEl, toEl)) {
                                 // don't bother updating
                                 return false;
                             }

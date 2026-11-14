@@ -971,15 +971,45 @@ var Idiomorph = (function() {
 		defaults
 	};
 })();
+const REFLECTED_VALUE_TAG_NAMES = /* @__PURE__ */ new Set([
+	"BUTTON",
+	"DATA",
+	"LI",
+	"METER",
+	"OPTION",
+	"PROGRESS"
+]);
 function normalizeAttributesForComparison(element) {
 	if (!(element instanceof HTMLInputElement && element.type === "file")) {
 		if ("value" in element) element.setAttribute("value", element.value);
 		else if (element.hasAttribute("value")) element.setAttribute("value", "");
 	}
-	Array.from(element.children).forEach((child) => {
-		normalizeAttributesForComparison(child);
-	});
+	for (let child = element.firstElementChild; child !== null; child = child.nextElementSibling) normalizeAttributesForComparison(child);
 }
+function areNodesEqualAfterNormalization(fromEl, toEl) {
+	const comparison = compareFieldValues(fromEl, toEl);
+	if (comparison !== null) return comparison;
+	const normalizedFromEl = cloneHTMLElement(fromEl);
+	normalizeAttributesForComparison(normalizedFromEl);
+	const normalizedToEl = cloneHTMLElement(toEl);
+	normalizeAttributesForComparison(normalizedToEl);
+	return normalizedFromEl.isEqualNode(normalizedToEl);
+}
+const compareFieldValues = (fromEl, toEl) => {
+	const fromElements = fromEl.querySelectorAll("*");
+	let toElements = null;
+	for (let i = -1; i < fromElements.length; i++) {
+		const from = i === -1 ? fromEl : fromElements[i];
+		if (!("value" in from) || REFLECTED_VALUE_TAG_NAMES.has(from.tagName)) continue;
+		const isInput = from instanceof HTMLInputElement;
+		if (!isInput && !(from instanceof HTMLTextAreaElement)) return null;
+		if (isInput && from.type === "file") continue;
+		if (toElements === null) toElements = toEl.querySelectorAll("*");
+		const to = i === -1 ? toEl : toElements[i];
+		if (from.value !== to.value) return false;
+	}
+	return true;
+};
 const syncAttributes = (fromEl, toEl) => {
 	for (let i = 0; i < fromEl.attributes.length; i++) {
 		const attr = fromEl.attributes[i];
@@ -1054,11 +1084,7 @@ function executeMorphdom(rootFromElement, rootToElement, modifiedFieldElements, 
 						if (externallyChangedIds.has(fromEl)) setId(toEl, serverId);
 					}
 					if (fromEl.nodeName.toUpperCase() !== "OPTION" && fromEl.isEqualNode(toEl)) {
-						const normalizedFromEl = cloneHTMLElement(fromEl);
-						normalizeAttributesForComparison(normalizedFromEl);
-						const normalizedToEl = cloneHTMLElement(toEl);
-						normalizeAttributesForComparison(normalizedToEl);
-						if (normalizedFromEl.isEqualNode(normalizedToEl)) return false;
+						if (areNodesEqualAfterNormalization(fromEl, toEl)) return false;
 					}
 				}
 				if (fromEl.hasAttribute("data-skip-morph") || fromId && fromId !== toEl.getAttribute("id")) {
