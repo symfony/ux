@@ -146,12 +146,9 @@ export default class extends AbstractMapController<
             title: title || undefined,
             riseOnHover: true,
             ...bridgeOptions,
-        }).addTo(this.map);
+        });
 
-        if (infoWindow) {
-            this.createInfoWindow({ definition: infoWindow, element: marker });
-        }
-
+        // Setting the icon while the marker is not on the map yet only stores it, instead of building its DOM twice.
         if (icon) {
             if (Object.prototype.hasOwnProperty.call(bridgeOptions, 'icon')) {
                 console.warn(
@@ -160,6 +157,12 @@ export default class extends AbstractMapController<
             }
 
             this.doCreateIcon({ definition: icon, element: marker });
+        }
+
+        marker.addTo(this.map);
+
+        if (infoWindow) {
+            this.createInfoWindow({ definition: infoWindow, element: marker });
         }
 
         return marker;

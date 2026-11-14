@@ -202,10 +202,6 @@ var map_controller_default = class extends abstract_map_controller_default {
 			title: title || void 0,
 			riseOnHover: true,
 			...bridgeOptions
-		}).addTo(this.map);
-		if (infoWindow) this.createInfoWindow({
-			definition: infoWindow,
-			element: marker
 		});
 		if (icon) {
 			if (Object.prototype.hasOwnProperty.call(bridgeOptions, "icon")) console.warn("[Symfony UX Map] Defining \"bridgeOptions.icon\" for a marker with a custom icon is not supported and will be ignored.");
@@ -214,6 +210,11 @@ var map_controller_default = class extends abstract_map_controller_default {
 				element: marker
 			});
 		}
+		marker.addTo(this.map);
+		if (infoWindow) this.createInfoWindow({
+			definition: infoWindow,
+			element: marker
+		});
 		return marker;
 	}
 	doRemoveMarker(marker) {
