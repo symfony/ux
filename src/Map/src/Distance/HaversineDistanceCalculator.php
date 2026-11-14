@@ -29,10 +29,10 @@ final class HaversineDistanceCalculator implements DistanceCalculatorInterface
 
     public function calculateDistance(Point $point1, Point $point2): float
     {
-        $lat1Rad = deg2rad($point1->getLatitude());
-        $lat2Rad = deg2rad($point2->getLatitude());
-        $deltaLat = deg2rad($point2->getLatitude() - $point1->getLatitude());
-        $deltaLng = deg2rad($point2->getLongitude() - $point1->getLongitude());
+        $lat1Rad = deg2rad($point1->latitude);
+        $lat2Rad = deg2rad($point2->latitude);
+        $deltaLat = deg2rad($point2->latitude - $point1->latitude);
+        $deltaLng = deg2rad($point2->longitude - $point1->longitude);
 
         $a = sin($deltaLat / 2) ** 2 + cos($lat1Rad) * cos($lat2Rad) * sin($deltaLng / 2) ** 2;
         $c = 2 * asin(min(1.0, sqrt($a)));
