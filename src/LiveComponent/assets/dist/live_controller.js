@@ -2043,6 +2043,30 @@ var LazyPlugin_default = class {
 		return this.intersectionObserver;
 	}
 };
+const validModifiers = /* @__PURE__ */ new Map();
+validModifiers.set("delay", (modifier, _directive, isLoading, modifiers) => {
+	if (!isLoading) return;
+	modifiers.delay = modifier.value ? Number.parseInt(modifier.value) : 200;
+});
+validModifiers.set("action", (modifier, directive, _isLoading, modifiers) => {
+	if (!modifier.value) throw new Error(`The "action" in data-loading must have an action name - e.g. action(foo). It's missing for "${directive.getString()}"`);
+	modifiers.targetedActions.push(modifier.value);
+});
+validModifiers.set("model", (modifier, directive, _isLoading, modifiers) => {
+	if (!modifier.value) throw new Error(`The "model" in data-loading must have an action name - e.g. model(foo). It's missing for "${directive.getString()}"`);
+	modifiers.targetedModels.push(modifier.value);
+});
+const parsedDirectives = /* @__PURE__ */ new WeakMap();
+const getDirectives = (element, raw) => {
+	const cached = parsedDirectives.get(element);
+	if (cached && cached.raw === raw) return cached.directives;
+	const directives = parseDirectives(raw);
+	parsedDirectives.set(element, {
+		raw,
+		directives
+	});
+	return directives;
+};
 var LoadingPlugin_default = class {
 	attachToComponent(component) {
 		component.on("loading.state:started", (element, request) => {
@@ -2072,29 +2096,20 @@ var LoadingPlugin_default = class {
 	}
 	handleLoadingDirective(element, isLoading, directive, backendRequest) {
 		const finalAction = parseLoadingAction(directive.action, isLoading);
-		const targetedActions = [];
-		const targetedModels = [];
-		let delay = 0;
-		const validModifiers = /* @__PURE__ */ new Map();
-		validModifiers.set("delay", (modifier) => {
-			if (!isLoading) return;
-			delay = modifier.value ? Number.parseInt(modifier.value) : 200;
-		});
-		validModifiers.set("action", (modifier) => {
-			if (!modifier.value) throw new Error(`The "action" in data-loading must have an action name - e.g. action(foo). It's missing for "${directive.getString()}"`);
-			targetedActions.push(modifier.value);
-		});
-		validModifiers.set("model", (modifier) => {
-			if (!modifier.value) throw new Error(`The "model" in data-loading must have an action name - e.g. model(foo). It's missing for "${directive.getString()}"`);
-			targetedModels.push(modifier.value);
-		});
+		const modifiers = {
+			delay: 0,
+			targetedActions: [],
+			targetedModels: []
+		};
 		directive.modifiers.forEach((modifier) => {
-			if (validModifiers.has(modifier.name)) {
-				(validModifiers.get(modifier.name) ?? (() => {}))(modifier);
+			const callable = validModifiers.get(modifier.name);
+			if (callable) {
+				callable(modifier, directive, isLoading, modifiers);
 				return;
 			}
 			throw new Error(`Unknown modifier "${modifier.name}" used in data-loading="${directive.getString()}". Available modifiers are: ${Array.from(validModifiers.keys()).join(", ")}.`);
 		});
+		const { delay, targetedActions, targetedModels } = modifiers;
 		if (isLoading && targetedActions.length > 0 && backendRequest && !backendRequest.containsOneOfActions(targetedActions)) return;
 		if (isLoading && targetedModels.length > 0 && backendRequest && !backendRequest.areAnyModelsUpdated(targetedModels)) return;
 		let loadingDirective;
@@ -2135,7 +2150,7 @@ var LoadingPlugin_default = class {
 		if (element.hasAttribute("data-loading")) matchingElements = [element, ...matchingElements];
 		matchingElements.forEach((element) => {
 			if (!(element instanceof HTMLElement) && !(element instanceof SVGElement)) throw new Error("Invalid Element Type");
-			const directives = parseDirectives(element.dataset.loading || "show");
+			const directives = getDirectives(element, element.dataset.loading || "show");
 			loadingDirectives.push({
 				element,
 				directives
