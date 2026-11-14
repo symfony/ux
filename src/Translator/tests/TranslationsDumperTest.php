@@ -482,6 +482,54 @@ class TranslationsDumperTest extends TestCase
         );
     }
 
+    public function testDumpTypesTheParametersOfTheLastLocale(): void
+    {
+        $catalogues = [
+            new MessageCatalogue('en', ['messages' => ['mixed.parameters' => 'Hello %who%!']]),
+            new MessageCatalogue('fr', ['messages' => ['mixed.parameters' => 'Bonjour %qui%, %count% messages']]),
+        ];
+
+        $translationsDumper = new TranslationsDumper(
+            new MessageParametersExtractor(),
+            new IntlMessageParametersExtractor(),
+            new TypeScriptMessageParametersPrinter(),
+            new Filesystem(),
+        );
+
+        $translationsDumper->dump(
+            catalogues: $catalogues,
+            dumpDir: self::$translationsDumpDir,
+        );
+
+        $this->assertStringContainsString(
+            '"mixed.parameters": Message<{ \'messages\': { parameters: { \'%qui%\': string, \'%count%\': number } } }, \'en\'|\'fr\'>;',
+            file_get_contents(self::$translationsDumpDir.'/index.d.ts'),
+        );
+    }
+
+    public function testDumpFailsOnAnInvalidIntlMessageOfAnyLocale(): void
+    {
+        $catalogues = [
+            new MessageCatalogue('en', ['messages+intl-icu' => ['broken' => '{count, plural, one {#}']]),
+            new MessageCatalogue('fr', ['messages+intl-icu' => ['broken' => '{count, plural, one {# élément} other {# éléments}}']]),
+        ];
+
+        $translationsDumper = new TranslationsDumper(
+            new MessageParametersExtractor(),
+            new IntlMessageParametersExtractor(),
+            new TypeScriptMessageParametersPrinter(),
+            new Filesystem(),
+        );
+
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage('Error while extracting parameters from message "{count, plural, one {#}" in domain "messages+intl-icu" and locale "en".');
+
+        $translationsDumper->dump(
+            catalogues: $catalogues,
+            dumpDir: self::$translationsDumpDir,
+        );
+    }
+
     /**
      * @return list<MessageCatalogue>
      */
