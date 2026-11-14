@@ -80,6 +80,15 @@ final class ComponentFactory implements ResetInterface
             return $this->metadata[$name] = new ComponentMetadata($config);
         }
 
+        // Looked up before the anonymous template, whose lookup costs up to four loader calls
+        if ($mappedName = $this->classMap[$name] ?? null) {
+            if ($config = $this->config[$mappedName] ?? null) {
+                return $this->metadata[$name] = $this->metadata[$mappedName] ??= new ComponentMetadata($config);
+            }
+
+            throw new \InvalidArgumentException(\sprintf('Unknown component "%s".', $name));
+        }
+
         if ($template = $this->componentTemplateFinder->findAnonymousComponentTemplate($name)) {
             $this->config[$name] = [
                 'key' => $name,
@@ -87,14 +96,6 @@ final class ComponentFactory implements ResetInterface
             ];
 
             return $this->metadata[$name] = new ComponentMetadata($this->config[$name]);
-        }
-
-        if ($mappedName = $this->classMap[$name] ?? null) {
-            if ($config = $this->config[$mappedName] ?? null) {
-                return $this->metadata[$name] = $this->metadata[$mappedName] ??= new ComponentMetadata($config);
-            }
-
-            throw new \InvalidArgumentException(\sprintf('Unknown component "%s".', $name));
         }
 
         $this->throwUnknownComponentException($name);
