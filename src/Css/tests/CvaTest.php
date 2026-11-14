@@ -116,6 +116,45 @@ final class CvaTest extends TestCase
         $this->assertSame(array_keys($generator->classes(['color' => 'red'])), $this->classNames($classes));
     }
 
+    public function testEachPropCombinationKeepsItsOwnClassesAcrossCalls(): void
+    {
+        $cva = $this->runtime($this->generator())->cva(...self::BUTTON);
+
+        $large = $this->classNames($cva->apply(['size' => 'lg', 'tone' => 'a']));
+        $small = $this->classNames($cva->apply(['size' => 'sm', 'tone' => 'b']));
+        $largeAgain = $this->classNames($cva->apply(['size' => 'lg', 'tone' => 'a']));
+        $undeclared = $this->classNames($cva->apply(['size' => 'xl']));
+
+        $this->assertSame(['color_red', 'padding-inline_2', 'background_a'], $large);
+        $this->assertSame(['color_red', 'padding-inline_1', 'background_b'], $small);
+        $this->assertSame($large, $largeAgain);
+        $this->assertSame(['color_red'], $undeclared);
+    }
+
+    public function testAPropValueOfAnotherTypeDoesNotReuseTheClassesOfTheFirstCall(): void
+    {
+        $config = ['base' => ['color' => 'red'], 'variants' => ['tone' => ['1' => ['bg' => 'a'], 'true' => ['bg' => 'b']]]];
+        $cva = $this->runtime($this->generator())->cva(...$config);
+
+        $integer = $this->classNames($cva->apply(['tone' => 1]));
+        $boolean = $this->classNames($cva->apply(['tone' => true]));
+        $string = $this->classNames($cva->apply(['tone' => '1']));
+
+        $this->assertSame(['color_red', 'background_a'], $integer);
+        $this->assertSame(['color_red', 'background_b'], $boolean);
+        $this->assertSame(['color_red', 'background_a'], $string);
+    }
+
+    public function testAPropValueThatCannotBeSerializedStillSelectsNoStyles(): void
+    {
+        $generator = $this->generator();
+        $cva = $this->runtime($generator)->cva(...self::BUTTON);
+
+        $classes = $cva->apply(['tone' => static fn (): string => 'a']);
+
+        $this->assertSame(['color_red', 'padding-inline_1'], $this->classNames($classes));
+    }
+
     public function testCompiledCvaReusesTheInstanceOfAnId(): void
     {
         $runtime = $this->runtime($this->generator());
