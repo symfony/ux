@@ -25,6 +25,8 @@ class DeterministicTwigIdCalculator
 {
     private array $lineAndFileCounts = [];
 
+    private ?string $lastFileAndLine = null;
+
     private ?MountedComponent $rootComponent = null;
 
     public function __construct(
@@ -55,6 +57,7 @@ class DeterministicTwigIdCalculator
         $lineData = $this->guessTemplateInfo();
 
         $fileAndLine = \sprintf('%s-%d', $lineData['name'], $lineData['line']);
+        $this->lastFileAndLine = $fileAndLine;
         if (!isset($this->lineAndFileCounts[$fileAndLine])) {
             $this->lineAndFileCounts[$fileAndLine] = 0;
         }
@@ -72,9 +75,26 @@ class DeterministicTwigIdCalculator
         return $id;
     }
 
+    /**
+     * Increments the counter of the file+line of the last calculated id.
+     *
+     * Saves a stack capture for a caller that already called calculateDeterministicId()
+     * with $increment set to false and only needs the counter to move on.
+     */
+    public function incrementLastCalculatedId(): void
+    {
+        if (null === $this->lastFileAndLine) {
+            throw new \LogicException('No deterministic id was calculated yet.');
+        }
+
+        $count = $this->lineAndFileCounts[$this->lastFileAndLine] ?? 0;
+        $this->lineAndFileCounts[$this->lastFileAndLine] = $count + 1;
+    }
+
     public function reset(): void
     {
         $this->lineAndFileCounts = [];
+        $this->lastFileAndLine = null;
         $this->rootComponent = null;
     }
 
