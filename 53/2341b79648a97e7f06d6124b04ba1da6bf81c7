@@ -1,0 +1,63 @@
+---------------------------------------------------------------------------
+
+by github-actions[bot] at 2026-11-14T19:29:18Z
+
+<h1>📊 Packages dist files size difference</h1>
+
+Thanks for the PR! Here is the difference in size of the packages dist files between the base branch and the PR.
+Please review the changes and make sure they are expected.
+
+<table>
+    <thead><tr><th>File</th><th>Before (Size / Gzip)</th><th>After (Size / Gzip)</th></tr></thead>
+    <tbody><tr><td colspan="3"><a href="https://github.com/Kocal/symfony-ux/tree/perf/map-prune-info-windows/src/Map/assets/dist"><b>Map</b></a></td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/perf/map-prune-info-windows/src/Map/assets/dist/abstract_map_controller.d.ts"><code>abstract_map_controller.d.ts</code></a></td>
+            <td>
+                    <code>7.1 kB</code>
+                    / <code>1.41 kB</code>
+                </td><td>
+                    <code>7.14 kB</code><sup>0%</sup>
+                    / <code>1.42 kB</code><sup>0%</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/perf/map-prune-info-windows/src/Map/assets/dist/abstract_map_controller.js"><code>abstract_map_controller.js</code></a></td>
+            <td>
+                    <code>4.72 kB</code>
+                    / <code>1.27 kB</code>
+                </td><td>
+                    <code>5.46 kB</code><sup>+16% 📈</sup>
+                    / <code>1.44 kB</code><sup>+14% 📈</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/Kocal/symfony-ux/tree/perf/map-prune-info-windows/src/Map/src/Bridge/Google/assets/dist"><b>Map (Bridge Google)</b></a></td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/perf/map-prune-info-windows/src/Map/src/Bridge/Google/assets/dist/map_controller.d.ts"><code>map_controller.d.ts</code></a></td>
+            <td>
+                    <code>10.12 kB</code>
+                    / <code>1.89 kB</code>
+                </td><td>
+                    <code>10.15 kB</code><sup>0%</sup>
+                    / <code>1.9 kB</code><sup>0%</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/perf/map-prune-info-windows/src/Map/src/Bridge/Google/assets/dist/map_controller.js"><code>map_controller.js</code></a></td>
+            <td>
+                    <code>11.32 kB</code>
+                    / <code>2.85 kB</code>
+                </td><td>
+                    <code>12.06 kB</code><sup>+7% 📈</sup>
+                    / <code>3.03 kB</code><sup>+6% 📈</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/Kocal/symfony-ux/tree/perf/map-prune-info-windows/src/Map/src/Bridge/Leaflet/assets/dist"><b>Map (Bridge Leaflet)</b></a></td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/perf/map-prune-info-windows/src/Map/src/Bridge/Leaflet/assets/dist/map_controller.d.ts"><code>map_controller.d.ts</code></a></td>
+            <td>
+                    <code>9.51 kB</code>
+                    / <code>1.82 kB</code>
+                </td><td>
+                    <code>9.54 kB</code><sup>0%</sup>
+                    / <code>1.83 kB</code><sup>0%</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/perf/map-prune-info-windows/src/Map/src/Bridge/Leaflet/assets/dist/map_controller.js"><code>map_controller.js</code></a></td>
+            <td>
+                    <code>11.44 kB</code>
+                    / <code>3.19 kB</code>
+                </td><td>
+                    <code>12.18 kB</code><sup>+7% 📈</sup>
+                    / <code>3.37 kB</code><sup>+6% 📈</sup>
+                </td></tr></tbody>
+</table>
+
+<!-- Sticky Pull Request Comment -->
