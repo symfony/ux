@@ -59,6 +59,73 @@ class IntlMessageParserTest extends TestCase
             ],
         ];
 
+        yield 'with an emoji before a parameter' => [
+            'Bravo 😊 {name} !',
+            [
+                'val' => [
+                    [
+                        'type' => Type::LITERAL,
+                        'value' => 'Bravo 😊 ',
+                        'location' => new Location(new Position(0, 1, 1), new Position(8, 1, 9)),
+                    ],
+                    [
+                        'type' => Type::ARGUMENT,
+                        'value' => 'name',
+                        'location' => new Location(new Position(8, 1, 9), new Position(14, 1, 15)),
+                    ],
+                    [
+                        'type' => Type::LITERAL,
+                        'value' => ' !',
+                        'location' => new Location(new Position(14, 1, 15), new Position(16, 1, 17)),
+                    ],
+                ],
+                'err' => null,
+            ],
+        ];
+
+        yield 'with a zero in a literal' => [
+            '0 apples {x}',
+            [
+                'val' => [
+                    [
+                        'type' => Type::LITERAL,
+                        'value' => '0 apples ',
+                        'location' => new Location(new Position(0, 1, 1), new Position(9, 1, 10)),
+                    ],
+                    [
+                        'type' => Type::ARGUMENT,
+                        'value' => 'x',
+                        'location' => new Location(new Position(9, 1, 10), new Position(12, 1, 13)),
+                    ],
+                ],
+                'err' => null,
+            ],
+        ];
+
+        yield 'with an accented parameter name' => [
+            'Bonjour {prénom} !',
+            [
+                'val' => [
+                    [
+                        'type' => Type::LITERAL,
+                        'value' => 'Bonjour ',
+                        'location' => new Location(new Position(0, 1, 1), new Position(8, 1, 9)),
+                    ],
+                    [
+                        'type' => Type::ARGUMENT,
+                        'value' => 'prénom',
+                        'location' => new Location(new Position(8, 1, 9), new Position(16, 1, 17)),
+                    ],
+                    [
+                        'type' => Type::LITERAL,
+                        'value' => ' !',
+                        'location' => new Location(new Position(16, 1, 17), new Position(18, 1, 19)),
+                    ],
+                ],
+                'err' => null,
+            ],
+        ];
+
         yield 'with HTML' => [
             'Hello <b>world</b>!',
             [
