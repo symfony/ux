@@ -79,23 +79,6 @@ export const findChildren = (currentComponent: Component): Component[] => {
             return;
         }
 
-        // check if there are any other components between the two
-        let foundChildComponent = false;
-        componentMapByComponent.forEach((childComponentName: string, childComponent: Component) => {
-            if (foundChildComponent) {
-                // return early
-                return;
-            }
-
-            if (childComponent === component) {
-                return;
-            }
-
-            if (childComponent.element.contains(component.element)) {
-                foundChildComponent = true;
-            }
-        });
-
         children.push(component);
     });
 
