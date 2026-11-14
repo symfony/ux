@@ -5,23 +5,24 @@
     align = 'center'
 -%}
 {%- set _popover_open = inject('popover.open', false) -%}
+{#- `anchor()` insets rather than `position-area`, which Firefox misplaces in right-to-left: https://bugzil.la/2019601 -#}
 {%- set style = html_cva(
-    base: 'invisible scale-95 opacity-0 transition-[opacity,scale,visibility] duration-100 ease-out group-data-[state=open]/popover:visible group-data-[state=open]/popover:scale-100 group-data-[state=open]/popover:opacity-100 absolute z-50 flex w-72 flex-col gap-2.5 rounded-lg bg-popover p-2.5 text-sm text-popover-foreground shadow-md ring-1 ring-foreground/10 outline-hidden',
+    base: 'invisible scale-95 opacity-0 transition-[opacity,scale,visibility] duration-100 ease-out group-data-[state=open]/popover:visible group-data-[state=open]/popover:scale-100 group-data-[state=open]/popover:opacity-100 absolute z-50 flex w-72 flex-col gap-2.5 rounded-lg bg-popover p-2.5 text-sm text-popover-foreground shadow-md ring-1 ring-foreground/10 outline-hidden overflow-visible [&[popover]:not(:popover-open)]:hidden [&[popover]]:inset-auto [&[popover]]:transition-[opacity,scale,visibility,display,overlay] [&[popover]]:transition-discrete starting:open:scale-95 starting:open:opacity-0',
     variants: {
         side: {
             top: 'bottom-full mb-2',
             bottom: 'top-full mt-2',
-            left: 'right-full top-1/2 -translate-y-1/2 mr-2 origin-right',
-            right: 'left-full top-1/2 -translate-y-1/2 ml-2 origin-left',
+            left: 'right-full top-1/2 -translate-y-1/2 mr-2 origin-right [&[popover]]:right-[anchor(left)] [&[popover]]:[align-self:anchor-center] [&[popover]]:[position-try-fallbacks:flip-block,flip-inline,flip-block_flip-inline] [&[popover]]:translate-none',
+            right: 'left-full top-1/2 -translate-y-1/2 ml-2 origin-left [&[popover]]:left-[anchor(right)] [&[popover]]:[align-self:anchor-center] [&[popover]]:[position-try-fallbacks:flip-block,flip-inline,flip-block_flip-inline] [&[popover]]:translate-none',
         },
     },
     compound_variants: [
-        {side: ['top'], align: ['start'], class: 'start-0 ltr:origin-bottom-left rtl:origin-bottom-right'},
-        {side: ['top'], align: ['center'], class: 'start-1/2 -translate-x-1/2 rtl:translate-x-1/2 origin-bottom'},
-        {side: ['top'], align: ['end'], class: 'end-0 ltr:origin-bottom-right rtl:origin-bottom-left'},
-        {side: ['bottom'], align: ['start'], class: 'start-0 ltr:origin-top-left rtl:origin-top-right'},
-        {side: ['bottom'], align: ['center'], class: 'start-1/2 -translate-x-1/2 rtl:translate-x-1/2 origin-top'},
-        {side: ['bottom'], align: ['end'], class: 'end-0 ltr:origin-top-right rtl:origin-top-left'},
+        {side: ['top'], align: ['start'], class: '[&[popover]]:bottom-[anchor(top)] [&[popover]]:start-[anchor(inside)] start-0 ltr:origin-bottom-left rtl:origin-bottom-right [&[popover]]:[position-try-fallbacks:flip-block,flip-inline,flip-block_flip-inline]'},
+        {side: ['top'], align: ['center'], class: '[&[popover]]:bottom-[anchor(top)] [&[popover]]:left-[anchor(center)] [&[popover]]:-translate-x-1/2 [&[popover]]:[position-try-fallbacks:flip-block] start-1/2 -translate-x-1/2 rtl:translate-x-1/2 origin-bottom'},
+        {side: ['top'], align: ['end'], class: '[&[popover]]:bottom-[anchor(top)] [&[popover]]:end-[anchor(inside)] end-0 ltr:origin-bottom-right rtl:origin-bottom-left [&[popover]]:[position-try-fallbacks:flip-block,flip-inline,flip-block_flip-inline]'},
+        {side: ['bottom'], align: ['start'], class: '[&[popover]]:top-[anchor(bottom)] [&[popover]]:start-[anchor(inside)] start-0 ltr:origin-top-left rtl:origin-top-right [&[popover]]:[position-try-fallbacks:flip-block,flip-inline,flip-block_flip-inline]'},
+        {side: ['bottom'], align: ['center'], class: '[&[popover]]:top-[anchor(bottom)] [&[popover]]:left-[anchor(center)] [&[popover]]:-translate-x-1/2 [&[popover]]:[position-try-fallbacks:flip-block] start-1/2 -translate-x-1/2 rtl:translate-x-1/2 origin-top'},
+        {side: ['bottom'], align: ['end'], class: '[&[popover]]:top-[anchor(bottom)] [&[popover]]:end-[anchor(inside)] end-0 ltr:origin-top-right rtl:origin-top-left [&[popover]]:[position-try-fallbacks:flip-block,flip-inline,flip-block_flip-inline]'},
     ],
 ) -%}
 <div

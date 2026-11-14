@@ -249,6 +249,7 @@ To enable RTL support, set the `dir="rtl"` attribute on the root element.
 - `Popover:Content` renders `role="dialog"` and an `aria-hidden` reflecting the open state. Give it an `aria-label`, or an `aria-labelledby` pointing at its heading, since a dialog without a name is announced as an unnamed dialog.
 - `Popover:Trigger` exposes an `aria-expanded` that the controller keeps in sync.
 - Opening the popover moves focus into it, to the element carrying `autofocus` or to the first focusable element. `Escape` closes it and returns focus to the trigger.
+- In browsers with the [Popover API](https://developer.mozilla.org/en-US/docs/Web/API/Popover_API) and [anchor positioning](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_anchor_positioning), the content is shown in the top layer, so an ancestor that hides its overflow does not clip it, and it flips to the other side of the trigger when there is no room. Other browsers show it below or beside the trigger, inside its parent.
 - Unlike `Dialog`, a popover is not modal: the rest of the page stays reachable and focus is not trapped. Use `Dialog` when the user must deal with the content before anything else.
 - Use the `name` prop to group mutually exclusive popovers, so opening one closes the others instead of leaving several unnamed dialogs open at once.
 

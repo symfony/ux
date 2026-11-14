@@ -8,6 +8,7 @@
 - [Shadcn] Use the native invoker commands (`command` and `commandfor`) and `closedby="any"` in `drawer`
 - [Shadcn] Render the closed panels of `accordion` with `hidden="until-found"`, so find-in-page and fragment links open them where supported
 - [Shadcn] Fix `tooltip` staying behind the modal `dialog` that contains its trigger: it now opens in the top layer, with the Popover API
+- [Shadcn] Show the `popover` and `date-picker` content in the top layer with anchor positioning where supported, so an ancestor hiding its overflow no longer clips it
 
 ## 3.7.1
 
