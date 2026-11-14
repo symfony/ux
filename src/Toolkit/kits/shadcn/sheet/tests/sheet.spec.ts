@@ -1,4 +1,15 @@
+import type { Locator } from '@playwright/test';
 import { describeRecipe, expect, test, testState } from '../../../../assets/test/browser/fixtures';
+
+async function recordExit(sheet: Locator): Promise<void> {
+    await sheet.evaluate((element) => {
+        new MutationObserver(() => {
+            if (element.hasAttribute('data-closing')) {
+                element.dataset.exitPlayed = '';
+            }
+        }).observe(element, { attributeFilter: ['data-closing'] });
+    });
+}
 
 describeRecipe('shadcn/sheet', () => {
     testState('opens on click and focuses the first field', {
@@ -77,6 +88,52 @@ describeRecipe('shadcn/sheet', () => {
             await page.keyboard.press('Escape');
             await expect(dialog).toBeHidden();
         }
+    });
+
+    test('opens from a command button outside of it', async ({ page, gotoExample }) => {
+        await gotoExample('shadcn/sheet/default');
+        await page.evaluate(() => {
+            const button = document.createElement('button');
+            button.textContent = 'Edit from elsewhere';
+            button.setAttribute('command', 'show-modal');
+            button.setAttribute('commandfor', 'sheet-sheet-demo');
+            document.body.append(button);
+        });
+        const invoker = page.getByRole('button', { name: 'Edit from elsewhere' });
+
+        await invoker.click();
+
+        await expect(page.getByRole('dialog', { name: 'Edit profile' })).toBeVisible();
+        await expect(invoker).toHaveAttribute('aria-expanded', 'true');
+        await expect(page.getByLabel('Name', { exact: true })).toBeFocused();
+
+        await page.keyboard.press('Escape');
+
+        await expect(page.getByRole('dialog')).toBeHidden();
+        await expect(invoker).toHaveAttribute('aria-expanded', 'false');
+        await expect(invoker).toBeFocused();
+    });
+
+    test('slides out when a command button closes it', async ({ page, gotoExample }) => {
+        await gotoExample('shadcn/sheet/default');
+        const trigger = page.getByRole('button', { name: 'Open', exact: true });
+        await trigger.click();
+        const sheet = page.locator('[data-slot="sheet-content"]');
+        await expect(sheet).toBeVisible();
+        await recordExit(sheet);
+        await sheet.evaluate((element) => {
+            const button = document.createElement('button');
+            button.textContent = 'Done';
+            button.setAttribute('command', 'close');
+            button.setAttribute('commandfor', element.id);
+            element.append(button);
+        });
+
+        await sheet.getByRole('button', { name: 'Done' }).click();
+
+        await expect(sheet).toBeHidden();
+        await expect(sheet).toHaveAttribute('data-exit-played');
+        await expect(trigger).toHaveAttribute('aria-expanded', 'false');
     });
 
     test('closes on Escape and gives focus back to the trigger', async ({ page, gotoExample }) => {
@@ -191,21 +248,15 @@ describeRecipe('shadcn/sheet', () => {
         await gotoExample('shadcn/sheet/default');
         const trigger = page.getByRole('button', { name: 'Open', exact: true });
         await trigger.click();
-        const dialog = page.locator('[data-slot="sheet-content"]');
-        await expect(dialog).toBeVisible();
-        await dialog.evaluate((element) => {
-            new MutationObserver(() => {
-                if (element.hasAttribute('data-closing')) {
-                    element.dataset.exitPlayed = '';
-                }
-            }).observe(element, { attributeFilter: ['data-closing'] });
-        });
+        const sheet = page.locator('[data-slot="sheet-content"]');
+        await expect(sheet).toBeVisible();
+        await recordExit(sheet);
         await page.evaluate(() => (document.activeElement as HTMLElement).blur());
 
         await page.keyboard.press('Escape');
 
-        await expect(dialog).toBeHidden();
-        await expect(dialog).toHaveAttribute('data-exit-played');
+        await expect(sheet).toBeHidden();
+        await expect(sheet).toHaveAttribute('data-exit-played');
         await expect(trigger).toHaveAttribute('aria-expanded', 'false');
     });
 
@@ -227,5 +278,22 @@ describeRecipe('shadcn/sheet', () => {
         await page.keyboard.press('Escape');
 
         await expect(dialog).toHaveAttribute('data-display-on-close', 'none');
+    });
+
+    test.describe('without JavaScript', () => {
+        test.use({ javaScriptEnabled: false });
+
+        test('opens from its trigger and closes from its close button', async ({ page }) => {
+            await page.goto('/shadcn/sheet/sides');
+
+            await page.getByRole('button', { name: /^right$/i }).click();
+
+            const sheet = page.getByRole('dialog', { name: 'Edit profile' });
+            await expect(sheet).toBeVisible();
+
+            await sheet.getByRole('button', { name: 'Cancel' }).click();
+
+            await expect(sheet).toBeHidden();
+        });
     });
 });

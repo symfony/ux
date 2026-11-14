@@ -1,5 +1,8 @@
+{%- set _sheet_id = inject('sheet.id') -%}
 {%- set sheet_trigger_attrs = {
     'data-slot': 'sheet-trigger',
+    command: 'show-modal',
+    commandfor: _sheet_id,
     'data-action': 'click->dialog#open'|html_attr_type('sst'),
     'data-dialog-target': 'trigger',
     'aria-haspopup': 'dialog',

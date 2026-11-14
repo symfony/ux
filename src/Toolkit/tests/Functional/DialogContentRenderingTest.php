@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\Toolkit\Tests\Functional;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\UX\Toolkit\Kit\KitContextRunner;
@@ -21,19 +22,27 @@ class DialogContentRenderingTest extends WebTestCase
 {
     use TestHelperTrait;
 
-    #[Group('skip-on-lowest')]
-    public function testItClosesOnAnyCloseRequestByDefault(): void
+    public static function provideRecipes(): iterable
     {
-        $renderedCode = $this->render('<twig:Dialog id="demo"><twig:Dialog:Content>Content</twig:Dialog:Content></twig:Dialog>');
+        yield 'dialog' => ['Dialog'];
+        yield 'sheet' => ['Sheet'];
+    }
+
+    #[Group('skip-on-lowest')]
+    #[DataProvider('provideRecipes')]
+    public function testItClosesOnAnyCloseRequestByDefault(string $recipe): void
+    {
+        $renderedCode = $this->render(\sprintf('<twig:%1$s id="demo"><twig:%1$s:Content>Content</twig:%1$s:Content></twig:%1$s>', $recipe));
 
         $this->assertSame(1, substr_count($renderedCode, 'closedby='));
         $this->assertStringContainsString('closedby="any"', $renderedCode);
     }
 
     #[Group('skip-on-lowest')]
-    public function testItLetsTheClosedbyAttributeBeOverridden(): void
+    #[DataProvider('provideRecipes')]
+    public function testItLetsTheClosedbyAttributeBeOverridden(string $recipe): void
     {
-        $renderedCode = $this->render('<twig:Dialog id="demo"><twig:Dialog:Content closedby="closerequest">Content</twig:Dialog:Content></twig:Dialog>');
+        $renderedCode = $this->render(\sprintf('<twig:%1$s id="demo"><twig:%1$s:Content closedby="closerequest">Content</twig:%1$s:Content></twig:%1$s>', $recipe));
 
         $this->assertSame(1, substr_count($renderedCode, 'closedby='));
         $this->assertStringContainsString('closedby="closerequest"', $renderedCode);
