@@ -29,6 +29,16 @@ final class StyleValidator
 {
     private const CSS_TYPES = __DIR__.'/../../resources/css-types.json';
 
+    /**
+     * @var array<string, true>|null
+     */
+    private static ?array $strictProperties = null;
+
+    /**
+     * @var array<string, true>|null
+     */
+    private static ?array $knownProperties = null;
+
     private const UNSAFE = 'cannot contain ";", "{", "}", "\\", quotes, "<" or a CSS comment';
 
     private const UNSAFE_VALUE = 'cannot contain ";", "{", "}", "\\", "<", a CSS comment, a line break inside a string or a quote that does not open and close a string';
@@ -323,10 +333,12 @@ final class StyleValidator
     private function valueType(string $key): array
     {
         $property = $this->engine->utilities()->resolveShorthand($key);
-        $strictKey = \in_array($key, self::STRICT_PROPERTIES, true);
-        $strictProperty = \in_array($property, self::STRICT_PROPERTIES, true);
+        $strict = self::$strictProperties ??= array_fill_keys(self::STRICT_PROPERTIES, true);
+        $known = self::$knownProperties ??= array_fill_keys(self::cssTypes()['properties'], true);
+        $strictKey = isset($strict[$key]);
+        $strictProperty = isset($strict[$property]);
         [$utilityType, $category] = $this->utilityType($property);
-        $cssType = \in_array($property, self::cssTypes()['properties'], true) ? self::cssType($property) : null;
+        $cssType = isset($known[$property]) ? self::cssType($property) : null;
         $cssVars = self::type(cssVars: true);
 
         if (null !== $utilityType) {
