@@ -50,15 +50,92 @@ final class SortStyleRules
             }
         }
 
-        usort($withSelectorsOnly, static function (AtomicStyle $a, AtomicStyle $b): int {
-            return self::compareSelectors($a, $b) ?: self::compareProperties($a, $b);
-        });
-        usort($withAtRules, static function (AtomicStyle $a, AtomicStyle $b): int {
-            return self::compareAtRuleOrMixed($a->conditions, $b->conditions) ?: self::compareProperties($a, $b);
-        });
-        usort($declarations, self::compareProperties(...));
+        return [
+            ...self::sortByProperty($declarations),
+            ...self::sortBySelectors($withSelectorsOnly),
+            ...self::sortByAtRules($withAtRules),
+        ];
+    }
 
-        return [...$declarations, ...$withSelectorsOnly, ...$withAtRules];
+    /**
+     * @param list<AtomicStyle> $styles
+     *
+     * @return list<AtomicStyle>
+     */
+    private static function sortByProperty(array $styles): array
+    {
+        $priorities = self::priorities($styles);
+
+        return self::reorder($styles, static fn (int $a, int $b): int => $priorities[$a] - $priorities[$b]);
+    }
+
+    /**
+     * @param list<AtomicStyle> $styles
+     *
+     * @return list<AtomicStyle>
+     */
+    private static function sortBySelectors(array $styles): array
+    {
+        $priorities = self::priorities($styles);
+        $depths = [];
+        $scores = [];
+        foreach ($styles as $index => $style) {
+            $depths[$index] = \count($style->conditions);
+            $scores[$index] = self::pseudoScore($style->conditions[0]->value);
+        }
+
+        return self::reorder($styles, static function (int $a, int $b) use ($depths, $scores, $priorities): int {
+            $selectors = $depths[$a] === $depths[$b] ? $scores[$a] - $scores[$b] : $depths[$a] - $depths[$b];
+
+            return $selectors ?: $priorities[$a] - $priorities[$b];
+        });
+    }
+
+    /**
+     * @param list<AtomicStyle> $styles
+     *
+     * @return list<AtomicStyle>
+     */
+    private static function sortByAtRules(array $styles): array
+    {
+        $priorities = self::priorities($styles);
+        $flattened = [];
+        foreach ($styles as $index => $style) {
+            $flattened[$index] = self::flatten($style->conditions);
+        }
+
+        return self::reorder($styles, static function (int $a, int $b) use ($flattened, $priorities): int {
+            return self::compareFlattened($flattened[$a], $flattened[$b]) ?: $priorities[$a] - $priorities[$b];
+        });
+    }
+
+    /**
+     * @param list<AtomicStyle>      $styles
+     * @param callable(int, int):int $compare
+     *
+     * @return list<AtomicStyle>
+     */
+    private static function reorder(array $styles, callable $compare): array
+    {
+        $order = array_keys($styles);
+        usort($order, $compare);
+
+        return array_map(static fn (int $index): AtomicStyle => $styles[$index], $order);
+    }
+
+    /**
+     * @param list<AtomicStyle> $styles
+     *
+     * @return list<int>
+     */
+    private static function priorities(array $styles): array
+    {
+        $priorities = [];
+        foreach ($styles as $style) {
+            $priorities[] = PropertyPriority::get($style->entry->property);
+        }
+
+        return $priorities;
     }
 
     /**
@@ -67,8 +144,15 @@ final class SortStyleRules
      */
     public static function compareAtRuleOrMixed(array $a, array $b): int
     {
-        $a = self::flatten($a);
-        $b = self::flatten($b);
+        return self::compareFlattened(self::flatten($a), self::flatten($b));
+    }
+
+    /**
+     * @param list<Condition> $a
+     * @param list<Condition> $b
+     */
+    private static function compareFlattened(array $a, array $b): int
+    {
         $max = max(\count($a), \count($b));
         for ($i = 0; $i < $max; ++$i) {
             $conditionA = $a[$i] ?? null;
@@ -109,24 +193,6 @@ final class SortStyleRules
         }
 
         return 0;
-    }
-
-    private static function compareSelectors(AtomicStyle $a, AtomicStyle $b): int
-    {
-        if (\count($a->conditions) === \count($b->conditions)) {
-            return self::pseudoScore($a->conditions[0]->value) - self::pseudoScore($b->conditions[0]->value);
-        }
-
-        return \count($a->conditions) - \count($b->conditions);
-    }
-
-    private static function compareProperties(AtomicStyle $a, AtomicStyle $b): int
-    {
-        if ($a->entry->property === $b->entry->property) {
-            return 0;
-        }
-
-        return PropertyPriority::get($a->entry->property) - PropertyPriority::get($b->entry->property);
     }
 
     /**
