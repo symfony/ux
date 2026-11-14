@@ -22,16 +22,39 @@ final class AtRuleSorter
 {
     private const MAX_VALUE = \PHP_FLOAT_MAX;
 
+    private const CACHED_QUERIES = 1000;
+
+    /**
+     * @var array<string, array{print: bool, printOnly: bool, min: bool, max: bool, length: float}>
+     */
+    private static array $attributes = [];
+
     public static function compare(string $a, string $b): int
     {
-        if (null !== $print = self::comparePrint($a, $b)) {
-            return $print;
+        $first = self::attributes($a);
+        $second = self::attributes($b);
+
+        if ($first['print'] && $second['print']) {
+            if (!$first['printOnly'] && $second['printOnly']) {
+                return 1;
+            }
+            if ($first['printOnly'] && !$second['printOnly']) {
+                return -1;
+            }
+
+            return strcmp($a, $b) <=> 0;
+        }
+        if ($first['print']) {
+            return 1;
+        }
+        if ($second['print']) {
+            return -1;
         }
 
-        $minA = self::isMinWidth($a) || self::isMinHeight($a);
-        $maxA = self::isMaxWidth($a) || self::isMaxHeight($a);
-        $minB = self::isMinWidth($b) || self::isMinHeight($b);
-        $maxB = self::isMaxWidth($b) || self::isMaxHeight($b);
+        $minA = $first['min'];
+        $maxA = $first['max'];
+        $minB = $second['min'];
+        $maxB = $second['max'];
 
         if ($minA && $maxB) {
             return -1;
@@ -40,8 +63,8 @@ final class AtRuleSorter
             return 1;
         }
 
-        $lengthA = self::queryLength($a);
-        $lengthB = self::queryLength($b);
+        $lengthA = $first['length'];
+        $lengthB = $second['length'];
         if (self::MAX_VALUE === $lengthA && self::MAX_VALUE === $lengthB) {
             return strcmp($a, $b) <=> 0;
         }
@@ -59,6 +82,27 @@ final class AtRuleSorter
         }
 
         return strcmp($a, $b) <=> 0;
+    }
+
+    /**
+     * @return array{print: bool, printOnly: bool, min: bool, max: bool, length: float}
+     */
+    private static function attributes(string $query): array
+    {
+        if (isset(self::$attributes[$query])) {
+            return self::$attributes[$query];
+        }
+        if (\count(self::$attributes) >= self::CACHED_QUERIES) {
+            self::$attributes = [];
+        }
+
+        return self::$attributes[$query] = [
+            'print' => 1 === preg_match('/print/i', $query),
+            'printOnly' => 1 === preg_match('/^print$/i', $query),
+            'min' => self::isMinWidth($query) || self::isMinHeight($query),
+            'max' => self::isMaxWidth($query) || self::isMaxHeight($query),
+            'length' => self::queryLength($query),
+        ];
     }
 
     private static function queryLength(string $query): float
@@ -80,33 +124,6 @@ final class AtRuleSorter
             'ex' => $number * 8.296875,
             default => $number,
         };
-    }
-
-    private static function comparePrint(string $a, string $b): ?int
-    {
-        $isPrintA = 1 === preg_match('/print/i', $a);
-        $isPrintOnlyA = 1 === preg_match('/^print$/i', $a);
-        $isPrintB = 1 === preg_match('/print/i', $b);
-        $isPrintOnlyB = 1 === preg_match('/^print$/i', $b);
-
-        if ($isPrintA && $isPrintB) {
-            if (!$isPrintOnlyA && $isPrintOnlyB) {
-                return 1;
-            }
-            if ($isPrintOnlyA && !$isPrintOnlyB) {
-                return -1;
-            }
-
-            return strcmp($a, $b) <=> 0;
-        }
-        if ($isPrintA) {
-            return 1;
-        }
-        if ($isPrintB) {
-            return -1;
-        }
-
-        return null;
     }
 
     private static function isMinWidth(string $query): bool
