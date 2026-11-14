@@ -90,13 +90,16 @@ abstract class AbstractRenderer implements RendererInterface
         $computeId = static fn (array $array) => hash('xxh3', json_encode($array, \JSON_THROW_ON_ERROR));
 
         $attrs = $map->toArray();
+        $icons = [];
 
         foreach ($attrs['markers'] as $key => $marker) {
             if (isset($marker['icon']['type']) && IconType::UxIcon->value === $marker['icon']['type']) {
-                $attrs['markers'][$key]['icon']['_generated_html'] = $this->uxIconRenderer->render($marker['icon']['name'], [
+                $generatedHtml = $this->uxIconRenderer->render($marker['icon']['name'], [
                     'width' => $marker['icon']['width'],
                     'height' => $marker['icon']['height'],
                 ]);
+                // Markers overwhelmingly share the same icon, so each SVG is written once and referenced by its index.
+                $attrs['markers'][$key]['icon']['_generated_html'] = $icons[$generatedHtml] ??= \count($icons);
             }
             $attrs['markers'][$key]['@id'] = $computeId($marker);
         }
@@ -114,6 +117,10 @@ abstract class AbstractRenderer implements RendererInterface
 
         foreach ($attrs['rectangles'] as $key => $rectangle) {
             $attrs['rectangles'][$key]['@id'] = $computeId($rectangle);
+        }
+
+        if ([] !== $icons) {
+            $attrs['icons'] = array_keys($icons);
         }
 
         return $attrs;

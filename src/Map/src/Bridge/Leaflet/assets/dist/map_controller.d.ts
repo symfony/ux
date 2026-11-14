@@ -97,6 +97,7 @@ declare abstract class export_default$1<MapOptions, BridgeMapOptions, BridgeMap,
     rectangles: ArrayConstructor;
     options: ObjectConstructor;
     extra: ObjectConstructor;
+    icons: ArrayConstructor;
   };
   centerValue: Point | null;
   zoomValue: number | null;
@@ -110,6 +111,7 @@ declare abstract class export_default$1<MapOptions, BridgeMapOptions, BridgeMap,
   rectanglesValue: Array<RectangleDefinition<BridgeRectangleOptions, BridgeInfoWindowOptions>>;
   optionsValue: MapOptions;
   extraValue: Record<string, unknown>;
+  iconsValue: Array<string>;
   hasCenterValue: boolean;
   hasZoomValue: boolean;
   hasMinZoomValue: boolean;
@@ -122,6 +124,7 @@ declare abstract class export_default$1<MapOptions, BridgeMapOptions, BridgeMap,
   hasRectanglesValue: boolean;
   hasOptionsValue: boolean;
   hasExtraValue: boolean;
+  hasIconsValue: boolean;
   protected map: BridgeMap;
   protected markers: Map<string, BridgeMarker>;
   protected polygons: Map<string, BridgePolygon>;
@@ -182,6 +185,7 @@ declare abstract class export_default$1<MapOptions, BridgeMapOptions, BridgeMap,
     definition: Icon;
     element: BridgeMarker;
   }): void;
+  private resolveMarkerIcons;
   private createDrawingFactory;
   private onDrawChanged;
 }

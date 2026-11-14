@@ -19,7 +19,8 @@ var abstract_map_controller_default = class extends Controller {
 		circles: Array,
 		rectangles: Array,
 		options: Object,
-		extra: Object
+		extra: Object,
+		icons: Array
 	};
 	map;
 	markers = /* @__PURE__ */ new Map();
@@ -51,7 +52,9 @@ var abstract_map_controller_default = class extends Controller {
 		this.createCircle = this.createDrawingFactory("circle", this.circles, this.doCreateCircle.bind(this));
 		this.createRectangle = this.createDrawingFactory("rectangle", this.rectangles, this.doCreateRectangle.bind(this));
 		this.map = this.doCreateMap({ definition: mapDefinition });
-		this.markersValue.forEach((definition) => {
+		const markerDefinitions = this.markersValue;
+		this.resolveMarkerIcons(markerDefinitions);
+		markerDefinitions.forEach((definition) => {
 			this.createMarker({ definition });
 		});
 		this.polygonsValue.forEach((definition) => {
@@ -98,7 +101,9 @@ var abstract_map_controller_default = class extends Controller {
 	}
 	markersValueChanged() {
 		if (!this.isConnected) return;
-		this.onDrawChanged(this.markers, this.markersValue, this.createMarker, this.doRemoveMarker);
+		const markerDefinitions = this.markersValue;
+		this.resolveMarkerIcons(markerDefinitions);
+		this.onDrawChanged(this.markers, markerDefinitions, this.createMarker, this.doRemoveMarker);
 		if (this.fitBoundsToMarkersValue) this.doFitBoundsToMarkers();
 	}
 	polygonsValueChanged() {
@@ -116,6 +121,15 @@ var abstract_map_controller_default = class extends Controller {
 	rectanglesValueChanged() {
 		if (!this.isConnected) return;
 		this.onDrawChanged(this.rectangles, this.rectanglesValue, this.createRectangle, this.doRemoveRectangle);
+	}
+	resolveMarkerIcons(definitions) {
+		if (!this.hasIconsValue) return;
+		const icons = this.iconsValue;
+		for (const { icon } of definitions) {
+			if (icon?.type !== IconTypes.UxIcon) continue;
+			const reference = icon._generated_html;
+			if (typeof reference === "number") icon._generated_html = icons[reference];
+		}
 	}
 	createDrawingFactory(type, draws, factory) {
 		const eventBefore = `${type}:before-create`;

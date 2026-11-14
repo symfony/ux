@@ -91,6 +91,105 @@ const startStimulus = () => {
     return application;
 };
 
+const uxIconSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32"><path d="M1 2"/></svg>';
+const inlineIconSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"><path d="M3 4"/></svg>';
+
+describe('AbstractMapController with a shared icon table', () => {
+    let container: HTMLElement;
+    let application: Application | null = null;
+    let listener: ((event: Event) => void) | null = null;
+
+    afterEach(() => {
+        if (listener) {
+            document.removeEventListener('ux:map:marker:before-create', listener);
+            listener = null;
+        }
+        application?.stop();
+        application = null;
+        clearDOM();
+    });
+
+    const mountMapWith = (markers: Array<unknown>, icons?: Array<string>) => {
+        const attributes = [
+            'data-testid="map"',
+            'data-controller="map"',
+            'data-map-provider-options-value="{}"',
+            'data-map-options-value="{}"',
+            `data-map-markers-value="${JSON.stringify(markers).replaceAll('"', '&quot;')}"`,
+        ];
+        if (icons) {
+            attributes.push(`data-map-icons-value="${JSON.stringify(icons).replaceAll('"', '&quot;')}"`);
+        }
+
+        container = mountDOM(`<div ${attributes.join(' ')} style="height: 600px"></div>`);
+    };
+
+    const collectIcons = async () => {
+        const definitions: Array<unknown> = [];
+        listener = (event: Event) => {
+            definitions.push((event as CustomEvent).detail.definition.icon);
+        };
+        document.addEventListener('ux:map:marker:before-create', listener);
+
+        const div = getByTestId(container, 'map');
+        application = startStimulus();
+        await waitFor(() => expect(application?.getControllerForElementAndIdentifier(div, 'map')).not.toBeNull());
+
+        return definitions;
+    };
+
+    it('resolves the icon references before dispatching "marker:before-create"', async () => {
+        mountMapWith(
+            [
+                {
+                    position: { lat: 48.8566, lng: 2.3522 },
+                    title: 'Paris',
+                    icon: { type: 'ux-icon', width: 32, height: 32, name: 'fa:map-marker', _generated_html: 0 },
+                    extra: [],
+                    '@id': 'marker-paris',
+                },
+                {
+                    position: { lat: 45.75, lng: 4.85 },
+                    title: 'Lyon',
+                    icon: { type: 'ux-icon', width: 32, height: 32, name: 'fa:map-marker', _generated_html: 0 },
+                    extra: [],
+                    '@id': 'marker-lyon',
+                },
+                {
+                    position: { lat: 43.6047, lng: 1.4442 },
+                    title: 'Toulouse',
+                    icon: { type: 'svg', width: 24, height: 24, html: inlineIconSvg },
+                    extra: [],
+                    '@id': 'marker-toulouse',
+                },
+            ],
+            [uxIconSvg]
+        );
+
+        expect(await collectIcons()).toEqual([
+            { type: 'ux-icon', width: 32, height: 32, name: 'fa:map-marker', _generated_html: uxIconSvg },
+            { type: 'ux-icon', width: 32, height: 32, name: 'fa:map-marker', _generated_html: uxIconSvg },
+            { type: 'svg', width: 24, height: 24, html: inlineIconSvg },
+        ]);
+    });
+
+    it('keeps an inline "_generated_html" untouched', async () => {
+        mountMapWith([
+            {
+                position: { lat: 48.8566, lng: 2.3522 },
+                title: 'Paris',
+                icon: { type: 'ux-icon', width: 32, height: 32, name: 'fa:map-marker', _generated_html: uxIconSvg },
+                extra: [],
+                '@id': 'marker-paris',
+            },
+        ]);
+
+        expect(await collectIcons()).toEqual([
+            { type: 'ux-icon', width: 32, height: 32, name: 'fa:map-marker', _generated_html: uxIconSvg },
+        ]);
+    });
+});
+
 describe('AbstractMapController', () => {
     let container: HTMLElement;
 
