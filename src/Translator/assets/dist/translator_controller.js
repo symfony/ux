@@ -4,11 +4,12 @@ const SPECIAL_CHARS_REGEX = /([-[\]{}()*+?.\\^$|#,])/g;
 function strtr(string, replacePairs) {
 	const keys = Object.keys(replacePairs);
 	if (keys.length === 0) return string;
-	const pattern = keys.map((from) => from.replace(SPECIAL_CHARS_REGEX, "\\$1")).join("|");
-	let regex = compiledPatterns.get(pattern);
+	const cacheKey = keys.length === 1 ? keys[0] : keys.join("\0");
+	let regex = compiledPatterns.get(cacheKey);
 	if (regex === void 0) {
+		const pattern = keys.map((from) => from.replace(SPECIAL_CHARS_REGEX, "\\$1")).join("|");
 		regex = new RegExp(pattern, "g");
-		compiledPatterns.set(pattern, regex);
+		compiledPatterns.set(cacheKey, regex);
 	}
 	return string.replace(regex, (matched) => replacePairs[matched].toString());
 }
