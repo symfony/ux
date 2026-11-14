@@ -25,6 +25,34 @@ class IntlMessageParametersExtractorTest extends TestCase
         static::assertEquals($expectedParameters, $intlMessageParametersExtractor->extract($message));
     }
 
+    public function testExtractTheSameMessageTwice(): void
+    {
+        $intlMessageParametersExtractor = new IntlMessageParametersExtractor();
+
+        $expected = [
+            'count' => ['type' => 'number'],
+            'name' => ['type' => 'string'],
+        ];
+
+        static::assertEquals($expected, $intlMessageParametersExtractor->extract('{count, plural, other {# for {name}}}'));
+        static::assertEquals($expected, $intlMessageParametersExtractor->extract('{count, plural, other {# for {name}}}'));
+        static::assertEquals(['what' => ['type' => 'string']], $intlMessageParametersExtractor->extract('Symfony is {what}!'));
+    }
+
+    public function testExtractAnInvalidMessageTwice(): void
+    {
+        $intlMessageParametersExtractor = new IntlMessageParametersExtractor();
+
+        for ($attempt = 0; $attempt < 2; ++$attempt) {
+            try {
+                $intlMessageParametersExtractor->extract('{count, plural, one {#}');
+                static::fail('An invalid Intl message should not be extracted.');
+            } catch (\InvalidArgumentException $e) {
+                static::assertSame('The message "{count, plural, one {#}" is not a valid Intl message.', $e->getMessage());
+            }
+        }
+    }
+
     public static function provideExtract()
     {
         yield [
