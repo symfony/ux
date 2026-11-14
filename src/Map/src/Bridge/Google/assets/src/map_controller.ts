@@ -45,6 +45,18 @@ let _loaded = false;
 let _onLoadedCallbacks: Array<() => void> = [];
 
 const parser = new DOMParser();
+const parsedSvgs = new Map<string, Element>();
+
+// Markers overwhelmingly share the same SVG, so it is parsed once and each marker gets a clone.
+function createSvgElement(html: string): Element {
+    let parsed = parsedSvgs.get(html);
+    if (undefined === parsed) {
+        parsed = parser.parseFromString(html, 'image/svg+xml').documentElement;
+        parsedSvgs.set(html, parsed);
+    }
+
+    return parsed.cloneNode(true) as Element;
+}
 
 export default class extends AbstractMapController<
     MapOptions,
@@ -400,9 +412,9 @@ export default class extends AbstractMapController<
         const { type, width, height } = definition;
 
         if (type === IconTypes.Svg) {
-            element.content = parser.parseFromString(definition.html, 'image/svg+xml').documentElement;
+            element.content = createSvgElement(definition.html);
         } else if (type === IconTypes.UxIcon) {
-            element.content = parser.parseFromString(definition._generated_html, 'image/svg+xml').documentElement;
+            element.content = createSvgElement(definition._generated_html);
         } else if (type === IconTypes.Url) {
             const icon = document.createElement('img');
             icon.width = width;
