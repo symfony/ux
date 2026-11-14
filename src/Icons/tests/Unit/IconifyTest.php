@@ -53,6 +53,45 @@ class IconifyTest extends TestCase
         $this->assertEquals($icon->getAttributes(), ['viewBox' => '0 0 24 24', 'xmlns' => 'http://www.w3.org/2000/svg']);
     }
 
+    public function testPrefetchedIconIsFetchedWithoutASecondRequest(): void
+    {
+        $requests = 0;
+        $client = new MockHttpClient(static function (string $method, string $url) use (&$requests): JsonMockResponse {
+            ++$requests;
+
+            if (str_contains($url, '/collections')) {
+                return new JsonMockResponse(['bi' => []]);
+            }
+
+            return new JsonMockResponse(['icons' => ['heart' => ['body' => '<path d="M0 0h24v24H0z"/>', 'height' => 24]]]);
+        });
+        $iconify = new Iconify(new NullAdapter(), new IconFactory(), 'https://example.com', $client);
+
+        $iconify->prefetchIcon('bi', 'heart');
+        $requestsAfterPrefetch = $requests;
+        $icon = $iconify->fetchIcon('bi', 'heart');
+
+        $this->assertSame('<path d="M0 0h24v24H0z"/>', $icon->getInnerSvg());
+        $this->assertSame(['xmlns' => 'http://www.w3.org/2000/svg', 'viewBox' => '0 0 24 24'], $icon->getAttributes());
+        $this->assertSame($requestsAfterPrefetch, $requests, 'fetchIcon() must consume the prefetched response.');
+    }
+
+    public function testPrefetchIgnoresAnUnknownIconSet(): void
+    {
+        $requests = 0;
+        $client = new MockHttpClient(static function (string $method, string $url) use (&$requests): JsonMockResponse {
+            ++$requests;
+
+            return new JsonMockResponse(['bi' => []]);
+        });
+        $iconify = new Iconify(new NullAdapter(), new IconFactory(), 'https://example.com', $client);
+
+        $iconify->prefetchIcon('not-a-set', 'heart');
+
+        // only the collections list
+        $this->assertSame(1, $requests);
+    }
+
     public function testFetchIconSanitizesBody(): void
     {
         $iconify = new Iconify(

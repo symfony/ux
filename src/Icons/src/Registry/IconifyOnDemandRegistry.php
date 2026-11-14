@@ -30,6 +30,25 @@ final class IconifyOnDemandRegistry implements IconRegistryInterface
     ) {
     }
 
+    /**
+     * @param iterable<string> $names
+     */
+    public function prefetch(iterable $names): void
+    {
+        foreach ($names as $name) {
+            if (2 !== \count($parts = explode(':', $name))) {
+                continue;
+            }
+            [$prefix, $icon] = $parts;
+
+            try {
+                $this->iconify->prefetchIcon($this->prefixAliases[$prefix] ?? $prefix, $icon);
+            } catch (HttpClientNotInstalledException) {
+                return;
+            }
+        }
+    }
+
     public function get(string $name): Icon
     {
         if (2 !== \count($parts = explode(':', $name))) {

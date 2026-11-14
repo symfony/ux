@@ -67,7 +67,10 @@ final class LockIconsCommand extends Command
             $io->comment('Adding icons aliases...');
         }
 
-        foreach ([...array_values($this->iconAliases), ...$finderIcons] as $icon) {
+        $icons = [...array_values($this->iconAliases), ...$finderIcons];
+        $this->prefetch($icons, $force);
+
+        foreach ($icons as $icon) {
             if (2 !== \count($parts = explode(':', $icon))) {
                 continue;
             }
@@ -116,5 +119,30 @@ final class LockIconsCommand extends Command
         $io->success(\sprintf('Imported %d icons.', $count));
 
         return Command::SUCCESS;
+    }
+
+    /**
+     * @param list<string> $icons
+     */
+    private function prefetch(array $icons, bool $force): void
+    {
+        foreach ($icons as $icon) {
+            if (2 !== \count($parts = explode(':', $icon))) {
+                continue;
+            }
+
+            [$prefix, $name] = $parts;
+            $prefix = $this->iconSetAliases[$prefix] ?? $prefix;
+
+            if (!$force && $this->registry->has($prefix.':'.$name)) {
+                continue;
+            }
+
+            if (!$this->iconify->hasIconSet($prefix)) {
+                continue;
+            }
+
+            $this->iconify->prefetchIcon($prefix, $name);
+        }
     }
 }
