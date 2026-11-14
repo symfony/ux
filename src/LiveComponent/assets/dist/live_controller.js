@@ -1205,8 +1205,8 @@ var ExternalMutationTracker_default = class {
 	mutationObserver;
 	changedElements = /* @__PURE__ */ new WeakMap();
 	changedElementsCount = 0;
-	addedElements = [];
-	removedElements = [];
+	addedElements = /* @__PURE__ */ new Set();
+	removedElements = /* @__PURE__ */ new WeakSet();
 	isStarted = false;
 	originalIds = /* @__PURE__ */ new Map();
 	constructor(element, shouldTrackChangeCallback) {
@@ -1238,10 +1238,10 @@ var ExternalMutationTracker_default = class {
 		return this.originalIds;
 	}
 	getAddedElements() {
-		return this.addedElements;
+		return [...this.addedElements];
 	}
 	wasElementAdded(element) {
-		return this.addedElements.includes(element);
+		return this.addedElements.has(element);
 	}
 	handlePendingChanges() {
 		this.onMutations(this.mutationObserver.takeRecords());
@@ -1274,20 +1274,20 @@ var ExternalMutationTracker_default = class {
 	handleChildListMutation(mutation) {
 		mutation.addedNodes.forEach((node) => {
 			if (!(node instanceof Element)) return;
-			if (this.removedElements.includes(node)) {
-				this.removedElements.splice(this.removedElements.indexOf(node), 1);
+			if (this.removedElements.has(node)) {
+				this.removedElements.delete(node);
 				return;
 			}
 			if (this.isElementAddedByTranslation(node)) return;
-			this.addedElements.push(node);
+			this.addedElements.add(node);
 		});
 		mutation.removedNodes.forEach((node) => {
 			if (!(node instanceof Element)) return;
-			if (this.addedElements.includes(node)) {
-				this.addedElements.splice(this.addedElements.indexOf(node), 1);
+			if (this.addedElements.has(node)) {
+				this.addedElements.delete(node);
 				return;
 			}
-			this.removedElements.push(node);
+			this.removedElements.add(node);
 		});
 	}
 	handleAttributeMutation(mutation) {
