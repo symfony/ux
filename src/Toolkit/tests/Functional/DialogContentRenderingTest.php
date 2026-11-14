@@ -26,6 +26,7 @@ class DialogContentRenderingTest extends WebTestCase
     {
         yield 'dialog' => ['Dialog'];
         yield 'sheet' => ['Sheet'];
+        yield 'drawer' => ['Drawer'];
     }
 
     #[Group('skip-on-lowest')]

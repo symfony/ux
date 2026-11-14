@@ -21,6 +21,7 @@
     data-dialog-target="dialog"
     data-direction="{{ _drawer_direction }}"
     {{ attributes.defaults({
+        closedby: 'any',
         class: style.apply({direction: _drawer_direction})|tailwind_classes,
         'data-action': 'keydown.esc->dialog#close:prevent click->dialog#closeOnClickOutside',
     }) }}

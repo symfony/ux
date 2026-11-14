@@ -1,4 +1,15 @@
+import type { Locator } from '@playwright/test';
 import { describeRecipe, expect, test, testState } from '../../../../assets/test/browser/fixtures';
+
+async function recordExit(drawer: Locator): Promise<void> {
+    await drawer.evaluate((element) => {
+        new MutationObserver(() => {
+            if (element.hasAttribute('data-closing')) {
+                element.dataset.exitPlayed = '';
+            }
+        }).observe(element, { attributeFilter: ['data-closing'] });
+    });
+}
 
 describeRecipe('shadcn/drawer', () => {
     testState('opens on click', {
@@ -66,6 +77,67 @@ describeRecipe('shadcn/drawer', () => {
             expect(Math.abs(distances[direction])).toBeLessThan(1);
         });
     }
+
+    test('opens from a command button outside of it', async ({ page, gotoExample }) => {
+        await gotoExample('shadcn/drawer/default');
+        await page.evaluate(() => {
+            const button = document.createElement('button');
+            button.textContent = 'Move from elsewhere';
+            button.setAttribute('command', 'show-modal');
+            button.setAttribute('commandfor', 'drawer-drawer-demo');
+            document.body.append(button);
+        });
+        const invoker = page.getByRole('button', { name: 'Move from elsewhere' });
+
+        await invoker.click();
+
+        await expect(page.getByRole('dialog', { name: 'Move Goal' })).toBeVisible();
+        await expect(invoker).toHaveAttribute('aria-expanded', 'true');
+
+        await page.keyboard.press('Escape');
+
+        await expect(page.getByRole('dialog')).toBeHidden();
+        await expect(invoker).toHaveAttribute('aria-expanded', 'false');
+        await expect(invoker).toBeFocused();
+    });
+
+    test('slides out when a command button closes it', async ({ page, gotoExample }) => {
+        await gotoExample('shadcn/drawer/default');
+        const trigger = page.getByRole('button', { name: 'Open Drawer' });
+        await trigger.click();
+        const drawer = page.locator('[data-slot="drawer-content"]');
+        await expect(drawer).toBeVisible();
+        await recordExit(drawer);
+        await drawer.evaluate((element) => {
+            const button = document.createElement('button');
+            button.textContent = 'Done';
+            button.setAttribute('command', 'close');
+            button.setAttribute('commandfor', element.id);
+            element.append(button);
+        });
+
+        await drawer.getByRole('button', { name: 'Done' }).click();
+
+        await expect(drawer).toBeHidden();
+        await expect(drawer).toHaveAttribute('data-exit-played');
+        await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+    });
+
+    test('slides out when Escape closes it while nothing inside holds the focus', async ({ page, gotoExample }) => {
+        await gotoExample('shadcn/drawer/default');
+        const trigger = page.getByRole('button', { name: 'Open Drawer' });
+        await trigger.click();
+        const drawer = page.locator('[data-slot="drawer-content"]');
+        await expect(drawer).toBeVisible();
+        await recordExit(drawer);
+        await page.evaluate(() => (document.activeElement as HTMLElement).blur());
+
+        await page.keyboard.press('Escape');
+
+        await expect(drawer).toBeHidden();
+        await expect(drawer).toHaveAttribute('data-exit-played');
+        await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+    });
 
     test('closes on Escape and gives focus back to the trigger', async ({ page, gotoExample }) => {
         await gotoExample('shadcn/drawer/default');
@@ -135,5 +207,22 @@ describeRecipe('shadcn/drawer', () => {
         await page.keyboard.press('Escape');
 
         await expect(dialog).toHaveAttribute('data-display-on-close', 'none');
+    });
+
+    test.describe('without JavaScript', () => {
+        test.use({ javaScriptEnabled: false });
+
+        test('opens from its trigger and closes from its close button', async ({ page }) => {
+            await page.goto('/shadcn/drawer/default');
+
+            await page.getByRole('button', { name: 'Open Drawer' }).click();
+
+            const drawer = page.getByRole('dialog', { name: 'Move Goal' });
+            await expect(drawer).toBeVisible();
+
+            await drawer.getByRole('button', { name: 'Cancel' }).click();
+
+            await expect(drawer).toBeHidden();
+        });
     });
 });
