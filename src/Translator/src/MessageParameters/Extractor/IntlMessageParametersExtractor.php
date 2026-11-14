@@ -21,11 +21,20 @@ use Symfony\UX\Translator\Intl\Type;
  */
 final class IntlMessageParametersExtractor implements ExtractorInterface
 {
+    /**
+     * @var array<string, array<string, array{type: string, values?: list<string>}>>
+     */
+    private array $parametersByMessage = [];
+
     public function extract(string $message): array
     {
         // Early return if there is no parameter-like pattern in the message
         if (!str_contains($message, '{')) {
             return [];
+        }
+
+        if (isset($this->parametersByMessage[$message])) {
+            return $this->parametersByMessage[$message];
         }
 
         $parameters = [];
@@ -87,6 +96,6 @@ final class IntlMessageParametersExtractor implements ExtractorInterface
             }
         }
 
-        return $parameters;
+        return $this->parametersByMessage[$message] = $parameters;
     }
 }
