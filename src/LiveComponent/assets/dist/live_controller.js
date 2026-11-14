@@ -2288,6 +2288,7 @@ var SetValueOntoModelFieldsPlugin_default = class {
 		});
 	}
 	synchronizeValueOfModelFields(component) {
+		const unsyncedModels = component.getUnsyncedModels();
 		component.element.querySelectorAll("[data-model]").forEach((element) => {
 			if (!(element instanceof HTMLElement)) throw new Error("Invalid element using data-model.");
 			if (element instanceof HTMLFormElement) return;
@@ -2295,20 +2296,22 @@ var SetValueOntoModelFieldsPlugin_default = class {
 			const modelDirective = getModelDirectiveFromElement(element);
 			if (!modelDirective) return;
 			const modelName = modelDirective.action;
-			if (component.getUnsyncedModels().includes(modelName)) return;
-			if (component.valueStore.has(modelName)) setValueOnElement(element, component.valueStore.get(modelName));
+			if (unsyncedModels.includes(modelName)) return;
+			const value = component.valueStore.get(modelName);
+			if (value !== void 0) setValueOnElement(element, value);
 			if (element instanceof HTMLSelectElement && !element.multiple) component.valueStore.set(modelName, getValueFromElement(element, component.valueStore));
 		});
 		this.synchronizeValueOfSelectsMappedViaForm(component);
 	}
 	synchronizeValueOfSelectsMappedViaForm(component) {
+		const unsyncedModels = component.getUnsyncedModels();
 		component.element.querySelectorAll("form[data-model] select[name]:not([data-model])").forEach((element) => {
 			if (!(element instanceof HTMLSelectElement) || element.multiple) return;
 			if (!elementBelongsToThisComponent(element, component)) return;
 			const modelDirective = getModelDirectiveFromElement(element, false);
 			if (!modelDirective) return;
 			const modelName = modelDirective.action;
-			if (component.getUnsyncedModels().includes(modelName) || !component.valueStore.has(modelName)) return;
+			if (unsyncedModels.includes(modelName) || component.valueStore.get(modelName) === void 0) return;
 			component.valueStore.set(modelName, getValueFromElement(element, component.valueStore));
 		});
 	}

@@ -30,6 +30,8 @@ export default class implements PluginInterface {
      * the "firstName" model.
      */
     private synchronizeValueOfModelFields(component: Component): void {
+        const unsyncedModels = component.getUnsyncedModels();
+
         component.element.querySelectorAll('[data-model]').forEach((element: Element) => {
             if (!(element instanceof HTMLElement)) {
                 throw new Error('Invalid element using data-model.');
@@ -51,12 +53,13 @@ export default class implements PluginInterface {
             const modelName = modelDirective.action;
 
             // skip any elements whose model name is currently in an unsynced state
-            if (component.getUnsyncedModels().includes(modelName)) {
+            if (unsyncedModels.includes(modelName)) {
                 return;
             }
 
-            if (component.valueStore.has(modelName)) {
-                setValueOnElement(element, component.valueStore.get(modelName));
+            const value = component.valueStore.get(modelName);
+            if (value !== undefined) {
+                setValueOnElement(element, value);
             }
 
             // for select elements without a blank value, one might be selected automatically
@@ -78,6 +81,8 @@ export default class implements PluginInterface {
      * https://github.com/symfony/ux/issues/3529
      */
     private synchronizeValueOfSelectsMappedViaForm(component: Component): void {
+        const unsyncedModels = component.getUnsyncedModels();
+
         component.element
             .querySelectorAll('form[data-model] select[name]:not([data-model])')
             .forEach((element: Element) => {
@@ -96,7 +101,7 @@ export default class implements PluginInterface {
 
                 const modelName = modelDirective.action;
 
-                if (component.getUnsyncedModels().includes(modelName) || !component.valueStore.has(modelName)) {
+                if (unsyncedModels.includes(modelName) || component.valueStore.get(modelName) === undefined) {
                     return;
                 }
 
