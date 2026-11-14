@@ -138,17 +138,46 @@ function getPluralizationRule(number, locale) {
 		default: return 0;
 	}
 }
+const instances = /* @__PURE__ */ new Map();
+function memoize(create) {
+	const cache = /* @__PURE__ */ new Map();
+	return (...args) => {
+		const key = JSON.stringify(args);
+		let value = cache.get(key);
+		if (value === void 0) {
+			value = create(...args);
+			cache.set(key, value);
+		}
+		return value;
+	};
+}
+const formatters = {
+	getNumberFormat: memoize((locales, options) => new Intl.NumberFormat(locales, options)),
+	getDateTimeFormat: memoize((locales, options) => new Intl.DateTimeFormat(locales, options)),
+	getPluralRules: memoize((locales, options) => new Intl.PluralRules(locales, options))
+};
 function formatIntl(id, parameters, locale) {
 	if (id === "") return "";
-	const intlMessage = new IntlMessageFormat(id, [locale.replaceAll("_", "-")], void 0, { ignoreTag: true });
-	parameters = { ...parameters };
-	Object.entries(parameters).forEach(([key, value]) => {
-		if (key.includes("%") || key.includes("{")) {
-			delete parameters[key];
-			parameters[key.replace(/[%{} ]/g, "").trim()] = value;
-		}
-	});
-	return intlMessage.format(parameters);
+	let instancesByMessage = instances.get(locale);
+	if (instancesByMessage === void 0) {
+		instancesByMessage = /* @__PURE__ */ new Map();
+		instances.set(locale, instancesByMessage);
+	}
+	let intlMessage = instancesByMessage.get(id);
+	if (intlMessage === void 0) {
+		intlMessage = new IntlMessageFormat(id, [locale.replaceAll("_", "-")], void 0, {
+			ignoreTag: true,
+			formatters
+		});
+		instancesByMessage.set(id, intlMessage);
+	}
+	let values = parameters;
+	for (const key of Object.keys(parameters)) if (key.includes("%") || key.includes("{")) {
+		if (values === parameters) values = { ...parameters };
+		delete values[key];
+		values[key.replace(/[%{} ]/g, "").trim()] = parameters[key];
+	}
+	return intlMessage.format(values);
 }
 function getDefaultLocale() {
 	return getPageLocale() ?? "en";
