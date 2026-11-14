@@ -11,8 +11,6 @@
 
 namespace Symfony\UX\Translator\Intl;
 
-use Symfony\Component\String\AbstractString;
-
 /**
  * @internal
  */
@@ -353,23 +351,6 @@ final class Utils
         }
 
         return $elements;
-    }
-
-    public static function matchIdentifierAtIndex(AbstractString $s, int $index): string
-    {
-        $match = [];
-
-        while (true) {
-            $c = $s->codePointsAt($index)[0] ?? null;
-            if (null === $c || self::isWhiteSpace($c) || self::isPatternSyntax($c)) {
-                break;
-            }
-
-            $match[] = $c;
-            $index += $c >= 0x10000 ? 2 : 1;
-        }
-
-        return self::fromCodePoint(...$match);
     }
 
     public static function isSafeInteger(mixed $value): bool
