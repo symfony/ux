@@ -12,32 +12,54 @@ function strtr(string, replacePairs) {
 	}
 	return string.replace(regex, (matched) => replacePairs[matched].toString());
 }
+const intervalRegex = /^(?<interval>({\s*(-?\d+(\.\d+)?[\s*,\s*\-?\d+(.\d+)?]*)\s*})|(?<left_delimiter>[[\]])\s*(?<left>-Inf|-?\d+(\.\d+)?)\s*,\s*(?<right>\+?Inf|-?\d+(\.\d+)?)\s*(?<right_delimiter>[[\]]))\s*(?<message>.*?)$/s;
+const standardRuleRegex = /^\w+:\s*(.*?)$/;
+const onlyPipesRegex = /^\|+$/;
+const escapedPipeRegex = /\|\|/g;
+const partsRegex = /(?:\|\||[^|])+/g;
+const pluralParts = /* @__PURE__ */ new Map();
+function parsePluralParts(id) {
+	return (onlyPipesRegex.test(id) ? id.split("|") : id.match(partsRegex) || []).map((rawPart) => {
+		const part = rawPart.trim().replace(escapedPipeRegex, "|");
+		const matches = part.match(intervalRegex);
+		if (!matches) {
+			const ruleMatch = part.match(standardRuleRegex);
+			return {
+				kind: "standard",
+				message: ruleMatch ? ruleMatch[1] : part
+			};
+		}
+		const matchGroups = matches.groups || {};
+		if (matches[2]) return {
+			kind: "set",
+			numbers: matches[3].split(",").map(Number),
+			message: matchGroups.message
+		};
+		return {
+			kind: "interval",
+			left: "-Inf" === matchGroups.left ? Number.NEGATIVE_INFINITY : Number(matchGroups.left),
+			right: ["Inf", "+Inf"].includes(matchGroups.right) ? Number.POSITIVE_INFINITY : Number(matchGroups.right),
+			leftInclusive: "[" === matchGroups.left_delimiter,
+			rightInclusive: "]" === matchGroups.right_delimiter,
+			message: matchGroups.message
+		};
+	});
+}
 function format(id, parameters, locale) {
 	if (null === id || "" === id) return "";
 	if (typeof parameters["%count%"] === "undefined" || Number.isNaN(parameters["%count%"])) return strtr(id, parameters);
 	const number = Number(parameters["%count%"]);
-	let parts = [];
-	if (/^\|+$/.test(id)) parts = id.split("|");
-	else parts = id.match(/(?:\|\||[^|])+/g) || [];
-	const intervalRegex = /^(?<interval>({\s*(-?\d+(\.\d+)?[\s*,\s*\-?\d+(.\d+)?]*)\s*})|(?<left_delimiter>[[\]])\s*(?<left>-Inf|-?\d+(\.\d+)?)\s*,\s*(?<right>\+?Inf|-?\d+(\.\d+)?)\s*(?<right_delimiter>[[\]]))\s*(?<message>.*?)$/s;
-	const standardRules = [];
-	for (let part of parts) {
-		part = part.trim().replace(/\|\|/g, "|");
-		const matches = part.match(intervalRegex);
-		if (matches) {
-			const matchGroups = matches.groups || {};
-			if (matches[2]) {
-				for (const n of matches[3].split(",")) if (number === Number(n)) return strtr(matchGroups.message, parameters);
-			} else {
-				const leftNumber = "-Inf" === matchGroups.left ? Number.NEGATIVE_INFINITY : Number(matchGroups.left);
-				const rightNumber = ["Inf", "+Inf"].includes(matchGroups.right) ? Number.POSITIVE_INFINITY : Number(matchGroups.right);
-				if (("[" === matchGroups.left_delimiter ? number >= leftNumber : number > leftNumber) && ("]" === matchGroups.right_delimiter ? number <= rightNumber : number < rightNumber)) return strtr(matchGroups.message, parameters);
-			}
-		} else {
-			const ruleMatch = part.match(/^\w+:\s*(.*?)$/);
-			standardRules.push(ruleMatch ? ruleMatch[1] : part);
-		}
+	let parts = pluralParts.get(id);
+	if (parts === void 0) {
+		parts = parsePluralParts(id);
+		pluralParts.set(id, parts);
 	}
+	const standardRules = [];
+	for (const part of parts) if ("set" === part.kind) {
+		if (part.numbers.includes(number)) return strtr(part.message, parameters);
+	} else if ("interval" === part.kind) {
+		if ((part.leftInclusive ? number >= part.left : number > part.left) && (part.rightInclusive ? number <= part.right : number < part.right)) return strtr(part.message, parameters);
+	} else standardRules.push(part.message);
 	const position = getPluralizationRule(number, locale);
 	if (typeof standardRules[position] === "undefined") {
 		if (1 === parts.length && typeof standardRules[0] !== "undefined") return strtr(standardRules[0], parameters);
