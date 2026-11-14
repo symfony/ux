@@ -56,9 +56,15 @@ class InterceptChildComponentRenderSubscriber implements EventSubscriberInterfac
 
         $childFingerprints = $parentComponent->getExtraMetadata(self::CHILDREN_FINGERPRINTS_METADATA_KEY);
 
+        // no child of this parent can match, no need to compute an id
+        if (!$childFingerprints) {
+            return;
+        }
+
         // get the deterministic id for this child, but without incrementing the counter yet
-        if (isset($event->getInputProps()['id'])) {
-            $deterministicId = $event->getInputProps()['id'];
+        $explicitId = $event->getInputProps()['id'] ?? null;
+        if (null !== $explicitId) {
+            $deterministicId = $explicitId;
         } else {
             $key = $event->getInputProps()[LiveControllerAttributesCreator::KEY_PROP_NAME] ?? null;
             $deterministicId = $this->getDeterministicIdCalculator()->calculateDeterministicId(increment: false, key: $key);
@@ -73,7 +79,11 @@ class InterceptChildComponentRenderSubscriber implements EventSubscriberInterfac
         // in a loop of children being rendered on the same line
         // we need to do this because this component will *not* ever hit
         // AddLiveAttributesSubscriber where the counter is normally incremented
-        $this->getDeterministicIdCalculator()->calculateDeterministicId(increment: true);
+        if (null !== $explicitId) {
+            $this->getDeterministicIdCalculator()->calculateDeterministicId(increment: true);
+        } else {
+            $this->getDeterministicIdCalculator()->incrementLastCalculatedId();
+        }
 
         $childPartialRenderer = $this->container->get(ChildComponentPartialRenderer::class);
         \assert($childPartialRenderer instanceof ChildComponentPartialRenderer);
