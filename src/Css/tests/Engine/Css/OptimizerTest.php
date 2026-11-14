@@ -103,6 +103,61 @@ final class OptimizerTest extends TestCase
         $this->assertSame("@layer utilities {\n\n  .c_red {\n    color: red;\n}\n}", $css);
     }
 
+    public function testDuplicateDeclarationsKeepTheLastOneLikePostcss(): void
+    {
+        $root = self::root(new Rule('.c_red', [
+            new Declaration('color', 'red'),
+            new Declaration('margin', '0'),
+            new Declaration('color', 'red'),
+        ]));
+
+        $css = new Optimizer()->toCss($root);
+
+        $this->assertSame("@layer utilities {\n  .c_red {\n    margin: 0;\n    color: red;\n}\n}", $css);
+    }
+
+    public function testAnImportantDeclarationDoesNotDuplicateThePlainOne(): void
+    {
+        $root = self::root(new Rule('.c_red', [
+            new Declaration('color', 'red'),
+            new Declaration('color', 'red', true),
+        ]));
+
+        $css = new Optimizer()->toCss($root);
+
+        $this->assertSame("@layer utilities {\n  .c_red {\n    color: red;\n    color: red !important;\n}\n}", $css);
+    }
+
+    public function testARuleEmptiedByALaterRuleOfTheSameSelectorIsDiscarded(): void
+    {
+        $root = self::root(
+            self::rule('.c_red', ['color' => 'red']),
+            self::rule('.bg_blue', ['background' => 'blue']),
+            self::rule('.c_red', ['color' => 'red', 'margin' => '0']),
+        );
+
+        $css = new Optimizer()->toCss($root);
+
+        $this->assertSame("@layer utilities {\n\n  .bg_blue {\n    background: blue;\n}\n\n  .c_red {\n    color: red;\n    margin: 0;\n}\n}", $css);
+    }
+
+    public function testAtRulesOnlyDeduplicateWhenTheirChildrenAlreadyMatch(): void
+    {
+        $root = self::root(
+            new AtRule('supports', '(display: grid)', [
+                self::rule('.c_red', ['color' => 'red']),
+                self::rule('.c_red', ['color' => 'red']),
+            ]),
+            new AtRule('supports', '(display: grid)', [
+                self::rule('.c_red', ['color' => 'red']),
+            ]),
+        );
+
+        $css = new Optimizer()->toCss($root);
+
+        $this->assertSame("@layer utilities {\n  @supports (display: grid) {\n    .c_red,.c_red {\n      color: red;\n}\n}\n}", $css);
+    }
+
     private static function root(Rule|AtRule ...$nodes): Root
     {
         return new Root([new AtRule('layer', 'utilities', $nodes)]);
