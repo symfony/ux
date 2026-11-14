@@ -27,6 +27,7 @@ var abstract_map_controller_default = class extends Controller {
 	circles = /* @__PURE__ */ new Map();
 	rectangles = /* @__PURE__ */ new Map();
 	infoWindows = [];
+	infoWindowsByElement = /* @__PURE__ */ new WeakMap();
 	isConnected = false;
 	createMarker;
 	createPolygon;
@@ -93,6 +94,9 @@ var abstract_map_controller_default = class extends Controller {
 			element
 		});
 		this.infoWindows.push(infoWindow);
+		const elementInfoWindows = this.infoWindowsByElement.get(element);
+		if (elementInfoWindows) elementInfoWindows.push(infoWindow);
+		else this.infoWindowsByElement.set(element, [infoWindow]);
 		return infoWindow;
 	}
 	markersValueChanged() {
@@ -135,10 +139,22 @@ var abstract_map_controller_default = class extends Controller {
 		newDrawDefinitions.forEach((definition) => {
 			idsToRemove.delete(definition["@id"]);
 		});
+		const removedInfoWindows = /* @__PURE__ */ new Set();
 		idsToRemove.forEach((id) => {
-			remover(draws.get(id));
+			const draw = draws.get(id);
+			const drawInfoWindows = this.infoWindowsByElement.get(draw);
+			if (drawInfoWindows) {
+				drawInfoWindows.forEach((infoWindow) => removedInfoWindows.add(infoWindow));
+				this.infoWindowsByElement.delete(draw);
+			}
+			remover(draw);
 			draws.delete(id);
 		});
+		if (removedInfoWindows.size > 0) {
+			let kept = 0;
+			for (const infoWindow of this.infoWindows) if (!removedInfoWindows.has(infoWindow)) this.infoWindows[kept++] = infoWindow;
+			this.infoWindows.length = kept;
+		}
 		newDrawDefinitions.forEach((definition) => {
 			if (!draws.has(definition["@id"])) factory({ definition });
 		});

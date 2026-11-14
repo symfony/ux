@@ -235,6 +235,7 @@ export default abstract class<
     protected rectangles = new Map<Identifier, BridgeRectangle>();
     protected infoWindows: Array<BridgeInfoWindow> = [];
 
+    private infoWindowsByElement = new WeakMap<object, Array<BridgeInfoWindow>>();
     private isConnected = false;
     private createMarker: ({
         definition,
@@ -334,6 +335,13 @@ export default abstract class<
         this.dispatchEvent('info-window:after-create', { infoWindow, definition, element });
 
         this.infoWindows.push(infoWindow);
+
+        const elementInfoWindows = this.infoWindowsByElement.get(element as object);
+        if (elementInfoWindows) {
+            elementInfoWindows.push(infoWindow);
+        } else {
+            this.infoWindowsByElement.set(element as object, [infoWindow]);
+        }
 
         return infoWindow;
     }
@@ -552,12 +560,29 @@ export default abstract class<
             idsToRemove.delete(definition['@id']);
         });
 
+        const removedInfoWindows = new Set<BridgeInfoWindow>();
         idsToRemove.forEach((id) => {
             // biome-ignore lint/style/noNonNullAssertion: the ids are coming from the keys of the map
             const draw = draws.get(id)!;
+            const drawInfoWindows = this.infoWindowsByElement.get(draw as object);
+            if (drawInfoWindows) {
+                drawInfoWindows.forEach((infoWindow) => removedInfoWindows.add(infoWindow));
+                this.infoWindowsByElement.delete(draw as object);
+            }
             remover(draw);
             draws.delete(id);
         });
+
+        if (removedInfoWindows.size > 0) {
+            // Compacted in place: `infoWindows` is handed to the listeners of `ux:map:connect`, which may hold it.
+            let kept = 0;
+            for (const infoWindow of this.infoWindows) {
+                if (!removedInfoWindows.has(infoWindow)) {
+                    this.infoWindows[kept++] = infoWindow;
+                }
+            }
+            this.infoWindows.length = kept;
+        }
 
         newDrawDefinitions.forEach((definition) => {
             if (!draws.has(definition['@id'])) {

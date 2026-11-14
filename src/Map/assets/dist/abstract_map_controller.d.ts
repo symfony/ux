@@ -126,6 +126,7 @@ export default abstract class export_default<MapOptions, BridgeMapOptions, Bridg
   protected circles: Map<string, BridgeCircle>;
   protected rectangles: Map<string, BridgeRectangle>;
   protected infoWindows: Array<BridgeInfoWindow>;
+  private infoWindowsByElement;
   private isConnected;
   private createMarker;
   private createPolygon;

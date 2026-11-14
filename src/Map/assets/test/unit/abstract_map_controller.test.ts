@@ -80,6 +80,26 @@ class MyMapController extends AbstractMapController {
         }
     }
 
+    doRemoveMarker() {
+        // no-op
+    }
+
+    doRemovePolygon() {
+        // no-op
+    }
+
+    doRemovePolyline() {
+        // no-op
+    }
+
+    doRemoveCircle() {
+        // no-op
+    }
+
+    doRemoveRectangle() {
+        // no-op
+    }
+
     doFitBoundsToMarkers() {
         // no-op
     }
@@ -180,5 +200,53 @@ describe('AbstractMapController', () => {
                 rectangle: null,
             },
         ]);
+    });
+});
+
+describe('AbstractMapController on markers change', () => {
+    const marker = (title: string, id: string, withInfoWindow: boolean) => ({
+        position: { lat: 48.8566, lng: 2.3522 },
+        title,
+        infoWindow: withInfoWindow
+            ? { headerContent: title, content: null, position: null, opened: false, autoClose: true, extra: [] }
+            : null,
+        extra: [],
+        '@id': id,
+    });
+
+    let container: HTMLElement;
+    let application: Application | null = null;
+
+    afterEach(() => {
+        application?.stop();
+        application = null;
+        clearDOM();
+    });
+
+    it('removes the info windows of the removed markers', async () => {
+        const definitions = [
+            marker('Paris', 'paris', true),
+            marker('Lyon', 'lyon', true),
+            marker('Dijon', 'dijon', false),
+        ];
+        const markersAttribute = 'data-map-markers-value';
+        container = mountDOM(
+            `<div data-testid="map" data-controller="map" data-map-provider-options-value="{}" data-map-options-value="{}" ${markersAttribute}="${JSON.stringify(definitions).replaceAll('"', '&quot;')}"></div>`
+        );
+
+        const div = getByTestId(container, 'map');
+        application = startStimulus();
+        await waitFor(() => expect(application?.getControllerForElementAndIdentifier(div, 'map')).not.toBeNull());
+
+        const controller = application.getControllerForElementAndIdentifier(div, 'map');
+        expect(controller.infoWindows).toHaveLength(2);
+        const infoWindowsBefore = controller.infoWindows;
+
+        div.setAttribute(markersAttribute, JSON.stringify([definitions[1], definitions[2]]));
+        await waitFor(() => expect(controller.infoWindows).toHaveLength(1));
+
+        expect(controller.infoWindows[0]).toEqual({ infoWindow: 'infoWindow', headerContent: 'Lyon', marker: 'Lyon' });
+        expect(controller.infoWindows).toBe(infoWindowsBefore);
+        expect([...controller.markers.keys()]).toEqual(['lyon', 'dijon']);
     });
 });
