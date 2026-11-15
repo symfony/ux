@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+    <file source-language="en" target-language="nl" datatype="plaintext" original="UXDataTableBundle">
+        <header>
+            <tool tool-id="symfony" tool-name="Symfony"/>
+        </header>
+        <body>
+            <trans-unit id="1">
+                <source>Filter</source>
+                <target>Filteren</target>
+            </trans-unit>
+            <trans-unit id="2">
+                <source>Reset</source>
+                <target>Resetten</target>
+            </trans-unit>
+            <trans-unit id="3">
+                <source>No results.</source>
+                <target>Geen resultaten.</target>
+            </trans-unit>
+            <trans-unit id="4">
+                <source>Yes</source>
+                <target>Ja</target>
+            </trans-unit>
+            <trans-unit id="5">
+                <source>No</source>
+                <target>Nee</target>
+            </trans-unit>
+            <trans-unit id="6">
+                <source>Cancel</source>
+                <target>Annuleren</target>
+            </trans-unit>
+            <trans-unit id="7">
+                <source>Are you sure?</source>
+                <target>Weet u het zeker?</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

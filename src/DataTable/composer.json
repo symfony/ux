@@ -1,0 +1,75 @@
+{
+    "name": "symfony/ux-data-table",
+    "type": "symfony-bundle",
+    "description": "Sortable, filterable and paginated data tables for Symfony",
+    "keywords": [
+        "symfony-ux",
+        "data-table",
+        "datagrid",
+        "table"
+    ],
+    "homepage": "https://symfony.com",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Simon Daigre",
+            "email": "simon@daig.re"
+        },
+        {
+            "name": "Symfony Community",
+            "homepage": "https://symfony.com/contributors"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Symfony\\UX\\DataTable\\": "src/"
+        },
+        "exclude-from-classmap": []
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Symfony\\UX\\DataTable\\Tests\\": "tests/"
+        }
+    },
+    "require": {
+        "php": ">=8.4",
+        "symfony/config": "^7.4|^8.0",
+        "symfony/dependency-injection": "^7.4|^8.0",
+        "symfony/form": "^7.4|^8.0",
+        "symfony/http-foundation": "^7.4|^8.0",
+        "symfony/http-kernel": "^7.4|^8.0",
+        "symfony/options-resolver": "^7.4|^8.0",
+        "symfony/polyfill-php86": "^1.36",
+        "symfony/property-access": "^7.4|^8.0",
+        "symfony/routing": "^7.4|^8.0",
+        "symfony/translation-contracts": "^3.0",
+        "symfony/twig-bundle": "^7.4|^8.0",
+        "symfony/ux-pagination": "^3.6",
+        "twig/twig": "^3.21|^4.0"
+    },
+    "require-dev": {
+        "doctrine/orm": "^3.0",
+        "phpstan/phpstan": "^2.1.17",
+        "phpunit/phpunit": "^11.1|^12.0",
+        "symfony/browser-kit": "^7.4|^8.0",
+        "symfony/css-selector": "^7.4|^8.0",
+        "symfony/dom-crawler": "^7.4|^8.0",
+        "symfony/framework-bundle": "^7.4|^8.0",
+        "symfony/security-csrf": "^7.4|^8.0",
+        "symfony/translation": "^7.4|^8.0",
+        "symfony/twig-bridge": "^7.4|^8.0",
+        "symfony/ux-live-component": "^3.0",
+        "symfony/ux-twig-component": "^3.0"
+    },
+    "conflict": {
+        "doctrine/orm": "<3.0",
+        "symfony/ux-live-component": "<3.0"
+    },
+    "extra": {
+        "thanks": {
+            "name": "symfony/ux",
+            "url": "https://github.com/symfony/ux"
+        }
+    },
+    "minimum-stability": "dev"
+}

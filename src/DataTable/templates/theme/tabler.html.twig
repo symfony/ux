@@ -1,0 +1,77 @@
+{% extends '@UXDataTable/theme/bootstrap_5.html.twig' %}
+
+{# The data table in a card: filters and actions in the header, pagination in the footer #}
+{% block data_table %}
+    {% if turbo_frame %}<turbo-frame id="{{ name }}" target="_top" data-turbo-action="advance">{% endif %}
+    <div class="ux-data-table card">
+        {% if data_table.filterForm or data_table.actions or data_table.batchActions %}
+            <div class="card-header d-flex flex-wrap align-items-end gap-3">
+                {{ block('filters') }}
+                {{ block('toolbar') }}
+            </div>
+        {% endif %}
+        <div class="table-responsive">
+            {{ block('table') }}
+        </div>
+        {% if data_table.pagination.hasPrevious() or data_table.pagination.hasNext() %}
+            <div class="card-footer">{{ block('pagination') }}</div>
+        {% endif %}
+    </div>
+    {% if turbo_frame %}</turbo-frame>{% endif %}
+{% endblock %}
+
+{% block filters %}
+    {% if data_table.filterForm %}
+        {% form_theme data_table.filterForm 'bootstrap_5_layout.html.twig' %}
+        {% set form = data_table.filterForm %}
+        {{ form_start(form, {action: filter_url, attr: {class: 'ux-data-table__filters d-flex flex-wrap align-items-end gap-2'}|merge(live ? {'data-model': '*', 'data-action': 'live#$render:prevent'} : (turbo_frame ? {'data-turbo-frame': name} : {}))}) }}
+            {% if not live %}
+                {% for field_name, field_value in filter_hidden_fields %}
+                    <input type="hidden" name="{{ field_name }}" value="{{ field_value }}">
+                {% endfor %}
+            {% endif %}
+            {% for field in form %}
+                {{ form_row(field, {row_attr: {class: 'mb-0'}}) }}
+            {% endfor %}
+            {{ block('filter_actions') }}
+        {{ form_end(form, {render_rest: false}) }}
+    {% endif %}
+{% endblock %}
+
+{% block toolbar %}
+    {% if data_table.actions or data_table.batchActions %}
+        <div class="ux-data-table__toolbar d-flex flex-wrap gap-2 ms-auto">
+            {% for action in data_table.actions %}
+                {% with action.vars|merge({action_class: 'btn btn-primary'}) %}{{ block('render_action') }}{% endwith %}
+            {% endfor %}
+            {% for action in data_table.batchActions %}
+                {% with action.vars|merge({control_block: 'batch_action_control'}) %}{{ block('link_action') }}{% endwith %}
+            {% endfor %}
+        </div>
+    {% endif %}
+    {% if batch %}
+        <form id="{{ batch_form }}" method="post"></form>
+    {% endif %}
+{% endblock %}
+
+{% block table %}
+    {% set attr = attr|merge({class: ('card-table table-vcenter ' ~ attr.class|default(''))|trim}) %}
+    {{ parent() }}
+{% endblock %}
+
+{% block link_action %}
+    {% set action_class = action_class|default('btn btn-sm btn-ghost-secondary') %}
+    {{ parent() }}
+{% endblock %}
+
+{% block confirmation %}
+    {% set attr = {class: 'btn btn-sm btn-ghost-secondary'}|merge(attr) %}
+    {{ parent() }}
+{% endblock %}
+
+{% block dropdown_action %}
+    {% set attr = {class: 'btn btn-sm btn-ghost-secondary dropdown-toggle', type: 'button', 'data-bs-toggle': 'dropdown', 'aria-expanded': 'false'}|merge(attr) %}
+    {{ parent() }}
+{% endblock %}
+
+{% block action_label %}{{ ux_data_table_icon(icon, {class: 'icon'}) }}{{ block('translated_label') }}{% endblock %}

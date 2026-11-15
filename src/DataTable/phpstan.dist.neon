@@ -1,0 +1,9 @@
+parameters:
+    level: 10
+    paths:
+        - src
+    treatPhpDocTypesAsCertain: false
+    inferPrivatePropertyTypeFromConstructor: true
+    ignoreErrors:
+        # The trait is used by the live components of the applications
+        - identifier: trait.unused

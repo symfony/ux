@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+    <file source-language="en" target-language="ru" datatype="plaintext" original="UXDataTableBundle">
+        <header>
+            <tool tool-id="symfony" tool-name="Symfony"/>
+        </header>
+        <body>
+            <trans-unit id="1">
+                <source>Filter</source>
+                <target>Фильтровать</target>
+            </trans-unit>
+            <trans-unit id="2">
+                <source>Reset</source>
+                <target>Сбросить</target>
+            </trans-unit>
+            <trans-unit id="3">
+                <source>No results.</source>
+                <target>Нет результатов.</target>
+            </trans-unit>
+            <trans-unit id="4">
+                <source>Yes</source>
+                <target>Да</target>
+            </trans-unit>
+            <trans-unit id="5">
+                <source>No</source>
+                <target>Нет</target>
+            </trans-unit>
+            <trans-unit id="6">
+                <source>Cancel</source>
+                <target>Отмена</target>
+            </trans-unit>
+            <trans-unit id="7">
+                <source>Are you sure?</source>
+                <target>Вы уверены?</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

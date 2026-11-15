@@ -1,0 +1,224 @@
+{# In a Turbo frame, only the sort, filter and pagination links navigate the frame, the others the whole page #}
+{% block data_table %}
+    {% if turbo_frame %}<turbo-frame id="{{ name }}" target="_top" data-turbo-action="advance">{% endif %}
+    <div class="ux-data-table">
+        {{ block('filters') }}
+        {{ block('toolbar') }}
+        {{ block('table') }}
+        {{ block('pagination') }}
+    </div>
+    {% if turbo_frame %}</turbo-frame>{% endif %}
+{% endblock %}
+
+{% if false %}
+    {% block filters %}
+        {% if data_table.filterForm %}
+            {% set form = data_table.filterForm %}
+            {{ form_start(form, {action: filter_url, attr: {class: 'ux-data-table__filters'}|merge(live ? {'data-model': '*', 'data-action': 'live#$render:prevent'} : (turbo_frame ? {'data-turbo-frame': name} : {}))}) }}
+                {% if not live %}
+                    {% for field_name, field_value in filter_hidden_fields %}
+                        <input type="hidden" name="{{ field_name }}" value="{{ field_value }}">
+                    {% endfor %}
+                {% endif %}
+                {{ form_widget(form) }}
+                {{ block('filter_actions') }}
+            {{ form_end(form, {render_rest: false}) }}
+        {% endif %}
+    {% endblock %}
+
+    {% block filter_actions %}
+        {% set attr = filter_button_attr|default({}) %}
+        <button type="submit"{{ block('attr') }}>{{ 'Filter'|trans({}, 'UXDataTableBundle') }}</button>
+        {% if reset_url %}
+            {% set attr = {href: reset_url}|merge(filter_reset_attr|default({}))|merge(live ? {'data-action': 'live#action:prevent', 'data-live-action-param': 'resetFilters'} : (turbo_frame ? {'data-turbo-frame': name} : {})) %}
+            <a{{ block('attr') }}>{{ 'Reset'|trans({}, 'UXDataTableBundle') }}</a>
+        {% endif %}
+    {% endblock %}
+
+    {# The global actions, and the batch actions submitting the form of the checked rows #}
+    {% block toolbar %}
+        {% if data_table.actions or data_table.batchActions %}
+            <div class="ux-data-table__toolbar">
+                {% for action in data_table.actions %}
+                    {% with action.vars %}{{ block('render_action') }}{% endwith %}
+                {% endfor %}
+                {% for action in data_table.batchActions %}
+                    {% with action.vars|merge({control_block: 'batch_action_control'}) %}{{ block('link_action') }}{% endwith %}
+                {% endfor %}
+            </div>
+        {% endif %}
+        {% if batch %}
+            <form id="{{ batch_form }}" method="post"></form>
+        {% endif %}
+    {% endblock %}
+
+    {% block table %}
+        {% set attr = attr|merge({class: ('ux-data-table__table ' ~ attr.class|default(''))|trim}) %}
+        {# The headers have their own "name" #}
+        {% set frame_name = name %}
+        <table{{ block('attr') }}>
+            <thead>
+                <tr>
+                    {% if batch %}<th class="ux-data-table__batch"></th>{% endif %}
+                    {% for header in data_table.headers %}
+                        {% with header.vars %}{{ block('header') }}{% endwith %}
+                    {% endfor %}
+                    {% if row_actions %}<th class="ux-data-table__row-actions"></th>{% endif %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in data_table.rows %}
+                    <tr>
+                        {% if batch %}
+                            <td class="ux-data-table__batch">
+                                {% set attr = {type: 'checkbox', form: batch_form, name: batch_parameter ~ '[]', value: row.vars.identifier}|merge(batch_checkbox_attr|default({})) %}
+                                <input{{ block('attr') }}>
+                            </td>
+                        {% endif %}
+                        {% for cell in row.cells %}
+                            {% with cell.vars %}{{ block('cell') }}{% endwith %}
+                        {% endfor %}
+                        {% if row_actions %}
+                            <td class="ux-data-table__row-actions">
+                                {% for action in row.actions %}
+                                    {% with action.vars %}{{ block('render_action') }}{% endwith %}
+                                {% endfor %}
+                            </td>
+                        {% endif %}
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="{{ data_table.headers|length + (batch ? 1 : 0) + (row_actions ? 1 : 0) }}">{{ 'No results.'|trans({}, 'UXDataTableBundle') }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endblock %}
+
+    {% block pagination %}
+        {{ ux_pagination(data_table.pagination, {}, pagination_theme|default(null), true, {}, live ? (link => {'data-action': 'live#action:prevent', 'data-live-action-param': 'goToPage', 'data-live-page-param': link.page}) : (turbo_frame ? {'data-turbo-frame': name} : {})) }}
+    {% endblock %}
+
+    {% block header %}{% set block_suffix = '_header' %}{{ block('dispatch') }}{% endblock %}
+
+    {% block cell %}{% set block_suffix = '_cell' %}{{ block('dispatch') }}{% endblock %}
+
+    {% block render_action %}{% set block_suffix = '' %}{{ block('dispatch') }}{% endblock %}
+
+    {# Renders the most specific "<block prefix><block_suffix>" block of the types, like "number_column_cell" or "link_action" #}
+    {% block dispatch %}
+        {% set block_name = block_prefixes|first ~ block_suffix %}
+        {% for prefix in block_prefixes %}
+            {% if block(prefix ~ block_suffix) is defined %}{% set block_name = prefix ~ block_suffix %}{% endif %}
+        {% endfor %}
+        {{ block(block_name) }}
+    {% endblock %}
+
+    {% block column_header %}
+        {% if sort_direction %}
+            {% set attr = attr|merge({
+                'aria-sort': sort_direction == 'asc' ? 'ascending' : 'descending',
+                class: ('ux-data-table__sorted ' ~ attr.class|default(''))|trim,
+            }) %}
+        {% endif %}
+        <th{{ block('attr') }}>
+            {%- if sort_url -%}
+                {% set attr = live ? {'data-action': 'live#action:prevent', 'data-live-action-param': 'sortBy', 'data-live-column-param': name} : (turbo_frame ? {'data-turbo-frame': frame_name} : {}) %}
+                <a href="{{ sort_url }}"{{ block('attr') }}>{{ block('label') }}{% if sort_direction %} {{ sort_direction == 'asc' ? '▲' : '▼' }}{% endif %}</a>
+            {%- else -%}
+                {{ block('label') }}
+            {%- endif -%}
+        </th>
+    {% endblock %}
+
+    {% block label %}{% if label is not same as(false) %}{{ block('translated_label') }}{% endif %}{% endblock %}
+
+    {# Translates the label in the domain of the data table, unless it is false; a translatable label is always translated #}
+    {% block translated_label %}{{ translatable_label or translation_domain is not same as(false) ? label|trans({}, translation_domain) : label }}{% endblock %}
+
+    {% block column_cell %}<td{{ block('attr') }}>{{ value }}</td>{% endblock %}
+
+    {% block boolean_column_cell %}<td{{ block('attr') }}>{% if value is not null %}{{ block('translated_value') }}{% endif %}</td>{% endblock %}
+
+    {% block enum_column_cell %}<td{{ block('attr') }}>{% if value is not null %}{{ block('translated_value') }}{% endif %}</td>{% endblock %}
+
+    {# Translates the value in the domain of the data table, unless it is false; a translatable value is always translated #}
+    {% block translated_value %}{{ translatable or translation_domain is not same as(false) ? value|trans({}, translation_domain) : value }}{% endblock %}
+
+    {% block link_column_cell %}
+        <td{{ block('attr') }}>
+            {%- if href -%}
+                {%- set attr = link_attr|merge({href: href}) -%}
+                <a{{ block('attr') }}>{{ value }}</a>
+            {%- else -%}
+                {{ value }}
+            {%- endif -%}
+        </td>
+    {% endblock %}
+
+    {% block template_column_cell %}<td{{ block('attr') }}>{{ include(template, {value: value, row: row}|merge(template_vars)) }}</td>{% endblock %}
+
+    {% block action %}<span{{ block('attr') }}>{{ block('action_label') }}</span>{% endblock %}
+
+    {# A link, or a form for another method; behind a confirmation dialog when it has one, rendered apart when "defer_confirmation" #}
+    {% block link_action %}
+        {% if confirmation %}
+            {% set control_attr = attr %}
+            {% set attr = {type: 'button', commandfor: id ~ '-confirmation', command: 'show-modal'}|merge(attr) %}
+            <button{{ block('attr') }}>{{ block('action_label') }}</button>
+            {% set attr = control_attr %}
+            {% if not defer_confirmation|default(false) %}{{ block('confirmation') }}{% endif %}
+        {% else %}
+            {{ block(control_block|default('link_action_control')) }}
+        {% endif %}
+    {% endblock %}
+
+    {# The dialog confirming an action, holding its link or its form #}
+    {% block confirmation %}
+        {% set control_attr = attr %}
+        {% set attr = {id: id ~ '-confirmation', class: 'ux-data-table__confirmation'}|merge(confirmation_attr|default({})) %}
+        <dialog{{ block('attr') }}>
+            <p>{{ confirmation_translation_domain is same as(false) ? confirmation : confirmation|trans({}, confirmation_translation_domain) }}</p>
+            {% set attr = control_attr %}
+            {{ block(control_block|default('link_action_control')) }}
+            {% set attr = {type: 'button', commandfor: id ~ '-confirmation', command: 'close'}|merge(confirmation_cancel_attr|default({})) %}
+            <button{{ block('attr') }}>{{ 'Cancel'|trans({}, 'UXDataTableBundle') }}</button>
+        </dialog>
+    {% endblock %}
+
+    {% block link_action_control %}
+        {% if method == 'GET' %}
+            {% set attr = {href: href}|merge(attr) %}
+            <a{{ block('attr') }}>{{ block('action_label') }}</a>
+        {% else %}
+            <form method="post" action="{{ href }}" class="ux-data-table__action-form">
+                {% if method != 'POST' %}<input type="hidden" name="_method" value="{{ method }}">{% endif %}
+                {% if csrf_token_id %}<input type="hidden" name="_token" value="{{ ux_data_table_csrf_token(csrf_token_id) }}">{% endif %}
+                {% set attr = {type: 'submit'}|merge(attr) %}
+                <button{{ block('attr') }}>{{ block('action_label') }}</button>
+            </form>
+        {% endif %}
+    {% endblock %}
+
+    {# A button submitting the checked rows to the action #}
+    {% block batch_action_control %}
+        {% set attr = {type: 'submit', form: batch_form, formaction: href, formmethod: method|lower}|merge(csrf_token_id ? {name: '_token', value: ux_data_table_csrf_token(csrf_token_id)} : {})|merge(attr) %}
+        <button{{ block('attr') }}>{{ block('action_label') }}</button>
+    {% endblock %}
+
+    {% block dropdown_action %}
+        {% set attr = {class: 'ux-data-table__dropdown'}|merge(attr) %}
+        <details{{ block('attr') }}>
+            <summary>{{ block('action_label') }}</summary>
+            <ul>
+                {% for action in actions %}
+                    <li>{% with action.vars %}{{ block('render_action') }}{% endwith %}</li>
+                {% endfor %}
+            </ul>
+        </details>
+    {% endblock %}
+
+    {% block action_label %}{{ ux_data_table_icon(icon) }}{{ block('translated_label') }}{% endblock %}
+
+    {% block attr %}{% for name, value in attr %}{% if value is same as(true) %} {{ name }}{% elseif value is not same as(false) and value is not null %} {{ name }}="{{ value }}"{% endif %}{% endfor %}{% endblock %}
+{% endif %}

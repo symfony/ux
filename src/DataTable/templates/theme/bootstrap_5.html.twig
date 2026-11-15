@@ -1,0 +1,73 @@
+{% extends '@UXDataTable/theme/default.html.twig' %}
+
+{% block filters %}
+    {% if data_table.filterForm %}
+        {% form_theme data_table.filterForm 'bootstrap_5_layout.html.twig' %}
+    {% endif %}
+    {{ parent() }}
+{% endblock %}
+
+{% block filter_actions %}
+    {% set filter_button_attr = {class: 'btn btn-primary'} %}
+    {% set filter_reset_attr = {class: 'btn btn-link'} %}
+    {{ parent() }}
+{% endblock %}
+
+{% block toolbar %}
+    {% if data_table.actions or data_table.batchActions %}
+        <div class="ux-data-table__toolbar d-flex flex-wrap gap-2 mb-3">
+            {% for action in data_table.actions %}
+                {% with action.vars %}{{ block('render_action') }}{% endwith %}
+            {% endfor %}
+            {% for action in data_table.batchActions %}
+                {% with action.vars|merge({control_block: 'batch_action_control'}) %}{{ block('link_action') }}{% endwith %}
+            {% endfor %}
+        </div>
+    {% endif %}
+    {% if batch %}
+        <form id="{{ batch_form }}" method="post"></form>
+    {% endif %}
+{% endblock %}
+
+{% block table %}
+    {% set attr = attr|merge({class: ('table ' ~ attr.class|default(''))|trim}) %}
+    {% set batch_checkbox_attr = {class: 'form-check-input'} %}
+    {{ parent() }}
+{% endblock %}
+
+{% block pagination %}
+    {% set pagination_theme = '@UXPagination/theme/bootstrap.html.twig' %}
+    {{ parent() }}
+{% endblock %}
+
+{% block link_action %}
+    {% set attr = {class: action_class|default('btn btn-sm btn-outline-secondary')}|merge(attr) %}
+    {{ parent() }}
+{% endblock %}
+
+{% block confirmation %}
+    {# The action of a dropdown item is confirmed by a button #}
+    {% set attr = {class: 'btn btn-sm btn-outline-secondary'}|merge(attr) %}
+    {% set confirmation_attr = {class: 'ux-data-table__confirmation border-0 rounded-3 shadow p-4'} %}
+    {% set confirmation_cancel_attr = {class: 'btn btn-link'} %}
+    {{ parent() }}
+{% endblock %}
+
+{# A Bootstrap dropdown, its actions rendered as dropdown items; their confirmation dialogs
+   are rendered after the menu, which Bootstrap hides on the click opening them #}
+{% block dropdown_action %}
+    {% set attr = {class: 'btn btn-sm btn-outline-secondary dropdown-toggle', type: 'button', 'data-bs-toggle': 'dropdown', 'aria-expanded': 'false'}|merge(attr) %}
+    <div class="dropdown d-inline-block">
+        <button{{ block('attr') }}>{{ block('action_label') }}</button>
+        <ul class="dropdown-menu dropdown-menu-end">
+            {% for action in actions %}
+                <li>{% with action.vars|merge({action_class: 'dropdown-item', defer_confirmation: true}) %}{{ block('render_action') }}{% endwith %}</li>
+            {% endfor %}
+        </ul>
+        {% for action in actions|filter(action => action.vars.confirmation) %}
+            {% with action.vars %}{{ block('confirmation') }}{% endwith %}
+        {% endfor %}
+    </div>
+{% endblock %}
+
+{% block action_label %}{{ ux_data_table_icon(icon, {class: 'me-1'}) }}{{ block('translated_label') }}{% endblock %}
