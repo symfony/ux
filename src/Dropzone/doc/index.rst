@@ -385,6 +385,8 @@ For example, to resize the photos in the browser before they are uploaded:
     import { Controller } from '@hotwired/stimulus';
 
     const MAX_DIMENSION = 2000;
+    // A canvas keeps only the first frame of an animated GIF, and not every browser can encode WebP
+    const RESIZED_TYPES = ['image/jpeg', 'image/png'];
 
     export default class extends Controller {
         connect() {
@@ -396,23 +398,46 @@ For example, to resize the photos in the browser before they are uploaded:
         }
 
         _onPreAdd = (event) => {
-            // Keep the original of a file that cannot be resized, without giving up on the others
-            event.detail.waitUntil(Promise.all(event.detail.files.map((file) => this._resize(file).catch(() => file))));
+            event.detail.waitUntil(this._resizeAll(event.detail.files));
         };
 
+        async _resizeAll(files) {
+            const resized = [];
+            // One file at a time: a decoded photo can take a hundred megabytes of memory
+            for (const file of files) {
+                resized.push(
+                    await this._resize(file).catch((error) => {
+                        console.warn(error);
+
+                        return file;
+                    })
+                );
+            }
+
+            return resized;
+        }
+
         async _resize(file) {
-            if (!file.type.startsWith('image/')) {
+            if (!RESIZED_TYPES.includes(file.type)) {
                 return file;
             }
 
             const bitmap = await createImageBitmap(file);
             try {
-                const scale = Math.min(1, MAX_DIMENSION / Math.max(bitmap.width, bitmap.height));
-                const canvas = new OffscreenCanvas(Math.round(bitmap.width * scale), Math.round(bitmap.height * scale));
-                canvas.getContext('2d').drawImage(bitmap, 0, 0, canvas.width, canvas.height);
-                const blob = await canvas.convertToBlob({ type: 'image/jpeg', quality: 0.85 });
+                const scale = MAX_DIMENSION / Math.max(bitmap.width, bitmap.height);
+                if (scale >= 1) {
+                    return file;
+                }
 
-                return new File([blob], file.name.replace(/\.\w+$/, '.jpg'), { type: 'image/jpeg', lastModified: file.lastModified });
+                const width = Math.max(1, Math.round(bitmap.width * scale));
+                const height = Math.max(1, Math.round(bitmap.height * scale));
+                const canvas = new OffscreenCanvas(width, height);
+                const context = canvas.getContext('2d');
+                context.imageSmoothingQuality = 'high';
+                context.drawImage(bitmap, 0, 0, width, height);
+                const blob = await canvas.convertToBlob({ type: file.type, quality: 0.85 });
+
+                return new File([blob], file.name, { type: file.type, lastModified: file.lastModified });
             } finally {
                 bitmap.close();
             }
