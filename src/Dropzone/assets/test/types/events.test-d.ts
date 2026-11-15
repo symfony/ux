@@ -1,9 +1,20 @@
-import type { DropzonePreAddEventDetail, DropzoneRejectEventDetail } from '@symfony/ux-dropzone';
+import type {
+    DropzonePreAddEventDetail,
+    DropzonePreSubmitEventDetail,
+    DropzoneRejectEventDetail,
+} from '@symfony/ux-dropzone';
 import { expectTypeOf, test } from 'vitest';
 
 test('types the detail of dropzone:pre-add', () => {
     expectTypeOf<DropzonePreAddEventDetail['files']>().toEqualTypeOf<readonly File[]>();
     expectTypeOf<DropzonePreAddEventDetail['waitUntil']>().toEqualTypeOf<
+        (files: readonly File[] | PromiseLike<readonly File[]>) => void
+    >();
+});
+
+test('types the detail of dropzone:pre-submit', () => {
+    expectTypeOf<DropzonePreSubmitEventDetail['files']>().toEqualTypeOf<readonly File[]>();
+    expectTypeOf<DropzonePreSubmitEventDetail['waitUntil']>().toEqualTypeOf<
         (files: readonly File[] | PromiseLike<readonly File[]>) => void
     >();
 });

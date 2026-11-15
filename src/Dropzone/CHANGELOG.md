@@ -6,6 +6,7 @@
 - Export the `DropzonePreAddEventDetail` and `DropzoneRejectEventDetail` types of the `dropzone:pre-add` and `dropzone:reject` event details
 - Preview the images, except SVG images, with object URLs instead of data URLs, see [UPGRADE.md](UPGRADE.md)
 - Hold the submission of the form while `dropzone:pre-add` listeners process files, and submit it again once they are done
+- Add a `dropzone:pre-submit` event to transform the files of the Dropzone when the form is submitted, and export the `DropzonePreSubmitEventDetail` type of its event detail
 
 ## 3.7.0
 

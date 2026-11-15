@@ -3,6 +3,10 @@ export interface DropzonePreAddEventDetail {
   readonly files: readonly File[];
   readonly waitUntil: (files: readonly File[] | PromiseLike<readonly File[]>) => void;
 }
+export interface DropzonePreSubmitEventDetail {
+  readonly files: readonly File[];
+  readonly waitUntil: (files: readonly File[] | PromiseLike<readonly File[]>) => void;
+}
 export interface DropzoneRejectEventDetail {
   readonly files: readonly File[];
   readonly reason: 'accept' | 'max_files';
@@ -10,6 +14,7 @@ export interface DropzoneRejectEventDetail {
 export default class DropzoneController extends Controller {
   private static readonly connectedDropzones;
   private static readonly heldSubmitters;
+  private static readonly preSubmittedForms;
   readonly inputTarget: HTMLInputElement;
   readonly placeholderTarget: HTMLDivElement;
   readonly previewTarget: HTMLDivElement;
@@ -63,6 +68,9 @@ export default class DropzoneController extends Controller {
   onDrop(): void;
   private onFormReset;
   private preAdd;
+  private dispatchWaitUntil;
+  private enqueue;
+  private replaceFiles;
   private whenIdle;
   private notifyIdle;
   private add;
@@ -83,4 +91,5 @@ export default class DropzoneController extends Controller {
   private updateState;
   private dispatchEvent;
   private static readonly onSubmit;
+  private static hold;
 }
