@@ -34,6 +34,7 @@ final class TemplateIconFinder implements IconFinderInterface
     public function icons(): iterable
     {
         $found = [];
+        $scanned = [];
 
         // https://regex101.com/r/WGa4iF/1
         $token = '[a-z0-9]+(?:-[a-z0-9]+)*';
@@ -41,6 +42,12 @@ final class TemplateIconFinder implements IconFinderInterface
 
         // Extract icon names from strings in app templates
         foreach ($this->templateFiles($this->twig->getLoader()) as $file) {
+            // a template in two registered directories, or found by two loaders, is yielded twice
+            if (isset($scanned[$file])) {
+                continue;
+            }
+            $scanned[$file] = true;
+
             $contents = file_get_contents($file);
             if (preg_match_all($pattern, $contents, $matches)) {
                 $found[] = array_map(static fn ($res) => trim($res, '"\''), $matches[0]);
@@ -65,13 +72,18 @@ final class TemplateIconFinder implements IconFinderInterface
     private function templateFiles(LoaderInterface $loader): iterable
     {
         if ($loader instanceof FilesystemLoader) {
-            $paths = $loader->getPaths();
-            foreach ($loader->getNamespaces() as $namespace) {
-                $paths = [...$paths, ...$loader->getPaths($namespace)];
+            // TwigBundle registers each bundle views directory twice, under "Foo" and "!Foo"
+            $paths = [];
+            foreach ([FilesystemLoader::MAIN_NAMESPACE, ...$loader->getNamespaces()] as $namespace) {
+                foreach ($loader->getPaths($namespace) as $path) {
+                    $paths[$path] = $path;
+                }
             }
             if ($paths) {
+                $isWindows = '\\' === \DIRECTORY_SEPARATOR;
                 foreach (new Finder()->files()->in($paths)->name('*.twig') as $file) {
-                    yield (string) $file;
+                    // on Windows, a nested template is found with different separators in each of its directories
+                    yield $isWindows ? strtr((string) $file, '\\', '/') : (string) $file;
                 }
             }
         }
