@@ -78,6 +78,8 @@ export default class extends Controller {
     private dropping = false;
     private form: HTMLFormElement | null = null;
     private resetTimeout: ReturnType<typeof setTimeout> | undefined;
+    private readonly objectUrls = new Map<Blob, string>();
+    private renderedBlobs: Set<Blob> | null = null;
     private readonly dataUrls = new WeakMap<Blob, Promise<string>>();
     private readonly previewedFiles = new WeakMap<HTMLElement, Blob>();
 
@@ -141,6 +143,7 @@ export default class extends Controller {
         this.inputTarget.removeEventListener('change', this.onInputChange);
         this.form?.removeEventListener('reset', this.onFormReset);
         this.form = null;
+        this.revokeObjectUrls(new Set());
     }
 
     // Bound when the button appears, as it is optional and can be rendered after the controller connects
@@ -189,7 +192,7 @@ export default class extends Controller {
 
     _populateImagePreview(target: HTMLElement, file: Blob) {
         this.previewedFiles.set(target, file);
-        this.readAsDataUrl(file, (url) => {
+        this.previewUrl(file, (url) => {
             // The target shows another file since, or none
             if (this.previewedFiles.get(target) !== file) {
                 return;
@@ -452,6 +455,8 @@ export default class extends Controller {
 
     private render() {
         const files = Array.from(this.dataTransfer.files);
+        const renderedBlobs = new Set<Blob>();
+        this.renderedBlobs = renderedBlobs;
 
         if (this.multipleValue) {
             if (this.hasPreviewListTarget) {
@@ -474,6 +479,8 @@ export default class extends Controller {
             }
         }
 
+        this.renderedBlobs = null;
+        this.revokeObjectUrls(renderedBlobs);
         this.updateState();
     }
 
@@ -520,7 +527,7 @@ export default class extends Controller {
             image.hidden = true;
         }
         if (images.length > 0 && this.isImage(file)) {
-            this.readAsDataUrl(file, (url) => {
+            this.previewUrl(file, (url) => {
                 for (const image of images) {
                     if (image instanceof HTMLImageElement) {
                         image.src = url;
@@ -548,6 +555,27 @@ export default class extends Controller {
         return !!file.type && file.type.indexOf('image') !== -1;
     }
 
+    private previewUrl(file: Blob, onLoad: (url: string) => void) {
+        // A blob: URL has the origin of the page: an SVG file opened from it, in a new tab for example, would run its scripts there
+        if (file.type === 'image/svg+xml') {
+            this.readAsDataUrl(file, onLoad);
+
+            return;
+        }
+
+        if (typeof URL.createObjectURL !== 'function') {
+            return;
+        }
+
+        let url = this.objectUrls.get(file);
+        if (!url) {
+            url = URL.createObjectURL(file);
+            this.objectUrls.set(file, url);
+        }
+        this.renderedBlobs?.add(file);
+        onLoad(url);
+    }
+
     private readAsDataUrl(file: Blob, onLoad: (url: string) => void) {
         if (typeof FileReader === 'undefined') {
             // FileReader API not available, skip
@@ -569,6 +597,15 @@ export default class extends Controller {
         }
 
         url.then(onLoad, () => {});
+    }
+
+    private revokeObjectUrls(kept: Set<Blob>) {
+        for (const [file, url] of this.objectUrls) {
+            if (!kept.has(file)) {
+                URL.revokeObjectURL(url);
+                this.objectUrls.delete(file);
+            }
+        }
     }
 
     private bindRemove(element: Element, file: File, index: number) {

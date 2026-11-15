@@ -29,6 +29,8 @@ var controller_default = class extends Controller {
 	dropping = false;
 	form = null;
 	resetTimeout;
+	objectUrls = /* @__PURE__ */ new Map();
+	renderedBlobs = null;
 	dataUrls = /* @__PURE__ */ new WeakMap();
 	previewedFiles = /* @__PURE__ */ new WeakMap();
 	initialize() {
@@ -69,6 +71,7 @@ var controller_default = class extends Controller {
 		this.inputTarget.removeEventListener("change", this.onInputChange);
 		this.form?.removeEventListener("reset", this.onFormReset);
 		this.form = null;
+		this.revokeObjectUrls(/* @__PURE__ */ new Set());
 	}
 	previewClearButtonTargetConnected(button) {
 		if (!this.multipleValue) button.addEventListener("click", this.clear);
@@ -96,7 +99,7 @@ var controller_default = class extends Controller {
 	}
 	_populateImagePreview(target, file) {
 		this.previewedFiles.set(target, file);
-		this.readAsDataUrl(file, (url) => {
+		this.previewUrl(file, (url) => {
 			if (this.previewedFiles.get(target) !== file) return;
 			target.hidden = false;
 			target.style.backgroundImage = `url("${url}")`;
@@ -251,6 +254,8 @@ var controller_default = class extends Controller {
 	}
 	render() {
 		const files = Array.from(this.dataTransfer.files);
+		const renderedBlobs = /* @__PURE__ */ new Set();
+		this.renderedBlobs = renderedBlobs;
 		if (this.multipleValue) {
 			if (this.hasPreviewListTarget) this.previewListTarget.replaceChildren(...files.map((file, index) => this.buildListItem(file, index)));
 		} else if (this.previewItem) this.previewTarget.replaceChildren(...files.map((file, index) => this.buildListItem(file, index)));
@@ -264,6 +269,8 @@ var controller_default = class extends Controller {
 				if (file && this.isImage(file)) this._populateImagePreview(this.previewImageTarget, file);
 			}
 		}
+		this.renderedBlobs = null;
+		this.revokeObjectUrls(renderedBlobs);
 		this.updateState();
 	}
 	buildListItem(file, index) {
@@ -292,7 +299,7 @@ var controller_default = class extends Controller {
 		};
 		const images = slots("image");
 		for (const image of images) image.hidden = true;
-		if (images.length > 0 && this.isImage(file)) this.readAsDataUrl(file, (url) => {
+		if (images.length > 0 && this.isImage(file)) this.previewUrl(file, (url) => {
 			for (const image of images) {
 				if (image instanceof HTMLImageElement) image.src = url;
 				else image.style.backgroundImage = `url("${url}")`;
@@ -305,6 +312,20 @@ var controller_default = class extends Controller {
 	}
 	isImage(file) {
 		return !!file.type && file.type.indexOf("image") !== -1;
+	}
+	previewUrl(file, onLoad) {
+		if (file.type === "image/svg+xml") {
+			this.readAsDataUrl(file, onLoad);
+			return;
+		}
+		if (typeof URL.createObjectURL !== "function") return;
+		let url = this.objectUrls.get(file);
+		if (!url) {
+			url = URL.createObjectURL(file);
+			this.objectUrls.set(file, url);
+		}
+		this.renderedBlobs?.add(file);
+		onLoad(url);
 	}
 	readAsDataUrl(file, onLoad) {
 		if (typeof FileReader === "undefined") return;
@@ -320,6 +341,12 @@ var controller_default = class extends Controller {
 			url.catch(() => this.dataUrls.delete(file));
 		}
 		url.then(onLoad, () => {});
+	}
+	revokeObjectUrls(kept) {
+		for (const [file, url] of this.objectUrls) if (!kept.has(file)) {
+			URL.revokeObjectURL(url);
+			this.objectUrls.delete(file);
+		}
 	}
 	bindRemove(element, file, index) {
 		element.setAttribute("aria-label", `${this.removeLabelValue} ${file.name}`);

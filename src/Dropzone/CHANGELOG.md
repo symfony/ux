@@ -4,6 +4,7 @@
 
 - Leave out the files over `max_files` before `dropzone:pre-add`, and dispatch `dropzone:reject` before the files are added
 - Export the `DropzonePreAddEventDetail` and `DropzoneRejectEventDetail` types of the `dropzone:pre-add` and `dropzone:reject` event details
+- Preview the images, except SVG images, with object URLs instead of data URLs, see [UPGRADE.md](UPGRADE.md)
 
 ## 3.7.0
 

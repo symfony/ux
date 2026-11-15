@@ -122,6 +122,14 @@ that label followed by the file name::
         'remove_label' => 'Delete',
     ])
 
+Image previews use object URLs (``blob:``), which the Dropzone revokes when the file is removed or the controller disconnects.
+SVG images keep data URLs (``data:``), because an SVG opened from an object URL would run its scripts with your site's origin.
+If your Content Security Policy restricts images, allow ``blob:`` and ``data:`` in ``img-src``.
+
+.. versionadded:: 3.8
+
+    Before Dropzone 3.8, all the image previews used data URLs.
+
 Customizing the preview of each file
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -151,7 +159,7 @@ The template must contain exactly one root element, which is cloned for each fil
 The controller fills the elements marked with a ``data-dropzone-slot`` attribute, the root element included.
 All slots are optional, and a slot can be on several elements:
 
-* ``image``: shows the preview of an image file. On an ``<img>``, it is set as the ``src``, on any other element as the background image. The element has the ``hidden`` attribute until the preview is loaded, and keeps it for files that are not images;
+* ``image``: shows the preview of an image file. On an ``<img>``, it is set as the ``src``, on any other element as the background image. The element has the ``hidden`` attribute for files that are not images;
 * ``filename``: receives the name of the file, as text;
 * ``remove``: removes the file on click. Its ``aria-label`` is the ``remove_label`` option followed by the file name.
 
