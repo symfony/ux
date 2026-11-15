@@ -14,6 +14,8 @@ namespace Symfony\UX\Icons;
 use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
 use Symfony\UX\Icons\Exception\IconNotFoundException;
 use Symfony\UX\Icons\Registry\CacheIconRegistry;
+use Symfony\UX\Icons\Registry\IconifyOnDemandRegistry;
+use Symfony\UX\Icons\Registry\LocalSvgIconRegistry;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
@@ -22,8 +24,12 @@ use Symfony\UX\Icons\Registry\CacheIconRegistry;
  */
 final class IconCacheWarmer implements CacheWarmerInterface
 {
-    public function __construct(private CacheIconRegistry $registry, private IconFinderInterface $icons)
-    {
+    public function __construct(
+        private CacheIconRegistry $registry,
+        private IconFinderInterface $icons,
+        private ?IconifyOnDemandRegistry $iconifyOnDemand = null,
+        private ?LocalSvgIconRegistry $localIcons = null,
+    ) {
     }
 
     /**
@@ -35,7 +41,47 @@ final class IconCacheWarmer implements CacheWarmerInterface
         $onSuccess ??= static fn (string $name, Icon $icon) => null;
         $onFailure ??= static fn (string $name) => null;
 
-        foreach ($this->icons->icons() as $name) {
+        if (!$this->iconifyOnDemand) {
+            $this->warmAll($this->icons->icons(), $onSuccess, $onFailure);
+
+            return;
+        }
+
+        // all the names are needed before the first fetch, to start their requests together
+        $names = [];
+        $finderError = null;
+        try {
+            foreach ($this->icons->icons() as $name) {
+                $names[] = $name;
+            }
+        } catch (\Throwable $e) {
+            $finderError = $e;
+        }
+
+        $localIcons = $this->localIcons;
+        $remoteNames = $localIcons ? array_filter($names, static fn (string $name) => !$localIcons->has($name)) : $names;
+
+        $this->iconifyOnDemand->prefetch($remoteNames);
+        $this->warmAll($names, $onSuccess, $onFailure);
+
+        if ($finderError) {
+            throw $finderError;
+        }
+    }
+
+    public function isOptional(): bool
+    {
+        return true;
+    }
+
+    /**
+     * @param iterable<string>                 $names
+     * @param callable(string,Icon):void       $onSuccess
+     * @param callable(string,\Exception):void $onFailure
+     */
+    private function warmAll(iterable $names, callable $onSuccess, callable $onFailure): void
+    {
+        foreach ($names as $name) {
             try {
                 $icon = $this->registry->get($name, refresh: true);
 
@@ -44,11 +90,6 @@ final class IconCacheWarmer implements CacheWarmerInterface
                 $onFailure($name, $e);
             }
         }
-    }
-
-    public function isOptional(): bool
-    {
-        return true;
     }
 
     /**

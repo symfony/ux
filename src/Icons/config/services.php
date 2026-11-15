@@ -100,6 +100,8 @@ return static function (ContainerConfigurator $container): void {
             ->args([
                 service('.ux_icons.cache_icon_registry'),
                 service('.ux_icons.icon_finder'),
+                service('.ux_icons.iconify_on_demand_registry')->nullOnInvalid(),
+                service('.ux_icons.local_svg_icon_registry'),
             ])
 
         ->set('.ux_icons.local_icon_cache_warmer', IconCacheWarmer::class)
