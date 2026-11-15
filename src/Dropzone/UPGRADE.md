@@ -17,6 +17,8 @@
 
     The preview is now shown at once, instead of after the file is read.
 
+- When a form is submitted while a `dropzone:pre-add` listener processes files, the Dropzone holds the submission and stops the `submit` event, so the listeners of the form and of the document do not see it. Once every Dropzone of the form is done, it submits the form again, with the last submit button used, and the listeners see that submission. A `submit` event dispatched by a script, or already cancelled by another listener, is not held. If your code holds the submission itself while `data-state` is `processing`, you can remove it.
+
 ## FROM 3.6 to 3.7
 
 - The controller shows and hides the input, the placeholder, the preview and the image preview with the `hidden` attribute instead of inline styles, and the form theme renders `hidden` instead of `style="display: none"`.

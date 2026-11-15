@@ -7,7 +7,9 @@ export interface DropzoneRejectEventDetail {
   readonly files: readonly File[];
   readonly reason: 'accept' | 'max_files';
 }
-export default class export_default extends Controller {
+export default class DropzoneController extends Controller {
+  private static readonly connectedDropzones;
+  private static readonly heldSubmitters;
   readonly inputTarget: HTMLInputElement;
   readonly placeholderTarget: HTMLDivElement;
   readonly previewTarget: HTMLDivElement;
@@ -45,6 +47,7 @@ export default class export_default extends Controller {
   private resetTimeout;
   private readonly objectUrls;
   private renderedBlobs;
+  private idleCallbacks;
   private readonly dataUrls;
   private readonly previewedFiles;
   initialize(): void;
@@ -60,6 +63,8 @@ export default class export_default extends Controller {
   onDrop(): void;
   private onFormReset;
   private preAdd;
+  private whenIdle;
+  private notifyIdle;
   private add;
   private removeFileAt;
   private checkAccept;
@@ -77,4 +82,5 @@ export default class export_default extends Controller {
   private isFileDrag;
   private updateState;
   private dispatchEvent;
+  private static readonly onSubmit;
 }

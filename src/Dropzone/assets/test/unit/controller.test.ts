@@ -1946,3 +1946,227 @@ describe('DropzoneController (multiple, preview item template)', () => {
         expect(getByTestId(container, 'list').querySelectorAll('li.item')).toHaveLength(1);
     });
 });
+
+describe('DropzoneController (form submission)', () => {
+    let container: HTMLElement;
+    let submits: (string | null)[];
+
+    beforeEach(() => {
+        container = mountDOM(`
+            <form id="form" data-testid="form">
+                <div data-controller="dropzone" data-dropzone-multiple-value="true" data-testid="first">
+                    <input type="file" multiple data-dropzone-target="input" data-testid="first-input" />
+                    <div data-dropzone-target="placeholder"></div>
+                    <ul data-dropzone-target="previewList"></ul>
+                </div>
+                <div data-controller="dropzone" data-dropzone-multiple-value="true" data-testid="second">
+                    <input type="file" multiple data-dropzone-target="input" data-testid="second-input" />
+                    <div data-dropzone-target="placeholder"></div>
+                    <ul data-dropzone-target="previewList"></ul>
+                </div>
+                <button type="submit" id="inside" data-testid="inside">Send</button>
+            </form>
+            <button type="submit" id="outside" form="form" data-testid="outside">Send</button>
+        `);
+        submits = [];
+        // jsdom does not implement the navigation of a submitted form
+        getByTestId(container, 'form').addEventListener('submit', (event: SubmitEvent) => {
+            event.preventDefault();
+            submits.push(event.submitter?.id ?? null);
+        });
+    });
+
+    afterEach(() => {
+        clearDOM();
+    });
+
+    const start = async () => {
+        const connected = Promise.all(
+            ['first', 'second'].map(
+                (name) =>
+                    new Promise((resolve) =>
+                        getByTestId(container, name).addEventListener('dropzone:connect', resolve, { once: true })
+                    )
+            )
+        );
+        startApplication().register('dropzone', DropzoneController);
+        await connected;
+    };
+
+    const holdPreAdd = (name: string) => {
+        let resolve!: () => void;
+        const done = new Promise<void>((r) => (resolve = r));
+        getByTestId(container, name).addEventListener(
+            'dropzone:pre-add',
+            (event: any) => event.detail.waitUntil(done.then(() => event.detail.files)),
+            { once: true }
+        );
+        selectFiles(getByTestId(container, `${name}-input`) as HTMLInputElement, [
+            new File(['content'], `${name}.txt`, { type: 'text/plain' }),
+        ]);
+
+        return resolve;
+    };
+
+    const inputNames = (name: string) =>
+        Array.from((getByTestId(container, `${name}-input`) as HTMLInputElement).files ?? []).map((file) => file.name);
+
+    it('submits at once when no file is processed', async () => {
+        await start();
+
+        getByTestId(container, 'inside').click();
+
+        expect(submits).toStrictEqual(['inside']);
+    });
+
+    it('holds the submission while files are processed, then submits once with the same submitter', async () => {
+        await start();
+        const resolve = holdPreAdd('first');
+
+        getByTestId(container, 'inside').click();
+        expect(submits).toStrictEqual([]);
+
+        resolve();
+        await waitFor(() => expect(submits).toStrictEqual(['inside']));
+        expect(inputNames('first')).toStrictEqual(['first.txt']);
+    });
+
+    it('waits for every dropzone of the form', async () => {
+        await start();
+        const resolveFirst = holdPreAdd('first');
+        const resolveSecond = holdPreAdd('second');
+
+        getByTestId(container, 'inside').click();
+        resolveFirst();
+        await new Promise((resolve) => setTimeout(resolve, 10));
+        expect(submits).toStrictEqual([]);
+
+        resolveSecond();
+        await waitFor(() => expect(submits).toStrictEqual(['inside']));
+        await new Promise((resolve) => setTimeout(resolve, 10));
+        expect(submits).toStrictEqual(['inside']);
+    });
+
+    it('submits once when the form is submitted again while it is held', async () => {
+        await start();
+        const resolve = holdPreAdd('first');
+
+        getByTestId(container, 'inside').click();
+        getByTestId(container, 'outside').click();
+        resolve();
+
+        await waitFor(() => expect(submits).toHaveLength(1));
+        await new Promise((r) => setTimeout(r, 10));
+        expect(submits).toHaveLength(1);
+    });
+
+    it('submits again with a submitter outside the form', async () => {
+        await start();
+        const resolve = holdPreAdd('first');
+
+        getByTestId(container, 'outside').click();
+        resolve();
+
+        await waitFor(() => expect(submits).toStrictEqual(['outside']));
+    });
+
+    it('hides the held submission from the other listeners', async () => {
+        await start();
+        const seen: string[] = [];
+        document.addEventListener('submit', () => seen.push('document capture'), { capture: true });
+        getByTestId(container, 'form').addEventListener('submit', () => seen.push('form'));
+        const resolve = holdPreAdd('first');
+
+        getByTestId(container, 'inside').click();
+        expect(seen).toStrictEqual([]);
+        resolve();
+
+        await waitFor(() => expect(seen).toStrictEqual(['document capture', 'form']));
+    });
+
+    it('does not hold a submit event dispatched by a script', async () => {
+        await start();
+        const resolve = holdPreAdd('first');
+
+        getByTestId(container, 'form').dispatchEvent(new Event('submit', { cancelable: true }));
+        expect(submits).toStrictEqual([null]);
+        resolve();
+        await new Promise((r) => setTimeout(r, 10));
+
+        expect(submits).toStrictEqual([null]);
+    });
+
+    it('does not hold a submission another listener cancelled', async () => {
+        // A test that stops its application leaves its dropzone connected: the listener of the Dropzone must come after this one
+        window.removeEventListener('submit', (DropzoneController as any).onSubmit, true);
+        window.addEventListener('submit', (event) => event.preventDefault(), { capture: true, once: true });
+        await start();
+        const resolve = holdPreAdd('first');
+
+        getByTestId(container, 'inside').click();
+        expect(submits).toStrictEqual(['inside']);
+        resolve();
+        await new Promise((r) => setTimeout(r, 10));
+
+        expect(submits).toStrictEqual(['inside']);
+    });
+
+    it('submits with the last submitter used while it is held', async () => {
+        await start();
+        const resolve = holdPreAdd('first');
+
+        getByTestId(container, 'inside').click();
+        getByTestId(container, 'outside').click();
+        resolve();
+
+        await waitFor(() => expect(submits).toStrictEqual(['outside']));
+    });
+
+    it('submits without the submitter when it is no longer a submit button', async () => {
+        await start();
+        const resolve = holdPreAdd('first');
+
+        getByTestId(container, 'inside').click();
+        (getByTestId(container, 'inside') as HTMLButtonElement).type = 'button';
+        resolve();
+
+        await waitFor(() => expect(submits).toStrictEqual([null]));
+    });
+
+    it('does not submit a form removed while it is held', async () => {
+        await start();
+        const resolve = holdPreAdd('first');
+
+        getByTestId(container, 'inside').click();
+        getByTestId(container, 'form').remove();
+        resolve();
+        await new Promise((r) => setTimeout(r, 10));
+
+        expect(submits).toStrictEqual([]);
+    });
+
+    it('submits when the processing dropzone disconnects while the form is held', async () => {
+        await start();
+        holdPreAdd('first');
+
+        getByTestId(container, 'inside').click();
+        getByTestId(container, 'first').remove();
+
+        await waitFor(() => expect(submits).toStrictEqual(['inside']));
+    });
+
+    it('holds the submission again for a selection made while it is held', async () => {
+        await start();
+        const resolveFirst = holdPreAdd('first');
+
+        getByTestId(container, 'inside').click();
+        const resolveSecond = holdPreAdd('second');
+        resolveFirst();
+        await new Promise((r) => setTimeout(r, 10));
+        expect(submits).toStrictEqual([]);
+
+        resolveSecond();
+        await waitFor(() => expect(submits).toStrictEqual(['inside']));
+        expect(inputNames('second')).toStrictEqual(['second.txt']);
+    });
+});

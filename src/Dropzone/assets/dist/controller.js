@@ -1,6 +1,8 @@
 import { Controller } from "@hotwired/stimulus";
 const fileKey = (file) => `${file.name}\0${file.size}\0${file.lastModified}`;
-var controller_default = class extends Controller {
+var DropzoneController = class DropzoneController extends Controller {
+	static connectedDropzones = /* @__PURE__ */ new Set();
+	static heldSubmitters = /* @__PURE__ */ new WeakMap();
 	static targets = [
 		"input",
 		"placeholder",
@@ -31,6 +33,7 @@ var controller_default = class extends Controller {
 	resetTimeout;
 	objectUrls = /* @__PURE__ */ new Map();
 	renderedBlobs = null;
+	idleCallbacks = [];
 	dataUrls = /* @__PURE__ */ new WeakMap();
 	previewedFiles = /* @__PURE__ */ new WeakMap();
 	initialize() {
@@ -58,6 +61,8 @@ var controller_default = class extends Controller {
 		this.inputTarget.addEventListener("change", this.onInputChange);
 		this.form = this.inputTarget.form;
 		this.form?.addEventListener("reset", this.onFormReset);
+		DropzoneController.connectedDropzones.add(this);
+		window.addEventListener("submit", DropzoneController.onSubmit, true);
 		this.render();
 		this.dispatchEvent("connect", {});
 	}
@@ -72,6 +77,9 @@ var controller_default = class extends Controller {
 		this.form?.removeEventListener("reset", this.onFormReset);
 		this.form = null;
 		this.revokeObjectUrls(/* @__PURE__ */ new Set());
+		DropzoneController.connectedDropzones.delete(this);
+		if (DropzoneController.connectedDropzones.size === 0) window.removeEventListener("submit", DropzoneController.onSubmit, true);
+		this.notifyIdle();
 	}
 	previewClearButtonTargetConnected(button) {
 		if (!this.multipleValue) button.addEventListener("click", this.clear);
@@ -168,7 +176,15 @@ var controller_default = class extends Controller {
 			this.pendingSelections.delete(selected);
 			this.processingCount--;
 			this.updateState();
+			if (this.processingCount === 0) this.notifyIdle();
 		});
+	}
+	whenIdle() {
+		if (this.processingCount === 0) return Promise.resolve();
+		return new Promise((resolve) => this.idleCallbacks.push(resolve));
+	}
+	notifyIdle() {
+		for (const callback of this.idleCallbacks.splice(0)) callback();
 	}
 	add(added) {
 		const [fitting, overflow] = this.checkMaxFiles(added, []);
@@ -375,5 +391,23 @@ var controller_default = class extends Controller {
 			cancelable
 		});
 	}
+	static onSubmit = (event) => {
+		const form = event.target;
+		if (!(form instanceof HTMLFormElement) || !event.isTrusted || event.defaultPrevented) return;
+		const processing = Array.from(DropzoneController.connectedDropzones).filter((dropzone) => dropzone.form === form && dropzone.processingCount > 0);
+		if (processing.length === 0) return;
+		event.preventDefault();
+		event.stopImmediatePropagation();
+		const held = DropzoneController.heldSubmitters.has(form);
+		DropzoneController.heldSubmitters.set(form, event.submitter);
+		if (held) return;
+		Promise.all(processing.map((dropzone) => dropzone.whenIdle())).then(() => {
+			const submitter = DropzoneController.heldSubmitters.get(form);
+			DropzoneController.heldSubmitters.delete(form);
+			if (!form.isConnected) return;
+			if (submitter?.isConnected && submitter.form === form && ["submit", "image"].includes(submitter.type)) form.requestSubmit(submitter);
+			else form.requestSubmit();
+		});
+	};
 };
-export { controller_default as default };
+export { DropzoneController as default };
