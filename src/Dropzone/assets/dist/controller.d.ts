@@ -1,4 +1,12 @@
 import { Controller } from "@hotwired/stimulus";
+export interface DropzonePreAddEventDetail {
+  readonly files: readonly File[];
+  readonly waitUntil: (files: readonly File[] | PromiseLike<readonly File[]>) => void;
+}
+export interface DropzoneRejectEventDetail {
+  readonly files: readonly File[];
+  readonly reason: 'accept' | 'max_files';
+}
 export default class export_default extends Controller {
   readonly inputTarget: HTMLInputElement;
   readonly placeholderTarget: HTMLDivElement;

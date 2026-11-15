@@ -458,6 +458,29 @@ Then add the controller to the field::
         'attr' => ['data-controller' => 'image-resize'],
     ])
 
+Typing the events in TypeScript
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. versionadded:: 3.8
+
+    The ``DropzonePreAddEventDetail`` and ``DropzoneRejectEventDetail`` types were added in Dropzone 3.8.
+
+The package exports the types of the ``event.detail`` of ``dropzone:pre-add`` and ``dropzone:reject``:
+
+.. code-block:: typescript
+
+    import type { DropzonePreAddEventDetail, DropzoneRejectEventDetail } from '@symfony/ux-dropzone';
+
+    this.element.addEventListener('dropzone:pre-add', (event) => {
+        const { files, waitUntil } = (event as CustomEvent<DropzonePreAddEventDetail>).detail;
+        // ...
+    });
+
+    this.element.addEventListener('dropzone:reject', (event) => {
+        const { files, reason } = (event as CustomEvent<DropzoneRejectEventDetail>).detail;
+        // ...
+    });
+
 Backward Compatibility promise
 ------------------------------
 

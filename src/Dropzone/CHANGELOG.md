@@ -3,6 +3,7 @@
 ## 3.8
 
 - Leave out the files over `max_files` before `dropzone:pre-add`, and dispatch `dropzone:reject` before the files are added
+- Export the `DropzonePreAddEventDetail` and `DropzoneRejectEventDetail` types of the `dropzone:pre-add` and `dropzone:reject` event details
 
 ## 3.7.0
 

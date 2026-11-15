@@ -57,7 +57,7 @@ var controller_default = class extends Controller {
 		this.form = this.inputTarget.form;
 		this.form?.addEventListener("reset", this.onFormReset);
 		this.render();
-		this.dispatchEvent("connect");
+		this.dispatchEvent("connect", {});
 	}
 	disconnect() {
 		this.generation++;
@@ -83,7 +83,7 @@ var controller_default = class extends Controller {
 		this.dataTransfer = new DataTransfer();
 		this.syncInput();
 		this.render();
-		if (cleared) this.dispatchEvent("clear");
+		if (cleared) this.dispatchEvent("clear", {});
 	}
 	onInputChange() {
 		const selected = Array.from(this.inputTarget.files ?? []);
@@ -154,7 +154,7 @@ var controller_default = class extends Controller {
 		this.updateState();
 		const result = (promise ?? Promise.resolve(selected)).then((resolved) => {
 			if (!Array.isArray(resolved) || !resolved.every((file) => file instanceof File)) throw new TypeError("The promise passed to waitUntil() must resolve to an array of files.");
-			return resolved;
+			return [...resolved];
 		}).catch((error) => {
 			console.error(error);
 			return files;
@@ -199,7 +199,7 @@ var controller_default = class extends Controller {
 		this.render();
 		this.dispatchEvent("change", this.inputTarget.files);
 		this.dispatchEvent("remove", file);
-		if (this.dataTransfer.files.length === 0) this.dispatchEvent("clear");
+		if (this.dataTransfer.files.length === 0) this.dispatchEvent("clear", {});
 	}
 	checkAccept(files) {
 		if (!this.dropping) return [files, []];
@@ -341,7 +341,7 @@ var controller_default = class extends Controller {
 		this.placeholderTarget.hidden = showPreview;
 		this.previewTarget.hidden = !showPreview;
 	}
-	dispatchEvent(name, payload = {}, cancelable = false) {
+	dispatchEvent(name, payload, cancelable = false) {
 		return this.dispatch(name, {
 			detail: payload,
 			prefix: "dropzone",
