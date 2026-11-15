@@ -28,9 +28,13 @@ export default class DropzoneController extends Controller {
   readonly hasPreviewListTarget: boolean;
   readonly previewItemTemplateTarget: HTMLTemplateElement;
   readonly hasPreviewItemTemplateTarget: boolean;
+  readonly feedbackTarget: HTMLElement;
+  readonly hasFeedbackTarget: boolean;
   readonly multipleValue: boolean;
   readonly maxFilesValue: number;
   readonly removeLabelValue: string;
+  readonly acceptMessageValue: string;
+  readonly maxFilesMessageValue: string;
   static targets: string[];
   static values: {
     multiple: BooleanConstructor;
@@ -39,6 +43,8 @@ export default class DropzoneController extends Controller {
       type: StringConstructor;
       default: string;
     };
+    acceptMessage: StringConstructor;
+    maxFilesMessage: StringConstructor;
   };
   private dataTransfer;
   private previewItem;
@@ -53,6 +59,7 @@ export default class DropzoneController extends Controller {
   private readonly objectUrls;
   private renderedBlobs;
   private idleCallbacks;
+  private feedbackMessages;
   private readonly dataUrls;
   private readonly previewedFiles;
   initialize(): void;
@@ -79,6 +86,7 @@ export default class DropzoneController extends Controller {
   private checkMaxFiles;
   private syncInput;
   private reject;
+  private clearFeedback;
   private render;
   private buildListItem;
   private buildListItemFromTemplate;

@@ -12,7 +12,8 @@ var DropzoneController = class DropzoneController extends Controller {
 		"previewFilename",
 		"previewImage",
 		"previewList",
-		"previewItemTemplate"
+		"previewItemTemplate",
+		"feedback"
 	];
 	static values = {
 		multiple: Boolean,
@@ -20,7 +21,9 @@ var DropzoneController = class DropzoneController extends Controller {
 		removeLabel: {
 			type: String,
 			default: "Remove"
-		}
+		},
+		acceptMessage: String,
+		maxFilesMessage: String
 	};
 	dataTransfer;
 	previewItem = null;
@@ -35,6 +38,7 @@ var DropzoneController = class DropzoneController extends Controller {
 	objectUrls = /* @__PURE__ */ new Map();
 	renderedBlobs = null;
 	idleCallbacks = [];
+	feedbackMessages = [];
 	dataUrls = /* @__PURE__ */ new WeakMap();
 	previewedFiles = /* @__PURE__ */ new WeakMap();
 	initialize() {
@@ -91,6 +95,7 @@ var DropzoneController = class DropzoneController extends Controller {
 	clear() {
 		this.generation++;
 		this.pendingSelections.clear();
+		this.clearFeedback();
 		const cleared = this.dataTransfer.files.length > 0;
 		this.dataTransfer = new DataTransfer();
 		this.syncInput();
@@ -99,6 +104,7 @@ var DropzoneController = class DropzoneController extends Controller {
 	}
 	onInputChange() {
 		const selected = Array.from(this.inputTarget.files ?? []);
+		this.clearFeedback();
 		const [accepted, notAccepted] = this.checkAccept(selected);
 		const [fitting, overflow] = this.checkMaxFiles(accepted, this.pendingSelections);
 		this.syncInput();
@@ -232,6 +238,7 @@ var DropzoneController = class DropzoneController extends Controller {
 			return;
 		}
 		this.dataTransfer.items.remove(index);
+		this.clearFeedback();
 		this.syncInput();
 		this.render();
 		this.dispatchEvent("change", this.inputTarget.files);
@@ -281,10 +288,26 @@ var DropzoneController = class DropzoneController extends Controller {
 		this.inputTarget.files = dataTransfer.files;
 	}
 	reject(files, reason) {
-		if (files.length > 0) this.dispatchEvent("reject", {
+		if (files.length === 0) return;
+		const event = this.dispatchEvent("reject", {
 			files,
 			reason
+		}, true);
+		const message = reason === "accept" ? this.acceptMessageValue : this.maxFilesMessageValue;
+		if (event.defaultPrevented || !message || !this.hasFeedbackTarget) return;
+		this.feedbackMessages.push(message.split("%files%").join(files.map((file) => file.name).join(", ")));
+		setTimeout(() => {
+			if (!this.hasFeedbackTarget) return;
+			this.feedbackTarget.replaceChildren(...this.feedbackMessages.map((text) => {
+				const element = document.createElement("div");
+				element.textContent = text;
+				return element;
+			}));
 		});
+	}
+	clearFeedback() {
+		this.feedbackMessages = [];
+		if (this.hasFeedbackTarget) this.feedbackTarget.replaceChildren();
 	}
 	render() {
 		const files = Array.from(this.dataTransfer.files);

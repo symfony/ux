@@ -1670,6 +1670,163 @@ describe('DropzoneController (multiple)', () => {
         await waitFor(() => expect(names()).toStrictEqual(['b.txt']));
     });
 
+    const addFeedback = () => {
+        const container = document.querySelector('[data-testid="container"]') as HTMLElement;
+        container.setAttribute('data-dropzone-accept-message-value', 'Not accepted: %files%');
+        container.setAttribute('data-dropzone-max-files-message-value', 'Too many: %files%');
+        const feedback = document.createElement('div');
+        feedback.setAttribute('data-dropzone-target', 'feedback');
+        container.append(feedback);
+
+        return feedback;
+    };
+
+    it('shows the messages of the rejections in the feedback target', async () => {
+        getByTestId(container, 'container').setAttribute('data-dropzone-max-files-value', '1');
+        const feedback = addFeedback();
+        await start();
+        const input = getByTestId(container, 'input') as HTMLInputElement;
+        input.accept = '.txt';
+
+        dropFiles(input, [
+            new File(['png'], 'a.png', { type: 'image/png' }),
+            make('b.txt'),
+            make('c.txt'),
+            make('d.txt'),
+        ]);
+
+        await waitFor(() =>
+            expect(Array.from(feedback.children).map((element) => element.textContent)).toStrictEqual([
+                'Not accepted: a.png',
+                'Too many: c.txt, d.txt',
+            ])
+        );
+    });
+
+    it('shows a file name with replacement patterns as it is', async () => {
+        const feedback = addFeedback();
+        getByTestId(container, 'container').setAttribute('data-dropzone-accept-message-value', '%files% (%files%)');
+        await start();
+        const input = getByTestId(container, 'input') as HTMLInputElement;
+        input.accept = '.txt';
+
+        dropFiles(input, [new File(['png'], "a$&$'$$.png", { type: 'image/png' })]);
+
+        await waitFor(() => expect(feedback).toHaveTextContent("a$&$'$$.png (a$&$'$$.png)"));
+    });
+
+    it('shows the same message again after it is cleared', async () => {
+        const feedback = addFeedback();
+        await start();
+        const input = getByTestId(container, 'input') as HTMLInputElement;
+        input.accept = '.txt';
+        const png = new File(['png'], 'a.png', { type: 'image/png' });
+        dropFiles(input, [png]);
+        await waitFor(() => expect(feedback).toHaveTextContent('Not accepted: a.png'));
+        const texts: string[] = [];
+        new MutationObserver(() => texts.push(feedback.textContent ?? '')).observe(feedback, {
+            childList: true,
+            subtree: true,
+            characterData: true,
+        });
+
+        dropFiles(input, [png]);
+        await waitFor(() => expect(texts).toStrictEqual(['', 'Not accepted: a.png']));
+    });
+
+    it('shows no message for a rejection a listener prevents', async () => {
+        const feedback = addFeedback();
+        getByTestId(container, 'container').addEventListener('dropzone:reject', (event) => event.preventDefault());
+        await start();
+        const input = getByTestId(container, 'input') as HTMLInputElement;
+        input.accept = '.txt';
+
+        dropFiles(input, [new File(['png'], 'a.png', { type: 'image/png' })]);
+        await new Promise((resolve) => setTimeout(resolve, 10));
+
+        expect(feedback).toHaveTextContent('');
+    });
+
+    it('clears the feedback when a file is removed', async () => {
+        getByTestId(container, 'container').setAttribute('data-dropzone-max-files-value', '1');
+        const feedback = addFeedback();
+        await start();
+        const input = getByTestId(container, 'input') as HTMLInputElement;
+        selectFiles(input, [make('a.txt'), make('b.txt')]);
+        await waitFor(() => expect(feedback).toHaveTextContent('Too many: b.txt'));
+
+        (getByTestId(container, 'list').querySelector('.dropzone-preview-list-remove') as HTMLButtonElement).click();
+
+        expect(feedback).toHaveTextContent('');
+    });
+
+    it('clears the feedback on the next selection', async () => {
+        const feedback = addFeedback();
+        await start();
+        const input = getByTestId(container, 'input') as HTMLInputElement;
+        input.accept = '.txt';
+        dropFiles(input, [new File(['png'], 'a.png', { type: 'image/png' })]);
+
+        selectFiles(input, [make('b.txt')]);
+
+        expect(feedback).toHaveTextContent('');
+    });
+
+    it('clears the feedback when the dropzone is cleared', async () => {
+        const feedback = addFeedback();
+        await start();
+        const input = getByTestId(container, 'input') as HTMLInputElement;
+        input.accept = '.txt';
+        dropFiles(input, [new File(['png'], 'a.png', { type: 'image/png' })]);
+
+        (
+            applications[0].getControllerForElementAndIdentifier(
+                getByTestId(container, 'container'),
+                'dropzone'
+            ) as DropzoneController
+        ).clear();
+
+        expect(feedback).toHaveTextContent('');
+    });
+
+    it('shows no feedback for a reason without message', async () => {
+        const feedback = addFeedback();
+        getByTestId(container, 'container').removeAttribute('data-dropzone-accept-message-value');
+        await start();
+        const input = getByTestId(container, 'input') as HTMLInputElement;
+        input.accept = '.txt';
+
+        dropFiles(input, [new File(['png'], 'a.png', { type: 'image/png' })]);
+
+        await new Promise((resolve) => setTimeout(resolve, 10));
+
+        expect(feedback.childElementCount).toBe(0);
+    });
+
+    it('shows no feedback when the feedback target is removed before the messages are written', async () => {
+        const feedback = addFeedback();
+        await start();
+        const input = getByTestId(container, 'input') as HTMLInputElement;
+        input.accept = '.txt';
+
+        dropFiles(input, [new File(['png'], 'a.png', { type: 'image/png' })]);
+        feedback.remove();
+        await new Promise((resolve) => setTimeout(resolve, 10));
+
+        expect(feedback.childElementCount).toBe(0);
+    });
+
+    it('shows the file names as text in the feedback', async () => {
+        const feedback = addFeedback();
+        await start();
+        const input = getByTestId(container, 'input') as HTMLInputElement;
+        input.accept = '.txt';
+
+        dropFiles(input, [new File(['png'], '<b>a</b>.png', { type: 'image/png' })]);
+
+        await waitFor(() => expect(feedback.innerHTML).toBe('<div>Not accepted: &lt;b&gt;a&lt;/b&gt;.png</div>'));
+    });
+
     it('clears when the last file is removed', async () => {
         await start();
         const events: string[] = [];

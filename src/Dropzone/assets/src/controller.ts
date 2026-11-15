@@ -57,10 +57,14 @@ export default class DropzoneController extends Controller {
     declare readonly hasPreviewListTarget: boolean;
     declare readonly previewItemTemplateTarget: HTMLTemplateElement;
     declare readonly hasPreviewItemTemplateTarget: boolean;
+    declare readonly feedbackTarget: HTMLElement;
+    declare readonly hasFeedbackTarget: boolean;
 
     declare readonly multipleValue: boolean;
     declare readonly maxFilesValue: number;
     declare readonly removeLabelValue: string;
+    declare readonly acceptMessageValue: string;
+    declare readonly maxFilesMessageValue: string;
 
     static targets = [
         'input',
@@ -71,12 +75,15 @@ export default class DropzoneController extends Controller {
         'previewImage',
         'previewList',
         'previewItemTemplate',
+        'feedback',
     ];
 
     static values = {
         multiple: Boolean,
         maxFiles: Number,
         removeLabel: { type: String, default: 'Remove' },
+        acceptMessage: String,
+        maxFilesMessage: String,
     };
 
     // The files added, in both modes: in single-file mode, a new selection replaces the file
@@ -94,6 +101,7 @@ export default class DropzoneController extends Controller {
     private readonly objectUrls = new Map<Blob, string>();
     private renderedBlobs: Set<Blob> | null = null;
     private idleCallbacks: (() => void)[] = [];
+    private feedbackMessages: string[] = [];
     private readonly dataUrls = new WeakMap<Blob, Promise<string>>();
     private readonly previewedFiles = new WeakMap<HTMLElement, Blob>();
 
@@ -183,6 +191,7 @@ export default class DropzoneController extends Controller {
         // The selections still processed must not bring a file back
         this.generation++;
         this.pendingSelections.clear();
+        this.clearFeedback();
 
         const cleared = this.dataTransfer.files.length > 0;
         this.dataTransfer = new DataTransfer();
@@ -196,6 +205,7 @@ export default class DropzoneController extends Controller {
 
     onInputChange() {
         const selected = Array.from(this.inputTarget.files ?? []);
+        this.clearFeedback();
         const [accepted, notAccepted] = this.checkAccept(selected);
         // Before the pre-add listeners, so they do not process the files left out
         const [fitting, overflow] = this.checkMaxFiles(accepted, this.pendingSelections);
@@ -415,6 +425,7 @@ export default class DropzoneController extends Controller {
         }
 
         this.dataTransfer.items.remove(index);
+        this.clearFeedback();
         this.syncInput();
         this.render();
         this.dispatchEvent('change', this.inputTarget.files!);
@@ -512,8 +523,38 @@ export default class DropzoneController extends Controller {
     }
 
     private reject(files: File[], reason: DropzoneRejectEventDetail['reason']) {
-        if (files.length > 0) {
-            this.dispatchEvent('reject', { files, reason });
+        if (files.length === 0) {
+            return;
+        }
+
+        const event = this.dispatchEvent('reject', { files, reason }, true);
+        const message = reason === 'accept' ? this.acceptMessageValue : this.maxFilesMessageValue;
+        if (event.defaultPrevented || !message || !this.hasFeedbackTarget) {
+            return;
+        }
+
+        this.feedbackMessages.push(message.split('%files%').join(files.map((file) => file.name).join(', ')));
+        // In a later task than the clearing, so screen readers announce the same message again
+        setTimeout(() => {
+            if (!this.hasFeedbackTarget) {
+                return;
+            }
+
+            this.feedbackTarget.replaceChildren(
+                ...this.feedbackMessages.map((text) => {
+                    const element = document.createElement('div');
+                    element.textContent = text;
+
+                    return element;
+                })
+            );
+        });
+    }
+
+    private clearFeedback() {
+        this.feedbackMessages = [];
+        if (this.hasFeedbackTarget) {
+            this.feedbackTarget.replaceChildren();
         }
     }
 

@@ -11,4 +11,5 @@
 
 return [
     'Remove' => 'Delete this file',
+    'Not accepted' => 'Translated accept message',
 ];

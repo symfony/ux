@@ -9,6 +9,7 @@
 - Add a `dropzone:pre-submit` event to transform the files of the Dropzone when the form is submitted, and export the `DropzonePreSubmitEventDetail` type of its event detail
 - Add a `placeholder` form view variable with the value of the `placeholder` option
 - Add a `container_attr` form view variable with the attributes of the container, and stop rendering an empty `data-controller` attribute on the input
+- Add `accept_message` and `max_files_message` options to `DropzoneType`, to show a message for the files left out, in an element with `role="status"`
 
 ## 3.7.0
 

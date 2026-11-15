@@ -415,3 +415,19 @@ test('single: submits the file a pre-submit listener resolves', async ({ page })
 
     await expect(page.locator('#upload-success')).toContainText('Uploaded: cropped-a.txt');
 });
+
+test('multiple: announces the files left out', async ({ page }) => {
+    await page.goto('/ux-dropzone/multiple');
+    await page.locator('.dropzone-container').evaluate((container) => {
+        container.setAttribute('data-symfony--ux-dropzone--dropzone-max-files-value', '1');
+    });
+    const feedback = page.getByRole('status');
+
+    await page.locator('input[type="file"]').setInputFiles([
+        { name: 'a.txt', mimeType: 'text/plain', buffer: Buffer.from('aaa') },
+        { name: 'b.txt', mimeType: 'text/plain', buffer: Buffer.from('bbb') },
+    ]);
+
+    await expect(feedback).toHaveText('Too many files, not added: b.txt');
+    await expect(feedback).toBeVisible();
+});

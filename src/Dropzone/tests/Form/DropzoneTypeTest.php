@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\Dropzone\Tests;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
 use Symfony\Component\Form\Extension\Validator\ValidatorExtension;
@@ -41,7 +42,7 @@ class DropzoneTypeTest extends TestCase
         $rendered = $this->renderForm(['attr' => ['data-controller' => 'mydropzone']]);
 
         $this->assertSame(
-            '<form name="form" method="post" enctype="multipart/form-data"><div id="form"><div><label for="form_photo" class="required">Photo</label><div class="dropzone-container" data-controller="mydropzone symfony--ux-dropzone--dropzone" data-symfony--ux-dropzone--dropzone-remove-label-value="Remove">
+            '<form name="form" method="post" enctype="multipart/form-data"><div id="form"><div><label for="form_photo" class="required">Photo</label><div class="dropzone-container" data-controller="mydropzone symfony--ux-dropzone--dropzone" data-symfony--ux-dropzone--dropzone-remove-label-value="Remove" data-symfony--ux-dropzone--dropzone-accept-message-value="File type not accepted: %files%" data-symfony--ux-dropzone--dropzone-max-files-message-value="Too many files, not added: %files%">
         <input type="file" id="form_photo" name="form[photo]" required="required" class="dropzone-input" data-symfony--ux-dropzone--dropzone-target="input" />
 
         <div class="dropzone-placeholder" data-symfony--ux-dropzone--dropzone-target="placeholder"></div>
@@ -56,6 +57,7 @@ class DropzoneTypeTest extends TestCase
             <div data-symfony--ux-dropzone--dropzone-target="previewFilename" class="dropzone-preview-filename"></div>
         </div>
 
+        <div class="dropzone-feedback" role="status" data-symfony--ux-dropzone--dropzone-target="feedback"></div>
     </div></div></div></form>
 ',
             str_replace(' >', '>', $rendered)
@@ -115,6 +117,66 @@ class DropzoneTypeTest extends TestCase
         $this->assertStringNotContainsString('data-controller=""', $rendered);
     }
 
+    public function testRenderRejectMessages(): void
+    {
+        $rendered = $this->renderForm(['multiple' => true, 'max_files' => 2]);
+
+        $this->assertStringContainsString('data-symfony--ux-dropzone--dropzone-accept-message-value="File type not accepted: %files%"', $rendered);
+        $this->assertStringContainsString('data-symfony--ux-dropzone--dropzone-max-files-message-value="Too many files, not added: %files%"', $rendered);
+        $this->assertStringContainsString('<div class="dropzone-feedback" role="status" data-symfony--ux-dropzone--dropzone-target="feedback"></div>', $rendered);
+    }
+
+    public function testRenderTranslatedRejectMessages(): void
+    {
+        $rendered = $this->renderForm(['translation_domain' => 'dropzone_test', 'accept_message' => 'Not accepted', 'max_files_message' => new class implements TranslatableInterface {
+            public function trans(TranslatorInterface $translator, ?string $locale = null): string
+            {
+                return 'Translated max files message';
+            }
+        }]);
+
+        $this->assertStringContainsString('data-symfony--ux-dropzone--dropzone-accept-message-value="Translated accept message"', $rendered);
+        $this->assertStringContainsString('data-symfony--ux-dropzone--dropzone-max-files-message-value="Translated max files message"', $rendered);
+    }
+
+    public function testRenderWithoutRejectMessages(): void
+    {
+        $rendered = $this->renderForm(['accept_message' => false, 'max_files_message' => false]);
+
+        $this->assertStringNotContainsString('-message-value', $rendered);
+        $this->assertStringNotContainsString('dropzone-feedback', $rendered);
+    }
+
+    public function testRenderWithoutOneRejectMessage(): void
+    {
+        $rendered = $this->renderForm(['accept_message' => false]);
+
+        $this->assertStringNotContainsString('accept-message-value', $rendered);
+        $this->assertStringContainsString('max-files-message-value', $rendered);
+        $this->assertStringContainsString('dropzone-feedback', $rendered);
+    }
+
+    #[DataProvider('provideRejectMessageOptions')]
+    public function testRejectMessagesCannotBeTrue(string $option): void
+    {
+        $this->expectException(InvalidOptionsException::class);
+
+        Forms::createFormFactory()->create(DropzoneType::class, null, [$option => true]);
+    }
+
+    public static function provideRejectMessageOptions(): iterable
+    {
+        yield ['accept_message'];
+        yield ['max_files_message'];
+    }
+
+    public function testRenderRejectMessagesWithoutTranslationDomain(): void
+    {
+        $rendered = $this->renderForm(['translation_domain' => false, 'accept_message' => 'Not accepted']);
+
+        $this->assertStringContainsString('data-symfony--ux-dropzone--dropzone-accept-message-value="Not accepted"', $rendered);
+    }
+
     public function testRenderFormMultiple(): void
     {
         $rendered = $this->renderForm(['multiple' => true], 'photos');
@@ -144,6 +206,7 @@ class DropzoneTypeTest extends TestCase
 
         $this->assertStringContainsString('<ul class="dropzone-preview-list" data-symfony--ux-dropzone--dropzone-target="previewList"></ul>
 <template data-symfony--ux-dropzone--dropzone-target="previewItemTemplate"><li data-dropzone-slot="filename"></li></template>
+        <div class="dropzone-feedback" role="status" data-symfony--ux-dropzone--dropzone-target="feedback"></div>
     </div>', $rendered);
     }
 

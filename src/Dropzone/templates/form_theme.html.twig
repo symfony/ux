@@ -1,9 +1,11 @@
 {% block dropzone_widget -%}
     {#- A "data-controller" passed to form_widget() is only in "attr", and the label is translated in the locale of the rendering -#}
-    {%- set container_attr = container_attr|merge({
-        'data-controller': (attr['data-controller']|default('') ~ ' symfony--ux-dropzone--dropzone')|trim,
-        'data-symfony--ux-dropzone--dropzone-remove-label-value': translation_domain is same as(false) ? remove_label : remove_label|trans({}, translation_domain),
-    }) -%}
+    {%- set container_attr = container_attr|merge({'data-controller': (attr['data-controller']|default('') ~ ' symfony--ux-dropzone--dropzone')|trim}) -%}
+    {%- for name, text in {'remove-label': remove_label, 'accept-message': accept_message, 'max-files-message': max_files_message} -%}
+        {%- if text is not same as(false) -%}
+            {%- set container_attr = container_attr|merge({('data-symfony--ux-dropzone--dropzone-' ~ name ~ '-value'): text.trans is defined ? text|trans : (translation_domain is same as(false) ? text : text|trans({}, translation_domain))}) -%}
+        {%- endif -%}
+    {%- endfor -%}
     {#- "form.vars" keeps the values of buildView(): a placeholder passed in "attr" to form_widget() still wins, as in older versions -#}
     {%- set placeholder = (attr.placeholder ?? false) is same as(form.vars.attr.placeholder ?? false) ? placeholder : attr.placeholder -%}
     {#- "placeholder" is not a valid attribute of <input type="file"> -#}
@@ -32,6 +34,9 @@
         <ul class="dropzone-preview-list" data-symfony--ux-dropzone--dropzone-target="previewList"></ul>
 {% endif %}
 {{- block('dropzone_preview_item_template') }}
+{% if accept_message is not same as(false) or max_files_message is not same as(false) %}
+        <div class="dropzone-feedback" role="status" data-symfony--ux-dropzone--dropzone-target="feedback"></div>
+{% endif %}
     </div>
 {%- endblock %}
 
