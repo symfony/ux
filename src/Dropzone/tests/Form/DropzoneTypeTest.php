@@ -178,6 +178,52 @@ class DropzoneTypeTest extends TestCase
         $this->assertArrayNotHasKey('placeholder', Forms::createFormFactory()->create(DropzoneType::class, null, ['placeholder' => false])->createView()->vars['attr']);
     }
 
+    public function testPlaceholderViewVariable(): void
+    {
+        $factory = Forms::createFormFactory();
+        $translatable = new class implements TranslatableInterface {
+            public function trans(TranslatorInterface $translator, ?string $locale = null): string
+            {
+                return 'Translated placeholder';
+            }
+        };
+
+        $this->assertSame('Drag and drop or browse', $factory->create(DropzoneType::class)->createView()->vars['placeholder']);
+        $this->assertSame('Choose a photo', $factory->create(DropzoneType::class, null, ['placeholder' => 'Choose a photo'])->createView()->vars['placeholder']);
+        $this->assertFalse($factory->create(DropzoneType::class, null, ['placeholder' => false])->createView()->vars['placeholder']);
+        $this->assertSame($translatable, $factory->create(DropzoneType::class, null, ['placeholder' => $translatable])->createView()->vars['placeholder']);
+    }
+
+    public function testPlaceholderViewVariableFromAttr(): void
+    {
+        [$view] = $this->createViewCollectingDeprecations(['attr' => ['placeholder' => 'Choose a photo']]);
+
+        $this->assertSame('Choose a photo', $view->vars['placeholder']);
+    }
+
+    public function testRenderPlaceholderVariablePassedToTheWidget(): void
+    {
+        $rendered = $this->renderWidget(['placeholder' => 'Drop here']);
+
+        $this->assertStringContainsString('data-symfony--ux-dropzone--dropzone-target="placeholder">Drop here</div>', $rendered);
+        $this->assertStringNotContainsString('placeholder="', $rendered);
+    }
+
+    public function testRenderPlaceholderVariablePassedToTheWidgetWithoutPlaceholderOption(): void
+    {
+        $rendered = $this->renderWidget(['placeholder' => 'Drop here'], ['placeholder' => false]);
+
+        $this->assertStringContainsString('data-symfony--ux-dropzone--dropzone-target="placeholder">Drop here</div>', $rendered);
+    }
+
+    public function testRenderPlaceholderPassedToTheWidgetWithoutPlaceholderOption(): void
+    {
+        $rendered = $this->renderWidget(['attr' => ['placeholder' => 'Drop here']], ['placeholder' => false]);
+
+        $this->assertStringContainsString('data-symfony--ux-dropzone--dropzone-target="placeholder">Drop here</div>', $rendered);
+        $this->assertStringNotContainsString('placeholder="', $rendered);
+    }
+
     public function testRenderWithoutPlaceholder(): void
     {
         $rendered = $this->renderForm(['placeholder' => false]);
@@ -294,9 +340,9 @@ class DropzoneTypeTest extends TestCase
         return $this->render('dropzone_form.html.twig', $name, $options);
     }
 
-    private function renderWidget(array $variables): string
+    private function renderWidget(array $variables, array $options = []): string
     {
-        return $this->render('dropzone_widget.html.twig', 'photo', [], ['variables' => $variables]);
+        return $this->render('dropzone_widget.html.twig', 'photo', $options, ['variables' => $variables]);
     }
 
     private function render(string $template, string $name, array $options, array $context = []): string

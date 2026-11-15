@@ -33,8 +33,9 @@ class DropzoneType extends AbstractType
         $view->vars['multiple'] = $options['multiple'];
         $view->vars['remove_label'] = $options['remove_label'];
         $view->vars['max_files'] = $options['max_files'];
+        $view->vars['placeholder'] = $options['placeholder'];
 
-        // The theme reads the text from "attr", where variables passed to form_widget() and themes copied from older versions put it
+        // Also in "attr", where themes copied from older versions read it
         unset($view->vars['attr']['placeholder']);
         if (false !== $options['placeholder']) {
             $view->vars['attr']['placeholder'] = $options['placeholder'];
