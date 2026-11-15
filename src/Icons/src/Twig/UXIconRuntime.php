@@ -37,6 +37,11 @@ final class UXIconRuntime implements RuntimeExtensionInterface
     public function renderIcon(string $name, array $attributes = []): string
     {
         foreach ($attributes as $key => $value) {
+            // htmlAttrValue() returns a string unchanged
+            if (\is_string($value)) {
+                continue;
+            }
+
             // "false" marks an omitted attribute, so it also drops the renderer defaults.
             $attributes[$key] = HtmlExtension::htmlAttrValue($key, $value) ?? false;
         }

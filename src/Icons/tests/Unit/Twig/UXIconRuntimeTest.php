@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\Icons\Tests\Unit\Twig;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Symfony\UX\Icons\Exception\IconNotFoundException;
@@ -74,5 +75,35 @@ class UXIconRuntimeTest extends TestCase
             },
             'gone' => null,
         ]));
+    }
+
+    #[DataProvider('provideStringAttributes')]
+    public function testStringAttributesReachTheRendererExactlyAsHtmlAttrValueWouldLeaveThem(string $name, string $value): void
+    {
+        $expected = HtmlExtension::htmlAttrValue($name, $value) ?? false;
+
+        $renderer = $this->createMock(IconRendererInterface::class);
+        $renderer->expects($this->once())
+            ->method('renderIcon')
+            ->with('foo', self::identicalTo([$name => $expected]))
+            ->willReturn('<svg></svg>');
+
+        new UXIconRuntime($renderer)->renderIcon('foo', [$name => $value]);
+    }
+
+    public static function provideStringAttributes(): iterable
+    {
+        yield 'class' => ['class', 'size-4 text-muted'];
+        yield 'empty string' => ['class', ''];
+        yield 'aria- with "true"' => ['aria-hidden', 'true'];
+        yield 'aria- with "false"' => ['aria-expanded', 'false'];
+        yield 'data- with a word' => ['data-icon', 'inline-start'];
+        yield 'data- with JSON' => ['data-config', '{"a":1}'];
+        yield 'data- with "true"' => ['data-open', 'true'];
+        yield 'style' => ['style', 'color: red; width: 1em'];
+        yield 'numeric string' => ['width', '24'];
+        yield 'zero' => ['width', '0'];
+        yield 'quotes and entities' => ['title', 'a "b" & <c>'];
+        yield 'utf-8' => ['title', 'Étoile ★'];
     }
 }
