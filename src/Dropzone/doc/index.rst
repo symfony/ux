@@ -325,6 +325,33 @@ When several states apply, the last one of this list wins:
         opacity: 0.5;
     }
 
+A theme that overrides ``dropzone_widget`` must render the ``container_attr`` view variable on the container element: it holds the container class, ``data-controller`` and the Stimulus values (remove label, ``multiple``, ``max_files``).
+The remove label is not translated, so translate it in the theme, and exclude ``data-controller`` and ``placeholder``, which ``attr`` still contains, from the ``<input>`` attributes:
+
+.. code-block:: html+twig
+
+    {% block dropzone_widget %}
+        {%- set container_attr = container_attr|merge({
+            'data-symfony--ux-dropzone--dropzone-remove-label-value': remove_label|trans({}, translation_domain),
+        }) -%}
+        {%- set placeholder = attr.placeholder ?? false -%}
+        {%- set attr = attr|filter((value, name) => name not in ['data-controller', 'placeholder'])|merge({
+            class: (attr.class|default('') ~ ' dropzone-input')|trim,
+        }) -%}
+
+        <div{% with {attr: container_attr} %}{{ block('attributes') }}{% endwith %}>
+            <input type="file" {{ block('widget_attributes') }} data-symfony--ux-dropzone--dropzone-target="input">
+            <div class="dropzone-placeholder" data-symfony--ux-dropzone--dropzone-target="placeholder">{{ placeholder ? placeholder|trans({}, translation_domain) }}</div>
+            {# ... the preview #}
+        </div>
+    {% endblock %}
+
+A ``data-controller`` passed to ``form_widget()`` is not in ``container_attr``, which is built from the options of the field.
+
+.. versionadded:: 3.8
+
+    The ``container_attr`` variable was added in Dropzone 3.8.
+
 If you override the ``dropzone_widget`` block in your form theme, the clear button, the file name and the image preview of the single-file mode are optional: leave out the elements with the ``previewClearButton``, ``previewFilename`` or ``previewImage`` target that your design does not need.
 
 Without the clear button, the user cannot deselect the file: once a file is chosen, the input is hidden behind the preview.

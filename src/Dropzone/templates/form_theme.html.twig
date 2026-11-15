@@ -1,12 +1,15 @@
 {% block dropzone_widget -%}
-    {%- set data_controller = (attr['data-controller']|default('') ~ ' symfony--ux-dropzone--dropzone')|trim -%}
+    {#- A "data-controller" passed to form_widget() is only in "attr", and the label is translated in the locale of the rendering -#}
+    {%- set container_attr = container_attr|merge({
+        'data-controller': (attr['data-controller']|default('') ~ ' symfony--ux-dropzone--dropzone')|trim,
+        'data-symfony--ux-dropzone--dropzone-remove-label-value': translation_domain is same as(false) ? remove_label : remove_label|trans({}, translation_domain),
+    }) -%}
     {#- "form.vars" keeps the values of buildView(): a placeholder passed in "attr" to form_widget() still wins, as in older versions -#}
     {%- set placeholder = (attr.placeholder ?? false) is same as(form.vars.attr.placeholder ?? false) ? placeholder : attr.placeholder -%}
     {#- "placeholder" is not a valid attribute of <input type="file"> -#}
-    {%- set attr = attr|filter((value, name) => name != 'placeholder')|merge({'data-controller': '', class: (attr.class|default('') ~ ' dropzone-input')|trim}) -%}
-    {%- set remove_label_translated = translation_domain is same as(false) ? remove_label : remove_label|trans({}, translation_domain) -%}
+    {%- set attr = attr|filter((value, name) => name != 'placeholder' and name != 'data-controller')|merge({class: (attr.class|default('') ~ ' dropzone-input')|trim}) -%}
 
-    <div class="dropzone-container{% if multiple %} dropzone-container-multiple{% endif %}" data-controller="{{ data_controller }}" data-symfony--ux-dropzone--dropzone-remove-label-value="{{ remove_label_translated }}"{% if multiple %} data-symfony--ux-dropzone--dropzone-multiple-value="true"{% if max_files is not null %} data-symfony--ux-dropzone--dropzone-max-files-value="{{ max_files }}"{% endif %}{% endif %}>
+    <div{% with {attr: container_attr} %}{{ block('attributes') }}{% endwith %}>
         <input type="file" {{ block('widget_attributes') }} data-symfony--ux-dropzone--dropzone-target="input" />
 
         <div class="dropzone-placeholder" data-symfony--ux-dropzone--dropzone-target="placeholder">

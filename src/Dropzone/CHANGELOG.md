@@ -8,6 +8,7 @@
 - Hold the submission of the form while `dropzone:pre-add` listeners process files, and submit it again once they are done
 - Add a `dropzone:pre-submit` event to transform the files of the Dropzone when the form is submitted, and export the `DropzonePreSubmitEventDetail` type of its event detail
 - Add a `placeholder` form view variable with the value of the `placeholder` option
+- Add a `container_attr` form view variable with the attributes of the container, and stop rendering an empty `data-controller` attribute on the input
 
 ## 3.7.0
 

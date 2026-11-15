@@ -28,12 +28,26 @@ use Symfony\Contracts\Translation\TranslatableInterface;
  */
 class DropzoneType extends AbstractType
 {
+    private const CONTROLLER = 'symfony--ux-dropzone--dropzone';
+
     public function buildView(FormView $view, FormInterface $form, array $options): void
     {
         $view->vars['multiple'] = $options['multiple'];
         $view->vars['remove_label'] = $options['remove_label'];
         $view->vars['max_files'] = $options['max_files'];
         $view->vars['placeholder'] = $options['placeholder'];
+
+        $view->vars['container_attr'] = [
+            'class' => $options['multiple'] ? 'dropzone-container dropzone-container-multiple' : 'dropzone-container',
+            'data-controller' => trim(($view->vars['attr']['data-controller'] ?? '').' '.self::CONTROLLER),
+            'data-'.self::CONTROLLER.'-remove-label-value' => $options['remove_label'],
+        ];
+        if ($options['multiple']) {
+            $view->vars['container_attr']['data-'.self::CONTROLLER.'-multiple-value'] = 'true';
+            if (null !== $options['max_files']) {
+                $view->vars['container_attr']['data-'.self::CONTROLLER.'-max-files-value'] = (string) $options['max_files'];
+            }
+        }
 
         // Also in "attr", where themes copied from older versions read it
         unset($view->vars['attr']['placeholder']);

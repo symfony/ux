@@ -44,6 +44,9 @@ class TwigAppKernel extends Kernel
                 'php_errors' => [
                     'log' => true,
                 ],
+                'translator' => [
+                    'default_path' => __DIR__.'/translations',
+                ],
                 ...(self::VERSION_ID >= 60200 ? [
                     'handle_all_throwables' => true,
                 ] : []),

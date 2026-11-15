@@ -42,7 +42,7 @@ class DropzoneTypeTest extends TestCase
 
         $this->assertSame(
             '<form name="form" method="post" enctype="multipart/form-data"><div id="form"><div><label for="form_photo" class="required">Photo</label><div class="dropzone-container" data-controller="mydropzone symfony--ux-dropzone--dropzone" data-symfony--ux-dropzone--dropzone-remove-label-value="Remove">
-        <input type="file" id="form_photo" name="form[photo]" required="required" data-controller="" class="dropzone-input" data-symfony--ux-dropzone--dropzone-target="input" />
+        <input type="file" id="form_photo" name="form[photo]" required="required" class="dropzone-input" data-symfony--ux-dropzone--dropzone-target="input" />
 
         <div class="dropzone-placeholder" data-symfony--ux-dropzone--dropzone-target="placeholder"></div>
 
@@ -60,6 +60,59 @@ class DropzoneTypeTest extends TestCase
 ',
             str_replace(' >', '>', $rendered)
         );
+    }
+
+    public function testContainerAttr(): void
+    {
+        $view = Forms::createFormFactory()->create(DropzoneType::class, null, ['attr' => ['data-controller' => 'mydropzone']])->createView();
+
+        $this->assertSame([
+            'class' => 'dropzone-container',
+            'data-controller' => 'mydropzone symfony--ux-dropzone--dropzone',
+            'data-symfony--ux-dropzone--dropzone-remove-label-value' => 'Remove',
+        ], $view->vars['container_attr']);
+    }
+
+    public function testContainerAttrMultiple(): void
+    {
+        $view = Forms::createFormFactory()->create(DropzoneType::class, null, ['multiple' => true, 'max_files' => 3])->createView();
+
+        $this->assertSame([
+            'class' => 'dropzone-container dropzone-container-multiple',
+            'data-controller' => 'symfony--ux-dropzone--dropzone',
+            'data-symfony--ux-dropzone--dropzone-remove-label-value' => 'Remove',
+            'data-symfony--ux-dropzone--dropzone-multiple-value' => 'true',
+            'data-symfony--ux-dropzone--dropzone-max-files-value' => '3',
+        ], $view->vars['container_attr']);
+    }
+
+    public function testRenderRemoveLabelPassedToTheWidget(): void
+    {
+        $rendered = $this->renderWidget(['remove_label' => 'Remove', 'translation_domain' => 'dropzone_test']);
+
+        $this->assertStringContainsString('data-symfony--ux-dropzone--dropzone-remove-label-value="Delete this file"', $rendered);
+    }
+
+    public function testRenderContainerAttr(): void
+    {
+        $rendered = $this->render('dropzone_container_attr.html.twig', 'photo', ['multiple' => true, 'max_files' => 2]);
+
+        $this->assertSame('<div class="dropzone-container dropzone-container-multiple" data-controller="symfony--ux-dropzone--dropzone" data-symfony--ux-dropzone--dropzone-remove-label-value="Remove" data-symfony--ux-dropzone--dropzone-multiple-value="true" data-symfony--ux-dropzone--dropzone-max-files-value="2"></div>', trim($rendered));
+    }
+
+    public function testRenderTranslatedRemoveLabel(): void
+    {
+        $rendered = $this->renderForm(['translation_domain' => 'dropzone_test']);
+
+        $this->assertStringContainsString('data-symfony--ux-dropzone--dropzone-remove-label-value="Delete this file"', $rendered);
+    }
+
+    public function testRenderDataControllerPassedToTheWidget(): void
+    {
+        $rendered = $this->renderWidget(['attr' => ['data-controller' => 'other']]);
+
+        $this->assertStringContainsString('<div class="dropzone-container" data-controller="other symfony--ux-dropzone--dropzone"', $rendered);
+        $this->assertStringNotContainsString('data-controller=""', $rendered);
     }
 
     public function testRenderFormMultiple(): void
