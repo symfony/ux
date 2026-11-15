@@ -74,18 +74,6 @@ final class ComponentRuntime
 
     public function inject(string $key, mixed $default = null): mixed
     {
-        $skippedSelf = false;
-        foreach ($this->componentStack as $mounted) {
-            if (!$skippedSelf) {
-                $skippedSelf = true;
-                continue;
-            }
-
-            if ($mounted->hasProvided($key)) {
-                return $mounted->getProvided($key);
-            }
-        }
-
-        return $default;
+        return $this->componentStack->getProvidedByAncestor($key, $default);
     }
 }

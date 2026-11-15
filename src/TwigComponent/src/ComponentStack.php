@@ -50,10 +50,25 @@ class ComponentStack implements \IteratorAggregate
      */
     public function getParentComponent(): ?MountedComponent
     {
-        $components = $this->components;
-        array_pop($components);
+        return $this->components[\count($this->components) - 2] ?? null;
+    }
 
-        return array_pop($components);
+    /**
+     * The value the closest ancestor of the current component provided for the given key.
+     *
+     * @internal
+     */
+    public function getProvidedByAncestor(string $key, mixed $default = null): mixed
+    {
+        for ($index = \count($this->components) - 2; $index >= 0; --$index) {
+            $mounted = $this->components[$index];
+
+            if ($mounted->hasProvided($key)) {
+                return $mounted->getProvided($key);
+            }
+        }
+
+        return $default;
     }
 
     public function hasParentComponent(): bool
