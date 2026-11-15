@@ -30,6 +30,7 @@ export default class export_default extends Controller {
   private processingCount;
   private readonly dragTargets;
   private queue;
+  private readonly pendingSelections;
   private generation;
   private dropping;
   private form;
@@ -52,9 +53,9 @@ export default class export_default extends Controller {
   private add;
   private removeFileAt;
   private checkAccept;
+  private checkMaxFiles;
   private syncInput;
   private reject;
-  private containsFile;
   private render;
   private buildListItem;
   private buildListItemFromTemplate;
