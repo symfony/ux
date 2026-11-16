@@ -63,6 +63,22 @@ final class TemplateCacheWarmerTest extends TestCase
         );
     }
 
+    public function testWarmUpWritesTheObscuredNameOfEachTemplate(): void
+    {
+        $this->templateCacheWarmer->warmUp($this->cacheDir);
+        $adapter = new PhpArrayAdapter($this->cacheFile, new NullAdapter());
+
+        $obscuredNames = $adapter->getItem('obscured_names')->get();
+
+        $this->assertSame(
+            [
+                'template1' => hash('xxh128', 'template1secret'),
+                'template2' => hash('xxh128', 'template2secret'),
+            ],
+            $obscuredNames
+        );
+    }
+
     public function testWarmUpCreatesReproductibleTemplateMap(): void
     {
         $this->templateCacheWarmer->warmUp($this->cacheDir);

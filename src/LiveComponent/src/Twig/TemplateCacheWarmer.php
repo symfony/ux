@@ -38,7 +38,7 @@ final class TemplateCacheWarmer implements CacheWarmerInterface
         asort($map);
 
         $cacheFile = \sprintf('%s%s%s', $buildDir ?? $cacheDir, \DIRECTORY_SEPARATOR, $this->cacheFilename);
-        PhpArrayAdapter::create($cacheFile, new NullAdapter())->warmUp(['map' => $map]);
+        PhpArrayAdapter::create($cacheFile, new NullAdapter())->warmUp(['map' => $map, 'obscured_names' => array_flip($map)]);
 
         return [];
     }
