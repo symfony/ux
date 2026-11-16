@@ -131,6 +131,23 @@ describeRecipe('shadcn/tooltip', () => {
         await expect(page.getByRole('tooltip')).toHaveText('Add to library');
     });
 
+    test('opens above a modal dialog that contains its trigger', async ({ page, gotoExample }) => {
+        await gotoExample('shadcn/tooltip/default');
+        await page.locator('#tooltip-demo').evaluate((element) => {
+            const dialog = document.createElement('dialog');
+            document.body.append(dialog);
+            dialog.append(element);
+            dialog.showModal();
+        });
+
+        await page.getByRole('button', { name: 'Hover' }).hover();
+
+        const wrapper = page.locator('[data-slot="tooltip-wrapper"]');
+        await expect(wrapper.locator('[data-slot="tooltip-content"]')).toBeVisible();
+        // A modal dialog is in the top layer, so only another element of the top layer is displayed above it.
+        expect(await wrapper.evaluate((element) => element.matches(':popover-open'))).toBe(true);
+    });
+
     test('waits for the delay before opening', async ({ page, gotoExample }) => {
         await gotoExample('shadcn/tooltip/default', { timers: 'fake' });
         await page.locator('#tooltip-demo').evaluate((element) => {
