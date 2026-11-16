@@ -1,8 +1,10 @@
+{#- `anchor()` insets rather than `position-area`, which Firefox misplaces in right-to-left: https://bugzil.la/2019601 -#}
 <div
     role="menu"
     data-slot="menubar-sub-content"
+    data-menubar-sub-target="content"
     {{ attributes.defaults({
-        class: 'invisible opacity-0 group-data-[state=open]/menubar-sub:visible group-data-[state=open]/menubar-sub:opacity-100 transition-opacity duration-100 absolute start-full top-0 z-50 ms-1 w-max min-w-32 overflow-hidden rounded-lg bg-popover p-1 text-popover-foreground shadow-lg ring-1 ring-foreground/10'|tailwind_classes,
+        class: 'invisible opacity-0 group-data-[state=open]/menubar-sub:visible group-data-[state=open]/menubar-sub:opacity-100 transition-opacity duration-100 absolute start-full top-0 z-50 ms-1 w-max min-w-32 overflow-visible rounded-lg bg-popover p-1 text-popover-foreground shadow-lg ring-1 ring-foreground/10 before:absolute before:inset-y-0 before:-inset-x-1 [&[popover]:not(:popover-open)]:hidden [&[popover]]:inset-auto [&[popover]]:start-[anchor(outside)] [&[popover]]:top-[anchor(top)] starting:open:opacity-0 [&[popover]]:[position-try-fallbacks:flip-inline,flip-block,flip-block_flip-inline]'|tailwind_classes,
     }) }}
 >
     {##- The sub-menu items revealed on hover or focus. -#}

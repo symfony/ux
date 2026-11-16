@@ -510,6 +510,7 @@ To enable RTL support, set the `dir="rtl"` attribute on the root element.
 - `Escape` closes every open menu. Menus also open on hover and on focus, so a keyboard user reaches a sub-menu by tabbing to its trigger.
 - `Menubar:CheckboxItem` and `Menubar:RadioItem` are backed by a real `<input>` kept visually hidden, so their checked state is exposed by the browser and they submit with the form. Give a `Menubar:RadioGroup` a `name` so its items are mutually exclusive.
 - `Menubar:Separator` renders `role="separator"` and `Menubar:RadioGroup` renders `role="group"`. Give the radio group an `aria-label` so the choice it represents is announced.
+- In browsers with the [Popover API](https://developer.mozilla.org/en-US/docs/Web/API/Popover_API) and [anchor positioning](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_anchor_positioning), menus and sub-menus open in the top layer, so no ancestor clips them. They flip to the other side of their trigger when there is no room.
 - The check and bullet icons are decorative and carry `aria-hidden="true"`, so keep the item text meaningful on its own.
 
 ## API Reference
