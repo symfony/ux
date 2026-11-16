@@ -67,8 +67,7 @@ final class BlockStack
 
     public function __call(string $name, array $arguments)
     {
-        $callingEmbeddedTemplateIndex = $this->findCallingEmbeddedTemplateIndex();
-        $hostEmbeddedTemplateIndex = $this->findHostEmbeddedTemplateIndexFromCaller();
+        [$callingEmbeddedTemplateIndex, $hostEmbeddedTemplateIndex] = $this->findCallingAndHostEmbeddedTemplateIndexes();
 
         return $this->stack[$name][$callingEmbeddedTemplateIndex][$hostEmbeddedTemplateIndex] ?? self::OUTER_BLOCK_FALLBACK_NAME;
     }
@@ -98,21 +97,14 @@ final class BlockStack
         return 0;
     }
 
-    private function findCallingEmbeddedTemplateIndex(): int
+    /**
+     * @return array{int, int} The index of the template calling outerBlocks, and the index of the embedded template that has the outer block definition
+     */
+    private function findCallingAndHostEmbeddedTemplateIndexes(): array
     {
         $backtrace = debug_backtrace(\DEBUG_BACKTRACE_IGNORE_ARGS | \DEBUG_BACKTRACE_PROVIDE_OBJECT);
 
-        foreach ($backtrace as $trace) {
-            if (isset($trace['object']) && $trace['object'] instanceof Template) {
-                return self::getTemplateIndexFromTemplateClassname($trace['object']::class);
-            }
-        }
-    }
-
-    private function findHostEmbeddedTemplateIndexFromCaller(): int
-    {
-        $backtrace = debug_backtrace(\DEBUG_BACKTRACE_IGNORE_ARGS | \DEBUG_BACKTRACE_PROVIDE_OBJECT);
-
+        $callingEmbeddedTemplateIndex = null;
         $blockCallerStack = [];
         $renderer = null;
 
@@ -120,6 +112,7 @@ final class BlockStack
             if (isset($trace['object']) && $trace['object'] instanceof Template) {
                 $classname = $trace['object']::class;
                 $templateIndex = self::getTemplateIndexFromTemplateClassname($classname);
+                $callingEmbeddedTemplateIndex ??= $templateIndex;
                 if (null === $renderer) {
                     if ($templateIndex) {
                         // This class is an embedded template.
@@ -142,12 +135,12 @@ final class BlockStack
 
                 // This is the first template that's not part of the callstack,
                 // so it's the template that has the outer block definition.
-                return $templateIndex;
+                return [$callingEmbeddedTemplateIndex, $templateIndex];
             }
         }
 
         // If the component is not an embedded one, just return 0, so the fallback content (aka nothing) is used.
-        return 0;
+        return [$callingEmbeddedTemplateIndex ?? 0, 0];
     }
 
     private static function getTemplateIndexFromTemplateClassname(string $classname): int
