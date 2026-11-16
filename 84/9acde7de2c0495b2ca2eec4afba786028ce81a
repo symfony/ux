@@ -1,0 +1,9 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2026-11-15T10:29:56Z
+
+Thanks for this one! I rebased it and removed the 32-frame limit, keeping the single backtrace and the single pass.
+
+A bounded backtrace with a fallback is a pattern we chose not to rely on in this package (see #3778).
+
+With one full backtrace, the eight-component chain of your test goes from 157-161 µs to 141-145 µs, where the limited version fell back and stayed at 160 µs.
