@@ -105,6 +105,16 @@ final class ComponentMetadata
         return $this->config['post_mount'] ?? [];
     }
 
+    /**
+     * @return array<string, true> The public properties that can be assigned without the property accessor
+     *
+     * @internal
+     */
+    public function getDirectWrites(): array
+    {
+        return $this->config['direct_writes'] ?? [];
+    }
+
     public function get(string $key, mixed $default = null): mixed
     {
         return $this->config[$key] ?? $default;

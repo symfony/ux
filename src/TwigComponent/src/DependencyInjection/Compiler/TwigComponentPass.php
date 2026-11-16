@@ -16,6 +16,7 @@ use Symfony\Component\DependencyInjection\Compiler\ServiceLocatorTagPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Exception\LogicException;
 use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Component\PropertyInfo\Attribute\WithAccessors;
 use Symfony\UX\TwigComponent\Attribute\PostMount;
 use Symfony\UX\TwigComponent\Attribute\PreMount;
 
@@ -68,7 +69,11 @@ final class TwigComponentPass implements CompilerPassInterface
                 $tag['service_id'] = $id;
                 $tag['class'] = $definition->getClass();
                 $tag['template'] ??= $this->calculateTemplate($tag['key'], $defaults);
-                $componentConfig[$tag['key']] = [...$tag, ...$this->getMountMethods($tag['class'])];
+                $componentConfig[$tag['key']] = [
+                    ...$tag,
+                    ...$this->getMountMethods($tag['class']),
+                    'direct_writes' => $this->getDirectWrites($tag['class']),
+                ];
                 $componentReferences[$tag['key']] = new Reference($id);
                 $componentNames[] = $tag['key'];
                 $componentClassMap[$tag['class']] = $tag['key'];
@@ -139,5 +144,44 @@ final class TwigComponentPass implements CompilerPassInterface
             'mount' => array_keys($mount),
             'post_mount' => array_keys($postMount),
         ];
+    }
+
+    /**
+     * Lists the public properties whose direct assignment gives the same result as the property accessor.
+     *
+     * The accessor looks for a mutator method before falling back to the property, so a class that declares one must keep going through it.
+     *
+     * @param class-string $component
+     *
+     * @return array<string, true>
+     */
+    private function getDirectWrites(string $component): array
+    {
+        $class = new \ReflectionClass($component);
+        if ($class->hasMethod('__set')) {
+            return [];
+        }
+
+        $methods = [];
+        foreach ($class->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
+            $name = strtolower(str_replace('_', '', $method->getName()));
+            if (str_starts_with($name, 'add') || str_starts_with($name, 'remove')) {
+                return [];
+            }
+
+            $methods[$name] = true;
+        }
+
+        $directWrites = [];
+        foreach ($class->getProperties(\ReflectionProperty::IS_PUBLIC) as $property) {
+            $name = strtolower(str_replace('_', '', $property->getName()));
+            $hasMutator = isset($methods[$name]) || isset($methods['set'.$name]);
+
+            if (!$hasMutator && !$property->hasHooks() && !$property->getAttributes(WithAccessors::class)) {
+                $directWrites[$property->getName()] = true;
+            }
+        }
+
+        return $directWrites;
     }
 }
