@@ -471,6 +471,17 @@ final class ComponentAttributesTest extends TestCase
         $this->assertSame(' data-&#x00E9;="foo"', (string) $attributes);
     }
 
+    public function testRendersStringValuesAsIs(): void
+    {
+        $attributes = new ComponentAttributes([
+            'aria-hidden' => 'true',
+            'data-config' => '{"a":1}',
+            'style' => 'color:red',
+        ], new EscaperRuntime());
+
+        $this->assertSame(' aria-hidden="true" data-config="{&quot;a&quot;:1}" style="color:red"', (string) $attributes);
+    }
+
     public static function nameProvider(): iterable
     {
         // Should not escape
