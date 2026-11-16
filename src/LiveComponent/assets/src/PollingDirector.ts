@@ -34,6 +34,7 @@ export default class {
         this.pollingIntervals.forEach((interval) => {
             clearInterval(interval);
         });
+        this.pollingIntervals = [];
     }
 
     clearPolling(): void {
