@@ -92,7 +92,10 @@ final class ComponentRenderer implements ComponentRendererInterface, ResetInterf
 
     public function startEmbeddedComponentRender(string $name, array $props, array $context, string $hostTemplateName, int $index): PreRenderEvent
     {
-        $context[PreRenderEvent::EMBEDDED] = true;
+        // Writing the key unconditionally would copy the caller's context, even when it already holds it
+        if (true !== ($context[PreRenderEvent::EMBEDDED] ?? null)) {
+            $context[PreRenderEvent::EMBEDDED] = true;
+        }
 
         $mounted = $this->factory->create($name, $props);
         $mounted->addExtraMetadata('hostTemplate', $hostTemplateName);
@@ -135,12 +138,8 @@ final class ComponentRenderer implements ComponentRendererInterface, ResetInterf
 
         // expose public properties and properties marked with ExposeInTemplate attribute
         $inputProps = $mounted->getInputProps();
-        $variables = [
-            ...$context,
-            ...$inputProps,
-            ...$classProps,
-            $metadata->getAttributesVar() => $mounted->getAttributes(),
-        ];
+        $variables = array_merge($context, $inputProps, $classProps);
+        $variables[$metadata->getAttributesVar()] = $mounted->getAttributes();
         if ($this->factory->hasListenersFor(PreRenderEvent::class, $metadata, $inputProps)) {
             $event = new PreRenderEvent($mounted, $metadata, $variables);
             $this->dispatcher->dispatch($event);
