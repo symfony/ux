@@ -26,7 +26,6 @@ use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Contracts\Service\ServiceSubscriberInterface;
-use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\Attribute\LiveArg;
 use Symfony\UX\LiveComponent\LiveComponentHydrator;
 use Symfony\UX\LiveComponent\LiveResponse;
@@ -162,7 +161,7 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
             throw new \RuntimeException('Not a valid live component.');
         }
 
-        if (!$request->attributes->get('_component_default_action', false) && !AsLiveComponent::isActionAllowed($component, $action)) {
+        if (!$request->attributes->get('_component_default_action', false) && !$this->container->get(LiveComponentMetadataFactory::class)->isActionAllowed($component, $action)) {
             throw new NotFoundHttpException(\sprintf('The action "%s" either doesn\'t exist or is not allowed in "%s". Make sure it exist and has the LiveAction attribute above it.', $action, $component::class));
         }
 
@@ -370,8 +369,8 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
     {
         $component = $mounted->getComponent();
 
-        foreach (AsLiveComponent::preReRenderMethods($component) as $method) {
-            $component->{$method->name}();
+        foreach ($this->container->get(LiveComponentMetadataFactory::class)->preReRenderMethods($component) as $method) {
+            $component->{$method}();
         }
 
         $html = $this->container->get(ComponentRenderer::class)->render($mounted);

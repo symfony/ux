@@ -12,7 +12,6 @@
 namespace Symfony\UX\LiveComponent\Util;
 
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\LiveComponentHydrator;
 use Symfony\UX\LiveComponent\LiveResponder;
 use Symfony\UX\LiveComponent\Metadata\LiveComponentMetadataFactory;
@@ -61,7 +60,7 @@ class LiveControllerAttributesCreator
         $url = $this->urlGenerator->generate($metadata->get('route'), ['_live_component' => $mounted->getName()], $metadata->get('url_reference_type'));
         $attributesCollection->setUrl($url);
 
-        $liveListeners = AsLiveComponent::liveListeners($mounted->getComponent());
+        $liveListeners = $this->metadataFactory->liveListeners($mounted->getComponent());
         if ($liveListeners) {
             $attributesCollection->setListeners($liveListeners);
         }

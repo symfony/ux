@@ -27,7 +27,6 @@ use Symfony\Component\TypeInfo\Type\ObjectType;
 use Symfony\Component\TypeInfo\Type\WrappingTypeInterface;
 use Symfony\Component\TypeInfo\TypeIdentifier;
 use Symfony\Component\Uid\AbstractUid;
-use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Symfony\UX\LiveComponent\Exception\HydrationException;
 use Symfony\UX\LiveComponent\Hydration\HydrationExtensionInterface;
@@ -80,8 +79,8 @@ final class LiveComponentHydrator
 
     public function dehydrate(object $component, ComponentAttributes $attributes, LiveComponentMetadata $componentMetadata): DehydratedProps
     {
-        foreach (AsLiveComponent::preDehydrateMethods($component) as $method) {
-            $component->{$method->name}();
+        foreach ($this->liveComponentMetadataFactory->preDehydrateMethods($component) as $method) {
+            $component->{$method}();
         }
 
         $takenFrontendPropertyNames = [];
@@ -261,8 +260,8 @@ final class LiveComponentHydrator
             $this->processOnUpdatedHook($component, $frontendName, $propMetadata, $dehydratedUpdatedProps, $dehydratedOriginalProps);
         }
 
-        foreach (AsLiveComponent::postHydrateMethods($component) as $method) {
-            $component->{$method->name}();
+        foreach ($this->liveComponentMetadataFactory->postHydrateMethods($component) as $method) {
+            $component->{$method}();
         }
 
         return $attributes;
