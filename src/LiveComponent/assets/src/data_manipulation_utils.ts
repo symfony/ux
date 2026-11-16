@@ -1,11 +1,21 @@
 export function getDeepData(data: any, propertyPath: string) {
-    const { currentLevelData, finalKey } = parseDeepData(data, propertyPath);
+    const parts = propertyPath.split('.');
+
+    let currentLevelData = data;
+    for (let i = 0; i < parts.length - 1; i++) {
+        currentLevelData = currentLevelData[parts[i]];
+    }
 
     if (currentLevelData === undefined) {
         return undefined;
     }
 
-    return currentLevelData[finalKey];
+    const value = currentLevelData[parts[parts.length - 1]];
+    if (typeof value !== 'object' || value === null) {
+        return value;
+    }
+
+    return JSON.parse(JSON.stringify(value));
 }
 
 // post.user.username
