@@ -16,6 +16,7 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Twig\Environment;
 use Twig\Loader\ArrayLoader;
 use Twig\Loader\ChainLoader;
+use Twig\TwigFunction;
 
 /**
  * @author Hugo Alliaume <hugo@alliau.me>
@@ -134,6 +135,82 @@ final class ComponentNodeTest extends KernelTestCase
             [],
             '<div class="foo" id="bar"/>',
         ];
+    }
+
+    #[DataProvider('provideOuterBlocksTemplates')]
+    public function testOuterBlocksAreConvertedOnlyForAContentThatMayReadThem(string $template, array $context, int $conversions, int $passThroughs, string $expected): void
+    {
+        $environment = $this->createEnvironment($template);
+        $source = $environment->getLoader()->getSourceContext(self::TEMPLATE);
+
+        $code = $environment->compileSource($source);
+        $output = $environment->render(self::TEMPLATE, $context);
+
+        $this->assertSame($conversions, substr_count($code, '->convert('));
+        $this->assertSame($passThroughs, substr_count($code, '->passThrough('));
+        $this->assertSame($expected, trim($output));
+    }
+
+    public static function provideOuterBlocksTemplates(): iterable
+    {
+        yield 'content without outerBlocks' => [
+            '<twig:OuterBlocksPassThrough:Box>content</twig:OuterBlocksPassThrough:Box>',
+            [],
+            0,
+            1,
+            '<box>content</box>',
+        ];
+        yield 'content reading outerBlocks' => [
+            '<twig:OuterBlocksPassThrough:Box>[{{ block(outerBlocks.missing) }}]</twig:OuterBlocksPassThrough:Box>',
+            [],
+            1,
+            0,
+            '<box>[]</box>',
+        ];
+        yield 'content reading the whole context' => [
+            "<twig:OuterBlocksPassThrough:Box>{{ _context.outerBlocks is defined ? 'yes' }}</twig:OuterBlocksPassThrough:Box>",
+            [],
+            1,
+            0,
+            '<box>yes</box>',
+        ];
+        yield 'content rendering a block by a runtime name' => [
+            '<twig:OuterBlocksPassThrough:Box>{{ block(name) }}{% block foo %}foo{% endblock %}</twig:OuterBlocksPassThrough:Box>',
+            ['name' => 'foo'],
+            1,
+            0,
+            '<box>foo</box>',
+        ];
+        yield 'content rendering a block by a constant name' => [
+            "<twig:OuterBlocksPassThrough:Box>{{ block('foo') }}{% block foo %}foo{% endblock %}</twig:OuterBlocksPassThrough:Box>",
+            [],
+            0,
+            1,
+            '<box>foo</box>',
+        ];
+        yield 'outerBlocks read only by a nested component' => [
+            '<twig:OuterBlocksPassThrough:Box><twig:OuterBlocksPassThrough:Box>[{{ block(outerBlocks.missing) }}]</twig:OuterBlocksPassThrough:Box></twig:OuterBlocksPassThrough:Box>',
+            [],
+            1,
+            1,
+            "<box><box>[]</box>\n</box>",
+        ];
+    }
+
+    public function testOuterBlocksAreConvertedForAContentCallingAFunctionThatReceivesTheContext(): void
+    {
+        $template = '{% block foo %}foo{% endblock %}|<twig:OuterBlocksPassThrough:Box><twig:OuterBlocksPassThrough:Show :name="outer_block_name(\'foo\')">content</twig:OuterBlocksPassThrough:Show></twig:OuterBlocksPassThrough:Box>';
+        $environment = $this->createEnvironment($template);
+        $outerBlockName = static fn (array $context, string $name): string => $context['outerBlocks']->$name();
+        $environment->addFunction(new TwigFunction('outer_block_name', $outerBlockName, ['needs_context' => true]));
+        $source = $environment->getLoader()->getSourceContext(self::TEMPLATE);
+
+        $code = $environment->compileSource($source);
+        $output = $environment->render(self::TEMPLATE);
+
+        $this->assertSame(1, substr_count($code, '->convert('));
+        $this->assertSame(1, substr_count($code, '->passThrough('));
+        $this->assertSame("foo|<box><show>foo|content</show>\n</box>", trim($output));
     }
 
     private function createEnvironment(string $template): Environment

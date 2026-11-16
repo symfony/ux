@@ -15,6 +15,8 @@ use Symfony\UX\TwigComponent\BlockStack;
 use Twig\Error\SyntaxError;
 use Twig\Node\Expression\AbstractExpression;
 use Twig\Node\Expression\ArrayExpression;
+use Twig\Node\Expression\BlockReferenceExpression;
+use Twig\Node\Expression\CallExpression;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\NameExpression;
 use Twig\Node\Expression\Variable\ContextVariable;
@@ -79,7 +81,7 @@ final class ComponentTokenParser extends AbstractTokenParser
 
         $stream->expect(Token::BLOCK_END_TYPE);
 
-        return new ComponentNode($componentNameExpression, $module->getTemplateName(), $module->getAttribute('index'), $propsExpression, $only, $token->getLine());
+        return new ComponentNode($componentNameExpression, $module->getTemplateName(), $module->getAttribute('index'), $propsExpression, $only, $token->getLine(), self::readsOuterBlocks($module));
     }
 
     public function getTag(): string
@@ -153,5 +155,28 @@ final class ComponentTokenParser extends AbstractTokenParser
         }
 
         return (int) $index;
+    }
+
+    /**
+     * Reading _context, a block() name only known at runtime (an alias may hold "outerBlocks"), or calling a function, a filter or a test that receives the context, counts too.
+     */
+    private static function readsOuterBlocks(Node $node): bool
+    {
+        if (($node instanceof NameExpression || $node instanceof ContextVariable) && \in_array($node->getAttribute('name'), ['outerBlocks', '_context'], true)) {
+            return true;
+        }
+        if ($node instanceof BlockReferenceExpression && !$node->getNode('name') instanceof ConstantExpression) {
+            return true;
+        }
+        if ($node instanceof CallExpression && $node->getAttribute('twig_callable')->needsContext()) {
+            return true;
+        }
+        foreach ($node as $child) {
+            if (self::readsOuterBlocks($child)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
