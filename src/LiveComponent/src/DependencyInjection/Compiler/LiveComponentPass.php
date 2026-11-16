@@ -33,5 +33,7 @@ final class LiveComponentPass implements CompilerPassInterface
 
         $debugCommandDefinition = $container->findDefinition('ux.live_component.command.debug');
         $debugCommandDefinition->setArgument(1, $liveComponentList);
+
+        $container->findDefinition('ux.live_component.metadata_cache_warmer')->setArgument(1, array_values($liveComponentList));
     }
 }
