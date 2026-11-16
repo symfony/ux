@@ -1,5 +1,9 @@
 import { Controller } from '@hotwired/stimulus';
 
+// The native path needs both: a popover without anchor positioning would be centred by the browser.
+const native = HTMLElement.prototype.hasOwnProperty('popover') && CSS.supports('position-area', 'block-end');
+let anchors = 0;
+
 /**
  * Behavior of the `Combobox` component: filtering, keyboard navigation, single and multiple
  * selection, and the hidden inputs carrying the selection on form submission.
@@ -61,10 +65,35 @@ export default class extends Controller {
         value: { type: Array, default: [] },
     };
 
+    #anchor = `--combobox-${++anchors}`;
+
     connect() {
         this.#identifyItems();
-        this.#reflectState();
+        this.#render();
         this.#reflectSelection();
+    }
+
+    disconnect() {
+        this.#reflectState(false);
+    }
+
+    contentTargetConnected(content) {
+        if (!native) {
+            return;
+        }
+        this.#connectNative(content);
+        content.addEventListener('beforetoggle', this.#onBeforeToggle);
+    }
+
+    contentTargetDisconnected(content) {
+        if (!native) {
+            return;
+        }
+        content.removeEventListener('beforetoggle', this.#onBeforeToggle);
+        content.removeAttribute('popover');
+        content.style.removeProperty('position-anchor');
+        content.style.removeProperty('transform-origin');
+        this.element.style.removeProperty('anchor-name');
     }
 
     toggle(event) {
@@ -88,7 +117,7 @@ export default class extends Controller {
 
         if (this.#inputInContent) {
             // Stimulus calls `openValueChanged()` only once it observes the change: until then the content is hidden and its input cannot take the focus.
-            this.#reflectState();
+            this.#render();
             this.focusInput();
         }
     }
@@ -247,7 +276,7 @@ export default class extends Controller {
     }
 
     openValueChanged() {
-        this.#reflectState();
+        this.#render();
     }
 
     valueValueChanged() {
@@ -356,8 +385,14 @@ export default class extends Controller {
         }
     }
 
-    #reflectState() {
-        const open = this.openValue;
+    #render() {
+        this.#reflectState(this.openValue);
+        if (native && this.hasContentTarget) {
+            this.#toggleNative(this.contentTarget, this.openValue);
+        }
+    }
+
+    #reflectState(open) {
         const state = open ? 'open' : 'closed';
 
         this.element.dataset.state = state;
@@ -376,6 +411,47 @@ export default class extends Controller {
             content.setAttribute('aria-hidden', String(!open));
         }
     }
+
+    #toggleNative(content, open) {
+        this.#connectNative(content);
+        if (content.matches(':popover-open') !== open) {
+            content.togglePopover(open);
+            if (open) {
+                this.#placeTransformOrigin(content);
+            }
+        }
+    }
+
+    // Idempotent, as a Turbo morph strips what it sets.
+    #connectNative(content) {
+        if ('manual' !== content.popover) {
+            // Without a transition, so a closed list goes straight to `display: none`.
+            content.style.transition = 'none';
+            // `manual`: the browser's light dismiss would also close it on a click in the input.
+            content.popover = 'manual';
+            content.getBoundingClientRect();
+            content.style.removeProperty('transition');
+        }
+        content.style.positionAnchor = this.#anchor;
+        this.element.style.setProperty('anchor-name', this.#anchor);
+    }
+
+    // The browser can flip the list to the other side of its anchor, so it grows from the edge next to it.
+    #placeTransformOrigin(content) {
+        const box = content.getBoundingClientRect();
+        const anchor = this.element.getBoundingClientRect();
+        const x = Math.min(Math.max((anchor.left + anchor.width / 2 - box.left) / box.width, 0), 1);
+        const y = Math.min(Math.max((anchor.top + anchor.height / 2 - box.top) / box.height, 0), 1);
+        content.style.transformOrigin = `${x * 100}% ${y * 100}%`;
+    }
+
+    // Keeps the state in sync when something else hides the list, e.g. the page entering fullscreen.
+    #onBeforeToggle = (event) => {
+        if ('closed' === event.newState) {
+            this.#placeTransformOrigin(event.target);
+            this.close();
+        }
+    };
 
     #reflectSelection() {
         const values = this.valueValue;

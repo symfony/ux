@@ -371,6 +371,39 @@ You can add an addon to the combobox by rendering an `InputGroup:Addon` inside t
 </div>
 ```
 
+### Side and Alignment
+
+Use the `side` prop to choose the side of the input the content opens on, and the `align` prop to align it to the `start`, `center` or `end` of the input.
+
+```twig {"preview":true}
+{% set frameworks = ['Next.js', 'SvelteKit', 'Nuxt.js', 'Remix', 'Astro'] %}
+{% set placements = [
+    {side: 'top', align: 'start'},
+    {side: 'top', align: 'center'},
+    {side: 'top', align: 'end'},
+    {side: 'right', align: 'center'},
+    {side: 'left', align: 'center'},
+    {side: 'bottom', align: 'start'},
+    {side: 'bottom', align: 'center'},
+    {side: 'bottom', align: 'end'},
+] %}
+<div class="mx-auto grid w-full max-w-md grid-cols-3 content-start gap-2 pt-40" style="min-height: 480px">
+    {% for placement in placements %}
+        <twig:Combobox id="framework-{{ placement.side }}-{{ placement.align }}" class="{{ placement.side == 'left' ? 'col-start-3' : '' }}">
+            <twig:Combobox:Input placeholder="{{ placement.side }} {{ placement.align }}" />
+            <twig:Combobox:Content side="{{ placement.side }}" align="{{ placement.align }}" class="w-40">
+                <twig:Combobox:Empty>No items found.</twig:Combobox:Empty>
+                <twig:Combobox:List>
+                    {% for framework in frameworks %}
+                        <twig:Combobox:Item value="{{ framework }}">{{ framework }}</twig:Combobox:Item>
+                    {% endfor %}
+                </twig:Combobox:List>
+            </twig:Combobox:Content>
+        </twig:Combobox>
+    {% endfor %}
+</div>
+```
+
 ### RTL
 
 To enable RTL support, set the `dir="rtl"` attribute on the root element.
@@ -425,6 +458,7 @@ To enable RTL support, set the `dir="rtl"` attribute on the root element.
 - `Combobox:List` renders `role="listbox"` with `aria-multiselectable`, each `Combobox:Item` renders `role="option"` with `aria-selected`, and a `Combobox:Group` wraps its items in `role="group"` labelled by its `Combobox:Label`.
 - The highlighted item is referenced by `aria-activedescendant` on the input, so the focus stays in the input while the reading order follows the highlight.
 - `ArrowDown` and `ArrowUp` move through the items, `Home` and `End` jump to the first and last, `Enter` selects the highlighted item and `Escape` closes the list. In a popup, the focus goes back to the button that opened it. In a multiple selection, `Backspace` on an empty input removes the last chip.
+- In browsers with the [Popover API](https://developer.mozilla.org/en-US/docs/Web/API/Popover_API) and [anchor positioning](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_anchor_positioning), the list opens in the top layer, so no ancestor clips it. It flips to the other side of the input when there is no room.
 - Set `id` so the internal ARIA references are unique, and give the combobox a visible `Field:Label` bound to the input with `for`, since the input's own text is only the current selection.
 - The clear button carries `aria-label="Clear selection"` and each chip's remove button `aria-label="Remove"`. Translate them when your interface is not in English.
 
