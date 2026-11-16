@@ -42,6 +42,31 @@ class LiveComponentExtensionTest extends TestCase
         $this->assertSame('custom_secret', $container->getDefinition('ux.live_component.fingerprint_calculator')->getArgument(0));
     }
 
+    public function testMetadataFactoryReadsTheCacheWhenNotInDebugMode(): void
+    {
+        $container = $this->createContainer();
+        $container->registerExtension(new LiveComponentExtension());
+        $container->loadFromExtension('live_component', []);
+        $this->compileContainer($container);
+
+        $cache = $container->getDefinition('ux.live_component.metadata_factory')->getArgument(3);
+
+        $this->assertSame('cache.ux.live_component', (string) $cache);
+    }
+
+    public function testMetadataFactoryHasNoCacheInDebugMode(): void
+    {
+        $container = $this->createContainer();
+        $container->setParameter('kernel.debug', true);
+        $container->registerExtension(new LiveComponentExtension());
+        $container->loadFromExtension('live_component', []);
+        $this->compileContainer($container);
+
+        $cache = $container->getDefinition('ux.live_component.metadata_factory')->getArgument(3);
+
+        $this->assertNull($cache);
+    }
+
     private function createContainer(): ContainerBuilder
     {
         $container = new ContainerBuilder(new ParameterBag([

@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\LiveComponent\Metadata;
 
+use Psr\Cache\CacheItemPoolInterface;
 use Symfony\Component\PropertyInfo\PropertyTypeExtractorInterface;
 use Symfony\Component\TypeInfo\Exception\UnsupportedException;
 use Symfony\Component\TypeInfo\Type;
@@ -34,6 +35,7 @@ class LiveComponentMetadataFactory implements ResetInterface
         private ComponentFactory $componentFactory,
         private PropertyTypeExtractorInterface $propertyTypeExtractor,
         private TypeResolver $typeResolver,
+        private ?CacheItemPoolInterface $cache = null,
     ) {
     }
 
@@ -45,10 +47,34 @@ class LiveComponentMetadataFactory implements ResetInterface
 
         $componentMetadata = $this->componentFactory->metadataFor($name);
 
-        $reflectionClass = new \ReflectionClass($componentMetadata->getClass());
-        $livePropsMetadata = $this->createPropMetadatas($reflectionClass);
+        $class = $componentMetadata->getClass();
+        $livePropsMetadata = $this->cache?->getItem(self::cacheKey($class))->get();
+        $livePropsMetadata ??= $this->createPropMetadatas(new \ReflectionClass($class));
 
         return $this->liveComponentMetadata[$name] = new LiveComponentMetadata($componentMetadata, $livePropsMetadata);
+    }
+
+    /**
+     * @param list<class-string> $classes
+     */
+    public function warmUp(array $classes): void
+    {
+        if (!$this->cache) {
+            return;
+        }
+
+        foreach ($classes as $class) {
+            try {
+                $livePropsMetadata = $this->createPropMetadatas(new \ReflectionClass($class));
+            } catch (\Throwable) {
+                // an invalid component must keep failing when it is used, not when the cache is warmed up
+                continue;
+            }
+
+            $this->cache->saveDeferred($this->cache->getItem(self::cacheKey($class))->set($livePropsMetadata));
+        }
+
+        $this->cache->commit();
     }
 
     /**
@@ -116,6 +142,11 @@ class LiveComponentMetadataFactory implements ResetInterface
         if ($parent = $class->getParentClass()) {
             yield from self::propertiesFor($parent);
         }
+    }
+
+    private static function cacheKey(string $class): string
+    {
+        return hash('xxh128', $class);
     }
 
     public function reset(): void
