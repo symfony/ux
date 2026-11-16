@@ -1,0 +1,54 @@
+---------------------------------------------------------------------------
+
+by github-actions[bot] at 2026-08-13T02:16:10Z
+
+<h1>📊 Packages dist files size difference</h1>
+
+Thanks for the PR! Here is the difference in size of the packages dist files between the base branch and the PR.
+Please review the changes and make sure they are expected.
+
+<table>
+    <thead><tr><th>File</th><th>Before (Size / Gzip)</th><th>After (Size / Gzip)</th></tr></thead>
+    <tbody><tr><td colspan="3"><a href="https://github.com/smnandre/ux/tree/sa/ux-upload/src/Upload/assets/dist"><b>Upload</b></a></td></tr><tr>
+                <td><a href="https://github.com/smnandre/ux/blob/sa/ux-upload/src/Upload/assets/dist/live_upload_controller.d.ts"><code>live_upload_controller.d.ts</code></a></td>
+            <td><em>Added</em></td><td>
+                    <code>523 B</code>
+                    / <code>293 B</code>
+                </td></tr><tr>
+                <td><a href="https://github.com/smnandre/ux/blob/sa/ux-upload/src/Upload/assets/dist/live_upload_controller.js"><code>live_upload_controller.js</code></a></td>
+            <td><em>Added</em></td><td>
+                    <code>916 B</code>
+                    / <code>446 B</code>
+                </td></tr><tr>
+                <td><a href="https://github.com/smnandre/ux/blob/sa/ux-upload/src/Upload/assets/dist/style.min.css"><code>style.min.css</code></a></td>
+            <td><em>Added</em></td><td>
+                    <code>7 kB</code>
+                    / <code>1.68 kB</code>
+                </td></tr><tr>
+                <td><a href="https://github.com/smnandre/ux/blob/sa/ux-upload/src/Upload/assets/dist/upload_controller.d.ts"><code>upload_controller.d.ts</code></a></td>
+            <td><em>Added</em></td><td>
+                    <code>10.82 kB</code>
+                    / <code>2.38 kB</code>
+                </td></tr><tr>
+                <td><a href="https://github.com/smnandre/ux/blob/sa/ux-upload/src/Upload/assets/dist/upload_controller.js"><code>upload_controller.js</code></a></td>
+            <td><em>Added</em></td><td>
+                    <code>56.01 kB</code>
+                    / <code>13.12 kB</code>
+                </td></tr></tbody>
+</table>
+
+<!-- Sticky Pull Request Comment -->
+
+---------------------------------------------------------------------------
+
+by smnandre at 2026-09-12T23:24:06Z
+
+Test failures unrelated (autocomplete usual problems)
+
+@Kocal do you want me to split PR in smaller commits, now i've closed all feedback It would be less vital to keep the discussion I suppose ?
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-09-24T18:11:16Z
+
+Sorry didn't see you asked me something. A small squash + rebase, and feel free to merge and continue to iterate
