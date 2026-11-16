@@ -23,6 +23,21 @@ async function expectNoFullPageReload(page: Page): Promise<void> {
     expect(markerStillPresent).toBe(true);
 }
 
+/**
+ * Submit a form inside a Turbo Frame and wait for the frame to render the response.
+ * Mercure can deliver a broadcast before this response, which would then replace a form being filled.
+ */
+async function submitFrameForm(page: Page, submitSelector: string): Promise<void> {
+    const frame = page.locator('turbo-frame', { has: page.locator(submitSelector) });
+    await frame.evaluate((element) => {
+        (element as any).__rendered = new Promise<void>((resolve) =>
+            element.addEventListener('turbo:frame-render', () => resolve(), { once: true })
+        );
+    });
+    await page.click(submitSelector);
+    await frame.evaluate((element) => (element as any).__rendered);
+}
+
 test('Can navigate with Turbo Drive without full page reload', async ({ page }) => {
     await page.goto('/ux-turbo/drive');
     await markPageAsLoaded(page);
@@ -107,7 +122,7 @@ test('Turbo Broadcast — create, update and remove an entity via Mercure', asyn
     await page.goto('/ux-turbo/broadcast/books');
 
     await page.fill('#book-title', bookTitle);
-    await page.click('#book-submit');
+    await submitFrameForm(page, '#book-submit');
 
     // Wait for the Mercure-broadcasted Turbo Stream to append the new book
     const newBook = page.locator('#books-list .book-item', { hasText: bookTitle });
@@ -122,14 +137,14 @@ test('Turbo Broadcast — create, update and remove an entity via Mercure', asyn
     // Update
     await page.fill('#book-id', bookId);
     await page.fill('#book-title', 'updated');
-    await page.click('#book-submit');
+    await submitFrameForm(page, '#book-submit');
 
     await expect(page.locator(`#book_${bookId}`)).toContainText('updated', { timeout: MERCURE_TIMEOUT });
 
     // Remove
     await page.fill('#book-id', bookId);
     await page.locator('#book-remove').check();
-    await page.click('#book-submit');
+    await submitFrameForm(page, '#book-submit');
 
     await expect(page.locator(`#book_${bookId}`)).toHaveCount(0, { timeout: MERCURE_TIMEOUT });
 });
@@ -187,11 +202,11 @@ test('Turbo Broadcast — entity stored as a proxy is broadcast on update', asyn
     await page.goto('/ux-turbo/broadcast/artist-from-song');
 
     // First submit creates the artist + song
-    await page.click('#afs-submit');
+    await submitFrameForm(page, '#afs-submit');
     await expect(page.locator('#artists-list')).toContainText('testing artist', { timeout: MERCURE_TIMEOUT });
 
     // Second submit updates the artist (loaded as a Doctrine proxy via Song::artist)
-    await page.click('#afs-submit');
+    await submitFrameForm(page, '#afs-submit');
     await expect(page.locator('#artists-list')).toContainText('testing artist after change', {
         timeout: MERCURE_TIMEOUT,
     });
