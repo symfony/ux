@@ -136,6 +136,9 @@ return [
     '@symfony/ux-router' => [
         'path' => './vendor/symfony/ux-router/assets/dist/router_controller.js',
     ],
+    '@symfony/ux-upload' => [
+        'path' => './vendor/symfony/ux-upload/assets/dist/upload_controller.js',
+    ],
     'typed.js' => [
         'version' => '2.1.0',
     ],

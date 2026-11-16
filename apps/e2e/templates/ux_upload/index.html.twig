@@ -1,0 +1,55 @@
+{% extends 'example.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {# The package styles use light-dark(): the application declares which schemes it supports. #}
+    <style>:root { color-scheme: light dark; }</style>
+{% endblock %}
+
+{% block navbar_brand_after %}
+    <div class="navbar-collapse">
+        <span class="navbar-text">{{ example.uxPackage.value }}</span>
+        <ul class="navbar-nav ms-4">
+            {% for route, label in {
+                app_ux_upload_single: 'Single',
+                app_ux_upload_multiple: 'Multiple',
+                app_ux_upload_manual: 'Manual',
+                app_ux_upload_minimal_theme: 'Minimal theme',
+                app_ux_upload_form: 'Form',
+                app_ux_upload_gallery: 'Gallery',
+                app_ux_upload_validation: 'Validation',
+            } %}
+                {% set current = app.request.attributes.get('_route') == route %}
+                <li class="nav-item">
+                    <a class="nav-link{{ current ? ' active' }}" href="{{ path(route) }}"{{ current ? ' aria-current="page"' }}>{{ label }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}
+
+{% block example %}
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            {% for received in app.flashes('upload_received') %}
+                <div class="alert alert-success mb-4">
+                    <ul id="upload-received" class="mb-0">
+                        {% for file in received %}
+                            <li>Received {{ file.name }}, {{ file.size }} bytes, {{ file.mime_type }}, sha256 {{ file.sha256 }}</li>
+                        {% else %}
+                            <li>Received no file</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endfor %}
+
+            {% if form_theme %}{% form_theme form[upload_field] form_theme %}{% endif %}
+            {{ form_start(form, {attr: {'data-turbo': 'false'}}) }}
+                {{ form_widget(form) }}
+                <div class="mt-3">
+                    <button type="submit" class="btn btn-primary" id="upload-submit">Save</button>
+                </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}
