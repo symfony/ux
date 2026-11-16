@@ -1,0 +1,9 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2026-11-15T21:55:57Z
+
+Thanks a lot for this PR, Jan. I rebased it and reworked it, and I kept your tests and added a few more.
+
+The list of public properties that can be assigned directly is now computed by `TwigComponentPass` when the container is compiled, next to the mount hooks. So `ComponentFactory` no longer needs `symfony/property-info` or a new constructor argument, and nothing is decided at runtime.
+
+I did this because deciding at runtime cost about 1.2 µs per prop on each request, which is more than the about 0.5 µs we save per write. Now mounting a component with 4 public props goes from 4.00-4.11 µs to 2.16-2.19 µs, and the gain is there from the first mount.
