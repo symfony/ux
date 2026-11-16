@@ -142,6 +142,7 @@ A longer text wraps over several lines, the tooltip shrinks to its longest line 
 - The tooltip opens on hover and on focus, so keyboard users get it too. Spread `tooltip_trigger_attrs` onto a natively focusable element such as a `Button`, otherwise the trigger is never focused and the tooltip never opens for them.
 - A tooltip describes, it does not name. Keep the trigger's own accessible name meaningful, and use the tooltip for the extra detail rather than as the only label.
 - Do not put interactive elements inside a tooltip. `role="tooltip"` does not support them and they cannot be reached before the tooltip closes.
+- In browsers with the [Popover API](https://developer.mozilla.org/en-US/docs/Web/API/Popover_API) and [anchor positioning](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_anchor_positioning), the tooltip follows its trigger while the page scrolls or the window is resized. Other browsers close it instead.
 - Set `id` so the generated trigger and content IDs are unique when several tooltips share a page.
 - Keep `delayDuration` short enough that a keyboard user is not left waiting after focusing the trigger.
 

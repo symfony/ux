@@ -1,5 +1,12 @@
 import { Controller } from '@hotwired/stimulus';
 
+// The native path needs both: a popover without anchor positioning would be centred by the browser.
+const native = HTMLElement.prototype.hasOwnProperty('popover') && CSS.supports('position-area', 'block-end');
+let anchors = 0;
+
+// The side of the wrapper facing the trigger, which carries the gap between them on the native path.
+const facingMargins = { top: 'marginBottom', bottom: 'marginTop', left: 'marginRight', right: 'marginLeft' };
+
 export default class extends Controller {
     static values = {
         delayDuration: Number,
@@ -10,6 +17,9 @@ export default class extends Controller {
         arrowSelector: String,
     };
     static targets = ['trigger', 'wrapper'];
+
+    #anchor = `--tooltip-${++anchors}`;
+    #anchoredTrigger = null;
 
     connect() {
         this.initialized = false;
@@ -28,16 +38,33 @@ export default class extends Controller {
         this.hideTimeout = null;
         this.dismiss = this.hide.bind(this);
 
-        document.body.appendChild(this.wrapperElement);
+        this.wrapperElement.addEventListener('beforetoggle', this.#onBeforeToggle);
+        if (this.#anchored) {
+            this.#connectNative();
+        } else {
+            document.body.appendChild(this.wrapperElement);
+        }
         this.initialized = true;
     }
 
     disconnect() {
+        this.hide();
         this.#clearTimeouts();
         this.#removeDismissListeners();
+        this.wrapperElement?.removeEventListener('beforetoggle', this.#onBeforeToggle);
+        this.#disconnectNative();
 
         if (this.wrapperElement && this.wrapperElement.parentNode === document.body) {
             this.element.appendChild(this.wrapperElement);
+        }
+    }
+
+    wrapperTargetDisconnected(element) {
+        // Moving the wrapper to `<body>` also disconnects it as a target: only a removed one is torn down.
+        if (element === this.wrapperElement && !element.isConnected) {
+            this.#clearTimeouts();
+            element.removeEventListener('beforetoggle', this.#onBeforeToggle);
+            this.#disconnectNative();
         }
     }
 
@@ -52,7 +79,7 @@ export default class extends Controller {
     }
 
     show() {
-        if (!this.initialized) {
+        if (!this.initialized || !this.wrapperElement.isConnected) {
             return;
         }
 
@@ -61,17 +88,25 @@ export default class extends Controller {
         const delay = this.hasDelayDurationValue ? this.delayDurationValue : 0;
 
         this.showTimeout = setTimeout(() => {
+            this.showTimeout = null;
+            if (this.#anchored) {
+                this.#connectNative();
+            }
             this.#showPopover();
             this.wrapperElement.setAttribute('open', '');
             this.contentElement.setAttribute('open', '');
             this.arrowElement.setAttribute('open', '');
             this.#fitWidthToText();
+            if (this.#anchored) {
+                this.#placeNative();
+
+                return;
+            }
             this.#positionElements();
             // The tooltip is portaled to <body> and positioned absolutely, so it cannot follow
             // the trigger on scroll. Dismiss it instead (capture scrolls from any scroller).
             window.addEventListener('scroll', this.dismiss, true);
             window.addEventListener('resize', this.dismiss);
-            this.showTimeout = null;
         }, delay);
     }
 
@@ -87,6 +122,66 @@ export default class extends Controller {
         this.arrowElement.removeAttribute('open');
         this.#hidePopover();
     }
+
+    get #anchored() {
+        return native && this.hasTriggerTarget;
+    }
+
+    // Idempotent, as a Turbo morph strips what it sets.
+    #connectNative() {
+        this.#anchoredTrigger = this.triggerTarget;
+        this.wrapperElement.dataset.anchored = '';
+        this.wrapperElement.style.positionAnchor = this.#anchor;
+        this.#anchoredTrigger.style.setProperty('anchor-name', this.#anchor);
+    }
+
+    #disconnectNative() {
+        if (!native) {
+            return;
+        }
+        if (this.wrapperElement) {
+            delete this.wrapperElement.dataset.anchored;
+            for (const property of ['position-anchor', 'translate', 'margin']) {
+                this.wrapperElement.style.removeProperty(property);
+            }
+        }
+        this.#anchoredTrigger?.style.removeProperty('anchor-name');
+        this.#anchoredTrigger = null;
+    }
+
+    // Applies the gap and the arrow offset of the fallback placement to the placement of the browser.
+    #placeNative() {
+        const wrapper = this.wrapperElement;
+        const arrowRect = this.arrowElement.getBoundingClientRect();
+        const vertical = this.side === 'top' || this.side === 'bottom';
+        if (this.side in facingMargins) {
+            wrapper.style[facingMargins[this.side]] =
+                `${(vertical ? arrowRect.height : arrowRect.width) / 2 + this.sideOffset}px`;
+        }
+        if (!vertical) {
+            return;
+        }
+
+        // Shifted by the same amount, the wrapper stays in the viewport and the arrow on the centre of the trigger.
+        wrapper.style.translate = '-50% 0';
+        const box = wrapper.getBoundingClientRect();
+        const margin = 16;
+        const left = Math.max(margin, Math.min(box.left, document.documentElement.clientWidth - box.width - margin));
+        const shift = left - box.left;
+        wrapper.style.translate = `calc(-50% + ${shift}px) 0`;
+        this.arrowElement.style.left = `${this.contentElement.offsetWidth / 2 - arrowRect.width / 2 - shift}px`;
+    }
+
+    #onBeforeToggle = (event) => {
+        if ('closed' !== event.newState || !this.wrapperElement.hasAttribute('open')) {
+            return;
+        }
+        this.#clearTimeouts();
+        this.#removeDismissListeners();
+        this.wrapperElement.removeAttribute('open');
+        this.contentElement.removeAttribute('open');
+        this.arrowElement.removeAttribute('open');
+    };
 
     // In the top layer, the tooltip is displayed above a modal dialog that contains its trigger.
     // The wrapper keeps `display: block` when it is not open, so the opening and closing transitions still run.

@@ -7,6 +7,7 @@
 {%- set _tooltip_wrapperId = inject('tooltip.wrapperId') -%}
 {%- set _tooltip_contentId = inject('tooltip.contentId') -%}
 {%- set _tooltip_arrowId = inject('tooltip.arrowId') -%}
+{#- `anchor()` insets rather than `position-area`, which Firefox misplaces in right-to-left: https://bugzil.la/2019601 -#}
 
 <div
     id="{{ _tooltip_wrapperId }}"
@@ -16,8 +17,7 @@
     data-tooltip-target="wrapper"
     role="presentation"
     popover="manual"
-    class="isolate z-50 pointer-events-none open:pointer-events-auto block overflow-visible bg-transparent"
-    style="position: fixed; inset: 0 auto auto 0; will-change: transform;"
+    class="isolate z-50 pointer-events-none open:pointer-events-auto block overflow-visible bg-transparent fixed inset-auto top-0 left-0 will-change-transform [&[data-anchored]]:inset-auto [&[data-anchored]]:w-max [&[data-anchored]]:data-[side=top]:bottom-[anchor(top)] [&[data-anchored]]:data-[side=top]:left-[anchor(center)] [&[data-anchored]]:data-[side=bottom]:top-[anchor(bottom)] [&[data-anchored]]:data-[side=bottom]:left-[anchor(center)] [&[data-anchored]]:data-[side=left]:right-[anchor(left)] [&[data-anchored]]:data-[side=left]:[align-self:anchor-center] [&[data-anchored]]:data-[side=right]:left-[anchor(right)] [&[data-anchored]]:data-[side=right]:[align-self:anchor-center]"
 >
     <div
         id="{{ _tooltip_contentId }}"
