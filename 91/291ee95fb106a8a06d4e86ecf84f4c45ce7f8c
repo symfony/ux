@@ -1,0 +1,9 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2026-11-15T22:07:55Z
+
+Thanks for this PR, Jan. It made three independent changes, so I split it into three PRs. This way each one can be reviewed and merged on its own.
+
+Your code is unchanged and you are still the author of each commit.
+
+This PR now only keeps the attribute names change. The string values moved to #4317 and the `computed` method cache moved to #4318.
