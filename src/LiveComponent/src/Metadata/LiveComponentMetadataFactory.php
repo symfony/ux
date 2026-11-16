@@ -18,6 +18,7 @@ use Symfony\Component\TypeInfo\Type;
 use Symfony\Component\TypeInfo\Type\CollectionType;
 use Symfony\Component\TypeInfo\TypeResolver\TypeResolver;
 use Symfony\Contracts\Service\ResetInterface;
+use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Symfony\UX\TwigComponent\ComponentFactory;
 
@@ -31,12 +32,63 @@ class LiveComponentMetadataFactory implements ResetInterface
     /** @var LiveComponentMetadata[] */
     private array $liveComponentMetadata = [];
 
+    /**
+     * @param array<class-string, array{
+     *     pre_dehydrate: list<string>,
+     *     post_hydrate: list<string>,
+     *     pre_re_render: list<string>,
+     *     actions: list<string>,
+     *     listeners: list<array{action: string, event: string}>,
+     * }> $hookMethods The methods of each live component class, listed when the container is compiled
+     */
     public function __construct(
         private ComponentFactory $componentFactory,
         private PropertyTypeExtractorInterface $propertyTypeExtractor,
         private TypeResolver $typeResolver,
         private ?CacheItemPoolInterface $cache = null,
+        private array $hookMethods = [],
     ) {
+    }
+
+    /**
+     * @return list<string>
+     */
+    public function preDehydrateMethods(object $component): array
+    {
+        return $this->hookMethods[$component::class]['pre_dehydrate'] ?? array_column(AsLiveComponent::preDehydrateMethods($component), 'name');
+    }
+
+    /**
+     * @return list<string>
+     */
+    public function postHydrateMethods(object $component): array
+    {
+        return $this->hookMethods[$component::class]['post_hydrate'] ?? array_column(AsLiveComponent::postHydrateMethods($component), 'name');
+    }
+
+    /**
+     * @return list<string>
+     */
+    public function preReRenderMethods(object $component): array
+    {
+        return $this->hookMethods[$component::class]['pre_re_render'] ?? array_column(AsLiveComponent::preReRenderMethods($component), 'name');
+    }
+
+    public function isActionAllowed(object $component, string $action): bool
+    {
+        if (null === $actions = $this->hookMethods[$component::class]['actions'] ?? null) {
+            return AsLiveComponent::isActionAllowed($component, $action);
+        }
+
+        return \in_array($action, $actions, true);
+    }
+
+    /**
+     * @return list<array{action: string, event: string}>
+     */
+    public function liveListeners(object $component): array
+    {
+        return $this->hookMethods[$component::class]['listeners'] ?? AsLiveComponent::liveListeners($component);
     }
 
     public function getMetadata(string $name): LiveComponentMetadata

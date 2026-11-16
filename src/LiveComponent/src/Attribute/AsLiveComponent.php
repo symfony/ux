@@ -112,6 +112,18 @@ final class AsLiveComponent extends AsTwigComponent
      *
      * @param object|class-string $component
      *
+     * @return list<string>
+     */
+    public static function liveActions(object|string $component): array
+    {
+        return array_column(self::cachedMethodsFor($component, LiveAction::class), 'name');
+    }
+
+    /**
+     * @internal
+     *
+     * @param object|class-string $component
+     *
      * @return \ReflectionMethod[]
      */
     public static function preReRenderMethods(object|string $component): iterable
