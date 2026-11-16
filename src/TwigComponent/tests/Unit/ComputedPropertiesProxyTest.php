@@ -87,6 +87,45 @@ final class ComputedPropertiesProxyTest extends TestCase
         $this->assertSame(1, $component->calls);
     }
 
+    public function testResolvesMethodsForEachComponentClass(): void
+    {
+        $getter = new ComputedPropertiesProxy(new class {
+            public function getLabel(): string
+            {
+                return 'getter';
+            }
+        });
+        $isser = new ComputedPropertiesProxy(new class {
+            public function isLabel(): string
+            {
+                return 'isser';
+            }
+        });
+
+        $this->assertSame('getter', $getter->label());
+        $this->assertSame('isser', $isser->label());
+    }
+
+    public function testCachesReturnsForEachProxy(): void
+    {
+        $create = static fn (string $label): object => new class($label) {
+            public function __construct(private string $label)
+            {
+            }
+
+            public function getLabel(): string
+            {
+                return $this->label;
+            }
+        };
+
+        $first = new ComputedPropertiesProxy($create('first'));
+        $second = new ComputedPropertiesProxy($create('second'));
+
+        $this->assertSame('first', $first->label());
+        $this->assertSame('second', $second->label());
+    }
+
     public function testCanProxyPublicProperties(): void
     {
         $proxy = new ComputedPropertiesProxy(new class {
@@ -153,5 +192,24 @@ final class ComputedPropertiesProxyTest extends TestCase
         $this->expectException(\LogicException::class);
 
         $proxy->getValue();
+    }
+
+    public function testThrowsForMethodsWithRequiredArgumentsOnEveryCall(): void
+    {
+        $proxy = new ComputedPropertiesProxy(new class {
+            public function getValue(int $value): int
+            {
+                return $value;
+            }
+        });
+
+        for ($i = 0; $i < 2; ++$i) {
+            try {
+                $proxy->getValue();
+                $this->fail('A LogicException should have been thrown.');
+            } catch (\LogicException $e) {
+                $this->assertSame('Cannot use computed methods for methods with required parameters.', $e->getMessage());
+            }
+        }
     }
 }
