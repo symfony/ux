@@ -1,4 +1,5 @@
 import { createRequire } from 'node:module';
+import { fileURLToPath } from 'node:url';
 import { defineConfig } from '@playwright/test';
 
 const require = createRequire(import.meta.url);
@@ -23,7 +24,11 @@ export default defineConfig({
     outputDir: 'playwright-output',
 
     expect: {
-        toHaveScreenshot: { animations: 'disabled', caret: 'hide' },
+        toHaveScreenshot: {
+            animations: 'disabled',
+            caret: 'hide',
+            stylePath: fileURLToPath(new URL('./test/browser/screenshot.css', import.meta.url)),
+        },
     },
 
     use: {

@@ -18,7 +18,8 @@
         "src/**/tests/**/Fixtures/**",
         "apps/**/tests/**/Fixtures/**",
         "src/Router/assets/test/fixtures/**",
-        "src/**/tests/**/__snapshots__/**"
+        "src/**/tests/**/__snapshots__/**",
+        "src/Toolkit/kits/daisyui-5/daisyui.mjs"
     ],
     "printWidth": 120,
     "tabWidth": 4,
