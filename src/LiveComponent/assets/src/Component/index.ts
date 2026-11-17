@@ -23,7 +23,7 @@ type MaybePromise<T = void> = T | Promise<T>;
 export type ComponentHooks = {
     connect: (component: Component) => MaybePromise;
     disconnect: (component: Component) => MaybePromise;
-    'request:started': (requestConfig: any) => MaybePromise;
+    'request:started': (requestConfig: any, controls: { shouldSend: boolean }) => MaybePromise;
     'render:started': (
         html: string,
         backendResponse: BackendResponse,
@@ -353,7 +353,17 @@ export default class Component {
             updatedPropsFromParent: this.valueStore.getUpdatedPropsFromParent(),
             files: filesToSend,
         };
-        this.hooks.triggerHook('request:started', requestConfig);
+        const controls = { shouldSend: true };
+        this.hooks.triggerHook('request:started', requestConfig, controls);
+
+        if (!controls.shouldSend) {
+            // pending actions and dirty props stay queued for the next request,
+            // which also resolves the promises handed out for this one
+            this.nextRequestPromise.then(thisPromiseResolve);
+
+            return;
+        }
+
         this.backendRequest = this.backend.makeRequest(
             requestConfig.props,
             requestConfig.actions,

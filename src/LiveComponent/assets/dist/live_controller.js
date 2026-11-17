@@ -1702,7 +1702,12 @@ var Component = class {
 			updatedPropsFromParent: this.valueStore.getUpdatedPropsFromParent(),
 			files: filesToSend
 		};
-		this.hooks.triggerHook("request:started", requestConfig);
+		const controls = { shouldSend: true };
+		this.hooks.triggerHook("request:started", requestConfig, controls);
+		if (!controls.shouldSend) {
+			this.nextRequestPromise.then(thisPromiseResolve);
+			return;
+		}
 		this.backendRequest = this.backend.makeRequest(requestConfig.props, requestConfig.actions, requestConfig.updated, requestConfig.children, requestConfig.updatedPropsFromParent, requestConfig.files);
 		this.hooks.triggerHook("loading.state:started", this.element, this.backendRequest);
 		const historyEntryKey = this.getCurrentHistoryEntryKey();

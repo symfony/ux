@@ -83,7 +83,9 @@ type MaybePromise<T = void> = T | Promise<T>;
 type ComponentHooks = {
   connect: (component: Component) => MaybePromise;
   disconnect: (component: Component) => MaybePromise;
-  'request:started': (requestConfig: any) => MaybePromise;
+  'request:started': (requestConfig: any, controls: {
+    shouldSend: boolean;
+  }) => MaybePromise;
   'render:started': (html: string, backendResponse: export_default$2, controls: {
     shouldRender: boolean;
   }) => MaybePromise;
