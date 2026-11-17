@@ -200,6 +200,13 @@ Use it to show your own message:
         alert(event.detail.reason === 'accept' ? `Not an image: ${names}` : `Too many files: ${names}`);
     });
 
+The files are left out before the ``dropzone:pre-add`` event (see `Transforming files before they are added`_), so its listeners only get the files that can be added.
+The files of the selections still processed by these listeners count against ``max_files``.
+
+.. versionadded:: 3.8
+
+    Before Dropzone 3.8, the files over ``max_files`` were left out after the ``dropzone:pre-add`` event, and ``dropzone:reject`` was dispatched after ``dropzone:change``.
+
 The ``accept`` check only helps the user: validate the type of the files on the server too, for example with the ``File`` constraint::
 
     use Symfony\Component\Validator\Constraints\All;

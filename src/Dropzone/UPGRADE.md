@@ -1,5 +1,11 @@
 # UPGRADE
 
+## FROM 3.7 to 3.8
+
+- The files over `max_files`, and in single-file mode the files after the first one, are now left out before `dropzone:pre-add`: its listeners only get the files that can be added. Before, they got every selected file, and the files over the limit were left out after their promise resolved.
+
+- `dropzone:reject` is now dispatched before `dropzone:pre-add` and `dropzone:change`. Before, it was dispatched after `dropzone:change`. If a `dropzone:reject` listener reads the files of the input, it now gets the files from before the selection: read the rejected files from `event.detail.files` instead, or listen to `dropzone:change`.
+
 ## FROM 3.6 to 3.7
 
 - The controller shows and hides the input, the placeholder, the preview and the image preview with the `hidden` attribute instead of inline styles, and the form theme renders `hidden` instead of `style="display: none"`.

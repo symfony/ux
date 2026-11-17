@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 3.8
+
+- Leave out the files over `max_files` before `dropzone:pre-add`, and dispatch `dropzone:reject` before the files are added
+
 ## 3.7.0
 
 - Add a `dropzone:pre-add` event to transform, replace or reject the selected files before they are added

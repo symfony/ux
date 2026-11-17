@@ -1,4 +1,5 @@
 import { Controller } from "@hotwired/stimulus";
+const fileKey = (file) => `${file.name}\0${file.size}\0${file.lastModified}`;
 var controller_default = class extends Controller {
 	static targets = [
 		"input",
@@ -23,6 +24,7 @@ var controller_default = class extends Controller {
 	processingCount = 0;
 	dragTargets = /* @__PURE__ */ new Set();
 	queue = Promise.resolve();
+	pendingSelections = /* @__PURE__ */ new Set();
 	generation = 0;
 	dropping = false;
 	form = null;
@@ -59,6 +61,7 @@ var controller_default = class extends Controller {
 	}
 	disconnect() {
 		this.generation++;
+		this.pendingSelections.clear();
 		clearTimeout(this.resetTimeout);
 		this.element.removeEventListener("dragenter", this.onDragEnter);
 		this.element.removeEventListener("dragleave", this.onDragLeave);
@@ -75,6 +78,7 @@ var controller_default = class extends Controller {
 	}
 	clear() {
 		this.generation++;
+		this.pendingSelections.clear();
 		const cleared = this.dataTransfer.files.length > 0;
 		this.dataTransfer = new DataTransfer();
 		this.syncInput();
@@ -83,14 +87,12 @@ var controller_default = class extends Controller {
 	}
 	onInputChange() {
 		const selected = Array.from(this.inputTarget.files ?? []);
-		const [accepted, rejected] = this.checkAccept(selected);
+		const [accepted, notAccepted] = this.checkAccept(selected);
+		const [fitting, overflow] = this.checkMaxFiles(accepted, this.pendingSelections);
 		this.syncInput();
-		if (selected.length === 0) return;
-		if (accepted.length === 0) {
-			this.reject(rejected, "accept");
-			return;
-		}
-		this.preAdd(accepted, (added) => this.add(added, rejected));
+		this.reject(notAccepted, "accept");
+		this.reject(overflow, "max_files");
+		if (fitting.length > 0) this.preAdd(fitting, (added) => this.add(added));
 	}
 	_populateImagePreview(target, file) {
 		this.previewedFiles.set(target, file);
@@ -148,6 +150,7 @@ var controller_default = class extends Controller {
 		}
 		const generation = this.generation;
 		this.processingCount++;
+		this.pendingSelections.add(selected);
 		this.updateState();
 		const result = (promise ?? Promise.resolve(selected)).then((resolved) => {
 			if (!Array.isArray(resolved) || !resolved.every((file) => file instanceof File)) throw new TypeError("The promise passed to waitUntil() must resolve to an array of files.");
@@ -159,25 +162,24 @@ var controller_default = class extends Controller {
 		this.queue = this.queue.then(() => result).then((resolved) => {
 			if (generation === this.generation) add(resolved);
 		}).finally(() => {
+			this.pendingSelections.delete(selected);
 			this.processingCount--;
 			this.updateState();
 		});
 	}
-	add(added, rejected) {
-		const overflow = [];
+	add(added) {
+		const [fitting, overflow] = this.checkMaxFiles(added, []);
 		let changed = false;
-		if (this.multipleValue) for (const file of added) {
-			if (this.containsFile(file)) continue;
-			if (this.maxFilesValue > 0 && this.dataTransfer.files.length >= this.maxFilesValue) overflow.push(file);
-			else {
+		if (this.multipleValue) {
+			const keys = new Set(Array.from(this.dataTransfer.files, fileKey));
+			for (const file of fitting) if (!keys.has(fileKey(file))) {
+				keys.add(fileKey(file));
 				this.dataTransfer.items.add(file);
 				changed = true;
 			}
-		}
-		else if (added.length > 0) {
+		} else if (fitting.length > 0) {
 			this.dataTransfer = new DataTransfer();
-			this.dataTransfer.items.add(added[0]);
-			overflow.push(...added.slice(1));
+			this.dataTransfer.items.add(fitting[0]);
 			changed = true;
 		}
 		if (changed) {
@@ -185,7 +187,6 @@ var controller_default = class extends Controller {
 			this.render();
 			this.dispatchEvent("change", this.multipleValue ? this.inputTarget.files : this.dataTransfer.files[0]);
 		}
-		this.reject(rejected, "accept");
 		this.reject(overflow, "max_files");
 	}
 	removeFileAt(index, file) {
@@ -218,6 +219,25 @@ var controller_default = class extends Controller {
 		}
 		return [accepted, rejected];
 	}
+	checkMaxFiles(files, pendingSelections) {
+		if (!this.multipleValue) return [files.slice(0, 1), files.slice(1)];
+		if (!(this.maxFilesValue > 0)) return [files, []];
+		const keys = new Set(Array.from(this.dataTransfer.files, fileKey));
+		for (const selection of pendingSelections) for (const file of selection) keys.add(fileKey(file));
+		let room = this.maxFilesValue - keys.size;
+		const fitting = [];
+		const overflow = [];
+		for (const file of files) {
+			const key = fileKey(file);
+			if (keys.has(key)) fitting.push(file);
+			else if (room > 0) {
+				keys.add(key);
+				fitting.push(file);
+				room--;
+			} else overflow.push(file);
+		}
+		return [fitting, overflow];
+	}
 	syncInput() {
 		const dataTransfer = new DataTransfer();
 		for (const file of Array.from(this.dataTransfer.files)) dataTransfer.items.add(file);
@@ -228,9 +248,6 @@ var controller_default = class extends Controller {
 			files,
 			reason
 		});
-	}
-	containsFile(file) {
-		return Array.from(this.dataTransfer.files).some((existing) => existing.name === file.name && existing.size === file.size && existing.lastModified === file.lastModified);
 	}
 	render() {
 		const files = Array.from(this.dataTransfer.files);

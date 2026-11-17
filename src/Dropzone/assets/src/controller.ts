@@ -9,6 +9,8 @@
 
 import { Controller } from '@hotwired/stimulus';
 
+const fileKey = (file: File): string => `${file.name}\0${file.size}\0${file.lastModified}`;
+
 export default class extends Controller {
     declare readonly inputTarget: HTMLInputElement;
     declare readonly placeholderTarget: HTMLDivElement;
@@ -52,6 +54,7 @@ export default class extends Controller {
     // The elements a file drag has entered and not left yet
     private readonly dragTargets = new Set<EventTarget>();
     private queue: Promise<void> = Promise.resolve();
+    private readonly pendingSelections = new Set<File[]>();
     private generation = 0;
     private dropping = false;
     private form: HTMLFormElement | null = null;
@@ -111,6 +114,7 @@ export default class extends Controller {
 
     disconnect() {
         this.generation++;
+        this.pendingSelections.clear();
         clearTimeout(this.resetTimeout);
         this.element.removeEventListener('dragenter', this.onDragEnter);
         this.element.removeEventListener('dragleave', this.onDragLeave);
@@ -135,6 +139,7 @@ export default class extends Controller {
     clear() {
         // The selections still processed must not bring a file back
         this.generation++;
+        this.pendingSelections.clear();
 
         const cleared = this.dataTransfer.files.length > 0;
         this.dataTransfer = new DataTransfer();
@@ -148,21 +153,19 @@ export default class extends Controller {
 
     onInputChange() {
         const selected = Array.from(this.inputTarget.files ?? []);
-        const [accepted, rejected] = this.checkAccept(selected);
+        const [accepted, notAccepted] = this.checkAccept(selected);
+        // Before the pre-add listeners, so they do not process the files left out
+        const [fitting, overflow] = this.checkMaxFiles(accepted, this.pendingSelections);
 
         // The browser replaced the files of the input with the new selection: put back the files added before, until the new ones are
         this.syncInput();
 
-        if (selected.length === 0) {
-            return;
-        }
+        this.reject(notAccepted, 'accept');
+        this.reject(overflow, 'max_files');
 
-        if (accepted.length === 0) {
-            this.reject(rejected, 'accept');
-            return;
+        if (fitting.length > 0) {
+            this.preAdd(fitting, (added) => this.add(added));
         }
-
-        this.preAdd(accepted, (added) => this.add(added, rejected));
     }
 
     _populateImagePreview(target: HTMLElement, file: Blob) {
@@ -259,6 +262,7 @@ export default class extends Controller {
 
         const generation = this.generation;
         this.processingCount++;
+        this.pendingSelections.add(selected);
         this.updateState();
 
         const result = (promise ?? Promise.resolve(selected))
@@ -284,31 +288,28 @@ export default class extends Controller {
                 }
             })
             .finally(() => {
+                this.pendingSelections.delete(selected);
                 this.processingCount--;
                 this.updateState();
             });
     }
 
-    private add(added: File[], rejected: File[]) {
-        const overflow: File[] = [];
+    private add(added: File[]) {
+        // A pre-add listener can resolve to more files than it received
+        const [fitting, overflow] = this.checkMaxFiles(added, []);
         let changed = false;
         if (this.multipleValue) {
-            for (const file of added) {
-                if (this.containsFile(file)) {
-                    continue;
-                }
-
-                if (this.maxFilesValue > 0 && this.dataTransfer.files.length >= this.maxFilesValue) {
-                    overflow.push(file);
-                } else {
+            const keys = new Set(Array.from(this.dataTransfer.files, fileKey));
+            for (const file of fitting) {
+                if (!keys.has(fileKey(file))) {
+                    keys.add(fileKey(file));
                     this.dataTransfer.items.add(file);
                     changed = true;
                 }
             }
-        } else if (added.length > 0) {
+        } else if (fitting.length > 0) {
             this.dataTransfer = new DataTransfer();
-            this.dataTransfer.items.add(added[0]);
-            overflow.push(...added.slice(1));
+            this.dataTransfer.items.add(fitting[0]);
             changed = true;
         }
 
@@ -318,7 +319,6 @@ export default class extends Controller {
             this.dispatchEvent('change', this.multipleValue ? this.inputTarget.files : this.dataTransfer.files[0]);
         }
 
-        this.reject(rejected, 'accept');
         this.reject(overflow, 'max_files');
     }
 
@@ -380,6 +380,42 @@ export default class extends Controller {
         return [accepted, rejected];
     }
 
+    private checkMaxFiles(files: File[], pendingSelections: Iterable<File[]>): [File[], File[]] {
+        if (!this.multipleValue) {
+            return [files.slice(0, 1), files.slice(1)];
+        }
+
+        if (!(this.maxFilesValue > 0)) {
+            return [files, []];
+        }
+
+        // A file already added or pending is left out later, it takes no room again
+        const keys = new Set(Array.from(this.dataTransfer.files, fileKey));
+        for (const selection of pendingSelections) {
+            for (const file of selection) {
+                keys.add(fileKey(file));
+            }
+        }
+
+        let room = this.maxFilesValue - keys.size;
+        const fitting: File[] = [];
+        const overflow: File[] = [];
+        for (const file of files) {
+            const key = fileKey(file);
+            if (keys.has(key)) {
+                fitting.push(file);
+            } else if (room > 0) {
+                keys.add(key);
+                fitting.push(file);
+                room--;
+            } else {
+                overflow.push(file);
+            }
+        }
+
+        return [fitting, overflow];
+    }
+
     private syncInput() {
         // Recent Chrome versions share one file list between the input and the DataTransfer it was set from, and a form reset empties both
         const dataTransfer = new DataTransfer();
@@ -393,15 +429,6 @@ export default class extends Controller {
         if (files.length > 0) {
             this.dispatchEvent('reject', { files, reason });
         }
-    }
-
-    private containsFile(file: File): boolean {
-        return Array.from(this.dataTransfer.files).some(
-            (existing) =>
-                existing.name === file.name &&
-                existing.size === file.size &&
-                existing.lastModified === file.lastModified
-        );
     }
 
     private render() {

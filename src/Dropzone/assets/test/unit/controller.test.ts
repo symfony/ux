@@ -238,6 +238,26 @@ describe('DropzoneController', () => {
         expect(rejections).toStrictEqual([{ files: [b], reason: 'max_files' }]);
     });
 
+    it('passes only the first file to the pre-add listeners', async () => {
+        await start();
+        const log: any[] = [];
+        for (const name of ['dropzone:pre-add', 'dropzone:reject']) {
+            getByTestId(container, 'container').addEventListener(name, (event: any) =>
+                log.push([name, event.detail.files.map((file: File) => file.name)])
+            );
+        }
+
+        pickFiles(getByTestId(container, 'input') as HTMLInputElement, [
+            new File(['a'], 'a.txt'),
+            new File(['b'], 'b.txt'),
+        ]);
+
+        expect(log).toStrictEqual([
+            ['dropzone:reject', ['b.txt']],
+            ['dropzone:pre-add', ['a.txt']],
+        ]);
+    });
+
     it('does not show the image of a file replaced before it is loaded', async () => {
         await start();
         const input = getByTestId(container, 'input') as HTMLInputElement;
@@ -799,8 +819,8 @@ describe('DropzoneController', () => {
         dropFiles(input, [doc, photo]);
 
         expect(log).toStrictEqual([
-            { name: 'dropzone:change', detail: photo },
             { name: 'dropzone:reject', detail: { files: [doc], reason: 'accept' } },
+            { name: 'dropzone:change', detail: photo },
         ]);
         expect(Array.from(input.files ?? [])).toStrictEqual([photo]);
         expect(getByTestId(container, 'preview-filename')).toHaveTextContent('b.png');
@@ -1345,7 +1365,182 @@ describe('DropzoneController (multiple)', () => {
             { files: [png], reason: 'accept' },
             { files: [c], reason: 'max_files' },
         ]);
-        expect(log).toStrictEqual(['dropzone:change', 'dropzone:reject', 'dropzone:reject']);
+        expect(log).toStrictEqual(['dropzone:reject', 'dropzone:reject', 'dropzone:change']);
+    });
+
+    it('passes only the files under max files to the pre-add listeners', async () => {
+        getByTestId(container, 'container').setAttribute('data-dropzone-max-files-value', '2');
+        await start();
+        const input = getByTestId(container, 'input') as HTMLInputElement;
+        selectFiles(input, [make('a.txt')]);
+        const log: any[] = [];
+        for (const name of ['dropzone:pre-add', 'dropzone:reject']) {
+            getByTestId(container, 'container').addEventListener(name, (event: any) =>
+                log.push([name, event.detail.files.map((file: File) => file.name)])
+            );
+        }
+
+        selectFiles(input, [make('a.txt'), make('b.txt'), make('c.txt'), make('d.txt')]);
+
+        expect(log).toStrictEqual([
+            ['dropzone:reject', ['c.txt', 'd.txt']],
+            ['dropzone:pre-add', ['a.txt', 'b.txt']],
+        ]);
+        expect(names()).toStrictEqual(['a.txt', 'b.txt']);
+    });
+
+    it('does not dispatch pre-add when no file is under max files', async () => {
+        getByTestId(container, 'container').setAttribute('data-dropzone-max-files-value', '1');
+        await start();
+        const input = getByTestId(container, 'input') as HTMLInputElement;
+        selectFiles(input, [make('a.txt')]);
+        const preAdds = listen('dropzone:pre-add');
+        const rejections = listen('dropzone:reject');
+
+        const b = make('b.txt');
+        selectFiles(input, [b]);
+
+        expect(preAdds).toStrictEqual([]);
+        expect(rejections).toStrictEqual([{ files: [b], reason: 'max_files' }]);
+    });
+
+    it('rejects the files over max files that a pre-add listener adds', async () => {
+        getByTestId(container, 'container').setAttribute('data-dropzone-max-files-value', '2');
+        await start();
+        const input = getByTestId(container, 'input') as HTMLInputElement;
+        const b = make('b.txt');
+        const c = make('c.txt');
+        getByTestId(container, 'container').addEventListener('dropzone:pre-add', (event: any) => {
+            event.detail.waitUntil(Promise.resolve([...event.detail.files, b, c]));
+        });
+        const rejections = listen('dropzone:reject');
+
+        selectFiles(input, [make('a.txt')]);
+
+        await waitFor(() => expect(names()).toStrictEqual(['a.txt', 'b.txt']));
+        expect(rejections).toStrictEqual([{ files: [c], reason: 'max_files' }]);
+    });
+
+    it('counts the files of the pending selections against max files', async () => {
+        getByTestId(container, 'container').setAttribute('data-dropzone-max-files-value', '2');
+        await start();
+        const input = getByTestId(container, 'input') as HTMLInputElement;
+        const preAdds: string[][] = [];
+        getByTestId(container, 'container').addEventListener('dropzone:pre-add', (event: any) => {
+            preAdds.push(event.detail.files.map((file: File) => file.name));
+            event.detail.waitUntil(new Promise((resolve) => setTimeout(() => resolve(event.detail.files))));
+        });
+        const rejections = listen('dropzone:reject');
+
+        selectFiles(input, [make('a.txt')]);
+        const c = make('c.txt');
+        selectFiles(input, [make('b.txt'), c]);
+
+        expect(preAdds).toStrictEqual([['a.txt'], ['b.txt']]);
+        expect(rejections).toStrictEqual([{ files: [c], reason: 'max_files' }]);
+        await waitFor(() => expect(names()).toStrictEqual(['a.txt', 'b.txt']));
+    });
+
+    it('does not count the files already added of a pending selection against max files', async () => {
+        getByTestId(container, 'container').setAttribute('data-dropzone-max-files-value', '3');
+        await start();
+        const input = getByTestId(container, 'input') as HTMLInputElement;
+        selectFiles(input, [make('a.txt')]);
+        getByTestId(container, 'container').addEventListener('dropzone:pre-add', (event: any) => {
+            event.detail.waitUntil(new Promise((resolve) => setTimeout(() => resolve(event.detail.files))));
+        });
+        const rejections = listen('dropzone:reject');
+
+        selectFiles(input, [make('a.txt'), make('b.txt')]);
+        selectFiles(input, [make('c.txt')]);
+
+        expect(rejections).toStrictEqual([]);
+        await waitFor(() => expect(names()).toStrictEqual(['a.txt', 'b.txt', 'c.txt']));
+    });
+
+    it('does not count a file picked again while it is processed against max files', async () => {
+        getByTestId(container, 'container').setAttribute('data-dropzone-max-files-value', '2');
+        await start();
+        const input = getByTestId(container, 'input') as HTMLInputElement;
+        selectFiles(input, [make('a.txt')]);
+        getByTestId(container, 'container').addEventListener('dropzone:pre-add', (event: any) => {
+            event.detail.waitUntil(new Promise((resolve) => setTimeout(() => resolve(event.detail.files))));
+        });
+        const rejections = listen('dropzone:reject');
+
+        selectFiles(input, [make('b.txt')]);
+        selectFiles(input, [make('b.txt')]);
+
+        expect(rejections).toStrictEqual([]);
+        await waitFor(() => expect(names()).toStrictEqual(['a.txt', 'b.txt']));
+    });
+
+    it('adds a file once when a pre-add listener resolves to it twice', async () => {
+        await start();
+        const input = getByTestId(container, 'input') as HTMLInputElement;
+        getByTestId(container, 'container').addEventListener('dropzone:pre-add', (event: any) => {
+            event.detail.waitUntil([...event.detail.files, ...event.detail.files]);
+        });
+
+        selectFiles(input, [make('a.txt')]);
+
+        await waitFor(() => expect(names()).toStrictEqual(['a.txt']));
+    });
+
+    it('does not count the selections dropped by a clear against max files', async () => {
+        getByTestId(container, 'container').setAttribute('data-dropzone-max-files-value', '1');
+        await start();
+        const input = getByTestId(container, 'input') as HTMLInputElement;
+        const preAdds: string[][] = [];
+        let resolve: ((files: File[]) => void) | null = null;
+        getByTestId(container, 'container').addEventListener('dropzone:pre-add', (event: any) => {
+            preAdds.push(event.detail.files.map((file: File) => file.name));
+            if (!resolve) {
+                event.detail.waitUntil(new Promise<File[]>((r) => (resolve = r)));
+            }
+        });
+        const a = make('a.txt');
+        selectFiles(input, [a]);
+
+        const controller = applications[0].getControllerForElementAndIdentifier(
+            getByTestId(container, 'container'),
+            'dropzone'
+        ) as DropzoneController;
+        controller.clear();
+        selectFiles(input, [make('b.txt')]);
+
+        resolve!([a]);
+
+        expect(preAdds).toStrictEqual([['a.txt'], ['b.txt']]);
+        await waitFor(() => expect(names()).toStrictEqual(['b.txt']));
+    });
+
+    it('does not count the selections dropped by a disconnect against max files', async () => {
+        getByTestId(container, 'container').setAttribute('data-dropzone-max-files-value', '1');
+        await start();
+        const element = getByTestId(container, 'container');
+        const input = getByTestId(container, 'input') as HTMLInputElement;
+        const preAdds: string[][] = [];
+        let resolve: ((files: File[]) => void) | null = null;
+        element.addEventListener('dropzone:pre-add', (event: any) => {
+            preAdds.push(event.detail.files.map((file: File) => file.name));
+            if (!resolve) {
+                event.detail.waitUntil(new Promise<File[]>((r) => (resolve = r)));
+            }
+        });
+        const a = make('a.txt');
+        selectFiles(input, [a]);
+
+        const reconnected = new Promise((r) => element.addEventListener('dropzone:connect', r, { once: true }));
+        element.remove();
+        await new Promise((r) => setTimeout(r));
+        container.append(element);
+        await reconnected;
+        selectFiles(input, [make('b.txt')]);
+        resolve!([a]);
+
+        expect(preAdds).toStrictEqual([['a.txt'], ['b.txt']]);
+        await waitFor(() => expect(names()).toStrictEqual(['b.txt']));
     });
 
     it('clears when the last file is removed', async () => {
