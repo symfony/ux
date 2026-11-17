@@ -1,0 +1,39 @@
+---------------------------------------------------------------------------
+
+by github-actions[bot] at 2026-11-15T17:18:26Z
+
+<h1>📊 Packages dist files size difference</h1>
+
+Thanks for the PR! Here is the difference in size of the packages dist files between the base branch and the PR.
+Please review the changes and make sure they are expected.
+
+<table>
+    <thead><tr><th>File</th><th>Before (Size / Gzip)</th><th>After (Size / Gzip)</th></tr></thead>
+    <tbody><tr><td colspan="3"><a href="https://github.com/ker0x/symfony-ux/tree/feat/dropzone-reject-messages/src/Dropzone/assets/dist"><b>Dropzone</b></a></td></tr><tr>
+                <td><a href="https://github.com/ker0x/symfony-ux/blob/feat/dropzone-reject-messages/src/Dropzone/assets/dist/controller.d.ts"><code>controller.d.ts</code></a></td>
+            <td>
+                    <code>2.95 kB</code>
+                    / <code>917 B</code>
+                </td><td>
+                    <code>3.23 kB</code><sup>+10% 📈</sup>
+                    / <code>969 B</code><sup>+6% 📈</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/ker0x/symfony-ux/blob/feat/dropzone-reject-messages/src/Dropzone/assets/dist/controller.js"><code>controller.js</code></a></td>
+            <td>
+                    <code>17.19 kB</code>
+                    / <code>4.47 kB</code>
+                </td><td>
+                    <code>18.02 kB</code><sup>+5% 📈</sup>
+                    / <code>4.64 kB</code><sup>+4% 📈</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/ker0x/symfony-ux/blob/feat/dropzone-reject-messages/src/Dropzone/assets/dist/style.min.css"><code>style.min.css</code></a></td>
+            <td>
+                    <code>1.57 kB</code>
+                    / <code>613 B</code>
+                </td><td>
+                    <code>1.69 kB</code><sup>+7% 📈</sup>
+                    / <code>653 B</code><sup>+7% 📈</sup>
+                </td></tr></tbody>
+</table>
+
+<!-- Sticky Pull Request Comment -->
