@@ -72,6 +72,34 @@ When you pass your own ``attr`` option, the default text is not used: pass the `
         'placeholder' => 'Drop your photo here',
     ])
 
+.. versionadded:: 3.8
+
+    The ``placeholder`` form view variable was added in Dropzone 3.8.
+
+To change the text in a single template, pass the ``placeholder`` variable to ``form_widget()``:
+
+.. code-block:: twig
+
+    {{ form_widget(form.photo, {placeholder: 'Drop your photo here'}) }}
+
+A theme that overrides the ``dropzone_widget`` block must read the text from the ``placeholder`` variable, which holds the untranslated option value (a string, a ``TranslatableInterface`` object or ``false``); ``attr.placeholder`` still holds it for themes written for older versions.
+Do not render it on the ``<input type="file">``, where ``placeholder`` is not a valid attribute:
+
+.. code-block:: html+twig
+
+    {% block dropzone_widget %}
+        {%- set attr = attr|filter((value, name) => name != 'placeholder') -%}
+        {# ... #}
+
+        <div class="dropzone-placeholder" data-symfony--ux-dropzone--dropzone-target="placeholder">
+            {%- if placeholder is not same as(false) -%}
+                {{- placeholder.trans is defined ? placeholder|trans : (translation_domain is same as(false) ? placeholder : placeholder|trans({}, translation_domain)) -}}
+            {%- endif -%}
+        </div>
+
+        {# ... #}
+    {% endblock %}
+
 Uploading multiple files
 ~~~~~~~~~~~~~~~~~~~~~~~~
 

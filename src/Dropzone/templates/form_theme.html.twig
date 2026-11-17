@@ -1,6 +1,7 @@
 {% block dropzone_widget -%}
     {%- set data_controller = (attr['data-controller']|default('') ~ ' symfony--ux-dropzone--dropzone')|trim -%}
-    {%- set placeholder = attr.placeholder ?? false -%}
+    {#- "form.vars" keeps the values of buildView(): a placeholder passed in "attr" to form_widget() still wins, as in older versions -#}
+    {%- set placeholder = (attr.placeholder ?? false) is same as(form.vars.attr.placeholder ?? false) ? placeholder : attr.placeholder -%}
     {#- "placeholder" is not a valid attribute of <input type="file"> -#}
     {%- set attr = attr|filter((value, name) => name != 'placeholder')|merge({'data-controller': '', class: (attr.class|default('') ~ ' dropzone-input')|trim}) -%}
     {%- set remove_label_translated = translation_domain is same as(false) ? remove_label : remove_label|trans({}, translation_domain) -%}
