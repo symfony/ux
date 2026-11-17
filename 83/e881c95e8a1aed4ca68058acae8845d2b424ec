@@ -1,0 +1,57 @@
+---------------------------------------------------------------------------
+
+by github-actions[bot] at 2026-10-20T10:59:19Z
+
+<h1>📊 Packages dist files size difference</h1>
+
+Thanks for the PR! Here is the difference in size of the packages dist files between the base branch and the PR.
+Please review the changes and make sure they are expected.
+
+<table>
+    <thead><tr><th>File</th><th>Before (Size / Gzip)</th><th>After (Size / Gzip)</th></tr></thead>
+    <tbody><tr><td colspan="3"><a href="https://github.com/Pechynho/ux/tree/feat-live-response-skip-render/src/LiveComponent/assets/dist"><b>LiveComponent</b></a></td></tr><tr>
+                <td><a href="https://github.com/Pechynho/ux/blob/feat-live-response-skip-render/src/LiveComponent/assets/dist/live_controller.d.ts"><code>live_controller.d.ts</code></a></td>
+            <td>
+                    <code>8.01 kB</code>
+                    / <code>2.08 kB</code>
+                </td><td>
+                    <code>8.11 kB</code><sup>+1% 📈</sup>
+                    / <code>2.11 kB</code><sup>+2% 📈</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/Pechynho/ux/blob/feat-live-response-skip-render/src/LiveComponent/assets/dist/live_controller.js"><code>live_controller.js</code></a></td>
+            <td>
+                    <code>93.97 kB</code>
+                    / <code>21.36 kB</code>
+                </td><td>
+                    <code>94.85 kB</code><sup>+1% 📈</sup>
+                    / <code>21.55 kB</code><sup>+1% 📈</sup>
+                </td></tr></tbody>
+</table>
+
+<!-- Sticky Pull Request Comment -->
+
+---------------------------------------------------------------------------
+
+by smnandre at 2026-11-14T22:59:28Z
+
+I had `LiveResponse::noRender` in mind because, in fact, it doesn't simply skip rendering. Well... it does, but... 👼 OK, there's room for debate here.
+
+One of the questions is: do we dispatch the same events or not? And that's more than a rhetorical question. It's almost a feature decision... Do we want to announce that we're not rendering, or not?
+
+---------------------------------------------------------------------------
+
+by Pechynho at 2026-11-16T13:37:06Z
+
+Fine with `noRender()`, I'll rename it.
+
+About the events: I kept `render:started` / `render:finished` firing, so existing listeners (loading states, etc.) keep working the same way, and `backendResponse.isRenderSkipped()` lets a hook know the render was skipped. A dedicated event would force every listener to handle two paths. But if you'd rather announce it explicitly, I can add one.
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-11-17T07:16:37Z
+
+Thanks for the PR, @Pechynho. About @smnandre's question on events: I'd keep it as it is now, so `render:started` and `render:finished` still fire and a listener that cares can check `backendResponse.isRenderSkipped()`. A dedicated event can be added later if a real need shows up, whereas removing one would be a BC break.
+
+I reviewed and tested this locally (PHP and JS suites, plus a real browser) and it works as described. I rebased the branch on 3.x and added a Playwright test to the same commit (an "Increment without render" button on the e2e counter), since the feature was only covered under jsdom.
+
+Heads-up: #3931 touches the same files, so whichever lands second will need a rebase.
