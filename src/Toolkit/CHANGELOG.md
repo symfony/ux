@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 3.8.0
+
+- [daisyUI v5] Add the `daisyui-5` kit, with the `button` recipe
+
 ## 3.7.1
 
 - Fix `ux:install` not prefixing `data-controller` and `data-action` values written as a Twig expression (array, ternary, concatenation) when `controllers.subdirectory` is set, which left the `questionnaire` recipe inert, broke the scroll buttons of `message-scroller`, and broke keyboard navigation, closing on Escape or on outside click, and date selection in the `calendar`, `combobox`, `date-picker` and `popover` recipes

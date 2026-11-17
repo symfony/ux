@@ -1,0 +1,9 @@
+{
+    "$schema": "../../schema-kit-v1.json",
+    "name": "daisyUI v5",
+    "description": "Components based on daisyUI (v5), a popular Tailwind CSS plugin that adds semantic component classes and a theme system.",
+    "license": "MIT",
+    "homepage": "https://ux.symfony.com/toolkit/kits/daisyui-5",
+    "color": "#ffc63a",
+    "icon": "icon.svg"
+}

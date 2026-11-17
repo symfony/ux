@@ -80,6 +80,6 @@ final class KitPreviewAssetsTest extends TestCase
     {
         $kitsWithStylesheet = array_keys(iterator_to_array(self::provideKitStylesheets()));
 
-        $this->assertSame(['common', 'flowbite-4', 'shadcn'], $kitsWithStylesheet);
+        $this->assertSame(['common', 'daisyui-5', 'flowbite-4', 'shadcn'], $kitsWithStylesheet);
     }
 }

@@ -46,7 +46,7 @@ final class PreviewWiringTest extends TestCase
         $this->bootKernel();
 
         $outputDir = $this->projectDir.'/var/ux_toolkit/preview';
-        foreach (['bootstrap', 'common', 'flowbite-4', 'shadcn'] as $kitId) {
+        foreach (['bootstrap', 'common', 'daisyui-5', 'flowbite-4', 'shadcn'] as $kitId) {
             $this->assertFileExists($outputDir.'/ux-toolkit-'.$kitId.'.js', \sprintf('The script of the kit "%s" is not generated at boot.', $kitId));
         }
         $this->assertFileDoesNotExist($outputDir.'/ux-toolkit-bootstrap.css', 'A stylesheet is generated for "bootstrap", which ships no "kit.css".');
@@ -64,6 +64,7 @@ final class PreviewWiringTest extends TestCase
         $this->assertSame([
             $this->projectDir.'/assets/styles/app.css',
             $outputDir.'/ux-toolkit-common.css',
+            $outputDir.'/ux-toolkit-daisyui-5.css',
             $outputDir.'/ux-toolkit-flowbite-4.css',
             $outputDir.'/ux-toolkit-shadcn.css',
         ], $inputs);

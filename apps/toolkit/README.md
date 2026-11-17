@@ -5,10 +5,13 @@ Renders every `{"preview": true}` example of the UX Toolkit kits in isolation, w
 ## Run it
 
 ```shell
+pnpm install
 symfony php ../../.github/build-packages.php
 symfony composer install
 symfony serve
 ```
+
+`pnpm install` installs the Tailwind CSS plugins that some kits load, such as daisyUI, in the `node_modules` directory at the root of the repository.
 
 `composer install` also clears the cache, installs the importmap packages and builds the stylesheet of every kit. Run `symfony composer run preview:build` to do it again. The app listens on http://127.0.0.1:9889, and `symfony serve` rebuilds the kit stylesheets while you edit a kit.
 
