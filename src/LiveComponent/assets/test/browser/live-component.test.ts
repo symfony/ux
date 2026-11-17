@@ -92,6 +92,36 @@ test('Can mutate a LiveProp(url: true), the state must be persisted in the URL, 
     await expect(page).toHaveURL('/ux-live-component/counter?value=1');
 });
 
+test('Can update the state with LiveResponse::noRender(), the HTML must be kept until the next render', async ({
+    page,
+}) => {
+    await page.goto('/ux-live-component/counter');
+    await expect(page.getByTestId('value')).toHaveText('0');
+
+    // The state changes, the HTML is kept
+    let responsePromise = page.waitForResponse('/_components/LiveCounter/incrementWithoutRender');
+    await page.getByRole('button', { name: 'Increment without render' }).click();
+    let response = await responsePromise;
+    expect(response.headers()['x-live-no-render']).toBe('1');
+    await expect(page).toHaveURL('/ux-live-component/counter?value=1');
+    await expect(page.getByTestId('value')).toHaveText('0');
+
+    // The next request sends the new state
+    responsePromise = page.waitForResponse('/_components/LiveCounter/incrementWithoutRender');
+    await page.getByRole('button', { name: 'Increment without render' }).click();
+    response = await responsePromise;
+    expect(response.status()).toBe(200);
+    await expect(page).toHaveURL('/ux-live-component/counter?value=2');
+    await expect(page.getByTestId('value')).toHaveText('0');
+
+    // A rendered action shows the state of the skipped renders
+    responsePromise = page.waitForResponse('/_components/LiveCounter/increment');
+    await page.getByRole('button', { name: '+' }).click();
+    await responsePromise;
+    await expect(page.getByTestId('value')).toHaveText('3');
+    await expect(page).toHaveURL('/ux-live-component/counter?value=3');
+});
+
 test('Can mutate a LiveProp(url: new UrlMapping(mapPath: true)), the state must be persisted in the URL, as a path parameter', async ({
     page,
 }) => {

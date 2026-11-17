@@ -121,6 +121,9 @@ var BackendResponse_default = class {
 	isRemoved() {
 		return this.response.headers.has("X-Live-Remove");
 	}
+	isRenderSkipped() {
+		return this.response.headers.has("X-Live-No-Render");
+	}
 	async parse() {
 		const htmlLength = this.response.headers.get("X-Live-Html-Length");
 		if (null === htmlLength) {
@@ -1557,6 +1560,7 @@ var Component = class {
 	pendingActions = [];
 	pendingFiles = {};
 	isRequestPending = false;
+	isRenderRequested = false;
 	isRemoved = false;
 	requestDebounceTimeout = null;
 	nextRequestPromise;
@@ -1614,7 +1618,10 @@ var Component = class {
 		const isChanged = this.valueStore.set(modelName, value);
 		this.hooks.triggerHook("model:set", model, value, this);
 		this.unsyncedInputsTracker.markModelAsSynced(modelName);
-		if (reRender && isChanged) this.debouncedStartRequest(debounce);
+		if (reRender && isChanged) {
+			this.isRenderRequested = true;
+			this.debouncedStartRequest(debounce);
+		}
 		return promise;
 	}
 	getData(model) {
@@ -1636,6 +1643,7 @@ var Component = class {
 	}
 	render() {
 		const promise = this.nextRequestPromise;
+		this.isRenderRequested = true;
 		this.tryStartingRequest();
 		return promise;
 	}
@@ -1710,6 +1718,8 @@ var Component = class {
 		this.pendingActions = remainingActions;
 		this.valueStore.flushDirtyPropsToPending();
 		this.isRequestPending = remainingActions.length > 0;
+		const isRenderRequested = this.isRenderRequested;
+		this.isRenderRequested = false;
 		this.backendRequest.promise.then(async (response) => {
 			const backendResponse = new BackendResponse_default(response);
 			const headers = backendResponse.response.headers;
@@ -1718,6 +1728,7 @@ var Component = class {
 			if (!headers.get("Content-Type")?.includes("application/vnd.live-component+html") && !headers.get("X-Live-Redirect") && !headers.has("X-Live-Remove")) {
 				const controls = { displayError: true };
 				this.valueStore.pushPendingPropsBackToDirty();
+				this.isRenderRequested ||= isRenderRequested;
 				this.hooks.triggerHook("loading.state:finished", this.element);
 				this.hooks.triggerHook("response:error", backendResponse, controls);
 				if (controls.displayError) this.renderError(html);
@@ -1740,6 +1751,10 @@ var Component = class {
 			const liveUrl = backendResponse.getLiveUrl();
 			if (liveUrl && this.element.isConnected && this.isOnSamePage(historyEntryKey, requestUrl)) history.replaceState(history.state, "", new URL(liveUrl + window.location.hash, window.location.origin));
 			this.processRerender(html, backendResponse);
+			if (isRenderRequested && backendResponse.isRenderSkipped()) {
+				this.isRenderRequested = true;
+				this.isRequestPending = true;
+			}
 			this.backendRequest = null;
 			thisPromiseResolve(backendResponse);
 			if (this.isRequestPending) {
@@ -1773,7 +1788,8 @@ var Component = class {
 		}
 		this.externalMutationTracker.handlePendingChanges();
 		this.externalMutationTracker.stop();
-		executeMorphdom(this.element, newElement, this.unsyncedInputsTracker.getUnsyncedInputs(), (element) => getValueFromElement(element, this.valueStore), this.externalMutationTracker, findChildren(this));
+		if (backendResponse.isRenderSkipped()) this.applyValuesOfSkippedRender(newElement);
+		else executeMorphdom(this.element, newElement, this.unsyncedInputsTracker.getUnsyncedInputs(), (element) => getValueFromElement(element, this.valueStore), this.externalMutationTracker, findChildren(this));
 		this.externalMutationTracker.start();
 		const newProps = this.elementDriver.getComponentProps();
 		this.valueStore.reinitializeAllProps(newProps);
@@ -1809,6 +1825,17 @@ var Component = class {
 		}
 		this.hooks.triggerHook("render:finished", this);
 	}
+	applyValuesOfSkippedRender(newElement) {
+		for (const name of [
+			"data-live-props-value",
+			"data-live-events-to-emit-value",
+			"data-live-events-to-dispatch-value"
+		]) {
+			const value = newElement.getAttribute(name);
+			if (null === value) this.element.removeAttribute(name);
+			else this.element.setAttribute(name, value);
+		}
+	}
 	calculateDebounce(debounce) {
 		if (debounce === true) return this.defaultDebounce;
 		if (debounce === false) return 0;
@@ -1823,7 +1850,7 @@ var Component = class {
 	debouncedStartRequest(debounce) {
 		this.clearRequestDebounceTimeout();
 		this.requestDebounceTimeout = window.setTimeout(() => {
-			this.render();
+			this.tryStartingRequest();
 		}, this.calculateDebounce(debounce));
 	}
 	renderError(html) {

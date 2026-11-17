@@ -15,6 +15,7 @@ use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\Attribute\LiveAction;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
+use Symfony\UX\LiveComponent\LiveResponse;
 
 #[AsLiveComponent]
 final class LiveCounter
@@ -34,5 +35,13 @@ final class LiveCounter
     public function increment(): void
     {
         ++$this->value;
+    }
+
+    #[LiveAction]
+    public function incrementWithoutRender(): LiveResponse
+    {
+        ++$this->value;
+
+        return LiveResponse::noRender();
     }
 }
