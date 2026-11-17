@@ -243,6 +243,24 @@ The files of the selections still processed by these listeners count against ``m
 
     Before Dropzone 3.8, the files over ``max_files`` were left out after the ``dropzone:pre-add`` event, and ``dropzone:reject`` was dispatched after ``dropzone:change``.
 
+The Dropzone also shows a message for the files left out, in an element with ``role="status"`` so that screen readers announce it.
+Change the messages with the ``accept_message`` and ``max_files_message`` options, where ``%files%`` is replaced with the names of the files.
+They go through the form's translation domain and accept a translatable object; ``false`` turns a message off::
+
+    ->add('photos', DropzoneType::class, [
+        'multiple' => true,
+        'max_files' => 5,
+        'attr' => ['accept' => 'image/*'],
+        'accept_message' => 'Only images, please: %files%',
+        'max_files_message' => false,
+    ])
+
+A ``dropzone:reject`` listener that shows its own message can also call ``event.preventDefault()`` to leave out the message of the Dropzone.
+
+.. versionadded:: 3.8
+
+    The ``accept_message`` and ``max_files_message`` options were added in Dropzone 3.8.
+
 The ``accept`` check only helps the user: validate the type of the files on the server too, for example with the ``File`` constraint::
 
     use Symfony\Component\Validator\Constraints\All;
@@ -326,14 +344,18 @@ When several states apply, the last one of this list wins:
     }
 
 A theme that overrides ``dropzone_widget`` must render the ``container_attr`` view variable on the container element: it holds the container class, ``data-controller`` and the Stimulus values (remove label, ``multiple``, ``max_files``).
-The remove label is not translated, so translate it in the theme, and exclude ``data-controller`` and ``placeholder``, which ``attr`` still contains, from the ``<input>`` attributes:
+The remove label and the messages of the files left out are not translated, so translate them in the theme, and exclude ``data-controller`` and ``placeholder``, which ``attr`` still contains, from the ``<input>`` attributes:
 
 .. code-block:: html+twig
 
     {% block dropzone_widget %}
-        {%- set container_attr = container_attr|merge({
-            'data-symfony--ux-dropzone--dropzone-remove-label-value': remove_label|trans({}, translation_domain),
-        }) -%}
+        {%- for name, text in {'remove-label': remove_label, 'accept-message': accept_message, 'max-files-message': max_files_message} -%}
+            {%- if text is not same as(false) -%}
+                {%- set container_attr = container_attr|merge({
+                    ('data-symfony--ux-dropzone--dropzone-' ~ name ~ '-value'): text.trans is defined ? text|trans : (translation_domain is same as(false) ? text : text|trans({}, translation_domain)),
+                }) -%}
+            {%- endif -%}
+        {%- endfor -%}
         {%- set placeholder = attr.placeholder ?? false -%}
         {%- set attr = attr|filter((value, name) => name not in ['data-controller', 'placeholder'])|merge({
             class: (attr.class|default('') ~ ' dropzone-input')|trim,
@@ -343,6 +365,7 @@ The remove label is not translated, so translate it in the theme, and exclude ``
             <input type="file" {{ block('widget_attributes') }} data-symfony--ux-dropzone--dropzone-target="input">
             <div class="dropzone-placeholder" data-symfony--ux-dropzone--dropzone-target="placeholder">{{ placeholder ? placeholder|trans({}, translation_domain) }}</div>
             {# ... the preview #}
+            <div class="dropzone-feedback" role="status" data-symfony--ux-dropzone--dropzone-target="feedback"></div>
         </div>
     {% endblock %}
 

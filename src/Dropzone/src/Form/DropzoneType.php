@@ -36,6 +36,8 @@ class DropzoneType extends AbstractType
         $view->vars['remove_label'] = $options['remove_label'];
         $view->vars['max_files'] = $options['max_files'];
         $view->vars['placeholder'] = $options['placeholder'];
+        $view->vars['accept_message'] = $options['accept_message'];
+        $view->vars['max_files_message'] = $options['max_files_message'];
 
         $view->vars['container_attr'] = [
             'class' => $options['multiple'] ? 'dropzone-container dropzone-container-multiple' : 'dropzone-container',
@@ -63,10 +65,16 @@ class DropzoneType extends AbstractType
             'placeholder' => static fn (Options $options) => [] === $options['attr'] ? 'Drag and drop or browse' : ($options['attr']['placeholder'] ?? false),
             'remove_label' => 'Remove',
             'max_files' => null,
+            'accept_message' => 'File type not accepted: %files%',
+            'max_files_message' => 'Too many files, not added: %files%',
         ]);
         $resolver->setAllowedTypes('placeholder', ['string', 'bool', TranslatableInterface::class]);
         $resolver->setAllowedValues('placeholder', static fn (string|bool|TranslatableInterface $placeholder): bool => true !== $placeholder);
         $resolver->setAllowedTypes('remove_label', 'string');
+        foreach (['accept_message', 'max_files_message'] as $option) {
+            $resolver->setAllowedTypes($option, ['string', 'bool', TranslatableInterface::class]);
+            $resolver->setAllowedValues($option, static fn (string|bool|TranslatableInterface $message): bool => true !== $message);
+        }
         $resolver->addNormalizer('attr', static function (Options $options, array $attr): array {
             if (isset($attr['placeholder'])) {
                 trigger_deprecation('symfony/ux-dropzone', '3.7', 'Passing the placeholder in the "attr" option of "%s" is deprecated, use the "placeholder" option instead.', self::class);

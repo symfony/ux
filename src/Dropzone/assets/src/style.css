@@ -1,9 +1,11 @@
 .dropzone-container {
     position: relative;
     display: flex;
+    flex-wrap: wrap;
     min-height: 100px;
     border: 2px dashed #bbb;
     align-items: center;
+    align-content: center;
     padding: 20px 10px;
 }
 
@@ -120,4 +122,11 @@
 /* Rules of the app setting "display" on these parts would otherwise win over the hidden attribute */
 .dropzone-container [hidden] {
     display: none !important;
+}
+
+.dropzone-feedback {
+    width: 100%;
+    color: #b91c1c;
+    font-size: 0.875em;
+    text-align: center;
 }
