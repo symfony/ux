@@ -197,6 +197,30 @@ final class EmbeddedComponentTest extends KernelTestCase
         );
     }
 
+    public function testOuterBlocksCanBeReadThroughAnotherVariableInANestedComponent(): void
+    {
+        $this->assertStringContainsStringIgnoringIndentation(
+            '<wrap><box>[wrap foo override]</box>|wrap foo override</wrap>',
+            self::render('embedded_component_blocks_outer_blocks_alias.html.twig'),
+        );
+    }
+
+    public function testAnOuterBlockNameCanBeRenderedByTheTemplateOfANestedComponent(): void
+    {
+        $this->assertStringContainsStringIgnoringIndentation(
+            '<wrap><show>page foo|show content</show>|wrap foo</wrap>',
+            self::render('embedded_component_blocks_outer_blocks_name_as_prop.html.twig'),
+        );
+    }
+
+    public function testAnOuterBlockNameCanBeRenderedThroughComponentsThatDoNotReadOuterBlocks(): void
+    {
+        $this->assertStringContainsStringIgnoringIndentation(
+            '<wrap><box><show>page foo|show content</show></box>|wrap foo</wrap>',
+            self::render('embedded_component_blocks_outer_blocks_name_through_chain.html.twig'),
+        );
+    }
+
     private function assertStringContainsStringIgnoringIndentation(string $needle, string $haystack): void
     {
         $needle = trim(preg_replace('#(\s+)#u', '', $needle));

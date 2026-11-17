@@ -1,0 +1,5 @@
+<twig:OuterBlocksPassThrough:Wrap>
+    {% set alias = outerBlocks %}
+    <twig:OuterBlocksPassThrough:Box>[{{ block(alias.foo) }}]</twig:OuterBlocksPassThrough:Box>
+    {% block foo %}wrap foo override{% endblock %}
+</twig:OuterBlocksPassThrough:Wrap>

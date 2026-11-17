@@ -65,6 +65,24 @@ final class BlockStack
         return $newBlocks;
     }
 
+    /**
+     * Only the blocks an earlier conversion renamed, found once per run of a template method.
+     */
+    public function passThrough(array $blocks, ?array &$passedThroughBlocks = null): array
+    {
+        if (null !== $passedThroughBlocks) {
+            return $passedThroughBlocks;
+        }
+        $passedThroughBlocks = [];
+        foreach ($blocks as $blockName => $block) {
+            if (str_starts_with($blockName, self::OUTER_BLOCK_PREFIX)) {
+                $passedThroughBlocks[$blockName] = $block;
+            }
+        }
+
+        return $passedThroughBlocks;
+    }
+
     public function __call(string $name, array $arguments)
     {
         [$callingEmbeddedTemplateIndex, $hostEmbeddedTemplateIndex] = $this->findCallingAndHostEmbeddedTemplateIndexes();

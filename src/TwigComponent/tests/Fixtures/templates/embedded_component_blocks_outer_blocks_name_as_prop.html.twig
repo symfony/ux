@@ -1,0 +1,9 @@
+{% extends 'base.html.twig' %}
+
+{% block foo %}page foo{% endblock %}
+
+{% block body %}
+<twig:OuterBlocksPassThrough:Wrap>
+    <twig:OuterBlocksPassThrough:Show :name="outerBlocks.foo">show content</twig:OuterBlocksPassThrough:Show>
+</twig:OuterBlocksPassThrough:Wrap>
+{% endblock %}

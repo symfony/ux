@@ -33,7 +33,7 @@ use Twig\Template;
 #[YieldReady]
 final class ComponentNode extends Node implements NodeOutputInterface
 {
-    public function __construct(AbstractExpression $component, string $embeddedTemplateName, int $embeddedTemplateIndex, ?AbstractExpression $props, bool $only, int $lineno)
+    public function __construct(AbstractExpression $component, string $embeddedTemplateName, int $embeddedTemplateIndex, ?AbstractExpression $props, bool $only, int $lineno, bool $usesOuterBlocks = true)
     {
         $nodes = ['component' => $component];
         if (null !== $props) {
@@ -45,6 +45,7 @@ final class ComponentNode extends Node implements NodeOutputInterface
         $this->setAttribute('only', $only);
         $this->setAttribute('embedded_template', $embeddedTemplateName);
         $this->setAttribute('embedded_index', $embeddedTemplateIndex);
+        $this->setAttribute('uses_outer_blocks', $usesOuterBlocks);
     }
 
     public function compile(Compiler $compiler): void
@@ -177,9 +178,14 @@ final class ComponentNode extends Node implements NodeOutputInterface
          *
          * Add the blocks to the block stack and get the converted embedded blocks.
          */
-        $compiler->write('$embeddedBlocks = $embeddedContext["outerBlocks"]->convert($blocks, ')
-            ->raw($this->getAttribute('embedded_index'))
-            ->raw(", \$this, \$hostEmbeddedTemplateIndex);\n");
+        if ($this->getAttribute('uses_outer_blocks')) {
+            $compiler->write('$embeddedBlocks = $embeddedContext["outerBlocks"]->convert($blocks, ')
+                ->raw($this->getAttribute('embedded_index'))
+                ->raw(", \$this, \$hostEmbeddedTemplateIndex);\n");
+        } else {
+            $compiler->write('$embeddedBlocks = $embeddedContext["outerBlocks"]->passThrough($blocks, $passedThroughBlocks);')
+                ->raw("\n");
+        }
 
         /*
          * Block 4) Render the component template
