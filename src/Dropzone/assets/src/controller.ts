@@ -30,7 +30,13 @@ interface DropzoneEventDetails {
     reject: DropzoneRejectEventDetail;
 }
 
-export default class extends Controller {
+export default class DropzoneController extends Controller {
+    private static readonly connectedDropzones = new Set<DropzoneController>();
+    private static readonly heldSubmitters = new WeakMap<
+        HTMLFormElement,
+        HTMLButtonElement | HTMLInputElement | null
+    >();
+
     declare readonly inputTarget: HTMLInputElement;
     declare readonly placeholderTarget: HTMLDivElement;
     declare readonly previewTarget: HTMLDivElement;
@@ -80,6 +86,7 @@ export default class extends Controller {
     private resetTimeout: ReturnType<typeof setTimeout> | undefined;
     private readonly objectUrls = new Map<Blob, string>();
     private renderedBlobs: Set<Blob> | null = null;
+    private idleCallbacks: (() => void)[] = [];
     private readonly dataUrls = new WeakMap<Blob, Promise<string>>();
     private readonly previewedFiles = new WeakMap<HTMLElement, Blob>();
 
@@ -128,6 +135,8 @@ export default class extends Controller {
         this.inputTarget.addEventListener('change', this.onInputChange);
         this.form = this.inputTarget.form;
         this.form?.addEventListener('reset', this.onFormReset);
+        DropzoneController.connectedDropzones.add(this);
+        window.addEventListener('submit', DropzoneController.onSubmit, true);
 
         this.render();
         this.dispatchEvent('connect', {});
@@ -144,6 +153,11 @@ export default class extends Controller {
         this.form?.removeEventListener('reset', this.onFormReset);
         this.form = null;
         this.revokeObjectUrls(new Set());
+        DropzoneController.connectedDropzones.delete(this);
+        if (DropzoneController.connectedDropzones.size === 0) {
+            window.removeEventListener('submit', DropzoneController.onSubmit, true);
+        }
+        this.notifyIdle();
     }
 
     // Bound when the button appears, as it is optional and can be rendered after the controller connects
@@ -313,7 +327,24 @@ export default class extends Controller {
                 this.pendingSelections.delete(selected);
                 this.processingCount--;
                 this.updateState();
+                if (this.processingCount === 0) {
+                    this.notifyIdle();
+                }
             });
+    }
+
+    private whenIdle(): Promise<void> {
+        if (this.processingCount === 0) {
+            return Promise.resolve();
+        }
+
+        return new Promise((resolve) => this.idleCallbacks.push(resolve));
+    }
+
+    private notifyIdle() {
+        for (const callback of this.idleCallbacks.splice(0)) {
+            callback();
+        }
     }
 
     private add(added: File[]) {
@@ -648,4 +679,45 @@ export default class extends Controller {
     ) {
         return this.dispatch(name, { detail: payload, prefix: 'dropzone', cancelable });
     }
+
+    // In the capture phase of window, so the listeners of the form and of the document, Turbo included, only see the submission that is sent
+    private static readonly onSubmit = (event: Event) => {
+        const form = event.target;
+        // A script can dispatch a submit event without asking for a submission, and another listener can cancel it
+        if (!(form instanceof HTMLFormElement) || !event.isTrusted || event.defaultPrevented) {
+            return;
+        }
+
+        const processing = Array.from(DropzoneController.connectedDropzones).filter(
+            (dropzone) => dropzone.form === form && dropzone.processingCount > 0
+        );
+        if (processing.length === 0) {
+            return;
+        }
+
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        const held = DropzoneController.heldSubmitters.has(form);
+        DropzoneController.heldSubmitters.set(
+            form,
+            (event as SubmitEvent).submitter as HTMLButtonElement | HTMLInputElement | null
+        );
+        if (held) {
+            return;
+        }
+
+        Promise.all(processing.map((dropzone) => dropzone.whenIdle())).then(() => {
+            const submitter = DropzoneController.heldSubmitters.get(form);
+            DropzoneController.heldSubmitters.delete(form);
+            if (!form.isConnected) {
+                return;
+            }
+
+            if (submitter?.isConnected && submitter.form === form && ['submit', 'image'].includes(submitter.type)) {
+                form.requestSubmit(submitter);
+            } else {
+                form.requestSubmit();
+            }
+        });
+    };
 }

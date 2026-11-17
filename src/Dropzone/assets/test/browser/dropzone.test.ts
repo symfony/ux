@@ -322,3 +322,70 @@ test('multiple: previews the images with one object URL each, revoked when the f
     await expect(images).toHaveCount(1);
     expect(await page.evaluate(() => (window as any).objectUrls.revoked)).toStrictEqual([created[0]]);
 });
+
+test('multiple: holds the submission until the pre-add listeners are done', async ({ page }) => {
+    await page.goto('/ux-dropzone/multiple');
+    await page.locator('.dropzone-container').evaluate((container) => {
+        container.addEventListener('dropzone:pre-add', (event: any) => {
+            event.detail.waitUntil(
+                new Promise((resolve) => setTimeout(resolve, 500)).then(() =>
+                    event.detail.files.map(
+                        (file: File) =>
+                            new File([file], `renamed-${file.name}`, {
+                                type: file.type,
+                                lastModified: file.lastModified,
+                            })
+                    )
+                )
+            );
+        });
+    });
+
+    await page
+        .locator('input[type="file"]')
+        .setInputFiles([{ name: 'a.txt', mimeType: 'text/plain', buffer: Buffer.from('aaa') }]);
+    await expect(page.locator('.dropzone-container')).toHaveAttribute('data-state', 'processing');
+    await page.locator('#upload-submit').click();
+
+    await expect(page.locator('#upload-success')).toContainText('renamed-a.txt');
+    await expect(page.locator('#upload-success')).toContainText('Uploaded 1 file(s)');
+});
+
+test('multiple: holds a submission that Turbo sends', async ({ page }) => {
+    await page.goto('/ux-dropzone/multiple');
+    await page.waitForFunction(() => 'Turbo' in window);
+    await page.locator('form').evaluate((form) => {
+        form.removeAttribute('data-turbo');
+        (window as any).turboSubmissions = [];
+        document.addEventListener('turbo:submit-start', (event: any) => {
+            const body = event.detail.formSubmission.fetchRequest.body as FormData;
+            (window as any).turboSubmissions.push(
+                Array.from(body.values())
+                    .filter((value) => value instanceof File)
+                    .map((file) => (file as File).name)
+            );
+        });
+    });
+    await page.locator('.dropzone-container').evaluate((container) => {
+        container.addEventListener('dropzone:pre-add', (event: any) => {
+            event.detail.waitUntil(
+                new Promise((resolve) => setTimeout(resolve, 500)).then(() =>
+                    event.detail.files.map(
+                        (file: File) =>
+                            new File([file], `renamed-${file.name}`, {
+                                type: file.type,
+                                lastModified: file.lastModified,
+                            })
+                    )
+                )
+            );
+        });
+    });
+
+    await page
+        .locator('input[type="file"]')
+        .setInputFiles([{ name: 'a.txt', mimeType: 'text/plain', buffer: Buffer.from('aaa') }]);
+    await page.locator('#upload-submit').click();
+
+    await expect.poll(() => page.evaluate(() => (window as any).turboSubmissions)).toStrictEqual([['renamed-a.txt']]);
+});

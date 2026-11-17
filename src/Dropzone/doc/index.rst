@@ -384,8 +384,17 @@ A listener can:
 * pass a promise to ``event.detail.waitUntil()``: the ``File`` objects the promise resolves to are added instead (fewer, more or other files). Call it once, synchronously, from the listener. It also accepts the array of files itself;
 * call ``event.preventDefault()``: no file is added.
 
-While a promise is pending, the container has a ``data-state="processing"`` attribute.
-Use it to show a spinner or to disable the submit button: until the promise resolves, the input holds the files added before.
+While a promise is pending, the container has a ``data-state="processing"`` attribute (use it to show a spinner) and the input holds the files added before.
+If the form is submitted meanwhile:
+
+* the Dropzone holds the submission until every Dropzone of the form is done, then submits the form again with the last submit button used;
+* the ``submit`` listeners of the form and of the document, Turbo included, only see the submission that is sent;
+* ``form.submit()`` dispatches no ``submit`` event, so the Dropzone cannot hold it: use ``form.requestSubmit()``.
+
+.. versionadded:: 3.8
+
+    Before Dropzone 3.8, a form submitted while a promise was pending was sent with the files added before.
+
 If the promise rejects, or resolves to anything other than an array of ``File`` objects, the original files are added and the error is logged to the console.
 Selections are added in the order they were made, and clearing the Dropzone drops the selections still processed.
 
