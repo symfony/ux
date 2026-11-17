@@ -277,3 +277,48 @@ test('multiple: dispatches dropzone:clear when the last file is removed', async 
     await expect(page.locator('.dropzone-container')).toHaveAttribute('data-state', 'empty');
     expect(await page.evaluate(() => (window as any).cleared)).toBe(true);
 });
+
+test('multiple: previews the images with one object URL each, revoked when the file is removed', async ({ page }) => {
+    await page.addInitScript(() => {
+        const created: string[] = [];
+        const revoked: string[] = [];
+        const createObjectURL = URL.createObjectURL.bind(URL);
+        const revokeObjectURL = URL.revokeObjectURL.bind(URL);
+        URL.createObjectURL = (object) => {
+            const url = createObjectURL(object);
+            created.push(url);
+
+            return url;
+        };
+        URL.revokeObjectURL = (url) => {
+            revoked.push(url);
+            revokeObjectURL(url);
+        };
+        (window as any).objectUrls = { created, revoked };
+    });
+    await page.goto('/ux-dropzone/multiple');
+    const png = Buffer.from(
+        'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==',
+        'base64'
+    );
+    const input = page.locator('input[type="file"]');
+    const images = page.locator('.dropzone-preview-list-item .dropzone-preview-image');
+
+    await input.setInputFiles([{ name: 'a.png', mimeType: 'image/png', buffer: png }]);
+    await input.setInputFiles([{ name: 'b.png', mimeType: 'image/png', buffer: png }]);
+    await expect(images).toHaveCount(2);
+    await expect(images.nth(1)).toBeVisible();
+
+    const { created, revoked } = await page.evaluate(() => (window as any).objectUrls);
+    expect(created).toHaveLength(2);
+    expect(revoked).toStrictEqual([]);
+    expect(
+        await images.evaluateAll((elements) => elements.map((element) => element.style.backgroundImage))
+    ).toStrictEqual(created.map((url: string) => `url("${url}")`));
+    expect(await page.evaluate((url) => fetch(url).then((response) => response.ok), created[1])).toBe(true);
+
+    await page.locator('.dropzone-preview-list-remove').first().click();
+
+    await expect(images).toHaveCount(1);
+    expect(await page.evaluate(() => (window as any).objectUrls.revoked)).toStrictEqual([created[0]]);
+});

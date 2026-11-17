@@ -28,6 +28,12 @@ if (typeof globalThis.DataTransfer === 'undefined') {
     (globalThis as any).DataTransfer = DataTransferStub;
 }
 
+// jsdom does not implement object URLs, and predictable ones are easier to check
+let objectUrlCount = 0;
+URL.createObjectURL = () => `blob:test/${++objectUrlCount}`;
+URL.revokeObjectURL = () => {};
+const objectUrlPattern = /^url\("blob:test\/\d+"\)$/;
+
 // Controller used to check the actual controller was properly booted
 class CheckController extends Controller {
     connect() {
@@ -47,6 +53,7 @@ const startApplication = () => {
 };
 
 afterEach(() => {
+    vi.restoreAllMocks();
     for (const application of applications.splice(0)) {
         application.stop();
     }
@@ -258,6 +265,76 @@ describe('DropzoneController', () => {
         ]);
     });
 
+    it('previews an SVG image with a data URL', async () => {
+        await start();
+        const createObjectURL = vi.spyOn(URL, 'createObjectURL');
+
+        selectFiles(getByTestId(container, 'input') as HTMLInputElement, [
+            new File(['<svg/>'], 'a.svg', { type: 'image/svg+xml' }),
+        ]);
+
+        await waitFor(() =>
+            expect(getByTestId(container, 'preview-image').style.backgroundImage).toBe(
+                'url("data:image/svg+xml;base64,PHN2Zy8+")'
+            )
+        );
+        expect(createObjectURL).not.toHaveBeenCalled();
+    });
+
+    it('does not show the SVG image of a file replaced before it is read', async () => {
+        await start();
+        const input = getByTestId(container, 'input') as HTMLInputElement;
+
+        pickFiles(input, [new File(['<svg/>'], 'a.svg', { type: 'image/svg+xml' })]);
+        pickFiles(input, [new File(['text'], 'b.txt', { type: 'text/plain' })]);
+        await new Promise((resolve) => setTimeout(resolve, 50));
+
+        expect(getByTestId(container, 'preview-image')).toHaveAttribute('hidden');
+        expect(getByTestId(container, 'preview-image').style.backgroundImage).toBe('');
+    });
+
+    it('reads an SVG image again after a failed read', async () => {
+        await start();
+        const input = getByTestId(container, 'input') as HTMLInputElement;
+        vi.spyOn(FileReader.prototype, 'readAsDataURL').mockImplementationOnce(function (this: FileReader) {
+            setTimeout(() => this.dispatchEvent(new ProgressEvent('error')));
+        });
+        const svg = new File(['<svg/>'], 'a.svg', { type: 'image/svg+xml' });
+
+        pickFiles(input, [svg]);
+        await new Promise((resolve) => setTimeout(resolve, 10));
+        expect(getByTestId(container, 'preview-image')).toHaveAttribute('hidden');
+        pickFiles(input, [svg]);
+
+        await waitFor(() => expect(getByTestId(container, 'preview-image')).not.toHaveAttribute('hidden'));
+    });
+
+    it('keeps the object URL of a blob previewed in place of the file', async () => {
+        const thumbnail = new Blob(['thumbnail'], { type: 'image/png' });
+        class ThumbnailController extends DropzoneController {
+            _populateImagePreview(target: HTMLElement) {
+                super._populateImagePreview(target, thumbnail);
+            }
+        }
+        const connected = new Promise((resolve) =>
+            getByTestId(container, 'container').addEventListener('dropzone:connect', resolve, { once: true })
+        );
+        startApplication().register('dropzone', ThumbnailController);
+        await connected;
+        const createObjectURL = vi.spyOn(URL, 'createObjectURL');
+        const revokeObjectURL = vi.spyOn(URL, 'revokeObjectURL');
+
+        selectFiles(getByTestId(container, 'input') as HTMLInputElement, [
+            new File(['png'], 'a.png', { type: 'image/png' }),
+        ]);
+
+        expect(createObjectURL.mock.calls).toStrictEqual([[thumbnail]]);
+        expect(revokeObjectURL).not.toHaveBeenCalled();
+        expect(getByTestId(container, 'preview-image').style.backgroundImage).toBe(
+            `url("${createObjectURL.mock.results[0].value}")`
+        );
+    });
+
     it('does not show the image of a file replaced before it is loaded', async () => {
         await start();
         const input = getByTestId(container, 'input') as HTMLInputElement;
@@ -428,7 +505,7 @@ describe('DropzoneController', () => {
         expect(dispatched.detail).toStrictEqual(file);
     });
 
-    it('shows the image preview once it is loaded', async () => {
+    it('shows the image preview with an object URL', async () => {
         await start();
 
         selectFiles(getByTestId(container, 'input') as HTMLInputElement, [
@@ -436,10 +513,64 @@ describe('DropzoneController', () => {
         ]);
 
         const image = getByTestId(container, 'preview-image');
-        expect(image).toHaveAttribute('hidden');
-        await waitFor(() => expect(image).not.toHaveAttribute('hidden'));
+        expect(image).not.toHaveAttribute('hidden');
         expect(image.style.display).toBe('');
-        expect(image.style.backgroundImage).toBe('url("data:image/png;base64,cG5n")');
+        expect(image.style.backgroundImage).toMatch(objectUrlPattern);
+    });
+
+    it('revokes the object URL of the image when it is cleared', async () => {
+        await start();
+        const createObjectURL = vi.spyOn(URL, 'createObjectURL');
+        const revokeObjectURL = vi.spyOn(URL, 'revokeObjectURL');
+        selectFiles(getByTestId(container, 'input') as HTMLInputElement, [
+            new File(['png'], 'a.png', { type: 'image/png' }),
+        ]);
+
+        getByTestId(container, 'button').click();
+
+        expect(revokeObjectURL.mock.calls).toStrictEqual([[createObjectURL.mock.results[0].value]]);
+    });
+
+    it('revokes the object URL of a replaced image', async () => {
+        await start();
+        const createObjectURL = vi.spyOn(URL, 'createObjectURL');
+        const revokeObjectURL = vi.spyOn(URL, 'revokeObjectURL');
+        const input = getByTestId(container, 'input') as HTMLInputElement;
+        selectFiles(input, [new File(['a'], 'a.png', { type: 'image/png' })]);
+
+        selectFiles(input, [new File(['b'], 'b.png', { type: 'image/png' })]);
+
+        expect(createObjectURL).toHaveBeenCalledTimes(2);
+        expect(revokeObjectURL.mock.calls).toStrictEqual([[createObjectURL.mock.results[0].value]]);
+        expect(getByTestId(container, 'preview-image').style.backgroundImage).toBe(
+            `url("${createObjectURL.mock.results[1].value}")`
+        );
+    });
+
+    it('revokes the object URL of the image when it disconnects, and creates it again when it reconnects', async () => {
+        await start();
+        selectFiles(getByTestId(container, 'input') as HTMLInputElement, [
+            new File(['png'], 'a.png', { type: 'image/png' }),
+        ]);
+        const createObjectURL = vi.spyOn(URL, 'createObjectURL');
+        const revokeObjectURL = vi.spyOn(URL, 'revokeObjectURL');
+        const before = getByTestId(container, 'preview-image').style.backgroundImage;
+
+        const element = getByTestId(container, 'container');
+        const reconnected = new Promise((resolve) =>
+            element.addEventListener('dropzone:connect', resolve, { once: true })
+        );
+        element.remove();
+        await new Promise((resolve) => setTimeout(resolve));
+        expect(revokeObjectURL).toHaveBeenCalledTimes(1);
+        expect(before).toBe(`url("${revokeObjectURL.mock.calls[0][0]}")`);
+        container.append(element);
+        await reconnected;
+
+        expect(createObjectURL).toHaveBeenCalledTimes(1);
+        expect(getByTestId(container, 'preview-image').style.backgroundImage).toBe(
+            `url("${createObjectURL.mock.results[0].value}")`
+        );
     });
 
     it('on drag', async () => {
@@ -720,11 +851,7 @@ describe('DropzoneController', () => {
 
         pick(new File(['png'], 'a.png', { type: 'image/png' }));
 
-        await waitFor(() =>
-            expect(getByTestId(container, 'preview-image').style.backgroundImage).toBe(
-                'url("data:image/png;base64,cG5n")'
-            )
-        );
+        expect(getByTestId(container, 'preview-image').style.backgroundImage).toMatch(objectUrlPattern);
     });
 
     it('disconnects without the clear button target', async () => {
@@ -977,7 +1104,7 @@ describe('DropzoneController (multiple)', () => {
         await waitFor(() => expect(getByTestId(container, 'container')).toHaveAttribute('data-state', 'filled'));
     });
 
-    it('shows the image preview of each file once it is loaded', async () => {
+    it('shows the image preview of each file with an object URL', async () => {
         await start();
 
         selectFiles(getByTestId(container, 'input') as HTMLInputElement, [
@@ -985,9 +1112,9 @@ describe('DropzoneController (multiple)', () => {
         ]);
 
         const image = getByTestId(container, 'list').querySelector('.dropzone-preview-image') as HTMLElement;
-        expect(image).toHaveAttribute('hidden');
-        await waitFor(() => expect(image).not.toHaveAttribute('hidden'));
+        expect(image).not.toHaveAttribute('hidden');
         expect(image.style.display).toBe('');
+        expect(image.style.backgroundImage).toMatch(objectUrlPattern);
     });
 
     it('adds the files a pre-add listener resolves', async () => {
@@ -1556,17 +1683,33 @@ describe('DropzoneController (multiple)', () => {
         expect(events).toStrictEqual(['dropzone:change', 'dropzone:change', 'dropzone:remove', 'dropzone:clear']);
     });
 
-    it('reads each image once', async () => {
+    it('creates one object URL per image', async () => {
         await start();
         const input = getByTestId(container, 'input') as HTMLInputElement;
-        const readAsDataURL = vi.spyOn(FileReader.prototype, 'readAsDataURL');
+        const createObjectURL = vi.spyOn(URL, 'createObjectURL');
 
         selectFiles(input, [new File(['a'], 'a.png', { type: 'image/png' })]);
         selectFiles(input, [new File(['b'], 'b.png', { type: 'image/png' })]);
         selectFiles(input, [new File(['c'], 'c.png', { type: 'image/png' })]);
 
-        expect(readAsDataURL).toHaveBeenCalledTimes(3);
-        readAsDataURL.mockRestore();
+        expect(createObjectURL).toHaveBeenCalledTimes(3);
+    });
+
+    it('revokes only the object URL of a removed image', async () => {
+        await start();
+        const input = getByTestId(container, 'input') as HTMLInputElement;
+        const createObjectURL = vi.spyOn(URL, 'createObjectURL');
+        const revokeObjectURL = vi.spyOn(URL, 'revokeObjectURL');
+        selectFiles(input, [new File(['a'], 'a.png', { type: 'image/png' })]);
+        selectFiles(input, [new File(['b'], 'b.png', { type: 'image/png' })]);
+
+        (getByTestId(container, 'list').querySelector('.dropzone-preview-list-remove') as HTMLButtonElement).click();
+
+        expect(revokeObjectURL.mock.calls).toStrictEqual([[createObjectURL.mock.results[0].value]]);
+        expect(
+            (getByTestId(container, 'list').querySelector('.dropzone-preview-image') as HTMLElement).style
+                .backgroundImage
+        ).toBe(`url("${createObjectURL.mock.results[1].value}")`);
     });
 
     it('keeps dragging while the drag moves over a child, without relatedTarget', async () => {
@@ -1591,28 +1734,6 @@ describe('DropzoneController (multiple)', () => {
 
         expect(names()).toStrictEqual(['a.txt', 'b.txt']);
         expect(changes).toStrictEqual([]);
-    });
-
-    it('reads an image again after a failed read', async () => {
-        await start();
-        const input = getByTestId(container, 'input') as HTMLInputElement;
-        const failOnce = vi.spyOn(FileReader.prototype, 'readAsDataURL').mockImplementationOnce(function (
-            this: FileReader
-        ) {
-            setTimeout(() => this.dispatchEvent(new ProgressEvent('error')));
-        });
-        const png = new File(['png'], 'a.png', { type: 'image/png' });
-
-        selectFiles(input, [png]);
-        await new Promise((resolve) => setTimeout(resolve, 10));
-        failOnce.mockRestore();
-        selectFiles(input, [make('b.txt')]);
-
-        await waitFor(() =>
-            expect(getByTestId(container, 'list').querySelector('.dropzone-preview-image')).not.toHaveAttribute(
-                'hidden'
-            )
-        );
     });
 
     it('ends the drag when the element under the cursor is removed', async () => {
@@ -1703,8 +1824,8 @@ describe('DropzoneController (multiple, preview item template)', () => {
         ]);
 
         const image = getByTestId(container, 'list').querySelector('[data-dropzone-slot="image"]') as HTMLElement;
-        await waitFor(() => expect(image).not.toHaveAttribute('hidden'));
-        expect(image.style.backgroundImage).toBe('url("data:image/png;base64,cG5n")');
+        expect(image).not.toHaveAttribute('hidden');
+        expect(image.style.backgroundImage).toMatch(objectUrlPattern);
     });
 
     it('shows the image preview as the source of an img image slot', async () => {
@@ -1716,8 +1837,8 @@ describe('DropzoneController (multiple, preview item template)', () => {
         ]);
 
         const image = getByTestId(container, 'list').querySelector('[data-dropzone-slot="image"]') as HTMLImageElement;
-        await waitFor(() => expect(image).not.toHaveAttribute('hidden'));
-        expect(image).toHaveAttribute('src', 'data:image/png;base64,cG5n');
+        expect(image).not.toHaveAttribute('hidden');
+        expect(image.getAttribute('src')).toMatch(/^blob:test\/\d+$/);
         expect(image).not.toHaveAttribute('style');
     });
 

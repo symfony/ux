@@ -6,6 +6,17 @@
 
 - `dropzone:reject` is now dispatched before `dropzone:pre-add` and `dropzone:change`. Before, it was dispatched after `dropzone:change`. If a `dropzone:reject` listener reads the files of the input, it now gets the files from before the selection: read the rejected files from `event.detail.files` instead, or listen to `dropzone:change`.
 
+- The image previews now use object URLs (`blob:`) instead of data URLs (`data:`), except for SVG images. If your Content Security Policy restricts images, allow `blob:` in `img-src`, or the previews are blocked:
+
+    ```diff
+    -Content-Security-Policy: img-src 'self' data:
+    +Content-Security-Policy: img-src 'self' data: blob:
+    ```
+
+    The controller revokes these URLs when the file is removed or replaced, when the Dropzone is cleared, and when the controller disconnects. If your code copies the URL of a preview (its `src` or its background image) to another element, create your own URL from the file instead.
+
+    The preview is now shown at once, instead of after the file is read.
+
 ## FROM 3.6 to 3.7
 
 - The controller shows and hides the input, the placeholder, the preview and the image preview with the `hidden` attribute instead of inline styles, and the form theme renders `hidden` instead of `style="display: none"`.

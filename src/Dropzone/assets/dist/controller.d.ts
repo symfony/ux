@@ -43,6 +43,8 @@ export default class export_default extends Controller {
   private dropping;
   private form;
   private resetTimeout;
+  private readonly objectUrls;
+  private renderedBlobs;
   private readonly dataUrls;
   private readonly previewedFiles;
   initialize(): void;
@@ -68,7 +70,9 @@ export default class export_default extends Controller {
   private buildListItem;
   private buildListItemFromTemplate;
   private isImage;
+  private previewUrl;
   private readAsDataUrl;
+  private revokeObjectUrls;
   private bindRemove;
   private isFileDrag;
   private updateState;
