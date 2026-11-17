@@ -1,0 +1,11 @@
+{
+    "extends": "../tsconfig.json",
+    "compilerOptions": {
+        "noEmit": true,
+        "rootDir": "..",
+        "paths": {
+            "@symfony/ux-dropzone": ["../src/controller.ts"]
+        }
+    },
+    "include": ["../src", "types"]
+}

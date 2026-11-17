@@ -11,6 +11,25 @@ import { Controller } from '@hotwired/stimulus';
 
 const fileKey = (file: File): string => `${file.name}\0${file.size}\0${file.lastModified}`;
 
+export interface DropzonePreAddEventDetail {
+    readonly files: readonly File[];
+    readonly waitUntil: (files: readonly File[] | PromiseLike<readonly File[]>) => void;
+}
+
+export interface DropzoneRejectEventDetail {
+    readonly files: readonly File[];
+    readonly reason: 'accept' | 'max_files';
+}
+
+interface DropzoneEventDetails {
+    connect: Record<string, never>;
+    change: File | FileList;
+    clear: Record<string, never>;
+    remove: File;
+    'pre-add': DropzonePreAddEventDetail;
+    reject: DropzoneRejectEventDetail;
+}
+
 export default class extends Controller {
     declare readonly inputTarget: HTMLInputElement;
     declare readonly placeholderTarget: HTMLDivElement;
@@ -109,7 +128,7 @@ export default class extends Controller {
         this.form?.addEventListener('reset', this.onFormReset);
 
         this.render();
-        this.dispatchEvent('connect');
+        this.dispatchEvent('connect', {});
     }
 
     disconnect() {
@@ -147,7 +166,7 @@ export default class extends Controller {
         this.render();
 
         if (cleared) {
-            this.dispatchEvent('clear');
+            this.dispatchEvent('clear', {});
         }
     }
 
@@ -231,13 +250,13 @@ export default class extends Controller {
     }
 
     private preAdd(files: File[], add: (files: File[]) => void) {
-        let promise = null as Promise<File[]> | null;
+        let promise = null as Promise<readonly File[]> | null;
         let dispatching = true;
         const event = this.dispatchEvent(
             'pre-add',
             {
                 files,
-                waitUntil: (filesPromise: File[] | Promise<File[]>) => {
+                waitUntil: (filesPromise) => {
                     if (!dispatching || promise) {
                         throw new Error('waitUntil() can only be called once, from a "dropzone:pre-add" listener.');
                     }
@@ -266,12 +285,12 @@ export default class extends Controller {
         this.updateState();
 
         const result = (promise ?? Promise.resolve(selected))
-            .then((resolved) => {
+            .then((resolved): File[] => {
                 if (!Array.isArray(resolved) || !resolved.every((file) => file instanceof File)) {
                     throw new TypeError('The promise passed to waitUntil() must resolve to an array of files.');
                 }
 
-                return resolved;
+                return [...resolved];
             })
             .catch((error) => {
                 console.error(error);
@@ -316,7 +335,7 @@ export default class extends Controller {
         if (changed) {
             this.syncInput();
             this.render();
-            this.dispatchEvent('change', this.multipleValue ? this.inputTarget.files : this.dataTransfer.files[0]);
+            this.dispatchEvent('change', this.multipleValue ? this.inputTarget.files! : this.dataTransfer.files[0]);
         }
 
         this.reject(overflow, 'max_files');
@@ -331,11 +350,11 @@ export default class extends Controller {
         this.dataTransfer.items.remove(index);
         this.syncInput();
         this.render();
-        this.dispatchEvent('change', this.inputTarget.files);
+        this.dispatchEvent('change', this.inputTarget.files!);
         this.dispatchEvent('remove', file);
 
         if (this.dataTransfer.files.length === 0) {
-            this.dispatchEvent('clear');
+            this.dispatchEvent('clear', {});
         }
     }
 
@@ -425,7 +444,7 @@ export default class extends Controller {
         this.inputTarget.files = dataTransfer.files;
     }
 
-    private reject(files: File[], reason: 'accept' | 'max_files') {
+    private reject(files: File[], reason: DropzoneRejectEventDetail['reason']) {
         if (files.length > 0) {
             this.dispatchEvent('reject', { files, reason });
         }
@@ -585,7 +604,11 @@ export default class extends Controller {
         this.previewTarget.hidden = !showPreview;
     }
 
-    private dispatchEvent(name: string, payload: any = {}, cancelable = false) {
+    private dispatchEvent<Name extends keyof DropzoneEventDetails>(
+        name: Name,
+        payload: DropzoneEventDetails[Name],
+        cancelable = false
+    ) {
         return this.dispatch(name, { detail: payload, prefix: 'dropzone', cancelable });
     }
 }
