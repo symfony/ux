@@ -389,3 +389,29 @@ test('multiple: holds a submission that Turbo sends', async ({ page }) => {
 
     await expect.poll(() => page.evaluate(() => (window as any).turboSubmissions)).toStrictEqual([['renamed-a.txt']]);
 });
+
+test('single: submits the file a pre-submit listener resolves', async ({ page }) => {
+    await page.goto('/ux-dropzone/single');
+    await page.locator('.dropzone-container').evaluate((container) => {
+        container.addEventListener('dropzone:pre-submit', (event: any) => {
+            event.detail.waitUntil(
+                new Promise((resolve) => setTimeout(resolve, 300)).then(() =>
+                    event.detail.files.map(
+                        (file: File) =>
+                            new File([file], `cropped-${file.name}`, {
+                                type: file.type,
+                                lastModified: file.lastModified,
+                            })
+                    )
+                )
+            );
+        });
+    });
+    await page
+        .locator('input[type="file"]')
+        .setInputFiles([{ name: 'a.txt', mimeType: 'text/plain', buffer: Buffer.from('aaa') }]);
+
+    await page.locator('#upload-submit').click();
+
+    await expect(page.locator('#upload-success')).toContainText('Uploaded: cropped-a.txt');
+});

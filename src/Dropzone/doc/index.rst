@@ -475,21 +475,60 @@ Then add the controller to the field::
         'attr' => ['data-controller' => 'image-resize'],
     ])
 
+Transforming files when the form is submitted
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. versionadded:: 3.8
+
+    The ``dropzone:pre-submit`` event was added in Dropzone 3.8.
+
+Some transformations depend on choices the user makes after adding the files, such as the area of a photo to crop.
+When the form is submitted, once the files being added are processed, each Dropzone of the form dispatches the ``dropzone:pre-submit`` event, with its files in ``event.detail.files``.
+A listener can:
+
+* pass a promise to ``event.detail.waitUntil()``, as for ``dropzone:pre-add``: the Dropzone holds the submission, replaces its files with the ``File`` objects the promise resolves to, then submits the form again with the last submit button used;
+* call ``event.preventDefault()``: the form is not submitted.
+
+.. code-block:: javascript
+
+    this.element.addEventListener('dropzone:pre-submit', (event) => {
+        // cropToSelection() is your own function, which returns a promise of the cropped file
+        event.detail.waitUntil(Promise.all(event.detail.files.map((file) => cropToSelection(file))));
+    });
+
+While the promise is pending, the container has a ``data-state="processing"`` attribute.
+Once it settles:
+
+* if the user changed the files of a Dropzone of the form meanwhile, the files are not replaced and the form is not submitted: the user submits it again;
+* otherwise, the files replace those of the Dropzone without a ``dropzone:change`` event, and the form is submitted again without dispatching ``dropzone:pre-submit`` again;
+* files over ``max_files``, or after the first one in single-file mode, are left out with a ``dropzone:reject`` event and the ``max_files`` reason;
+* if a listener cancels that resubmission, the new files stay in the Dropzone and the next submission dispatches ``dropzone:pre-submit`` with them;
+* if the promise rejects, or resolves to anything other than an array of ``File`` objects, the files are submitted as they are and the error is logged to the console.
+
 Typing the events in TypeScript
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. versionadded:: 3.8
 
-    The ``DropzonePreAddEventDetail`` and ``DropzoneRejectEventDetail`` types were added in Dropzone 3.8.
+    The ``DropzonePreAddEventDetail``, ``DropzonePreSubmitEventDetail`` and ``DropzoneRejectEventDetail`` types were added in Dropzone 3.8.
 
-The package exports the types of the ``event.detail`` of ``dropzone:pre-add`` and ``dropzone:reject``:
+The package exports the types of the ``event.detail`` of ``dropzone:pre-add``, ``dropzone:pre-submit`` and ``dropzone:reject``:
 
 .. code-block:: typescript
 
-    import type { DropzonePreAddEventDetail, DropzoneRejectEventDetail } from '@symfony/ux-dropzone';
+    import type {
+        DropzonePreAddEventDetail,
+        DropzonePreSubmitEventDetail,
+        DropzoneRejectEventDetail,
+    } from '@symfony/ux-dropzone';
 
     this.element.addEventListener('dropzone:pre-add', (event) => {
         const { files, waitUntil } = (event as CustomEvent<DropzonePreAddEventDetail>).detail;
+        // ...
+    });
+
+    this.element.addEventListener('dropzone:pre-submit', (event) => {
+        const { files, waitUntil } = (event as CustomEvent<DropzonePreSubmitEventDetail>).detail;
         // ...
     });
 

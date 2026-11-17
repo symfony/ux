@@ -16,6 +16,11 @@ export interface DropzonePreAddEventDetail {
     readonly waitUntil: (files: readonly File[] | PromiseLike<readonly File[]>) => void;
 }
 
+export interface DropzonePreSubmitEventDetail {
+    readonly files: readonly File[];
+    readonly waitUntil: (files: readonly File[] | PromiseLike<readonly File[]>) => void;
+}
+
 export interface DropzoneRejectEventDetail {
     readonly files: readonly File[];
     readonly reason: 'accept' | 'max_files';
@@ -27,6 +32,7 @@ interface DropzoneEventDetails {
     clear: Record<string, never>;
     remove: File;
     'pre-add': DropzonePreAddEventDetail;
+    'pre-submit': DropzonePreSubmitEventDetail;
     reject: DropzoneRejectEventDetail;
 }
 
@@ -36,6 +42,7 @@ export default class DropzoneController extends Controller {
         HTMLFormElement,
         HTMLButtonElement | HTMLInputElement | null
     >();
+    private static readonly preSubmittedForms = new WeakSet<HTMLFormElement>();
 
     declare readonly inputTarget: HTMLInputElement;
     declare readonly placeholderTarget: HTMLDivElement;
@@ -267,15 +274,34 @@ export default class DropzoneController extends Controller {
     }
 
     private preAdd(files: File[], add: (files: File[]) => void) {
+        const [event, promise] = this.dispatchWaitUntil('pre-add', files);
+        const selected = event.defaultPrevented ? [] : files;
+
+        if (!promise && this.processingCount === 0) {
+            add(selected);
+            return;
+        }
+
+        this.pendingSelections.add(selected);
+        this.enqueue(promise ?? Promise.resolve(selected), files, (resolved) => {
+            this.pendingSelections.delete(selected);
+            add(resolved);
+        });
+    }
+
+    private dispatchWaitUntil(
+        name: 'pre-add' | 'pre-submit',
+        files: File[]
+    ): [CustomEvent, Promise<readonly File[]> | null] {
         let promise = null as Promise<readonly File[]> | null;
         let dispatching = true;
         const event = this.dispatchEvent(
-            'pre-add',
+            name,
             {
                 files,
                 waitUntil: (filesPromise) => {
                     if (!dispatching || promise) {
-                        throw new Error('waitUntil() can only be called once, from a "dropzone:pre-add" listener.');
+                        throw new Error(`waitUntil() can only be called once, from a "dropzone:${name}" listener.`);
                     }
                     promise = Promise.resolve(filesPromise);
                 },
@@ -285,23 +311,20 @@ export default class DropzoneController extends Controller {
         dispatching = false;
 
         if (event.defaultPrevented && promise) {
-            // The selection is dropped, but a rejection of its promise must not go unhandled
+            // The files are dropped, but a rejection of their promise must not go unhandled
             promise.catch((error) => console.error(error));
             promise = null;
         }
-        const selected = event.defaultPrevented ? [] : files;
 
-        if (!promise && this.processingCount === 0) {
-            add(selected);
-            return;
-        }
+        return [event, promise];
+    }
 
+    private enqueue(promise: Promise<readonly File[]>, fallback: File[], apply: (files: File[]) => void) {
         const generation = this.generation;
         this.processingCount++;
-        this.pendingSelections.add(selected);
         this.updateState();
 
-        const result = (promise ?? Promise.resolve(selected))
+        const result = promise
             .then((resolved): File[] => {
                 if (!Array.isArray(resolved) || !resolved.every((file) => file instanceof File)) {
                     throw new TypeError('The promise passed to waitUntil() must resolve to an array of files.');
@@ -312,25 +335,35 @@ export default class DropzoneController extends Controller {
             .catch((error) => {
                 console.error(error);
 
-                return files;
+                return fallback;
             });
 
         this.queue = this.queue
             .then(() => result)
             .then((resolved) => {
-                // The dropzone was cleared or disconnected since this selection
+                // The dropzone was cleared or disconnected since
                 if (generation === this.generation) {
-                    add(resolved);
+                    apply(resolved);
                 }
             })
             .finally(() => {
-                this.pendingSelections.delete(selected);
                 this.processingCount--;
                 this.updateState();
                 if (this.processingCount === 0) {
                     this.notifyIdle();
                 }
             });
+    }
+
+    private replaceFiles(files: File[]) {
+        const limit = this.multipleValue ? (this.maxFilesValue > 0 ? this.maxFilesValue : files.length) : 1;
+        this.dataTransfer = new DataTransfer();
+        for (const file of files.slice(0, limit)) {
+            this.dataTransfer.items.add(file);
+        }
+        this.syncInput();
+        this.render();
+        this.reject(files.slice(limit), 'max_files');
     }
 
     private whenIdle(): Promise<void> {
@@ -688,36 +721,110 @@ export default class DropzoneController extends Controller {
             return;
         }
 
-        const processing = Array.from(DropzoneController.connectedDropzones).filter(
-            (dropzone) => dropzone.form === form && dropzone.processingCount > 0
-        );
-        if (processing.length === 0) {
+        const submitter = (event as SubmitEvent).submitter as HTMLButtonElement | HTMLInputElement | null;
+        if (DropzoneController.heldSubmitters.has(form)) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+            DropzoneController.heldSubmitters.set(form, submitter);
             return;
         }
 
-        event.preventDefault();
-        event.stopImmediatePropagation();
-        const held = DropzoneController.heldSubmitters.has(form);
-        DropzoneController.heldSubmitters.set(
-            form,
-            (event as SubmitEvent).submitter as HTMLButtonElement | HTMLInputElement | null
+        const dropzones = Array.from(DropzoneController.connectedDropzones).filter(
+            (dropzone) => dropzone.form === form
         );
-        if (held) {
+        const processing = dropzones.filter((dropzone) => dropzone.processingCount > 0);
+        if (processing.length > 0) {
+            DropzoneController.hold(event, form, submitter, processing);
             return;
         }
 
-        Promise.all(processing.map((dropzone) => dropzone.whenIdle())).then(() => {
-            const submitter = DropzoneController.heldSubmitters.get(form);
-            DropzoneController.heldSubmitters.delete(form);
-            if (!form.isConnected) {
+        if (DropzoneController.preSubmittedForms.delete(form)) {
+            return;
+        }
+
+        const preSubmits: { dropzone: DropzoneController; files: File[]; promise: Promise<readonly File[]> | null }[] =
+            [];
+        for (const dropzone of dropzones) {
+            const files = Array.from(dropzone.dataTransfer.files);
+            const [preSubmit, promise] = dropzone.dispatchWaitUntil('pre-submit', files);
+            if (preSubmit.defaultPrevented) {
+                for (const { promise } of preSubmits) {
+                    promise?.catch((error) => console.error(error));
+                }
+                event.preventDefault();
                 return;
             }
+            preSubmits.push({ dropzone, files, promise });
+        }
 
-            if (submitter?.isConnected && submitter.form === form && ['submit', 'image'].includes(submitter.type)) {
-                form.requestSubmit(submitter);
-            } else {
-                form.requestSubmit();
+        const transformed = preSubmits.filter(
+            (
+                preSubmit
+            ): preSubmit is { dropzone: DropzoneController; files: File[]; promise: Promise<readonly File[]> } =>
+                preSubmit.promise !== null
+        );
+        if (transformed.length === 0) {
+            return;
+        }
+
+        const results = new Map<DropzoneController, File[]>();
+        for (const { dropzone, files, promise } of transformed) {
+            dropzone.enqueue(promise, files, (resolved) => results.set(dropzone, resolved));
+        }
+        DropzoneController.preSubmittedForms.add(form);
+        DropzoneController.hold(
+            event,
+            form,
+            submitter,
+            transformed.map(({ dropzone }) => dropzone),
+            () => {
+                const unchanged = preSubmits.every(
+                    ({ dropzone, files }) =>
+                        dropzone.processingCount === 0 &&
+                        dropzone.dataTransfer.files.length === files.length &&
+                        files.every((file, index) => dropzone.dataTransfer.files[index] === file)
+                );
+                if (unchanged) {
+                    for (const [dropzone, resolved] of results) {
+                        dropzone.replaceFiles(resolved);
+                    }
+                }
+
+                return unchanged;
+            }
+        );
+    };
+
+    private static hold(
+        event: Event,
+        form: HTMLFormElement,
+        submitter: HTMLButtonElement | HTMLInputElement | null,
+        dropzones: DropzoneController[],
+        beforeSubmit: () => boolean = () => true
+    ) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        DropzoneController.heldSubmitters.set(form, submitter);
+
+        Promise.all(dropzones.map((dropzone) => dropzone.whenIdle())).then(() => {
+            const lastSubmitter = DropzoneController.heldSubmitters.get(form);
+            DropzoneController.heldSubmitters.delete(form);
+            if (form.isConnected && beforeSubmit()) {
+                if (
+                    lastSubmitter?.isConnected &&
+                    lastSubmitter.form === form &&
+                    ['submit', 'image'].includes(lastSubmitter.type)
+                ) {
+                    form.requestSubmit(lastSubmitter);
+                } else {
+                    form.requestSubmit();
+                }
+            }
+
+            // Also when no submission reached the Dropzone (invalid form, cancelled before), unless the one sent was held again for pre-submit
+            if (!DropzoneController.heldSubmitters.has(form)) {
+                DropzoneController.preSubmittedForms.delete(form);
             }
         });
-    };
+    }
 }

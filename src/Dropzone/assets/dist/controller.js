@@ -3,6 +3,7 @@ const fileKey = (file) => `${file.name}\0${file.size}\0${file.lastModified}`;
 var DropzoneController = class DropzoneController extends Controller {
 	static connectedDropzones = /* @__PURE__ */ new Set();
 	static heldSubmitters = /* @__PURE__ */ new WeakMap();
+	static preSubmittedForms = /* @__PURE__ */ new WeakSet();
 	static targets = [
 		"input",
 		"placeholder",
@@ -140,12 +141,25 @@ var DropzoneController = class DropzoneController extends Controller {
 		});
 	}
 	preAdd(files, add) {
+		const [event, promise] = this.dispatchWaitUntil("pre-add", files);
+		const selected = event.defaultPrevented ? [] : files;
+		if (!promise && this.processingCount === 0) {
+			add(selected);
+			return;
+		}
+		this.pendingSelections.add(selected);
+		this.enqueue(promise ?? Promise.resolve(selected), files, (resolved) => {
+			this.pendingSelections.delete(selected);
+			add(resolved);
+		});
+	}
+	dispatchWaitUntil(name, files) {
 		let promise = null;
 		let dispatching = true;
-		const event = this.dispatchEvent("pre-add", {
+		const event = this.dispatchEvent(name, {
 			files,
 			waitUntil: (filesPromise) => {
-				if (!dispatching || promise) throw new Error("waitUntil() can only be called once, from a \"dropzone:pre-add\" listener.");
+				if (!dispatching || promise) throw new Error(`waitUntil() can only be called once, from a "dropzone:${name}" listener.`);
 				promise = Promise.resolve(filesPromise);
 			}
 		}, true);
@@ -154,30 +168,34 @@ var DropzoneController = class DropzoneController extends Controller {
 			promise.catch((error) => console.error(error));
 			promise = null;
 		}
-		const selected = event.defaultPrevented ? [] : files;
-		if (!promise && this.processingCount === 0) {
-			add(selected);
-			return;
-		}
+		return [event, promise];
+	}
+	enqueue(promise, fallback, apply) {
 		const generation = this.generation;
 		this.processingCount++;
-		this.pendingSelections.add(selected);
 		this.updateState();
-		const result = (promise ?? Promise.resolve(selected)).then((resolved) => {
+		const result = promise.then((resolved) => {
 			if (!Array.isArray(resolved) || !resolved.every((file) => file instanceof File)) throw new TypeError("The promise passed to waitUntil() must resolve to an array of files.");
 			return [...resolved];
 		}).catch((error) => {
 			console.error(error);
-			return files;
+			return fallback;
 		});
 		this.queue = this.queue.then(() => result).then((resolved) => {
-			if (generation === this.generation) add(resolved);
+			if (generation === this.generation) apply(resolved);
 		}).finally(() => {
-			this.pendingSelections.delete(selected);
 			this.processingCount--;
 			this.updateState();
 			if (this.processingCount === 0) this.notifyIdle();
 		});
+	}
+	replaceFiles(files) {
+		const limit = this.multipleValue ? this.maxFilesValue > 0 ? this.maxFilesValue : files.length : 1;
+		this.dataTransfer = new DataTransfer();
+		for (const file of files.slice(0, limit)) this.dataTransfer.items.add(file);
+		this.syncInput();
+		this.render();
+		this.reject(files.slice(limit), "max_files");
 	}
 	whenIdle() {
 		if (this.processingCount === 0) return Promise.resolve();
@@ -394,20 +412,59 @@ var DropzoneController = class DropzoneController extends Controller {
 	static onSubmit = (event) => {
 		const form = event.target;
 		if (!(form instanceof HTMLFormElement) || !event.isTrusted || event.defaultPrevented) return;
-		const processing = Array.from(DropzoneController.connectedDropzones).filter((dropzone) => dropzone.form === form && dropzone.processingCount > 0);
-		if (processing.length === 0) return;
-		event.preventDefault();
-		event.stopImmediatePropagation();
-		const held = DropzoneController.heldSubmitters.has(form);
-		DropzoneController.heldSubmitters.set(form, event.submitter);
-		if (held) return;
-		Promise.all(processing.map((dropzone) => dropzone.whenIdle())).then(() => {
-			const submitter = DropzoneController.heldSubmitters.get(form);
-			DropzoneController.heldSubmitters.delete(form);
-			if (!form.isConnected) return;
-			if (submitter?.isConnected && submitter.form === form && ["submit", "image"].includes(submitter.type)) form.requestSubmit(submitter);
-			else form.requestSubmit();
+		const submitter = event.submitter;
+		if (DropzoneController.heldSubmitters.has(form)) {
+			event.preventDefault();
+			event.stopImmediatePropagation();
+			DropzoneController.heldSubmitters.set(form, submitter);
+			return;
+		}
+		const dropzones = Array.from(DropzoneController.connectedDropzones).filter((dropzone) => dropzone.form === form);
+		const processing = dropzones.filter((dropzone) => dropzone.processingCount > 0);
+		if (processing.length > 0) {
+			DropzoneController.hold(event, form, submitter, processing);
+			return;
+		}
+		if (DropzoneController.preSubmittedForms.delete(form)) return;
+		const preSubmits = [];
+		for (const dropzone of dropzones) {
+			const files = Array.from(dropzone.dataTransfer.files);
+			const [preSubmit, promise] = dropzone.dispatchWaitUntil("pre-submit", files);
+			if (preSubmit.defaultPrevented) {
+				for (const { promise } of preSubmits) promise?.catch((error) => console.error(error));
+				event.preventDefault();
+				return;
+			}
+			preSubmits.push({
+				dropzone,
+				files,
+				promise
+			});
+		}
+		const transformed = preSubmits.filter((preSubmit) => preSubmit.promise !== null);
+		if (transformed.length === 0) return;
+		const results = /* @__PURE__ */ new Map();
+		for (const { dropzone, files, promise } of transformed) dropzone.enqueue(promise, files, (resolved) => results.set(dropzone, resolved));
+		DropzoneController.preSubmittedForms.add(form);
+		DropzoneController.hold(event, form, submitter, transformed.map(({ dropzone }) => dropzone), () => {
+			const unchanged = preSubmits.every(({ dropzone, files }) => dropzone.processingCount === 0 && dropzone.dataTransfer.files.length === files.length && files.every((file, index) => dropzone.dataTransfer.files[index] === file));
+			if (unchanged) for (const [dropzone, resolved] of results) dropzone.replaceFiles(resolved);
+			return unchanged;
 		});
 	};
+	static hold(event, form, submitter, dropzones, beforeSubmit = () => true) {
+		event.preventDefault();
+		event.stopImmediatePropagation();
+		DropzoneController.heldSubmitters.set(form, submitter);
+		Promise.all(dropzones.map((dropzone) => dropzone.whenIdle())).then(() => {
+			const lastSubmitter = DropzoneController.heldSubmitters.get(form);
+			DropzoneController.heldSubmitters.delete(form);
+			if (form.isConnected && beforeSubmit()) {
+				if (lastSubmitter?.isConnected && lastSubmitter.form === form && ["submit", "image"].includes(lastSubmitter.type)) form.requestSubmit(lastSubmitter);
+				else form.requestSubmit();
+			}
+			if (!DropzoneController.heldSubmitters.has(form)) DropzoneController.preSubmittedForms.delete(form);
+		});
+	}
 };
 export { DropzoneController as default };

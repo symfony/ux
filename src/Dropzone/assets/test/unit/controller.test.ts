@@ -1989,6 +1989,13 @@ describe('DropzoneController (form submission)', () => {
                     )
             )
         );
+        for (const name of ['first', 'second']) {
+            Object.defineProperty(getByTestId(container, `${name}-input`), 'files', {
+                configurable: true,
+                writable: true,
+                value: [],
+            });
+        }
         startApplication().register('dropzone', DropzoneController);
         await connected;
     };
@@ -2168,5 +2175,268 @@ describe('DropzoneController (form submission)', () => {
         resolveSecond();
         await waitFor(() => expect(submits).toStrictEqual(['inside']));
         expect(inputNames('second')).toStrictEqual(['second.txt']);
+    });
+    const preSubmit = (name: string, listener: (event: any) => void) =>
+        getByTestId(container, name).addEventListener('dropzone:pre-submit', listener);
+
+    const submittedNames = () => {
+        const names: string[][] = [];
+        getByTestId(container, 'form').addEventListener('submit', () =>
+            names.push([...inputNames('first'), ...inputNames('second')])
+        );
+
+        return names;
+    };
+
+    it('dispatches pre-submit on each dropzone with its files, and submits at once without promise', async () => {
+        await start();
+        selectFiles(getByTestId(container, 'first-input') as HTMLInputElement, [new File(['a'], 'a.txt')]);
+        const details: any[] = [];
+        preSubmit('first', (event) => details.push(['first', event.detail.files.map((file: File) => file.name)]));
+        preSubmit('second', (event) => details.push(['second', event.detail.files.map((file: File) => file.name)]));
+
+        getByTestId(container, 'inside').click();
+
+        expect(details).toStrictEqual([
+            ['first', ['a.txt']],
+            ['second', []],
+        ]);
+        expect(submits).toStrictEqual(['inside']);
+    });
+
+    it('submits the files a pre-submit listener resolves, once, with the same submitter', async () => {
+        await start();
+        selectFiles(getByTestId(container, 'first-input') as HTMLInputElement, [new File(['a'], 'a.txt')]);
+        const names = submittedNames();
+        let resolve!: () => void;
+        let dispatched = 0;
+        preSubmit('first', (event) => {
+            dispatched++;
+            event.detail.waitUntil(
+                new Promise<void>((r) => (resolve = r)).then(() => [new File(['b'], 'cropped.txt')])
+            );
+        });
+
+        getByTestId(container, 'outside').click();
+        expect(submits).toStrictEqual([]);
+        expect(getByTestId(container, 'first')).toHaveAttribute('data-state', 'processing');
+        resolve();
+
+        await waitFor(() => expect(submits).toStrictEqual(['outside']));
+        expect(names).toStrictEqual([['cropped.txt']]);
+        expect(dispatched).toBe(1);
+        expect(getByTestId(container, 'first')).toHaveAttribute('data-state', 'filled');
+    });
+
+    it('cancels the submission when a pre-submit listener prevents it', async () => {
+        await start();
+        let reached = false;
+        getByTestId(container, 'form').addEventListener(
+            'submit',
+            (event) => {
+                reached = event.defaultPrevented;
+            },
+            { capture: true }
+        );
+        preSubmit('second', (event) => event.preventDefault());
+
+        getByTestId(container, 'inside').click();
+
+        expect(reached).toBe(true);
+    });
+
+    it('logs the rejection of a pre-submit promise when another dropzone cancels the submission', async () => {
+        await start();
+        const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
+        preSubmit('first', (event) => event.detail.waitUntil(Promise.reject(new Error('Crop failed'))));
+        preSubmit('second', (event) => event.preventDefault());
+
+        getByTestId(container, 'inside').click();
+
+        await waitFor(() => expect(consoleError).toHaveBeenCalledWith(new Error('Crop failed')));
+    });
+
+    it('submits the files of the dropzone when a pre-submit promise rejects', async () => {
+        await start();
+        const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
+        selectFiles(getByTestId(container, 'first-input') as HTMLInputElement, [new File(['a'], 'a.txt')]);
+        const names = submittedNames();
+        preSubmit('first', (event) => event.detail.waitUntil(Promise.reject(new Error('Crop failed'))));
+
+        getByTestId(container, 'inside').click();
+
+        await waitFor(() => expect(names).toStrictEqual([['a.txt']]));
+        expect(consoleError).toHaveBeenCalledWith(new Error('Crop failed'));
+    });
+
+    it('dispatches pre-submit again on the next submission', async () => {
+        await start();
+        let dispatched = 0;
+        preSubmit('first', (event) => {
+            dispatched++;
+            event.detail.waitUntil(Promise.resolve(event.detail.files));
+        });
+
+        getByTestId(container, 'inside').click();
+        await waitFor(() => expect(submits).toHaveLength(1));
+        getByTestId(container, 'inside').click();
+        await waitFor(() => expect(submits).toHaveLength(2));
+
+        expect(dispatched).toBe(2);
+    });
+
+    it('dispatches pre-submit with the files the pre-add listeners resolved', async () => {
+        await start();
+        const resolve = holdPreAdd('first');
+        const details: string[][] = [];
+        preSubmit('first', (event) => details.push(event.detail.files.map((file: File) => file.name)));
+
+        getByTestId(container, 'inside').click();
+        expect(details).toStrictEqual([]);
+        resolve();
+
+        await waitFor(() => expect(submits).toStrictEqual(['inside']));
+        expect(details).toStrictEqual([['first.txt']]);
+    });
+
+    it('keeps the first file a pre-submit listener resolves in single-file mode', async () => {
+        getByTestId(container, 'second').removeAttribute('data-dropzone-multiple-value');
+        getByTestId(container, 'second-input').removeAttribute('multiple');
+        const preview = document.createElement('div');
+        preview.setAttribute('data-dropzone-target', 'preview');
+        getByTestId(container, 'second').append(preview);
+        await start();
+        const names = submittedNames();
+        preSubmit('second', (event) => event.detail.waitUntil([new File(['x'], 'x.txt'), new File(['y'], 'y.txt')]));
+
+        getByTestId(container, 'inside').click();
+
+        await waitFor(() => expect(names).toStrictEqual([['x.txt']]));
+    });
+    it('does not submit when a file is removed while the pre-submit promise is pending', async () => {
+        await start();
+        selectFiles(getByTestId(container, 'first-input') as HTMLInputElement, [
+            new File(['a'], 'a.txt'),
+            new File(['b'], 'b.txt'),
+        ]);
+        let resolve!: () => void;
+        preSubmit('first', (event) =>
+            event.detail.waitUntil(
+                new Promise<void>((r) => (resolve = r)).then(() =>
+                    event.detail.files.map((file: File) => new File([file], `cropped-${file.name}`))
+                )
+            )
+        );
+
+        getByTestId(container, 'inside').click();
+        (getByTestId(container, 'first').querySelectorAll('.dropzone-preview-list-remove')[1] as HTMLElement).click();
+        resolve();
+        await new Promise((r) => setTimeout(r, 10));
+
+        expect(submits).toStrictEqual([]);
+        expect(inputNames('first')).toStrictEqual(['a.txt']);
+    });
+
+    it('does not submit when another dropzone of the form is processing once the pre-submit promise resolves', async () => {
+        await start();
+        let resolve!: () => void;
+        preSubmit('first', (event) =>
+            event.detail.waitUntil(new Promise<void>((r) => (resolve = r)).then(() => event.detail.files))
+        );
+
+        getByTestId(container, 'inside').click();
+        const resolveSecond = holdPreAdd('second');
+        resolve();
+        await new Promise((r) => setTimeout(r, 10));
+        resolveSecond();
+        await new Promise((r) => setTimeout(r, 10));
+
+        expect(submits).toStrictEqual([]);
+    });
+
+    it('does not submit when the dropzone disconnects while the pre-submit promise is pending', async () => {
+        await start();
+        preSubmit('first', (event) => event.detail.waitUntil(new Promise(() => {})));
+
+        getByTestId(container, 'inside').click();
+        getByTestId(container, 'first').remove();
+        await new Promise((r) => setTimeout(r, 10));
+
+        expect(submits).toStrictEqual([]);
+    });
+
+    it('dispatches pre-submit again when the submission sent afterwards is cancelled before the Dropzone', async () => {
+        // The listener of the Dropzone is registered again after this one, so this one runs first
+        window.removeEventListener('submit', (DropzoneController as any).onSubmit, true);
+        let submissions = 0;
+        window.addEventListener(
+            'submit',
+            (event) => {
+                if (++submissions === 2) {
+                    event.preventDefault();
+                }
+            },
+            { capture: true }
+        );
+        await start();
+        let dispatched = 0;
+        preSubmit('first', (event) => {
+            dispatched++;
+            event.detail.waitUntil(Promise.resolve(event.detail.files));
+        });
+
+        getByTestId(container, 'inside').click();
+        await new Promise((r) => setTimeout(r, 10));
+        getByTestId(container, 'inside').click();
+        await new Promise((r) => setTimeout(r, 10));
+
+        expect(dispatched).toBe(2);
+    });
+
+    it('does not dispatch pre-submit on the other dropzones once a listener cancels the submission', async () => {
+        await start();
+        let dispatched = false;
+        preSubmit('first', (event) => event.preventDefault());
+        preSubmit('second', () => (dispatched = true));
+
+        getByTestId(container, 'inside').click();
+
+        expect(dispatched).toBe(false);
+    });
+
+    it('keeps the files a pre-submit listener resolves under max files', async () => {
+        getByTestId(container, 'first').setAttribute('data-dropzone-max-files-value', '1');
+        await start();
+        const names = submittedNames();
+        const rejections: any[] = [];
+        getByTestId(container, 'first').addEventListener('dropzone:reject', (event: any) =>
+            rejections.push([event.detail.reason, event.detail.files.map((file: File) => file.name)])
+        );
+        preSubmit('first', (event) => event.detail.waitUntil([new File(['x'], 'x.txt'), new File(['y'], 'y.txt')]));
+
+        getByTestId(container, 'inside').click();
+
+        await waitFor(() => expect(names).toStrictEqual([['x.txt']]));
+        expect(rejections).toStrictEqual([['max_files', ['y.txt']]]);
+    });
+    it('transforms once the files the pre-add listeners resolved before the submission', async () => {
+        await start();
+        const resolve = holdPreAdd('first');
+        const names = submittedNames();
+        let dispatched = 0;
+        preSubmit('first', (event) => {
+            dispatched++;
+            event.detail.waitUntil(
+                Promise.resolve(event.detail.files.map((file: File) => new File([file], `cropped-${file.name}`)))
+            );
+        });
+
+        getByTestId(container, 'inside').click();
+        resolve();
+
+        await waitFor(() => expect(names).toStrictEqual([['cropped-first.txt']]));
+        await new Promise((r) => setTimeout(r, 10));
+        expect(dispatched).toBe(1);
+        expect(submits).toStrictEqual(['inside']);
     });
 });
