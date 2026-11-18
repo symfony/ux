@@ -1,5 +1,8 @@
+{%- set _sheet_id = inject('sheet.id') -%}
 {%- set sheet_close_attrs = {
     'data-slot': 'sheet-close',
+    command: 'close',
+    commandfor: _sheet_id,
     'data-action': 'click->dialog#close'|html_attr_type('sst'),
 } -%}
 {##- The close trigger element (e.g., a `Button`) that closes the sheet when clicked. -#}

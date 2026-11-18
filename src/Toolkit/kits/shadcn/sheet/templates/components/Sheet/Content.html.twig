@@ -25,6 +25,7 @@
     data-dialog-target="dialog"
     data-side="{{ _sheet_side }}"
     {{ attributes.defaults({
+        closedby: 'any',
         class: style.apply({side: _sheet_side})|tailwind_classes,
         'data-action': 'keydown.esc->dialog#close:prevent click->dialog#closeOnClickOutside',
     }) }}
@@ -38,6 +39,8 @@
             size="icon-sm"
             class="absolute top-3 end-3"
             data-slot="sheet-close"
+            command="close"
+            commandfor="{{ _sheet_id }}"
             data-action="click->dialog#close"
         >
             <twig:ux:icon name="lucide:x" />
