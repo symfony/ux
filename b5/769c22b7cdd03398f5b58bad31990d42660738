@@ -1,0 +1,9 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2026-11-18T09:08:07Z
+
+I rebased the branch on the reworked dialog branch (#4324).
+
+I removed the README paragraph about opening the sheet from a button elsewhere, as in the dialog and alert-dialog PRs, because the reader has to guess the sheet id to use `commandfor`.
+
+I also reduced the CHANGELOG to a single line saying the recipe now uses the native invoker commands and `closedby`, and shortened the PR description.
