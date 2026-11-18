@@ -82,14 +82,27 @@ first page should also serve the cursor boundary predicate.
 Cursor restrictions
 -------------------
 
-Cursor fields must be non-nullable mapped scalar fields on the root
-entity. Associations, unmapped aliases, nullable fields and invalid field
-names are rejected against ORM metadata. Supported Doctrine types include
+Cursor fields must be mapped scalar fields on the root entity.
+Associations, unmapped aliases and invalid field names are rejected
+against ORM metadata. Supported Doctrine types include
 small, regular and big integers, string, GUID, float, decimal, boolean,
 ``date``, ``datetime`` and ``datetimetz`` fields, and the ``uuid`` and ``ulid``
 types of ``symfony/doctrine-bridge``. A UID is compared in its database
 storage format, which follows creation time for ULIDs and UUIDv7 (a UUIDv4
 order is deterministic but arbitrary).
+
+A nullable field keeps the database platform's default ``NULL`` order:
+
+==================================  ==============  ==============
+Database                            ``ASC``         ``DESC``
+==================================  ==============  ==============
+PostgreSQL, Oracle, DB2             ``NULL`` last   ``NULL`` first
+MySQL, MariaDB, SQLite, SQL Server  ``NULL`` first  ``NULL`` last
+==================================  ==============  ==============
+
+The cursor boundary predicate follows the same order in both navigation
+directions, so the ``ORDER BY`` stays a plain column order that an index
+on the field can serve.
 
 The adapter appends every missing entity identifier field to make the
 effective order deterministic. The direction passed to ``orderBy()``

@@ -18,6 +18,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\UX\Pagination\Adapter\DoctrineOrmAdapter;
+use Symfony\UX\Pagination\Cursor\CursorBoundary;
 use Symfony\UX\Pagination\Cursor\CursorCodec;
 use Symfony\UX\Pagination\Cursor\CursorOrder;
 use Symfony\UX\Pagination\Exception\InvalidCursorException;
@@ -201,6 +202,155 @@ final class DoctrineCursorInvariantTest extends TestCase
         yield 'date' => ['printedOn'];
     }
 
+    /**
+     * @param 'ASC'|'DESC' $direction
+     */
+    #[DataProvider('provideDirections')]
+    public function testNullableFieldWalkMatchesTheDatabaseOrder(string $direction): void
+    {
+        $this->createBooksWithNullableRatings(23);
+        $order = CursorOrder::byFields(['rating', 'id'], $direction);
+
+        // NULLs sort where the platform puts them; the walk must follow the same order
+        $expected = array_map(
+            static fn (Book $book) => $book->getId(),
+            $this->bookQueryBuilder()->orderBy('b.rating', $direction)->addOrderBy('b.id', $direction)->getQuery()->getResult(),
+        );
+
+        $forwardPages = [];
+        $cursor = null;
+        $guard = 0;
+        do {
+            $page = $this->adapter->sliceWithCursor($this->bookQueryBuilder(), $cursor, 5, $order);
+            $forwardPages[] = array_map(static fn (Book $book) => $book->getId(), $page->items);
+            $cursor = $page->next;
+            $lastPage = $page;
+        } while (null !== $cursor && ++$guard < 50);
+
+        self::assertSame($expected, array_merge(...$forwardPages));
+
+        $backwardPages = [];
+        $cursor = $lastPage->previous;
+        $guard = 0;
+        while (null !== $cursor && ++$guard < 50) {
+            $page = $this->adapter->sliceWithCursor($this->bookQueryBuilder(), $cursor, 5, $order);
+            $backwardPages[] = array_map(static fn (Book $book) => $book->getId(), $page->items);
+            $cursor = $page->previous;
+        }
+
+        self::assertSame(\array_slice($forwardPages, 0, -1), array_reverse($backwardPages));
+    }
+
+    public static function provideDirections(): iterable
+    {
+        yield 'ascending' => ['ASC'];
+        yield 'descending' => ['DESC'];
+    }
+
+    public function testNullableFieldBoundaryRoundTripsThroughTheCodec(): void
+    {
+        $this->createBooksWithNullableRatings(6);
+        $order = CursorOrder::byFields(['rating', 'id'], 'ASC');
+        $codec = new CursorCodec('secret');
+
+        // Every boundary of a 1-row walk, NULL ones included, survives encoding
+        $ids = [];
+        $cursor = null;
+        $guard = 0;
+        do {
+            $page = $this->adapter->sliceWithCursor($this->bookQueryBuilder(), $cursor, 1, $order);
+            $ids = [...$ids, ...array_map(static fn (Book $book) => $book->getId(), $page->items)];
+            $cursor = null;
+            if (null !== $page->next) {
+                $decoded = $codec->decode($codec->encode($page->next->values, true, 'order', 'context'), 'order', 'context');
+                $cursor = new CursorBoundary($decoded['values'], $decoded['forward']);
+            }
+        } while (null !== $cursor && ++$guard < 50);
+
+        sort($ids);
+        self::assertSame(range(1, 6), $ids);
+    }
+
+    /**
+     * @param list<array{float|null, int|null}> $values
+     * @param 'ASC'|'DESC'                      $direction
+     */
+    #[DataProvider('provideMultipleNullableFields')]
+    public function testMultipleNullableFieldsRoundTripThroughTheCodec(array $values, string $direction, int $perPage): void
+    {
+        new SchemaTool($this->entityManager)->createSchema([
+            $this->entityManager->getClassMetadata(Book::class),
+            $this->entityManager->getClassMetadata(Category::class),
+        ]);
+
+        foreach ($values as $index => [$rating, $reviewCount]) {
+            $book = new Book();
+            $book->setTitle('Book '.$index);
+            $book->setRating($rating);
+            $book->setReviewCount($reviewCount);
+            $this->entityManager->persist($book);
+        }
+        $this->entityManager->flush();
+        $this->entityManager->clear();
+
+        $doctrineDirection = self::doctrineSortDirection($direction);
+        $expected = array_map(
+            static fn (Book $book) => $book->getId(),
+            $this->bookQueryBuilder()
+                ->orderBy('b.rating', $doctrineDirection)
+                ->addOrderBy('b.reviewCount', $doctrineDirection)
+                ->addOrderBy('b.id', $doctrineDirection)
+                ->getQuery()->getResult(),
+        );
+        self::assertCount(\count($values), $expected);
+        $expectedPages = array_chunk($expected, $perPage);
+
+        $paginator = new Paginator([$this->adapter], cursorCodec: new CursorCodec('test-secret'));
+        $builder = $paginator->cursor($this->bookQueryBuilder())
+            ->orderBy(['rating', 'reviewCount'], $direction)
+            ->perPage($perPage);
+        $pagination = $builder->paginate();
+
+        foreach ($expectedPages as $index => $expectedPage) {
+            self::assertSame($expectedPage, array_map(static fn (Book $book) => $book->getId(), $pagination->getItems()));
+            $nextCursor = $pagination->getNextCursor();
+            if ($index === \count($expectedPages) - 1) {
+                self::assertNull($nextCursor);
+            } else {
+                self::assertNotNull($nextCursor);
+                $pagination = $builder->cursor($nextCursor)->paginate();
+            }
+        }
+
+        foreach (array_reverse(\array_slice($expectedPages, 0, -1)) as $expectedPage) {
+            $previousCursor = $pagination->getPreviousCursor();
+            self::assertNotNull($previousCursor);
+            $pagination = $builder->cursor($previousCursor)->paginate();
+            self::assertSame($expectedPage, array_map(static fn (Book $book) => $book->getId(), $pagination->getItems()));
+        }
+        self::assertNull($pagination->getPreviousCursor());
+    }
+
+    public static function provideMultipleNullableFields(): iterable
+    {
+        $mixed = [];
+        foreach ([null, 0.0, 1.0] as $rating) {
+            foreach ([null, 0, 2] as $reviewCount) {
+                // Duplicate tuples force the appended identifier to break ties
+                $mixed[] = [$rating, $reviewCount];
+                $mixed[] = [$rating, $reviewCount];
+            }
+        }
+
+        foreach (['mixed' => $mixed, 'all null' => array_fill(0, 8, [null, null])] as $name => $values) {
+            foreach (['ASC', 'DESC'] as $direction) {
+                foreach ([1, 3] as $perPage) {
+                    yield $name.' '.$direction.' page size '.$perPage => [$values, $direction, $perPage];
+                }
+            }
+        }
+    }
+
     public function testExistingOrderIsRejectedEvenWhenCompatible(): void
     {
         $this->createAuthors(8);
@@ -273,6 +423,23 @@ final class DoctrineCursorInvariantTest extends TestCase
         self::assertCount(2, $decoded['values']);
     }
 
+    /**
+     * @param 'ASC'|'DESC' $direction
+     */
+    private static function doctrineSortDirection(string $direction): string|\SortDirection
+    {
+        $type = new \ReflectionParameter([QueryBuilder::class, 'addOrderBy'], 'order')->getType();
+        $types = $type instanceof \ReflectionUnionType ? $type->getTypes() : [$type];
+
+        foreach ($types as $namedType) {
+            if ($namedType instanceof \ReflectionNamedType && \SortDirection::class === $namedType->getName()) {
+                return 'ASC' === $direction ? \SortDirection::Ascending : \SortDirection::Descending;
+            }
+        }
+
+        return $direction;
+    }
+
     private function createAuthors(int $count): void
     {
         for ($i = 1; $i <= $count; ++$i) {
@@ -281,6 +448,24 @@ final class DoctrineCursorInvariantTest extends TestCase
             $this->entityManager->persist($author);
         }
         $this->entityManager->flush();
+    }
+
+    private function createBooksWithNullableRatings(int $count): void
+    {
+        new SchemaTool($this->entityManager)->createSchema([
+            $this->entityManager->getClassMetadata(Book::class),
+            $this->entityManager->getClassMetadata(Category::class),
+        ]);
+
+        // Every fourth rating is NULL, the others repeat so that page boundaries fall inside equal values
+        for ($i = 1; $i <= $count; ++$i) {
+            $book = new Book();
+            $book->setTitle('Book '.$i);
+            $book->setRating(0 === $i % 4 ? null : (float) ($i % 3));
+            $this->entityManager->persist($book);
+        }
+        $this->entityManager->flush();
+        $this->entityManager->clear();
     }
 
     private function queryBuilder(): QueryBuilder
