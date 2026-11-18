@@ -204,8 +204,8 @@ final class ArrayPaginationAdapter implements OffsetAdapterInterface, LookaheadA
     /**
      * Whether an item tuple comes after the cursor values in display order.
      *
-     * @param list<int|string|float> $tuple
-     * @param list<int|string|float> $values
+     * @param list<int|string|float|null> $tuple
+     * @param list<int|string|float|null> $values
      */
     private function isAfterTuple(array $tuple, array $values, string $direction): bool
     {

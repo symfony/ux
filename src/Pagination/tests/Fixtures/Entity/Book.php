@@ -103,6 +103,13 @@ class Book
         return $this->rating;
     }
 
+    public function setRating(?float $rating): self
+    {
+        $this->rating = $rating;
+
+        return $this;
+    }
+
     public function getPublishedAt(): \DateTimeImmutable
     {
         return $this->publishedAt;
