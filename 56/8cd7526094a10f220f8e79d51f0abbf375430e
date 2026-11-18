@@ -1,0 +1,9 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2026-11-18T09:08:01Z
+
+I rebased the branch on 3.x now that the alert-dialog PR is merged. Thanks for the work!
+
+I removed the README paragraph about opening the dialog from a button elsewhere, as in the alert-dialog PR, because the reader has to guess the dialog id to use `commandfor`.
+
+I also reduced the CHANGELOG to a single line saying the recipe now uses the native invoker commands, `closedby` and the native `<dialog>` centering, and shortened the PR title and description.
