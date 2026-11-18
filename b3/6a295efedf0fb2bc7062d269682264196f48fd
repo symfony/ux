@@ -1,0 +1,7 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2026-11-18T09:08:19Z
+
+I rebased the branch on 3.x, so the CHANGELOG entry now sits under the `3.8.0` heading.
+
+I also shortened the README bullet to two sentences, and the PR description too.
