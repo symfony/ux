@@ -1,0 +1,42 @@
+{%- set status_counts = this.statusCounts -%}
+{%- set total_posts = this.totalPosts -%}
+{%- set total_views = this.totalViews -%}
+<section {{ attributes.defaults({class: 'grid gap-4 md:grid-cols-2 lg:grid-cols-4'}) }}>
+    <twig:Dashboard:Card>
+        <twig:Dashboard:CardHeader>
+            <twig:Dashboard:CardDescription>Total posts</twig:Dashboard:CardDescription>
+            <twig:Dashboard:CardTitle class="text-2xl tabular-nums">{{ total_posts|number_format }}</twig:Dashboard:CardTitle>
+            <twig:Dashboard:CardAction>
+                <twig:Dashboard:Button variant="ghost" size="icon-xs" aria-label="Refresh" data-action="live#action" data-live-action-param="refresh">&#x21bb;</twig:Dashboard:Button>
+            </twig:Dashboard:CardAction>
+        </twig:Dashboard:CardHeader>
+        <twig:block name="footer"><span class="text-sm text-muted-foreground">{{ status_counts.draft }} drafts waiting for review</span></twig:block>
+    </twig:Dashboard:Card>
+    <twig:Dashboard:Card>
+        <twig:Dashboard:CardHeader>
+            <twig:Dashboard:CardDescription>Total views</twig:Dashboard:CardDescription>
+            <twig:Dashboard:CardTitle class="text-2xl tabular-nums">{{ total_views|number_format }}</twig:Dashboard:CardTitle>
+            <twig:Dashboard:CardAction>
+                <twig:Dashboard:Badge variant="outline">+8.2%</twig:Dashboard:Badge>
+            </twig:Dashboard:CardAction>
+        </twig:Dashboard:CardHeader>
+        <twig:block name="footer"><span class="text-sm text-muted-foreground">{{ (total_views / max(1, total_posts))|round|number_format }} views per post on average</span></twig:block>
+    </twig:Dashboard:Card>
+    <twig:Dashboard:Card>
+        <twig:Dashboard:CardHeader>
+            <twig:Dashboard:CardDescription>Comments</twig:Dashboard:CardDescription>
+            <twig:Dashboard:CardTitle class="text-2xl tabular-nums">{{ this.totalComments|number_format }}</twig:Dashboard:CardTitle>
+            <twig:Dashboard:CardAction>
+                <twig:Dashboard:Badge variant="destructive">-3.4%</twig:Dashboard:Badge>
+            </twig:Dashboard:CardAction>
+        </twig:Dashboard:CardHeader>
+        <twig:block name="footer"><span class="text-sm text-muted-foreground">Fewer comments than last month</span></twig:block>
+    </twig:Dashboard:Card>
+    <twig:Dashboard:Card>
+        <twig:Dashboard:CardHeader>
+            <twig:Dashboard:CardDescription>Published</twig:Dashboard:CardDescription>
+            <twig:Dashboard:CardTitle class="text-2xl tabular-nums">{{ (status_counts.published / max(1, total_posts) * 100)|round }}%</twig:Dashboard:CardTitle>
+        </twig:Dashboard:CardHeader>
+        <twig:block name="footer"><span class="text-sm text-muted-foreground">{{ status_counts.published }} of {{ total_posts }} posts are live</span></twig:block>
+    </twig:Dashboard:Card>
+</section>

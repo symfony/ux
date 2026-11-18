@@ -1,0 +1,85 @@
+name: App Benchmarks
+
+on:
+    push:
+        branches-ignore:
+            - 'dependabot/**'
+        paths:
+            - '.github/workflows/app-benchmarks.yaml'
+            - 'apps/benchmarks/**'
+            - 'src/Css/**'
+            - 'src/Icons/**'
+            - 'src/LiveComponent/**'
+            - 'src/Map/**'
+            - 'src/StimulusBundle/**'
+            - 'src/TwigComponent/**'
+            - '!src/*/doc/**'
+            - '!src/**/*.md'
+    pull_request:
+        paths:
+            - '.github/workflows/app-benchmarks.yaml'
+            - 'apps/benchmarks/**'
+            - 'src/Css/**'
+            - 'src/Icons/**'
+            - 'src/LiveComponent/**'
+            - 'src/Map/**'
+            - 'src/StimulusBundle/**'
+            - 'src/TwigComponent/**'
+            - '!src/*/doc/**'
+            - '!src/**/*.md'
+
+concurrency:
+    group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+    cancel-in-progress: true
+
+permissions: {}
+
+jobs:
+    test:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+              with:
+                  persist-credentials: false
+
+            - uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
+              with:
+                  php-version: '8.4'
+                  tools: symfony-cli, flex
+
+            - name: Install root PHP dependencies
+              uses: ramsey/composer-install@65e4f84970763564f46a70b8a54b90d033b3bdda # 4.0.0
+              with:
+                  working-directory: ${{ github.workspace }}
+
+            - name: Build root PHP packages
+              run: php .github/build-packages.php
+
+            - name: Install app dependencies
+              uses: ramsey/composer-install@65e4f84970763564f46a70b8a54b90d033b3bdda # 4.0.0
+              with:
+                  working-directory: apps/benchmarks
+                  dependency-versions: highest
+
+            - name: Run the unit tests of the runner
+              run: php vendor/bin/phpunit
+              working-directory: apps/benchmarks
+
+            - name: Start Symfony server
+              run: symfony server:start -d --port=8180 --no-tls
+              working-directory: apps/benchmarks
+              env:
+                  APP_ENV: prod
+                  APP_DEBUG: '0'
+
+            - name: Check every page and live scenario
+              run: php bin/console app:bench --check --url http://127.0.0.1:8180
+              working-directory: apps/benchmarks
+              env:
+                  APP_ENV: prod
+                  APP_DEBUG: '0'
+
+            - name: Stop Symfony server
+              if: always()
+              run: symfony server:stop
+              working-directory: apps/benchmarks

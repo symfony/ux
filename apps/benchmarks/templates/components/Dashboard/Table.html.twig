@@ -1,0 +1,8 @@
+<div class="relative w-full overflow-x-auto">
+    <table
+        data-slot="table"
+        {{ attributes.defaults({class: 'w-full caption-bottom text-sm'}) }}
+    >
+        {%- block content %}{% endblock -%}
+    </table>
+</div>

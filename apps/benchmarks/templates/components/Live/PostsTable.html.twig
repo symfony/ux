@@ -1,0 +1,132 @@
+{%- set page = this.postPage -%}
+{%- set status_counts = this.statusCounts -%}
+{%- set category_counts = this.categoryCounts -%}
+<div {{ attributes }}>
+    <twig:Dashboard:Card>
+        <twig:Dashboard:CardHeader class="border-b">
+            <twig:Dashboard:CardTitle>Posts</twig:Dashboard:CardTitle>
+            <twig:Dashboard:CardDescription>{{ page.total|number_format }} {{ page.total == 1 ? 'post' : 'posts' }} match your filters.</twig:Dashboard:CardDescription>
+            <twig:Dashboard:CardAction>
+                <div class="flex flex-wrap items-center gap-3" role="group" aria-label="Toggle columns">
+                    {% for column in ['Author', 'Category', 'Status', 'Views', 'Comments', 'Published'] %}
+                        <div class="flex items-center gap-1.5">
+                            <twig:Dashboard:Checkbox id="posts-column-{{ column|lower }}" checked />
+                            <twig:Dashboard:Label for="posts-column-{{ column|lower }}">{{ column }}</twig:Dashboard:Label>
+                        </div>
+                    {% endfor %}
+                </div>
+            </twig:Dashboard:CardAction>
+            <form class="col-span-2 mt-3 flex flex-wrap items-center gap-2" data-action="live#$render:prevent">
+                <twig:Dashboard:Input type="search" id="table-search" class="w-full sm:w-72" name="query" value="{{ query }}" data-model="query" placeholder="Filter by title or author..." aria-label="Filter by title or author" />
+                {% if query %}
+                    <span class="text-xs text-muted-foreground">{{ page.total }} results</span>
+                {% endif %}
+                <select name="status" data-model="status" aria-label="Status" class="h-7 rounded-lg border border-input bg-transparent px-2 text-sm">
+                    <option value="">All statuses</option>
+                    {% for case in enum('App\\Model\\PostStatus').cases() %}
+                        <option value="{{ case.value }}" {{ status == case ? 'selected' }}>{{ case.label }} ({{ status_counts[case.value] }})</option>
+                    {% endfor %}
+                </select>
+                <select name="category" data-model="category" aria-label="Category" class="h-7 rounded-lg border border-input bg-transparent px-2 text-sm">
+                    <option value="">All categories</option>
+                    {% for case in enum('App\\Model\\PostCategory').cases() %}
+                        <option value="{{ case.value }}" {{ category == case ? 'selected' }}>{{ case.label }} ({{ category_counts[case.value] }})</option>
+                    {% endfor %}
+                </select>
+                <select name="sort" data-model="sort" aria-label="Sort by" class="h-7 rounded-lg border border-input bg-transparent px-2 text-sm">
+                    {% for case in enum('App\\Model\\PostSort').cases() %}
+                        <option value="{{ case.value }}" {{ sort == case ? 'selected' }}>{{ case.label }}</option>
+                    {% endfor %}
+                </select>
+                <div class="flex items-center gap-2">
+                    <twig:Dashboard:Checkbox id="posts-featured" data-model="featured" checked="{{ featured }}" />
+                    <twig:Dashboard:Label for="posts-featured">Featured only</twig:Dashboard:Label>
+                </div>
+                <span data-loading class="ms-auto text-xs text-muted-foreground">Loading...</span>
+            </form>
+        </twig:Dashboard:CardHeader>
+
+        {% if selected is not empty %}
+            <div class="flex flex-wrap items-center gap-2 border-b bg-muted/50 px-4 py-2 text-sm" role="toolbar" aria-label="Bulk actions">
+                <span class="me-auto font-medium">{{ selected|length }} selected</span>
+                <twig:Dashboard:Button variant="destructive" size="sm" data-action="live#action" data-live-action-param="bulkDelete">Delete</twig:Dashboard:Button>
+            </div>
+        {% endif %}
+
+        <twig:Dashboard:CardContent class="px-0">
+            <twig:Dashboard:Table>
+                <twig:Dashboard:TableHeader>
+                    <twig:Dashboard:TableRow>
+                        <twig:Dashboard:TableHead class="w-8 ps-4"><span class="sr-only">Select</span></twig:Dashboard:TableHead>
+                        <twig:Dashboard:TableHead>Post</twig:Dashboard:TableHead>
+                        <twig:Dashboard:TableHead>Author</twig:Dashboard:TableHead>
+                        <twig:Dashboard:TableHead>Category</twig:Dashboard:TableHead>
+                        <twig:Dashboard:TableHead>Status</twig:Dashboard:TableHead>
+                        <twig:Dashboard:TableHead class="text-end">Views</twig:Dashboard:TableHead>
+                        <twig:Dashboard:TableHead class="text-end">Comments</twig:Dashboard:TableHead>
+                        <twig:Dashboard:TableHead>Published</twig:Dashboard:TableHead>
+                    </twig:Dashboard:TableRow>
+                </twig:Dashboard:TableHeader>
+                <twig:Dashboard:TableBody>
+                    {% for post in page.items %}
+                        <tr data-slot="table-row" class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"{% if post.id in selected %} data-state="selected"{% endif %}>
+                            <twig:Dashboard:TableCell class="w-8 ps-4">
+                                <input type="checkbox" id="select-post-{{ post.id }}" aria-label="Select post #{{ post.id }}" value="{{ post.id }}" data-model="selected" {{ post.id in selected ? 'checked' }}>
+                            </twig:Dashboard:TableCell>
+                            <twig:Dashboard:TableCell>
+                                <div class="flex items-center gap-1.5">
+                                    <twig:Live:FeaturedToggle id="featured-{{ post.id }}" postId="{{ post.id }}" featured="{{ post.featured }}" />
+                                    <a href="#" class="truncate font-medium hover:underline">{{ post.title }}</a>
+                                </div>
+                            </twig:Dashboard:TableCell>
+                            <twig:Dashboard:TableCell>
+                                <div class="flex items-center gap-2">
+                                    <twig:Dashboard:Avatar size="sm" name="{{ post.author }}" />
+                                    <span>{{ post.author }}</span>
+                                </div>
+                            </twig:Dashboard:TableCell>
+                            <twig:Dashboard:TableCell>
+                                <twig:Dashboard:Badge variant="outline">{{ post.category.label }}</twig:Dashboard:Badge>
+                            </twig:Dashboard:TableCell>
+                            <twig:Dashboard:TableCell>
+                                <twig:Dashboard:Badge variant="{{ post.status.badgeVariant }}">{{ post.status.label }}</twig:Dashboard:Badge>
+                            </twig:Dashboard:TableCell>
+                            <twig:Dashboard:TableCell numeric>{{ post.views|number_format }}</twig:Dashboard:TableCell>
+                            <twig:Dashboard:TableCell numeric>{{ post.comments }}</twig:Dashboard:TableCell>
+                            <twig:Dashboard:TableCell>
+                                <time datetime="{{ post.publishedAt|date('c') }}">{{ post.publishedAt|date('M j, Y') }}</time>
+                            </twig:Dashboard:TableCell>
+                        </tr>
+                    {% endfor %}
+                </twig:Dashboard:TableBody>
+            </twig:Dashboard:Table>
+        </twig:Dashboard:CardContent>
+
+        <twig:block name="footer">
+            <div class="flex w-full flex-wrap items-center justify-between gap-4">
+                <p class="text-sm text-muted-foreground">
+                    Showing <strong class="text-foreground">{{ page.firstIndex }}-{{ page.lastIndex }}</strong> of <strong class="text-foreground">{{ page.total|number_format }}</strong>
+                </p>
+                <div class="flex items-center gap-2">
+                    <twig:Dashboard:Label for="posts-per-page" class="text-muted-foreground">Rows per page</twig:Dashboard:Label>
+                    <select id="posts-per-page" data-model="perPage" class="h-7 rounded-lg border border-input bg-transparent px-2 text-sm">
+                        {% for choice in constant('App\\Twig\\Components\\Live\\PostsTable::PER_PAGE_CHOICES') %}
+                            <option value="{{ choice }}" {{ perPage == choice ? 'selected' }}>{{ choice }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <nav class="flex items-center gap-1" aria-label="Pagination">
+                    <twig:Dashboard:Button variant="ghost" size="sm" disabled="{{ page.page == 1 }}" data-action="live#action" data-live-action-param="goToPage" data-live-page-param="{{ max(1, page.page - 1) }}">Previous</twig:Dashboard:Button>
+                    {% for number in page.window %}
+                        {% if number is null %}
+                            <span class="px-1 text-muted-foreground">...</span>
+                        {% else %}
+                            <twig:Dashboard:Button variant="{{ number == page.page ? 'outline' : 'ghost' }}" size="icon-sm" aria-current="{{ number == page.page ? 'page' : false }}" data-action="live#action" data-live-action-param="goToPage" data-live-page-param="{{ number }}">{{ number }}</twig:Dashboard:Button>
+                        {% endif %}
+                    {% endfor %}
+                    <twig:Dashboard:Button variant="ghost" size="sm" disabled="{{ page.page == page.pageCount }}" data-action="live#action" data-live-action-param="goToPage" data-live-page-param="{{ min(page.pageCount, page.page + 1) }}">Next</twig:Dashboard:Button>
+                </nav>
+            </div>
+        </twig:block>
+    </twig:Dashboard:Card>
+</div>

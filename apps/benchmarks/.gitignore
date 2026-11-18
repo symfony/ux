@@ -1,0 +1,15 @@
+composer.lock
+
+###> symfony/framework-bundle ###
+/.env.local
+/.env.local.php
+/.env.*.local
+/config/secrets/prod/prod.decrypt.private.php
+/public/bundles/
+/var/
+/vendor/
+/.phpunit.cache/
+###< symfony/framework-bundle ###
+
+/config/reference.php
+/config/reference_css.php

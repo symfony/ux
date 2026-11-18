@@ -124,7 +124,7 @@ configuration, ``css()`` gives the same class names and the same CSS as Panda.
 
 .. _`Tailwind CSS`: https://tailwindcss.com/
 .. _`TailwindBundle`: https://symfony.com/bundles/TailwindBundle/current/index.html
-.. _`benchmark app`: https://github.com/symfony/ux/tree/3.x/apps/css-benchmark
+.. _`benchmark app`: https://github.com/symfony/ux/tree/3.x/apps/benchmarks
 .. _`UnoCSS`: https://unocss.dev/
 .. _`Bootstrap`: https://getbootstrap.com/
 .. _`Panda CSS`: https://panda-css.com/

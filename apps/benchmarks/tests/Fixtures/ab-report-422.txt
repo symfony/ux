@@ -1,0 +1,47 @@
+This is ApacheBench, Version 2.3 <$Revision: 1923142 $>
+Copyright 1996 Adam Twiss, Zeus Technology Ltd, http://www.zeustech.net/
+Licensed to The Apache Software Foundation, http://www.apache.org/
+
+Benchmarking 127.0.0.1 (be patient).....done
+
+
+Server Software:        
+Server Hostname:        127.0.0.1
+Server Port:            8181
+
+Document Path:          /_components/Live:PostForm
+Document Length:        5035 bytes
+
+Concurrency Level:      4
+Time taken for tests:   0.375 seconds
+Complete requests:      50
+Failed requests:        0
+Non-2xx responses:      50
+Keep-Alive requests:    0
+Total transferred:      265000 bytes
+Total body sent:        40050
+HTML transferred:       251750 bytes
+Requests per second:    133.39 [#/sec] (mean)
+Time per request:       29.987 [ms] (mean)
+Time per request:       7.497 [ms] (mean, across all concurrent requests)
+Transfer rate:          690.40 [Kbytes/sec] received
+                        104.34 kb/s sent
+                        794.74 kb/s total
+
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:        0    0   0.0      0       0
+Processing:     7   27   4.2     28      34
+Waiting:        6   26   4.1     27      33
+Total:          7   27   4.2     28      34
+
+Percentage of the requests served within a certain time (ms)
+  50%     28
+  66%     29
+  75%     29
+  80%     29
+  90%     30
+  95%     34
+  98%     34
+  99%     34
+ 100%     34 (longest request)

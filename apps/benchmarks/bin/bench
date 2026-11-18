@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+# Benchmarks the UX packages: FrankenPHP in classic then worker mode, ab, RESULTS.md. See README.md.
+cd "$(dirname "$0")/.." && exec php bin/console app:bench "$@"
