@@ -1,5 +1,8 @@
+{%- set _drawer_id = inject('drawer.id') -%}
 {%- set drawer_trigger_attrs = {
     'data-slot': 'drawer-trigger',
+    command: 'show-modal',
+    commandfor: _drawer_id,
     'data-action': 'click->dialog#open'|html_attr_type('sst'),
     'data-dialog-target': 'trigger',
     'aria-haspopup': 'dialog',

@@ -1,5 +1,8 @@
+{%- set _drawer_id = inject('drawer.id') -%}
 {%- set drawer_close_attrs = {
     'data-slot': 'drawer-close',
+    command: 'close',
+    commandfor: _drawer_id,
     'data-action': 'click->dialog#close'|html_attr_type('sst'),
 } -%}
 {##- The close trigger element (e.g., a `Button`) that closes the drawer when clicked. -#}

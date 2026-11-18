@@ -5,6 +5,7 @@
 - [Shadcn] Use the native invoker commands (`command` and `commandfor`) and the native `<dialog>` centering in `alert-dialog`
 - [Shadcn] Use the native invoker commands (`command` and `commandfor`), `closedby="any"` and the native `<dialog>` centering in `dialog`
 - [Shadcn] Use the native invoker commands (`command` and `commandfor`) and `closedby="any"` in `sheet`
+- [Shadcn] Use the native invoker commands (`command` and `commandfor`) and `closedby="any"` in `drawer`
 
 ## 3.7.1
 
