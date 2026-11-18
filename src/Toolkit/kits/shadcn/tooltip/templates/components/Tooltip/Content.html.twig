@@ -15,8 +15,9 @@
     data-side-offset="{{ sideOffset }}"
     data-tooltip-target="wrapper"
     role="presentation"
-    class="isolate z-50 pointer-events-none open:pointer-events-auto"
-    style="position: fixed; left: 0; top: 0; will-change: transform;"
+    popover="manual"
+    class="isolate z-50 pointer-events-none open:pointer-events-auto block overflow-visible bg-transparent"
+    style="position: fixed; inset: 0 auto auto 0; will-change: transform;"
 >
     <div
         id="{{ _tooltip_contentId }}"

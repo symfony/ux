@@ -61,6 +61,7 @@ export default class extends Controller {
         const delay = this.hasDelayDurationValue ? this.delayDurationValue : 0;
 
         this.showTimeout = setTimeout(() => {
+            this.#showPopover();
             this.wrapperElement.setAttribute('open', '');
             this.contentElement.setAttribute('open', '');
             this.arrowElement.setAttribute('open', '');
@@ -84,6 +85,26 @@ export default class extends Controller {
         this.wrapperElement.removeAttribute('open');
         this.contentElement.removeAttribute('open');
         this.arrowElement.removeAttribute('open');
+        this.#hidePopover();
+    }
+
+    // In the top layer, the tooltip is displayed above a modal dialog that contains its trigger.
+    // The wrapper keeps `display: block` when it is not open, so the opening and closing transitions still run.
+    #showPopover() {
+        if (this.#isPopover() && !this.wrapperElement.matches(':popover-open')) {
+            this.wrapperElement.showPopover();
+        }
+    }
+
+    #hidePopover() {
+        if (this.#isPopover() && this.wrapperElement.matches(':popover-open')) {
+            this.wrapperElement.hidePopover();
+        }
+    }
+
+    // Browsers without the Popover API ignore the attribute: the tooltip then stays below a modal dialog.
+    #isPopover() {
+        return this.wrapperElement.hasAttribute('popover') && 'function' === typeof this.wrapperElement.showPopover;
     }
 
     // A shrink-to-fit box that wraps its text keeps its max width, leaving a gap after the longest line.
