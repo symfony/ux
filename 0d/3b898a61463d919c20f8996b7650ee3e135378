@@ -1,0 +1,21 @@
+---------------------------------------------------------------------------
+
+by seb-jean at 2026-11-04T13:55:02Z
+
+Is it possible to create a PR directly on https://github.com/doctrine/orm, or not?
+
+---------------------------------------------------------------------------
+
+by norkunas at 2026-11-04T16:24:25Z
+
+Doctrine's own `CursorPaginator` (ORM 3.7) has the same gap: `CursorWalker::buildCursorCondition()` compares the boundary with `col > :v`, so a `NULL` boundary ends the walk there too. A fix there would be worth having.
+
+This PR is for ux-pagination as it is today: `DoctrineOrmAdapter` builds its own boundary predicate, so it doesn't benefit from a Doctrine fix until it moves onto Doctrine's paginator (#3898, waiting on doctrine/orm#12724). Once it does, the same handling needs to live in Doctrine.
+
+Would you like to take the Doctrine side, since you follow the pagination work there? Otherwise I can open it later.
+
+---------------------------------------------------------------------------
+
+by seb-jean at 2026-11-08T13:34:42Z
+
+If you can, opening a PR on the Doctrine ORM side would be great!
