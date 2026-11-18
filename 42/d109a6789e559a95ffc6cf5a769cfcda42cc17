@@ -1,0 +1,9 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2026-11-18T09:08:13Z
+
+I rebased the branch on the reworked sheet branch (#4326).
+
+I removed the README paragraph about opening the drawer from a button elsewhere, as in the other dialog PRs: the reader has to guess the drawer id to use `commandfor`.
+
+I also cut the CHANGELOG down to a single line saying the recipe now uses the native invoker commands and `closedby`, and shortened the PR description.
