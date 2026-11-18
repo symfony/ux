@@ -98,6 +98,100 @@ describeRecipe('shadcn/accordion', () => {
         await expect(page.getByText('This section contains information about premium features.')).toBeHidden();
     });
 
+    test('opens a closed item when a fragment reaches it', async ({ page, gotoExample }) => {
+        await gotoExample('shadcn/accordion/default');
+        const shipping = page.getByRole('button', { name: 'What are your shipping options?' });
+        const returns = page.getByRole('button', { name: 'What is your return policy?' });
+        const content = page.locator('#accordion-demo-returns-content');
+        await expect(content).toHaveAttribute('hidden', 'until-found');
+        await expect(content).not.toHaveClass(/(^|\s)hidden(\s|$)/);
+
+        await page.evaluate(() => {
+            location.hash = 'accordion-demo-returns-content';
+        });
+
+        await expect(returns).toHaveAttribute('aria-expanded', 'true');
+        await expect(page.getByRole('region', { name: 'What is your return policy?' })).toBeVisible();
+        await expect(content).not.toHaveAttribute('hidden');
+        await expect(shipping).toHaveAttribute('aria-expanded', 'false');
+    });
+
+    test('keeps a closed item findable once it closes', async ({ page, gotoExample }) => {
+        await gotoExample('shadcn/accordion/default');
+        const shipping = page.getByRole('button', { name: 'What are your shipping options?' });
+        const content = page.locator('#accordion-demo-shipping-content');
+
+        await shipping.click();
+
+        await expect(content).toHaveAttribute('hidden', 'until-found');
+        await expect(content).not.toHaveClass(/(^|\s)hidden(\s|$)/);
+        await expect(page.getByRole('region', { name: 'What are your shipping options?' })).toBeHidden();
+    });
+
+    test('does not open a disabled item when a fragment reaches it', async ({ page, gotoExample }) => {
+        await gotoExample('shadcn/accordion/disabled');
+        const premium = page.getByRole('button', { name: 'Premium feature information' });
+
+        await page.evaluate(() => {
+            location.hash = 'accordion-disabled-item-2-content';
+        });
+
+        await expect(premium).toHaveAttribute('aria-expanded', 'false');
+        await expect(page.getByText('This section contains information about premium features.')).toBeHidden();
+    });
+
+    test('renders the closed panels hidden until found, and the disabled ones hidden', async ({
+        page,
+        gotoExample,
+    }) => {
+        await gotoExample('shadcn/accordion/disabled');
+
+        await expect(page.locator('#accordion-disabled-item-1-content')).toHaveAttribute('hidden', 'until-found');
+        await expect(page.locator('#accordion-disabled-item-2-content')).toHaveAttribute('hidden', '');
+    });
+
+    test('keeps a disabled item hidden from find-in-page once it closes', async ({ page, gotoExample }) => {
+        await gotoExample('shadcn/accordion/default');
+        const returns = page.getByRole('button', { name: 'What is your return policy?' });
+        const content = page.locator('#accordion-demo-shipping-content');
+        await page.locator('[data-accordion-target="item"][data-value="shipping"]').evaluate((item) => {
+            item.setAttribute('aria-disabled', 'true');
+        });
+
+        await returns.click();
+
+        await expect(content).toHaveAttribute('hidden', '');
+    });
+
+    test('closes the open item at once when a fragment reaches another one, so the match does not move', async ({
+        page,
+        gotoExample,
+    }) => {
+        await gotoExample('shadcn/accordion/default');
+
+        const shippingHiddenAtMatch = await page.evaluate(
+            () =>
+                new Promise((resolve) => {
+                    document.getElementById('accordion-demo-returns-content')!.addEventListener('beforematch', () => {
+                        resolve(document.getElementById('accordion-demo-shipping-content')!.getAttribute('hidden'));
+                    });
+                    location.hash = 'accordion-demo-returns-content';
+                })
+        );
+
+        expect(shippingHiddenAtMatch).toBe('until-found');
+    });
+
+    test('hides a closed item when its transition does not run', async ({ page, gotoExample }) => {
+        await gotoExample('shadcn/accordion/default');
+        await page.addStyleTag({ content: '[data-slot="accordion-content"] { transition: none !important; }' });
+        const shipping = page.getByRole('button', { name: 'What are your shipping options?' });
+
+        await shipping.click();
+
+        await expect(page.locator('#accordion-demo-shipping-content')).toHaveAttribute('hidden', 'until-found');
+    });
+
     test('skips a disabled item with the arrow keys', async ({ page, gotoExample }) => {
         await gotoExample('shadcn/accordion/disabled');
         const history = page.getByRole('button', { name: 'Can I access my account history?' });
