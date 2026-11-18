@@ -1,0 +1,9 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2026-11-18T07:45:51Z
+
+I rebased the branch on 3.x and rewrote the PR description to make it shorter.
+
+I removed the README paragraph about opening the dialog from a button elsewhere: the reader has to guess the dialog id to use `commandfor`, so it adds little.
+
+I also reduced the CHANGELOG to a single line saying the recipe now uses the native invoker commands and the native `<dialog>` centering. Thanks!
