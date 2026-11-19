@@ -1,0 +1,11 @@
+<div {{ attributes.defaults({class: 'inline-flex'}) }}>
+    <twig:Dashboard:Button
+        variant="ghost"
+        size="icon-xs"
+        aria-pressed="{{ featured ? 'true' : 'false' }}"
+        aria-label="{{ featured ? 'Unfeature' : 'Feature' }} post #{{ postId }}"
+        data-action="live#action"
+        data-live-action-param="toggle"
+        data-loading="addAttribute(disabled)"
+    >{{ featured ? '★' : '☆' }}</twig:Dashboard:Button>
+</div>

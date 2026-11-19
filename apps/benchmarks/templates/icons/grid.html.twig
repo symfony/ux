@@ -1,0 +1,16 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}Icons{% endblock %}
+
+{% block body %}
+<main class="grid grid-cols-10 gap-2 p-6">
+    {% for i in 1..repeat %}
+        {% for name in names %}
+            {{ ux_icon('lucide:' ~ name, {class: 'size-' ~ (4 + loop.index % 3), 'aria-label': name, width: 16 + i}) }}
+        {% endfor %}
+        {% for name in names %}
+            <twig:ux:icon name="lucide:{{ name }}" class="text-muted-foreground size-{{ 4 + loop.index % 3 }}" aria-hidden="true" />
+        {% endfor %}
+    {% endfor %}
+</main>
+{% endblock %}

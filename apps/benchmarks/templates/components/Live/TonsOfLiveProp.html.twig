@@ -1,0 +1,13 @@
+<div{{ attributes }}>
+    <h1>Tons of Live Prop</h1>
+    <p>Prop1: {{ prop1 }}</p>
+    <p>Price: {{ price }}</p>
+    <p>Tags: {{ tags|join(', ') }}</p>
+    <p>Is Visible: {{ isVisible ? 'Yes' : 'No' }}</p>
+    <p>Page: {{ page }}</p>
+    <p>{{ dumbDto|json_encode }}</p>
+    <button data-action="live#action" data-live-action-param="updateSomeProps">Update Some Props</button>
+
+    <button data-action="live#action" data-live-action-param="decrementPage">Decrement page</button>
+    <button data-action="live#action" data-live-action-param="incrementPage">Increment page</button>
+</div>

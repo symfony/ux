@@ -1,0 +1,102 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}TwigComponent{% endblock %}
+
+{% block body %}
+<main class="flex flex-col gap-6 p-6">
+    <header class="flex items-center justify-between gap-4">
+        <div class="flex flex-col gap-1">
+            <h1 class="text-2xl font-semibold tracking-tight">Dashboard</h1>
+            <p class="text-sm text-muted-foreground">What happened on the blog this month.</p>
+        </div>
+        <div class="flex items-center gap-2">
+            <twig:Dashboard:Button variant="outline">Export</twig:Dashboard:Button>
+            <twig:Dashboard:Button>New post</twig:Dashboard:Button>
+        </div>
+    </header>
+
+    <twig:Dashboard:Alert>
+        <twig:Dashboard:AlertTitle>Heads up</twig:Dashboard:AlertTitle>
+        <twig:Dashboard:AlertDescription>Three drafts are waiting for a review.</twig:Dashboard:AlertDescription>
+    </twig:Dashboard:Alert>
+
+    <section class="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        {% for stat in stats %}
+            <twig:Dashboard:Card>
+                <twig:Dashboard:CardHeader>
+                    <twig:Dashboard:CardDescription>{{ stat.label }}</twig:Dashboard:CardDescription>
+                    <twig:Dashboard:CardTitle class="text-2xl">{{ stat.value }}</twig:Dashboard:CardTitle>
+                    <twig:Dashboard:CardAction>
+                        <twig:Dashboard:Badge variant="outline">{{ stat.trend }}</twig:Dashboard:Badge>
+                    </twig:Dashboard:CardAction>
+                </twig:Dashboard:CardHeader>
+                <twig:block name="footer"><span class="text-sm text-muted-foreground">{{ stat.note }}</span></twig:block>
+            </twig:Dashboard:Card>
+        {% endfor %}
+    </section>
+
+    <section class="grid gap-4 lg:grid-cols-3">
+        <twig:Dashboard:Card class="lg:col-span-2">
+            <twig:Dashboard:CardHeader>
+                <twig:Dashboard:CardTitle>Recent posts</twig:Dashboard:CardTitle>
+                <twig:Dashboard:CardDescription>The last posts written by the team.</twig:Dashboard:CardDescription>
+            </twig:Dashboard:CardHeader>
+            <twig:Dashboard:CardContent>
+                <twig:Dashboard:Table>
+                    <twig:Dashboard:TableHeader>
+                        <twig:Dashboard:TableRow>
+                            <twig:Dashboard:TableHead class="text-end">#</twig:Dashboard:TableHead>
+                            <twig:Dashboard:TableHead>Author</twig:Dashboard:TableHead>
+                            <twig:Dashboard:TableHead>Title</twig:Dashboard:TableHead>
+                            <twig:Dashboard:TableHead>Status</twig:Dashboard:TableHead>
+                        </twig:Dashboard:TableRow>
+                    </twig:Dashboard:TableHeader>
+                    <twig:Dashboard:TableBody>
+                        {% for post in posts %}
+                            <twig:Dashboard:TableRow>
+                                <twig:Dashboard:TableCell numeric>{{ loop.index }}</twig:Dashboard:TableCell>
+                                <twig:Dashboard:TableCell>
+                                    <div class="flex items-center gap-2">
+                                        <twig:Dashboard:Avatar size="sm" name="{{ post.author }}" />
+                                        <span class="font-medium">{{ post.author }}</span>
+                                    </div>
+                                </twig:Dashboard:TableCell>
+                                <twig:Dashboard:TableCell>{{ post.title }}</twig:Dashboard:TableCell>
+                                <twig:Dashboard:TableCell>
+                                    <twig:Dashboard:Badge variant="{{ post.status == 'published' ? 'default' : (post.status == 'draft' ? 'secondary' : 'destructive') }}">{{ post.status }}</twig:Dashboard:Badge>
+                                </twig:Dashboard:TableCell>
+                            </twig:Dashboard:TableRow>
+                        {% endfor %}
+                    </twig:Dashboard:TableBody>
+                </twig:Dashboard:Table>
+            </twig:Dashboard:CardContent>
+        </twig:Dashboard:Card>
+
+        <twig:Dashboard:Card>
+            <twig:Dashboard:CardHeader>
+                <twig:Dashboard:CardTitle>Quick post</twig:Dashboard:CardTitle>
+            </twig:Dashboard:CardHeader>
+            <twig:Dashboard:CardContent>
+                <form class="flex flex-col gap-4">
+                    {% for field in fields %}
+                        <div class="flex flex-col gap-2">
+                            <twig:Dashboard:Label for="{{ field.id }}">{{ field.label }}</twig:Dashboard:Label>
+                            <twig:Dashboard:Input id="{{ field.id }}" placeholder="{{ field.placeholder }}" />
+                        </div>
+                    {% endfor %}
+                    <div class="flex items-center gap-2">
+                        <twig:Dashboard:Checkbox id="publish-now" />
+                        <twig:Dashboard:Label for="publish-now">Publish immediately</twig:Dashboard:Label>
+                    </div>
+                    <twig:Dashboard:Separator />
+                    <div class="flex items-center justify-end gap-2">
+                        <twig:Dashboard:Button variant="secondary" size="sm">Cancel</twig:Dashboard:Button>
+                        <twig:Dashboard:Button size="sm">Publish</twig:Dashboard:Button>
+                    </div>
+                </form>
+            </twig:Dashboard:CardContent>
+            <twig:block name="footer"><twig:Dashboard:Button variant="link" size="sm">See the drafts</twig:Dashboard:Button></twig:block>
+        </twig:Dashboard:Card>
+    </section>
+</main>
+{% endblock %}

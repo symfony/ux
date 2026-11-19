@@ -1,0 +1,14 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}Home{% endblock %}
+
+{% block body %}
+<main>
+    <h1>UX benchmarks</h1>
+    <ul>
+        {% for name, path in paths %}
+            <li><a href="{{ path(name) }}">{{ path }}</a> ({{ name }})</li>
+        {% endfor %}
+    </ul>
+</main>
+{% endblock %}

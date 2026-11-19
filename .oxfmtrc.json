@@ -16,6 +16,7 @@
         "src/Css/resources/*.json",
         "src/**/tests/**/fixtures/**",
         "src/**/tests/**/Fixtures/**",
+        "apps/**/tests/**/Fixtures/**",
         "src/Router/assets/test/fixtures/**",
         "src/**/tests/**/__snapshots__/**"
     ],

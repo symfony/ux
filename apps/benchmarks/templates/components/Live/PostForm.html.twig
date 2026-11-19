@@ -1,0 +1,23 @@
+<div {{ attributes }}>
+    <twig:Dashboard:Card>
+        <twig:Dashboard:CardHeader>
+            <twig:Dashboard:CardTitle>New post</twig:Dashboard:CardTitle>
+            <twig:Dashboard:CardDescription>Each field is validated as soon as it changes.</twig:Dashboard:CardDescription>
+        </twig:Dashboard:CardHeader>
+        <twig:Dashboard:CardContent>
+            {{ form_start(form, {attr: {novalidate: true, class: 'flex flex-col gap-4', 'data-action': 'live#action:prevent', 'data-live-action-param': 'save'}}) }}
+                {{ form_row(form.title) }}
+                <div class="grid grid-cols-2 gap-4">
+                    {{ form_row(form.author) }}
+                    {{ form_row(form.category) }}
+                </div>
+                {{ form_row(form.status) }}
+                {{ form_row(form.featured) }}
+                <twig:Dashboard:Separator />
+                <div class="flex justify-end gap-2">
+                    <twig:Dashboard:Button type="submit" data-loading="addAttribute(disabled)">Create post</twig:Dashboard:Button>
+                </div>
+            {{ form_end(form, {render_rest: false}) }}
+        </twig:Dashboard:CardContent>
+    </twig:Dashboard:Card>
+</div>

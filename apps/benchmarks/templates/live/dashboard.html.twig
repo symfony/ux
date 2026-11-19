@@ -1,0 +1,20 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}LiveComponent{% endblock %}
+
+{% block body %}
+<main class="flex flex-col gap-6 p-6">
+    <header class="flex flex-col gap-1">
+        <h1 class="text-2xl font-semibold tracking-tight">Dashboard</h1>
+        <p class="text-sm text-muted-foreground">Live filters, row toggles and a validated form.</p>
+    </header>
+
+    <twig:Live:DashboardStats id="dashboard-stats" />
+    <section class="grid gap-4 xl:grid-cols-3">
+        <div class="xl:col-span-2">
+            <twig:Live:PostsTable id="posts-table" perPage="{{ 100 }}" />
+        </div>
+        <twig:Live:PostForm id="post-form" />
+    </section>
+</main>
+{% endblock %}

@@ -1,0 +1,9 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}Map (Google){% endblock %}
+
+{% block body %}
+<main class="p-6">
+    {{ ux_map(map, {style: 'height: 600px'}) }}
+</main>
+{% endblock %}
