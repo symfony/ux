@@ -26,6 +26,7 @@ final class IconFactory
 {
     private const FORBIDDEN_ELEMENTS = ['script', 'foreignobject', 'iframe', 'object', 'embed', 'handler'];
     private const ANIMATION_ELEMENTS = ['animate', 'set', 'animatetransform', 'animatemotion'];
+    private const SVG_NAMESPACE = 'http://www.w3.org/2000/svg';
 
     public function fromFile(string $filename): Icon
     {
@@ -119,7 +120,10 @@ final class IconFactory
         foreach ($children as $child) {
             $name = strtolower($child->localName);
 
-            if (\in_array($name, self::FORBIDDEN_ELEMENTS, true)
+            // Only SVG elements are kept: where icons are parsed as XML, like in the Google Maps bridge
+            // of ux-map, an XHTML <form> or <base> would be a live element of the page.
+            if (!\in_array($child->namespaceURI, [self::SVG_NAMESPACE, null], true)
+                || \in_array($name, self::FORBIDDEN_ELEMENTS, true)
                 || (\in_array($name, self::ANIMATION_ELEMENTS, true) && $this->animatesDangerousAttribute($child))
             ) {
                 $element->removeChild($child);
@@ -195,7 +199,7 @@ final class IconFactory
                 continue;
             }
 
-            $innerSvg .= $document->saveHTML($node);
+            $innerSvg .= $document->saveXML($node, \LIBXML_NOEMPTYTAG);
         }
 
         return $innerSvg;
