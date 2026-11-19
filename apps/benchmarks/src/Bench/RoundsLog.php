@@ -29,7 +29,8 @@ final class RoundsLog
     public function append(Round $round): void
     {
         $line = \sprintf(
-            "%s\t%s\t%d\t%s\t%s\t%s\t%s\t%d\n",
+            "%s\t%s\t%s\t%d\t%s\t%s\t%s\t%s\t%d\n",
+            $round->side,
             $round->mode,
             $round->target,
             $round->round,
@@ -54,8 +55,13 @@ final class RoundsLog
 
         $rounds = [];
         foreach (file($this->path, \FILE_IGNORE_NEW_LINES | \FILE_SKIP_EMPTY_LINES) as $line) {
-            [$mode, $target, $round, $rps, $p50, $p95, $p99, $errors] = explode("\t", $line);
-            $rounds[] = new Round($mode, $target, (int) $round, new Measurement((float) $rps, (float) $p50, (float) $p95, (float) $p99, (int) $errors));
+            $columns = explode("\t", $line);
+            if (8 === \count($columns)) {
+                array_unshift($columns, '');
+            }
+
+            [$side, $mode, $target, $round, $rps, $p50, $p95, $p99, $errors] = $columns;
+            $rounds[] = new Round($side, $mode, $target, (int) $round, new Measurement((float) $rps, (float) $p50, (float) $p95, (float) $p99, (int) $errors));
         }
 
         return $rounds;

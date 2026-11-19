@@ -17,16 +17,19 @@ use App\Bench\PageStats;
 use App\Bench\ResultsWriter;
 use App\Bench\Round;
 use App\Bench\RunInfo;
+use App\Bench\Side;
 use App\Bench\Target;
 use App\Bench\TargetProvider;
 use App\Bench\TargetStats;
+use App\Bench\VendorVersions;
 use PHPUnit\Framework\TestCase;
 
 final class ResultsWriterTest extends TestCase
 {
-    public function testItWritesOneSectionPerPackageWithMediansAndRanges(): void
+    public function testOneSideWritesOneColumnSetAndNoDelta(): void
     {
-        $run = $this->runInfo(false);
+        $side = $this->side('3.x (abc1234)');
+        $run = $this->runInfo();
         $stats = PageStats::fromHtml('<div class="a b"></div>');
         $targets = array_map(
             static fn (Target $target): TargetStats => new TargetStats($target, $stats),
@@ -35,31 +38,91 @@ final class ResultsWriterTest extends TestCase
         $rounds = [];
         foreach (['classic', 'worker'] as $mode) {
             foreach ([1, 2, 3] as $index => $round) {
-                $rounds[] = new Round($mode, 'css/tailwind', $round, new Measurement([100.0, 110.0, 120.0][$index], 8.0, 9.0, 10.0, 0));
-                $rounds[] = new Round($mode, 'css/ux-css', $round, new Measurement([200.0, 190.0, 210.0][$index], 8.0, 9.0, 10.0, 0));
+                $rounds[] = new Round('3.x (abc1234)', $mode, 'css/tailwind', $round, new Measurement([100.0, 110.0, 120.0][$index], 8.0, 9.0, 10.0, 0));
+                $rounds[] = new Round('3.x (abc1234)', $mode, 'css/ux-css', $round, new Measurement([200.0, 190.0, 210.0][$index], 8.0, 9.0, 10.0, 0));
             }
         }
 
-        $output = new ResultsWriter(new TargetProvider())->write($run, $targets, $rounds);
+        $output = new ResultsWriter(new TargetProvider())->write($run, [$side], $targets, $rounds, []);
 
-        self::assertStringContainsString('# Results', $output);
-        self::assertStringContainsString('## Css', $output);
-        self::assertStringContainsString('from symfony/ux abc1234.', $output);
-        self::assertMatchesRegularExpression('/\| classic\s+\| Tailwind CSS \(`\/css\/tailwind`\)\s+\| 110\.0\s+\| 100\.0-120\.0\s+\|/', $output);
-        self::assertStringContainsString('- classic mode: UX CSS serves +81.8% requests per second compared to Tailwind CSS', $output);
+        self::assertStringContainsString('- **3.x (abc1234)**: symfony/ux abc1234, Symfony 8.2.0-BETA1, Twig 3.30.0, tales-from-a-dev/twig-tailwind-extra 1.5.0', $output);
+        self::assertMatchesRegularExpression('/\| Target\s+\| 3\.x \(abc1234\) req\/s\s+\| 3\.x \(abc1234\) p50\s+\| 3\.x \(abc1234\) p95\s+\| 3\.x \(abc1234\) p99\s+\| Errors\s+\|/', $output);
+        self::assertStringNotContainsString('Δ', $output);
+        self::assertMatchesRegularExpression('/\| Tailwind CSS \(`\/css\/tailwind`\)\s+\| 110\.0 \(100\.0-120\.0\)\s+\| 8 ms\s+\|/', $output);
+        self::assertStringContainsString('- 3.x (abc1234), classic mode: UX CSS serves +81.8% requests per second compared to Tailwind CSS', $output);
+        self::assertStringNotContainsString('## Not available', $output);
         self::assertSame($output, MarkdownTables::align($output));
+    }
+
+    public function testTwoSidesWriteADeltaAndNotAvailableCells(): void
+    {
+        $old = $this->side('v3.6.0', workingTree: false);
+        $new = $this->side('3.x (abc1234)');
+        $rounds = [];
+        foreach ([1, 2, 3] as $round) {
+            $rounds[] = new Round('v3.6.0', 'classic', 'css/tailwind', $round, new Measurement(100.0, 8.0, 9.0, 10.0, 0));
+            $rounds[] = new Round('3.x (abc1234)', 'classic', 'css/tailwind', $round, new Measurement(110.0, 8.0, 9.0, 10.0, 0));
+            $rounds[] = new Round('3.x (abc1234)', 'classic', 'css/ux-css', $round, new Measurement(200.0, 8.0, 9.0, 10.0, 0));
+        }
+        $unavailable = ['v3.6.0' => ['css/ux-css' => '"css/ux-css" answered 500, expected 200.']];
+
+        $output = new ResultsWriter(new TargetProvider())->write($this->runInfo(), [$old, $new], [], $rounds, $unavailable);
+
+        self::assertMatchesRegularExpression('/\| Tailwind CSS \(`\/css\/tailwind`\)\s+\| 100\.0 \(100\.0-100\.0\)\s+\| 8 ms\s+\| 9 ms\s+\| 10 ms\s+\| 110\.0 \(110\.0-110\.0\)\s+\| 8 ms\s+\| 9 ms\s+\| 10 ms\s+\| \+10\.0%\s+\| 0 \/ 0\s+\|/', $output);
+        self::assertMatchesRegularExpression('/\| UX CSS \(`\/css\/ux-css`\)\s+\| n\/a\s+\| n\/a\s+\| n\/a\s+\| n\/a\s+\| 200\.0 \(200\.0-200\.0\)\s+\| 8 ms\s+\| 9 ms\s+\| 10 ms\s+\|\s+\| - \/ 0\s+\|/', $output);
+        self::assertStringContainsString('- 3.x (abc1234), classic mode: UX CSS serves +81.8%', $output);
+        self::assertStringNotContainsString('- v3.6.0, classic mode', $output);
+        self::assertStringContainsString('## Not available', $output);
+        self::assertStringContainsString('- v3.6.0, `css/ux-css`: "css/ux-css" answered 500, expected 200.', $output);
+        self::assertStringContainsString('- **v3.6.0**: symfony/ux abc1234, Symfony', $output);
+        self::assertMatchesRegularExpression('/\| Δ v3\.6\.0\s+\| Errors\s+\|/', $output);
+        self::assertSame($output, MarkdownTables::align($output));
+    }
+
+    public function testTwoAgainstSidesWriteOneDeltaColumnEach(): void
+    {
+        $first = $this->side('v3.6.0', workingTree: false);
+        $second = $this->side('v3.7.2', workingTree: false);
+        $workingTree = $this->side('3.x (abc1234)');
+        $rounds = [];
+        foreach ([1, 2, 3] as $round) {
+            $rounds[] = new Round('v3.6.0', 'classic', 'css/tailwind', $round, new Measurement(100.0, 8.0, 9.0, 10.0, 1));
+            $rounds[] = new Round('v3.7.2', 'classic', 'css/tailwind', $round, new Measurement(110.0, 8.0, 9.0, 10.0, 2));
+            $rounds[] = new Round('3.x (abc1234)', 'classic', 'css/tailwind', $round, new Measurement(120.0, 8.0, 9.0, 10.0, 3));
+        }
+
+        $output = new ResultsWriter(new TargetProvider())->write($this->runInfo(), [$first, $second, $workingTree], [], $rounds, []);
+
+        self::assertMatchesRegularExpression('/\| Δ v3\.6\.0\s+\| Δ v3\.7\.2\s+\| Errors\s+\|/', $output);
+        self::assertMatchesRegularExpression('/\| Tailwind CSS \(`\/css\/tailwind`\).*\| \+20\.0%\s+\| \+9\.1%\s+\| 3 \/ 6 \/ 9\s+\|/', $output);
+        self::assertSame($output, MarkdownTables::align($output));
+    }
+
+    public function testItLeavesTheDeltaBlankWhenTheComparedSideServedNothing(): void
+    {
+        $old = $this->side('v3.6.0', workingTree: false);
+        $new = $this->side('3.x (abc1234)');
+        $rounds = [];
+        foreach ([1, 2, 3] as $round) {
+            $rounds[] = new Round('v3.6.0', 'classic', 'css/tailwind', $round, new Measurement(0.0, 0.0, 0.0, 0.0, 5));
+            $rounds[] = new Round('3.x (abc1234)', 'classic', 'css/tailwind', $round, new Measurement(110.0, 8.0, 9.0, 10.0, 0));
+        }
+
+        $output = new ResultsWriter(new TargetProvider())->write($this->runInfo(), [$old, $new], [], $rounds, []);
+
+        self::assertMatchesRegularExpression('/\| Tailwind CSS \(`\/css\/tailwind`\)\s+\| 0\.0 .*\| 110\.0 .*\|\s+\| 15 \/ 0\s+\|/', $output);
     }
 
     public function testItMentionsUncommittedChangesAndWhatAPageHolds(): void
     {
-        $run = $this->runInfo(true);
+        $side = $this->side('3.x (abc1234)', dirty: true);
         $target = new TargetProvider()->only(['twig-component'])[0];
         $stats = PageStats::fromHtml('<div data-slot="x"></div><div data-slot="y"></div>');
-        $rounds = [new Round('classic', 'twig-component/dashboard', 1, new Measurement(50.0, 20.0, 30.0, 40.0, 2))];
+        $rounds = [new Round('3.x (abc1234)', 'classic', 'twig-component/dashboard', 1, new Measurement(50.0, 20.0, 30.0, 40.0, 2))];
 
-        $output = new ResultsWriter(new TargetProvider())->write($run, [new TargetStats($target, $stats)], $rounds);
+        $output = new ResultsWriter(new TargetProvider())->write($this->runInfo(), [$side], [new TargetStats($target, $stats)], $rounds, []);
 
-        self::assertStringContainsString('from symfony/ux abc1234 with uncommitted changes.', $output);
+        self::assertStringContainsString('abc1234 with uncommitted changes, Symfony', $output);
         self::assertStringContainsString('## TwigComponent', $output);
         self::assertStringContainsString('2 components', $output);
         self::assertStringNotContainsString('## Css', $output);
@@ -67,34 +130,34 @@ final class ResultsWriterTest extends TestCase
 
     public function testItWritesALivePackageWithoutPageStats(): void
     {
-        $run = $this->runInfo(false);
-        $rounds = [new Round('classic', 'live/table-search', 1, new Measurement(80.0, 10.0, 20.0, 30.0, 0))];
+        $side = $this->side('3.x (abc1234)');
+        $rounds = [new Round('3.x (abc1234)', 'classic', 'live/table-search', 1, new Measurement(80.0, 10.0, 20.0, 30.0, 0))];
 
-        $output = new ResultsWriter(new TargetProvider())->write($run, [], $rounds);
+        $output = new ResultsWriter(new TargetProvider())->write($this->runInfo(), [$side], [], $rounds, []);
 
         self::assertStringContainsString('## LiveComponent', $output);
-        self::assertMatchesRegularExpression('/\| classic\s+\| `live\/table-search`\s+\| 80\.0\s+\|/', $output);
+        self::assertMatchesRegularExpression('/\| `live\/table-search`\s+\| 80\.0 \(80\.0-80\.0\)\s+\|/', $output);
         self::assertStringNotContainsString('Holds', $output);
     }
 
-    private function runInfo(bool $dirty): RunInfo
+    private function side(string $label, bool $dirty = false, bool $workingTree = true): Side
+    {
+        return new Side($label, '/tmp/project', '/tmp/pages', 8181, 'abc1234', $dirty, VendorVersions::of('8.2.0-BETA1', '3.30.0', '1.5.0'), $workingTree);
+    }
+
+    private function runInfo(): RunInfo
     {
         return new RunInfo(
-            'bin/bench 3 1000 4',
-            '2026-11-18 10:00 UTC',
-            'abc1234',
-            $dirty,
+            'bin/bench --against v3.6.0',
+            '2026-11-19 10:00 UTC',
             'FrankenPHP v1.13.5 with PHP 8.5.12',
-            '8.2.0-BETA1',
-            '3.30.0',
-            '1.5.0',
             'Apple M1 Pro',
             10,
             'Darwin 27.2.0',
             4,
-            500,
+            200,
             3,
-            1000,
+            15,
             1.5,
             2.25,
         );

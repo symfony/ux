@@ -23,7 +23,8 @@ final class FrankenPhpServer
     private const POLL_ATTEMPTS = 100;
     private const POLL_DELAY_MICROSECONDS = 200_000;
 
-    private ?Process $process = null;
+    /** @var array<string, Process> */
+    private array $processes = [];
 
     public function __construct(
         #[Autowire('%kernel.project_dir%/var/frankenphp/frankenphp')]
@@ -48,65 +49,64 @@ final class FrankenPhpServer
         return \sprintf('%s %s with %s %s', $words[0], $words[1], $words[2], $words[3]);
     }
 
-    public function start(string $mode, int $port): void
+    public function start(Side $side, string $mode): void
     {
-        $logFile = \sprintf('%s/var/log/frankenphp-%s.log', $this->projectDir, $mode);
+        $logFile = \sprintf('%s/var/log/%s', $this->projectDir, $side->logFile($mode));
         $this->truncate($logFile);
 
         $process = new Process(
             [$this->binary, 'run', '--config', 'Caddyfile'],
-            $this->projectDir,
+            $side->projectDir,
             [
                 'FRANKENPHP_CONFIG' => 'worker' === $mode ? 'worker ./public/index.php' : '',
                 'APP_ENV' => 'prod',
                 'APP_DEBUG' => '0',
-                'PHPRC' => \sprintf('%s/frankenphp.ini', $this->projectDir),
-                'PORT' => (string) $port,
+                'PHPRC' => \sprintf('%s/frankenphp.ini', $side->projectDir),
+                'PORT' => (string) $side->port,
             ],
         );
         $process->setTimeout(null);
         $process->start(static function (string $type, string $buffer) use ($logFile): void {
             file_put_contents($logFile, $buffer, \FILE_APPEND);
         });
-        $this->process = $process;
+        $this->processes[$side->label] = $process;
 
-        if ($this->waitUntilReady($process, $port)) {
+        if ($this->waitUntilReady($process, $side)) {
             return;
         }
 
-        $this->stop();
+        $this->stop($side);
 
-        throw new \RuntimeException(\sprintf('FrankenPHP did not start in "%s" mode, see var/log/frankenphp-%s.log.', $mode, $mode));
+        throw new \RuntimeException(\sprintf('FrankenPHP did not start for "%s" in "%s" mode, see var/log/%s.', $side->label, $mode, $side->logFile($mode)));
     }
 
-    public function stop(): void
+    public function stop(Side $side): void
     {
-        $this->process?->stop();
-        $this->process = null;
+        ($this->processes[$side->label] ?? null)?->stop();
+        unset($this->processes[$side->label]);
     }
 
-    public function isRunning(): bool
+    public function stopAll(): void
     {
-        return $this->process?->isRunning() ?? false;
+        foreach ($this->processes as $process) {
+            $process->stop();
+        }
+
+        $this->processes = [];
     }
 
     /**
      * @param list<string> $args
      */
-    public function phpCli(array $args): void
+    public function phpCli(array $args, string $projectDir): void
     {
         $process = new Process(
             [$this->binary, 'php-cli', ...$args],
-            $this->projectDir,
+            $projectDir,
             ['APP_ENV' => 'prod', 'APP_DEBUG' => '0'],
         );
         $process->setTimeout(null);
         $process->mustRun();
-    }
-
-    public function baseUrl(int $port): string
-    {
-        return \sprintf('http://127.0.0.1:%d', $port);
     }
 
     private function truncate(string $logFile): void
@@ -119,9 +119,9 @@ final class FrankenPhpServer
         file_put_contents($logFile, '');
     }
 
-    private function waitUntilReady(Process $process, int $port): bool
+    private function waitUntilReady(Process $process, Side $side): bool
     {
-        $url = \sprintf('%s/css/ux-css', $this->baseUrl($port));
+        $url = \sprintf('%s/', $side->baseUrl());
 
         for ($attempt = 0; $attempt < self::POLL_ATTEMPTS; ++$attempt) {
             if (!$process->isRunning()) {

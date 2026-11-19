@@ -14,6 +14,7 @@ namespace App\Bench;
 final class Round
 {
     public function __construct(
+        public readonly string $side,
         public readonly string $mode,
         public readonly string $target,
         public readonly int $round,

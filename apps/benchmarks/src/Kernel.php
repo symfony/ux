@@ -40,7 +40,9 @@ final class Kernel extends BaseKernel implements CompilerPassInterface
         yield new TwigExtraBundle();
         yield new TwigComponentBundle();
         yield new UXIconsBundle();
-        yield new UXCssBundle();
+        if (class_exists(UXCssBundle::class)) {
+            yield new UXCssBundle();
+        }
         yield new TalesFromADevTwigExtraTailwindBundle();
         yield new LiveComponentBundle();
         yield new StimulusBundle();
@@ -72,7 +74,7 @@ final class Kernel extends BaseKernel implements CompilerPassInterface
         $container->services()
             ->defaults()->autowire()->autoconfigure()
             ->load('App\\', __DIR__.'/')
-            ->exclude([__DIR__.'/Kernel.php', __DIR__.'/Model/', __DIR__.'/Bench/{Target,LiveScenario,LiveRequest,Measurement,Round,RunInfo,TargetStats,PageStats,IdleMachineCheck}.php']);
+            ->exclude([__DIR__.'/Kernel.php', __DIR__.'/Model/', __DIR__.'/Bench/{Target,LiveScenario,LiveRequest,Measurement,Round,RunInfo,Side,VendorVersions,TargetStats,PageStats,IdleMachineCheck,ComposerJsonRewriter,RoundPlan,CheckResult,Sides}.php']);
 
         $container->services()->set(IdleMachineCheck::class)->factory([IdleMachineCheck::class, 'withSystemProbes']);
 
@@ -81,6 +83,27 @@ final class Kernel extends BaseKernel implements CompilerPassInterface
             'iconify' => ['on_demand' => false],
         ]);
 
+        if (class_exists(UXCssBundle::class)) {
+            $this->configureCss($container);
+        }
+    }
+
+    protected function configureRoutes(RoutingConfigurator $routes): void
+    {
+        $routes->import('@LiveComponentBundle/config/routes.php')->prefix('/_components');
+        $routes->import(__DIR__.'/Controller/', 'attribute');
+    }
+
+    public function process(ContainerBuilder $container): void
+    {
+        $container->getDefinition('ux_map.renderers')->setArgument(0, [
+            'default' => 'leaflet://default',
+            'google' => 'google://benchmarks@default',
+        ]);
+    }
+
+    private function configureCss(ContainerConfigurator $container): void
+    {
         // The shadcn theme, read through the same CSS variables as the Tailwind side
         $container->extension('ux_css', [
             'preflight' => true,
@@ -110,20 +133,6 @@ final class Kernel extends BaseKernel implements CompilerPassInterface
                     '4xl' => 'calc(var(--radius) * 2.6)',
                 ],
             ],
-        ]);
-    }
-
-    protected function configureRoutes(RoutingConfigurator $routes): void
-    {
-        $routes->import('@LiveComponentBundle/config/routes.php')->prefix('/_components');
-        $routes->import(__DIR__.'/Controller/', 'attribute');
-    }
-
-    public function process(ContainerBuilder $container): void
-    {
-        $container->getDefinition('ux_map.renderers')->setArgument(0, [
-            'default' => 'leaflet://default',
-            'google' => 'google://benchmarks@default',
         ]);
     }
 }
