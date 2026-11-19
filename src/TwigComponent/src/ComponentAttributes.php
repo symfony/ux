@@ -33,6 +33,13 @@ final class ComponentAttributes implements \Stringable, \IteratorAggregate, \Cou
      */
     private const SAFE_NAME_CHARS = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789,.-_:@[]';
 
+    private const MAX_ESCAPED_CLASSES = 1000;
+
+    /**
+     * @var \WeakMap<EscaperRuntime, array<string, string>>|null
+     */
+    private static ?\WeakMap $escapedClasses = null;
+
     /** @var array<string,true> */
     private array $rendered = [];
 
@@ -70,7 +77,7 @@ final class ComponentAttributes implements \Stringable, \IteratorAggregate, \Cou
             // Most names only hold safe characters: checking them is much cheaper than running the escaper on them
             $name = \strlen($key) === strspn($key, self::SAFE_NAME_CHARS) ? $key : $this->escaper->escape($key, 'html_attr_relaxed');
 
-            $attributes .= ' '.$name.'="'.$this->escaper->escape($value).'"';
+            $attributes .= ' '.$name.'="'.('class' === $key ? $this->escapeClasses($value) : $this->escaper->escape($value)).'"';
         }
 
         return $attributes;
@@ -218,5 +225,21 @@ final class ComponentAttributes implements \Stringable, \IteratorAggregate, \Cou
     public function count(): int
     {
         return \count($this->attributes);
+    }
+
+    /**
+     * The classes of a component rendered many times are the same ones: they are escaped once.
+     */
+    private function escapeClasses(string $classes): string
+    {
+        self::$escapedClasses ??= new \WeakMap();
+        self::$escapedClasses[$this->escaper] ??= [];
+        $escapedClasses = &self::$escapedClasses[$this->escaper];
+
+        if (self::MAX_ESCAPED_CLASSES < \count($escapedClasses)) {
+            $escapedClasses = [];
+        }
+
+        return $escapedClasses[$classes] ??= $this->escaper->escape($classes);
     }
 }

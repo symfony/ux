@@ -447,6 +447,52 @@ final class ComponentAttributesTest extends TestCase
         $this->assertSame(' foo="'.$expected.'"', (string) $attributes);
     }
 
+    #[DataProvider('valueProvider')]
+    public function testEscapeClasses(string $input, string $expected): void
+    {
+        $attributes = new ComponentAttributes(['class' => $input], new EscaperRuntime());
+
+        $rendered = (string) $attributes;
+
+        $this->assertSame(\sprintf(' class="%s"', $expected), $rendered);
+    }
+
+    public function testEscapeTheSameClassesTwice(): void
+    {
+        $escaper = new EscaperRuntime();
+        $first = new ComponentAttributes(['class' => '[&>svg]:size-4'], $escaper);
+        $second = new ComponentAttributes(['class' => '[&>svg]:size-4'], $escaper);
+
+        $rendered = [(string) $first, (string) $second];
+
+        $this->assertSame([' class="[&amp;&gt;svg]:size-4"', ' class="[&amp;&gt;svg]:size-4"'], $rendered);
+    }
+
+    public function testEscapeClassesWithTheCharsetOfTheirEscaper(): void
+    {
+        $utf8 = new ComponentAttributes(['class' => "caf\xE9"], new EscaperRuntime());
+        $latin1 = new ComponentAttributes(['class' => "caf\xE9"], new EscaperRuntime('ISO-8859-1'));
+
+        $rendered = [(string) $utf8, (string) $latin1];
+
+        $this->assertSame([" class=\"caf\u{FFFD}\"", " class=\"caf\xE9\""], $rendered);
+    }
+
+    public function testEscapeMoreClassesThanRemembered(): void
+    {
+        $escaper = new EscaperRuntime();
+        $rendered = [];
+
+        for ($i = 0; $i < 1500; ++$i) {
+            $rendered[] = (string) new ComponentAttributes(['class' => \sprintf('[&>svg]:size-%d', $i)], $escaper);
+        }
+        $rendered[] = (string) new ComponentAttributes(['class' => '[&>svg]:size-0'], $escaper);
+
+        $this->assertSame(' class="[&amp;&gt;svg]:size-0"', $rendered[0]);
+        $this->assertSame(' class="[&amp;&gt;svg]:size-1499"', $rendered[1499]);
+        $this->assertSame(' class="[&amp;&gt;svg]:size-0"', $rendered[1500]);
+    }
+
     public function testRendersIntegerName(): void
     {
         $attributes = new ComponentAttributes([0 => 'foo'], new EscaperRuntime());
