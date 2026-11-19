@@ -148,8 +148,10 @@ final class IconFactoryTest extends TestCase
         yield 'cdata breaks out of parent' => ['<g><![CDATA[</g><img src=x onerror=alert(1)>]]></g>', '<g></g>'];
         yield 'processing instruction' => ['<g><?foo bar?></g>', '<g></g>'];
 
-        // <style> is kept, but its attributes are sanitized and "</style>" breakouts are dropped
+        // <style> is kept, but its attributes and descendants are sanitized and "</style>" breakouts are dropped
         yield 'style onload attribute' => ['<style onload="alert(1)">.a{fill:red}</style>', '<style>.a{fill:red}</style>'];
+        yield 'script inside style' => ['<style><script>alert(1)</script></style><path d="ok"/>', '<style></style><path d="ok"></path>'];
+        yield 'event handler inside style' => ['<style><img src="invalid:" onerror="alert(1)"/></style>', '<style><img src="invalid:"></img></style>'];
         yield 'style breakout via cdata' => ['<style><![CDATA[x{}</style><img src=x onerror=alert(1)>]]></style><path d="ok"/>', '<path d="ok"></path>'];
     }
 
