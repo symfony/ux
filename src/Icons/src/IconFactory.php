@@ -117,7 +117,10 @@ final class IconFactory
         foreach ($children as $child) {
             $name = strtolower($child->localName);
 
-            if (\in_array($name, self::FORBIDDEN_ELEMENTS, true)
+            // saveHtml() serializes an XHTML <style>, <xmp>, <noembed>... as raw text, turning
+            // "&lt;img onerror=...&gt;" into live markup, while the browser parses it as SVG.
+            if (!\in_array($child->namespaceURI, [self::SVG_NAMESPACE, null], true)
+                || \in_array($name, self::FORBIDDEN_ELEMENTS, true)
                 || (\in_array($name, self::ANIMATION_ELEMENTS, true) && $this->animatesDangerousAttribute($child))
             ) {
                 $element->removeChild($child);

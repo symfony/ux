@@ -152,6 +152,12 @@ final class IconFactoryTest extends TestCase
         yield 'style onload attribute' => ['<style onload="alert(1)">.a{fill:red}</style>', '<style>.a{fill:red}</style>'];
         yield 'script inside style' => ['<style><script>alert(1)</script></style><path d="ok"/>', '<style></style><path d="ok"></path>'];
         yield 'event handler inside style' => ['<style><img src="invalid:" onerror="alert(1)"/></style>', '<style><img src="invalid:"></img></style>'];
+        // only SVG elements are kept: an XHTML raw-text element would be serialized unescaped
+        yield 'xhtml style' => ['<style xmlns="http://www.w3.org/1999/xhtml">&lt;img src=x onerror=alert(1)&gt;</style><path d="ok"/>', '<path d="ok"></path>'];
+        yield 'xhtml style with cdata' => ['<style xmlns="http://www.w3.org/1999/xhtml"><![CDATA[<img src=x onerror=alert(1)>]]></style><path d="ok"/>', '<path d="ok"></path>'];
+        yield 'xhtml xmp' => ['<xmp xmlns="http://www.w3.org/1999/xhtml">&lt;img src=x onerror=alert(1)&gt;</xmp><path d="ok"/>', '<path d="ok"></path>'];
+        yield 'nested xhtml element' => ['<g><noembed xmlns="http://www.w3.org/1999/xhtml">&lt;img src=x onerror=alert(1)&gt;</noembed></g>', '<g></g>'];
+        yield 'foreign namespace element' => ['<i:pgf xmlns:i="urn:x">data</i:pgf><path d="ok"/>', '<path d="ok"></path>'];
         yield 'style breakout via cdata' => ['<style><![CDATA[x{}</style><img src=x onerror=alert(1)>]]></style><path d="ok"/>', '<path d="ok"></path>'];
     }
 
