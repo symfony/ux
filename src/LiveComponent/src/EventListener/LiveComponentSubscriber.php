@@ -106,6 +106,11 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
             throw new NotFoundHttpException(\sprintf('Component "%s" not found.', $componentName), $e);
         }
 
+        // metadataFor() also accepts class names, but URLs must use the name of the component
+        if ($metadata->getName() !== $componentName) {
+            throw new NotFoundHttpException(\sprintf('Component "%s" not found.', $componentName));
+        }
+
         if (!$metadata->get('live', false)) {
             throw new NotFoundHttpException(\sprintf('"%s" (%s) is not a Live Component.', $metadata->getClass(), $componentName));
         }
