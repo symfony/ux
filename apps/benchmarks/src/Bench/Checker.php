@@ -11,85 +11,94 @@
 
 namespace App\Bench;
 
-use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 final class Checker
 {
-    /**
-     * @var array<string, string>
-     */
-    private array $pages = [];
-
     public function __construct(
         private readonly HttpClientInterface $client,
         private readonly LiveRequestBuilder $builder,
-        #[Autowire('%kernel.project_dir%/var/bench')]
-        private readonly string $directory,
     ) {
     }
 
     /**
      * @param list<Target> $targets
-     *
-     * @return list<TargetStats>
      */
-    public function check(string $baseUrl, array $targets, bool $compareWithSaved): array
+    public function check(string $baseUrl, array $targets, bool $compareWithSaved, string $directory, bool $lenient): CheckResult
     {
-        if (!is_dir($this->directory)) {
-            mkdir($this->directory, 0o777, true);
+        if (!is_dir($directory)) {
+            mkdir($directory, 0o777, true);
         }
 
         $stats = [];
-        $this->pages = [];
+        $pages = [];
+        $unavailable = [];
+        $unavailablePaths = [];
 
         foreach ($targets as $target) {
-            if ($target->isLive()) {
-                $this->checkLive($baseUrl, $target);
+            try {
+                if ($target->isLive()) {
+                    $this->checkLive($baseUrl, $target, $directory, $lenient, $pages, $unavailablePaths);
 
-                continue;
+                    continue;
+                }
+
+                $html = $this->checkPage($baseUrl, $target, $compareWithSaved, $directory);
+                $pages[$target->path] = $html;
+                $stats[] = new TargetStats($target, $this->pageStats($target, $html));
+            } catch (\RuntimeException|\JsonException $exception) {
+                if (!$lenient) {
+                    throw $exception;
+                }
+
+                $unavailable[$target->name] = $exception->getMessage();
+                if (!$target->isLive()) {
+                    $unavailablePaths[$target->path] = true;
+                }
             }
-
-            $html = $this->checkPage($baseUrl, $target, $compareWithSaved);
-            $this->pages[$target->path] = $html;
-            $stats[] = new TargetStats($target, $this->pageStats($target, $html));
         }
 
-        return $stats;
+        return new CheckResult($directory, $stats, $unavailable, $pages);
     }
 
-    public function page(string $path): string
-    {
-        return $this->pages[$path] ?? throw new \LogicException(\sprintf('The page "%s" was not checked.', $path));
-    }
-
-    public function pageFile(Target $target): string
-    {
-        return $this->file($target, 'html');
-    }
-
-    public function bodyFile(Target $target): string
-    {
-        return $this->file($target, 'body');
-    }
-
-    private function checkPage(string $baseUrl, Target $target, bool $compareWithSaved): string
+    private function checkPage(string $baseUrl, Target $target, bool $compareWithSaved, string $directory): string
     {
         $url = $baseUrl.$target->path;
         $first = $this->fetch($target->name, $target->expectedStatus, 'GET', $url);
         $second = $this->fetch($target->name, $target->expectedStatus, 'GET', $url);
         $this->assertIdentical($target, $first, $second);
-        $this->save($target, $first, $compareWithSaved);
+        $this->save($target, $first, $compareWithSaved, $directory);
 
         return $first;
     }
 
-    private function checkLive(string $baseUrl, Target $target): void
+    /**
+     * @param array<string, string> $pages
+     * @param array<string, true>   $unavailablePaths
+     */
+    private function checkLive(string $baseUrl, Target $target, string $directory, bool $lenient, array &$pages, array &$unavailablePaths): void
     {
         $page = $target->scenario->page;
-        $this->pages[$page] ??= $this->fetch($page, 200, 'GET', $baseUrl.$page);
 
-        $request = $this->builder->build($this->pages[$page], $target->scenario);
+        if (isset($unavailablePaths[$page])) {
+            throw $this->pageUnavailable($page);
+        }
+
+        if (!isset($pages[$page])) {
+            try {
+                $pages[$page] = $this->fetch($page, 200, 'GET', $baseUrl.$page);
+            } catch (\RuntimeException $exception) {
+                if (!$lenient) {
+                    throw $exception;
+                }
+
+                $unavailablePaths[$page] = true;
+
+                throw $this->pageUnavailable($page);
+            }
+        }
+
+        $request = $this->builder->build($pages[$page], $target->scenario);
         $options = [
             'headers' => [...$request->headers(), 'Content-Type' => $request->contentType()],
             'body' => $request->body,
@@ -99,7 +108,12 @@ final class Checker
         $first = $this->fetch($target->name, $target->expectedStatus, 'POST', $url, $options);
         $second = $this->fetch($target->name, $target->expectedStatus, 'POST', $url, $options);
         $this->assertIdentical($target, $first, $second);
-        file_put_contents($this->bodyFile($target), $request->body);
+        file_put_contents(CheckResult::file($directory, $target, 'body'), $request->body);
+    }
+
+    private function pageUnavailable(string $page): \RuntimeException
+    {
+        return new \RuntimeException(\sprintf('Its page "%s" is not available.', $page));
     }
 
     /**
@@ -124,9 +138,9 @@ final class Checker
         }
     }
 
-    private function save(Target $target, string $html, bool $compareWithSaved): void
+    private function save(Target $target, string $html, bool $compareWithSaved, string $directory): void
     {
-        $file = $this->pageFile($target);
+        $file = CheckResult::file($directory, $target, 'html');
 
         if ($compareWithSaved && is_file($file)) {
             if (file_get_contents($file) !== $html) {
@@ -151,10 +165,5 @@ final class Checker
         }
 
         return $stats;
-    }
-
-    private function file(Target $target, string $extension): string
-    {
-        return \sprintf('%s/%s.%s', $this->directory, str_replace('/', '-', $target->name), $extension);
     }
 }

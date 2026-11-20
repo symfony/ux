@@ -22,8 +22,8 @@ final class RoundsLogTest extends TestCase
     {
         $path = tempnam(sys_get_temp_dir(), 'rounds');
         $log = new RoundsLog($path);
-        $first = new Round('before', 'css/ux-css', 1, new Measurement(76.5, 41.0, 62.0, 142.0, 0));
-        $second = new Round('after', 'live/post-form', 2, new Measurement(133.39, 28.0, 34.0, 34.0, 3));
+        $first = new Round('3.x (abc1234)', 'before', 'css/ux-css', 1, new Measurement(76.5, 41.0, 62.0, 142.0, 0));
+        $second = new Round('v3.6.0', 'after', 'live/post-form', 2, new Measurement(133.39, 28.0, 34.0, 34.0, 3));
 
         try {
             $log->clear();
@@ -36,15 +36,35 @@ final class RoundsLogTest extends TestCase
         }
 
         self::assertCount(2, $rounds);
+        self::assertSame('3.x (abc1234)', $rounds[0]->side);
         self::assertSame('before', $rounds[0]->mode);
         self::assertSame('css/ux-css', $rounds[0]->target);
         self::assertSame(1, $rounds[0]->round);
         self::assertSame(76.5, $rounds[0]->measurement->requestsPerSecond);
         self::assertSame(142.0, $rounds[0]->measurement->p99);
+        self::assertSame('v3.6.0', $rounds[1]->side);
         self::assertSame('after', $rounds[1]->mode);
         self::assertSame(2, $rounds[1]->round);
         self::assertSame(133.39, $rounds[1]->measurement->requestsPerSecond);
         self::assertSame(3, $rounds[1]->measurement->errors);
+    }
+
+    public function testItReadsLegacyLinesWithoutASide(): void
+    {
+        $path = tempnam(sys_get_temp_dir(), 'rounds');
+        file_put_contents($path, "classic\tcss/ux-css\t1\t76.5\t41\t62\t142\t0\n");
+        $log = new RoundsLog($path);
+
+        try {
+            $rounds = $log->rounds();
+        } finally {
+            unlink($path);
+        }
+
+        self::assertCount(1, $rounds);
+        self::assertSame('', $rounds[0]->side);
+        self::assertSame('classic', $rounds[0]->mode);
+        self::assertSame(76.5, $rounds[0]->measurement->requestsPerSecond);
     }
 
     public function testItReturnsNoRoundsWhenTheFileIsMissing(): void

@@ -16,12 +16,7 @@ final class RunInfo
     public function __construct(
         public readonly string $command,
         public readonly string $date,
-        public readonly string $sha,
-        public readonly bool $dirty,
         public readonly string $frankenPhpVersion,
-        public readonly string $symfonyVersion,
-        public readonly string $twigVersion,
-        public readonly string $tailwindExtraVersion,
         public readonly string $cpu,
         public readonly int $cores,
         public readonly string $os,

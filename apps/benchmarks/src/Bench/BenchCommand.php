@@ -11,7 +11,6 @@
 
 namespace App\Bench;
 
-use Composer\InstalledVersions;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Command\SignalableCommandInterface;
@@ -42,6 +41,7 @@ final class BenchCommand extends Command implements SignalableCommandInterface
         private readonly RoundsLog $log,
         private readonly ResultsWriter $writer,
         private readonly FrankenPhpServer $server,
+        private readonly AgainstInstaller $installer,
         private readonly LiveRequestBuilder $builder,
         #[Autowire('%kernel.project_dir%')]
         private readonly string $projectDir,
@@ -57,6 +57,7 @@ final class BenchCommand extends Command implements SignalableCommandInterface
             ->addOption('concurrency', null, InputOption::VALUE_REQUIRED, 'Concurrent requests of ab', 4)
             ->addOption('mode', null, InputOption::VALUE_REQUIRED, 'FrankenPHP mode: classic, worker or both', 'both')
             ->addOption('only', null, InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'Only the targets whose name starts with this prefix')
+            ->addOption('against', null, InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'Also benchmark this git ref of symfony/ux (repeatable)')
             ->addOption('yes', null, InputOption::VALUE_NONE, 'Run even if the machine is not idle')
             ->addOption('port', null, InputOption::VALUE_REQUIRED, 'Port of FrankenPHP', 8180)
             ->addOption('check', null, InputOption::VALUE_NONE, 'Only check the pages and the live requests of a running server')
@@ -81,16 +82,34 @@ final class BenchCommand extends Command implements SignalableCommandInterface
         $targets = $this->provider->only($prefixes);
 
         if ($input->getOption('check')) {
+            if ([] !== $input->getOption('against')) {
+                $io->error('--against cannot be combined with --check.');
+
+                return Command::FAILURE;
+            }
+
             return $this->check($io, $input->getOption('url'), $targets);
         }
 
         try {
+            $workingTree = $this->workingTreeSide($input);
+            $refs = $input->getOption('against');
+
+            try {
+                Sides::labels($refs, $workingTree->label);
+            } catch (\InvalidArgumentException $exception) {
+                $io->error($exception->getMessage());
+
+                return Command::FAILURE;
+            }
+
             $this->assertPreconditions();
+            $sides = [...$this->installSides($io, $refs, $workingTree->port), $workingTree];
             if (!$this->confirmIdle($input, $io)) {
                 return Command::FAILURE;
             }
 
-            $results = $this->benchmark($input, $io, $modes, $targets);
+            $results = $this->benchmark($input, $io, $modes, $targets, $sides);
             file_put_contents(\sprintf('%s/RESULTS.md', $this->projectDir), $results);
             $output->write($results, false, OutputInterface::OUTPUT_RAW);
         } catch (\RuntimeException $exception) {
@@ -144,7 +163,7 @@ final class BenchCommand extends Command implements SignalableCommandInterface
         }
 
         try {
-            $stats = $this->checker->check(rtrim($url, '/'), $targets, false);
+            $stats = $this->checker->check(rtrim($url, '/'), $targets, false, \sprintf('%s/var/bench', $this->projectDir), false)->stats;
         } catch (\RuntimeException $exception) {
             $io->error($exception->getMessage());
 
@@ -199,76 +218,118 @@ final class BenchCommand extends Command implements SignalableCommandInterface
     /**
      * @param list<string> $modes
      * @param list<Target> $targets
+     * @param list<Side>   $sides
      */
-    private function benchmark(InputInterface $input, SymfonyStyle $io, array $modes, array $targets): string
+    private function benchmark(InputInterface $input, SymfonyStyle $io, array $modes, array $targets, array $sides): string
     {
         $loadBefore = $this->idle->loadAverage();
-        $this->prepare($io);
+        $this->prepare($io, $sides);
+        $workingTree = $sides[\count($sides) - 1];
 
         $stats = [];
+        $unavailable = [];
         foreach ($modes as $mode) {
-            $stats = $this->benchmarkMode($input, $io, $mode, $targets);
+            $results = $this->benchmarkMode($input, $io, $sides, $mode, $targets);
+            $stats = $results[$workingTree->label]->stats;
+            foreach ($results as $label => $result) {
+                $unavailable[$label] = [...$result->unavailable, ...$unavailable[$label] ?? []];
+            }
         }
 
         $run = $this->runInfo($input, $loadBefore);
 
-        return $this->writer->write($run, $stats, $this->log->rounds());
+        return $this->writer->write($run, $sides, $stats, $this->log->rounds(), array_filter($unavailable));
     }
 
-    private function prepare(SymfonyStyle $io): void
+    /**
+     * @param list<string> $refs
+     *
+     * @return list<Side>
+     */
+    private function installSides(SymfonyStyle $io, array $refs, int $port): array
+    {
+        if ([] === $refs) {
+            return [];
+        }
+
+        $io->section('Installing the other versions');
+
+        $sides = [];
+        foreach ($refs as $index => $ref) {
+            $sides[] = $this->installer->install($ref, $port + $index + 1, $io->writeln(...));
+        }
+
+        return $sides;
+    }
+
+    /**
+     * @param list<Side> $sides
+     */
+    private function prepare(SymfonyStyle $io, array $sides): void
     {
         $io->section('Preparing the app for production');
 
         $this->prepared = true;
         $this->composer(['dump-autoload', '--quiet', '--no-dev', '--classmap-authoritative']);
-        $this->server->phpCli(['bin/console', 'cache:clear', '--quiet']);
-
-        $directory = \sprintf('%s/var/bench', $this->projectDir);
-        if (!is_dir($directory)) {
-            mkdir($directory, 0o777, true);
-        }
+        $this->server->phpCli(['bin/console', 'cache:clear', '--quiet'], $this->projectDir);
 
         $this->log->clear();
-        $pageFiles = glob(\sprintf('%s/*.html', $directory)) ?: [];
-        $bodyFiles = glob(\sprintf('%s/*.body', $directory)) ?: [];
-        foreach ([...$pageFiles, ...$bodyFiles] as $file) {
-            unlink($file);
+        foreach ($sides as $side) {
+            $pageFiles = glob(\sprintf('%s/*.html', $side->pagesDir)) ?: [];
+            $bodyFiles = glob(\sprintf('%s/*.body', $side->pagesDir)) ?: [];
+            foreach ([...$pageFiles, ...$bodyFiles] as $file) {
+                unlink($file);
+            }
         }
     }
 
     /**
+     * @param list<Side>   $sides
      * @param list<Target> $targets
      *
-     * @return list<TargetStats>
+     * @return array<string, CheckResult> label => result
      */
-    private function benchmarkMode(InputInterface $input, SymfonyStyle $io, string $mode, array $targets): array
+    private function benchmarkMode(InputInterface $input, SymfonyStyle $io, array $sides, string $mode, array $targets): array
     {
         $io->section(\sprintf('FrankenPHP in %s mode', $mode));
 
-        $port = (int) $input->getOption('port');
-        $this->server->start($mode, $port);
-        $baseUrl = $this->server->baseUrl($port);
+        foreach ($sides as $side) {
+            $this->server->start($side, $mode);
+        }
 
-        $stats = $this->checker->check($baseUrl, $targets, true);
-        $liveRequests = $this->liveRequests($targets);
+        $results = [];
+        $liveRequests = [];
+        foreach ($sides as $side) {
+            $results[$side->label] = $this->checker->check($side->baseUrl(), $targets, true, $side->pagesDir, !$side->isWorkingTree);
+            $liveRequests[$side->label] = $this->liveRequests($results[$side->label], $targets);
+        }
+
         $concurrency = (int) $input->getOption('concurrency');
-
-        $this->warmup($baseUrl, $targets, $liveRequests, $concurrency);
+        foreach ($sides as $side) {
+            $this->warmup($side, $results[$side->label], $targets, $liveRequests[$side->label], $concurrency);
+        }
 
         $rounds = (int) $input->getOption('rounds');
         $seconds = (int) $input->getOption('seconds');
-        $width = max(array_map(static fn (Target $item): int => \strlen($item->name), $targets));
+        $widths = [
+            max(array_map(static fn (Side $item): int => \strlen($item->label), $sides)),
+            max(array_map(static fn (Target $item): int => \strlen($item->name), $targets)),
+        ];
         for ($round = 1; $round <= $rounds; ++$round) {
-            $order = 0 === $round % 2 ? array_reverse($targets) : $targets;
-            foreach ($order as $target) {
-                $command = $this->load($baseUrl, $target, $liveRequests, $concurrency, $seconds, null);
-                $this->round($io, $mode, $round, $target, $command, $width);
+            foreach (RoundPlan::order($targets, $sides, $round) as [$target, $side]) {
+                $result = $results[$side->label];
+                if (!$result->isAvailable($target)) {
+                    continue;
+                }
+
+                $command = $this->load($side, $result, $target, $liveRequests[$side->label], $concurrency, $seconds, null);
+                $this->round($io, $side, $mode, $round, $target, $command, $widths);
             }
         }
 
-        $this->server->stop();
+        $this->server->stopAll();
 
-        return $stats;
+        return $results;
     }
 
     /**
@@ -276,12 +337,12 @@ final class BenchCommand extends Command implements SignalableCommandInterface
      *
      * @return array<string, LiveRequest>
      */
-    private function liveRequests(array $targets): array
+    private function liveRequests(CheckResult $result, array $targets): array
     {
         $requests = [];
         foreach ($targets as $target) {
-            if ($target->isLive()) {
-                $pageHtml = $this->checker->page($target->scenario->page);
+            if ($target->isLive() && $result->isAvailable($target)) {
+                $pageHtml = $result->page($target->scenario->page);
                 $requests[$target->name] = $this->builder->build($pageHtml, $target->scenario);
             }
         }
@@ -293,10 +354,14 @@ final class BenchCommand extends Command implements SignalableCommandInterface
      * @param list<Target>               $targets
      * @param array<string, LiveRequest> $liveRequests
      */
-    private function warmup(string $baseUrl, array $targets, array $liveRequests, int $concurrency): void
+    private function warmup(Side $side, CheckResult $result, array $targets, array $liveRequests, int $concurrency): void
     {
         foreach ($targets as $target) {
-            $command = $this->load($baseUrl, $target, $liveRequests, $concurrency, null, self::WARMUP_REQUESTS);
+            if (!$result->isAvailable($target)) {
+                continue;
+            }
+
+            $command = $this->load($side, $result, $target, $liveRequests, $concurrency, null, self::WARMUP_REQUESTS);
             $this->ab->run($command);
         }
     }
@@ -306,32 +371,35 @@ final class BenchCommand extends Command implements SignalableCommandInterface
      *
      * @return list<string>
      */
-    private function load(string $baseUrl, Target $target, array $liveRequests, int $concurrency, ?int $seconds, ?int $requests): array
+    private function load(Side $side, CheckResult $result, Target $target, array $liveRequests, int $concurrency, ?int $seconds, ?int $requests): array
     {
+        $baseUrl = $side->baseUrl();
         if (!$target->isLive()) {
             return $this->ab->command($baseUrl.$target->path, $concurrency, $seconds, $requests);
         }
 
         $request = $liveRequests[$target->name];
         $url = $baseUrl.$request->url;
-        $bodyFile = $this->checker->bodyFile($target);
+        $bodyFile = $result->bodyFile($target);
 
         return $this->ab->command($url, $concurrency, $seconds, $requests, $bodyFile, $request->headers());
     }
 
     /**
-     * @param list<string> $command
+     * @param list<string>    $command
+     * @param array{int, int} $widths  side label width, target name width
      */
-    private function round(SymfonyStyle $io, string $mode, int $round, Target $target, array $command, int $width): void
+    private function round(SymfonyStyle $io, Side $side, string $mode, int $round, Target $target, array $command, array $widths): void
     {
         $report = $this->ab->run($command);
         $measurement = $this->ab->parse($report, $target->expectedStatus);
-        $this->log->append(new Round($mode, $target->name, $round, $measurement));
+        $this->log->append(new Round($side->label, $mode, $target->name, $round, $measurement));
 
         $io->writeln(\sprintf(
-            '  round %d %s %8.1f req/s  p50 %g ms  p95 %g ms  p99 %g ms  errors %d',
+            '  round %d %s %s %8.1f req/s  p50 %g ms  p95 %g ms  p99 %g ms  errors %d',
             $round,
-            str_pad($target->name, $width),
+            str_pad($side->label, $widths[0]),
+            str_pad($target->name, $widths[1]),
             $measurement->requestsPerSecond,
             $measurement->p50,
             $measurement->p95,
@@ -345,12 +413,7 @@ final class BenchCommand extends Command implements SignalableCommandInterface
         return new RunInfo(
             $this->commandLine($input),
             \sprintf('%s UTC', gmdate('Y-m-d H:i')),
-            $this->tryOutput(['git', 'rev-parse', '--short', 'HEAD']),
-            $this->isDirty(),
             $this->frankenPhpVersion(),
-            $this->version('symfony/framework-bundle'),
-            $this->version('twig/twig'),
-            $this->version('tales-from-a-dev/twig-tailwind-extra'),
             $this->cpu(),
             (int) $this->tryOutput(['getconf', '_NPROCESSORS_ONLN']),
             \sprintf('%s %s', php_uname('s'), php_uname('r')),
@@ -360,6 +423,23 @@ final class BenchCommand extends Command implements SignalableCommandInterface
             (int) $input->getOption('seconds'),
             $loadBefore,
             (float) sys_getloadavg()[0],
+        );
+    }
+
+    private function workingTreeSide(InputInterface $input): Side
+    {
+        $branch = $this->tryOutput(['git', 'rev-parse', '--abbrev-ref', 'HEAD']);
+        $sha = $this->tryOutput(['git', 'rev-parse', '--short', 'HEAD']);
+
+        return new Side(
+            \sprintf('%s (%s)', $branch, $sha),
+            $this->projectDir,
+            \sprintf('%s/var/bench', $this->projectDir),
+            (int) $input->getOption('port'),
+            $sha,
+            $this->isDirty(),
+            VendorVersions::read($this->projectDir),
+            true,
         );
     }
 
@@ -388,7 +468,7 @@ final class BenchCommand extends Command implements SignalableCommandInterface
     {
         $parts = ['bin/bench'];
 
-        foreach (['rounds', 'seconds', 'concurrency', 'mode', 'only', 'yes', 'port'] as $name) {
+        foreach (['against', 'rounds', 'seconds', 'concurrency', 'mode', 'only', 'yes', 'port'] as $name) {
             $value = $input->getOption($name);
             $default = $this->getDefinition()->getOption($name)->getDefault();
             if ($this->optionString($value) === $this->optionString($default)) {
@@ -414,11 +494,6 @@ final class BenchCommand extends Command implements SignalableCommandInterface
         return \is_array($value) ? implode(' ', $value) : (string) $value;
     }
 
-    private function version(string $package): string
-    {
-        return ltrim(InstalledVersions::getPrettyVersion($package) ?? '', 'v');
-    }
-
     private function cpu(): string
     {
         if ('Darwin' === \PHP_OS_FAMILY) {
@@ -436,9 +511,7 @@ final class BenchCommand extends Command implements SignalableCommandInterface
 
     private function restore(): void
     {
-        if ($this->server->isRunning()) {
-            $this->server->stop();
-        }
+        $this->server->stopAll();
 
         if ($this->prepared) {
             $this->prepared = false;

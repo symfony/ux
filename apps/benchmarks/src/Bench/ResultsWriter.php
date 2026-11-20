@@ -19,19 +19,25 @@ final class ResultsWriter
     }
 
     /**
-     * @param list<TargetStats> $targets
-     * @param list<Round>       $rounds
+     * @param list<Side>                           $sides
+     * @param list<TargetStats>                    $targets
+     * @param list<Round>                          $rounds
+     * @param array<string, array<string, string>> $unavailable
      */
-    public function write(RunInfo $run, array $targets, array $rounds): string
+    public function write(RunInfo $run, array $sides, array $targets, array $rounds, array $unavailable): string
     {
-        $lines = $this->header($run);
+        $lines = $this->header($run, $sides);
+        $packagesByTarget = array_column($this->provider->targets(), 'package', 'name');
 
         foreach ($this->provider->packages() as $package) {
             $packageTargets = array_values(array_filter(
                 $targets,
                 static fn (TargetStats $stats): bool => $package === $stats->target->package,
             ));
-            $packageRounds = $this->packageRounds($package, $rounds);
+            $packageRounds = array_values(array_filter(
+                $rounds,
+                static fn (Round $round): bool => $package === ($packagesByTarget[$round->target] ?? null),
+            ));
             if ([] === $packageTargets && [] === $packageRounds) {
                 continue;
             }
@@ -44,13 +50,17 @@ final class ResultsWriter
                 $lines[] = '';
             }
 
-            if ([] !== $packageRounds) {
-                array_push($lines, ...$this->resultsTable($packageRounds));
-                $lines[] = '';
+            foreach (FrankenPhpServer::MODES as $mode) {
+                $modeTable = $this->modeTable($package, $mode, $sides, $packageRounds);
+                if ([] !== $modeTable) {
+                    array_push($lines, \sprintf('**%s mode**', $mode), '');
+                    array_push($lines, ...$modeTable);
+                    $lines[] = '';
+                }
             }
 
             if ('Css' === $package) {
-                $sentences = $this->cssSentences($rounds);
+                $sentences = $this->cssSentences($sides, $rounds);
                 if ([] !== $sentences) {
                     array_push($lines, ...$sentences);
                     $lines[] = '';
@@ -58,23 +68,41 @@ final class ResultsWriter
             }
         }
 
+        if ([] !== $unavailable) {
+            array_push($lines, ...$this->unavailableSection($unavailable));
+        }
+
         return MarkdownTables::align(implode("\n", $lines));
     }
 
     /**
+     * @param list<Side> $sides
+     *
      * @return list<string>
      */
-    private function header(RunInfo $run): array
+    private function header(RunInfo $run, array $sides): array
     {
-        $sha = $run->dirty ? \sprintf('%s with uncommitted changes', $run->sha) : $run->sha;
-
-        return [
+        $lines = [
             '# Results',
             '',
-            \sprintf('Written by `%s` on %s, from symfony/ux %s.', $run->command, $run->date, $sha),
+            \sprintf('Written by `%s` on %s.', $run->command, $run->date),
             '',
-            \sprintf('- %s, static binary, opcache and preloading on (see `frankenphp.ini`)', $run->frankenPhpVersion),
-            \sprintf('- Symfony %s, Twig %s, tales-from-a-dev/twig-tailwind-extra %s, `prod` environment', $run->symfonyVersion, $run->twigVersion, $run->tailwindExtraVersion),
+        ];
+
+        foreach ($sides as $side) {
+            $lines[] = \sprintf(
+                '- **%s**: symfony/ux %s, Symfony %s, Twig %s, tales-from-a-dev/twig-tailwind-extra %s',
+                $side->label,
+                $side->dirty ? \sprintf('%s with uncommitted changes', $side->sha) : $side->sha,
+                $side->versions->symfony,
+                $side->versions->twig,
+                $side->versions->tailwindExtra,
+            );
+        }
+
+        return [
+            ...$lines,
+            \sprintf('- %s, static binary, opcache and preloading on (see `frankenphp.ini`), `prod` environment', $run->frankenPhpVersion),
             \sprintf('- %s, %d cores, %s; `ab` runs on the same machine', $run->cpu, $run->cores, $run->os),
             \sprintf('- `ab -k -c %d`: %d warmup requests per target, then %s of %d seconds per target', $run->concurrency, $run->warmup, $this->rounds($run->rounds), $run->seconds),
             \sprintf('- Load average: %.2f before the run, %.2f after (1 minute)', $run->loadBefore, $run->loadAfter),
@@ -124,109 +152,95 @@ final class ResultsWriter
     }
 
     /**
-     * @param list<Round> $rounds
+     * @param list<Side>  $sides
+     * @param list<Round> $packageRounds
      *
-     * @return list<array{Target, list<Round>}> rounds grouped by target, in provider order
+     * @return list<string>
      */
-    private function packageRounds(string $package, array $rounds): array
+    private function modeTable(string $package, string $mode, array $sides, array $packageRounds): array
     {
-        $grouped = [];
+        $compared = array_values(array_filter($sides, static fn (Side $side): bool => !$side->isWorkingTree));
+        $workingTree = array_find($sides, static fn (Side $side): bool => $side->isWorkingTree);
+
+        $header = '| Target |';
+        $separator = '| --- |';
+        foreach ($sides as $side) {
+            foreach (['req/s', 'p50', 'p95', 'p99'] as $column) {
+                $header .= \sprintf(' %s %s |', $side->label, $column);
+                $separator .= ' --- |';
+            }
+        }
+        foreach ($compared as $side) {
+            $header .= \sprintf(' Δ %s |', $side->label);
+            $separator .= ' --- |';
+        }
+        $header .= ' Errors |';
+        $separator .= ' --- |';
+
+        $lines = [];
         foreach ($this->provider->targets() as $target) {
             if ($package !== $target->package) {
                 continue;
             }
 
-            $targetRounds = array_values(array_filter(
-                $rounds,
-                static fn (Round $round): bool => $target->name === $round->target,
-            ));
-            if ([] !== $targetRounds) {
-                $grouped[] = [$target, $targetRounds];
+            $cells = [];
+            foreach ($sides as $side) {
+                $cells[$side->label] = $this->roundsFor($side->label, $mode, $target->name, $packageRounds);
             }
-        }
-
-        return $grouped;
-    }
-
-    /**
-     * @param list<array{Target, list<Round>}> $packageRounds
-     *
-     * @return list<string>
-     */
-    private function resultsTable(array $packageRounds): array
-    {
-        $lines = [
-            '| Mode | Target | req/s (median) | req/s (range) | p50 | p95 | p99 | Errors |',
-            '| --- | --- | --- | --- | --- | --- | --- | --- |',
-        ];
-
-        foreach (FrankenPhpServer::MODES as $mode) {
-            foreach ($packageRounds as [$target, $targetRounds]) {
-                $modeRounds = $this->forMode($targetRounds, $mode);
-                if ([] === $modeRounds) {
-                    continue;
-                }
-
-                $rates = array_map(static fn (Round $round): float => $round->measurement->requestsPerSecond, $modeRounds);
-                $lines[] = \sprintf(
-                    '| %s | %s | %.1f | %.1f-%.1f | %g ms | %g ms | %g ms | %d |',
-                    $mode,
-                    $target->label(),
-                    $this->median($rates),
-                    min($rates),
-                    max($rates),
-                    $this->median(array_map(static fn (Round $round): float => $round->measurement->p50, $modeRounds)),
-                    $this->median(array_map(static fn (Round $round): float => $round->measurement->p95, $modeRounds)),
-                    $this->median(array_map(static fn (Round $round): float => $round->measurement->p99, $modeRounds)),
-                    array_sum(array_map(static fn (Round $round): int => $round->measurement->errors, $modeRounds)),
-                );
-            }
-        }
-
-        return $lines;
-    }
-
-    /**
-     * @param list<Round> $rounds
-     *
-     * @return list<string>
-     */
-    private function cssSentences(array $rounds): array
-    {
-        $sentences = [];
-        foreach (FrankenPhpServer::MODES as $mode) {
-            $tailwind = $this->rates($rounds, 'css/tailwind', $mode);
-            $uxCss = $this->rates($rounds, 'css/ux-css', $mode);
-            if ([] === $tailwind || [] === $uxCss) {
+            if ([] === array_filter($cells)) {
                 continue;
             }
 
-            $difference = ($this->median($uxCss) / $this->median($tailwind) - 1) * 100;
-            $spread = max($this->spread($tailwind), $this->spread($uxCss));
-            $sentences[] = \sprintf(
-                '- %s mode: UX CSS serves %+.1f%% requests per second compared to Tailwind CSS; the rounds of a page spread over up to %.1f%%.',
-                $mode,
-                $difference,
-                $spread,
-            );
+            $row = \sprintf('| %s |', $target->label());
+            $errors = [];
+            foreach ($sides as $side) {
+                $sideRounds = $cells[$side->label];
+                if ([] === $sideRounds) {
+                    $row .= ' n/a | n/a | n/a | n/a |';
+                    $errors[] = '-';
+                    continue;
+                }
+
+                $rates = $this->rates($sideRounds);
+                $row .= \sprintf(
+                    ' %.1f (%.1f-%.1f) | %g ms | %g ms | %g ms |',
+                    $this->median($rates),
+                    min($rates),
+                    max($rates),
+                    $this->median(array_map(static fn (Round $round): float => $round->measurement->p50, $sideRounds)),
+                    $this->median(array_map(static fn (Round $round): float => $round->measurement->p95, $sideRounds)),
+                    $this->median(array_map(static fn (Round $round): float => $round->measurement->p99, $sideRounds)),
+                );
+                $errors[] = (string) array_sum(array_map(static fn (Round $round): int => $round->measurement->errors, $sideRounds));
+            }
+
+            foreach ($compared as $side) {
+                $row .= \sprintf(' %s |', $this->delta($workingTree, $side, $cells));
+            }
+
+            $lines[] = \sprintf('%s %s |', $row, implode(' / ', $errors));
         }
 
-        return $sentences;
+        return [] === $lines ? [] : [$header, $separator, ...$lines];
     }
 
     /**
-     * @param list<Round> $rounds
-     *
-     * @return list<float>
+     * @param array<string, list<Round>> $cells
      */
-    private function rates(array $rounds, string $target, string $mode): array
+    private function delta(?Side $workingTree, Side $side, array $cells): string
     {
-        $targetRounds = array_filter($rounds, static fn (Round $round): bool => $target === $round->target);
+        $current = null === $workingTree ? [] : $cells[$workingTree->label];
+        $previous = $cells[$side->label];
+        if ([] === $current || [] === $previous) {
+            return '';
+        }
 
-        return array_map(
-            static fn (Round $round): float => $round->measurement->requestsPerSecond,
-            $this->forMode(array_values($targetRounds), $mode),
-        );
+        $previousMedian = $this->median($this->rates($previous));
+        if (0.0 === $previousMedian) {
+            return '';
+        }
+
+        return \sprintf('%+.1f%%', ($this->median($this->rates($current)) / $previousMedian - 1) * 100);
     }
 
     /**
@@ -234,9 +248,70 @@ final class ResultsWriter
      *
      * @return list<Round>
      */
-    private function forMode(array $rounds, string $mode): array
+    private function roundsFor(string $side, string $mode, string $target, array $rounds): array
     {
-        return array_values(array_filter($rounds, static fn (Round $round): bool => $mode === $round->mode));
+        return array_values(array_filter(
+            $rounds,
+            static fn (Round $round): bool => $side === $round->side && $mode === $round->mode && $target === $round->target,
+        ));
+    }
+
+    /**
+     * @param list<Side>  $sides
+     * @param list<Round> $rounds
+     *
+     * @return list<string>
+     */
+    private function cssSentences(array $sides, array $rounds): array
+    {
+        $sentences = [];
+        foreach ($sides as $side) {
+            foreach (FrankenPhpServer::MODES as $mode) {
+                $tailwind = $this->rates($this->roundsFor($side->label, $mode, 'css/tailwind', $rounds));
+                $uxCss = $this->rates($this->roundsFor($side->label, $mode, 'css/ux-css', $rounds));
+                if ([] === $tailwind || [] === $uxCss) {
+                    continue;
+                }
+
+                $sentences[] = \sprintf(
+                    '- %s, %s mode: UX CSS serves %+.1f%% requests per second compared to Tailwind CSS; the rounds of a page spread over up to %.1f%%.',
+                    $side->label,
+                    $mode,
+                    ($this->median($uxCss) / $this->median($tailwind) - 1) * 100,
+                    max($this->spread($tailwind), $this->spread($uxCss)),
+                );
+            }
+        }
+
+        return $sentences;
+    }
+
+    /**
+     * @param array<string, array<string, string>> $unavailable
+     *
+     * @return list<string>
+     */
+    private function unavailableSection(array $unavailable): array
+    {
+        $lines = ['## Not available', ''];
+        foreach ($unavailable as $side => $reasons) {
+            foreach ($reasons as $target => $reason) {
+                $lines[] = \sprintf('- %s, `%s`: %s', $side, $target, $reason);
+            }
+        }
+        $lines[] = '';
+
+        return $lines;
+    }
+
+    /**
+     * @param list<Round> $rounds
+     *
+     * @return list<float>
+     */
+    private function rates(array $rounds): array
+    {
+        return array_map(static fn (Round $round): float => $round->measurement->requestsPerSecond, $rounds);
     }
 
     /**

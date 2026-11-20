@@ -52,10 +52,10 @@ final class CheckerTest extends TestCase
         $target = $this->target('live/props');
         $checker = $this->checker([$this->response($html), $this->response($html)]);
 
-        $stats = $checker->check(self::BASE_URL, [$target], false);
+        $result = $checker->check(self::BASE_URL, [$target], false, $this->directory, false);
 
-        self::assertCount(1, $stats);
-        self::assertSame($target, $stats[0]->target);
+        self::assertCount(1, $result->stats);
+        self::assertSame($target, $result->stats[0]->target);
     }
 
     public function testAPageRenderingDifferentHtmlFails(): void
@@ -67,7 +67,7 @@ final class CheckerTest extends TestCase
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('"live/props" renders a different HTML on two requests.');
 
-        $checker->check(self::BASE_URL, [$target], false);
+        $checker->check(self::BASE_URL, [$target], false, $this->directory, false);
     }
 
     public function testAWrongStatusFails(): void
@@ -78,7 +78,7 @@ final class CheckerTest extends TestCase
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('"live/props" answered 500, expected 200.');
 
-        $checker->check(self::BASE_URL, [$target], false);
+        $checker->check(self::BASE_URL, [$target], false, $this->directory, false);
     }
 
     public function testAPageDifferentFromThePreviousModeFails(): void
@@ -86,12 +86,12 @@ final class CheckerTest extends TestCase
         $html = $this->fixture('dashboard.html');
         $checker = $this->checker([$this->response($html), $this->response($html)]);
         $target = $this->target('live/props');
-        file_put_contents($checker->pageFile($target), 'previous mode');
+        file_put_contents(\sprintf('%s/live-props.html', $this->directory), 'previous mode');
 
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('"live/props" renders a different HTML than the previous mode.');
 
-        $checker->check(self::BASE_URL, [$target], true);
+        $checker->check(self::BASE_URL, [$target], true, $this->directory, false);
     }
 
     public function testALiveTargetFetchesItsPageThenPostsTwice(): void
@@ -100,11 +100,57 @@ final class CheckerTest extends TestCase
         $checker = $this->checker([$page, $this->response('<div></div>'), $this->response('<div></div>')]);
         $target = $this->target('live/table-search');
 
-        $stats = $checker->check(self::BASE_URL, [$target], false);
+        $result = $checker->check(self::BASE_URL, [$target], false, $this->directory, false);
 
         self::assertSame(['GET /live/dashboard', 'POST /_components/Live:PostsTable', 'POST /_components/Live:PostsTable'], $this->methods);
-        self::assertSame([], $stats);
-        self::assertFileExists($checker->bodyFile($target));
+        self::assertSame([], $result->stats);
+        self::assertFileExists($result->bodyFile($target));
+    }
+
+    public function testALenientWrongStatusBecomesUnavailable(): void
+    {
+        $checker = $this->checker([$this->response('error', 500)]);
+        $target = $this->target('live/props');
+
+        $result = $checker->check(self::BASE_URL, [$target], false, $this->directory, true);
+
+        self::assertSame([], $result->stats);
+        self::assertSame(['live/props' => '"live/props" answered 500, expected 200.'], $result->unavailable);
+        self::assertFalse($result->isAvailable($target));
+    }
+
+    public function testALenientLiveTargetWhosePageIsUnavailableIsNotRequested(): void
+    {
+        $checker = $this->checker([$this->response('error', 500)]);
+        [$page, $live] = [$this->target('live/dashboard'), $this->target('live/table-search')];
+
+        $result = $checker->check(self::BASE_URL, [$page, $live], false, $this->directory, true);
+
+        self::assertSame(['GET /live/dashboard'], $this->methods);
+        self::assertSame('Its page "/live/dashboard" is not available.', $result->unavailable['live/table-search']);
+    }
+
+    public function testALenientMalformedLivePropsBecomeUnavailable(): void
+    {
+        $page = $this->response('<div data-live-name-value="Live:PostsTable" data-live-props-value="{broken"></div>');
+        $checker = $this->checker([$page]);
+        $target = $this->target('live/table-search');
+
+        $result = $checker->check(self::BASE_URL, [$target], false, $this->directory, true);
+
+        self::assertSame(['GET /live/dashboard'], $this->methods);
+        self::assertSame(['live/table-search' => 'Syntax error'], $result->unavailable);
+    }
+
+    public function testLiveTargetsWhoseOwnPageFailsToLoadAreUnavailableWithOneRequest(): void
+    {
+        $checker = $this->checker([$this->response('error', 500)]);
+        [$first, $second] = [$this->target('live/table-search'), $this->target('live/table-select')];
+
+        $result = $checker->check(self::BASE_URL, [$first, $second], false, $this->directory, true);
+
+        self::assertSame(['GET /live/dashboard'], $this->methods);
+        self::assertSame(['live/table-search' => 'Its page "/live/dashboard" is not available.', 'live/table-select' => 'Its page "/live/dashboard" is not available.'], $result->unavailable);
     }
 
     /**
@@ -118,7 +164,7 @@ final class CheckerTest extends TestCase
             return array_shift($responses);
         });
 
-        return new Checker($client, new LiveRequestBuilder(), $this->directory);
+        return new Checker($client, new LiveRequestBuilder());
     }
 
     private function response(string $body, int $status = 200): MockResponse

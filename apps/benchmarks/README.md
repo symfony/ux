@@ -41,8 +41,30 @@ bin/bench
 - `--only <prefix>`: only the targets whose name starts with the prefix, repeatable. For example `--only css`, `--only live` or `--only live/table-select`.
 - `--yes`: run even if the machine is not idle, without asking.
 - `--port 8180`: the port of FrankenPHP.
+- `--against <ref>`: also benchmarks this git ref of symfony/ux (a tag, a branch or a commit), repeatable. See [Compare with another version](#compare-with-another-version).
 
 `bin/bench --check --url <url>` does not benchmark anything. It runs against an already running server and checks that every page answers with the expected status and the same HTML on two requests, that every page holds its minimum counts, and that every live scenario builds its request and gets the expected status with the same HTML on two requests. CI runs it against `symfony server:start`, see `.github/workflows/app-benchmarks.yaml`.
+
+## Compare with another version
+
+```shell
+bin/bench --against v3.7.2
+bin/bench --against v3.6.0 --against v3.7.2
+```
+
+`--against` is repeatable. Each version gets its own columns in `RESULTS.md`, in the order given, the working tree last. A `Δ` column per other version gives the median requests per second of the working tree against the one of that version.
+
+Each ref is installed in `var/bench/against/<ref>/app`: a copy of this app (same code) with its own `vendor/`, installed by Composer from the packages of that ref, which come from a temporary git worktree removed afterwards. A `/` in a ref becomes `-` in the directory name (`origin/3.x` -> `origin-3.x`). The first install runs `composer update` and needs the network. Later runs reuse it while the ref points to the same commit and the `composer.json` of the app has not changed. The app code is copied again on every run, so every version runs the same app code.
+
+For each mode, one FrankenPHP per version runs at the same time: the working tree on `--port`, the n-th `--against` on `--port` + n. Every version is checked and warmed up first. Then, in every round, `ab` runs each target on every version back to back, and the version that goes first changes with the round, so that a slowdown of the machine hits every version alike.
+
+When another version cannot render a target (its check fails: unexpected status, different HTML on two requests, a missing component...), its cells for that target are `n/a`, and the reason is listed under `## Not available` at the end of `RESULTS.md`. The working tree never falls back to `n/a`: a failing check there fails the run. A version that fails to install or to start fails the run too, with the Composer, git or FrankenPHP output.
+
+The oldest version is `v3.6.0`. `symfony/ux-css` exists only since 3.7, so the app registers it only when it is installed, and UX CSS is `n/a` on older versions. It can also be `n/a` on later releases, when their UX CSS lacks what the page uses. Versions older than 3.6.0 lack packages or APIs the app needs and fail their checks.
+
+The committed `RESULTS.md` compares the working tree with the last two releases: `bin/bench --against v3.6.0 --against v3.7.2`.
+
+The installs are never removed automatically. `rm -rf var/bench/against` removes them.
 
 ## What `bin/bench` does
 

@@ -1,12 +1,14 @@
 # Results
 
-Written by `bin/bench` on 2026-11-18 23:18 UTC, from symfony/ux 0ae2e4df989.
+Written by `bin/bench --against v3.6.0 --against v3.7.2` on 2026-11-20 10:28 UTC.
 
-- FrankenPHP v1.13.5 with PHP 8.5.12, static binary, opcache and preloading on (see `frankenphp.ini`)
-- Symfony 8.2.0-BETA2, Twig 3.30.0, tales-from-a-dev/twig-tailwind-extra 1.5.0, `prod` environment
+- **v3.6.0**: symfony/ux 623c488cd70, Symfony 8.2.0-BETA2, Twig 3.30.0, tales-from-a-dev/twig-tailwind-extra 1.5.0
+- **v3.7.2**: symfony/ux 455f92465ea, Symfony 8.2.0-BETA2, Twig 3.30.0, tales-from-a-dev/twig-tailwind-extra 1.5.0
+- **benchmarks-against (2454284bc4c)**: symfony/ux 2454284bc4c, Symfony 8.2.0-BETA2, Twig 3.30.0, tales-from-a-dev/twig-tailwind-extra 1.5.0
+- FrankenPHP v1.13.5 with PHP 8.5.12, static binary, opcache and preloading on (see `frankenphp.ini`), `prod` environment
 - Apple M1 Pro, 10 cores, Darwin 27.2.0; `ab` runs on the same machine
 - `ab -k -c 4`: 200 warmup requests per target, then 3 rounds of 15 seconds per target
-- Load average: 2.98 before the run, 3.83 after (1 minute)
+- Load average: 3.09 before the run, 4.56 after (1 minute)
 
 ## Css
 
@@ -15,15 +17,22 @@ Written by `bin/bench` on 2026-11-18 23:18 UTC, from symfony/ux 0ae2e4df989.
 | Tailwind CSS (`/css/tailwind`) | 164.5 KB | 505                | 6035    | 236            |
 | UX CSS (`/css/ux-css`)         | 174.8 KB | 505                | 5689    | 227            |
 
-| Mode    | Target                         | req/s (median) | req/s (range) | p50  | p95  | p99  | Errors |
-| ------- | ------------------------------ | -------------- | ------------- | ---- | ---- | ---- | ------ |
-| classic | Tailwind CSS (`/css/tailwind`) | 494.2          | 492.4-501.7   | 8 ms | 9 ms | 9 ms | 0      |
-| classic | UX CSS (`/css/ux-css`)         | 531.9          | 526.8-533.9   | 8 ms | 8 ms | 8 ms | 0      |
-| worker  | Tailwind CSS (`/css/tailwind`) | 575.6          | 574.9-577.0   | 7 ms | 7 ms | 8 ms | 0      |
-| worker  | UX CSS (`/css/ux-css`)         | 607.0          | 605.7-612.5   | 7 ms | 7 ms | 7 ms | 0      |
+**classic mode**
 
-- classic mode: UX CSS serves +7.6% requests per second compared to Tailwind CSS; the rounds of a page spread over up to 1.9%.
-- worker mode: UX CSS serves +5.5% requests per second compared to Tailwind CSS; the rounds of a page spread over up to 1.1%.
+| Target                         | v3.6.0 req/s        | v3.6.0 p50 | v3.6.0 p95 | v3.6.0 p99 | v3.7.2 req/s        | v3.7.2 p50 | v3.7.2 p95 | v3.7.2 p99 | benchmarks-against (2454284bc4c) req/s | benchmarks-against (2454284bc4c) p50 | benchmarks-against (2454284bc4c) p95 | benchmarks-against (2454284bc4c) p99 | Δ v3.6.0 | Δ v3.7.2 | Errors    |
+| ------------------------------ | ------------------- | ---------- | ---------- | ---------- | ------------------- | ---------- | ---------- | ---------- | -------------------------------------- | ------------------------------------ | ------------------------------------ | ------------------------------------ | -------- | -------- | --------- |
+| Tailwind CSS (`/css/tailwind`) | 439.7 (439.5-440.1) | 9 ms       | 9 ms       | 9 ms       | 548.1 (547.9-551.2) | 7 ms       | 8 ms       | 8 ms       | 648.0 (647.2-649.6)                    | 6 ms                                 | 6 ms                                 | 7 ms                                 | +47.4%   | +18.2%   | 0 / 0 / 0 |
+| UX CSS (`/css/ux-css`)         | n/a                 | n/a        | n/a        | n/a        | n/a                 | n/a        | n/a        | n/a        | 718.8 (718.1-719.9)                    | 6 ms                                 | 6 ms                                 | 6 ms                                 |          |          | - / - / 0 |
+
+**worker mode**
+
+| Target                         | v3.6.0 req/s        | v3.6.0 p50 | v3.6.0 p95 | v3.6.0 p99 | v3.7.2 req/s        | v3.7.2 p50 | v3.7.2 p95 | v3.7.2 p99 | benchmarks-against (2454284bc4c) req/s | benchmarks-against (2454284bc4c) p50 | benchmarks-against (2454284bc4c) p95 | benchmarks-against (2454284bc4c) p99 | Δ v3.6.0 | Δ v3.7.2 | Errors    |
+| ------------------------------ | ------------------- | ---------- | ---------- | ---------- | ------------------- | ---------- | ---------- | ---------- | -------------------------------------- | ------------------------------------ | ------------------------------------ | ------------------------------------ | -------- | -------- | --------- |
+| Tailwind CSS (`/css/tailwind`) | 514.7 (514.6-514.8) | 8 ms       | 8 ms       | 8 ms       | 652.9 (652.6-653.0) | 6 ms       | 6 ms       | 6 ms       | 808.4 (807.9-808.6)                    | 5 ms                                 | 5 ms                                 | 5 ms                                 | +57.0%   | +23.8%   | 0 / 0 / 0 |
+| UX CSS (`/css/ux-css`)         | n/a                 | n/a        | n/a        | n/a        | n/a                 | n/a        | n/a        | n/a        | 869.0 (868.7-869.3)                    | 5 ms                                 | 5 ms                                 | 5 ms                                 |          |          | - / - / 0 |
+
+- benchmarks-against (2454284bc4c), classic mode: UX CSS serves +10.9% requests per second compared to Tailwind CSS; the rounds of a page spread over up to 0.4%.
+- benchmarks-against (2454284bc4c), worker mode: UX CSS serves +7.5% requests per second compared to Tailwind CSS; the rounds of a page spread over up to 0.1%.
 
 ## TwigComponent
 
@@ -31,10 +40,17 @@ Written by `bin/bench` on 2026-11-18 23:18 UTC, from symfony/ux 0ae2e4df989.
 | -------------------------- | --------- | ---------------------------------- |
 | `twig-component/dashboard` | 1163.9 KB | 3,560 components, 500 rows, 1 icon |
 
-| Mode    | Target                     | req/s (median) | req/s (range) | p50   | p95   | p99   | Errors |
-| ------- | -------------------------- | -------------- | ------------- | ----- | ----- | ----- | ------ |
-| classic | `twig-component/dashboard` | 80.3           | 80.1-81.5     | 46 ms | 62 ms | 72 ms | 0      |
-| worker  | `twig-component/dashboard` | 81.8           | 81.5-82.7     | 45 ms | 60 ms | 70 ms | 0      |
+**classic mode**
+
+| Target                     | v3.6.0 req/s     | v3.6.0 p50 | v3.6.0 p95 | v3.6.0 p99 | v3.7.2 req/s     | v3.7.2 p50 | v3.7.2 p95 | v3.7.2 p99 | benchmarks-against (2454284bc4c) req/s | benchmarks-against (2454284bc4c) p50 | benchmarks-against (2454284bc4c) p95 | benchmarks-against (2454284bc4c) p99 | Δ v3.6.0 | Δ v3.7.2 | Errors    |
+| -------------------------- | ---------------- | ---------- | ---------- | ---------- | ---------------- | ---------- | ---------- | ---------- | -------------------------------------- | ------------------------------------ | ------------------------------------ | ------------------------------------ | -------- | -------- | --------- |
+| `twig-component/dashboard` | 60.3 (60.0-60.3) | 66 ms      | 67 ms      | 68 ms      | 77.0 (77.0-79.3) | 51 ms      | 53 ms      | 53 ms      | 95.4 (95.1-95.6)                       | 42 ms                                | 43 ms                                | 44 ms                                | +58.4%   | +23.9%   | 0 / 0 / 0 |
+
+**worker mode**
+
+| Target                     | v3.6.0 req/s     | v3.6.0 p50 | v3.6.0 p95 | v3.6.0 p99 | v3.7.2 req/s     | v3.7.2 p50 | v3.7.2 p95 | v3.7.2 p99 | benchmarks-against (2454284bc4c) req/s | benchmarks-against (2454284bc4c) p50 | benchmarks-against (2454284bc4c) p95 | benchmarks-against (2454284bc4c) p99 | Δ v3.6.0 | Δ v3.7.2 | Errors    |
+| -------------------------- | ---------------- | ---------- | ---------- | ---------- | ---------------- | ---------- | ---------- | ---------- | -------------------------------------- | ------------------------------------ | ------------------------------------ | ------------------------------------ | -------- | -------- | --------- |
+| `twig-component/dashboard` | 61.2 (60.9-61.2) | 65 ms      | 66 ms      | 67 ms      | 78.5 (77.9-78.9) | 51 ms      | 51 ms      | 52 ms      | 97.4 (96.9-97.7)                       | 41 ms                                | 42 ms                                | 42 ms                                | +59.2%   | +24.0%   | 0 / 0 / 0 |
 
 ## LiveComponent
 
@@ -43,28 +59,35 @@ Written by `bin/bench` on 2026-11-18 23:18 UTC, from symfony/ux 0ae2e4df989.
 | `live/dashboard` | 596.2 KB | 1,368 components, 100 rows, 7 icons, 100 live children |
 | `live/props`     | 3.1 KB   | -                                                      |
 
-| Mode    | Target                   | req/s (median) | req/s (range)   | p50   | p95   | p99   | Errors |
-| ------- | ------------------------ | -------------- | --------------- | ----- | ----- | ----- | ------ |
-| classic | `live/dashboard`         | 113.1          | 111.4-113.4     | 32 ms | 49 ms | 58 ms | 0      |
-| classic | `live/props`             | 2640.7         | 2593.2-2646.2   | 1 ms  | 2 ms  | 2 ms  | 0      |
-| classic | `live/table-search`      | 130.9          | 129.3-136.8     | 27 ms | 42 ms | 54 ms | 0      |
-| classic | `live/table-select`      | 161.1          | 156.4-161.1     | 24 ms | 36 ms | 39 ms | 0      |
-| classic | `live/table-bulk-delete` | 160.1          | 155.9-161.2     | 24 ms | 35 ms | 41 ms | 0      |
-| classic | `live/table-next-page`   | 120.0          | 120.0-123.5     | 30 ms | 47 ms | 57 ms | 0      |
-| classic | `live/form-validate`     | 1151.4         | 1141.2-1156.6   | 3 ms  | 4 ms  | 4 ms  | 0      |
-| classic | `live/featured-toggle`   | 3911.3         | 3876.7-3913.0   | 1 ms  | 1 ms  | 1 ms  | 0      |
-| classic | `live/stats-refresh`     | 1277.2         | 1270.3-1285.0   | 3 ms  | 4 ms  | 4 ms  | 0      |
-| classic | `live/props-update`      | 1810.1         | 1789.4-1824.4   | 2 ms  | 3 ms  | 3 ms  | 0      |
-| worker  | `live/dashboard`         | 126.8          | 123.3-127.4     | 28 ms | 43 ms | 55 ms | 0      |
-| worker  | `live/props`             | 5810.9         | 5783.2-5878.5   | 1 ms  | 1 ms  | 1 ms  | 0      |
-| worker  | `live/table-search`      | 143.7          | 134.9-146.8     | 24 ms | 41 ms | 53 ms | 0      |
-| worker  | `live/table-select`      | 176.7          | 174.4-178.9     | 21 ms | 34 ms | 42 ms | 0      |
-| worker  | `live/table-bulk-delete` | 175.5          | 174.8-176.7     | 21 ms | 34 ms | 39 ms | 0      |
-| worker  | `live/table-next-page`   | 129.8          | 127.3-137.2     | 27 ms | 46 ms | 58 ms | 0      |
-| worker  | `live/form-validate`     | 1702.4         | 1675.7-1771.7   | 2 ms  | 3 ms  | 3 ms  | 0      |
-| worker  | `live/featured-toggle`   | 10578.5        | 10004.6-10590.3 | 0 ms  | 0 ms  | 1 ms  | 0      |
-| worker  | `live/stats-refresh`     | 3596.8         | 3065.9-3619.1   | 1 ms  | 1 ms  | 1 ms  | 0      |
-| worker  | `live/props-update`      | 3059.3         | 2765.2-3195.6   | 1 ms  | 2 ms  | 2 ms  | 0      |
+**classic mode**
+
+| Target                   | v3.6.0 req/s           | v3.6.0 p50 | v3.6.0 p95 | v3.6.0 p99 | v3.7.2 req/s           | v3.7.2 p50 | v3.7.2 p95 | v3.7.2 p99 | benchmarks-against (2454284bc4c) req/s | benchmarks-against (2454284bc4c) p50 | benchmarks-against (2454284bc4c) p95 | benchmarks-against (2454284bc4c) p99 | Δ v3.6.0 | Δ v3.7.2 | Errors    |
+| ------------------------ | ---------------------- | ---------- | ---------- | ---------- | ---------------------- | ---------- | ---------- | ---------- | -------------------------------------- | ------------------------------------ | ------------------------------------ | ------------------------------------ | -------- | -------- | --------- |
+| `live/dashboard`         | 100.2 (100.0-100.7)    | 40 ms      | 41 ms      | 41 ms      | 117.7 (116.7-122.3)    | 34 ms      | 35 ms      | 35 ms      | 140.5 (140.2-141.9)                    | 28 ms                                | 29 ms                                | 30 ms                                | +40.2%   | +19.3%   | 0 / 0 / 0 |
+| `live/props`             | 2524.9 (2522.5-2525.1) | 2 ms       | 2 ms       | 2 ms       | 2551.4 (2550.2-2570.7) | 2 ms       | 2 ms       | 2 ms       | 3282.4 (3280.3-3284.6)                 | 1 ms                                 | 1 ms                                 | 1 ms                                 | +30.0%   | +28.6%   | 0 / 0 / 0 |
+| `live/table-search`      | 80.6 (80.5-81.0)       | 49 ms      | 50 ms      | 51 ms      | 136.8 (136.0-139.3)    | 29 ms      | 30 ms      | 30 ms      | 163.5 (161.4-164.2)                    | 24 ms                                | 25 ms                                | 25 ms                                | +102.8%  | +19.5%   | 0 / 0 / 0 |
+| `live/table-select`      | 88.8 (88.6-88.9)       | 45 ms      | 45 ms      | 46 ms      | 153.9 (152.7-156.7)    | 26 ms      | 27 ms      | 27 ms      | 183.2 (182.1-184.0)                    | 22 ms                                | 22 ms                                | 23 ms                                | +106.3%  | +19.0%   | 0 / 0 / 0 |
+| `live/table-bulk-delete` | 88.2 (88.0-88.3)       | 45 ms      | 46 ms      | 46 ms      | 151.4 (150.5-155.2)    | 26 ms      | 27 ms      | 27 ms      | 180.8 (180.6-181.8)                    | 22 ms                                | 23 ms                                | 23 ms                                | +105.0%  | +19.4%   | 0 / 0 / 0 |
+| `live/table-next-page`   | 77.2 (77.1-77.5)       | 51 ms      | 52 ms      | 53 ms      | 127.2 (126.3-129.2)    | 31 ms      | 32 ms      | 32 ms      | 151.4 (150.3-151.5)                    | 26 ms                                | 27 ms                                | 27 ms                                | +96.0%   | +19.0%   | 0 / 0 / 0 |
+| `live/form-validate`     | 1297.3 (1295.4-1298.9) | 3 ms       | 3 ms       | 3 ms       | 1358.4 (1358.2-1360.2) | 3 ms       | 3 ms       | 3 ms       | 1419.0 (1418.4-1419.4)                 | 3 ms                                 | 3 ms                                 | 3 ms                                 | +9.4%    | +4.5%    | 0 / 0 / 0 |
+| `live/featured-toggle`   | 3564.1 (3560.1-3565.5) | 1 ms       | 1 ms       | 1 ms       | 3694.5 (3692.7-3694.9) | 1 ms       | 1 ms       | 1 ms       | 3940.7 (3935.4-3942.6)                 | 1 ms                                 | 1 ms                                 | 1 ms                                 | +10.6%   | +6.7%    | 0 / 0 / 0 |
+| `live/stats-refresh`     | 1360.7 (1359.5-1360.8) | 3 ms       | 3 ms       | 3 ms       | 1537.7 (1534.6-1552.9) | 3 ms       | 3 ms       | 3 ms       | 1608.4 (1606.1-1608.4)                 | 2 ms                                 | 3 ms                                 | 3 ms                                 | +18.2%   | +4.6%    | 0 / 0 / 0 |
+| `live/props-update`      | 1856.2 (1855.8-1856.5) | 2 ms       | 2 ms       | 2 ms       | 1866.1 (1863.6-1873.4) | 2 ms       | 2 ms       | 2 ms       | 2248.8 (2244.2-2249.8)                 | 2 ms                                 | 2 ms                                 | 2 ms                                 | +21.2%   | +20.5%   | 0 / 0 / 0 |
+
+**worker mode**
+
+| Target                   | v3.6.0 req/s           | v3.6.0 p50 | v3.6.0 p95 | v3.6.0 p99 | v3.7.2 req/s              | v3.7.2 p50 | v3.7.2 p95 | v3.7.2 p99 | benchmarks-against (2454284bc4c) req/s | benchmarks-against (2454284bc4c) p50 | benchmarks-against (2454284bc4c) p95 | benchmarks-against (2454284bc4c) p99 | Δ v3.6.0 | Δ v3.7.2 | Errors    |
+| ------------------------ | ---------------------- | ---------- | ---------- | ---------- | ------------------------- | ---------- | ---------- | ---------- | -------------------------------------- | ------------------------------------ | ------------------------------------ | ------------------------------------ | -------- | -------- | --------- |
+| `live/dashboard`         | 110.7 (110.5-111.0)    | 36 ms      | 37 ms      | 37 ms      | 131.4 (131.1-131.9)       | 30 ms      | 31 ms      | 31 ms      | 157.6 (157.2-157.8)                    | 25 ms                                | 26 ms                                | 27 ms                                | +42.4%   | +19.9%   | 0 / 0 / 0 |
+| `live/props`             | 5751.5 (5746.5-5751.5) | 1 ms       | 1 ms       | 1 ms       | 5737.1 (5733.4-5741.0)    | 1 ms       | 1 ms       | 1 ms       | 7743.8 (7730.1-7746.7)                 | 1 ms                                 | 1 ms                                 | 1 ms                                 | +34.6%   | +35.0%   | 0 / 0 / 0 |
+| `live/table-search`      | 85.7 (85.7-86.1)       | 46 ms      | 47 ms      | 48 ms      | 149.7 (149.6-150.4)       | 27 ms      | 27 ms      | 27 ms      | 183.2 (183.1-183.8)                    | 22 ms                                | 22 ms                                | 23 ms                                | +113.7%  | +22.4%   | 0 / 0 / 0 |
+| `live/table-select`      | 94.4 (94.4-94.8)       | 42 ms      | 43 ms      | 43 ms      | 169.5 (169.4-170.3)       | 24 ms      | 24 ms      | 24 ms      | 208.0 (207.7-208.2)                    | 19 ms                                | 20 ms                                | 20 ms                                | +120.2%  | +22.7%   | 0 / 0 / 0 |
+| `live/table-bulk-delete` | 94.1 (94.1-94.3)       | 42 ms      | 43 ms      | 43 ms      | 168.7 (168.3-169.0)       | 24 ms      | 24 ms      | 24 ms      | 206.6 (206.0-206.7)                    | 19 ms                                | 20 ms                                | 20 ms                                | +119.5%  | +22.5%   | 0 / 0 / 0 |
+| `live/table-next-page`   | 81.4 (81.3-81.5)       | 49 ms      | 49 ms      | 50 ms      | 137.9 (137.5-138.3)       | 29 ms      | 29 ms      | 30 ms      | 167.3 (166.8-167.6)                    | 24 ms                                | 24 ms                                | 25 ms                                | +105.6%  | +21.4%   | 0 / 0 / 0 |
+| `live/form-validate`     | 2164.0 (2157.1-2164.7) | 2 ms       | 2 ms       | 2 ms       | 2288.5 (2286.0-2292.0)    | 2 ms       | 2 ms       | 2 ms       | 2355.8 (2354.8-2357.9)                 | 2 ms                                 | 2 ms                                 | 2 ms                                 | +8.9%    | +2.9%    | 0 / 0 / 0 |
+| `live/featured-toggle`   | 9950.9 (9766.3-9966.7) | 0 ms       | 0 ms       | 1 ms       | 10265.1 (10082.1-10272.3) | 0 ms       | 0 ms       | 1 ms       | 10910.8 (10898.0-10916.9)              | 0 ms                                 | 0 ms                                 | 1 ms                                 | +9.6%    | +6.3%    | 0 / 0 / 0 |
+| `live/stats-refresh`     | 3613.3 (3609.1-3618.5) | 1 ms       | 1 ms       | 1 ms       | 4867.6 (4866.4-4869.1)    | 1 ms       | 1 ms       | 1 ms       | 5369.3 (5358.7-5387.3)                 | 1 ms                                 | 1 ms                                 | 1 ms                                 | +48.6%   | +10.3%   | 0 / 0 / 0 |
+| `live/props-update`      | 3408.8 (3408.3-3411.0) | 1 ms       | 1 ms       | 1 ms       | 3404.3 (3403.9-3404.6)    | 1 ms       | 1 ms       | 1 ms       | 4030.9 (4027.3-4031.9)                 | 1 ms                                 | 1 ms                                 | 1 ms                                 | +18.2%   | +18.4%   | 0 / 0 / 0 |
 
 ## Icons
 
@@ -72,10 +95,17 @@ Written by `bin/bench` on 2026-11-18 23:18 UTC, from symfony/ux 0ae2e4df989.
 | ------------ | -------- | ----------- |
 | `icons/grid` | 728.5 KB | 2,000 icons |
 
-| Mode    | Target       | req/s (median) | req/s (range) | p50  | p95   | p99   | Errors |
-| ------- | ------------ | -------------- | ------------- | ---- | ----- | ----- | ------ |
-| classic | `icons/grid` | 291.8          | 260.7-315.9   | 9 ms | 32 ms | 42 ms | 0      |
-| worker  | `icons/grid` | 268.6          | 248.7-272.1   | 9 ms | 36 ms | 46 ms | 0      |
+**classic mode**
+
+| Target       | v3.6.0 req/s        | v3.6.0 p50 | v3.6.0 p95 | v3.6.0 p99 | v3.7.2 req/s        | v3.7.2 p50 | v3.7.2 p95 | v3.7.2 p99 | benchmarks-against (2454284bc4c) req/s | benchmarks-against (2454284bc4c) p50 | benchmarks-against (2454284bc4c) p95 | benchmarks-against (2454284bc4c) p99 | Δ v3.6.0 | Δ v3.7.2 | Errors    |
+| ------------ | ------------------- | ---------- | ---------- | ---------- | ------------------- | ---------- | ---------- | ---------- | -------------------------------------- | ------------------------------------ | ------------------------------------ | ------------------------------------ | -------- | -------- | --------- |
+| `icons/grid` | 469.5 (468.8-470.8) | 8 ms       | 9 ms       | 9 ms       | 470.6 (469.0-471.1) | 8 ms       | 9 ms       | 9 ms       | 529.8 (529.7-531.0)                    | 7 ms                                 | 8 ms                                 | 9 ms                                 | +12.9%   | +12.6%   | 0 / 0 / 0 |
+
+**worker mode**
+
+| Target       | v3.6.0 req/s        | v3.6.0 p50 | v3.6.0 p95 | v3.6.0 p99 | v3.7.2 req/s        | v3.7.2 p50 | v3.7.2 p95 | v3.7.2 p99 | benchmarks-against (2454284bc4c) req/s | benchmarks-against (2454284bc4c) p50 | benchmarks-against (2454284bc4c) p95 | benchmarks-against (2454284bc4c) p99 | Δ v3.6.0 | Δ v3.7.2 | Errors    |
+| ------------ | ------------------- | ---------- | ---------- | ---------- | ------------------- | ---------- | ---------- | ---------- | -------------------------------------- | ------------------------------------ | ------------------------------------ | ------------------------------------ | -------- | -------- | --------- |
+| `icons/grid` | 500.4 (500.0-501.0) | 8 ms       | 8 ms       | 9 ms       | 500.4 (498.5-502.2) | 8 ms       | 8 ms       | 9 ms       | 567.7 (565.4-568.4)                    | 7 ms                                 | 8 ms                                 | 8 ms                                 | +13.5%   | +13.4%   | 0 / 0 / 0 |
 
 ## Map
 
@@ -84,9 +114,21 @@ Written by `bin/bench` on 2026-11-18 23:18 UTC, from symfony/ux 0ae2e4df989.
 | `map/leaflet` | 1004.6 KB | 2,000 markers |
 | `map/google`  | 1004.7 KB | 2,000 markers |
 
-| Mode    | Target        | req/s (median) | req/s (range) | p50   | p95   | p99   | Errors |
-| ------- | ------------- | -------------- | ------------- | ----- | ----- | ----- | ------ |
-| classic | `map/leaflet` | 179.7          | 155.1-185.3   | 23 ms | 41 ms | 48 ms | 0      |
-| classic | `map/google`  | 180.3          | 163.1-183.9   | 23 ms | 41 ms | 45 ms | 0      |
-| worker  | `map/leaflet` | 157.2          | 149.1-160.4   | 25 ms | 47 ms | 57 ms | 0      |
-| worker  | `map/google`  | 151.4          | 148.2-151.8   | 27 ms | 47 ms | 55 ms | 0      |
+**classic mode**
+
+| Target        | v3.6.0 req/s        | v3.6.0 p50 | v3.6.0 p95 | v3.6.0 p99 | v3.7.2 req/s        | v3.7.2 p50 | v3.7.2 p95 | v3.7.2 p99 | benchmarks-against (2454284bc4c) req/s | benchmarks-against (2454284bc4c) p50 | benchmarks-against (2454284bc4c) p95 | benchmarks-against (2454284bc4c) p99 | Δ v3.6.0 | Δ v3.7.2 | Errors    |
+| ------------- | ------------------- | ---------- | ---------- | ---------- | ------------------- | ---------- | ---------- | ---------- | -------------------------------------- | ------------------------------------ | ------------------------------------ | ------------------------------------ | -------- | -------- | --------- |
+| `map/leaflet` | 305.3 (303.9-306.4) | 13 ms      | 15 ms      | 16 ms      | 298.1 (296.4-299.7) | 13 ms      | 16 ms      | 16 ms      | 365.9 (365.5-366.6)                    | 11 ms                                | 12 ms                                | 13 ms                                | +19.9%   | +22.7%   | 0 / 0 / 0 |
+| `map/google`  | 304.7 (304.4-305.4) | 13 ms      | 15 ms      | 16 ms      | 296.9 (296.1-297.5) | 13 ms      | 16 ms      | 16 ms      | 364.6 (363.6-368.4)                    | 11 ms                                | 12 ms                                | 13 ms                                | +19.7%   | +22.8%   | 0 / 0 / 0 |
+
+**worker mode**
+
+| Target        | v3.6.0 req/s        | v3.6.0 p50 | v3.6.0 p95 | v3.6.0 p99 | v3.7.2 req/s        | v3.7.2 p50 | v3.7.2 p95 | v3.7.2 p99 | benchmarks-against (2454284bc4c) req/s | benchmarks-against (2454284bc4c) p50 | benchmarks-against (2454284bc4c) p95 | benchmarks-against (2454284bc4c) p99 | Δ v3.6.0 | Δ v3.7.2 | Errors    |
+| ------------- | ------------------- | ---------- | ---------- | ---------- | ------------------- | ---------- | ---------- | ---------- | -------------------------------------- | ------------------------------------ | ------------------------------------ | ------------------------------------ | -------- | -------- | --------- |
+| `map/leaflet` | 305.7 (305.1-309.1) | 13 ms      | 15 ms      | 16 ms      | 302.3 (301.2-303.6) | 13 ms      | 15 ms      | 16 ms      | 378.7 (377.5-380.9)                    | 10 ms                                | 11 ms                                | 12 ms                                | +23.9%   | +25.3%   | 0 / 0 / 0 |
+| `map/google`  | 310.1 (310.0-311.4) | 13 ms      | 15 ms      | 15 ms      | 307.2 (305.7-308.1) | 13 ms      | 15 ms      | 16 ms      | 379.6 (377.9-381.8)                    | 10 ms                                | 11 ms                                | 12 ms                                | +22.4%   | +23.6%   | 0 / 0 / 0 |
+
+## Not available
+
+- v3.6.0, `css/ux-css`: "css/ux-css" answered 500, expected 200.
+- v3.7.2, `css/ux-css`: "css/ux-css" answered 500, expected 200.
