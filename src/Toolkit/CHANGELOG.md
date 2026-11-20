@@ -17,6 +17,8 @@
 - [Shadcn] Show the `menubar` menus and their submenus in the top layer with anchor positioning where supported, so no ancestor clips them
 - [Shadcn] Fix `menubar` menus wrapping their items to the width of their trigger
 - [Shadcn] Place `tooltip` with anchor positioning where supported, so it follows its trigger on scroll and resize
+- [Shadcn] Show the `navigation-menu` panels in the top layer with anchor positioning where supported, so no ancestor clips them
+- [Shadcn] Fix `navigation-menu` ignoring `Escape`, closing on a click inside a panel, and not opening after a Turbo cache restore
 
 ## 3.7.1
 

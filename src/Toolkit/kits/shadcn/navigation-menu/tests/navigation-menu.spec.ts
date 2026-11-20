@@ -1,4 +1,34 @@
-import { describeRecipe, expect, test, testState } from '../../../../assets/test/browser/fixtures';
+import type { Page } from '@playwright/test';
+import { describeRecipe, expect, isUnderPointer, test, testState } from '../../../../assets/test/browser/fixtures';
+
+async function clipMenu(page: Page): Promise<void> {
+    await page
+        .locator('[data-slot="navigation-menu"]')
+        .first()
+        .evaluate((element) => {
+            const box = element.parentElement!;
+            box.style.overflow = 'clip';
+            box.style.minHeight = '0';
+            box.style.height = `${element.getBoundingClientRect().bottom - box.getBoundingClientRect().top + 4}px`;
+        });
+}
+
+function testFirstOpening(): void {
+    test('opens its panel under its trigger at once the first time', async ({ page, gotoExample }) => {
+        await gotoExample('shadcn/navigation-menu/default');
+        const positioner = page.locator('[data-navigation-menu-target="viewportPositioner"]');
+        // Slow enough to catch a panel that would travel to its place.
+        await positioner.evaluate((element) => element.style.setProperty('transition-duration', '10s'));
+        const trigger = page.getByRole('button', { name: 'Getting started' });
+
+        await trigger.click();
+
+        await expect(trigger).toHaveAttribute('aria-expanded', 'true');
+        const triggerBox = (await trigger.boundingBox())!;
+        const positionerBox = (await positioner.boundingBox())!;
+        expect(positionerBox.x).toBeCloseTo(triggerBox.x, 0);
+    });
+}
 
 describeRecipe('shadcn/navigation-menu', () => {
     testState('opens on hover', {
@@ -202,5 +232,225 @@ describeRecipe('shadcn/navigation-menu', () => {
 
         await expect(page.getByRole('link', { name: /Introduction/ })).toBeFocused();
         await expect(trigger).toHaveAttribute('aria-expanded', 'true');
+    });
+
+    test('shows the panel outside an ancestor that hides its overflow', async ({ page, gotoExample }) => {
+        await gotoExample('shadcn/navigation-menu/default');
+        await clipMenu(page);
+
+        await page.getByRole('button', { name: 'Getting started' }).click();
+
+        const link = page.getByRole('link', { name: /Introduction/ });
+        await expect(link).toBeVisible();
+        await expect(page.locator('[data-slot="navigation-menu-viewport"]')).toHaveCSS('opacity', '1');
+        expect(await isUnderPointer(link)).toBe(true);
+    });
+
+    test('shows the panel above a positioned element stacked higher than the menu', async ({ page, gotoExample }) => {
+        await gotoExample('shadcn/navigation-menu/default');
+        await page.evaluate(() => {
+            const cover = document.createElement('div');
+            Object.assign(cover.style, { position: 'fixed', inset: '100px 0 0 0', zIndex: '100', background: 'white' });
+            document.body.append(cover);
+        });
+
+        await page.getByRole('button', { name: 'Getting started' }).click();
+
+        const link = page.getByRole('link', { name: /Introduction/ });
+        await expect(link).toBeVisible();
+        await expect(page.locator('[data-slot="navigation-menu-viewport"]')).toHaveCSS('opacity', '1');
+        expect(await isUnderPointer(link)).toBe(true);
+    });
+
+    testFirstOpening();
+
+    test('takes no room while closed', async ({ page, gotoExample }) => {
+        await gotoExample('shadcn/navigation-menu/default');
+
+        await expect(page.locator('[data-navigation-menu-target="viewportPositioner"]')).toHaveCSS('display', 'none');
+    });
+
+    test('closes on Escape and gives the focus back to the trigger without reopening', async ({
+        page,
+        gotoExample,
+    }) => {
+        await gotoExample('shadcn/navigation-menu/default');
+        const trigger = page.getByRole('button', { name: 'Getting started' });
+        await trigger.click();
+        await page.keyboard.press('Tab');
+        await expect(page.getByRole('link', { name: /Introduction/ })).toBeFocused();
+
+        await page.keyboard.press('Escape');
+
+        await expect(trigger).toBeFocused();
+        await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+        await expect(page.locator('[data-slot="navigation-menu-viewport"]')).toHaveAttribute('data-state', 'closed');
+    });
+
+    test('closes a panel opened on hover on Escape', async ({ page, gotoExample }) => {
+        await gotoExample('shadcn/navigation-menu/default');
+        const trigger = page.getByRole('button', { name: 'Getting started' });
+        await trigger.hover();
+        await expect(trigger).toHaveAttribute('aria-expanded', 'true');
+
+        await page.keyboard.press('Escape');
+
+        await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+    });
+
+    test('stays open on a click on a spot of the panel that cannot take the focus', async ({ page, gotoExample }) => {
+        await gotoExample('shadcn/navigation-menu/default');
+        const trigger = page.getByRole('button', { name: 'Getting started' });
+        await trigger.click();
+        await expect(page.getByRole('link', { name: /Introduction/ })).toBeVisible();
+        await page.locator('[data-slot="navigation-menu-content"][data-active]').evaluate((content) => {
+            const label = document.createElement('span');
+            label.textContent = 'Inside the panel';
+            content.prepend(label);
+        });
+
+        await page.getByText('Inside the panel').click();
+
+        await expect(trigger).toHaveAttribute('aria-expanded', 'true');
+    });
+
+    test('stays open while another popover opens', async ({ page, gotoExample }) => {
+        await gotoExample('shadcn/navigation-menu/default');
+        const trigger = page.getByRole('button', { name: 'Getting started' });
+        await trigger.click();
+        await expect(page.getByRole('link', { name: /Introduction/ })).toBeVisible();
+
+        await page.evaluate(() => {
+            const other = document.createElement('div');
+            other.popover = 'auto';
+            other.textContent = 'Another popover';
+            document.body.append(other);
+            other.showPopover();
+        });
+
+        await expect(trigger).toHaveAttribute('aria-expanded', 'true');
+    });
+
+    test('stays open while the pointer crosses the gap to the panel', async ({ page, gotoExample }) => {
+        await gotoExample('shadcn/navigation-menu/default');
+        await page.getByRole('button', { name: 'Getting started' }).hover();
+        const link = page.getByRole('link', { name: /Introduction/ });
+        await expect(link).toBeVisible();
+        const viewportBox = (await page.locator('[data-slot="navigation-menu-viewport"]').boundingBox())!;
+        const linkBox = (await link.boundingBox())!;
+
+        await page.mouse.move(viewportBox.x + 20, viewportBox.y - 3);
+        await page.waitForTimeout(500);
+        await page.mouse.move(linkBox.x + linkBox.width / 2, linkBox.y + linkBox.height / 2);
+
+        await expect(page.getByRole('button', { name: 'Getting started' })).toHaveAttribute('aria-expanded', 'true');
+        await expect(link).toBeVisible();
+    });
+
+    test('reflects a panel hidden by something else', async ({ page, gotoExample }) => {
+        await gotoExample('shadcn/navigation-menu/default');
+        const trigger = page.getByRole('button', { name: 'Getting started' });
+        await trigger.click();
+        await expect(page.getByRole('link', { name: /Introduction/ })).toBeVisible();
+
+        await page
+            .locator('[data-navigation-menu-target="viewportPositioner"]')
+            .evaluate((positioner) => positioner.hidePopover());
+
+        await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+        await expect(page.locator('[data-slot="navigation-menu-viewport"]')).toHaveAttribute('data-state', 'closed');
+    });
+
+    test('opens again after a morph strips what the controller set', async ({ page, gotoExample }) => {
+        await gotoExample('shadcn/navigation-menu/default');
+        const positioner = page.locator('[data-navigation-menu-target="viewportPositioner"]');
+        await page.locator('[data-slot="navigation-menu"]').evaluate((nav) => {
+            const positioner = nav.querySelector<HTMLElement>('[data-navigation-menu-target="viewportPositioner"]')!;
+            positioner.removeAttribute('popover');
+            positioner.removeAttribute('style');
+            nav.removeAttribute('style');
+        });
+
+        await page.getByRole('button', { name: 'Getting started' }).click();
+
+        await expect(page.getByRole('link', { name: /Introduction/ })).toBeVisible();
+        await expect(positioner).toHaveAttribute('popover', 'manual');
+    });
+
+    test('opens again once restored from the Turbo cache', async ({ page, gotoExample }) => {
+        await gotoExample('shadcn/navigation-menu/default');
+        await page.locator('[data-slot="navigation-menu"]').evaluate((nav) => {
+            // Turbo caches a clone of the page taken while the controller is connected.
+            nav.replaceWith(nav.cloneNode(true));
+        });
+
+        await page.getByRole('button', { name: 'Getting started' }).click();
+
+        await expect(page.getByRole('link', { name: /Introduction/ })).toBeVisible();
+    });
+
+    test('cleans up when its viewport is removed', async ({ page, gotoExample }) => {
+        await gotoExample('shadcn/navigation-menu/default');
+        const nav = page.locator('[data-slot="navigation-menu"]');
+        await nav.evaluate((element) => {
+            element.querySelector('[data-navigation-menu-target="viewportPositioner"]')!.remove();
+        });
+
+        await page.getByRole('button', { name: 'Getting started' }).click();
+
+        await expect(nav).not.toHaveAttribute('style', /anchor-name/);
+    });
+
+    test('closes its open panel once its controller disconnects', async ({ page, gotoExample }) => {
+        await gotoExample('shadcn/navigation-menu/default');
+        await page.getByRole('button', { name: 'Getting started' }).click();
+        const link = page.getByRole('link', { name: /Introduction/ });
+        await expect(link).toBeVisible();
+
+        await page.locator('[data-slot="navigation-menu"]').evaluate((nav) => {
+            nav.removeAttribute('data-controller');
+        });
+
+        await expect(link).toBeHidden();
+    });
+
+    test.describe('without anchor positioning', () => {
+        test.beforeEach(async ({ page }) => {
+            await page.addInitScript(() => {
+                const supports = CSS.supports.bind(CSS);
+                CSS.supports = (...args: [string, string?]) =>
+                    args[0].startsWith('position-area') ? false : supports(...(args as [string]));
+            });
+        });
+
+        test('closes a panel opened on hover on Escape', async ({ page, gotoExample }) => {
+            await gotoExample('shadcn/navigation-menu/default');
+            const trigger = page.getByRole('button', { name: 'Getting started' });
+            await trigger.hover();
+            await expect(trigger).toHaveAttribute('aria-expanded', 'true');
+
+            await page.keyboard.press('Escape');
+
+            await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+        });
+
+        test('opens in place and clips the panel in an ancestor that hides its overflow', async ({
+            page,
+            gotoExample,
+        }) => {
+            await gotoExample('shadcn/navigation-menu/default');
+            await clipMenu(page);
+
+            await page.getByRole('button', { name: 'Getting started' }).click();
+
+            await expect(page.locator('[data-slot="navigation-menu-viewport"]')).toHaveAttribute('data-state', 'open');
+            await expect(page.locator('[data-navigation-menu-target="viewportPositioner"]')).not.toHaveAttribute(
+                'popover'
+            );
+            await expect(page.locator('[data-slot="navigation-menu-viewport"]')).toHaveCSS('opacity', '1');
+            expect(await isUnderPointer(page.getByRole('link', { name: /Introduction/ }))).toBe(false);
+        });
+
+        testFirstOpening();
     });
 });
