@@ -291,7 +291,7 @@ final class ParentCrumbCollectorTest extends TestCase
         $leaf = [new Breadcrumb('leaf', parent: ProductNameController::class)];
 
         $this->expectException(LogicException::class);
-        $this->expectExceptionMessage(\sprintf('The breadcrumb "{name:product}" of "%s" reads the argument "$product", which the closure controller does not have.', ProductNameController::class));
+        $this->expectExceptionMessageMatches(\sprintf('/^The breadcrumb "\{name:product\}" of "%s" reads the argument "\$product", which "\{closure:[^"]+\}" does not have\.$/', preg_quote(ProductNameController::class, '/')));
 
         $collector->collect(static fn (): null => null, $leaf, ['slug' => 'blue-sneakers'], ['slug' => 'blue-sneakers']);
     }

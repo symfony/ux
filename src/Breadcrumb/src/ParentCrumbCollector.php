@@ -77,7 +77,7 @@ final class ParentCrumbCollector implements ResetInterface
                 $own = self::fromLastParent($crumbs);
             }
             $visiting = [];
-            $current = 'the closure controller';
+            $current = $controller instanceof \Closure ? new \ReflectionFunction($controller)->getName() : (\is_string($controller) ? $controller : get_debug_type($controller));
         } else {
             [$class, $method] = $action;
             $id = \sprintf('%s::%s', $class, $method);
@@ -89,7 +89,7 @@ final class ParentCrumbCollector implements ResetInterface
                 $own = self::fromLastParent($crumbs);
             }
             $visiting = [$id];
-            $current = \sprintf('"%s::%s()"', $class, $method);
+            $current = \sprintf('%s::%s()', $class, $method);
         }
 
         $trail = $this->withAncestors($own, $visiting);

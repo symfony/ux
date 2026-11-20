@@ -28,7 +28,7 @@ final class ParentCrumbCheckerTest extends TestCase
 
         $this->expectNotToPerformAssertions();
 
-        $checker->check($ancestor, 'App\ProductController', '"App\ReviewController::__invoke()"', ['product' => new Product()], []);
+        $checker->check($ancestor, 'App\ProductController', 'App\ReviewController::__invoke()', ['product' => new Product()], []);
     }
 
     public function testAPlaceholderReadingAnArgumentTheActionLacksIsRejected(): void
@@ -39,7 +39,7 @@ final class ParentCrumbCheckerTest extends TestCase
         $this->expectException(LogicException::class);
         $this->expectExceptionMessage('The breadcrumb "{name:product}" of "App\ProductController" reads the argument "$product", which "App\ReviewController::__invoke()" does not have.');
 
-        $checker->check($ancestor, 'App\ProductController', '"App\ReviewController::__invoke()"', [], ['product' => 'blue-sneakers']);
+        $checker->check($ancestor, 'App\ProductController', 'App\ReviewController::__invoke()', [], ['product' => 'blue-sneakers']);
     }
 
     public function testABarePlaceholderMayReadARouteParameter(): void
@@ -49,7 +49,7 @@ final class ParentCrumbCheckerTest extends TestCase
 
         $this->expectNotToPerformAssertions();
 
-        $checker->check($ancestor, 'App\ProductController', '"App\ReviewController::__invoke()"', [], ['slug' => 'blue-sneakers']);
+        $checker->check($ancestor, 'App\ProductController', 'App\ReviewController::__invoke()', [], ['slug' => 'blue-sneakers']);
     }
 
     public function testABarePlaceholderReadingNothingIsRejected(): void
@@ -60,7 +60,7 @@ final class ParentCrumbCheckerTest extends TestCase
         $this->expectException(LogicException::class);
         $this->expectExceptionMessage('The breadcrumb "{slug}" of "App\ProductController" reads "{slug}", which is neither an argument of "App\ReviewController::__invoke()" nor a parameter of its route.');
 
-        $checker->check($ancestor, 'App\ProductController', '"App\ReviewController::__invoke()"', ['product' => new Product()], ['id' => 42]);
+        $checker->check($ancestor, 'App\ProductController', 'App\ReviewController::__invoke()', ['product' => new Product()], ['id' => 42]);
     }
 
     public function testALiteralLabelIsNotChecked(): void
@@ -70,6 +70,6 @@ final class ParentCrumbCheckerTest extends TestCase
 
         $this->expectNotToPerformAssertions();
 
-        $checker->check($ancestor, 'App\ProductController', '"App\ReviewController::__invoke()"', [], []);
+        $checker->check($ancestor, 'App\ProductController', 'App\ReviewController::__invoke()', [], []);
     }
 }
