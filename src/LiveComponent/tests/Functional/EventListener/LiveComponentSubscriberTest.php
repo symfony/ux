@@ -155,6 +155,29 @@ final class LiveComponentSubscriberTest extends KernelTestCase
         ;
     }
 
+    public function testComponentIsOnlyServedOnTheRouteItIsConfiguredWith(): void
+    {
+        $props = $this->dehydrateComponent($this->mountComponent('alternate_route'))->getProps();
+        $defaultRouteProps = $this->dehydrateComponent($this->mountComponent('component2'))->getProps();
+
+        $this->browser()
+            ->post('/alt/alternate_route', ['body' => ['data' => json_encode(['props' => $props])]])
+            ->assertSuccessful()
+            ->assertContains('count: 0')
+            ->post('/alt/alternate_route/increase', ['body' => ['data' => json_encode(['props' => $props])]])
+            ->assertSuccessful()
+            ->assertContains('count: 1')
+            ->post('/_components/alternate_route', ['body' => ['data' => json_encode(['props' => $props])]])
+            ->assertStatus(404)
+            ->post('/_components/alternate_route/increase', ['body' => ['data' => json_encode(['props' => $props])]])
+            ->assertStatus(404)
+            ->post('/_components/alternate_route/_batch', ['body' => ['data' => json_encode(['props' => $props, 'actions' => [['name' => 'increase']]])]])
+            ->assertStatus(404)
+            ->post('/alt/component2', ['body' => ['data' => json_encode(['props' => $defaultRouteProps])]])
+            ->assertStatus(404)
+        ;
+    }
+
     public function testCannotExecuteComponentActionForGetRequest(): void
     {
         $this->browser()
