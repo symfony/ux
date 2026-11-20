@@ -23,7 +23,7 @@
                     <twig:ux:icon name="lucide:chevrons-up-down" class="ms-auto" />
                 </twig:Sidebar:MenuButton>
             </twig:DropdownMenu:Trigger>
-            <twig:DropdownMenu:Content class="w-full">
+            <twig:DropdownMenu:Content class="w-(--dropdown-menu-trigger-width)">
                 {%- for version in versions %}
                     <twig:DropdownMenu:Item>
                         v{{ version }}

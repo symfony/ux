@@ -10,6 +10,8 @@
 - [Shadcn] Fix `tooltip` staying behind the modal `dialog` that contains its trigger: it now opens in the top layer, with the Popover API
 - [Shadcn] Show the `popover` and `date-picker` content in the top layer with anchor positioning where supported, so an ancestor hiding its overflow no longer clips it
 - [Shadcn] Show the `hover-card` content in the top layer with anchor positioning where supported, so an ancestor hiding its overflow no longer clips it, and close it on `Escape`
+- [Shadcn] Show the `dropdown-menu` content and its submenus in the top layer with anchor positioning where supported, so no ancestor clips them
+- [Shadcn] Add a `--dropdown-menu-trigger-width` variable to `DropdownMenu:Content`, to use instead of `w-full`
 
 ## 3.7.1
 

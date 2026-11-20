@@ -1,10 +1,11 @@
+{#- `anchor()` insets rather than `position-area`, which Firefox misplaces in right-to-left: https://bugzil.la/2019601 -#}
 <div
     role="menu"
     data-slot="dropdown-menu-sub-content"
     data-dropdown-menu-sub-target="content"
     data-state="closed"
     {{ attributes.defaults({
-        class: 'invisible opacity-0 transition-[opacity,translate,visibility] duration-100 ease-out data-[state=open]:visible data-[state=open]:opacity-100 data-[state=open]:translate-x-0 data-[state=closed]:ltr:-translate-x-2 data-[state=closed]:rtl:translate-x-2 absolute start-full top-0 z-50 ms-1 w-max min-w-[96px] rounded-lg bg-popover p-1 text-popover-foreground shadow-lg ring-1 ring-foreground/10 outline-none'|tailwind_classes,
+        class: 'invisible opacity-0 transition-[opacity,translate,visibility] duration-100 ease-out data-[state=open]:visible data-[state=open]:opacity-100 data-[state=open]:translate-x-0 [&:not([popover])]:data-[state=closed]:ltr:-translate-x-2 [&:not([popover])]:data-[state=closed]:rtl:translate-x-2 absolute start-full top-0 z-50 ms-1 w-max min-w-[96px] rounded-lg bg-popover p-1 text-popover-foreground shadow-lg ring-1 ring-foreground/10 outline-none overflow-visible before:absolute before:inset-y-0 before:-inset-x-1 [&[popover]:not(:popover-open)]:hidden [&[popover]]:inset-auto [&[popover]]:start-[anchor(outside)] [&[popover]]:top-[anchor(top)] [&[popover]]:scale-95 [&[popover]]:data-[state=open]:scale-100 [&[popover]]:transition-[opacity,scale,visibility,display,overlay] [&[popover]:popover-open]:visible [&[popover]:popover-open]:transition-[opacity,scale,display,overlay] [&[popover]]:transition-discrete starting:open:opacity-0 starting:open:scale-95 [&[popover]]:[position-try-fallbacks:flip-inline,flip-block,flip-block_flip-inline]'|tailwind_classes,
     }) }}
 >
     {##- The sub-menu items, e.g. `DropdownMenu:Item`. -#}
