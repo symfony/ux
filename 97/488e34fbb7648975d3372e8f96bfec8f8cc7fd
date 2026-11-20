@@ -1,0 +1,9 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2026-11-20T07:53:32Z
+
+I rebased the branch on 3.x and pushed a few changes:
+
+- `contentTargetDisconnected` returns early when the native path is off, in both controllers.
+- I inlined the `#focus()` helper back into `open()`, because it had a single caller.
+- The test "no submenu once the menu is closed" could pass with or without the guard in `show()`. The assertion could run before the `setTimeout(0)`. It now waits 50ms after the `mouseenter`.
