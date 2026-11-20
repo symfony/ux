@@ -3,6 +3,9 @@
 ## 3.8
 
 - Add `LiveResponse::noRender()` to update the state of a component from a `LiveAction` without rendering its template
+- Re-emit the `render:started` and `render:finished` JS hooks as bubbling
+  `live:render:started` / `live:render:finished` DOM events on the component's
+  root element, alongside the existing `live:connect` / `live:disconnect`
 
 ## 3.7.2
 
