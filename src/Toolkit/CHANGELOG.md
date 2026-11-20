@@ -16,6 +16,7 @@
 - [Shadcn] Show the `combobox` list in the top layer with anchor positioning where supported, so no ancestor clips it
 - [Shadcn] Show the `menubar` menus and their submenus in the top layer with anchor positioning where supported, so no ancestor clips them
 - [Shadcn] Fix `menubar` menus wrapping their items to the width of their trigger
+- [Shadcn] Place `tooltip` with anchor positioning where supported, so it follows its trigger on scroll and resize
 
 ## 3.7.1
 
