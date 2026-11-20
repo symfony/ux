@@ -1,7 +1,3 @@
-{#-
-    Deliberately unstyled: the package ships no CSS.
-    Extend this template and override the *_class blocks to attach your own classes, or walk ux_breadcrumb_items() in your own markup.
--#}
 {% block breadcrumb %}
     {% if items is not empty %}
         {% set root_classes = (block('root_class') ~ ' ' ~ attributes.class|default(''))|trim %}
@@ -21,7 +17,6 @@
         {% set attr = {class: block('list_class')|trim ?: null} %}
         <ol{{ block('attr') }}>
             {% for item in items %}
-                {#- Only the last crumb is the current page, so only it claims aria-current. -#}
                 {% set is_current = loop.last %}
                 {{ block('item') }}
             {% endfor %}

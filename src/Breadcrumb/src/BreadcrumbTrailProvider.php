@@ -30,6 +30,11 @@ final class BreadcrumbTrailProvider
 
     public function getTrail(): ?BreadcrumbTrail
     {
+        // The ErrorListener renders the error page in a sub-request carrying the exception, while the main request still holds the trail of the page that failed.
+        if ($this->requestStack->getCurrentRequest()?->attributes->has('exception')) {
+            return null;
+        }
+
         $trail = $this->requestStack->getMainRequest()?->attributes->get($this->requestAttribute);
 
         return $trail instanceof BreadcrumbTrail ? $trail : null;

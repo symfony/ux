@@ -247,7 +247,9 @@ final class BreadcrumbResolverTest extends KernelTestCase
             translationParameters: ['name' => 'product.name'],
         ));
 
-        self::assertSame('Product product.name', $this->resolver()->resolve($trail)[0]->label, 'Only an Expression is evaluated.');
+        $items = $this->resolver()->resolve($trail);
+
+        self::assertSame('Product product.name', $items[0]->label, 'Only an Expression is evaluated.');
     }
 
     public function testTranslationDomainFalseReturnsTheRawKey(): void
@@ -257,7 +259,9 @@ final class BreadcrumbResolverTest extends KernelTestCase
             translationDomain: false,
         ));
 
-        self::assertSame('product.index.breadcrumb', $this->resolver()->resolve($trail)[0]->label);
+        $items = $this->resolver()->resolve($trail);
+
+        self::assertSame('product.index.breadcrumb', $items[0]->label);
     }
 
     public function testAPlaceholderHoldingATranslatableIsTranslated(): void
@@ -293,7 +297,9 @@ final class BreadcrumbResolverTest extends KernelTestCase
     {
         $trail = $this->trail(new Breadcrumb(label: 'Edit {title:product.name} ({state:product})'));
 
-        self::assertSame('Edit Blue sneakers (published)', $this->resolver()->resolve($trail)[0]->label);
+        $items = $this->resolver()->resolve($trail);
+
+        self::assertSame('Edit Blue sneakers (published)', $items[0]->label);
     }
 
     public function testAPatternLabelReadsAGetter(): void
@@ -303,7 +309,9 @@ final class BreadcrumbResolverTest extends KernelTestCase
         $trail = new BreadcrumbTrail('category_view', [], ['category' => new Category()]);
         $trail->append(new Breadcrumb(label: '{name:category}'));
 
-        self::assertSame('Shoes', $this->resolver()->resolve($trail)[0]->label);
+        $items = $this->resolver()->resolve($trail);
+
+        self::assertSame('Shoes', $items[0]->label);
     }
 
     public function testABarePlaceholderPrefersTheArgumentOverTheRouteParameter(): void
@@ -313,21 +321,27 @@ final class BreadcrumbResolverTest extends KernelTestCase
         $trail = new BreadcrumbTrail('product_view', ['slug' => 'from-route', 'page' => '2'], ['slug' => 'from-argument']);
         $trail->append(new Breadcrumb(label: '{slug} page {page}'));
 
-        self::assertSame('from-argument page 2', $this->resolver()->resolve($trail)[0]->label);
+        $items = $this->resolver()->resolve($trail);
+
+        self::assertSame('from-argument page 2', $items[0]->label);
     }
 
     public function testAPlaceholderThatCannotBeReadDegradesToAnEmptyString(): void
     {
         $trail = $this->trail(new Breadcrumb(label: '[{name:category}][{missing:product}][{product}][{unknown}]'));
 
-        self::assertSame('[][][][]', $this->resolver()->resolve($trail)[0]->label);
+        $items = $this->resolver()->resolve($trail);
+
+        self::assertSame('[][][][]', $items[0]->label);
     }
 
     public function testALiteralLabelKeepsItsBraces(): void
     {
         $trail = $this->trail(new Breadcrumb(label: 'Shoes {Kids} {slug} {name:product}', translationDomain: false));
 
-        self::assertSame('Shoes {Kids} {slug} {name:product}', $this->resolver()->resolve($trail)[0]->label);
+        $items = $this->resolver()->resolve($trail);
+
+        self::assertSame('Shoes {Kids} {slug} {name:product}', $items[0]->label);
     }
 
     public function testAPatternLabelReadsAnArrayByKey(): void
@@ -337,7 +351,9 @@ final class BreadcrumbResolverTest extends KernelTestCase
         $trail = new BreadcrumbTrail('product_index', [], ['filters' => ['q' => 'shoes', 'product' => new Product()]]);
         $trail->append(new Breadcrumb(label: '{q:filters} {name:filters.product.name} [{missing:filters}]'));
 
-        self::assertSame('shoes Blue sneakers []', $this->resolver()->resolve($trail)[0]->label);
+        $items = $this->resolver()->resolve($trail);
+
+        self::assertSame('shoes Blue sneakers []', $items[0]->label);
     }
 
     public function testAPatternLabelReadsAnArrayAccessObjectByKey(): void
@@ -347,7 +363,9 @@ final class BreadcrumbResolverTest extends KernelTestCase
         $trail = new BreadcrumbTrail('product_index', [], ['tags' => new \ArrayObject(['shoes', 'boots'])]);
         $trail->append(new Breadcrumb(label: '{first:tags.0}'));
 
-        self::assertSame('shoes', $this->resolver()->resolve($trail)[0]->label);
+        $items = $this->resolver()->resolve($trail);
+
+        self::assertSame('shoes', $items[0]->label);
     }
 
     public function testAnUngenerableRouteDegradesToNoUrl(): void
@@ -426,7 +444,9 @@ final class BreadcrumbResolverTest extends KernelTestCase
             translationParameters: ['released_at' => new Expression('product.releasedAt')],
         ));
 
-        self::assertSame('Product released on {released_at}', $this->resolver()->resolve($trail)[0]->label);
+        $items = $this->resolver()->resolve($trail);
+
+        self::assertSame('Product released on {released_at}', $items[0]->label);
     }
 
     #[RequiresPhpExtension('intl')]
@@ -440,7 +460,22 @@ final class BreadcrumbResolverTest extends KernelTestCase
             ],
         ));
 
-        self::assertSame('Blue sneakers, released on {released_at}', $this->resolver()->resolve($trail)[0]->label);
+        $items = $this->resolver()->resolve($trail);
+
+        self::assertSame('Blue sneakers, released on {released_at}', $items[0]->label);
+    }
+
+    #[RequiresPhpExtension('intl')]
+    public function testATranslationParameterOfAnUnformattableTypeLeavesThePlaceholderRatherThanThrowing(): void
+    {
+        $trail = $this->trail(new Breadcrumb(
+            label: 'product.name.breadcrumb',
+            translationParameters: ['name' => new Expression('product')],
+        ));
+
+        $items = $this->resolver()->resolve($trail);
+
+        self::assertSame('Product {name}', $items[0]->label);
     }
 
     public function testAStringAndAnEnumBackedRouteNameResolveIdentically(): void

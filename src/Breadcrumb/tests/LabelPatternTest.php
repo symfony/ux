@@ -21,28 +21,34 @@ final class LabelPatternTest extends TestCase
 {
     public function testABareVariableNamesAnArgumentOrARouteParameter(): void
     {
+        $placeholders = LabelPattern::parse('#{slug}');
+
         self::assertSame(
             [['placeholder' => '{slug}', 'variable' => 'slug', 'argument' => null, 'path' => null]],
-            LabelPattern::parse('#{slug}'),
+            $placeholders,
         );
     }
 
     public function testAMappedVariableNamesThePropertyOfAnArgument(): void
     {
+        $placeholders = LabelPattern::parse('{name:product}');
+
         self::assertSame(
             [['placeholder' => '{name:product}', 'variable' => 'name', 'argument' => 'product', 'path' => null]],
-            LabelPattern::parse('{name:product}'),
+            $placeholders,
         );
     }
 
     public function testAPropertyPathMakesTheVariableAnAlias(): void
     {
+        $placeholders = LabelPattern::parse('Edit {title:product.name} in {a:b.c.d}');
+
         self::assertSame(
             [
                 ['placeholder' => '{title:product.name}', 'variable' => 'title', 'argument' => 'product', 'path' => 'name'],
                 ['placeholder' => '{a:b.c.d}', 'variable' => 'a', 'argument' => 'b', 'path' => 'c.d'],
             ],
-            LabelPattern::parse('Edit {title:product.name} in {a:b.c.d}'),
+            $placeholders,
         );
     }
 
@@ -52,11 +58,15 @@ final class LabelPatternTest extends TestCase
     #[TestWith(['{count, plural, one {# item} other {# items}}'])]
     public function testAnythingElseIsNotAPattern(string $label): void
     {
-        self::assertSame([], LabelPattern::parse($label));
+        $placeholders = LabelPattern::parse($label);
+
+        self::assertSame([], $placeholders);
     }
 
     public function testArgumentsListsEachArgumentOnce(): void
     {
-        self::assertSame(['slug', 'product'], LabelPattern::arguments('{slug} {name:product} {title:product.name}'));
+        $arguments = LabelPattern::arguments('{slug} {name:product} {title:product.name}');
+
+        self::assertSame(['slug', 'product'], $arguments);
     }
 }

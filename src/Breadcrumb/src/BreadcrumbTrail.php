@@ -33,7 +33,7 @@ final class BreadcrumbTrail
     private bool $expanding = false;
 
     /**
-     * @param array<string, mixed> $routeParameters the matched route parameters
+     * @param array<string, mixed> $routeParameters
      * @param array<string, mixed> $context         controller arguments referenced by crumb expressions
      */
     public function __construct(

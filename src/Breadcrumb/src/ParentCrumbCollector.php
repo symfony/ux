@@ -58,7 +58,8 @@ final class ParentCrumbCollector implements ResetInterface
      * Returns the trails of the controller's ancestors followed by its own crumbs.
      *
      * The own crumbs are the ones the kernel gives, which a listener may have replaced through ControllerEvent::setController().
-     * The kernel lists the class-level crumbs first, so the class tells how many of them there are.
+     * When they are the ones the controller declares, the class-level crumbs come first, so the class tells how many of them there are.
+     * A replaced list does not tell where its class-level crumbs end, so it starts at its last crumb that names a parent, as a method-level parent would.
      *
      * @param list<Breadcrumb>     $crumbs          the crumbs the kernel read off the controller
      * @param array<string, mixed> $arguments       only read by the checker
@@ -69,15 +70,24 @@ final class ParentCrumbCollector implements ResetInterface
     public function collect(mixed $controller, array $crumbs, array $arguments = [], array $routeParameters = []): array
     {
         if (null === $action = self::action($controller)) {
-            self::assertParentOnTop($crumbs, 'closure controller');
-            $own = $crumbs;
+            if ($controller instanceof \Closure && $crumbs == self::crumbs(new \ReflectionFunction($controller))) {
+                self::assertParentOnTop($crumbs, 'closure controller');
+                $own = $crumbs;
+            } else {
+                $own = self::fromLastParent($crumbs);
+            }
             $visiting = [];
             $current = 'the closure controller';
         } else {
             [$class, $method] = $action;
-            $classLevel = \count(new \ReflectionClass($class)->getAttributes(Breadcrumb::class));
             $id = \sprintf('%s::%s', $class, $method);
-            $own = self::own(\array_slice($crumbs, 0, $classLevel), $class, \array_slice($crumbs, $classLevel), $id);
+            $classCrumbs = self::crumbs(new \ReflectionClass($class));
+            if ($crumbs == [...$classCrumbs, ...self::crumbs(new \ReflectionMethod($class, $method))]) {
+                $classLevel = \count($classCrumbs);
+                $own = self::own(\array_slice($crumbs, 0, $classLevel), $class, \array_slice($crumbs, $classLevel), $id);
+            } else {
+                $own = self::fromLastParent($crumbs);
+            }
             $visiting = [$id];
             $current = \sprintf('"%s::%s()"', $class, $method);
         }
@@ -232,16 +242,32 @@ final class ParentCrumbCollector implements ResetInterface
     }
 
     /**
-     * @param \ReflectionClass<object>|\ReflectionMethod $reflector
+     * @param \ReflectionClass<object>|\ReflectionFunctionAbstract $reflector
      *
      * @return list<Breadcrumb>
      */
-    private static function crumbs(\ReflectionClass|\ReflectionMethod $reflector): array
+    private static function crumbs(\ReflectionClass|\ReflectionFunctionAbstract $reflector): array
     {
         return array_map(
             static fn (\ReflectionAttribute $attribute): Breadcrumb => $attribute->newInstance(),
             $reflector->getAttributes(Breadcrumb::class),
         );
+    }
+
+    /**
+     * @param list<Breadcrumb> $crumbs
+     *
+     * @return list<Breadcrumb>
+     */
+    private static function fromLastParent(array $crumbs): array
+    {
+        for ($index = \count($crumbs) - 1; $index > 0; --$index) {
+            if (null !== $crumbs[$index]->parent) {
+                return \array_slice($crumbs, $index);
+            }
+        }
+
+        return $crumbs;
     }
 
     /**

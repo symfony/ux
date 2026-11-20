@@ -23,9 +23,11 @@ final class BreadcrumbTrailTest extends TestCase
     public function testStartsEmpty(): void
     {
         $trail = new BreadcrumbTrail();
+        $isEmpty = $trail->isEmpty();
+        $crumbs = $trail->all();
 
-        self::assertTrue($trail->isEmpty());
-        self::assertSame([], $trail->all());
+        self::assertTrue($isEmpty);
+        self::assertSame([], $crumbs);
         self::assertSame('', $trail->route);
         self::assertSame([], $trail->routeParameters);
         self::assertSame([], $trail->context);
@@ -49,9 +51,11 @@ final class BreadcrumbTrailTest extends TestCase
 
         $trail->append($first);
         $trail->append($second, $third);
+        $isEmpty = $trail->isEmpty();
+        $crumbs = $trail->all();
 
-        self::assertFalse($trail->isEmpty());
-        self::assertSame([$first, $second, $third], $trail->all());
+        self::assertFalse($isEmpty);
+        self::assertSame([$first, $second, $third], $crumbs);
     }
 
     public function testPrependPutsACrumbBeforeTheExistingOnes(): void
@@ -61,9 +65,11 @@ final class BreadcrumbTrailTest extends TestCase
 
         $trail = new BreadcrumbTrail();
         $trail->append($leaf);
-        $trail->prepend($root);
 
-        self::assertSame([$root, $leaf], $trail->all());
+        $trail->prepend($root);
+        $crumbs = $trail->all();
+
+        self::assertSame([$root, $leaf], $crumbs);
     }
 
     public function testPrependKeepsTheRelativeOrderOfThePrependedCrumbs(): void
@@ -74,9 +80,11 @@ final class BreadcrumbTrailTest extends TestCase
 
         $trail = new BreadcrumbTrail();
         $trail->append($leaf);
-        $trail->prepend($root, $section);
 
-        self::assertSame([$root, $section, $leaf], $trail->all());
+        $trail->prepend($root, $section);
+        $crumbs = $trail->all();
+
+        self::assertSame([$root, $section, $leaf], $crumbs);
     }
 
     public function testAClosureIsExpandedInPlaceWhenTheTrailIsRead(): void
@@ -188,9 +196,11 @@ final class BreadcrumbTrailTest extends TestCase
     public function testAppendWithNoArgumentsIsANoop(): void
     {
         $trail = new BreadcrumbTrail();
+
         $trail->append();
         $trail->prepend();
+        $isEmpty = $trail->isEmpty();
 
-        self::assertTrue($trail->isEmpty());
+        self::assertTrue($isEmpty);
     }
 }

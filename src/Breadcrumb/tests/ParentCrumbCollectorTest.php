@@ -27,6 +27,7 @@ use Symfony\UX\Breadcrumb\ParentCrumbCollector;
 use Symfony\UX\Breadcrumb\Tests\Fixtures\Controller\AdminProductController;
 use Symfony\UX\Breadcrumb\Tests\Fixtures\Controller\CatalogController;
 use Symfony\UX\Breadcrumb\Tests\Fixtures\Controller\InvalidParentController;
+use Symfony\UX\Breadcrumb\Tests\Fixtures\Controller\NonAsciiArgumentController;
 use Symfony\UX\Breadcrumb\Tests\Fixtures\Controller\ProductEditController;
 use Symfony\UX\Breadcrumb\Tests\Fixtures\Controller\ProductIndexController;
 use Symfony\UX\Breadcrumb\Tests\Fixtures\Controller\ProductNameController;
@@ -38,42 +39,52 @@ final class ParentCrumbCollectorTest extends TestCase
 {
     public function testAnActionWithoutAParentGetsItsClassAndMethodCrumbs(): void
     {
+        $labels = $this->labels([AdminProductController::class, 'view']);
+
         self::assertSame(
             ['product.index.breadcrumb', 'product.view.breadcrumb'],
-            $this->labels([AdminProductController::class, 'view']),
+            $labels,
         );
     }
 
     public function testAnInvokableClassParentContributesItsWholeTrail(): void
     {
+        $labels = $this->labels(new ProductEditController());
+
         self::assertSame(
             ['product.index.breadcrumb', 'product.view.breadcrumb', 'product.edit.breadcrumb'],
-            $this->labels(new ProductEditController()),
+            $labels,
         );
     }
 
     public function testARouteNameParentResolvesToItsController(): void
     {
+        $labels = $this->labels([new CatalogController(), 'edit']);
+
         self::assertSame(
             ['product.index.breadcrumb', 'product.view.breadcrumb', 'product.edit.breadcrumb'],
-            $this->labels([new CatalogController(), 'edit']),
+            $labels,
             'The method-level parent replaces the class head, so the class crumb appears once.',
         );
     }
 
     public function testAnActionParentChainsAcrossSeveralLevels(): void
     {
+        $labels = $this->labels([CatalogController::class, 'history']);
+
         self::assertSame(
             ['product.index.breadcrumb', 'product.view.breadcrumb', 'product.edit.breadcrumb', 'product.history.breadcrumb'],
-            $this->labels([CatalogController::class, 'history']),
+            $labels,
         );
     }
 
     public function testAStringActionControllerIsSupported(): void
     {
+        $labels = $this->labels(CatalogController::class.'::history');
+
         self::assertSame(
             ['product.index.breadcrumb', 'product.view.breadcrumb', 'product.edit.breadcrumb', 'product.history.breadcrumb'],
-            $this->labels(CatalogController::class.'::history'),
+            $labels,
         );
     }
 
@@ -201,9 +212,11 @@ final class ParentCrumbCollectorTest extends TestCase
 
     public function testAFirstClassCallableIsCollectedLikeItsAction(): void
     {
+        $labels = $this->labels(new CatalogController()->edit(...));
+
         self::assertSame(
             ['product.index.breadcrumb', 'product.view.breadcrumb', 'product.edit.breadcrumb'],
-            $this->labels(new CatalogController()->edit(...)),
+            $labels,
         );
     }
 
@@ -217,16 +230,39 @@ final class ParentCrumbCollectorTest extends TestCase
         self::assertSame(['product.index.breadcrumb', 'replaced'], self::labelsOf($trail));
     }
 
-    public function testAMisplacedParentInReplacedCrumbsIsRejected(): void
+    public function testReplacedCrumbsStartAtTheirLastParent(): void
     {
-        $this->expectException(LogicException::class);
-        $this->expectExceptionMessage('"late"');
-
-        $this->collector()->collect([CatalogController::class, 'index'], [
+        $collector = $this->collector();
+        $crumbs = [
             new Breadcrumb('class level', parent: ProductIndexController::class),
             new Breadcrumb('method level'),
             new Breadcrumb('late', parent: ProductIndexController::class),
-        ]);
+            new Breadcrumb('leaf'),
+        ];
+
+        $trail = $collector->collect([CatalogController::class, 'index'], $crumbs);
+
+        self::assertSame(['product.index.breadcrumb', 'late', 'leaf'], self::labelsOf($trail));
+    }
+
+    public function testCrumbsKeptFromAControllerWithClassCrumbsAreCollectedOnOneWithout(): void
+    {
+        $collector = $this->collector();
+        $crumbs = $this->attributesOf([CatalogController::class, 'history']);
+
+        $trail = $collector->collect(new NonAsciiArgumentController(), $crumbs);
+
+        self::assertSame(['product.index.breadcrumb', 'product.view.breadcrumb', 'product.edit.breadcrumb', 'product.history.breadcrumb'], self::labelsOf($trail));
+    }
+
+    public function testAClosureControllerKeepingTheCrumbsOfAClassWithAParentIsCollected(): void
+    {
+        $collector = $this->collector();
+        $crumbs = $this->attributesOf([CatalogController::class, 'history']);
+
+        $trail = $collector->collect(static fn (): null => null, $crumbs);
+
+        self::assertSame(['product.index.breadcrumb', 'product.view.breadcrumb', 'product.edit.breadcrumb', 'product.history.breadcrumb'], self::labelsOf($trail));
     }
 
     public function testResetForgetsTheRouteMap(): void
@@ -240,12 +276,13 @@ final class ParentCrumbCollectorTest extends TestCase
 
         $collector = new ParentCrumbCollector($router);
         $leaf = [new Breadcrumb('leaf', parent: 'moved')];
-
-        self::assertSame(['product.index.breadcrumb', 'leaf'], self::labelsOf($collector->collect(static fn (): null => null, $leaf)));
+        $before = $collector->collect(static fn (): null => null, $leaf);
 
         $collector->reset();
+        $after = $collector->collect(static fn (): null => null, $leaf);
 
-        self::assertSame(['product.index.breadcrumb', 'product.view.breadcrumb', 'leaf'], self::labelsOf($collector->collect(static fn (): null => null, $leaf)));
+        self::assertSame(['product.index.breadcrumb', 'leaf'], self::labelsOf($before));
+        self::assertSame(['product.index.breadcrumb', 'product.view.breadcrumb', 'leaf'], self::labelsOf($after));
     }
 
     public function testAnAncestorReadingAnArgumentTheActionLacksIsRejectedByTheChecker(): void

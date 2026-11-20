@@ -16,8 +16,6 @@ use Symfony\UX\Breadcrumb\Exception\InvalidArgumentException;
 use Twig\Environment;
 
 /**
- * Renders resolved breadcrumb items to HTML.
- *
  * @internal
  *
  * @author Romain Monteil <monteil.romain@gmail.com>

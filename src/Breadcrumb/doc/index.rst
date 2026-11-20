@@ -224,7 +224,7 @@ Only the controller arguments a crumb expression actually names are kept on the 
 
 Resolution degrades rather than throwing.
 A crumb pointing at an unknown route, at one whose required parameters are missing, or carrying an expression that cannot be evaluated against this action's arguments, resolves to ``url === null`` and renders as plain text.
-A translation parameter that cannot be evaluated leaves its placeholder in the label rather than taking the page down.
+A translation parameter that cannot be evaluated, or whose value the translator cannot format, such as an object that is not ``Stringable``, leaves its placeholder in the label rather than taking the page down.
 
 Computed labels
 ~~~~~~~~~~~~~~~
@@ -330,6 +330,7 @@ before the listener has run, which happens on the controller arguments event. He
 It reads the **main** request on purpose, so a crumb appended from a
 ``{{ render(controller(...)) }}`` fragment lands on the page's trail rather than on one
 that nothing renders.
+An error page gets no trail, so a page that fails after the listener has run does not show its breadcrumb on the error page.
 
 ``BreadcrumbTrail`` is a small mutable list of unresolved crumbs:
 
@@ -365,10 +366,12 @@ and ``extra``. Rendering them yourself is the expected path:
             <ol>
                 {% for item in items %}
                     <li>
-                        {% if not loop.last and item.url is not null %}
+                        {% if loop.last %}
+                            <span aria-current="page">{{ item.label }}</span>
+                        {% elseif item.url is not null %}
                             <a href="{{ item.url }}">{{ item.label }}</a>
                         {% else %}
-                            <span aria-current="page">{{ item.label }}</span>
+                            <span>{{ item.label }}</span>
                         {% endif %}
                     </li>
                 {% endfor %}

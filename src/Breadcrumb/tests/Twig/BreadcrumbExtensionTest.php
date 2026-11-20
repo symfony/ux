@@ -64,7 +64,10 @@ final class BreadcrumbExtensionTest extends KernelTestCase
     {
         $extension = $this->extensionFor($this->trailWithOneCrumb());
 
-        self::assertEquals($extension->getBreadcrumb(), $extension->getBreadcrumb());
+        $first = $extension->getBreadcrumb();
+        $second = $extension->getBreadcrumb();
+
+        self::assertEquals($first, $second);
     }
 
     public function testRelativeAndAbsoluteAreMemoizedSeparately(): void
@@ -111,8 +114,11 @@ final class BreadcrumbExtensionTest extends KernelTestCase
     {
         $extension = $this->extensionFor(new BreadcrumbTrail('product_index'));
 
-        self::assertSame([], $extension->getBreadcrumb());
-        self::assertSame([], $extension->getBreadcrumb(true));
+        $relative = $extension->getBreadcrumb();
+        $absolute = $extension->getBreadcrumb(true);
+
+        self::assertSame([], $relative);
+        self::assertSame([], $absolute);
         self::assertSame(0, $this->translator()->calls);
     }
 
@@ -120,7 +126,9 @@ final class BreadcrumbExtensionTest extends KernelTestCase
     {
         $extension = $this->extensionFor(null);
 
-        self::assertSame([], $extension->getBreadcrumb());
+        $items = $extension->getBreadcrumb();
+
+        self::assertSame([], $items);
         self::assertSame(0, $this->translator()->calls);
     }
 
@@ -128,7 +136,11 @@ final class BreadcrumbExtensionTest extends KernelTestCase
     {
         self::bootKernel(['environment' => 'counting_translator']);
 
-        self::assertSame([], $this->extension()->getBreadcrumb());
+        $extension = $this->extension();
+
+        $items = $extension->getBreadcrumb();
+
+        self::assertSame([], $items);
     }
 
     public function testATrailMutatedAfterAReadIsResolvedAgain(): void
@@ -163,7 +175,9 @@ final class BreadcrumbExtensionTest extends KernelTestCase
     {
         $extension = $this->extensionFor($this->trailWithOneCrumb(), 'plain_translator');
 
-        self::assertSame('product.index.breadcrumb', $extension->getBreadcrumb()[0]->label);
+        $items = $extension->getBreadcrumb();
+
+        self::assertSame('product.index.breadcrumb', $items[0]->label);
     }
 
     private function trailWithOneCrumb(): BreadcrumbTrail

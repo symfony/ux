@@ -21,8 +21,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\UX\Breadcrumb\Attribute\Breadcrumb;
 
 /**
- * Turns a collected trail into the items a template renders.
- *
  * @phpstan-import-type Placeholder from LabelPattern
  *
  * @internal
@@ -192,7 +190,7 @@ final class BreadcrumbResolver
     }
 
     /**
-     * A parameter that cannot be evaluated is left out, so the translator keeps its placeholder instead of failing on a value of the wrong type.
+     * A parameter that cannot be evaluated, or whose value the translator cannot format, is left out, so the translator keeps its placeholder instead of failing on a value of the wrong type.
      * The other parameters are still passed.
      *
      * @return array<string, mixed>
@@ -202,8 +200,13 @@ final class BreadcrumbResolver
         $parameters = [];
         foreach ($crumb->translationParameters as $key => $value) {
             try {
-                $parameters[$key] = $this->evaluate($value, $trail);
+                $value = $this->evaluate($value, $trail);
             } catch (\Throwable) {
+                continue;
+            }
+
+            if (null === $value || \is_scalar($value) || $value instanceof \Stringable || $value instanceof TranslatableInterface || $value instanceof \DateTimeInterface) {
+                $parameters[$key] = $value;
             }
         }
 
