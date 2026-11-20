@@ -1,9 +1,9 @@
 import { waitFor } from '@testing-library/dom';
 import { Response } from 'node-fetch';
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import type { BackendAction, BackendInterface } from '../../../src/Backend/Backend';
 import BackendRequest from '../../../src/Backend/BackendRequest';
-import type BackendResponse from '../../../src/Backend/BackendResponse';
+import BackendResponse from '../../../src/Backend/BackendResponse';
 import Component, { proxifyComponent } from '../../../src/Component';
 import { noopElementDriver } from '../../tools';
 
@@ -239,21 +239,47 @@ describe('Component class', () => {
             }
         });
 
-        it('follows a download URL instead of building a blob', async () => {
-            await withMockedObjectUrl(async () => {
-                const component = makeComponent(null, {}, { 'X-Live-Download-Url': '/exports/report.csv' });
-                const appendChild = vi.spyOn(document.body, 'appendChild');
+        describe('download URLs', () => {
+            afterEach(() => vi.restoreAllMocks());
 
-                try {
+            it.each([
+                '/exports/report.csv',
+                'https://downloads.example/report.csv',
+                'data:text/plain,report',
+                'blob:https://example.com/report',
+            ])('downloads %j without building a blob', async (url) => {
+                await withMockedObjectUrl(async () => {
+                    const component = makeComponent(null, {}, { 'X-Live-Download-Url': url });
+                    const click = vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(() => {});
+
                     await component.set('firstName', 'Kevin', true);
 
-                    const link = appendChild.mock.calls[0][0] as HTMLAnchorElement;
-                    expect(link.href).toContain('/exports/report.csv');
-                    // no blob involved: the browser fetches it itself
+                    expect(click).toHaveBeenCalledOnce();
+                    expect((click.mock.instances[0] as HTMLAnchorElement).getAttribute('href')).toBe(url);
                     expect(URL.createObjectURL).not.toHaveBeenCalled();
-                } finally {
-                    appendChild.mockRestore();
-                }
+                });
+            });
+
+            it.each([
+                'javascript:alert(1)',
+                'JaVaScRiPt:alert(1)',
+                'java\tscript:alert(1)',
+                'java\nscript:alert(1)',
+                'java\rscript:alert(1)',
+                '\u0001javascript:alert(1)',
+            ])('rejects %j without interrupting rendering', async (url) => {
+                // Bypass node-fetch's header validation to exercise browser URL parsing.
+                vi.spyOn(BackendResponse.prototype, 'getDownloadUrl').mockReturnValue(url);
+                vi.spyOn(console, 'error').mockImplementation(() => {});
+                const click = vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(() => {});
+                const component = makeComponent(null);
+                const finished = vi.fn();
+                component.on('render:finished', finished);
+
+                await component.set('firstName', 'Kevin', true);
+
+                expect(click).not.toHaveBeenCalled();
+                expect(finished).toHaveBeenCalledWith(component);
             });
         });
 

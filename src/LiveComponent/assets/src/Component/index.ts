@@ -793,6 +793,10 @@ function triggerDownload(download: Download | { url: string }): void {
         style: 'display: none',
     });
 
+    if (link.protocol === 'javascript:') {
+        throw new Error('JavaScript download URLs are not allowed.');
+    }
+
     document.body.appendChild(link);
     link.click();
 
