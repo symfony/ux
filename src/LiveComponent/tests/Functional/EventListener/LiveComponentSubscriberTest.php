@@ -416,6 +416,30 @@ final class LiveComponentSubscriberTest extends KernelTestCase
         ;
     }
 
+    public function testUnprocessableEntityBeforeTheActionDoesNotRenderComponent(): void
+    {
+        $props = $this->dehydrateComponent($this->mountComponent('with_security'))->getProps();
+
+        $browser = $this->browser()
+            ->post('/_components/with_security/goToPage?page=abc', ['body' => ['data' => json_encode(['props' => $props])]])
+            ->assertStatus(422)
+        ;
+        $this->assertStringNotContainsString('Successful.', $browser->client()->getResponse()->getContent());
+
+        $browser
+            ->post('/_components/with_security/_batch?page=abc', ['body' => ['data' => json_encode(['props' => $props, 'actions' => [['name' => 'goToPage']]])]])
+            ->assertStatus(422)
+        ;
+        $this->assertStringNotContainsString('Successful.', $browser->client()->getResponse()->getContent());
+
+        $browser
+            ->actingAs(new InMemoryUser('kevin', 'pass', ['ROLE_USER']))
+            ->post('/_components/with_security/_batch?page=abc', ['body' => ['data' => json_encode(['props' => $props, 'actions' => [['name' => 'setUsername'], ['name' => 'goToPage']]])]])
+            ->assertStatus(422)
+        ;
+        $this->assertStringNotContainsString('Successful.', $browser->client()->getResponse()->getContent());
+    }
+
     public function testCanInjectSecurityUserIntoAction(): void
     {
         $dehydrated = $this->dehydrateComponent($this->mountComponent('with_security'));

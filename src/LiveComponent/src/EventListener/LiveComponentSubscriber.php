@@ -17,6 +17,7 @@ use Symfony\Component\HttpFoundation\Exception\JsonException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use Symfony\Component\HttpKernel\Event\ControllerArgumentsEvent;
 use Symfony\Component\HttpKernel\Event\ControllerEvent;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
@@ -61,10 +62,18 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
     private const REMOVE_HEADER = 'X-Live-Remove';
     private const NO_RENDER_HEADER = 'X-Live-No-Render';
 
+    /**
+     * The mounted components whose controller is called, once all its controller attributes are checked.
+     *
+     * @var \WeakMap<MountedComponent, true>
+     */
+    private \WeakMap $calledControllers;
+
     public function __construct(
         private ContainerInterface $container,
         private bool $testMode = false,
     ) {
+        $this->calledControllers = new \WeakMap();
     }
 
     public static function getSubscribedServices(): array
@@ -204,6 +213,8 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
                 $component,
                 $action,
             ]);
+            // the controller attributes of this action are not checked yet
+            unset($this->calledControllers[$request->attributes->get('_mounted_component')]);
         }
 
         // read the action arguments from the request, unless they're already set (batch sub-requests)
@@ -214,6 +225,19 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
             if (isset($actionArguments[$arg])) {
                 $request->attributes->set($parameter, $actionArguments[$arg]);
             }
+        }
+    }
+
+    public function onKernelControllerArguments(ControllerArgumentsEvent $event): void
+    {
+        $request = $event->getRequest();
+
+        if (!$this->isLiveComponentRequest($request) || $request->attributes->get('_is_live_batch_action')) {
+            return;
+        }
+
+        if ($mounted = $request->attributes->get('_mounted_component')) {
+            $this->calledControllers[$mounted] = true;
         }
     }
 
@@ -325,6 +349,11 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
             return;
         }
 
+        // a 422 thrown before the controller, by an argument resolver or a controller attribute, must not render the component
+        if (!isset($this->calledControllers[$mounted])) {
+            return;
+        }
+
         $event->setResponse($this->createResponse($mounted));
     }
 
@@ -365,6 +394,8 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
             RequestEvent::class => 'onKernelRequest',
             // positive priority in case other ControllerEvent listeners need the attributes we set
             ControllerEvent::class => ['onKernelController', 10],
+            // lowest priority so that the controller attributes, like #[IsGranted], are checked first
+            ControllerArgumentsEvent::class => ['onKernelControllerArguments', \PHP_INT_MIN],
             ViewEvent::class => 'onKernelView',
             ResponseEvent::class => 'onKernelResponse',
             // priority so that the exception is processed before it can be logged as an error
