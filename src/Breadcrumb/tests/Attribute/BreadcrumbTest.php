@@ -90,28 +90,6 @@ final class BreadcrumbTest extends TestCase
         new Breadcrumb('label', translationParameters: ['name']);
     }
 
-    public function testTheLabelAcceptsAnExpression(): void
-    {
-        $label = new Expression('product.name');
-
-        self::assertSame($label, new Breadcrumb(label: $label)->label);
-        self::assertSame($label, new Breadcrumb(label: $label, translationDomain: false)->label);
-    }
-
-    public function testAnExpressionLabelTakesNoTranslationDomain(): void
-    {
-        $this->expectException(InvalidArgumentException::class);
-
-        new Breadcrumb(label: new Expression('product.name'), translationDomain: 'admin');
-    }
-
-    public function testAnExpressionLabelTakesNoTranslationParameters(): void
-    {
-        $this->expectException(InvalidArgumentException::class);
-
-        new Breadcrumb(label: new Expression('product.name'), translationParameters: ['name' => 'Blue sneakers']);
-    }
-
     public function testAPatternLabelMayOptOutOfTranslation(): void
     {
         self::assertSame('{name:product}', new Breadcrumb(label: '{name:product}', translationDomain: false)->label);

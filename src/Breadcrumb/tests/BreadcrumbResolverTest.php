@@ -260,48 +260,18 @@ final class BreadcrumbResolverTest extends KernelTestCase
         self::assertSame('product.index.breadcrumb', $this->resolver()->resolve($trail)[0]->label);
     }
 
-    public function testAnExpressionLabelIsTheLabelItselfAndIsNotTranslated(): void
-    {
-        $translator = new CountingTranslator();
-        $resolver = new BreadcrumbResolver(
-            self::getContainer()->get('router'),
-            new ExpressionLanguage(),
-            $translator,
-        );
-
-        $items = $resolver->resolve($this->trail(new Breadcrumb(label: new Expression('product.name'))));
-
-        self::assertSame('Blue sneakers', $items[0]->label);
-        self::assertSame(0, $translator->calls);
-    }
-
-    public function testAnExpressionLabelReturningATranslatableIsTranslated(): void
+    public function testAPlaceholderHoldingATranslatableIsTranslated(): void
     {
         self::bootKernel();
 
         $trail = new BreadcrumbTrail('product_view', [], [
             'message' => new TranslatableMessage('product.name.breadcrumb', ['name' => 'Blue sneakers']),
         ]);
-        $trail->append(new Breadcrumb(label: new Expression('message')));
+        $trail->append(new Breadcrumb(label: '{message}'));
 
-        self::assertSame('Product Blue sneakers', $this->resolver()->resolve($trail)[0]->label);
-    }
+        $items = $this->resolver()->resolve($trail);
 
-    public function testAnExpressionLabelNamingAnAbsentArgumentDegradesToAnEmptyLabel(): void
-    {
-        self::bootKernel();
-
-        $trail = new BreadcrumbTrail('product_view', [], []);
-        $trail->append(new Breadcrumb(label: new Expression('product.name')));
-
-        self::assertSame('', $this->resolver()->resolve($trail)[0]->label);
-    }
-
-    public function testAnExpressionLabelThatIsNotAStringDegradesToAnEmptyLabel(): void
-    {
-        $trail = $this->trail(new Breadcrumb(label: new Expression('product')));
-
-        self::assertSame('', $this->resolver()->resolve($trail)[0]->label);
+        self::assertSame('Product Blue sneakers', $items[0]->label);
     }
 
     public function testAPatternLabelReadsAPropertyAndIsNotTranslated(): void

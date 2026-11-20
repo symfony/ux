@@ -92,6 +92,7 @@ final class UXBreadcrumbBundle extends AbstractBundle
         if ($builder->hasParameter('kernel.debug') && $builder->getParameter('kernel.debug')) {
             $builder->getDefinition('ux_breadcrumb.parent_crumb_collector')
                 ->setArgument('$cache', null)
+                ->setArgument('$debug', true)
                 ->addTag('kernel.reset', ['method' => 'reset']);
         }
 

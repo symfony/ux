@@ -22,9 +22,12 @@ use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\UX\Breadcrumb\Attribute\Breadcrumb;
 use Symfony\UX\Breadcrumb\BreadcrumbTrail;
 use Symfony\UX\Breadcrumb\EventListener\BreadcrumbListener;
+use Symfony\UX\Breadcrumb\Exception\LogicException;
 use Symfony\UX\Breadcrumb\Tests\Fixtures\Category;
 use Symfony\UX\Breadcrumb\Tests\Fixtures\Controller\LiteralLabelController;
 use Symfony\UX\Breadcrumb\Tests\Fixtures\Controller\NonAsciiArgumentController;
+use Symfony\UX\Breadcrumb\Tests\Fixtures\Controller\ProductNameController;
+use Symfony\UX\Breadcrumb\Tests\Fixtures\Controller\ProductReviewController;
 use Symfony\UX\Breadcrumb\Tests\Fixtures\Controller\SharedParameterNameController;
 use Symfony\UX\Breadcrumb\Tests\Fixtures\CountingTranslator;
 use Symfony\UX\Breadcrumb\Tests\Fixtures\Product;
@@ -170,6 +173,32 @@ final class BreadcrumbListenerTest extends KernelTestCase
         self::assertInstanceOf(BreadcrumbTrail::class, $trail);
         self::assertSame(
             ['product.index.breadcrumb', 'product.view.breadcrumb', 'product.edit.breadcrumb'],
+            array_map(static fn (Breadcrumb $crumb): string => $crumb->label, $trail->all()),
+        );
+    }
+
+    public function testAnAncestorReadingAnArgumentTheActionLacksThrowsInDebugMode(): void
+    {
+        $kernel = self::bootKernel();
+        $request = Request::create('/products/blue-sneakers/reviews');
+
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage(\sprintf('The breadcrumb "{name:product}" of "%s" reads the argument "$product", which "%s::__invoke()" does not have.', ProductNameController::class, ProductReviewController::class));
+
+        $kernel->handle($request, HttpKernelInterface::MAIN_REQUEST, false);
+    }
+
+    public function testAnAncestorReadingAnArgumentTheActionLacksIsCollectedOutsideDebugMode(): void
+    {
+        $kernel = self::bootKernel(['environment' => 'no_debug', 'debug' => false]);
+        $request = Request::create('/products/blue-sneakers/reviews');
+
+        $kernel->handle($request);
+
+        $trail = $request->attributes->get(BreadcrumbTrail::ATTRIBUTE);
+        self::assertInstanceOf(BreadcrumbTrail::class, $trail);
+        self::assertSame(
+            ['dashboard.home.breadcrumb', '{name:product}', 'product.reviews.breadcrumb'],
             array_map(static fn (Breadcrumb $crumb): string => $crumb->label, $trail->all()),
         );
     }

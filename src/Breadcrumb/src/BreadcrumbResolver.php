@@ -62,10 +62,6 @@ final class BreadcrumbResolver
 
     private function resolveLabel(Breadcrumb $crumb, BreadcrumbTrail $trail): string
     {
-        if ($crumb->label instanceof Expression) {
-            return $this->expressionLabel($crumb->label, $trail);
-        }
-
         if (false !== $crumb->translationDomain && [] !== $placeholders = LabelPattern::parse($crumb->label)) {
             return $this->patternLabel($crumb->label, $placeholders, $trail);
         }
@@ -87,21 +83,6 @@ final class BreadcrumbResolver
             $this->translationParameters($crumb, $trail),
             $crumb->translationDomain ?? $this->defaultTranslationDomain,
         );
-    }
-
-    /**
-     * The value is the label itself, not a translation key, unless it is a TranslatableInterface.
-     * A value that cannot be evaluated or turned into a string degrades to an empty label.
-     */
-    private function expressionLabel(Expression $label, BreadcrumbTrail $trail): string
-    {
-        try {
-            $value = $this->expressionLanguage->evaluate($label, $trail->context);
-        } catch (\Throwable) {
-            return '';
-        }
-
-        return $this->stringify($value);
     }
 
     /**

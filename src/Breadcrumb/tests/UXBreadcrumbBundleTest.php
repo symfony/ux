@@ -46,6 +46,15 @@ final class UXBreadcrumbBundleTest extends TestCase
         self::assertFalse($this->parentCrumbCollector(false)->hasTag('kernel.reset'));
     }
 
+    public function testTheParentCrumbCollectorChecksAncestorsInDebugModeOnly(): void
+    {
+        $debug = $this->parentCrumbCollector(true);
+        $production = $this->parentCrumbCollector(false);
+
+        self::assertTrue($debug->getArgument('$debug'));
+        self::assertArrayNotHasKey('$debug', $production->getArguments());
+    }
+
     private function parentCrumbCollector(bool $debug): Definition
     {
         $container = new ContainerBuilder(new ParameterBag([

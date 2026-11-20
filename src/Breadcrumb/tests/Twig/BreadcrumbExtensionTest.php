@@ -145,6 +145,20 @@ final class BreadcrumbExtensionTest extends KernelTestCase
         self::assertSame('Appended later', $after[1]->label);
     }
 
+    public function testAClosureAppendedAfterAReadIsResolved(): void
+    {
+        $trail = $this->trailWithOneCrumb();
+        $extension = $this->extensionFor($trail);
+        $before = $extension->getBreadcrumb();
+        $trail->append(static fn (): array => [new Breadcrumb(label: 'Appended later', translationDomain: false)]);
+
+        $after = $extension->getBreadcrumb();
+
+        self::assertCount(1, $before);
+        self::assertCount(2, $after);
+        self::assertSame('Appended later', $after[1]->label);
+    }
+
     public function testATranslatorThatIsNotLocaleAwareIsAccepted(): void
     {
         $extension = $this->extensionFor($this->trailWithOneCrumb(), 'plain_translator');

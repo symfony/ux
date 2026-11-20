@@ -74,7 +74,7 @@ final class BreadcrumbListener implements EventSubscriberInterface
         $crumbs = array_values($event->getAttributes(Breadcrumb::class));
 
         if (null !== $this->parentCrumbCollector && array_any($crumbs, static fn (Breadcrumb $crumb): bool => null !== $crumb->parent)) {
-            $crumbs = $this->parentCrumbCollector->collect($event->getController(), $crumbs);
+            $crumbs = $this->parentCrumbCollector->collect($event->getController(), $crumbs, array_keys($event->getNamedArguments()), array_keys($routeParameters));
         }
 
         $roots = $this->roots($route, $request);
@@ -127,14 +127,14 @@ final class BreadcrumbListener implements EventSubscriberInterface
 
         $referenced = [];
         foreach ($crumbs as $crumb) {
-            if (\is_string($crumb->label) && false !== $crumb->translationDomain) {
+            if (false !== $crumb->translationDomain) {
                 foreach (LabelPattern::arguments($crumb->label) as $name) {
                     $referenced[$name] = true;
                 }
             }
 
             // Spreading the string keys would let a translation parameter replace the URL parameter of the same name.
-            foreach ([$crumb->label, ...array_values($crumb->parameters), ...array_values($crumb->translationParameters)] as $expression) {
+            foreach ([...array_values($crumb->parameters), ...array_values($crumb->translationParameters)] as $expression) {
                 // The name pattern of the ExpressionLanguage lexer.
                 if ($expression instanceof Expression && preg_match_all('/[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*/', (string) $expression, $matches)) {
                     foreach ($matches[0] as $name) {

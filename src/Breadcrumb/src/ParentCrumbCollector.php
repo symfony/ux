@@ -41,10 +41,17 @@ final class ParentCrumbCollector implements ResetInterface
      */
     private ?array $routes = null;
 
+    /**
+     * @var \WeakMap<Breadcrumb, string>
+     */
+    private \WeakMap $owners;
+
     public function __construct(
         private readonly RouterInterface $router,
         private readonly ?CacheInterface $cache = null,
+        private readonly bool $debug = false,
     ) {
+        $this->owners = new \WeakMap();
     }
 
     /**
@@ -53,29 +60,73 @@ final class ParentCrumbCollector implements ResetInterface
      * The own crumbs are the ones the kernel gives, which a listener may have replaced through ControllerEvent::setController().
      * The kernel lists the class-level crumbs first, so the class tells how many of them there are.
      *
-     * @param list<Breadcrumb> $crumbs the crumbs the kernel read off the controller
+     * @param list<Breadcrumb> $crumbs              the crumbs the kernel read off the controller
+     * @param list<string>     $argumentNames       only read in debug mode
+     * @param list<string>     $routeParameterNames only read in debug mode
      *
      * @return list<Breadcrumb>
      */
-    public function collect(mixed $controller, array $crumbs): array
+    public function collect(mixed $controller, array $crumbs, array $argumentNames = [], array $routeParameterNames = []): array
     {
         if (null === $action = self::action($controller)) {
             self::assertParentOnTop($crumbs, 'closure controller');
-
-            return $this->withAncestors($crumbs, []);
+            $own = $crumbs;
+            $visiting = [];
+            $current = 'the closure controller';
+        } else {
+            [$class, $method] = $action;
+            $classLevel = \count(new \ReflectionClass($class)->getAttributes(Breadcrumb::class));
+            $id = \sprintf('%s::%s', $class, $method);
+            $own = self::own(\array_slice($crumbs, 0, $classLevel), $class, \array_slice($crumbs, $classLevel), $id);
+            $visiting = [$id];
+            $current = \sprintf('"%s::%s()"', $class, $method);
         }
 
-        [$class, $method] = $action;
-        $classLevel = \count(new \ReflectionClass($class)->getAttributes(Breadcrumb::class));
-        $own = self::own(\array_slice($crumbs, 0, $classLevel), $class, \array_slice($crumbs, $classLevel), $class.'::'.$method);
+        $trail = $this->withAncestors($own, $visiting);
 
-        return $this->withAncestors($own, [$class.'::'.$method]);
+        if ($this->debug) {
+            $this->assertAncestorsResolve(\array_slice($trail, 0, \count($trail) - \count($own)), $current, $argumentNames, $routeParameterNames);
+        }
+
+        return $trail;
     }
 
     public function reset(): void
     {
         $this->trails = [];
         $this->routes = null;
+        $this->owners = new \WeakMap();
+    }
+
+    /**
+     * A bare placeholder falls back to the route parameter of the same name, so it only needs one of the two.
+     *
+     * @param list<Breadcrumb> $ancestors
+     * @param list<string>     $argumentNames
+     * @param list<string>     $routeParameterNames
+     */
+    private function assertAncestorsResolve(array $ancestors, string $current, array $argumentNames, array $routeParameterNames): void
+    {
+        foreach ($ancestors as $crumb) {
+            if (false === $crumb->translationDomain) {
+                continue;
+            }
+
+            foreach (LabelPattern::parse($crumb->label) as $placeholder) {
+                if (null !== $argument = $placeholder['argument']) {
+                    if (!\in_array($argument, $argumentNames, true)) {
+                        throw new LogicException(\sprintf('The breadcrumb "%s" of "%s" reads the argument "$%s", which %s does not have.', $crumb->label, $this->owners[$crumb], $argument, $current));
+                    }
+
+                    continue;
+                }
+
+                $variable = $placeholder['variable'];
+                if (!\in_array($variable, $argumentNames, true) && !\in_array($variable, $routeParameterNames, true)) {
+                    throw new LogicException(\sprintf('The breadcrumb "%s" of "%s" reads "%s", which is neither an argument of %s nor a parameter of its route.', $crumb->label, $this->owners[$crumb], $placeholder['placeholder'], $current));
+                }
+            }
+        }
     }
 
     /**
@@ -96,7 +147,16 @@ final class ParentCrumbCollector implements ResetInterface
             throw new LogicException(\sprintf('The breadcrumb parents form a cycle: "%s".', implode(' -> ', [...$visiting, $action])));
         }
 
-        $own = self::own(self::crumbs(new \ReflectionClass($class)), $class, self::crumbs(new \ReflectionMethod($class, $method)), $action);
+        $classCrumbs = self::crumbs(new \ReflectionClass($class));
+        $methodCrumbs = self::crumbs(new \ReflectionMethod($class, $method));
+        foreach ($classCrumbs as $crumb) {
+            $this->owners[$crumb] = $class;
+        }
+        foreach ($methodCrumbs as $crumb) {
+            $this->owners[$crumb] = $action;
+        }
+
+        $own = self::own($classCrumbs, $class, $methodCrumbs, $action);
 
         return $this->trails[$action] = $this->withAncestors($own, [...$visiting, $action]);
     }

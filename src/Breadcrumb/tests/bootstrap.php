@@ -10,8 +10,11 @@
  */
 
 use Symfony\Component\ErrorHandler\ErrorHandler;
+use Symfony\Component\Filesystem\Filesystem;
 
 require __DIR__.'/../vendor/autoload.php';
+
+new Filesystem()->remove(sys_get_temp_dir().'/ux-breadcrumb');
 
 // @see https://github.com/symfony/symfony/issues/53812
 ErrorHandler::register(null, false);

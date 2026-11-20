@@ -55,7 +55,7 @@ final class UXBreadcrumbIntegrationTest extends KernelTestCase
         self::assertStringContainsString('aria-current="page"', $html);
     }
 
-    public function testAnExpressionLabelRendersTheValueOfAControllerArgument(): void
+    public function testAPatternLabelRendersTheValueOfAControllerArgument(): void
     {
         $twig = $this->twigForRequest('/products/blue-sneakers/name');
 

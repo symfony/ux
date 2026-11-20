@@ -128,6 +128,11 @@ The ancestors are resolved against the current request, like any other crumb of 
 Their placeholders and expressions read the arguments of the current action, so they only resolve when that action has arguments with the same names.
 In both examples, the edit action receives a ``$product`` too, so the product's crumb shows its name on the edit page as well.
 
+In debug mode, an ancestor whose label reads an argument the current action does not have throws a ``LogicException`` naming the crumb, the argument and the action.
+A bare placeholder such as ``{slug}`` passes as long as the action has a ``$slug`` argument or the matched route a ``slug`` parameter.
+In production, an ancestor placeholder that reads a missing argument renders as an empty string instead.
+Only label placeholders are checked: an ``Expression`` in ``parameters`` or ``translationParameters`` that reads a missing argument still degrades quietly, see `The attribute`_.
+
 A cycle, a parent that points at nothing, and a parent on any crumb but the first of its level throw a ``LogicException`` when the page is requested.
 Resolving a route name reads the route collection, which is expensive, so the map of routes to controllers is kept in the ``.ux_breadcrumb.cache`` pool.
 In debug mode it is only kept for the current request, so a changed route is picked up at once, also by a long-running worker such as FrankenPHP.
@@ -177,7 +182,7 @@ Only the first crumb of a class or of a method can name a parent.
 The attribute
 -------------
 
-* ``label`` (``string|Expression``): the label, such as ``'Products'``, a label computed from the controller arguments, with placeholders such as ``'{name:product}'`` or an ``Expression``, see `Computed labels`_, or a translation key, see `Translated labels`_
+* ``label`` (``string``): the label, such as ``'Products'``, a label computed from the controller arguments with placeholders such as ``'{name:product}'``, see `Computed labels`_, or a translation key, see `Translated labels`_
 * ``route`` (``?string``): name of the route to link to
 * ``parameters`` (``array<int|string, mixed>``): the URL parameters, inherited from the matched route, given, or computed, see below
 * ``translationDomain`` (``string|false|null``): ``null`` for the default domain, a domain name, or ``false`` to skip translation
@@ -245,16 +250,10 @@ It therefore takes no ``translationDomain`` and no ``translationParameters``: pa
 A label that must be translated keeps its translation key and passes the values through ``translationParameters``, see `Translated labels`_.
 
 A placeholder that cannot be read, or whose value is neither a scalar nor a ``Stringable``, is replaced by an empty string rather than taking the page down.
-This happens to an ancestor whose placeholder names an argument the current action does not have.
+For an ancestor, debug mode throws instead, see `Parent crumbs`_.
 
-For anything a placeholder cannot say, such as a concatenation or a translated enum, give an ``Expression`` as the ``label``.
-It is evaluated against the controller's arguments, like the other expressions of the crumb::
-
-    #[Breadcrumb(label: new Expression('product.brand.name ~ " " ~ product.name'))]
-
-Its value is the label itself too, unless it is a ``TranslatableInterface``, such as a ``TranslatableMessage`` or a translatable enum, which is translated.
-The same rules apply: no ``translationDomain``, no ``translationParameters``, and an empty label when it cannot be evaluated.
-A placeholder whose value is a ``TranslatableInterface`` is translated the same way.
+A placeholder whose value is a ``TranslatableInterface``, such as a ``TranslatableMessage`` or a translatable enum, is translated.
+For anything a placeholder cannot say, give a translation key and pass the values through ``translationParameters``, see `Translated labels`_.
 
 Translated labels
 ~~~~~~~~~~~~~~~~~
@@ -299,26 +298,31 @@ listener already built, and add to it::
         #[Route('/categories/{slug}', name: 'category_view')]
         public function view(Category $category, BreadcrumbTrailProvider $trailProvider): Response
         {
-            $chain = [];
-            for ($node = $category; null !== $node; $node = $node->getParent()) {
-                $chain[] = new Breadcrumb(
-                    label: $node->getName(),
-                    route: 'category_view',
-                    parameters: ['slug' => $node->getSlug()],
-                    translationDomain: false,
-                );
-            }
+            $trailProvider->getTrail()?->append(static function () use ($category): iterable {
+                $chain = [];
+                for ($node = $category; null !== $node; $node = $node->getParent()) {
+                    $chain[] = new Breadcrumb(
+                        label: $node->getName(),
+                        route: 'category_view',
+                        parameters: ['slug' => $node->getSlug()],
+                        translationDomain: false,
+                    );
+                }
 
-            $trailProvider->getTrail()?->append(...array_reverse($chain));
+                return array_reverse($chain);
+            });
 
             return $this->render('category/view.html.twig');
         }
     }
 
-The class attribute states the part of the trail that never changes, and the controller
+The class attribute states the part of the trail that never changes, and the closure
 adds as many levels as the category happens to be deep. Every level of the chain is built
 the same way, the deepest one included, which changes nothing on the page: the current
 crumb is never a link.
+
+The closure only runs when a template reads the trail, and only once, so a redirect or a JSON response never walks the tree.
+It returns any iterable of ``Breadcrumb``, so it can also ``yield`` them.
 
 ``getTrail()`` returns ``null`` when there is no trail to add to, outside a request or
 before the listener has run, which happens on the controller arguments event. Hence the
@@ -329,11 +333,11 @@ that nothing renders.
 
 ``BreadcrumbTrail`` is a small mutable list of unresolved crumbs:
 
-* ``append(Breadcrumb ...$crumbs)`` adds below what is already there. Root crumbs and the attribute's are collected before the controller runs, so an appended crumb is always deeper than those.
-* ``prepend(Breadcrumb ...$crumbs)`` adds above them all, root crumbs included.
-* ``all()`` returns the crumbs, and ``isEmpty()`` says whether there are any, for a controller that decides what to add from what is already there.
+* ``append(Breadcrumb|Closure ...$crumbs)`` adds below what is already there. Root crumbs and the attribute's are collected before the controller runs, so an appended crumb is always deeper than those.
+* ``prepend(Breadcrumb|Closure ...$crumbs)`` adds above them all, root crumbs included.
+* ``all()`` returns the crumbs, and ``isEmpty()`` says whether anything was added, for a controller that decides what to add from what is already there. ``all()`` runs the closures, ``isEmpty()`` does not.
 
-Both take any number of crumbs, so a variable depth is a loop and a spread, as above.
+Both take any number of crumbs and closures, mixed, and keep their order.
 
 A crumb built here already holds its values, so it passes them as given in ``parameters``
 and a literal label with ``translationDomain: false``.
@@ -343,8 +347,8 @@ When an appended crumb names any other argument, its placeholder renders as an e
 A bare placeholder such as ``{slug}`` still falls back to the route parameter.
 
 Adding a crumb stays cheap: nothing is resolved until a template asks for it, and a crumb
-appended after a first ``ux_breadcrumb_items()`` call is picked up rather than served from
-the memo.
+or a closure appended after a first ``ux_breadcrumb_items()`` call is picked up rather than
+served from the memo.
 
 Rendering
 ---------
