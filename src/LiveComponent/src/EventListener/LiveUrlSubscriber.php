@@ -28,6 +28,7 @@ use Symfony\UX\TwigComponent\MountedComponent;
 class LiveUrlSubscriber implements EventSubscriberInterface, ServiceSubscriberInterface
 {
     private const URL_HEADER = 'X-Live-Url';
+    private const REDIRECT_HEADER = 'X-Live-Redirect';
 
     public function __construct(
         private ContainerInterface $container,
@@ -48,6 +49,8 @@ class LiveUrlSubscriber implements EventSubscriberInterface, ServiceSubscriberIn
         $request = $event->getRequest();
         if (!$event->isMainRequest()
             || !$event->getResponse()->isSuccessful()
+            // the redirect of a denied request, to a login page for example, must not dehydrate the component
+            || $event->getResponse()->headers->has(self::REDIRECT_HEADER)
             || !$request->attributes->has('_live_component')
             || !$request->attributes->has('_mounted_component')
             || !($previousLiveUrl = $request->headers->get(self::URL_HEADER))
