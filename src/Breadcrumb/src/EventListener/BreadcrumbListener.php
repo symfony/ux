@@ -74,7 +74,7 @@ final class BreadcrumbListener implements EventSubscriberInterface
         $crumbs = array_values($event->getAttributes(Breadcrumb::class));
 
         if (null !== $this->parentCrumbCollector && array_any($crumbs, static fn (Breadcrumb $crumb): bool => null !== $crumb->parent)) {
-            $crumbs = $this->parentCrumbCollector->collect($event->getController(), $crumbs, array_keys($event->getNamedArguments()), array_keys($routeParameters));
+            $crumbs = $this->parentCrumbCollector->collect($event->getController(), $crumbs, $event->getNamedArguments(), $routeParameters);
         }
 
         $roots = $this->roots($route, $request);

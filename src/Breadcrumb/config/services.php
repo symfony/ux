@@ -33,6 +33,7 @@ return static function (ContainerConfigurator $container): void {
     $services->set('ux_breadcrumb.parent_crumb_collector', ParentCrumbCollector::class)
         ->arg('$router', service('router'))
         ->arg('$cache', service('.ux_breadcrumb.cache'))
+        ->arg('$checker', service('ux_breadcrumb.parent_crumb_checker')->nullOnInvalid())
     ;
 
     // Crumb expressions are static strings parsed once, so a node-local, deploy-scoped pool beats a shared cache round-trip.

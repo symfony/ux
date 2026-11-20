@@ -14,8 +14,10 @@ namespace Symfony\UX\Breadcrumb\Tests;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
+use Symfony\Component\DependencyInjection\Reference;
 use Symfony\UX\Breadcrumb\UXBreadcrumbBundle;
 
 #[CoversClass(UXBreadcrumbBundle::class)]
@@ -46,16 +48,26 @@ final class UXBreadcrumbBundleTest extends TestCase
         self::assertFalse($this->parentCrumbCollector(false)->hasTag('kernel.reset'));
     }
 
-    public function testTheParentCrumbCollectorChecksAncestorsInDebugModeOnly(): void
+    public function testTheParentCrumbCheckerIsRegisteredInDebugModeOnly(): void
     {
-        $debug = $this->parentCrumbCollector(true);
-        $production = $this->parentCrumbCollector(false);
+        $debug = $this->container(true);
+        $production = $this->container(false);
 
-        self::assertTrue($debug->getArgument('$debug'));
-        self::assertArrayNotHasKey('$debug', $production->getArguments());
+        $checker = $debug->getDefinition('ux_breadcrumb.parent_crumb_collector')->getArgument('$checker');
+
+        self::assertTrue($debug->hasDefinition('ux_breadcrumb.parent_crumb_checker'));
+        self::assertFalse($production->hasDefinition('ux_breadcrumb.parent_crumb_checker'));
+        self::assertInstanceOf(Reference::class, $checker);
+        self::assertSame('ux_breadcrumb.parent_crumb_checker', (string) $checker);
+        self::assertSame(ContainerInterface::NULL_ON_INVALID_REFERENCE, $checker->getInvalidBehavior());
     }
 
     private function parentCrumbCollector(bool $debug): Definition
+    {
+        return $this->container($debug)->getDefinition('ux_breadcrumb.parent_crumb_collector');
+    }
+
+    private function container(bool $debug): ContainerBuilder
     {
         $container = new ContainerBuilder(new ParameterBag([
             'kernel.debug' => $debug,
@@ -65,6 +77,6 @@ final class UXBreadcrumbBundleTest extends TestCase
         ]));
         new UXBreadcrumbBundle()->getContainerExtension()?->load([], $container);
 
-        return $container->getDefinition('ux_breadcrumb.parent_crumb_collector');
+        return $container;
     }
 }

@@ -22,6 +22,7 @@ use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\UX\Breadcrumb\Attribute\Breadcrumb;
 use Symfony\UX\Breadcrumb\Exception\LogicException;
+use Symfony\UX\Breadcrumb\ParentCrumbChecker;
 use Symfony\UX\Breadcrumb\ParentCrumbCollector;
 use Symfony\UX\Breadcrumb\Tests\Fixtures\Controller\AdminProductController;
 use Symfony\UX\Breadcrumb\Tests\Fixtures\Controller\CatalogController;
@@ -30,6 +31,7 @@ use Symfony\UX\Breadcrumb\Tests\Fixtures\Controller\ProductEditController;
 use Symfony\UX\Breadcrumb\Tests\Fixtures\Controller\ProductIndexController;
 use Symfony\UX\Breadcrumb\Tests\Fixtures\Controller\ProductNameController;
 use Symfony\UX\Breadcrumb\Tests\Fixtures\Controller\ProductViewController;
+use Symfony\UX\Breadcrumb\Tests\Fixtures\Product;
 
 #[CoversClass(ParentCrumbCollector::class)]
 final class ParentCrumbCollectorTest extends TestCase
@@ -246,76 +248,30 @@ final class ParentCrumbCollectorTest extends TestCase
         self::assertSame(['product.index.breadcrumb', 'product.view.breadcrumb', 'leaf'], self::labelsOf($collector->collect(static fn (): null => null, $leaf)));
     }
 
-    public function testAnAncestorReadingAnArgumentTheActionLacksIsRejectedInDebugMode(): void
+    public function testAnAncestorReadingAnArgumentTheActionLacksIsRejectedByTheChecker(): void
     {
-        $collector = new ParentCrumbCollector($this->router(), debug: true);
+        $collector = new ParentCrumbCollector($this->router(), checker: new ParentCrumbChecker());
         $leaf = [new Breadcrumb('leaf', parent: ProductNameController::class)];
 
         $this->expectException(LogicException::class);
         $this->expectExceptionMessage(\sprintf('The breadcrumb "{name:product}" of "%s" reads the argument "$product", which the closure controller does not have.', ProductNameController::class));
 
-        $collector->collect(static fn (): null => null, $leaf, ['slug'], ['slug']);
+        $collector->collect(static fn (): null => null, $leaf, ['slug' => 'blue-sneakers'], ['slug' => 'blue-sneakers']);
     }
 
-    public function testAnAncestorReadingAnArgumentTheActionHasIsAcceptedInDebugMode(): void
+    public function testAnAncestorReadingAnArgumentTheActionHasIsAcceptedByTheChecker(): void
     {
-        $collector = new ParentCrumbCollector($this->router(), debug: true);
+        $collector = new ParentCrumbCollector($this->router(), checker: new ParentCrumbChecker());
         $leaf = [new Breadcrumb('leaf', parent: ProductNameController::class)];
 
-        $trail = $collector->collect(static fn (): null => null, $leaf, ['product'], []);
+        $trail = $collector->collect(static fn (): null => null, $leaf, ['product' => new Product()], []);
 
         self::assertSame(['{name:product}', 'leaf'], self::labelsOf($trail));
     }
 
-    public function testABarePlaceholderOfAnAncestorMayReadARouteParameterInDebugMode(): void
+    public function testTheActionsOwnCrumbsAreNotChecked(): void
     {
-        $collector = new ParentCrumbCollector($this->router(), debug: true);
-        $parent = new #[Breadcrumb('{slug}')] class {
-            public function __invoke(): void
-            {
-            }
-        };
-        $leaf = [new Breadcrumb('leaf', parent: $parent::class)];
-
-        $trail = $collector->collect(static fn (): null => null, $leaf, [], ['slug']);
-
-        self::assertSame(['{slug}', 'leaf'], self::labelsOf($trail));
-    }
-
-    public function testABarePlaceholderOfAnAncestorReadingNothingIsRejectedInDebugMode(): void
-    {
-        $collector = new ParentCrumbCollector($this->router(), debug: true);
-        $parent = new #[Breadcrumb('{slug}')] class {
-            public function __invoke(): void
-            {
-            }
-        };
-        $leaf = [new Breadcrumb('leaf', parent: $parent::class)];
-
-        $this->expectException(LogicException::class);
-        $this->expectExceptionMessage('reads "{slug}", which is neither an argument of the closure controller nor a parameter of its route.');
-
-        $collector->collect(static fn (): null => null, $leaf, ['product'], ['id']);
-    }
-
-    public function testALiteralAncestorLabelIsNotCheckedInDebugMode(): void
-    {
-        $collector = new ParentCrumbCollector($this->router(), debug: true);
-        $parent = new #[Breadcrumb('{slug}', translationDomain: false)] class {
-            public function __invoke(): void
-            {
-            }
-        };
-        $leaf = [new Breadcrumb('leaf', parent: $parent::class)];
-
-        $trail = $collector->collect(static fn (): null => null, $leaf);
-
-        self::assertSame(['{slug}', 'leaf'], self::labelsOf($trail));
-    }
-
-    public function testTheActionsOwnCrumbsAreNotCheckedInDebugMode(): void
-    {
-        $collector = new ParentCrumbCollector($this->router(), debug: true);
+        $collector = new ParentCrumbCollector($this->router(), checker: new ParentCrumbChecker());
         $leaf = [new Breadcrumb('{name:product}', parent: ProductIndexController::class)];
 
         $trail = $collector->collect(static fn (): null => null, $leaf);
@@ -323,7 +279,7 @@ final class ParentCrumbCollectorTest extends TestCase
         self::assertSame(['product.index.breadcrumb', '{name:product}'], self::labelsOf($trail));
     }
 
-    public function testAnAncestorReadingAnArgumentTheActionLacksDegradesOutsideDebugMode(): void
+    public function testAnAncestorReadingAnArgumentTheActionLacksDegradesWithoutAChecker(): void
     {
         $leaf = [new Breadcrumb('leaf', parent: ProductNameController::class)];
 
