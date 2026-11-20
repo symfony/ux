@@ -1,0 +1,10 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2026-11-20T07:53:33Z
+
+I rebased the branch on 3.x and pushed a few changes:
+
+- `contentTargetDisconnected` returns early when the native path is off.
+- I extracted a `pinToBottom()` helper in the spec.
+
+One thing I did not change: with `item-aligned`, `align="end"` and `align="center"` are placed like `start` on the native path, because `_position()` always sets `left: anchor(left)`. No example uses it. It is worth a follow-up.
