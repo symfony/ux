@@ -1,0 +1,8 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2026-11-20T07:53:30Z
+
+I rebased the branch on 3.x and pushed a few changes:
+
+- `contentTargetDisconnected` now returns early when the native path is off. Before, it removed the `popover` attribute and the inline `anchor-name` even in the fallback, where an application may have set them itself.
+- In the spec, I extracted two helpers, `finishAnimations()` and `pinToBottom()`, to replace repeated setup.
