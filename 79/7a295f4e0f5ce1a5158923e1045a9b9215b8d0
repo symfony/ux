@@ -1,0 +1,5 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2026-11-20T07:53:35Z
+
+I rebased the branch on 3.x and pushed one change. `contentTargetDisconnected` now returns early when the native path is off, in both controllers.
