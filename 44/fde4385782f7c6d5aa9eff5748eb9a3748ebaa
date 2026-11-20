@@ -1,0 +1,9 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2026-11-20T07:53:38Z
+
+I rebased the branch on 3.x and pushed a few changes:
+
+- I fixed a regression on the native path. Near the right edge of the viewport, the tooltip was squeezed into a narrow and tall box (94px by 180px for the long content example, against 344px by 54px in the middle of the page). Its shrink-to-fit width was capped by the space left after `left: anchor(center)`. The wrapper now gets `[&[data-anchored]]:w-max`. I added a test that fails without the class.
+- `#disconnectNative()` returns early when the native path is off.
+- I renamed the test "cleans up when its content is removed, and no longer opens", because it never checked that the tooltip no longer opens.
