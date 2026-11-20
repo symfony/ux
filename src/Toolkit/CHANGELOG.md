@@ -14,6 +14,8 @@
 - [Shadcn] Add a `--dropdown-menu-trigger-width` variable to `DropdownMenu:Content`, to use instead of `w-full`
 - [Shadcn] Show the `select` popup in the top layer with anchor positioning where supported, so no ancestor clips it
 - [Shadcn] Show the `combobox` list in the top layer with anchor positioning where supported, so no ancestor clips it
+- [Shadcn] Show the `menubar` menus and their submenus in the top layer with anchor positioning where supported, so no ancestor clips them
+- [Shadcn] Fix `menubar` menus wrapping their items to the width of their trigger
 
 ## 3.7.1
 
