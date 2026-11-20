@@ -1003,6 +1003,37 @@ In TypeScript, use the ``ComponentHooks`` type to type a hook callback that is d
 
     this.component.on('response:error', onError);
 
+DOM Events
+~~~~~~~~~~
+
+.. versionadded:: 3.8
+
+    The ``live:render:started`` and ``live:render:finished`` DOM events were added in LiveComponent 3.8.
+
+The ``connect``, ``disconnect``, ``render:started`` and ``render:finished`` JavaScript
+hooks are also re-emitted as bubbling DOM events on the component's root element,
+prefixed with ``live:``. This lets external code subscribe via plain
+``addEventListener`` without needing to grab the ``Component`` instance through
+``getComponent()``:
+
+.. code-block:: javascript
+
+    element.addEventListener('live:render:finished', (event) => {
+        // event.detail.component: the (proxied) Component instance
+        // event.detail.controller: the Stimulus controller
+    });
+
+The ``live:render:started`` event additionally carries ``html``, ``backendResponse``
+and ``controls`` in its ``detail``, matching the JS hook signature. Like the
+hooks, both render events are only dispatched when the component is re-rendered.
+
+The following DOM events are dispatched:
+
+* ``live:connect``
+* ``live:disconnect``
+* ``live:render:started``
+* ``live:render:finished``
+
 Loading States
 --------------
 

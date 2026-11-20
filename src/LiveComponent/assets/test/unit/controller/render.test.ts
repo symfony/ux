@@ -43,6 +43,49 @@ describe('LiveController rendering Tests', () => {
         expect(test.component.valueStore.getOriginalProps()).toEqual({ firstName: 'Kevin' });
     });
 
+    it('dispatches bubbling live:render:started and live:render:finished DOM events', async () => {
+        const test = await createTest(
+            { firstName: 'Ryan' },
+            (data: any) => `
+            <div ${initComponent(data)}>
+                <span>Name: ${data.firstName}</span>
+                <button data-action="live#$render">Reload</button>
+            </div>
+        `
+        );
+
+        const events: CustomEvent[] = [];
+        const listener = (event: Event) => events.push(event as CustomEvent);
+        document.addEventListener('live:render:started', listener);
+        document.addEventListener('live:render:finished', listener);
+
+        test.expectsAjaxCall().serverWillChangeProps((data: any) => {
+            data.firstName = 'Kevin';
+        });
+
+        getByText(test.element, 'Reload').click();
+
+        await waitFor(() => expect(test.element).toHaveTextContent('Name: Kevin'));
+        document.removeEventListener('live:render:started', listener);
+        document.removeEventListener('live:render:finished', listener);
+
+        expect(events.map((event) => event.type)).toEqual(['live:render:started', 'live:render:finished']);
+        const [started, finished] = events;
+
+        expect(started.target).toBe(test.element);
+        expect(started.bubbles).toBe(true);
+        expect(started.detail.html).toContain('Name: Kevin');
+        expect(started.detail.backendResponse.response.status).toBe(200);
+        expect(started.detail.controls).toEqual({ shouldRender: true });
+        expect(started.detail.component.element).toBe(test.element);
+        expect(started.detail.controller.component).toBe(test.component);
+
+        expect(finished.target).toBe(test.element);
+        expect(finished.bubbles).toBe(true);
+        expect(finished.detail.component.element).toBe(test.element);
+        expect(finished.detail.controller.component).toBe(test.component);
+    });
+
     it('conserves the value of model field that was modified after a render request', async () => {
         const test = await createTest(
             { title: 'greetings', comment: '' },
