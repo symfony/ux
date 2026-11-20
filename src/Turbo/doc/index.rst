@@ -718,8 +718,22 @@ Stream Messages and Actions
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 To render ``<turbo-stream>`` elements in templates, Symfony UX Turbo provides
-a set of ``<twig:Turbo:Stream:*>`` Twig components. The ``target`` attribute
-accepts a CSS selector (e.g. ``#task_42``, ``.tasks``).
+a set of ``<twig:Turbo:Stream:*>`` Twig components. Their ``target`` attribute
+is rendered as the ``targets`` attribute of ``<turbo-stream>``, so it expects a
+CSS selector (e.g. ``#task_42``, ``.tasks``), not an element ``id``.
+
+.. caution::
+
+    A CSS ``id`` selector cannot start with a digit, while an HTML ``id`` can.
+    When the ``id`` starts with a digit (e.g. ``42``, or some UUIDs),
+    ``target="#{{ task.id }}"`` is not a valid selector: the browser throws an
+    error and the stream does nothing. Make the ``id`` start with a letter, for
+    example with a prefix (``id="task_{{ task.id }}"`` and
+    ``target="#task_{{ task.id }}"``), or escape it in the selector
+    (``#\34 2`` for ``42``).
+
+    The same applies to the ``$target`` argument of the ``TurboStreamResponse``
+    methods.
 
 Remove
 """"""
