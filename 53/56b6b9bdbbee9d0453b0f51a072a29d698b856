@@ -1,0 +1,8 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2026-11-20T07:53:31Z
+
+I rebased the branch on 3.x and pushed a few changes:
+
+- `handleEscape()` no longer checks `event.key`. The `keydown.esc@window` descriptor already filters the key.
+- `contentTargetDisconnected` returns early when the native path is off. The fallback must not remove a `popover` attribute or an `anchor-name` that it did not set.
