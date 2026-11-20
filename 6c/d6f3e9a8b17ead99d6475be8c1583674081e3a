@@ -1,0 +1,11 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2026-11-20T07:53:37Z
+
+I rebased the branch on 3.x and pushed a few changes:
+
+- I fixed a glitch on the native path. The first time a panel opened, it showed at the left edge of the page for a few frames, then jumped under its trigger. With `transition-discrete`, the change of `inset-inline-start` from `auto` to the `calc(anchor(inside) + Npx)` value is a discrete transition, so the old value is kept for half of the duration. A panel that opens from the closed state is now placed without a transition. Sliding from one trigger to another is unchanged. I added a test for it, in both modes.
+- In `#activate`, `#setOpen(true, item)` became `#reflect(true, item)`, because the positioner is already open at that point.
+- `viewportPositionerTargetDisconnected` returns early when the native path is off.
+
+One thing I did not change: the test "closes on Escape and gives the focus back to the trigger without reopening" depends on timing. On my machine it failed 6 times out of 6 in one session, and it passed in others. Pressing Tab right after the panel opens does not move the focus into the panel. With a 500ms wait before Tab, it passes. The same happens with the recipe files of 3.x, so this PR does not cause it. The test should wait for a condition before pressing Tab. Can you make it stable?
