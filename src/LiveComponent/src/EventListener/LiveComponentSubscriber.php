@@ -90,6 +90,12 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
             throw new NotFoundHttpException(\sprintf('"%s" (%s) is not a Live Component.', $metadata->getClass(), $componentName));
         }
 
+        $route = $metadata->get('route', 'ux_live_component');
+
+        if ($route !== ($request->attributes->get('_canonical_route') ?? $request->attributes->get('_route'))) {
+            throw new NotFoundHttpException(\sprintf('Component "%s" is only served by route "%s".', $componentName, $route));
+        }
+
         if ('get' === $action) {
             $defaultAction = trim($metadata->get('default_action', '__invoke'), '()');
 
