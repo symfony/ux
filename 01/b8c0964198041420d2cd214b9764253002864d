@@ -1,0 +1,10 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2026-11-20T07:53:34Z
+
+I rebased the branch on 3.x and pushed a few changes:
+
+- I fixed a regression on the native path. A width given by the application, such as `class="w-40"` on `Combobox:Content`, was ignored, because `[&[popover]]:w-[anchor-size(width)]` won over it. So `align` had no visible effect. The width now goes through a `--combobox-content-width` variable (`100%` by default, `anchor-size(width)` on the native path), so a `w-*` class replaces it in both modes.
+- I added a "Side and Alignment" example to the README, with the 8 placements, and a placement test for each one, on the native path and in the fallback. No example used `side` or `align` before, so these classes were never run.
+- `contentTargetDisconnected` returns early when the native path is off.
+- I extracted a `pinToViewportBottom()` helper in the spec.
