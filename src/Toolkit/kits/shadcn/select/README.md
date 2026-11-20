@@ -295,6 +295,7 @@ To enable RTL support, set the `dir="rtl"` attribute on the root element.
 - With `name`, the value is carried by a hidden native `<select>`: `required` blocks the form submission like on a native control, and a disabled `Select` submits no value.
 - Give `Select:Group` an `id` so its `Select:Label` is wired with `aria-labelledby` and the group is announced with a name. A group without an `id` is announced as an unnamed group.
 - Set `aria-invalid="true"` on `Select:Trigger` for the invalid styling, and point `aria-describedby` at the message explaining what is wrong, as the `Invalid` example does.
+- In browsers with the [Popover API](https://developer.mozilla.org/en-US/docs/Web/API/Popover_API) and [anchor positioning](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_anchor_positioning), the popup opens in the top layer, so no ancestor clips it. A `popper` popup flips to the other side of the trigger when there is no room.
 - `disabled` on the root disables the trigger itself; `disabled` on an item marks it `aria-disabled` and takes it out of the keyboard order while leaving it visible.
 
 ## API Reference
