@@ -111,6 +111,33 @@ describe('BackendResponse', () => {
             expect(await response.getBody()).toBe('<div>hello</div>');
             expect(await response.getBody()).toBe('<div>hello</div>');
         });
+
+        it('treats a length longer than the body as the whole body', async () => {
+            const response = makeDownloadResponse('<div>hello</div>', encoder.encode('a,b,c'), {
+                'X-Live-Html-Length': '9999',
+            });
+
+            expect(await response.getBody()).toBe('<div>hello</div>a,b,c');
+            expect(response.getDownload()?.blob.size).toBe(0);
+        });
+
+        it('treats a negative length as an offset from the end of the body', async () => {
+            const response = makeDownloadResponse('<div>hello</div>', encoder.encode('a,b,c'), {
+                'X-Live-Html-Length': '-5',
+            });
+
+            expect(await response.getBody()).toBe('<div>hello</div>');
+            expect(await blobText(response.getDownload()!.blob)).toBe('a,b,c');
+        });
+
+        it('treats a non-numeric length as empty HTML', async () => {
+            const response = makeDownloadResponse('<div>hello</div>', encoder.encode('a,b,c'), {
+                'X-Live-Html-Length': 'nonsense',
+            });
+
+            expect(await response.getBody()).toBe('');
+            expect(await blobText(response.getDownload()!.blob)).toBe('<div>hello</div>a,b,c');
+        });
     });
 
     describe('download filename', () => {
