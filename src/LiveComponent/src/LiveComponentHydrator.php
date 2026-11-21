@@ -433,7 +433,7 @@ final class LiveComponentHydrator
 
         // bind the MAC to (component name, slot) so a blob minted for component A cannot be replayed as component B,
         // and a `props` blob cannot be replayed as `propsFromParent` (or vice-versa)
-        $preImage = $componentName."\0".$slot."\0".json_encode($dehydratedPropsData);
+        $preImage = $componentName."\0".$slot."\0".json_encode($dehydratedPropsData, \JSON_THROW_ON_ERROR);
 
         return base64_encode(hash_hmac('sha256', $preImage, $this->secret, true));
     }
@@ -449,7 +449,11 @@ final class LiveComponentHydrator
         $sentChecksum = $identifierPops[self::CHECKSUM_KEY];
         unset($identifierPops[self::CHECKSUM_KEY]);
 
-        $expectedChecksum = $this->calculateChecksum($identifierPops, $componentName, $slot);
+        try {
+            $expectedChecksum = $this->calculateChecksum($identifierPops, $componentName, $slot);
+        } catch (\JsonException $e) {
+            throw new HydrationException($error, $e);
+        }
 
         if (hash_equals($expectedChecksum, $sentChecksum)) {
             return;

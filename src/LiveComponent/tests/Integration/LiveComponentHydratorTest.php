@@ -2200,6 +2200,34 @@ final class LiveComponentHydratorTest extends KernelTestCase
         );
     }
 
+    public function testChecksumOfDataThatCannotBeEncodedFails(): void
+    {
+        $this->expectException(\JsonException::class);
+
+        $this->hydrator()->addChecksumToData(['value' => \INF], '__testing', LiveComponentHydrator::CHECKSUM_SLOT_PROPS);
+    }
+
+    public function testHydrationFailsWhenPropsCannotBeEncoded(): void
+    {
+        $component = new class {
+            #[LiveProp]
+            public float $value = 1.0;
+        };
+
+        // the checksum that every payload got when json_encode() failed on it, as for INF (sent as 1e400)
+        $checksum = base64_encode(hash_hmac('sha256', "__testing\0props\0", self::getContainer()->getParameter('kernel.secret'), true));
+
+        $this->expectException(HydrationException::class);
+        $this->expectExceptionMessage('Invalid checksum sent when updating the live component.');
+
+        $this->hydrator()->hydrate(
+            $component,
+            ['value' => \INF, '@checksum' => $checksum],
+            [],
+            $this->createLiveMetadata($component),
+        );
+    }
+
     public function testPreDehydrateAndPostHydrateHooksCalled(): void
     {
         $mounted = $this->mountComponent('component2');
