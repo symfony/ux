@@ -122,6 +122,21 @@ test('Can update the state with LiveResponse::noRender(), the HTML must be kept 
     await expect(page).toHaveURL('/ux-live-component/counter?value=3');
 });
 
+test('Can receive the data sent with LiveResponse::data() when calling an action from JavaScript', async ({ page }) => {
+    await page.goto('/ux-live-component/counter');
+    await expect(page.getByTestId('value')).toHaveText('0');
+
+    const data = await page.locator('[data-controller~="live"]').evaluate(async (element: any) => {
+        const response = await element.__component.action('incrementAndSendValue');
+
+        return response.getData().json();
+    });
+
+    expect(data).toEqual({ value: 1 });
+    await expect(page.getByTestId('value')).toHaveText('1');
+    await expect(page).toHaveURL('/ux-live-component/counter?value=1');
+});
+
 test('Can mutate a LiveProp(url: new UrlMapping(mapPath: true)), the state must be persisted in the URL, as a path parameter', async ({
     page,
 }) => {
