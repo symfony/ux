@@ -293,13 +293,13 @@ prefix the attribute with ``:`` or use the normal ``{{ }}`` syntax:
 
     <twig:Alert message="hello!" :user="user.id" />
 
-    // equal to
+    {# equal to #}
     <twig:Alert message="hello!" user="{{ user.id }}" />
 
-    // pass object, array, or anything you imagine
+    {# pass object, array, or anything you imagine #}
     <twig:Alert :foo="{col: ['foo', 'oof']}" />
 
-    // null-safe operator (Twig 3.23+)
+    {# null-safe operator (Twig 3.23+) #}
     <twig:Alert :title="user.profile?.displayName" />
 
 .. versionadded:: 3.7
@@ -734,7 +734,7 @@ name the component file ``index.html.twig`` to avoid repetition:
 .. code-block:: html+twig
 
     {# templates/components/Menu/Item.html.twig #}
-    {% props href, label %}
+    {% props href, label='' %}
     <li {{ attributes.defaults({class: 'menu__item'}) }}>
         <a href="{{ href }}">{% block content %}{{ label }}{% endblock %}</a>
     </li>
@@ -829,7 +829,7 @@ In your component template, this becomes a block named ``content``:
 
     <div class="alert alert-{{ type }}">
         {% block content %}
-            // the content will appear in here
+            {# the content will appear in here #}
         {% endblock %}
      </div>
 
@@ -985,15 +985,16 @@ components, that can be done via the ``outerScope...`` variable:
 
     {# templates/SuccessAlert.html.twig #}
     {% set name = 'Fabien' %}
-    {% set message = 'Hello' %}
     {% component Alert with {type: 'success', name: 'Bart'} %}
-        Hello {{ name }} {# Hello Bart #}
+        {% block content %}
+            Hello {{ name }} {# Hello Bart #}
 
-        {{ message }} {{ outerScope.name }} {# Hello Fabien #}
+            {{ message }} {{ outerScope.name }} {# Hello Fabien #}
 
-        {{ outerScope.this.someFunction }} {# this refers to SuccessAlert #}
+            {{ outerScope.this.someFunction }} {# this refers to SuccessAlert #}
 
-        {{ outerScope.this.someProp }} {# references a "someProp" prop from SuccessAlert #}
+            {{ outerScope.this.someProp }} {# references a "someProp" prop from SuccessAlert #}
+        {% endblock %}
     {% endcomponent %}
 
 You can keep referring to components higher up as well. Just add another ``outerScope``.
@@ -1047,14 +1048,14 @@ For example, imagine we want to create a ``SuccessAlert`` component:
     {# templates/some_page.html.twig #}
     <twig:SuccessAlert>
         We will successfully <em>forward</em> this block content!
-    <twig:SuccessAlert>
+    </twig:SuccessAlert>
 
 We already have a generic ``Alert`` component, so let's reuse it:
 
 .. code-block:: html+twig
 
     {# templates/components/Alert.html.twig #}
-    <div {{ attributes.defaults({class: 'alert alert-'~type}) }}">
+    <div {{ attributes.defaults({class: 'alert alert-'~type}) }}>
         {% block content %}{% endblock %}
     </div>
 
@@ -1096,7 +1097,7 @@ When rendering the component, you can pass an array of html attributes to add:
     <twig:MyComponent class="foo" style="color: red" />
 
     {# renders as: #}
-    <div class="foo" style="color:red">
+    <div class="foo" style="color: red">
       My Component!
     </div>
 
@@ -1315,7 +1316,7 @@ and footer. Here's an example of this:
     {# render #}
     <twig:Dialog class="foo" title:class="bar" body:class="baz" footer:class="qux">
         Some content
-    </twig:MyDialog>
+    </twig:Dialog>
 
     {# output #}
     <div class="foo">
@@ -1352,6 +1353,7 @@ and variant-specific classes:
 
 .. code-block:: html+twig
 
+    {% props color, size %}
     {% set button = html_cva(
         base: 'btn',
         variants: {
