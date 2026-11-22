@@ -205,6 +205,32 @@ describe('UxUploadController: lifecycle', () => {
             expect(input.validity.customError).toBe(true);
         });
 
+        it('keeps the paused label when a chunk in flight lands', async () => {
+            const element = await mount();
+            let releaseChunk: (() => void) | undefined;
+            queueResponses(vi.mocked(fetch), [
+                okJson(initResponse('upload-paused-chunk', { chunkSize: 2, totalChunks: 2, parallel: 1 })),
+                statusResponse(),
+            ])
+                .mockImplementationOnce(
+                    () =>
+                        new Promise((resolve) => {
+                            releaseChunk = () => resolve(okEmpty());
+                        })
+                )
+                .mockImplementation(pendingUntilAborted);
+            triggerFileSelect(element, [new File(['data'], 'slow.txt', { type: 'text/plain' })]);
+            await vi.waitFor(() => expect(releaseChunk).toBeDefined());
+            const item = element.querySelector('.ux-upload__item') as HTMLElement;
+            (item.querySelector('.ux-upload__pause') as HTMLButtonElement).click();
+
+            releaseChunk?.();
+            await vi.waitFor(() => expect(item.dataset.progress).toBe('50'));
+
+            expect(item.dataset.status).toBe('paused');
+            expect(item.querySelector('[data-ux-upload-status]')?.textContent).toBe('Paused');
+        });
+
         it('makes the file input valid again once the upload is cancelled', async () => {
             const element = await mount();
             const input = element.querySelector('[data-ux-upload-target="input"]') as HTMLInputElement;

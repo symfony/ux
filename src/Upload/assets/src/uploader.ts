@@ -92,7 +92,7 @@ export class Uploader {
     private uploadFingerprints: Map<string, string> = new Map();
     private abortReasons: Map<string, 'cancel' | 'suspend'> = new Map();
     private pauseFlags: Map<string, boolean> = new Map();
-    private pauseResolvers: Map<string, () => void> = new Map();
+    private pauseResolvers: Map<string, Array<() => void>> = new Map();
     private speedSamples: Map<string, SpeedSample[]> = new Map();
     private uploadFileSizes: Map<string, number> = new Map();
     private initUrl: string;
@@ -988,8 +988,11 @@ export class Uploader {
             return Promise.resolve();
         }
 
+        // One resolver per parked slot: with parallel chunks, several workers wait at once.
         return new Promise<void>((resolve) => {
-            this.pauseResolvers.set(uploadId, resolve);
+            const resolvers = this.pauseResolvers.get(uploadId) ?? [];
+            resolvers.push(resolve);
+            this.pauseResolvers.set(uploadId, resolvers);
         });
     }
 
@@ -998,10 +1001,10 @@ export class Uploader {
      */
     private resumeIfPaused(uploadId: string): void {
         this.pauseFlags.delete(uploadId);
-        const resolver = this.pauseResolvers.get(uploadId);
-        if (resolver) {
-            this.pauseResolvers.delete(uploadId);
-            resolver();
+        const resolvers = this.pauseResolvers.get(uploadId) ?? [];
+        this.pauseResolvers.delete(uploadId);
+        for (const resolve of resolvers) {
+            resolve();
         }
     }
 }
