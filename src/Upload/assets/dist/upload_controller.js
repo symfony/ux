@@ -633,16 +633,16 @@ var Uploader = class {
 	waitIfPaused(uploadId) {
 		if (!this.pauseFlags.get(uploadId)) return Promise.resolve();
 		return new Promise((resolve) => {
-			this.pauseResolvers.set(uploadId, resolve);
+			const resolvers = this.pauseResolvers.get(uploadId) ?? [];
+			resolvers.push(resolve);
+			this.pauseResolvers.set(uploadId, resolvers);
 		});
 	}
 	resumeIfPaused(uploadId) {
 		this.pauseFlags.delete(uploadId);
-		const resolver = this.pauseResolvers.get(uploadId);
-		if (resolver) {
-			this.pauseResolvers.delete(uploadId);
-			resolver();
-		}
+		const resolvers = this.pauseResolvers.get(uploadId) ?? [];
+		this.pauseResolvers.delete(uploadId);
+		for (const resolve of resolvers) resolve();
 	}
 };
 var DirectUploadFallbackError = class extends Error {};
@@ -1529,7 +1529,7 @@ var upload_controller_default = class extends Controller {
 		if (progressContainer) progressContainer.setAttribute("aria-valuenow", percent.toString());
 		const percentText = item.querySelector("[data-ux-upload-percent]");
 		if (percentText) percentText.textContent = `${percent}%`;
-		const statusText = item.querySelector("[data-ux-upload-status]");
+		const statusText = "paused" === item.dataset.status ? null : item.querySelector("[data-ux-upload-status]");
 		if (statusText) {
 			let text = `${percent}%`;
 			if (speed && percent < 100) {

@@ -680,6 +680,36 @@ describe('Uploader', () => {
             // every remaining chunk meanwhile. Fixed batches would stop after 1.
             expect(startedWhileChunkZeroRan).toEqual([1, 2, 3, 4]);
         });
+
+        it('wakes every slot when a paused upload resumes', async () => {
+            const file = createMockFile('paused.bin', 800, 'image/jpeg');
+            let chunksSent = 0;
+            const customFetch = vi.fn(
+                routedFetch({
+                    init: () =>
+                        okJson(initResponse('upload-paused-pool', { chunkSize: 200, totalChunks: 4, parallel: 2 })),
+                    put: () => {
+                        // Pause once the first chunk lands, so both slots park in waitIfPaused.
+                        if (1 === ++chunksSent) {
+                            instance.pause('upload-paused-pool');
+                        }
+
+                        return okEmpty();
+                    },
+                    complete: () =>
+                        okJson({ success: true, meta: { filename: 'paused.bin', size: 800, mimeType: 'image/jpeg' } }),
+                })
+            );
+            const instance = new Uploader({ initUrl: '/upload/init', fetch: customFetch });
+
+            const promise = instance.upload(file);
+            await vi.waitFor(() => expect(instance.isPaused('upload-paused-pool')).toBe(true));
+            await flushTasks();
+            instance.resume('upload-paused-pool');
+
+            await expect(promise).resolves.toMatchObject({ metadata: { filename: 'paused.bin' } });
+            expect(chunkIndices(customFetch)).toEqual(['0', '1', '2', '3']);
+        });
     });
 
     describe('cancel', () => {

@@ -1020,7 +1020,8 @@ export default class extends Controller<HTMLElement> {
             percentText.textContent = `${percent}%`;
         }
 
-        const statusText = item.querySelector('[data-ux-upload-status]');
+        // Chunks in flight still land after a pause: the label keeps saying so.
+        const statusText = 'paused' === item.dataset.status ? null : item.querySelector('[data-ux-upload-status]');
         if (statusText) {
             let text = `${percent}%`;
             if (speed && percent < 100) {
