@@ -32,7 +32,7 @@ class ControllersMapGenerator
         private AssetMapperInterface $assetMapper,
         private UxPackageReader $uxPackageReader,
         private array $controllerPaths,
-        private string $controllersJsonPath,
+        private ?string $controllersJsonPath,
         private ?AutoImportLocator $autoImportLocator = null,
         private array $applicationControllerPaths = [],
         private ?string $baseControllersJsonPath = null,
@@ -56,7 +56,7 @@ class ControllersMapGenerator
      */
     public function getControllersJsonPaths(): array
     {
-        return null === $this->baseControllersJsonPath ? [$this->controllersJsonPath] : [$this->baseControllersJsonPath, $this->controllersJsonPath];
+        return array_values(array_filter([$this->baseControllersJsonPath, $this->controllersJsonPath], static fn (?string $path): bool => null !== $path));
     }
 
     public function getControllerPaths(): array

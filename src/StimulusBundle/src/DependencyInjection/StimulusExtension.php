@@ -17,6 +17,7 @@ use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\Config\Resource\FileExistenceResource;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
@@ -45,22 +46,37 @@ final class StimulusExtension extends Extension implements PrependExtensionInter
         $applications = [];
         $loaderRealpaths = [];
         foreach ($config['applications'] as $name => $application) {
-            $loader = $container->getParameterBag()->resolveValue($application['loader']);
-            if (!str_ends_with($loader, '.js')) {
-                throw new InvalidArgumentException(\sprintf('The loader "%s" of the "%s" Stimulus application must be a ".js" file.', $loader, $name));
+            $module = $container->getParameterBag()->resolveValue($application['loader'] ?? '%kernel.project_dir%/assets/'.$name.'/stimulus.js');
+            if (!str_ends_with($module, '.js')) {
+                throw new InvalidArgumentException(\sprintf('The module "%s" of the "%s" Stimulus application must be a ".js" file.', $module, $name));
             }
 
-            if (!is_file($loader)) {
-                throw new InvalidArgumentException(\sprintf('The loader file "%s" of the "%s" Stimulus application does not exist. Create it as an empty file inside an AssetMapper path.', $loader, $name));
+            if (!is_file($module)) {
+                throw new InvalidArgumentException(\sprintf('The module "%s" of the "%s" Stimulus application does not exist. Create it inside an AssetMapper path, either empty or containing only "export { startStimulusApp } from \'@symfony/stimulus-bundle\';".', $module, $name));
             }
 
-            $loaderRealpath = realpath($loader);
-            if (isset($loaderRealpaths[$loaderRealpath])) {
-                throw new InvalidArgumentException(\sprintf('The loader "%s" is used by both the "%s" and "%s" Stimulus applications.', $loaderRealpath, $loaderRealpaths[$loaderRealpath], $name));
+            $moduleRealpath = realpath($module);
+            if (isset($loaderRealpaths[$moduleRealpath])) {
+                throw new InvalidArgumentException(\sprintf('The module "%s" is used by both the "%s" and "%s" Stimulus applications.', $moduleRealpath, $loaderRealpaths[$moduleRealpath], $name));
             }
-            $loaderRealpaths[$loaderRealpath] = $name;
+            $loaderRealpaths[$moduleRealpath] = $name;
 
-            $controllersJson = $config['controllers_json'];
+            $controllerPaths = $application['controller_paths'];
+            $watchedPaths = [];
+            if (null === $controllerPaths) {
+                $conventionPath = '%kernel.project_dir%/assets/'.$name.'/controllers';
+                $resolvedConventionPath = $container->getParameterBag()->resolveValue($conventionPath);
+                // Rebuild the container when the directory appears or disappears.
+                $container->addResource(new FileExistenceResource($resolvedConventionPath));
+                $controllerPaths = is_dir($resolvedConventionPath) ? [$conventionPath] : [];
+                // A missing directory cannot be an asset dependency: watch its parent, so the compiled module is refreshed once it appears.
+                if ([] === $controllerPaths && is_dir(\dirname($resolvedConventionPath))) {
+                    $watchedPaths[] = \dirname($resolvedConventionPath);
+                }
+            }
+
+            // Without the global files, an application gets no UX controller unless it declares its own controllers.json.
+            $controllersJson = $application['include_global'] ? $config['controllers_json'] : null;
             if (null !== $application['controllers_json']) {
                 $controllersJson = $container->getParameterBag()->resolveValue($application['controllers_json']);
                 if (!is_file($controllersJson)) {
@@ -73,16 +89,17 @@ final class StimulusExtension extends Extension implements PrependExtensionInter
                 ->setArguments([
                     new Reference('asset_mapper'),
                     new Reference('stimulus.asset_mapper.ux_package_reader'),
-                    $application['include_global_paths'] ? $config['controller_paths'] : [],
+                    $application['include_global'] ? $config['controller_paths'] : [],
                     $controllersJson,
                     new Reference('stimulus.asset_mapper.auto_import_locator', ContainerInterface::NULL_ON_INVALID_REFERENCE),
-                    $application['controller_paths'],
+                    $controllerPaths,
                     $application['merge_controllers_json'] ? $config['controllers_json'] : null,
                 ]);
 
             $applications[$name] = [
-                'loader' => $loader,
+                'loader' => $module,
                 'generator' => new Reference($generatorId),
+                'watched_paths' => $watchedPaths,
             ];
         }
 
@@ -133,7 +150,7 @@ final class StimulusExtension extends Extension implements PrependExtensionInter
                     ->normalizeKeys(false)
                     ->validate()
                         ->always(static function (array $applications): array {
-                            foreach ($applications as $name => $application) {
+                            foreach (array_keys($applications) as $name) {
                                 $name = (string) $name;
                                 if ('default' === $name) {
                                     throw new \InvalidArgumentException('The Stimulus application name "default" is reserved.');
@@ -152,16 +169,26 @@ final class StimulusExtension extends Extension implements PrependExtensionInter
                             ->ifTrue(static fn (array $application): bool => $application['merge_controllers_json'] && null === $application['controllers_json'])
                             ->thenInvalid('The "merge_controllers_json" option requires the "controllers_json" option.')
                         ->end()
+                        ->validate()
+                            ->ifTrue(static fn (array $application): bool => $application['merge_controllers_json'] && !$application['include_global'])
+                            ->thenInvalid('The "merge_controllers_json" option cannot be used with "include_global: false": there is no global controllers.json file to merge over.')
+                        ->end()
                         ->children()
                             ->scalarNode('loader')
-                                ->isRequired()
-                                ->cannotBeEmpty()
+                                ->info('The module of the application, compiled by the bundle. Defaults to "%kernel.project_dir%/assets/<name>/stimulus.js".')
+                                ->defaultNull()
+                                ->validate()
+                                    ->ifTrue(static fn (mixed $loader): bool => '' === $loader)
+                                    ->thenInvalid('The "loader" option cannot be an empty string. Omit it to use "assets/<name>/stimulus.js".')
+                                ->end()
                             ->end()
                             ->arrayNode('controller_paths')
-                                ->defaultValue([])
+                                ->info('Defaults to "%kernel.project_dir%/assets/<name>/controllers" when that directory exists.')
+                                ->defaultNull()
                                 ->scalarPrototype()->end()
                             ->end()
-                            ->booleanNode('include_global_paths')
+                            ->booleanNode('include_global')
+                                ->info('Also load the global controller_paths and controllers_json. When false, the application only gets its own controllers.')
                                 ->defaultTrue()
                             ->end()
                             ->scalarNode('controllers_json')

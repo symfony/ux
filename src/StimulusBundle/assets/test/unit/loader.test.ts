@@ -5,7 +5,7 @@ import { describe, expect, it, vi } from 'vitest';
 // which does not actually exist in the source code
 import { loadControllers } from '../../dist/loader';
 import type { EagerControllersCollection, LazyControllersCollection } from '../../src/controllers';
-import { startApplication } from '../../src/core';
+import { startApplication } from '../../src/runtime';
 
 let isController1Initialized = false;
 let isController2Initialized = false;

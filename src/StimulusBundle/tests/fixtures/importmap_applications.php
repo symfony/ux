@@ -22,17 +22,26 @@ return [
         'path' => 'admin.js',
         'entrypoint' => true,
     ],
+    'shop' => [
+        'path' => 'shop.js',
+        'entrypoint' => true,
+    ],
+    'backoffice' => [
+        'path' => 'in/asset/mapper/zones/backoffice/app.js',
+        'entrypoint' => true,
+    ],
+    'partner' => [
+        'path' => 'partner.js',
+        'entrypoint' => true,
+    ],
     '@hotwired/stimulus' => [
         'version' => '3.2.1',
     ],
     '@symfony/stimulus-bundle' => [
         'path' => '@symfony/stimulus-bundle/loader.js',
     ],
-    '@symfony/stimulus-bundle/front' => [
+    'stimulus-front' => [
         'path' => 'front/stimulus_loader.js',
-    ],
-    '@symfony/stimulus-bundle/admin' => [
-        'path' => 'admin/stimulus_loader.js',
     ],
     'needed-vendor' => [
         'version' => '3.2.0',

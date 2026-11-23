@@ -8,10 +8,10 @@
  */
 
 import type { Application } from '@hotwired/stimulus';
-import { startApplication } from './core.js';
+import { startApplication } from './runtime.js';
 import { eagerControllers, isApplicationDebug, lazyControllers } from './controllers.js';
 
-export { loadControllers } from './core.js';
+export { loadControllers } from './runtime.js';
 
 export const startStimulusApp = (): Application =>
     startApplication(eagerControllers, lazyControllers, isApplicationDebug);

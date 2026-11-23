@@ -93,9 +93,9 @@ final class StimulusExtensionTest extends TestCase
             'controllers_json' => '/global/controllers.json',
             'applications' => [
                 'admin' => [
-                    'loader' => __DIR__.'/../fixtures/assets/admin/stimulus_loader.js',
+                    'loader' => __DIR__.'/../fixtures/assets/admin/stimulus.js',
                     'controller_paths' => ['/admin/controllers'],
-                    'include_global_paths' => false,
+                    'include_global' => false,
                     'controllers_json' => '%stimulus_test.fixtures_dir%/assets/admin/controllers.json',
                 ],
                 'front-office_2' => [
@@ -123,12 +123,14 @@ final class StimulusExtensionTest extends TestCase
 
         self::assertEquals([
             'admin' => [
-                'loader' => __DIR__.'/../fixtures/assets/admin/stimulus_loader.js',
+                'loader' => __DIR__.'/../fixtures/assets/admin/stimulus.js',
                 'generator' => new Reference('stimulus.asset_mapper.controllers_map_generator.admin'),
+                'watched_paths' => [],
             ],
             'front-office_2' => [
                 'loader' => __DIR__.'/../fixtures/assets/front/stimulus_loader.js',
                 'generator' => new Reference('stimulus.asset_mapper.controllers_map_generator.front-office_2'),
+                'watched_paths' => [],
             ],
         ], $container->getDefinition('stimulus.asset_mapper.loader_javascript_compiler')->getArgument(2));
 
@@ -140,7 +142,7 @@ final class StimulusExtensionTest extends TestCase
         $container = $this->load([
             'applications' => [
                 'admin' => [
-                    'loader' => __DIR__.'/../fixtures/assets/admin/stimulus_loader.js',
+                    'loader' => __DIR__.'/../fixtures/assets/admin/stimulus.js',
                 ],
             ],
         ]);
@@ -148,7 +150,60 @@ final class StimulusExtensionTest extends TestCase
         $admin = $container->getDefinition('stimulus.asset_mapper.controllers_map_generator.admin');
         self::assertSame(['%kernel.project_dir%/assets/controllers'], $admin->getArgument(2));
         self::assertSame('%kernel.project_dir%/assets/controllers.json', $admin->getArgument(3));
-        self::assertSame([], $admin->getArgument(5));
+        self::assertSame(['%kernel.project_dir%/assets/admin/controllers'], $admin->getArgument(5));
+        self::assertNull($admin->getArgument(6));
+    }
+
+    public function testLoadUsesTheConventionForAnApplicationDeclaredWithNull(): void
+    {
+        $container = $this->load(['applications' => ['admin' => null]]);
+
+        $admin = $container->getDefinition('stimulus.asset_mapper.controllers_map_generator.admin');
+        self::assertSame(['%kernel.project_dir%/assets/controllers'], $admin->getArgument(2));
+        self::assertSame(['%kernel.project_dir%/assets/admin/controllers'], $admin->getArgument(5));
+
+        $application = $container->getDefinition('stimulus.asset_mapper.loader_javascript_compiler')->getArgument(2)['admin'];
+        self::assertSame(__DIR__.'/../fixtures/assets/admin/stimulus.js', $application['loader']);
+        self::assertSame([], $application['watched_paths']);
+        self::assertContains('existence.'.__DIR__.'/../fixtures/assets/admin/controllers', array_map('strval', $container->getResources()));
+    }
+
+    public function testLoadWatchesTheParentWhenTheConventionDirectoryIsMissing(): void
+    {
+        $container = $this->load(['applications' => ['account' => null]]);
+
+        self::assertSame([], $container->getDefinition('stimulus.asset_mapper.controllers_map_generator.account')->getArgument(5));
+        self::assertSame(
+            [__DIR__.'/../fixtures/assets/account'],
+            $container->getDefinition('stimulus.asset_mapper.loader_javascript_compiler')->getArgument(2)['account']['watched_paths'],
+        );
+        self::assertContains('existence.'.__DIR__.'/../fixtures/assets/account/controllers', array_map('strval', $container->getResources()));
+    }
+
+    public function testLoadThrowsWhenTheConventionModuleIsMissing(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage(\sprintf('The module "%s" of the "missing" Stimulus application does not exist.', __DIR__.'/../fixtures/assets/missing/stimulus.js'));
+
+        $this->load(['applications' => ['missing' => null]]);
+    }
+
+    public function testLoadGivesNoControllersJsonToAnApplicationWithoutTheGlobalOnes(): void
+    {
+        $container = $this->load([
+            'controllers_json' => '/global/controllers.json',
+            'applications' => [
+                'admin' => [
+                    'loader' => __DIR__.'/../fixtures/assets/admin/stimulus.js',
+                    'controller_paths' => ['/admin/controllers'],
+                    'include_global' => false,
+                ],
+            ],
+        ]);
+
+        $admin = $container->getDefinition('stimulus.asset_mapper.controllers_map_generator.admin');
+        self::assertSame([], $admin->getArgument(2));
+        self::assertNull($admin->getArgument(3));
         self::assertNull($admin->getArgument(6));
     }
 
@@ -158,7 +213,7 @@ final class StimulusExtensionTest extends TestCase
             'controllers_json' => '/global/controllers.json',
             'applications' => [
                 'admin' => [
-                    'loader' => __DIR__.'/../fixtures/assets/admin/stimulus_loader.js',
+                    'loader' => __DIR__.'/../fixtures/assets/admin/stimulus.js',
                     'controllers_json' => '%stimulus_test.fixtures_dir%/assets/admin/controllers.json',
                     'merge_controllers_json' => true,
                 ],
@@ -187,32 +242,33 @@ final class StimulusExtensionTest extends TestCase
      */
     public static function provideInvalidApplications(): iterable
     {
-        $adminLoader = __DIR__.'/../fixtures/assets/admin/stimulus_loader.js';
+        $adminLoader = __DIR__.'/../fixtures/assets/admin/stimulus.js';
         $frontLoader = __DIR__.'/../fixtures/assets/front/stimulus_loader.js';
 
         yield 'uppercase name' => [['Admin' => ['loader' => $adminLoader]], 'Invalid Stimulus application name "Admin"'];
         yield 'name starting with a digit' => [['1x' => ['loader' => $adminLoader]], 'Invalid Stimulus application name "1x"'];
         yield 'name with a dot' => [['a.b' => ['loader' => $adminLoader]], 'Invalid Stimulus application name "a.b"'];
         yield 'reserved name' => [['default' => ['loader' => $adminLoader]], 'The Stimulus application name "default" is reserved.'];
-        yield 'missing loader' => [['admin' => ['controller_paths' => []]], 'The child config "loader" under "stimulus.applications.admin" must be configured'];
-        yield 'empty loader' => [['admin' => ['loader' => '']], 'The path "stimulus.applications.admin.loader" cannot contain an empty value'];
+        yield 'empty loader' => [['admin' => ['loader' => '']], 'The "loader" option cannot be an empty string.'];
         yield 'empty controllers_json' => [['front' => ['loader' => $frontLoader, 'controllers_json' => '']], 'The "controllers_json" option cannot be an empty string.'];
         yield 'merge_controllers_json without controllers_json' => [['front' => ['loader' => $frontLoader, 'merge_controllers_json' => true]], 'The "merge_controllers_json" option requires the "controllers_json" option.'];
+        yield 'merge_controllers_json without the global files' => [['front' => ['loader' => $frontLoader, 'include_global' => false, 'controllers_json' => $frontLoader, 'merge_controllers_json' => true]], 'The "merge_controllers_json" option cannot be used with "include_global: false"'];
     }
 
     public function testLoadAcceptsTheDocumentedDefaults(): void
     {
         // same values as the documented YAML example, where "~" is null
         $container = $this->load(['applications' => ['admin' => [
-            'loader' => __DIR__.'/../fixtures/assets/admin/stimulus_loader.js',
+            'loader' => __DIR__.'/../fixtures/assets/admin/stimulus.js',
             'controller_paths' => [],
-            'include_global_paths' => true,
+            'include_global' => true,
             'controllers_json' => null,
             'merge_controllers_json' => false,
         ]]]);
 
         $admin = $container->getDefinition('stimulus.asset_mapper.controllers_map_generator.admin');
         self::assertSame('%kernel.project_dir%/assets/controllers.json', $admin->getArgument(3));
+        self::assertSame([], $admin->getArgument(5));
         self::assertNull($admin->getArgument(6));
     }
 
@@ -221,7 +277,7 @@ final class StimulusExtensionTest extends TestCase
         $container = $this->load(['applications' => ['admin' => ['loader' => '%stimulus_test.admin_loader%']]]);
 
         self::assertSame(
-            __DIR__.'/../fixtures/assets/admin/stimulus_loader.js',
+            __DIR__.'/../fixtures/assets/admin/stimulus.js',
             $container->getDefinition('stimulus.asset_mapper.loader_javascript_compiler')->getArgument(2)['admin']['loader'],
         );
     }
@@ -232,7 +288,7 @@ final class StimulusExtensionTest extends TestCase
         $container->setParameter('stimulus_test.loader', __DIR__.'/../fixtures/assets/controllers.json');
 
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage(\sprintf('The loader "%s" of the "admin" Stimulus application must be a ".js" file.', __DIR__.'/../fixtures/assets/controllers.json'));
+        $this->expectExceptionMessage(\sprintf('The module "%s" of the "admin" Stimulus application must be a ".js" file.', __DIR__.'/../fixtures/assets/controllers.json'));
 
         new StimulusExtension()->load([['applications' => ['admin' => ['loader' => '%stimulus_test.loader%']]]], $container);
     }
@@ -241,10 +297,10 @@ final class StimulusExtensionTest extends TestCase
     public function testLoadThrowsOnDuplicateLoader(string $frontLoader): void
     {
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage(\sprintf('The loader "%s" is used by both the "admin" and "front" Stimulus applications.', realpath(__DIR__.'/../fixtures/assets/admin/stimulus_loader.js')));
+        $this->expectExceptionMessage(\sprintf('The module "%s" is used by both the "admin" and "front" Stimulus applications.', realpath(__DIR__.'/../fixtures/assets/admin/stimulus.js')));
 
         $this->load(['applications' => [
-            'admin' => ['loader' => __DIR__.'/../fixtures/assets/admin/stimulus_loader.js'],
+            'admin' => ['loader' => __DIR__.'/../fixtures/assets/admin/stimulus.js'],
             'front' => ['loader' => $frontLoader],
         ]]);
     }
@@ -254,8 +310,8 @@ final class StimulusExtensionTest extends TestCase
      */
     public static function provideDuplicateLoaders(): iterable
     {
-        yield 'same path' => [__DIR__.'/../fixtures/assets/admin/stimulus_loader.js'];
-        yield 'equivalent path' => [__DIR__.'/../fixtures/assets/admin/../admin/stimulus_loader.js'];
+        yield 'same path' => [__DIR__.'/../fixtures/assets/admin/stimulus.js'];
+        yield 'equivalent path' => [__DIR__.'/../fixtures/assets/admin/../admin/stimulus.js'];
         yield 'parameter' => ['%stimulus_test.admin_loader%'];
     }
 
@@ -264,7 +320,7 @@ final class StimulusExtensionTest extends TestCase
         $loader = __DIR__.'/../fixtures/assets/missing/stimulus_loader.js';
 
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage(\sprintf('The loader file "%s" of the "admin" Stimulus application does not exist. Create it as an empty file inside an AssetMapper path.', $loader));
+        $this->expectExceptionMessage(\sprintf('The module "%s" of the "admin" Stimulus application does not exist. Create it inside an AssetMapper path, either empty or containing only "export { startStimulusApp } from \'@symfony/stimulus-bundle\';".', $loader));
 
         $this->load(['applications' => ['admin' => ['loader' => $loader]]]);
     }
@@ -277,7 +333,7 @@ final class StimulusExtensionTest extends TestCase
         $this->expectExceptionMessage(\sprintf('The controllers.json file "%s" of the "admin" Stimulus application does not exist.', $controllersJson));
 
         $this->load(['applications' => ['admin' => [
-            'loader' => __DIR__.'/../fixtures/assets/admin/stimulus_loader.js',
+            'loader' => __DIR__.'/../fixtures/assets/admin/stimulus.js',
             'controllers_json' => $controllersJson,
         ]]]);
     }
@@ -288,8 +344,9 @@ final class StimulusExtensionTest extends TestCase
     private function load(array $config): ContainerBuilder
     {
         $container = new ContainerBuilder();
+        $container->setParameter('kernel.project_dir', __DIR__.'/../fixtures');
         $container->setParameter('stimulus_test.fixtures_dir', __DIR__.'/../fixtures');
-        $container->setParameter('stimulus_test.admin_loader', __DIR__.'/../fixtures/assets/admin/stimulus_loader.js');
+        $container->setParameter('stimulus_test.admin_loader', __DIR__.'/../fixtures/assets/admin/stimulus.js');
         new StimulusExtension()->load([$config], $container);
 
         return $container;

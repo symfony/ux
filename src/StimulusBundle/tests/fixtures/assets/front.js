@@ -1,3 +1,3 @@
-import { startStimulusApp } from '@symfony/stimulus-bundle/front';
+import { startStimulusApp } from 'stimulus-front';
 
 const app = startStimulusApp();

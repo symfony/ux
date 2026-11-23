@@ -313,6 +313,19 @@ class ControllersMapGeneratorTest extends TestCase
         }
     }
 
+    public function testWithoutControllersJsonNoUxControllerIsLoaded(): void
+    {
+        $generator = new ControllersMapGenerator(
+            $this->createStub(AssetMapperInterface::class),
+            new UxPackageReader(__DIR__.'/../fixtures'),
+            [],
+            null,
+        );
+
+        $this->assertSame([], $generator->getControllersMap());
+        $this->assertSame([], $generator->getControllersJsonPaths());
+    }
+
     public function testGetControllersJsonPathsIncludesTheBaseFileFirst(): void
     {
         $this->assertSame(['/app.json'], $this->createGenerator([], [], '/app.json')->getControllersJsonPaths());

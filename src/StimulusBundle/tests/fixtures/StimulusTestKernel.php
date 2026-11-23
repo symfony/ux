@@ -15,6 +15,8 @@ use Psr\Log\NullLogger;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Bundle\TwigBundle\TwigBundle;
+use Symfony\Component\AssetMapper\ImportMap\ImportMapGenerator;
+use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\HttpFoundation\Response;
@@ -42,6 +44,16 @@ class StimulusTestKernel extends Kernel
         return new Response($twig->render('admin.html.twig'));
     }
 
+    public function shop(Environment $twig): Response
+    {
+        return new Response($twig->render('shop.html.twig'));
+    }
+
+    public function page(Environment $twig, string $template): Response
+    {
+        return new Response($twig->render($template.'.html.twig'));
+    }
+
     public function registerBundles(): iterable
     {
         return [
@@ -58,7 +70,7 @@ class StimulusTestKernel extends Kernel
 
     protected function configureContainer(ContainerConfigurator $container): void
     {
-        $isApplicationsEnvironment = 'applications' === $this->environment;
+        $isApplicationsEnvironment = str_starts_with($this->environment, 'applications');
 
         $container->extension('framework', [
             'secret' => 'foo000',
@@ -94,13 +106,31 @@ class StimulusTestKernel extends Kernel
                     'front' => [
                         'loader' => '%kernel.project_dir%/assets/front/stimulus_loader.js',
                         'controller_paths' => [__DIR__.'/assets/front/controllers'],
-                        'include_global_paths' => true,
+                        'include_global' => true,
                     ],
                     'admin' => [
-                        'loader' => '%kernel.project_dir%/assets/admin/stimulus_loader.js',
                         'controller_paths' => [__DIR__.'/assets/admin/controllers'],
-                        'include_global_paths' => false,
+                        'include_global' => false,
                         'controllers_json' => '%kernel.project_dir%/assets/admin/controllers.json',
+                    ],
+                    'shop' => null,
+                    'account' => null,
+                    'backoffice' => [
+                        'loader' => '%kernel.project_dir%/in-asset-mapper/zones/backoffice/bootstrap.js',
+                        'controller_paths' => [
+                            __DIR__.'/in-asset-mapper/shared/controllers',
+                            __DIR__.'/assets/admin/controllers',
+                        ],
+                        'include_global' => false,
+                    ],
+                    'partner' => [
+                        'loader' => '%kernel.project_dir%/assets/partner_stimulus.js',
+                        'controller_paths' => [
+                            __DIR__.'/in-asset-mapper/shared/controllers',
+                            __DIR__.'/assets/shop/controllers',
+                        ],
+                        'controllers_json' => '%kernel.project_dir%/assets/partner/controllers.json',
+                        'merge_controllers_json' => true,
                     ],
                 ],
             ] : []),
@@ -110,6 +140,15 @@ class StimulusTestKernel extends Kernel
     protected function build(ContainerBuilder $container): void
     {
         $container->register('logger', NullLogger::class);
+
+        if ('applications_reachable' === $this->environment) {
+            $container->addCompilerPass(new class implements CompilerPassInterface {
+                public function process(ContainerBuilder $container): void
+                {
+                    $container->getDefinition('asset_mapper.importmap.generator')->setArgument(4, ImportMapGenerator::ENTRIES_REACHABLE);
+                }
+            });
+        }
     }
 
     protected function configureRoutes(RoutingConfigurator $routes): void
@@ -117,5 +156,9 @@ class StimulusTestKernel extends Kernel
         $routes->add('homepage', '/')->controller('kernel::homepage');
         $routes->add('front', '/front')->controller('kernel::front');
         $routes->add('admin', '/admin')->controller('kernel::admin');
+        $routes->add('shop', '/shop')->controller('kernel::shop');
+        $routes->add('backoffice', '/backoffice')->controller('kernel::page')->defaults(['template' => 'backoffice']);
+        $routes->add('partner', '/partner')->controller('kernel::page')->defaults(['template' => 'partner']);
+        $routes->add('admin_with_app', '/admin-with-app')->controller('kernel::page')->defaults(['template' => 'admin_with_app']);
     }
 }

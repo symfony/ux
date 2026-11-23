@@ -1,3 +1,3 @@
-import { startStimulusApp } from '@symfony/stimulus-bundle/admin';
+import { startStimulusApp } from './admin/stimulus.js';
 
 const app = startStimulusApp();

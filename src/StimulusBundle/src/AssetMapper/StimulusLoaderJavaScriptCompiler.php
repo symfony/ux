@@ -18,7 +18,9 @@ use Symfony\Component\AssetMapper\MappedAsset;
 use Symfony\Component\Filesystem\Path;
 
 /**
- * Compiles the loader.js file to dynamically import the controllers.
+ * Compiles the Stimulus modules: the global loader.js and the module of each application.
+ *
+ * Both get the same shape: the runtime, the controllers inlined, and the same exports.
  *
  * @internal
  *
@@ -26,15 +28,17 @@ use Symfony\Component\Filesystem\Path;
  */
 class StimulusLoaderJavaScriptCompiler implements AssetCompilerInterface
 {
-    private const CORE_ASSET = '@symfony/stimulus-bundle/core.js';
+    private const RUNTIME_ASSET = '@symfony/stimulus-bundle/runtime.js';
+    private const STUB = "export { startStimulusApp } from '@symfony/stimulus-bundle';";
+    private const STUB_REGEX = '/^export\s*\{\s*startStimulusApp\s*\}\s*from\s*([\'"])@symfony\/stimulus-bundle\1\s*;?$/';
 
     /**
      * @var array<string, string>|null
      */
-    private ?array $applicationLoaderRealpaths = null;
+    private ?array $applicationModuleRealpaths = null;
 
     /**
-     * @param array<string, array{loader: string, generator: ControllersMapGenerator}> $applications
+     * @param array<string, array{loader: string, generator: ControllersMapGenerator, watched_paths?: list<string>}> $applications
      */
     public function __construct(
         private ControllersMapGenerator $controllersMapGenerator,
@@ -45,43 +49,69 @@ class StimulusLoaderJavaScriptCompiler implements AssetCompilerInterface
 
     public function supports(MappedAsset $asset): bool
     {
-        return $asset->sourcePath === realpath(__DIR__.'/../../assets/dist/controllers.js')
-            || null !== $this->findApplicationGenerator($asset->sourcePath);
+        return $asset->sourcePath === realpath(__DIR__.'/../../assets/dist/loader.js')
+            || $asset->sourcePath === realpath(__DIR__.'/../../assets/dist/controllers.js')
+            || null !== $this->findApplicationName($asset->sourcePath)
+            || self::containsOnlyTheStub($asset);
     }
 
     public function compile(string $content, MappedAsset $asset, AssetMapperInterface $assetMapper): string
     {
-        $applicationGenerator = $this->findApplicationGenerator($asset->sourcePath);
-        if (null === $applicationGenerator) {
+        // Nothing imports controllers.js any more; it stays compiled for code that imports it directly.
+        if ($asset->sourcePath === realpath(__DIR__.'/../../assets/dist/controllers.js')) {
             return $this->compileControllers($this->controllersMapGenerator, $asset);
         }
 
-        $coreAsset = $assetMapper->getAsset(self::CORE_ASSET);
-        if (null === $coreAsset) {
-            throw new \LogicException(\sprintf('The "%s" asset cannot be found. Make sure the StimulusBundle assets are available to AssetMapper.', self::CORE_ASSET));
+        $generator = $this->controllersMapGenerator;
+        if (null !== $name = $this->findApplicationName($asset->sourcePath)) {
+            $trimmedContent = trim($content);
+            if ('' !== $trimmedContent && !preg_match(self::STUB_REGEX, $trimmedContent)) {
+                throw new \LogicException(\sprintf('The "%s" module of the "%s" Stimulus application is generated: its content is replaced when the asset is compiled. Leave it empty or containing only "%s", and move your code to the entrypoint that imports it.', $asset->sourcePath, $name, self::STUB));
+            }
+
+            $generator = $this->applications[$name]['generator'];
+            foreach ($this->applications[$name]['watched_paths'] ?? [] as $watchedPath) {
+                $asset->addFileDependency($watchedPath);
+            }
+        } elseif (preg_match(self::STUB_REGEX, trim($content))) {
+            // Served as is, the stub would silently start the global application.
+            throw new \LogicException(\sprintf('The "%s" module contains the Stimulus application stub, but no Stimulus application uses it. Declare it under "stimulus.applications" (as "assets/<name>/stimulus.js" or with the "loader" option), or import "@symfony/stimulus-bundle" directly.', $asset->sourcePath));
         }
 
-        $coreImportPath = json_encode(self::makeRelativeImport($coreAsset->sourcePath, \dirname($asset->sourcePath)), \JSON_THROW_ON_ERROR | \JSON_UNESCAPED_SLASHES);
+        $runtimeAsset = $assetMapper->getAsset(self::RUNTIME_ASSET);
+        if (null === $runtimeAsset) {
+            throw new \LogicException(\sprintf('The "%s" asset cannot be found. Make sure the StimulusBundle assets are available to AssetMapper.', self::RUNTIME_ASSET));
+        }
 
-        return \sprintf("import { startApplication } from %s;\n", $coreImportPath)
-            .$this->compileControllers($applicationGenerator, $asset)
-            ."\nexport const startStimulusApp = () => startApplication(eagerControllers, lazyControllers, isApplicationDebug);";
+        $runtimeImportPath = json_encode(self::makeRelativeImport($runtimeAsset->sourcePath, \dirname($asset->sourcePath)), \JSON_THROW_ON_ERROR | \JSON_UNESCAPED_SLASHES);
+
+        return \sprintf("import { loadControllers, startApplication } from %s;\n", $runtimeImportPath)
+            .$this->compileControllers($generator, $asset)
+            ."\nexport const startStimulusApp = () => startApplication(eagerControllers, lazyControllers, isApplicationDebug);"
+            ."\nexport { loadControllers };";
     }
 
-    private function findApplicationGenerator(string $sourcePath): ?ControllersMapGenerator
+    private function findApplicationName(string $sourcePath): ?string
     {
-        if (null === $this->applicationLoaderRealpaths) {
-            $this->applicationLoaderRealpaths = [];
+        if (null === $this->applicationModuleRealpaths) {
+            $this->applicationModuleRealpaths = [];
             foreach ($this->applications as $name => $application) {
                 if (false !== $realpath = realpath($application['loader'])) {
-                    $this->applicationLoaderRealpaths[$realpath] = $name;
+                    $this->applicationModuleRealpaths[$realpath] = $name;
                 }
             }
         }
 
-        $name = $this->applicationLoaderRealpaths[$sourcePath] ?? null;
+        return $this->applicationModuleRealpaths[$sourcePath] ?? null;
+    }
 
-        return null === $name ? null : $this->applications[$name]['generator'];
+    private static function containsOnlyTheStub(MappedAsset $asset): bool
+    {
+        if ($asset->isVendor || !str_ends_with($asset->sourcePath, '.js') || !is_file($asset->sourcePath) || filesize($asset->sourcePath) > 128) {
+            return false;
+        }
+
+        return 1 === preg_match(self::STUB_REGEX, trim((string) file_get_contents($asset->sourcePath)));
     }
 
     private function compileControllers(ControllersMapGenerator $controllersMapGenerator, MappedAsset $asset): string

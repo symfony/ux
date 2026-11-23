@@ -440,15 +440,21 @@ directory and the ``controllers.json`` file if you need to use different paths:
         applications:
             # the application name: lowercase letters, digits, "_" and "-", "default" is reserved
             admin:
-                # required: an empty ".js" file inside an AssetMapper path
-                loader: '%kernel.project_dir%/assets/admin/stimulus_loader.js'
-                controller_paths: []
-                include_global_paths: true
-                # null (the global controllers_json file) or the path of a file
-                # that replaces it for this application
+                # the module of the application, compiled by the bundle
+                # (defaults to "%kernel.project_dir%/assets/<name>/stimulus.js")
+                loader: ~
+                # defaults to "%kernel.project_dir%/assets/<name>/controllers" when this directory exists
+                controller_paths: ~
+                # false to load neither the global controller_paths nor the global
+                # controllers_json file: only the controllers of the application
+                include_global: true
+                # null (the global controllers_json file, or none when
+                # include_global is false) or the path of a file that
+                # replaces it for this application
                 controllers_json: ~
                 # true to merge the controllers_json file of the application over
-                # the global one instead of replacing it (requires controllers_json)
+                # the global one instead of replacing it (requires controllers_json
+                # and include_global)
                 merge_controllers_json: false
 
 See :ref:`Scoping Controllers with AssetMapper <assetmapper-applications>` for
@@ -658,34 +664,34 @@ controllers per area. With AssetMapper, see
 Scoping Controllers with AssetMapper
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-With AssetMapper, declare one Stimulus application per area under the
-``applications`` option. Each application gets its own loader, which only
-imports and preloads the controllers of that application:
+With AssetMapper, declare one Stimulus application per area under the ``applications`` option. Each application gets its own module, which only imports and preloads the controllers of that application:
 
 .. code-block:: yaml
 
     # config/packages/stimulus.yaml
     stimulus:
         applications:
-            admin:
-                loader: '%kernel.project_dir%/assets/admin/stimulus_loader.js'
-                controller_paths: ['%kernel.project_dir%/assets/admin/controllers']
-                include_global_paths: false
-                controllers_json: '%kernel.project_dir%/assets/admin/controllers.json'
+            admin: ~
 
-The application name must start with a lowercase letter and contain only
-lowercase letters, digits, ``_`` and ``-``. The name ``default`` is reserved.
+By convention, the ``admin`` application uses:
 
-Create the loader as an empty file, inside a path mapped by AssetMapper. The
-file must exist and each application needs its own loader. The bundle
-replaces its content when the asset is compiled:
+* ``assets/admin/stimulus.js``: the module of the application;
+* ``assets/admin/controllers/``: the controllers of the application, when this directory exists.
 
-.. code-block:: terminal
+The ``loader`` and ``controller_paths`` options override these paths.
 
-    $ mkdir -p assets/admin && touch assets/admin/stimulus_loader.js
+The application name must start with a lowercase letter and contain only lowercase letters, digits, ``_`` and ``-``. The name ``default`` is reserved.
 
-Then add two entries to your ``importmap.php`` file: one for the loader and
-one for the entrypoint of the area::
+Create the module inside a path mapped by AssetMapper, with this single line:
+
+.. code-block:: javascript
+
+    // assets/admin/stimulus.js
+    export { startStimulusApp } from '@symfony/stimulus-bundle';
+
+The bundle replaces the content of this file when the asset is compiled: the compiled module imports the controllers of the application, and nothing from the global ``@symfony/stimulus-bundle`` module. The line above gives editors and TypeScript the type of ``startStimulusApp()``. An empty file also works. Any other content is rejected, because it would be lost: put your own code in the entrypoint. A file containing this line that no application uses is rejected too, because it would start the global application instead.
+
+Then add the entrypoint of the area to your ``importmap.php`` file::
 
     // importmap.php
     return [
@@ -695,17 +701,14 @@ one for the entrypoint of the area::
             'path' => './assets/admin.js',
             'entrypoint' => true,
         ],
-        '@symfony/stimulus-bundle/admin' => [
-            'path' => './assets/admin/stimulus_loader.js',
-        ],
     ];
 
-The entrypoint starts the application from its loader:
+The entrypoint imports the module of the application with a relative path, so the module needs no ``importmap.php`` entry:
 
 .. code-block:: javascript
 
     // assets/admin.js
-    import { startStimulusApp } from '@symfony/stimulus-bundle/admin';
+    import { startStimulusApp } from './admin/stimulus.js';
 
     startStimulusApp();
 
@@ -718,18 +721,21 @@ Finally, render this entrypoint in the templates of the area:
 
 The controllers of an application are resolved as follows:
 
-* ``include_global_paths`` (default ``true``) also loads the controllers found
-  in the global ``controller_paths``. Set it to ``false`` to load only the
-  controllers of the application;
+* ``include_global`` (default ``true``) also loads the controllers found
+  in the global ``controller_paths`` and the UX controllers enabled in the
+  global ``controllers_json`` file. Set it to ``false`` to load only the
+  controllers of the application: its ``controller_paths``, and the UX
+  controllers of its own ``controllers_json`` file, if any;
 * ``controllers_json`` points to a file with the same format as
   ``assets/controllers.json``. When set, this file replaces the global
   ``controllers_json`` file for the application, so the ``enabled``, ``fetch``
   and ``autoimport`` settings of the global file do not apply to the
-  application. When omitted, the application uses the global file. The
-  configured file must exist;
+  application. When omitted, the application uses the global file, or no
+  file at all with ``include_global: false``. The configured file must
+  exist;
 * ``merge_controllers_json`` (default ``false``) merges the ``controllers_json``
   file of the application over the global one instead of replacing it. It
-  requires the ``controllers_json`` option;
+  requires the ``controllers_json`` option and ``include_global: true``;
 * when two controllers have the same name, a controller from the global
   ``controller_paths`` overrides a UX controller, and a controller from the
   application ``controller_paths`` overrides both.
@@ -785,7 +791,6 @@ the global file are loaded unchanged:
     stimulus:
         applications:
             admin:
-                loader: '%kernel.project_dir%/assets/admin/stimulus_loader.js'
                 controllers_json: '%kernel.project_dir%/assets/admin/controllers.json'
                 merge_controllers_json: true
 
@@ -809,6 +814,10 @@ the global file are loaded unchanged:
 If your entrypoint used to start the global application and register extra
 controllers with ``app.register()``, move those controllers into the
 ``controller_paths`` of the application and remove the manual calls.
+
+.. tip::
+
+    By default, the importmap of every page lists all the modules of the project, even the ones the page never imports. With Symfony 8.2 or later, set the ``importmap_entries`` option of AssetMapper to ``reachable``: the importmap of a page then only lists the modules reachable from its entrypoints, so the pages of one area no longer list the controllers of the other areas.
 
 .. note::
 

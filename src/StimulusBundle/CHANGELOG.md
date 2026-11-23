@@ -1,9 +1,8 @@
 # CHANGELOG
 
-## 3.6.0
+## 3.9
 
 - Add the `applications` option to load a distinct set of controllers per AssetMapper entrypoint
-- The AssetMapper loader now imports its startup code from `@symfony/stimulus-bundle/core.js`
 
 ## 3.5.0
 
