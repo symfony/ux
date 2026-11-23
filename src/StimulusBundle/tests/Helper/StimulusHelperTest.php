@@ -22,7 +22,7 @@ final class StimulusHelperTest extends TestCase
 {
     public function testCreateStimulusAttributes(): void
     {
-        $helper = new StimulusHelper($this->createMock(Environment::class));
+        $helper = new StimulusHelper($this->createStub(Environment::class));
         $attributes = $helper->createStimulusAttributes();
 
         $this->assertInstanceOf(StimulusAttributes::class, $attributes);

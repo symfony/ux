@@ -31,7 +31,7 @@ class AutoImportLocatorTest extends TestCase
             ->willReturn(new MappedAsset('foo.css', '/path/to/foo.css'));
 
         $locator = new AutoImportLocator(
-            $this->createMock(ImportMapConfigReader::class),
+            $this->createStub(ImportMapConfigReader::class),
             $assetMapper,
         );
         $packageMetadata = new UxPackageMetadata('foo', [], 'bar');
@@ -55,7 +55,7 @@ class AutoImportLocatorTest extends TestCase
             ->willReturn(new MappedAsset('styles.css', '/path/to/styles.css'));
 
         $locator = new AutoImportLocator(
-            $this->createMock(ImportMapConfigReader::class),
+            $this->createStub(ImportMapConfigReader::class),
             $assetMapper,
         );
 
@@ -74,7 +74,7 @@ class AutoImportLocatorTest extends TestCase
 
         $locator = new AutoImportLocator(
             $importMapConfigReader,
-            $this->createMock(AssetMapperInterface::class),
+            $this->createStub(AssetMapperInterface::class),
         );
 
         $packageMetadata = new UxPackageMetadata('foo', [], 'bar');

@@ -51,7 +51,7 @@ class StimulusLoaderJavaScriptCompilerTest extends TestCase
         $loaderAsset = $this->createAsset('/assets/symfony/stimulus-bundle/loader.js');
         $startingContents = file_get_contents(__DIR__.'/../../assets/dist/loader.js');
 
-        $compiledContents = $compiler->compile($startingContents, $loaderAsset, $this->createMock(AssetMapperInterface::class));
+        $compiledContents = $compiler->compile($startingContents, $loaderAsset, $this->createStub(AssetMapperInterface::class));
         $this->assertStringContainsString(
             'import controller_0 from "../../controllers/foo-controller.js";',
             $compiledContents,
@@ -76,8 +76,8 @@ class StimulusLoaderJavaScriptCompilerTest extends TestCase
 
     public function testDebugModeIsSetCorrectly(): void
     {
-        $controllerMapGenerator = $this->createMock(ControllersMapGenerator::class);
-        $controllerMapGenerator->expects($this->any())
+        $controllerMapGenerator = $this->createStub(ControllersMapGenerator::class);
+        $controllerMapGenerator
             ->method('getControllersMap')
             ->willReturn([]);
 
@@ -88,7 +88,7 @@ class StimulusLoaderJavaScriptCompilerTest extends TestCase
             $controllerMapGenerator,
             isDebug: true,
         );
-        $compiledContents = $compiler->compile($startingContents, $loaderAsset, $this->createMock(AssetMapperInterface::class));
+        $compiledContents = $compiler->compile($startingContents, $loaderAsset, $this->createStub(AssetMapperInterface::class));
         $this->assertStringContainsString(
             'const isApplicationDebug = true;',
             $compiledContents,
@@ -98,7 +98,7 @@ class StimulusLoaderJavaScriptCompilerTest extends TestCase
             $controllerMapGenerator,
             isDebug: false,
         );
-        $compiledContents = $compiler->compile($startingContents, $loaderAsset, $this->createMock(AssetMapperInterface::class));
+        $compiledContents = $compiler->compile($startingContents, $loaderAsset, $this->createStub(AssetMapperInterface::class));
         $this->assertStringContainsString(
             'const isApplicationDebug = false;',
             $compiledContents,
