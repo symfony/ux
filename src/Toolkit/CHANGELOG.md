@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 3.8.1
+
+- [Shadcn] Fix the content of `dropdown-menu`, `popover`, `date-picker`, `select`, `combobox`, `menubar`, `hover-card` and `navigation-menu` misplaced in the top layer: ignoring its alignment in Firefox, and leaving its trigger on scroll in Chrome
+
 ## 3.8.0
 
 - [Shadcn] Use the native invoker commands (`command` and `commandfor`) and the native `<dialog>` centering in `alert-dialog`

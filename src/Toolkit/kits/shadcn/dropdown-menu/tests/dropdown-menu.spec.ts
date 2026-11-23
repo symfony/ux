@@ -223,6 +223,7 @@ describeRecipe('shadcn/dropdown-menu', () => {
             await page.getByRole('button', { name: 'Complex Menu' }).click();
             await expect(page.getByRole('menuitem', { name: 'New File' })).toBeFocused();
             const theme = page.getByRole('menuitem', { name: 'Theme' });
+            await settle(page, '[data-slot="dropdown-menu-content"]');
 
             await theme.hover();
 
@@ -367,6 +368,37 @@ describeRecipe('shadcn/dropdown-menu', () => {
         const menuBox = (await menu.boundingBox())!;
         expect(Math.abs(menuBox.y - (triggerBox.y + triggerBox.height + 8))).toBeLessThanOrEqual(1);
         expect(Math.abs(menuBox.x - triggerBox.x)).toBeLessThanOrEqual(1);
+    });
+
+    test('stays below the end of a root pinned to the viewport while the page scrolls', async ({
+        page,
+        gotoExample,
+    }) => {
+        await gotoExample('shadcn/dropdown-menu/avatar');
+        await pinMenu(page, { top: '16px', right: '16px' });
+        await page.evaluate(() => {
+            const spacer = document.createElement('div');
+            spacer.style.height = '3000px';
+            document.body.append(spacer);
+        });
+        const root = page.locator('[data-slot="dropdown-menu"]');
+        await page.getByRole('button', { name: 'shadcn' }).click();
+        const menu = page.getByRole('menu', { name: 'shadcn' });
+        await expect(menu).toBeVisible();
+        await settle(page, '[data-slot="dropdown-menu-content"]');
+
+        const scrollY = await page.evaluate(() => {
+            window.scrollBy(0, 200);
+
+            return window.scrollY;
+        });
+
+        expect(scrollY).toBe(200);
+        await expect(menu).toBeVisible();
+        const rootBox = (await root.boundingBox())!;
+        const menuBox = (await menu.boundingBox())!;
+        expect(Math.abs(menuBox.y - (rootBox.y + rootBox.height + 8))).toBeLessThanOrEqual(1);
+        expect(Math.abs(menuBox.x + menuBox.width - (rootBox.x + rootBox.width))).toBeLessThanOrEqual(1);
     });
 
     test('opens a submenu beside its trigger, aligned to its top', async ({ page, gotoExample }) => {

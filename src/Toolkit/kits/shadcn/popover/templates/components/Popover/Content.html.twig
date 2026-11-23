@@ -7,7 +7,7 @@
 {%- set _popover_open = inject('popover.open', false) -%}
 {#- `anchor()` insets rather than `position-area`, which Firefox misplaces in right-to-left: https://bugzil.la/2019601 -#}
 {%- set style = html_cva(
-    base: 'invisible scale-95 opacity-0 transition-[opacity,scale,visibility] duration-100 ease-out group-data-[state=open]/popover:visible group-data-[state=open]/popover:scale-100 group-data-[state=open]/popover:opacity-100 absolute z-50 flex w-72 flex-col gap-2.5 rounded-lg bg-popover p-2.5 text-sm text-popover-foreground shadow-md ring-1 ring-foreground/10 outline-hidden overflow-visible [&[popover]:not(:popover-open)]:hidden [&[popover]]:inset-auto [&[popover]]:transition-[opacity,scale,visibility,display,overlay] [&[popover]]:transition-discrete starting:open:scale-95 starting:open:opacity-0',
+    base: 'invisible scale-95 opacity-0 transition-[opacity,scale,visibility] duration-100 ease-out group-data-[state=open]/popover:visible group-data-[state=open]/popover:scale-100 group-data-[state=open]/popover:opacity-100 absolute [&[popover]]:fixed z-50 flex w-72 flex-col gap-2.5 rounded-lg bg-popover p-2.5 text-sm text-popover-foreground shadow-md ring-1 ring-foreground/10 outline-hidden overflow-visible [&[popover]:not(:popover-open)]:hidden [&[popover]]:inset-auto [&[popover]]:transition-[opacity,scale,visibility,display,overlay] [&[popover]]:transition-discrete starting:open:scale-95 starting:open:opacity-0',
     variants: {
         side: {
             top: 'bottom-full mb-2',
