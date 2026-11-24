@@ -151,13 +151,27 @@ final class IconFactoryTest extends TestCase
         // <style> is kept, but its attributes and descendants are sanitized and "</style>" breakouts are dropped
         yield 'style onload attribute' => ['<style onload="alert(1)">.a{fill:red}</style>', '<style>.a{fill:red}</style>'];
         yield 'script inside style' => ['<style><script>alert(1)</script></style><path d="ok"/>', '<style></style><path d="ok"></path>'];
-        yield 'event handler inside style' => ['<style><img src="invalid:" onerror="alert(1)"/></style>', '<style><img src="invalid:"></img></style>'];
+        yield 'event handler inside style' => ['<style><image href="#a" onerror="alert(1)"/></style>', '<style><image href="#a"></image></style>'];
         // only SVG elements are kept: an XHTML raw-text element would be serialized unescaped
         yield 'xhtml style' => ['<style xmlns="http://www.w3.org/1999/xhtml">&lt;img src=x onerror=alert(1)&gt;</style><path d="ok"/>', '<path d="ok"></path>'];
         yield 'xhtml style with cdata' => ['<style xmlns="http://www.w3.org/1999/xhtml"><![CDATA[<img src=x onerror=alert(1)>]]></style><path d="ok"/>', '<path d="ok"></path>'];
         yield 'xhtml xmp' => ['<xmp xmlns="http://www.w3.org/1999/xhtml">&lt;img src=x onerror=alert(1)&gt;</xmp><path d="ok"/>', '<path d="ok"></path>'];
         yield 'nested xhtml element' => ['<g><noembed xmlns="http://www.w3.org/1999/xhtml">&lt;img src=x onerror=alert(1)&gt;</noembed></g>', '<g></g>'];
         yield 'foreign namespace element' => ['<i:pgf xmlns:i="urn:x">data</i:pgf><path d="ok"/>', '<path d="ok"></path>'];
+        // browsers parse what follows these tags as HTML, and the content of <title> and <desc> too
+        yield 'html breakout tag' => ['<p>x</p><path d="ok"/>', '<path d="ok"></path>'];
+        yield 'nested html breakout tag' => ['<g><IMG src="x"/></g>', '<g></g>'];
+        yield 'meta refresh' => ['<meta http-equiv="refresh" content="0;url=https://example.com/"/><path d="ok"/>', '<path d="ok"></path>'];
+        yield 'font' => ['<font color="red">x</font><path d="ok"/>', '<path d="ok"></path>'];
+        yield 'element in title' => ['<title>Home<base href="https://example.com/"/></title><path d="ok"/>', '<title>Home</title><path d="ok"></path>'];
+        yield 'element in desc' => ['<desc>Home<style>x</style></desc>', '<desc>Home</desc>'];
+        // browsers end a comment at "<!-->" or "<!--->", so comments are dropped
+        yield 'comment ended early' => ['<!--><img src=x onerror=alert(1)>--><path d="ok"/>', '<path d="ok"></path>'];
+        yield 'comment ended early with a dash' => ['<!---><img src=x onerror=alert(1)>--><path d="ok"/>', '<path d="ok"></path>'];
+        yield 'nested comment' => ['<g><!-- x --></g>', '<g></g>'];
+        // markup in a CDATA section or an attribute value could end a <noscript> around the icon
+        yield 'style cdata with markup' => ['<style><![CDATA[</noscript><img src=x onerror=alert(1)>]]></style>', '<style>&lt;/noscript&gt;&lt;img src=x onerror=alert(1)&gt;</style>'];
+        yield 'attribute value with markup' => ['<path d="ok" data-x="&lt;/noscript&gt;&lt;img src=x onerror=alert(1)&gt;"/>', '<path d="ok"></path>'];
         yield 'style breakout via cdata' => ['<style><![CDATA[x{}</style><img src=x onerror=alert(1)>]]></style><path d="ok"/>', '<path d="ok"></path>'];
     }
 
