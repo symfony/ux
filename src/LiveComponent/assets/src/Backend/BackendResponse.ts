@@ -4,9 +4,9 @@ export interface Download {
 }
 
 /**
- * A response may carry a file after the HTML, in the same body.
+ * A response may carry a file, or data for the caller, after the HTML, in the same body.
  *
- * `X-Live-Html-Length` gives the byte offset where the HTML ends and the file
+ * `X-Live-Html-Length` gives the byte offset where the HTML ends and the rest
  * begins, so the two are split without any delimiter to scan for.
  */
 export default class {
@@ -14,6 +14,7 @@ export default class {
     private body: string;
     private liveUrl: string | null;
     private download: Download | null = null;
+    private data: { bytes: ArrayBuffer; type: string } | null = null;
     private parsePromise: Promise<void> | null = null;
 
     constructor(response: Response) {
@@ -35,6 +36,20 @@ export default class {
      */
     getDownload(): Download | null {
         return this.download;
+    }
+
+    /**
+     * The data the action sent with LiveResponse::data(), or null when it sent none.
+     *
+     * A new Response is returned on each call, so the data can be read more than once, with json(), text(), blob() or arrayBuffer().
+     * Only meaningful once getBody() has resolved, which is the case once the promise returned by Component.action() has resolved.
+     */
+    getData(): Response | null {
+        if (null === this.data) {
+            return null;
+        }
+
+        return new Response(this.data.bytes, { headers: { 'Content-Type': this.data.type } });
     }
 
     getLiveUrl(): string | null {
@@ -82,8 +97,18 @@ export default class {
         const buffer = await this.response.arrayBuffer();
         const splitAt = clampToBuffer(Number.parseInt(htmlLength, 10), buffer.byteLength);
 
-        // views rather than slices: the two halves are read, never kept
+        // the HTML is decoded from a view rather than a slice: it is read, never kept
         this.body = new TextDecoder().decode(new Uint8Array(buffer, 0, splitAt));
+
+        const dataType = this.response.headers.get('X-Live-Data-Type');
+        if (null !== dataType) {
+            // the data is kept for getData(), so it is copied out, and the HTML part is not held with it
+            this.data = { bytes: buffer.slice(splitAt), type: dataType };
+
+            return;
+        }
+
+        // the file is read once into the Blob, so a view is enough
         this.download = {
             // the filename is percent-encoded: headers carry ASCII only
             filename: decodeFilename(this.response.headers.get('X-Live-Download-Filename')),
