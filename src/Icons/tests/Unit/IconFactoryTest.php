@@ -198,6 +198,19 @@ final class IconFactoryTest extends TestCase
         yield 'xhtml base' => ['<base xmlns="http://www.w3.org/1999/xhtml" href="https://example.com/"/><path d="ok"/>', '<path d="ok"></path>'];
         yield 'nested xhtml element' => ['<g><noembed xmlns="http://www.w3.org/1999/xhtml">x</noembed></g>', '<g></g>'];
         yield 'foreign namespace element' => ['<i:pgf xmlns:i="urn:x">data</i:pgf><path d="ok"/>', '<path d="ok"></path>'];
+        // browsers parse what follows these tags as HTML, and the content of <title> and <desc> too
+        yield 'html breakout tag' => ['<p>x</p><path d="ok"/>', '<path d="ok"></path>'];
+        yield 'nested html breakout tag' => ['<g><IMG src="x"/></g>', '<g></g>'];
+        yield 'meta refresh' => ['<meta http-equiv="refresh" content="0;url=https://example.com/"/><path d="ok"/>', '<path d="ok"></path>'];
+        yield 'font' => ['<font color="red">x</font><path d="ok"/>', '<path d="ok"></path>'];
+        yield 'element in title' => ['<title>Home<base href="https://example.com/"/></title><path d="ok"/>', '<title>Home</title><path d="ok"></path>'];
+        yield 'element in desc' => ['<desc>Home<style>x</style></desc>', '<desc>Home</desc>'];
+        // browsers end a comment at "<!-->" or "<!--->", so comments are dropped
+        yield 'comment ended early' => ['<!--><img src=x onerror=alert(1)>--><path d="ok"/>', '<path d="ok"></path>'];
+        yield 'comment ended early with a dash' => ['<!---><img src=x onerror=alert(1)>--><path d="ok"/>', '<path d="ok"></path>'];
+        yield 'nested comment' => ['<g><!-- x --></g>', '<g></g>'];
+        // the raw CDATA of a style could end a <noscript> around the icon
+        yield 'style cdata with markup' => ['<style><![CDATA[</noscript><img src=x onerror=alert(1)>]]></style>', '<style>&lt;/noscript&gt;&lt;img src=x onerror=alert(1)&gt;</style>'];
         yield 'style breakout via cdata' => ['<style><![CDATA[x{}</style><img src=x onerror=alert(1)>]]></style><path d="ok"/>', '<path d="ok"></path>'];
     }
 
@@ -205,7 +218,7 @@ final class IconFactoryTest extends TestCase
     {
         yield 'style script' => ['<style>.a{fill:red}<script>alert(1)</script></style>', '<style>.a{fill:red}</style>'];
         yield 'style nested script' => ['<style>.a{fill:red}<g><script>alert(1)</script></g></style>', '<style>.a{fill:red}<g></g></style>'];
-        yield 'style image handler' => ['<style>.a{fill:red}<img src="invalid:" onerror="alert(1)"/></style>', '<style>.a{fill:red}<img src="invalid:"></img></style>'];
+        yield 'style image handler' => ['<style>.a{fill:red}<img src="invalid:" onerror="alert(1)"/></style>', '<style>.a{fill:red}</style>'];
         yield 'style SVG image handler' => ['<style>.a{fill:red}<image href="#a" onload="alert(1)"/></style>', '<style>.a{fill:red}<image href="#a"></image></style>'];
         yield 'style animation handler' => ['<style>.a{fill:red}<set attributeName="onload" to="alert(1)"/></style>', '<style>.a{fill:red}</style>'];
         yield 'style animation URL' => ['<style>.a{fill:red}<animate attributeName="href" to="javascript:alert(1)"/></style>', '<style>.a{fill:red}</style>'];

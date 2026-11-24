@@ -27,6 +27,9 @@ final class IconFactory
     private const FORBIDDEN_ELEMENTS = ['script', 'foreignobject', 'iframe', 'object', 'embed', 'handler'];
     private const ANIMATION_ELEMENTS = ['animate', 'set', 'animatetransform', 'animatemotion'];
     private const SVG_NAMESPACE = 'http://www.w3.org/2000/svg';
+    // Browsers parse what follows these start tags as HTML instead of SVG, so an icon could
+    // contain markup that only becomes live there; the list comes from the HTML specification
+    private const BREAKOUT_ELEMENTS = ['b', 'big', 'blockquote', 'body', 'br', 'center', 'code', 'dd', 'div', 'dl', 'dt', 'em', 'embed', 'font', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'head', 'hr', 'i', 'img', 'li', 'listing', 'menu', 'meta', 'nobr', 'ol', 'p', 'pre', 'ruby', 's', 'small', 'span', 'strike', 'strong', 'sub', 'sup', 'table', 'tt', 'u', 'ul', 'var'];
 
     public function fromFile(string $filename): Icon
     {
@@ -111,12 +114,20 @@ final class IconFactory
                 // payload of CDATA sections and processing instructions verbatim, turning
                 // "<![CDATA[<img onerror=...>]]>" into live markup (mutation XSS). Drop them.
                 $rawNodes[] = $child;
+            } elseif ($child instanceof \DOMComment) {
+                // Browsers end a comment at "<!-->" or "<!--->", so what follows it would be live markup
+                $rawNodes[] = $child;
             }
         }
         foreach ($rawNodes as $child) {
             if ($child instanceof \DOMCdataSection && 'style' === strtolower($element->localName)) {
                 // Preserve CSS as text so HTML serialization cannot turn CDATA into markup.
                 $element->replaceChild($element->ownerDocument->createTextNode($child->data), $child);
+
+                // Written out again as escaped text, since the raw CDATA could end a <noscript> around the icon
+                if (str_contains($child->data, '<')) {
+                    $modified = true;
+                }
 
                 continue;
             }
@@ -131,6 +142,7 @@ final class IconFactory
             // of ux-map, an XHTML <form> or <base> would be a live element of the page.
             if (!\in_array($child->namespaceURI, [self::SVG_NAMESPACE, null], true)
                 || \in_array($name, self::FORBIDDEN_ELEMENTS, true)
+                || \in_array($name, self::BREAKOUT_ELEMENTS, true)
                 || (\in_array($name, self::ANIMATION_ELEMENTS, true) && $this->animatesDangerousAttribute($child))
             ) {
                 $element->removeChild($child);
@@ -146,12 +158,30 @@ final class IconFactory
                 continue;
             }
 
+            // Browsers parse the content of <title> and <desc> as HTML, so only their text is kept
+            if (('title' === $name || 'desc' === $name) && $this->removeChildElements($child)) {
+                $modified = true;
+            }
+
             if ($this->sanitizeElement($child)) {
                 $modified = true;
             }
         }
 
         return $modified;
+    }
+
+    private function removeChildElements(\DOMElement $element): bool
+    {
+        $removed = false;
+        foreach (iterator_to_array($element->childNodes) as $child) {
+            if ($child instanceof \DOMElement) {
+                $element->removeChild($child);
+                $removed = true;
+            }
+        }
+
+        return $removed;
     }
 
     private function sanitizeAttributes(\DOMElement $element): bool
