@@ -12,6 +12,7 @@
 namespace Symfony\UX\LiveComponent\Tests\Functional\EventListener;
 
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
 use Symfony\Component\Security\Core\User\InMemoryUser;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Component\Component2;
@@ -464,6 +465,34 @@ final class LiveComponentSubscriberTest extends KernelTestCase
             ->post('/_components/with_security?props='.urlencode(json_encode($dehydrated->getProps())))
             ->assertSuccessful()
         ;
+    }
+
+    public function testUnprocessableEntityBeforeTheActionDoesNotRenderComponent()
+    {
+        if (!class_exists(IsGranted::class) || !property_exists(MapQueryParameter::class, 'validationFailedStatusCode')) {
+            $this->markTestSkipped('The security attributes or the "validationFailedStatusCode" option of #[MapQueryParameter] are not available.');
+        }
+
+        $props = $this->dehydrateComponent($this->mountComponent('with_security'))->getProps();
+
+        $browser = $this->browser()
+            ->post('/_components/with_security/goToPage?page=abc', ['body' => ['data' => json_encode(['props' => $props])]])
+            ->assertStatus(422)
+        ;
+        $this->assertStringNotContainsString('Successful.', $browser->client()->getResponse()->getContent());
+
+        $browser
+            ->post('/_components/with_security/_batch?page=abc', ['body' => ['data' => json_encode(['props' => $props, 'actions' => [['name' => 'goToPage']]])]])
+            ->assertStatus(422)
+        ;
+        $this->assertStringNotContainsString('Successful.', $browser->client()->getResponse()->getContent());
+
+        $browser
+            ->actingAs(new InMemoryUser('kevin', 'pass', ['ROLE_USER']))
+            ->post('/_components/with_security/_batch?page=abc', ['body' => ['data' => json_encode(['props' => $props, 'actions' => [['name' => 'setUsername'], ['name' => 'goToPage']]])]])
+            ->assertStatus(422)
+        ;
+        $this->assertStringNotContainsString('Successful.', $browser->client()->getResponse()->getContent());
     }
 
     public function testCanInjectSecurityUserIntoAction()
