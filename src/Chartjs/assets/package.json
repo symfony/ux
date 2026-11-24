@@ -2,7 +2,7 @@
     "name": "@symfony/ux-chartjs",
     "description": "Chart.js integration for Symfony",
     "license": "MIT",
-    "version": "2.36.2",
+    "version": "2.26.3",
     "keywords": [
         "symfony-ux"
     ],

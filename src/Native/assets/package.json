@@ -1,6 +1,6 @@
 {
     "name": "@symfony/ux-native",
-    "version": "2.36.2",
+    "version": "2.26.3",
     "description": "Hotwire Native integration for Symfony",
     "keywords": [
         "symfony-ux"
