@@ -160,9 +160,8 @@ class ControllersMapGeneratorTest extends TestCase
 
     public function testCustomControllersAreSortedByName(): void
     {
-        $mapper = $this->createMock(AssetMapperInterface::class);
-        $mapper->expects($this->any())
-            ->method('getAssetFromSourcePath')
+        $mapper = $this->createStub(AssetMapperInterface::class);
+        $mapper->method('getAssetFromSourcePath')
             ->willReturnCallback(static function ($path) {
                 // replace windows slashes
                 $path = str_replace('\\', '/', $path);
@@ -171,9 +170,8 @@ class ControllersMapGeneratorTest extends TestCase
                 return new MappedAsset(substr($path, $assetsPosition + 1), $path);
             });
 
-        $autoImportLocator = $this->createMock(AutoImportLocator::class);
-        $autoImportLocator->expects($this->any())
-            ->method('locateAutoImport')
+        $autoImportLocator = $this->createStub(AutoImportLocator::class);
+        $autoImportLocator->method('locateAutoImport')
             ->willReturnCallback(static function ($path) {
                 return new MappedControllerAutoImport('/path/to'.$path, false);
             });
