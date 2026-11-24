@@ -191,7 +191,9 @@ final class IconFactory
         // \DOMNamedNodeMap is live, so collect before mutating.
         $dangerous = [];
         foreach ($element->attributes as $attribute) {
-            if ($this->isDangerousAttribute($attribute->nodeName, $attribute->value)) {
+            // The local name is what matters: fromFile() keys the attributes of the root element by local
+            // name, and XML parsers resolve prefixes, so "x:onload" or "q:href" have to be checked too.
+            if ($this->isDangerousAttribute($attribute->localName, $attribute->value)) {
                 $dangerous[] = $attribute;
             }
         }
@@ -235,13 +237,23 @@ final class IconFactory
 
     private function animatesDangerousAttribute(\DOMElement $element): bool
     {
-        $attributeName = strtolower($element->getAttribute('attributeName'));
+        foreach ($element->attributes as $attribute) {
+            // HTML parsers read attribute names case-insensitively, so "ATTRIBUTENAME" is "attributeName" there
+            if ('attributename' !== strtolower($attribute->localName)) {
+                continue;
+            }
 
-        // A SMIL animation can install an event handler (on*) or a script-capable URL
-        // (href/xlink:href -> "javascript:...") onto its target element.
-        return str_starts_with($attributeName, 'on')
-            || 'href' === $attributeName
-            || 'xlink:href' === $attributeName;
+            // A SMIL animation can install an event handler (on*) or a script-capable URL
+            // (href, whatever its prefix, -> "javascript:...") onto its target element.
+            $name = strtolower(trim($attribute->value));
+            $name = substr($name, false === ($i = strrpos($name, ':')) ? 0 : $i + 1);
+
+            if (str_starts_with($name, 'on') || 'href' === $name) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private function isDangerousAttribute(string $name, string $value): bool

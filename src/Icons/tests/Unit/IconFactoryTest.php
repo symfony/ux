@@ -125,6 +125,18 @@ final class IconFactoryTest extends TestCase
         }
     }
 
+    public function testFromFileSanitizesPrefixedAttributesOfTheRootElement()
+    {
+        $filename = tempnam(sys_get_temp_dir(), 'ux_icon_');
+        try {
+            file_put_contents($filename, '<svg xmlns="http://www.w3.org/2000/svg" xmlns:x="urn:x" x:onload="alert(1)" viewBox="0 0 24 24"><path d="M0 0"/></svg>');
+
+            $this->assertSame(['viewBox' => '0 0 24 24'], (new IconFactory())->fromFile($filename)->getAttributes());
+        } finally {
+            unlink($filename);
+        }
+    }
+
     public function testFromFileKeepsStyleCdataAsText()
     {
         $filename = tempnam(sys_get_temp_dir(), 'ux_icon_');
@@ -211,6 +223,11 @@ final class IconFactoryTest extends TestCase
         yield 'nested comment' => ['<g><!-- x --></g>', '<g></g>'];
         // the raw CDATA of a style could end a <noscript> around the icon
         yield 'style cdata with markup' => ['<style><![CDATA[</noscript><img src=x onerror=alert(1)>]]></style>', '<style>&lt;/noscript&gt;&lt;img src=x onerror=alert(1)&gt;</style>'];
+        // attribute names are checked the way browsers read them: by local name, and case-insensitively in HTML
+        yield 'smil attributeName in another case' => ['<a><set ATTRIBUTENAME="href" to="javascript:alert(1)"/><path d="z"/></a>', '<a><path d="z"></path></a>'];
+        yield 'smil attributeName with a prefix in its value' => ['<a><set attributeName="q:href" to="javascript:alert(1)"/><path d="z"/></a>', '<a><path d="z"></path></a>'];
+        yield 'xlink href under another prefix' => ['<a xmlns:q="http://www.w3.org/1999/xlink" q:href="javascript:alert(1)"><path d="z"/></a>', '<a xmlns:q="http://www.w3.org/1999/xlink"><path d="z"></path></a>'];
+        yield 'prefixed event handler' => ['<path xmlns:x="urn:x" x:onclick="alert(1)" d="M0 0"/>', '<path xmlns:x="urn:x" d="M0 0"></path>'];
         yield 'style breakout via cdata' => ['<style><![CDATA[x{}</style><img src=x onerror=alert(1)>]]></style><path d="ok"/>', '<path d="ok"></path>'];
     }
 
