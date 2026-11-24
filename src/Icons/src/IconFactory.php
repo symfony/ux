@@ -114,6 +114,13 @@ final class IconFactory
             }
         }
         foreach ($rawNodes as $child) {
+            if ($child instanceof \DOMCdataSection && 'style' === strtolower($element->localName)) {
+                // Preserve CSS as text so HTML serialization cannot turn CDATA into markup.
+                $element->replaceChild($element->ownerDocument->createTextNode($child->data), $child);
+
+                continue;
+            }
+
             $element->removeChild($child);
             $modified = true;
         }
@@ -132,18 +139,9 @@ final class IconFactory
                 continue;
             }
 
-            if ('style' === $name) {
-                // <style> is kept (themes rely on it, e.g. prefers-color-scheme), but it is a
-                // raw-text element: saveHTML() re-emits its CSS verbatim, so the only XSS path is
-                // a "</style>" breakout smuggled through CDATA. Sanitize the attributes, never the
-                // CSS itself, and drop the whole element on a breakout attempt.
-                if ($this->sanitizeAttributes($child)) {
-                    $modified = true;
-                }
-                if (preg_match('#</\s*style#i', $child->textContent)) {
-                    $element->removeChild($child);
-                    $modified = true;
-                }
+            if ('style' === $name && preg_match('#</\s*style#i', $child->textContent)) {
+                $element->removeChild($child);
+                $modified = true;
 
                 continue;
             }

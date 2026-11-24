@@ -111,11 +111,39 @@ final class IconFactoryTest extends TestCase
         (new IconFactory())->fromFile(__DIR__.'/../Fixtures/svg/'.$name.'.svg');
     }
 
+    public function testFromFileSanitizesStyleDescendants()
+    {
+        $filename = tempnam(sys_get_temp_dir(), 'ux_icon_');
+        try {
+            foreach (self::provideSanitizedStyles() as [$body, $expected]) {
+                file_put_contents($filename, '<svg xmlns="http://www.w3.org/2000/svg">'.$body.'</svg>');
+
+                $this->assertSame($expected, (new IconFactory())->fromFile($filename)->getInnerSvg(), $body);
+            }
+        } finally {
+            unlink($filename);
+        }
+    }
+
+    public function testFromFileKeepsStyleCdataAsText()
+    {
+        $filename = tempnam(sys_get_temp_dir(), 'ux_icon_');
+        try {
+            file_put_contents($filename, '<svg xmlns="http://www.w3.org/2000/svg"><style><![CDATA[<script>alert(1)</script>]]></style></svg>');
+
+            $this->assertSame('<style>&lt;script&gt;alert(1)&lt;/script&gt;</style>', (new IconFactory())->fromFile($filename)->getInnerSvg());
+        } finally {
+            unlink($filename);
+        }
+    }
+
     /**
      * Malicious SVG bodies and their expected sanitized inner SVG.
      */
     public static function provideSanitizedBodies(): iterable
     {
+        yield from self::provideSanitizedStyles();
+
         // Event handler attributes
         yield 'onload' => ['<rect onload="alert(1)" fill="red"/>', '<rect fill="red"></rect>'];
         yield 'onclick' => ['<path onclick="x" d="M0 0"/>', '<path d="M0 0"></path>'];
@@ -171,6 +199,21 @@ final class IconFactoryTest extends TestCase
         yield 'nested xhtml element' => ['<g><noembed xmlns="http://www.w3.org/1999/xhtml">x</noembed></g>', '<g></g>'];
         yield 'foreign namespace element' => ['<i:pgf xmlns:i="urn:x">data</i:pgf><path d="ok"/>', '<path d="ok"></path>'];
         yield 'style breakout via cdata' => ['<style><![CDATA[x{}</style><img src=x onerror=alert(1)>]]></style><path d="ok"/>', '<path d="ok"></path>'];
+    }
+
+    public static function provideSanitizedStyles(): iterable
+    {
+        yield 'style script' => ['<style>.a{fill:red}<script>alert(1)</script></style>', '<style>.a{fill:red}</style>'];
+        yield 'style nested script' => ['<style>.a{fill:red}<g><script>alert(1)</script></g></style>', '<style>.a{fill:red}<g></g></style>'];
+        yield 'style image handler' => ['<style>.a{fill:red}<img src="invalid:" onerror="alert(1)"/></style>', '<style>.a{fill:red}<img src="invalid:"></img></style>'];
+        yield 'style SVG image handler' => ['<style>.a{fill:red}<image href="#a" onload="alert(1)"/></style>', '<style>.a{fill:red}<image href="#a"></image></style>'];
+        yield 'style animation handler' => ['<style>.a{fill:red}<set attributeName="onload" to="alert(1)"/></style>', '<style>.a{fill:red}</style>'];
+        yield 'style animation URL' => ['<style>.a{fill:red}<animate attributeName="href" to="javascript:alert(1)"/></style>', '<style>.a{fill:red}</style>'];
+        yield 'style foreignObject' => ['<style>.a{fill:red}<foreignObject><div onclick="alert(1)">x</div></foreignObject></style>', '<style>.a{fill:red}</style>'];
+        yield 'style processing instruction' => ['<style>.a{fill:red}<?foo <img src=x onerror=alert(1)> ?></style>', '<style>.a{fill:red}</style>'];
+        yield 'style CDATA script after sanitization' => ['<style onload="alert(1)"><![CDATA[<script>alert(1)</script>]]></style>', '<style>&lt;script&gt;alert(1)&lt;/script&gt;</style>'];
+        yield 'style CDATA CSS after sanitization' => ['<style onload="alert(1)"><![CDATA[.a > b{fill:red}]]></style>', '<style>.a &gt; b{fill:red}</style>'];
+        yield 'style CDATA after sibling sanitization' => ['<style><![CDATA[<script>alert(1)</script>]]></style><path onload="alert(1)"/>', '<style>&lt;script&gt;alert(1)&lt;/script&gt;</style><path></path>'];
     }
 
     public static function provideSafeBodies(): iterable
