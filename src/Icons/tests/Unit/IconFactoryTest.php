@@ -31,6 +31,22 @@ final class IconFactoryTest extends TestCase
     }
 
     /**
+     * @dataProvider provideUnescapedTextBodies
+     */
+    #[DataProvider('provideUnescapedTextBodies')]
+    public function testFromBodyKeepsTextEscaped(string $body, string $expected)
+    {
+        $this->assertSame($expected, (new IconFactory())->fromBody($body)->getInnerSvg());
+    }
+
+    public static function provideUnescapedTextBodies(): iterable
+    {
+        // the onclick attribute makes the icon change, so that it is written out again
+        yield 'style text' => ['<path onclick="x"/><style>&lt;img src=x onerror=alert(1)&gt;</style>', '<path></path><style>&lt;img src=x onerror=alert(1)&gt;</style>'];
+        yield 'xhtml style text' => ['<path onclick="x"/><style xmlns="http://www.w3.org/1999/xhtml">&lt;img src=x onerror=alert(1)&gt;</style>', '<path></path>'];
+    }
+
+    /**
      * @dataProvider provideSafeBodies
      */
     #[DataProvider('provideSafeBodies')]
@@ -149,6 +165,11 @@ final class IconFactoryTest extends TestCase
 
         // <style> is kept, but its attributes are sanitized and "</style>" breakouts are dropped
         yield 'style onload attribute' => ['<style onload="alert(1)">.a{fill:red}</style>', '<style>.a{fill:red}</style>'];
+        // only SVG elements are kept, other ones would be live where icons are parsed as XML
+        yield 'xhtml form' => ['<form xmlns="http://www.w3.org/1999/xhtml" action="javascript:alert(1)"><button>x</button></form><path d="ok"/>', '<path d="ok"></path>'];
+        yield 'xhtml base' => ['<base xmlns="http://www.w3.org/1999/xhtml" href="https://example.com/"/><path d="ok"/>', '<path d="ok"></path>'];
+        yield 'nested xhtml element' => ['<g><noembed xmlns="http://www.w3.org/1999/xhtml">x</noembed></g>', '<g></g>'];
+        yield 'foreign namespace element' => ['<i:pgf xmlns:i="urn:x">data</i:pgf><path d="ok"/>', '<path d="ok"></path>'];
         yield 'style breakout via cdata' => ['<style><![CDATA[x{}</style><img src=x onerror=alert(1)>]]></style><path d="ok"/>', '<path d="ok"></path>'];
     }
 
