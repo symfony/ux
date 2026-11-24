@@ -44,7 +44,9 @@ before_composer_install() {
         ;;
       8.2)
         # PropertyInfo 7.1 (experimental PropertyTypeExtractorInterface::getType) and TypeInfo 7.2 (lowest non-experimental)
-        composer require symfony/property-info:7.1.* symfony/type-info:7.2.* --no-update
+        # Composer blocks the Serializer versions compatible with them, as they all have a security advisory
+        composer config policy.advisories.block false \
+          && composer require symfony/property-info:7.1.* symfony/type-info:7.2.* --no-update
         return $?
         ;;
       8.3)
