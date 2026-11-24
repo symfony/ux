@@ -100,10 +100,13 @@ final class IconFactory
         foreach ($element->childNodes as $child) {
             if ($child instanceof \Dom\Element) {
                 $children[] = $child;
-            } elseif ($child instanceof \Dom\CDATASection || $child instanceof \Dom\ProcessingInstruction) {
+            } elseif ($child instanceof \Dom\ProcessingInstruction
+                || ($child instanceof \Dom\CDATASection && 'style' !== strtolower($element->localName))
+            ) {
                 // The tree is parsed as XML but serialized as HTML: saveHtml() emits the raw
                 // payload of CDATA sections and processing instructions verbatim, turning
-                // "<![CDATA[<img onerror=...>]]>" into live markup (mutation XSS). Drop them.
+                // "<![CDATA[<img onerror=...>]]>" into live markup (mutation XSS). Drop them,
+                // except the CSS of a <style> element, which the "</style>" check below covers.
                 $rawNodes[] = $child;
             }
         }
@@ -123,18 +126,12 @@ final class IconFactory
                 continue;
             }
 
-            if ('style' === $name) {
-                // <style> is kept (themes rely on it, e.g. prefers-color-scheme), but it is a
-                // raw-text element: saveHtml() re-emits its CSS verbatim, so the only XSS path is
-                // a "</style>" breakout smuggled through CDATA. Sanitize the attributes, never the
-                // CSS itself, and drop the whole element on a breakout attempt.
-                if ($this->sanitizeAttributes($child)) {
-                    $modified = true;
-                }
-                if (preg_match('#</\s*style#i', $child->textContent)) {
-                    $element->removeChild($child);
-                    $modified = true;
-                }
+            // <style> is kept (themes rely on it, e.g. prefers-color-scheme). Unlike in HTML, an SVG
+            // <style> can have child elements, so it is sanitized like any other element, and
+            // dropped on a "</style>" breakout attempt.
+            if ('style' === $name && preg_match('#</\s*style#i', $child->textContent)) {
+                $element->removeChild($child);
+                $modified = true;
 
                 continue;
             }
