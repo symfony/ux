@@ -2,7 +2,7 @@
     "name": "@symfony/ux-upload",
     "description": "Direct and resumable file uploads for Symfony applications",
     "license": "MIT",
-    "version": "3.8.0",
+    "version": "3.8.1",
     "keywords": [
         "chunked",
         "file",
