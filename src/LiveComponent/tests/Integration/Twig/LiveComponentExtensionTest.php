@@ -12,6 +12,7 @@
 namespace Symfony\UX\LiveComponent\Tests\Integration\Twig;
 
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\UX\LiveComponent\Tests\Fixtures\Component\Component2;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
@@ -27,5 +28,14 @@ final class LiveComponentExtensionTest extends KernelTestCase
         $this->assertStringContainsString('/_components/component1?props=%7B%22prop1%22:null,%22prop2%22:%222022-10-06T00:00:00%2B00:00%22,%22prop3%22:null,', $rendered);
         $this->assertStringContainsString('/alt/alternate_route?', $rendered);
         $this->assertStringContainsString('http://localhost/_components/with_absolute_url?', $rendered);
+    }
+
+    public function testGetComponentUrlWithClassName()
+    {
+        $rendered = self::getContainer()->get('twig')->createTemplate('{{ component_url(name) }}')->render([
+            'name' => Component2::class,
+        ]);
+
+        $this->assertStringStartsWith('/_components/component2?props=', $rendered);
     }
 }
