@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 3.9.0
+
+- Support Doctrine ORM cursor fields reached through single-valued associations (`author.name`)
+
 ## 3.8.0
 
 - Support nullable Doctrine ORM cursor fields; `NULL` sorts where the database platform puts it by default
