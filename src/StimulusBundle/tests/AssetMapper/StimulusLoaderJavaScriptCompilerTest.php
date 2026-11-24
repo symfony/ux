@@ -114,7 +114,8 @@ class StimulusLoaderJavaScriptCompilerTest extends TestCase
     {
         $controllerMapGenerator = $this->createStub(ControllersMapGenerator::class);
         $controllerMapGenerator->method('getControllersMap')->willReturn([
-            'foo' => new MappedControllerAsset($this->createAsset('/assets/controllers/foo-controller.js'), false),
+            // on the same root as controllers.js, so that the import path can be made relative on Windows
+            'foo' => new MappedControllerAsset(new MappedAsset('foo-controller.js', __DIR__.'/../fixtures/assets/controllers/foo-controller.js', publicPathWithoutDigest: '/assets/controllers/foo-controller.js'), false),
         ]);
 
         $compiler = new StimulusLoaderJavaScriptCompiler($controllerMapGenerator, false);
