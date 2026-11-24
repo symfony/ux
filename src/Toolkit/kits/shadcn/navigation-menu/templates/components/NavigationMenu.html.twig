@@ -21,7 +21,7 @@
     {%- block content %}{% endblock -%}
     <div
         data-navigation-menu-target="viewportPositioner"
-        class="absolute start-0 top-full isolate z-50 transition-[inset-inline-start] duration-150 ease-out [&[popover]:not(:popover-open)]:hidden [&[popover]]:inset-auto [&[popover]]:overflow-visible [&[popover]]:bg-transparent [&[popover]]:top-[anchor(bottom)] [&[popover]]:transition-[inset-inline-start,display,overlay] [&[popover]]:transition-discrete"
+        class="absolute [&[popover]]:fixed start-0 top-full isolate z-50 transition-[inset-inline-start] duration-150 ease-out [&[popover]:not(:popover-open)]:hidden [&[popover]]:inset-auto [&[popover]]:overflow-visible [&[popover]]:bg-transparent [&[popover]]:top-[anchor(bottom)] [&[popover]]:transition-[inset-inline-start,display,overlay] [&[popover]]:transition-discrete"
         data-action="mouseenter->navigation-menu#cancelClose mouseleave->navigation-menu#scheduleClose"
     >
         <div

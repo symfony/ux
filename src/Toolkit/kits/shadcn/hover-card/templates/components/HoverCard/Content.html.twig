@@ -4,7 +4,7 @@
 -%}
 {#- `anchor()` insets rather than `position-area`, which Firefox misplaces in right-to-left: https://bugzil.la/2019601 -#}
 {%- set style = html_cva(
-    base: 'invisible opacity-0 in-data-[state=open]:visible in-data-[state=open]:opacity-100 transition-opacity duration-100 absolute z-50 w-64 rounded-lg bg-popover p-2.5 text-sm text-popover-foreground shadow-md ring-1 ring-foreground/10 outline-hidden overflow-visible [&[popover]:not(:popover-open)]:hidden [&[popover]]:inset-auto starting:open:opacity-0',
+    base: 'invisible opacity-0 in-data-[state=open]:visible in-data-[state=open]:opacity-100 transition-opacity duration-100 absolute [&[popover]]:fixed z-50 w-64 rounded-lg bg-popover p-2.5 text-sm text-popover-foreground shadow-md ring-1 ring-foreground/10 outline-hidden overflow-visible [&[popover]:not(:popover-open)]:hidden [&[popover]]:inset-auto starting:open:opacity-0',
     variants: {
         side: {
             bottom: 'left-1/2 top-full mt-2 -translate-x-1/2 [&[popover]]:top-[anchor(bottom)] [&[popover]]:left-[anchor(center)] [&[popover]]:-translate-x-1/2 [&[popover]]:[position-try-fallbacks:flip-block]',
