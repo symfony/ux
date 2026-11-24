@@ -37,6 +37,11 @@ if git rev-parse -q --verify "refs/tags/$tag" >/dev/null; then
     exit 1
 fi
 
+if git ls-remote --exit-code --tags upstream "refs/tags/$tag" >/dev/null; then
+    echo "Error: tag '$tag' already exists on 'upstream'." >&2
+    exit 1
+fi
+
 if [ -n "$(git status --porcelain)" ]; then
     echo "Error: the working tree is not clean. Commit or stash your changes first." >&2
     exit 1
@@ -47,6 +52,8 @@ if [ "$(git rev-parse HEAD)" != "$(git rev-parse FETCH_HEAD)" ]; then
     echo "Error: local '$branch' is not in sync with 'upstream/$branch'. Pull first." >&2
     exit 1
 fi
+
+node bin/release_version.ts --version "$version"
 
 # Bumping a package the splitter will not tag is what makes npm advertise versions that exist nowhere else. split.sh
 # says which repositories this release will tag, for the branch state just checked above. Asking before the build so
