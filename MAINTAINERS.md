@@ -31,6 +31,8 @@ $ curl 'https://go.split.sh/api/projects/symfonyux/branches/2.x/tag-prediction?v
 {"branch":"2.x","tagged":["ux-autocomplete"],"skipped":[...],"version":"2.36.2"}
 ```
 
+`release.sh` also refuses a version that does not directly follow the previous release of the same major, based on the tags on `upstream`: after `v2.36.3`, only `2.36.4` or `2.37.0` go through (a prerelease suffix like `-rc1` is allowed).
+
 ## Splitting packages into read-only repositories
 
 Each `symfony/ux-*` package lives in its own read-only repository split from this monorepo, managed on the [split.sh dashboard](https://go.split.sh/dashboard#project-symfonyux).
