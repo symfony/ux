@@ -262,4 +262,24 @@ class LiveUrlSubscriberTest extends KernelTestCase
             ->assertSuccessful()
             ->assertHeaderEquals('X-Live-Url', $expectedLocation);
     }
+
+    public function testNoLiveUrlWithRedirect(): void
+    {
+        $dehydrated = $this->dehydrateComponent($this->mountComponent('component2'));
+
+        $this->browser()
+            ->throwExceptions()
+            ->post('/_components/component2/redirect', [
+                'body' => ['data' => json_encode(['props' => $dehydrated->getProps()])],
+                'headers' => [
+                    'Accept' => 'application/vnd.live-component+html',
+                    'X-Requested-With' => 'XMLHttpRequest',
+                    'X-Live-Url' => '/route_with_prop/foo',
+                ],
+            ])
+            ->assertStatus(204)
+            ->assertHeaderContains('X-Live-Redirect', '1')
+            ->assertHeaderEquals('X-Live-Url', null)
+        ;
+    }
 }
