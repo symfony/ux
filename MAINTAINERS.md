@@ -31,6 +31,8 @@ $ curl 'https://go.split.sh/api/projects/symfonyux/branches/3.x/tag-prediction?v
 {"branch":"3.x","tagged":["ux-map","ux-pagination"],"skipped":[...],"version":"3.5.1"}
 ```
 
+`release.sh` also refuses a version that does not directly follow the previous release of the same major, based on the tags on `upstream`: after `v3.8.1`, only `3.8.2` or `3.9.0` go through (a prerelease suffix like `-rc1` is allowed).
+
 ### The first release of a new package
 
 The Release on NPM workflow publishes through npm trusted publishing. This only works for a package that npm already has, so you must publish the first version of a new package by hand.
