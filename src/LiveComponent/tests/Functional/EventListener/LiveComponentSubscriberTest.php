@@ -15,6 +15,7 @@ use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Security\Core\User\InMemoryUser;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\UX\LiveComponent\Tests\Fixtures\Component\Component2;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Entity\Entity1;
 use Symfony\UX\LiveComponent\Tests\LiveComponentTestHelper;
 use Zenstruck\Browser\Test\HasBrowser;
@@ -191,6 +192,23 @@ final class LiveComponentSubscriberTest extends KernelTestCase
         $this->browser()
             ->get('/_components/with_method_post/__invoke')
             ->assertStatus(405)
+        ;
+    }
+
+    public function testCannotReachComponentWithItsClassName(): void
+    {
+        $props = $this->dehydrateComponent($this->mountComponent('component2'))->getProps();
+        $url = '/_components/'.rawurlencode(Component2::class);
+
+        $this->browser()
+            ->post('/_components/component2', ['body' => ['data' => json_encode(['props' => $props])]])
+            ->assertSuccessful()
+            ->post($url, ['body' => ['data' => json_encode(['props' => $props])]])
+            ->assertStatus(404)
+            ->post($url.'/increase', ['body' => ['data' => json_encode(['props' => $props])]])
+            ->assertStatus(404)
+            ->post($url.'/_batch', ['body' => ['data' => json_encode(['props' => $props, 'actions' => [['name' => 'increase']]])]])
+            ->assertStatus(404)
         ;
     }
 
