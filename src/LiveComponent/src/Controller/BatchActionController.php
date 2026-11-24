@@ -35,6 +35,11 @@ final class BatchActionController
 
     public function __invoke(Request $request, MountedComponent $_mounted_component, string $serviceId, array $actions): ?Response
     {
+        // controller attributes of the component, like #[IsGranted], are only checked by the sub-request of each action
+        if (!$actions) {
+            throw new BadRequestHttpException('No actions in batch.');
+        }
+
         if (\count($actions) > self::MAX_ACTIONS_PER_BATCH) {
             throw new BadRequestHttpException('Too many actions in batch.');
         }
