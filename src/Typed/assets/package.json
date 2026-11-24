@@ -2,7 +2,7 @@
     "name": "@symfony/ux-typed",
     "description": "Typed integration for Symfony",
     "license": "MIT",
-    "version": "2.26.3",
+    "version": "2.36.3",
     "keywords": [
         "symfony-ux"
     ],
