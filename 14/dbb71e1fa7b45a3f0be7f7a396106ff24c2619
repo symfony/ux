@@ -1,0 +1,59 @@
+---------------------------------------------------------------------------
+
+by seb-jean at 2026-11-04T13:55:25Z
+
+Is it possible to create a PR directly on https://github.com/doctrine/orm, or not?
+
+---------------------------------------------------------------------------
+
+by norkunas at 2026-11-04T16:24:27Z
+
+Doctrine's own `CursorPaginator` (ORM 3.7) has the same gap: `CursorWalker::buildCursorCondition()` compares the boundary with `col > :v`, so a `NULL` boundary ends the walk there too. A fix there would be worth having.
+
+This PR is for ux-pagination as it is today: `DoctrineOrmAdapter` builds its own boundary predicate, so it doesn't benefit from a Doctrine fix until it moves onto Doctrine's paginator (#3898, waiting on doctrine/orm#12724). Once it does, the same handling needs to live in Doctrine.
+
+Would you like to take the Doctrine side, since you follow the pagination work there? Otherwise I can open it later.
+
+---------------------------------------------------------------------------
+
+by norkunas at 2026-11-04T16:24:33Z
+
+To be precise for this PR: Doctrine's paginator already follows ORDER BY items on joined aliases, so the association part has no Doctrine counterpart to add. Only the NULL handling it inherits from #4209 does.
+
+---------------------------------------------------------------------------
+
+by seb-jean at 2026-11-08T13:34:38Z
+
+If you can, opening a PR on the Doctrine ORM side would be great!
+
+---------------------------------------------------------------------------
+
+by norkunas at 2026-11-09T05:34:13Z
+
+Opened doctrine/orm#12776: it makes `CursorPaginator` walk through `NULL`s of a nullable `ORDER BY` column, with the same rules as #4209 (`NULL` keeps the platform's position; `IS NULL` / `IS NOT NULL` for a `NULL` boundary, `OR col IS NULL` on the side the `NULL`s sort).
+
+---------------------------------------------------------------------------
+
+by smnandre at 2026-11-18T17:05:48Z
+
+So @norkunas what do we do here ?
+
+---------------------------------------------------------------------------
+
+by norkunas at 2026-11-18T17:17:16Z
+
+At least for me it'd be good if it could get merged, so i could drop a custom cursor paginator totally 🙂
+
+---------------------------------------------------------------------------
+
+by smnandre at 2026-11-22T10:44:16Z
+
+Could you rebase / fix conflicts and update changelog (3.9 ?) ?
+
+After that i see no reason not to merge it :)
+
+---------------------------------------------------------------------------
+
+by norkunas at 2026-11-23T10:45:54Z
+
+Rebased on 3.x, conflicts fixed and the changelog entry moved to 3.9.0. Thanks!
