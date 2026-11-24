@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\LiveComponent\Tests\Fixtures\Component;
 
+use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
 use Symfony\Component\Security\Core\User\InMemoryUser;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
@@ -33,5 +34,10 @@ class WithSecurity
     public function setUsername(#[CurrentUser] InMemoryUser $user)
     {
         $this->username = $user->getUserIdentifier();
+    }
+
+    #[LiveAction]
+    public function goToPage(#[MapQueryParameter(validationFailedStatusCode: 422)] int $page = 1): void
+    {
     }
 }
