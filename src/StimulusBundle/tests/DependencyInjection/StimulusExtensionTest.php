@@ -150,7 +150,7 @@ final class StimulusExtensionTest extends TestCase
         $admin = $container->getDefinition('stimulus.asset_mapper.controllers_map_generator.admin');
         self::assertSame(['%kernel.project_dir%/assets/controllers'], $admin->getArgument(2));
         self::assertSame('%kernel.project_dir%/assets/controllers.json', $admin->getArgument(3));
-        self::assertSame(['%kernel.project_dir%/assets/admin/controllers'], $admin->getArgument(5));
+        self::assertSame([__DIR__.'/../fixtures/assets/admin/controllers'], $admin->getArgument(5));
         self::assertNull($admin->getArgument(6));
     }
 
@@ -160,7 +160,7 @@ final class StimulusExtensionTest extends TestCase
 
         $admin = $container->getDefinition('stimulus.asset_mapper.controllers_map_generator.admin');
         self::assertSame(['%kernel.project_dir%/assets/controllers'], $admin->getArgument(2));
-        self::assertSame(['%kernel.project_dir%/assets/admin/controllers'], $admin->getArgument(5));
+        self::assertSame([__DIR__.'/../fixtures/assets/admin/controllers'], $admin->getArgument(5));
 
         $application = $container->getDefinition('stimulus.asset_mapper.loader_javascript_compiler')->getArgument(2)['admin'];
         self::assertSame(__DIR__.'/../fixtures/assets/admin/stimulus.js', $application['loader']);
@@ -178,6 +178,34 @@ final class StimulusExtensionTest extends TestCase
             $container->getDefinition('stimulus.asset_mapper.loader_javascript_compiler')->getArgument(2)['account']['watched_paths'],
         );
         self::assertContains('existence.'.__DIR__.'/../fixtures/assets/account/controllers', array_map('strval', $container->getResources()));
+    }
+
+    public function testLoadLooksUpTheControllersNextToAModuleOutsideAssets(): void
+    {
+        $container = $this->load(['applications' => ['backoffice' => [
+            'loader' => '%kernel.project_dir%/in-asset-mapper/zones/backoffice/bootstrap.js',
+        ]]]);
+
+        self::assertSame(
+            [__DIR__.'/../fixtures/in-asset-mapper/zones/backoffice/controllers'],
+            $container->getDefinition('stimulus.asset_mapper.controllers_map_generator.backoffice')->getArgument(5),
+        );
+        self::assertSame([], $container->getDefinition('stimulus.asset_mapper.loader_javascript_compiler')->getArgument(2)['backoffice']['watched_paths']);
+    }
+
+    public function testLoadDoesNotUseAGlobalControllerPathByConvention(): void
+    {
+        $container = $this->load([
+            'controller_paths' => ['%stimulus_test.fixtures_dir%/assets/controllers'],
+            'applications' => ['partner' => [
+                'loader' => '%kernel.project_dir%/assets/partner_stimulus.js',
+                'include_global' => false,
+            ]],
+        ]);
+
+        $partner = $container->getDefinition('stimulus.asset_mapper.controllers_map_generator.partner');
+        self::assertSame([], $partner->getArgument(2));
+        self::assertSame([], $partner->getArgument(5));
     }
 
     public function testLoadThrowsWhenTheConventionModuleIsMissing(): void

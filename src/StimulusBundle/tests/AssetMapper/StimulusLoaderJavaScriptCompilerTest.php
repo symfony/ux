@@ -157,6 +157,14 @@ class StimulusLoaderJavaScriptCompilerTest extends TestCase
         $this->assertFalse($compiler->supports(new MappedAsset('app.js', realpath(__DIR__.'/../fixtures/assets/app.js'))));
     }
 
+    public function testSupportsIgnoresTheStubWithoutApplications(): void
+    {
+        $compiler = new StimulusLoaderJavaScriptCompiler($this->createStub(ControllersMapGenerator::class), false);
+
+        $this->assertTrue($compiler->supports(new MappedAsset('loader.js', realpath(__DIR__.'/../../assets/dist/loader.js'))));
+        $this->assertFalse($compiler->supports(new MappedAsset('shop/stimulus.js', realpath(__DIR__.'/../fixtures/assets/shop/stimulus.js'))));
+    }
+
     public function testCompileRejectsAStubNoApplicationUses(): void
     {
         $compiler = $this->createAdminCompiler();

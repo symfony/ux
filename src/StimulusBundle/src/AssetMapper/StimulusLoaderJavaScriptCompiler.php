@@ -52,7 +52,7 @@ class StimulusLoaderJavaScriptCompiler implements AssetCompilerInterface
         return $asset->sourcePath === realpath(__DIR__.'/../../assets/dist/loader.js')
             || $asset->sourcePath === realpath(__DIR__.'/../../assets/dist/controllers.js')
             || null !== $this->findApplicationName($asset->sourcePath)
-            || self::containsOnlyTheStub($asset);
+            || ([] !== $this->applications && self::containsOnlyTheStub($asset));
     }
 
     public function compile(string $content, MappedAsset $asset, AssetMapperInterface $assetMapper): string

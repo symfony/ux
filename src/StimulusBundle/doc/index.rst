@@ -443,7 +443,7 @@ directory and the ``controllers.json`` file if you need to use different paths:
                 # the module of the application, compiled by the bundle
                 # (defaults to "%kernel.project_dir%/assets/<name>/stimulus.js")
                 loader: ~
-                # defaults to "%kernel.project_dir%/assets/<name>/controllers" when this directory exists
+                # defaults to the "controllers" directory next to the module, when this directory exists
                 controller_paths: ~
                 # false to load neither the global controller_paths nor the global
                 # controllers_json file: only the controllers of the application
@@ -678,7 +678,21 @@ By convention, the ``admin`` application uses:
 * ``assets/admin/stimulus.js``: the module of the application;
 * ``assets/admin/controllers/``: the controllers of the application, when this directory exists.
 
-The ``loader`` and ``controller_paths`` options override these paths.
+The ``loader`` option overrides the path of the module. The controllers are
+then looked up in the ``controllers/`` directory next to it, unless this
+directory is one of the global ``controller_paths``. For assets stored outside
+``assets/``, only the module has to be configured:
+
+.. code-block:: yaml
+
+    # config/packages/stimulus.yaml
+    stimulus:
+        applications:
+            # frontend/admin/stimulus.js + frontend/admin/controllers/
+            admin:
+                loader: '%kernel.project_dir%/frontend/admin/stimulus.js'
+
+The ``controller_paths`` option overrides the controller directories.
 
 The application name must start with a lowercase letter and contain only lowercase letters, digits, ``_`` and ``-``. The name ``default`` is reserved.
 
@@ -689,7 +703,7 @@ Create the module inside a path mapped by AssetMapper, with this single line:
     // assets/admin/stimulus.js
     export { startStimulusApp } from '@symfony/stimulus-bundle';
 
-The bundle replaces the content of this file when the asset is compiled: the compiled module imports the controllers of the application, and nothing from the global ``@symfony/stimulus-bundle`` module. The line above gives editors and TypeScript the type of ``startStimulusApp()``. An empty file also works. Any other content is rejected, because it would be lost: put your own code in the entrypoint. A file containing this line that no application uses is rejected too, because it would start the global application instead.
+The bundle replaces the content of this file when the asset is compiled: the compiled module imports the controllers of the application, and nothing from the global ``@symfony/stimulus-bundle`` module. The line above gives editors and TypeScript the type of ``startStimulusApp()``. An empty file also works. Any other content is rejected, because it would be lost: put your own code in the entrypoint. When at least one application is configured, a file containing this line that no application uses is rejected too, because it would start the global application instead.
 
 Then add the entrypoint of the area to your ``importmap.php`` file::
 

@@ -500,10 +500,8 @@ class StimulusControllerLoaderFunctionalTest extends WebTestCase
 
     public function testStubThatNoApplicationUsesIsRejected(): void
     {
-        self::ensureKernelShutdown();
-        new Filesystem()->remove(__DIR__.'/../fixtures/var/cache/test');
-        // Without applications, the stub of the shop fixture is used by no application.
-        self::bootKernel();
+        self::removeApplicationsCache();
+        self::bootKernel(['environment' => 'applications']);
 
         $assetMapper = self::getContainer()->get('asset_mapper');
         \assert($assetMapper instanceof AssetMapperInterface);
@@ -512,7 +510,25 @@ class StimulusControllerLoaderFunctionalTest extends WebTestCase
             $this->expectException(\LogicException::class);
             $this->expectExceptionMessage('no Stimulus application uses it');
 
-            $assetMapper->getAsset('shop/stimulus.js');
+            $assetMapper->getAsset('orphan_stimulus.js');
+        } finally {
+            self::ensureKernelShutdown();
+        }
+    }
+
+    public function testStubIsServedAsIsWithoutApplications(): void
+    {
+        self::ensureKernelShutdown();
+        new Filesystem()->remove(__DIR__.'/../fixtures/var/cache/test');
+        self::bootKernel();
+
+        $assetMapper = self::getContainer()->get('asset_mapper');
+        \assert($assetMapper instanceof AssetMapperInterface);
+
+        try {
+            $asset = $assetMapper->getAsset('orphan_stimulus.js');
+            $this->assertNotNull($asset);
+            $this->assertSame("export { startStimulusApp } from '@symfony/stimulus-bundle';", trim($asset->content ?? file_get_contents($asset->sourcePath)));
         } finally {
             self::ensureKernelShutdown();
         }

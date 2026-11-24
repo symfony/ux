@@ -45,6 +45,7 @@ final class StimulusExtension extends Extension implements PrependExtensionInter
 
         $applications = [];
         $loaderRealpaths = [];
+        $globalControllerRealpaths = null;
         foreach ($config['applications'] as $name => $application) {
             $module = $container->getParameterBag()->resolveValue($application['loader'] ?? '%kernel.project_dir%/assets/'.$name.'/stimulus.js');
             if (!str_ends_with($module, '.js')) {
@@ -64,14 +65,18 @@ final class StimulusExtension extends Extension implements PrependExtensionInter
             $controllerPaths = $application['controller_paths'];
             $watchedPaths = [];
             if (null === $controllerPaths) {
-                $conventionPath = '%kernel.project_dir%/assets/'.$name.'/controllers';
-                $resolvedConventionPath = $container->getParameterBag()->resolveValue($conventionPath);
+                $conventionPath = \dirname($module).'/controllers';
+                // A module next to the global controllers (e.g. "assets/admin_stimulus.js") must not get them by convention.
+                $globalControllerRealpaths ??= array_filter(array_map(
+                    static fn (string $path): string|false => realpath($path),
+                    $container->getParameterBag()->resolveValue($config['controller_paths']),
+                ));
                 // Rebuild the container when the directory appears or disappears.
-                $container->addResource(new FileExistenceResource($resolvedConventionPath));
-                $controllerPaths = is_dir($resolvedConventionPath) ? [$conventionPath] : [];
+                $container->addResource(new FileExistenceResource($conventionPath));
+                $controllerPaths = is_dir($conventionPath) && !\in_array(realpath($conventionPath), $globalControllerRealpaths, true) ? [$conventionPath] : [];
                 // A missing directory cannot be an asset dependency: watch its parent, so the compiled module is refreshed once it appears.
-                if ([] === $controllerPaths && is_dir(\dirname($resolvedConventionPath))) {
-                    $watchedPaths[] = \dirname($resolvedConventionPath);
+                if (!is_dir($conventionPath)) {
+                    $watchedPaths[] = \dirname($module);
                 }
             }
 
@@ -183,7 +188,7 @@ final class StimulusExtension extends Extension implements PrependExtensionInter
                                 ->end()
                             ->end()
                             ->arrayNode('controller_paths')
-                                ->info('Defaults to "%kernel.project_dir%/assets/<name>/controllers" when that directory exists.')
+                                ->info('Defaults to the "controllers" directory next to the module, when that directory exists.')
                                 ->defaultNull()
                                 ->scalarPrototype()->end()
                             ->end()
