@@ -3,6 +3,7 @@
 ## 3.9.0
 
 - [daisyUI v5] Add the `daisyui-5` kit, with the `button` recipe
+- [Common] Add `password-strength` recipe
 
 ## 3.8.1
 

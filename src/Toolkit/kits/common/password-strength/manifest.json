@@ -1,0 +1,9 @@
+{
+    "$schema": "../../../schema-kit-recipe-v1.json",
+    "type": "component",
+    "name": "Password Strength",
+    "version-added": "3.9",
+    "copy-files": {
+        "assets/controllers/": "%CONTROLLERS_DIR%/"
+    }
+}
