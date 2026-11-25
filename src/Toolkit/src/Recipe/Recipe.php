@@ -12,7 +12,6 @@
 namespace Symfony\UX\Toolkit\Recipe;
 
 use Symfony\Component\Filesystem\Path;
-use Symfony\Component\Finder\Finder;
 use Symfony\Component\String\Slugger\AsciiSlugger;
 use Symfony\UX\Toolkit\File;
 use Symfony\UX\Toolkit\Markdown\CodeOptions;
@@ -128,16 +127,7 @@ final class Recipe
             return $this->files;
         }
 
-        $files = [];
-        foreach ($this->manifest->copyFiles as $source => $destination) {
-            $finder = new Finder()->in(Path::join($this->absolutePath, $source))->sortByName()->files();
-
-            foreach ($finder as $file) {
-                $files[] = new File(Path::join($source, $file->getRelativePathname()), Path::join($destination, $file->getRelativePathname()));
-            }
-        }
-
-        return $this->files = $files;
+        return $this->files = File::collect($this->absolutePath, $this->manifest->copyFiles);
     }
 
     private function getExampleBaseId(string $docBefore, AsciiSlugger $slugger): string

@@ -15,7 +15,6 @@ use Symfony\UX\Toolkit\Dependency\ImportmapPackageDependency;
 use Symfony\UX\Toolkit\Dependency\NpmPackageDependency;
 use Symfony\UX\Toolkit\Dependency\PhpPackageDependency;
 use Symfony\UX\Toolkit\File;
-use Symfony\UX\Toolkit\Recipe\Recipe;
 
 /**
  * Represents a pool of files and dependencies to be installed.
@@ -46,9 +45,12 @@ final class Pool
      */
     private array $importmapPackageDependencies = [];
 
-    public function addFile(Recipe $recipe, File $file): void
+    /**
+     * @param non-empty-string $sourceAbsolutePath the directory of the kit or recipe the file comes from
+     */
+    public function addFile(string $sourceAbsolutePath, File $file): void
     {
-        $this->files[$recipe->absolutePath][$file->destinationRelativePathName] ??= $file;
+        $this->files[$sourceAbsolutePath][$file->destinationRelativePathName] ??= $file;
     }
 
     /**

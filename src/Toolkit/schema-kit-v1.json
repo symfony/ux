@@ -30,6 +30,10 @@
             "type": "string",
             "description": "Path, relative to the kit root, to an SVG icon of the kit (e.g. 'icon.svg')."
         },
+        "copy-files": {
+            "description": "Relative directories of kit-global files (e.g. fonts) to copy into the project, installed with every recipe of the kit. A destination can use the \"%COMPONENTS_DIR%\" and \"%CONTROLLERS_DIR%\" placeholders, which point to the directories configured in the application (\"templates/components\" and \"assets/controllers\" by default)",
+            "type": "object"
+        },
         "dependencies": {
             "description": "List of kit-global dependencies, available to every recipe of the kit (e.g. a library installed once during the kit setup).",
             "type": "object",

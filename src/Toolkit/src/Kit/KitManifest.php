@@ -23,9 +23,10 @@ use Symfony\UX\Toolkit\Dependency\DependencyParser;
 final class KitManifest
 {
     /**
-     * @param list<DependencyInterface> $dependencies Kit-global dependencies, available to every recipe
-     * @param ?string                   $color        Accent color of the kit, used when rendering its documentation
-     * @param ?string                   $icon         Path, relative to the kit root, to an SVG icon of the kit
+     * @param list<DependencyInterface>                 $dependencies Kit-global dependencies, available to every recipe
+     * @param ?string                                   $color        Accent color of the kit, used when rendering its documentation
+     * @param ?string                                   $icon         Path, relative to the kit root, to an SVG icon of the kit
+     * @param array<non-empty-string, non-empty-string> $copyFiles    Kit-global files (e.g. fonts), installed with every recipe
      */
     public function __construct(
         public readonly string $name,
@@ -36,8 +37,10 @@ final class KitManifest
         public readonly array $dependencies = [],
         public readonly ?string $color = null,
         public readonly ?string $icon = null,
+        public readonly array $copyFiles = [],
     ) {
         Assert::kitName($this->name);
+        Assert::copyFiles($this->copyFiles);
 
         if (!filter_var($this->homepage, \FILTER_VALIDATE_URL)) {
             throw new \InvalidArgumentException(\sprintf('Invalid homepage URL "%s".', $this->homepage));
@@ -60,6 +63,7 @@ final class KitManifest
             dependencies: DependencyParser::parse($data['dependencies'] ?? null, allowRecipe: false),
             color: $data['color'] ?? null,
             icon: $data['icon'] ?? null,
+            copyFiles: $data['copy-files'] ?? [],
         );
     }
 }

@@ -1,0 +1,10 @@
+{
+    "$schema": "../../../../schema-kit-v1.json",
+    "name": "With kit files",
+    "description": "Kit used as a test fixture, shipping kit-global files (fonts) installed with every recipe.",
+    "license": "MIT",
+    "homepage": "https://ux.symfony.com/",
+    "copy-files": {
+        "assets/fonts/": "assets/fonts/"
+    }
+}

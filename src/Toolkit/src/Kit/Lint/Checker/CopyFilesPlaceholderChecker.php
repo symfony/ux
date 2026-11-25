@@ -34,26 +34,39 @@ final class CopyFilesPlaceholderChecker implements KitCheckerInterface
 
     public function check(Kit $kit): iterable
     {
-        foreach ($kit->getRecipes() as $recipe) {
-            foreach ($recipe->manifest->copyFiles as $source => $destination) {
-                foreach (self::DEFAULT_DIRECTORIES as $placeholder => $directory) {
-                    if (!$this->installsInto($recipe->absolutePath, $source, $destination, $directory)) {
-                        continue;
-                    }
+        yield from $this->checkCopyFiles($kit->absolutePath, $kit->manifest->copyFiles, null);
 
-                    yield new LintIssue(
-                        severity: LintSeverity::Warning,
-                        category: 'copy-files.placeholder',
-                        message: \sprintf('copy-files destination "%s" installs files into the default directory "%s", so it ignores the application configuration: use the "%s" placeholder instead.', $destination, $directory, $placeholder),
-                        recipe: $recipe->name,
-                        file: $source,
-                    );
+        foreach ($kit->getRecipes() as $recipe) {
+            yield from $this->checkCopyFiles($recipe->absolutePath, $recipe->manifest->copyFiles, $recipe->name);
+        }
+    }
+
+    /**
+     * @param array<non-empty-string, non-empty-string> $copyFiles
+     * @param ?string                                   $recipe    null for the kit-global files
+     *
+     * @return iterable<LintIssue>
+     */
+    private function checkCopyFiles(string $absolutePath, array $copyFiles, ?string $recipe): iterable
+    {
+        foreach ($copyFiles as $source => $destination) {
+            foreach (self::DEFAULT_DIRECTORIES as $placeholder => $directory) {
+                if (!$this->installsInto($absolutePath, $source, $destination, $directory)) {
+                    continue;
                 }
+
+                yield new LintIssue(
+                    severity: LintSeverity::Warning,
+                    category: 'copy-files.placeholder',
+                    message: \sprintf('copy-files destination "%s" installs files into the default directory "%s", so it ignores the application configuration: use the "%s" placeholder instead.', $destination, $directory, $placeholder),
+                    recipe: $recipe,
+                    file: $source,
+                );
             }
         }
     }
 
-    private function installsInto(string $recipePath, string $source, string $destination, string $directory): bool
+    private function installsInto(string $basePath, string $source, string $destination, string $directory): bool
     {
         if (Path::isBasePath($directory, $destination)) {
             return true;
@@ -61,6 +74,6 @@ final class CopyFilesPlaceholderChecker implements KitCheckerInterface
 
         // A parent directory installs into the default one when the source has the matching subdirectory.
         return Path::isBasePath($destination, $directory)
-            && file_exists(Path::join($recipePath, $source, Path::makeRelative($directory, $destination)));
+            && file_exists(Path::join($basePath, $source, Path::makeRelative($directory, $destination)));
     }
 }

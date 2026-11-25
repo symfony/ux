@@ -149,6 +149,67 @@ final class KitManifestTest extends TestCase
         $this->assertInstanceOf(ImportmapPackageDependency::class, $manifest->dependencies[2]);
     }
 
+    public function testFromJsonWithCopyFiles(): void
+    {
+        $manifest = KitManifest::fromJson(<<<JSON
+                {
+                    "name": "kit",
+                    "description": "A kit",
+                    "license": "MIT",
+                    "homepage": "https://example.com",
+                    "copy-files": {
+                        "assets/fonts/": "assets/fonts/"
+                    }
+                }
+            JSON);
+
+        $this->assertSame(['assets/fonts/' => 'assets/fonts/'], $manifest->copyFiles);
+    }
+
+    public function testFromJsonWithoutCopyFiles(): void
+    {
+        $manifest = KitManifest::fromJson(<<<JSON
+                {
+                    "name": "kit",
+                    "description": "A kit",
+                    "license": "MIT",
+                    "homepage": "https://example.com"
+                }
+            JSON);
+
+        $this->assertSame([], $manifest->copyFiles);
+    }
+
+    /**
+     * @return iterable<string, array{array<string, string>, string}>
+     */
+    public static function provideInvalidCopyFiles(): iterable
+    {
+        yield 'absolute source' => [['/etc/fonts/' => 'assets/fonts/'], 'Copy file source "/etc/fonts/" must be a relative path.'];
+        yield 'absolute destination' => [['assets/fonts/' => '/var/www/'], 'Copy file destination "/var/www/" must be a relative path.'];
+        yield 'escaping source' => [['../fonts/' => 'assets/fonts/'], 'The path "../fonts/" must not escape its target directory.'];
+        yield 'escaping destination' => [['assets/fonts/' => 'assets/../../fonts/'], 'The path "assets/../../fonts/" must not escape its target directory.'];
+        yield 'unknown placeholder' => [['assets/fonts/' => '%FONTS_DIR%/'], 'Unknown placeholder "%FONTS_DIR%"'];
+    }
+
+    /**
+     * @param array<string, string> $copyFiles
+     */
+    #[DataProvider('provideInvalidCopyFiles')]
+    public function testFromJsonRejectsInvalidCopyFiles(array $copyFiles, string $expectedMessage): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage($expectedMessage);
+
+        KitManifest::fromJson(json_encode([
+            'name' => 'kit',
+            'description' => 'A kit',
+            'license' => 'MIT',
+            'homepage' => 'https://example.com',
+            'copy-files' => $copyFiles,
+        ], \JSON_THROW_ON_ERROR));
+    }
+
     public function testFromJsonRejectsRecipeDependency(): void
     {
         $this->expectException(\InvalidArgumentException::class);

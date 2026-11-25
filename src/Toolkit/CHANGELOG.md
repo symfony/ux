@@ -6,6 +6,7 @@
 - [daisyUI v5] Add the `daisyui-5` kit, with the `button` recipe
 - [daisyUI v5] Add the `badge` recipe
 - [daisyUI v5] Add the `alert` recipe
+- Allow a kit to ship kit-global files, like the fonts it needs, with a `copy-files` entry in its `manifest.json`: `ux:install` installs them with every recipe of the kit
 
 ## 3.8.1
 

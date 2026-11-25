@@ -52,17 +52,17 @@ final class Installer
         $componentNameRewriter = ComponentNameRewriter::forKit($kit, $this->directories->getComponentNamePrefix());
         $stimulusIdentifierRewriter = StimulusIdentifierRewriter::forKit($kit, $this->directories->getStimulusIdentifierPrefix());
 
-        foreach ($pool->getFiles() as $recipeAbsolutePath => $files) {
+        foreach ($pool->getFiles() as $sourceAbsolutePath => $files) {
             foreach ($files as $file) {
                 $installedFile = new File($file->sourceRelativePathName, $this->directories->resolve($file->destinationRelativePathName));
-                $sourceAbsolutePathName = Path::join($recipeAbsolutePath, $installedFile->sourceRelativePathName);
+                $sourceAbsolutePathName = Path::join($sourceAbsolutePath, $installedFile->sourceRelativePathName);
                 $destinationAbsolutePathName = Path::join($destinationPath, $installedFile->destinationRelativePathName);
 
-                // Last-line defense: even though RecipeManifest and File already reject paths
+                // Last-line defense: even though the manifests and File already reject paths
                 // escaping their directory, re-check the fully resolved paths right before the
                 // filesystem read/write, so the copy can never land outside its base directory.
-                if (!Path::isBasePath($recipeAbsolutePath, $sourceAbsolutePathName)) {
-                    throw new \RuntimeException(\sprintf('Refusing to read "%s": source escapes the recipe directory.', $installedFile->sourceRelativePathName));
+                if (!Path::isBasePath($sourceAbsolutePath, $sourceAbsolutePathName)) {
+                    throw new \RuntimeException(\sprintf('Refusing to read "%s": source escapes the kit or recipe directory.', $installedFile->sourceRelativePathName));
                 }
                 if (!Path::isBasePath($destinationPath, $destinationAbsolutePathName)) {
                     throw new \RuntimeException(\sprintf('Refusing to write "%s": destination escapes the target directory.', $installedFile->destinationRelativePathName));

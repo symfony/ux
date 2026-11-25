@@ -156,6 +156,11 @@ final class RecipeDocRenderer
 
         $files = [];
         foreach ($pool->getFiles() as $recipeAbsolutePath => $recipeFiles) {
+            // The kit-global files (e.g. fonts) are documented once, by the kit itself
+            if ($recipeAbsolutePath === $kit->absolutePath) {
+                continue;
+            }
+
             foreach ($recipeFiles as $file) {
                 $source = Path::join($recipeAbsolutePath, $file->sourceRelativePathName);
                 $files[] = [
