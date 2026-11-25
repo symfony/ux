@@ -251,6 +251,17 @@ export function executeMorphdom(
                     return !fromEl.hasAttribute('data-live-ignore');
                 },
 
+                beforeAttributeUpdated(attributeName: string, element: Element, mutationType: 'update' | 'remove') {
+                    // Idiomorph empties an <input> when the new one has no "value" attribute,
+                    // which would discard the value kept for a field modified since the request
+                    return !(
+                        attributeName === 'value' &&
+                        mutationType === 'remove' &&
+                        modifiedFieldElements.includes(element as HTMLElement) &&
+                        !['checkbox', 'radio'].includes((element as HTMLInputElement).type)
+                    );
+                },
+
                 beforeNodeRemoved(node: Node) {
                     if (!(node instanceof HTMLElement)) {
                         // text element

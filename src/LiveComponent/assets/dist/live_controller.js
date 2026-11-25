@@ -1095,6 +1095,9 @@ function executeMorphdom(rootFromElement, rootToElement, modifiedFieldElements, 
 				if (fromEl.parentElement?.hasAttribute("data-skip-morph")) return false;
 				return !fromEl.hasAttribute("data-live-ignore");
 			},
+			beforeAttributeUpdated(attributeName, element, mutationType) {
+				return !(attributeName === "value" && mutationType === "remove" && modifiedFieldElements.includes(element) && !["checkbox", "radio"].includes(element.type));
+			},
 			beforeNodeRemoved(node) {
 				if (!(node instanceof HTMLElement)) return true;
 				const id = node.getAttribute("id");
