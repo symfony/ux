@@ -1,0 +1,67 @@
+{%- props
+    ## 'default'|'neutral'|'primary'|'secondary'|'accent'|'info'|'success'|'warning'|'error' The color of the button.
+    color = 'default',
+    ## 'default'|'outline'|'dash'|'soft'|'ghost'|'link' The style of the button.
+    variant = 'default',
+    ## 'xs'|'sm'|'md'|'lg'|'xl' The size of the button.
+    size = 'md',
+    ## 'default'|'square'|'circle' The shape of the button, `square` and `circle` give it a 1:1 ratio.
+    shape = 'default',
+    ## boolean Whether the button has more horizontal padding.
+    wide = false,
+    ## boolean Whether the button takes the full width of its container.
+    block = false,
+    ## 'button'|'a' The HTML tag to render.
+    as = 'button'
+-%}
+{%- set style = html_cva(
+    base: 'btn',
+    variants: {
+        color: {
+            default: '',
+            neutral: 'btn-neutral',
+            primary: 'btn-primary',
+            secondary: 'btn-secondary',
+            accent: 'btn-accent',
+            info: 'btn-info',
+            success: 'btn-success',
+            warning: 'btn-warning',
+            error: 'btn-error',
+        },
+        variant: {
+            default: '',
+            outline: 'btn-outline',
+            dash: 'btn-dash',
+            soft: 'btn-soft',
+            ghost: 'btn-ghost',
+            link: 'btn-link',
+        },
+        size: {
+            xs: 'btn-xs',
+            sm: 'btn-sm',
+            md: '',
+            lg: 'btn-lg',
+            xl: 'btn-xl',
+        },
+        shape: {
+            default: '',
+            square: 'btn-square',
+            circle: 'btn-circle',
+        },
+        wide: {
+            true: 'btn-wide',
+        },
+        block: {
+            true: 'btn-block',
+        },
+    },
+) -%}
+<{{ as }}
+    {{ attributes.defaults({
+        class: style.apply({color: color, variant: variant, size: size, shape: shape, wide: wide, block: block})|tailwind_classes,
+        type: as == 'button' ? 'button' : false,
+    }) }}
+>
+    {##- The button label and/or icon. -#}
+    {%- block content %}{% endblock -%}
+</{{ as }}>

@@ -1,0 +1,9 @@
+/*
+ * Applied while Playwright takes a screenshot.
+ *
+ * `animations: 'disabled'` stops CSS animations, but not the SMIL animations of an SVG image.
+ * daisyUI draws its loading spinner with such an image, so it gets a still frame of the same spinner.
+ */
+.loading-spinner {
+    mask-image: url("data:image/svg+xml,%3Csvg width='24' height='24' stroke='black' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='12' cy='12' r='9.5' fill='none' stroke-width='3' stroke-linecap='round' stroke-dasharray='42,150' stroke-dashoffset='-16'/%3E%3C/svg%3E");
+}

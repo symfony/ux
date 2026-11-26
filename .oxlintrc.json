@@ -20,6 +20,7 @@
         "src/**/dist",
         "src/**/var",
         "src/**/tests/**/fixtures/**",
-        "src/**/tests/**/__snapshots__/**"
+        "src/**/tests/**/__snapshots__/**",
+        "src/Toolkit/kits/daisyui-5/daisyui.mjs"
     ]
 }
