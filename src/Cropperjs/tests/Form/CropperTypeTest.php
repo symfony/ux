@@ -11,9 +11,11 @@
 
 namespace Symfony\UX\Cropperjs\Tests;
 
+use Intervention\Image\ImageManager;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\UX\Cropperjs\Form\CropperType;
+use Symfony\UX\Cropperjs\Model\Crop;
 use Symfony\UX\Cropperjs\Tests\Kernel\TwigAppKernel;
 use Twig\Environment;
 
@@ -77,5 +79,43 @@ class CropperTypeTest extends TestCase
                 'data-symfony--ux-cropperjs--cropper-options-value="[]"',
             str_replace(' >', '>', $rendered)
         );
+    }
+
+    public function testSubmitValidOptions()
+    {
+        $kernel = new TwigAppKernel('test', true);
+        $kernel->boot();
+        $container = $kernel->getContainer()->get('test.service_container');
+        $crop = new Crop(new ImageManager(), '/path/to/image.jpg');
+        $form = $container->get(FormFactoryInterface::class)->createBuilder()
+            ->add('photo', CropperType::class, ['public_url' => '/public/url.jpg', 'data' => $crop])
+            ->getForm()
+        ;
+
+        $form->submit(['photo' => ['options' => '{"x":1,"y":2,"width":3,"height":4,"rotate":0}']]);
+
+        $this->assertTrue($form->isValid());
+        $this->assertSame(['x' => 1, 'y' => 2, 'width' => 3, 'height' => 4, 'rotate' => 0], json_decode($crop->getOptions(), true));
+    }
+
+    /**
+     * @testWith ["\"abc\""]
+     *           ["{not json"]
+     *           ["{\"width\":[1],\"height\":2}"]
+     */
+    public function testSubmitInvalidOptionsIsAFormError(string $options)
+    {
+        $kernel = new TwigAppKernel('test', true);
+        $kernel->boot();
+        $container = $kernel->getContainer()->get('test.service_container');
+        $form = $container->get(FormFactoryInterface::class)->createBuilder()
+            ->add('photo', CropperType::class, ['public_url' => '/public/url.jpg', 'data' => new Crop(new ImageManager(), '/path/to/image.jpg')])
+            ->getForm()
+        ;
+
+        $form->submit(['photo' => ['options' => $options]]);
+
+        $this->assertTrue($form->isSubmitted());
+        $this->assertFalse($form->isValid());
     }
 }

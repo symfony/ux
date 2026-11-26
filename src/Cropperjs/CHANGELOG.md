@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.36.4
+
+- Throw an `\InvalidArgumentException` from `Crop::setOptions()` when the options are not a JSON object or when a numeric option is not a finite number, and report it as a form error in `CropperType`
+
 ## 2.34
 
 - Deprecate calling `Crop::getCroppedImage()` and `Crop::getCroppedThumbnail()` without explicitly passing `true` for the $applyRotation parameter. It will always be `true` in 3.0

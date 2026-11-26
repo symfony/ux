@@ -12,6 +12,7 @@
 namespace Symfony\UX\Cropperjs\Form;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Exception\TransformationFailedException;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
@@ -31,6 +32,13 @@ class CropperType extends AbstractType
         $builder
             ->add('options', HiddenType::class, [
                 'error_bubbling' => true,
+                'setter' => static function (Crop $crop, $options): void {
+                    try {
+                        $crop->setOptions((string) $options);
+                    } catch (\InvalidArgumentException $e) {
+                        throw new TransformationFailedException($e->getMessage(), 0, $e);
+                    }
+                },
                 'attr' => [
                     'data-controller' => trim(($options['attr']['data-controller'] ?? '').' symfony--ux-cropperjs--cropper'),
                     'data-symfony--ux-cropperjs--cropper-public-url-value' => $options['public_url'],

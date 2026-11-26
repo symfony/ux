@@ -120,4 +120,63 @@ class CropTest extends TestCase
 
         $crop->getCroppedThumbnail(200, 200, applyRotation: false);
     }
+
+    public function testSetOptionsAcceptsCropperjsOutput()
+    {
+        $crop = new Crop(new ImageManager(), $this->testImagePath);
+        $options = ['x' => 10.5, 'y' => 0, 'width' => 100.2, 'height' => 50, 'rotate' => -90, 'scaleX' => 1, 'scaleY' => -1];
+
+        $crop->setOptions(json_encode($options));
+
+        $this->assertSame($options, json_decode($crop->getOptions(), true));
+    }
+
+    public function testSetOptionsAcceptsNullDimensions()
+    {
+        $crop = new Crop(new ImageManager(), $this->testImagePath);
+
+        $crop->setOptions('{"x":0,"y":0,"width":null,"height":null,"rotate":0}');
+
+        $this->assertSame(['x' => 0, 'y' => 0, 'width' => null, 'height' => null, 'rotate' => 0], json_decode($crop->getOptions(), true));
+    }
+
+    public function testSetOptionsKeepsUnknownKeys()
+    {
+        $crop = new Crop(new ImageManager(), $this->testImagePath);
+
+        $crop->setOptions('{"width":10,"height":10,"x":0,"y":0,"extra":"value"}');
+
+        $this->assertSame('value', json_decode($crop->getOptions(), true)['extra']);
+    }
+
+    /**
+     * @dataProvider invalidOptionsProvider
+     */
+    public function testSetOptionsRejectsInvalidOptions(string $options)
+    {
+        $crop = new Crop(new ImageManager(), $this->testImagePath);
+
+        $this->expectException(\InvalidArgumentException::class);
+
+        $crop->setOptions($options);
+    }
+
+    public static function invalidOptionsProvider(): iterable
+    {
+        yield 'invalid JSON' => ['{not json'];
+        yield 'empty string' => [''];
+        yield 'JSON null' => ['null'];
+        yield 'JSON string' => ['"abc"'];
+        yield 'JSON number' => ['42'];
+        yield 'JSON boolean' => ['true'];
+        yield 'JSON list' => ['[1,2]'];
+        yield 'array width' => ['{"width":[1],"height":2}'];
+        yield 'object height' => ['{"width":1,"height":{"a":1}}'];
+        yield 'string width' => ['{"width":"x","height":2}'];
+        yield 'numeric string width' => ['{"width":"10","height":2}'];
+        yield 'boolean x' => ['{"width":1,"height":2,"x":true}'];
+        yield 'string rotate' => ['{"width":1,"height":2,"rotate":"90"}'];
+        yield 'infinite width' => ['{"width":1e999,"height":2}'];
+        yield 'infinite scaleX' => ['{"scaleX":-1e999}'];
+    }
 }
