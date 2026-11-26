@@ -23,6 +23,24 @@ final class ConstraintVersionTest extends TestCase
         $this->assertSame('1.2.3', (string) $version);
     }
 
+    /**
+     * @dataProvider provideInvalidVersions
+     */
+    public function testCannotBeInstantiatedWithInvalidVersion(string $value)
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        new ConstraintVersion($value);
+    }
+
+    public static function provideInvalidVersions(): iterable
+    {
+        yield ['^1 --no-plugins'];
+        yield ['1; id'];
+        yield ["1\r2"];
+        yield ['</><fg=black>1'];
+    }
+
     public function testCanBeCompared()
     {
         $this->assertTrue((new ConstraintVersion('1.2.3'))->isHigherThan(new ConstraintVersion('1.2.2')));

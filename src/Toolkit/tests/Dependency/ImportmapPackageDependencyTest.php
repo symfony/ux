@@ -28,4 +28,21 @@ class ImportmapPackageDependencyTest extends TestCase
         $this->assertSame('Importmap package "bootstrap/dist/css/bootstrap.min.css"', $dependency->toDebug());
         $this->assertSame('bootstrap/dist/css/bootstrap.min.css', (string) $dependency);
     }
+
+    /**
+     * @dataProvider provideInvalidPackages
+     */
+    public function testShouldRejectInvalidPackage(string $package)
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        new ImportmapPackageDependency($package);
+    }
+
+    public static function provideInvalidPackages(): iterable
+    {
+        yield ['react; id'];
+        yield ['<fg=black>react</>'];
+        yield ["react\r"];
+    }
 }

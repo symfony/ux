@@ -11,6 +11,8 @@
 
 namespace Symfony\UX\Toolkit\Dependency;
 
+use Symfony\UX\Toolkit\Assert;
+
 /**
  * Represents a dependency on an Importmap package.
  *
@@ -26,6 +28,7 @@ final class ImportmapPackageDependency implements DependencyInterface
     public function __construct(
         public readonly string $package,
     ) {
+        Assert::importmapPackageName($package);
     }
 
     public function isEquivalentTo(DependencyInterface $dependency): bool
