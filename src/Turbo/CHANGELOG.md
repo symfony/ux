@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.36.4
+
+- Throw an `\InvalidArgumentException` when `TurboStream::action()` receives an attribute name that is not a valid HTML attribute name
+
 ## 2.35
 
 - Allow Symfony UX 3.x packages

@@ -104,4 +104,42 @@ class TurboStreamTest extends TestCase
         yield ['customAction', 'some["selector"]', '<div>content</div>', ['action' => 'someAction']];
         yield ['customAction', 'some["selector"]', '<div>content</div>', ['targets' => 'someTargets']];
     }
+
+    public function testCustomWithCommonAttributeNames()
+    {
+        $html = TurboStream::action('customAction', 'some["selector"]', '<div>content</div>', ['data-foo' => 'a', 'aria-hidden' => 'true', 'x:y' => 'b', '@click' => 'c', 'a.b_c' => null]);
+
+        $this->assertSame(<<<EOHTML
+            <turbo-stream action="customAction" targets="some[&quot;selector&quot;]" data-foo="a" aria-hidden="true" x:y="b" @click="c" a.b_c>
+                <template><div>content</div></template>
+            </turbo-stream>
+            EOHTML,
+            $html
+        );
+    }
+
+    /**
+     * @dataProvider customThrowsExceptionOnInvalidAttributeNameDataProvider
+     */
+    public function testCustomThrowsExceptionOnInvalidAttributeName(string $name)
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('is not a valid HTML attribute name');
+
+        TurboStream::action('customAction', 'some["selector"]', '<div>content</div>', [$name => 'value']);
+    }
+
+    public static function customThrowsExceptionOnInvalidAttributeNameDataProvider(): \Generator
+    {
+        yield 'space and event handler' => ['foo onmouseover=alert(1)'];
+        yield 'equal sign' => ['a=b c'];
+        yield 'empty' => [''];
+        yield 'quote' => ['a"b'];
+        yield 'greater than' => ['a>b'];
+        yield 'slash' => ['a/b'];
+        yield 'newline' => ["a\nb"];
+        yield 'trailing newline' => ["ab\n"];
+        yield 'leading digit' => ['1a'];
+        yield 'leading dash' => ['-a'];
+    }
 }
