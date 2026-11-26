@@ -107,7 +107,7 @@ final class Iconify
         // Sort to enforce cache hits
         sort($names);
         $queryString = implode(',', $names);
-        if (!preg_match('#^[a-z0-9-,]+$#', $queryString)) {
+        if (!preg_match('#^[a-z0-9-,]+$#D', $queryString)) {
             throw new \InvalidArgumentException('Invalid icon names.'.$queryString);
         }
 
