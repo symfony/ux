@@ -40,6 +40,11 @@ final class ComponentTemplateFinder implements ComponentTemplateFinderInterface
         $loader = $this->loader;
         $componentPath = rtrim(str_replace(':', '/', $name));
 
+        $segments = preg_split('#[/\\\\]#', $componentPath);
+        if ('' === $segments[0] || \in_array('..', $segments, true)) {
+            return null;
+        }
+
         // Legacy auto-naming rules < 2.13
         if (null === $this->directory) {
             if ($loader->exists('components/'.$componentPath.'.html.twig')) {
