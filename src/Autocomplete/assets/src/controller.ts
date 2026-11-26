@@ -186,7 +186,9 @@ export default class extends Controller {
                 if (optgroup && this.tomSelect.optgroups) {
                     optgroupData = this.tomSelect.optgroups[optgroup];
                     if (optgroupData) {
-                        const optgroupElement = parentElement.querySelector(`optgroup[label="${optgroupData.label}"]`);
+                        const optgroupElement = parentElement.querySelector(
+                            `optgroup[label="${CSS.escape(optgroupData.label)}"]`
+                        );
                         if (optgroupElement) {
                             parentElement = optgroupElement;
                         }
