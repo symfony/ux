@@ -399,6 +399,26 @@ final class TwigPreLexerTest extends TestCase
             '<twig:foo text="Hello {{ name }}, I\'m Theo!"/>',
             "{{ component('foo', { text: 'Hello '~(name)~', I\'m Theo!' }) }}",
         ];
+        yield 'component_with_trailing_backslash_in_attribute' => [
+            '<twig:Foo title="a\\" b="2" />',
+            "{{ component('Foo', { title: 'a\\\\', b: '2' }) }}",
+        ];
+        yield 'component_with_escaped_quote_in_attribute' => [
+            '<twig:Foo title="a\\\'b" />',
+            "{{ component('Foo', { title: 'a\\'b' }) }}",
+        ];
+        yield 'component_with_escaped_backslash_in_attribute' => [
+            '<twig:Foo title="App\\\\Entity" b="a\\\\" />',
+            "{{ component('Foo', { title: 'App\\\\Entity', b: 'a\\\\' }) }}",
+        ];
+        yield 'component_with_escape_sequence_in_attribute' => [
+            '<twig:Foo title="a\nb" />',
+            "{{ component('Foo', { title: 'a\\nb' }) }}",
+        ];
+        yield 'component_with_backslash_before_twig_expression_in_attribute' => [
+            '<twig:Foo title="a\\{{ name }}b\\" />',
+            "{{ component('Foo', { title: 'a\\\\'~(name)~'b\\\\' }) }}",
+        ];
         yield 'component_with_nested_hash_in_argument' => [
             '<twig:foo class="{{ css({lg: {p: \'4\'}}) }}"/>',
             "{{ component('foo', { class: (css({lg: {p: '4'}})) }) }}",

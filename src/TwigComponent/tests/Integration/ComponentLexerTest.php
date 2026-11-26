@@ -29,6 +29,14 @@ class ComponentLexerTest extends KernelTestCase
         $this->assertStringContainsString('propB: hello', $output);
     }
 
+    public function testComponentSyntaxReadsStaticAttributesAsTwigStrings(): void
+    {
+        $output = self::getContainer()->get(Environment::class)->render('tags/static_attribute_with_backslashes.html.twig');
+
+        $this->assertStringContainsString('propA: App\Entity\Book', $output);
+        $this->assertStringContainsString('propB: a\\', $output);
+    }
+
     public function testComponentSyntaxSelfCloseTags(): void
     {
         $output = self::getContainer()->get(Environment::class)->render('tags/self_close_tag.html.twig');

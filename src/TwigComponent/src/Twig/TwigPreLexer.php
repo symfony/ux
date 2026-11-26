@@ -752,7 +752,7 @@ class TwigPreLexer
             if ($this->check('{{')) {
                 // mark any previous static text as complete: push into parts
                 if ('' !== $currentPart) {
-                    $parts[] = \sprintf("'%s'", str_replace("'", "\'", $currentPart));
+                    $parts[] = $this->quoteStaticText($currentPart);
                     $currentPart = '';
                 }
 
@@ -771,9 +771,23 @@ class TwigPreLexer
         }
 
         if ('' !== $currentPart) {
-            $parts[] = \sprintf("'%s'", str_replace("'", "\'", $currentPart));
+            $parts[] = $this->quoteStaticText($currentPart);
         }
 
         return implode('~', $parts);
+    }
+
+    /**
+     * The text is read as the body of a Twig string, so its escape sequences are kept.
+     */
+    private function quoteStaticText(string $text): string
+    {
+        $escaped = preg_replace_callback('/\\\\.|\\\\\z|\'/s', static fn (array $match): string => match ($match[0]) {
+            "'" => "\\'",
+            '\\' => '\\\\',
+            default => $match[0],
+        }, $text);
+
+        return \sprintf("'%s'", $escaped);
     }
 }
