@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 3.9.0
+
+- Add support for MercureBundle 0.7
+
 ## 3.6.0
 
 - Add support for MercureBundle 0.5 and 0.6
