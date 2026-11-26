@@ -1,0 +1,40 @@
+{%- props
+    ## 'default'|'info'|'success'|'warning'|'error' The color of the alert.
+    color = 'default',
+    ## 'default'|'outline'|'dash'|'soft' The style of the alert.
+    variant = 'default',
+    ## 'default'|'vertical'|'horizontal' The direction of the alert content: `vertical` suits mobile, `horizontal` suits desktop.
+    direction = 'default'
+-%}
+{%- set style = html_cva(
+    base: 'alert',
+    variants: {
+        color: {
+            default: '',
+            info: 'alert-info',
+            success: 'alert-success',
+            warning: 'alert-warning',
+            error: 'alert-error',
+        },
+        variant: {
+            default: '',
+            outline: 'alert-outline',
+            dash: 'alert-dash',
+            soft: 'alert-soft',
+        },
+        direction: {
+            default: '',
+            vertical: 'alert-vertical',
+            horizontal: 'alert-horizontal',
+        },
+    },
+) -%}
+<div
+    role="alert"
+    {{ attributes.defaults({
+        class: style.apply({color: color, variant: variant, direction: direction})|tailwind_classes,
+    }) }}
+>
+    {##- The alert content, such as an icon, a message and actions. -#}
+    {%- block content %}{% endblock -%}
+</div>
