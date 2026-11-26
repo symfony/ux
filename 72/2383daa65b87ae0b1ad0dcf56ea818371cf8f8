@@ -1,0 +1,5 @@
+---------------------------------------------------------------------------
+
+by Enz000 at 2026-11-26T13:13:57Z
+
+FYI, `UrlGeneratorParityTest::testFixtureIsUpToDate` in `src/Router` fails since symfony/routing 8.1.12 / 7.4.24 / 6.4.51 (released on Nov 25): the PHP generator now throws `InvalidParameterError` for `.` and `..` path segments, while the fixture still expects `/files/a/%2E%2E/b/%2E/c`. It only shows up in PRs that run the Router tests. I can open a PR to align the JS generator if you want.
