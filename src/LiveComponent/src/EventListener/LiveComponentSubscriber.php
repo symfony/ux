@@ -22,6 +22,7 @@ use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\Event\ViewEvent;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
@@ -271,6 +272,18 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
                 ];
             }
 
+            foreach (['props', 'updated', 'children', 'propsFromParent'] as $key) {
+                if (!\is_array($liveRequestData[$key])) {
+                    throw new BadRequestHttpException(\sprintf('The "%s" data must be an array, "%s" given.', $key, get_debug_type($liveRequestData[$key])));
+                }
+            }
+
+            foreach ($liveRequestData['children'] as $child) {
+                if (!\is_array($child) || !\is_string($child['fingerprint'] ?? null) || !\is_string($child['tag'] ?? null)) {
+                    throw new BadRequestHttpException('Each child must have a "fingerprint" and a "tag" string.');
+                }
+            }
+
             $request->attributes->set('_live_request_data', $liveRequestData);
         }
 
@@ -430,7 +443,7 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
         return $mountedComponent;
     }
 
-    private static function parseJsonFromQuery(Request $request, string $key): array
+    private static function parseJsonFromQuery(Request $request, string $key): mixed
     {
         if (!$request->query->has($key)) {
             return [];
