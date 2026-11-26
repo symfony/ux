@@ -119,6 +119,16 @@ final class CursorCodecTest extends TestCase
         new CursorCodec('secret')->encode([\NAN], true, 'order-a', 'products');
     }
 
+    public function testOutOfRangeFloatLiteralInTokenIsRejected(): void
+    {
+        $codec = new CursorCodec('application-secret');
+        $json = base64_decode(strtr($codec->encode([12], true, 'order-a', 'products'), '-_', '+/'));
+        $token = rtrim(strtr(base64_encode(str_replace('"values":[12]', '"values":[1e999]', $json)), '+/', '-_'), '=');
+
+        $this->expectException(\InvalidArgumentException::class);
+        $codec->decode($token, 'order-a', 'products');
+    }
+
     public function testInvalidBase64IsRejectedBeforeDecoding(): void
     {
         $this->expectException(\InvalidArgumentException::class);
