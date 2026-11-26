@@ -85,4 +85,16 @@ final class Assert
             throw new \InvalidArgumentException(\sprintf('The path "%s" must not escape its target directory.', $path));
         }
     }
+
+    /**
+     * Assert that a relative path does not contain glob characters, so that it is always read literally.
+     *
+     * @throws \InvalidArgumentException if the path contains a glob character
+     */
+    public static function pathHasNoGlobCharacters(string $path): void
+    {
+        if (1 === preg_match('/[*?\[\]{}]/', $path)) {
+            throw new \InvalidArgumentException(\sprintf('The path "%s" must not contain glob characters.', $path));
+        }
+    }
 }

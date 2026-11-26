@@ -266,4 +266,43 @@ class AssertTest extends TestCase
         yield ['..\\..\\tmp\\PWNED'];
         yield ['templates\\..\\..\\etc'];
     }
+
+    /**
+     * @dataProvider provideGlobFreePaths
+     */
+    public function testPathHasNoGlobCharactersWithValidPath(string $path)
+    {
+        $this->expectNotToPerformAssertions();
+
+        Assert::pathHasNoGlobCharacters($path);
+    }
+
+    public static function provideGlobFreePaths(): iterable
+    {
+        yield ['templates/'];
+        yield ['templates/components/Button.html.twig'];
+        yield ['templates/my-dir_1/file.name.twig'];
+    }
+
+    /**
+     * @dataProvider provideGlobPaths
+     */
+    public function testPathHasNoGlobCharactersWithGlobPath(string $path)
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage(\sprintf('The path "%s" must not contain glob characters.', $path));
+
+        Assert::pathHasNoGlobCharacters($path);
+    }
+
+    public static function provideGlobPaths(): iterable
+    {
+        yield ['.{.,x}/'];
+        yield ['templates/*'];
+        yield ['templates/?'];
+        yield ['templates/[a-z]'];
+        yield ['templates/{a,b}'];
+        yield ['templates/a]'];
+        yield ['templates/a}'];
+    }
 }
