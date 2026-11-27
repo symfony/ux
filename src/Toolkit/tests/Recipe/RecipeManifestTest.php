@@ -232,6 +232,35 @@ final class RecipeManifestTest extends TestCase
             JSON);
     }
 
+    /**
+     * @dataProvider provideGlobCopyFilesSources
+     */
+    public function testFromJsonWithGlobCharactersInCopyFilesSource(string $source)
+    {
+        $json = json_encode([
+            'type' => 'component',
+            'name' => 'MyComponent',
+            'description' => 'An incredible component',
+            'copy-files' => [$source => 'templates/'],
+        ], \JSON_THROW_ON_ERROR);
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage(\sprintf('The path "%s" must not contain glob characters.', $source));
+
+        RecipeManifest::fromJson($json);
+    }
+
+    public static function provideGlobCopyFilesSources(): iterable
+    {
+        yield 'brace expansion' => ['.{.,x}/'];
+        yield 'asterisk' => ['templates/*'];
+        yield 'question mark' => ['templates/?'];
+        yield 'opening bracket' => ['templates/[a-z]'];
+        yield 'closing bracket' => ['templates/a]'];
+        yield 'opening brace' => ['templates/{a,b}'];
+        yield 'closing brace' => ['templates/a}'];
+    }
+
     public function testFromJsonWithMinimumValidData()
     {
         $manifest = RecipeManifest::fromJson(<<<JSON

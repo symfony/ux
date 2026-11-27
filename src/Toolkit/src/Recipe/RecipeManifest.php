@@ -49,6 +49,7 @@ final class RecipeManifest
             }
 
             Assert::pathDoesNotEscapeDirectory($source);
+            Assert::pathHasNoGlobCharacters($source);
             Assert::pathDoesNotEscapeDirectory($destination);
         }
     }

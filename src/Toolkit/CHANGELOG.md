@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.36.4
+
+- Reject glob characters in the sources of the `copy-files` of a recipe manifest.
+
 ## 2.36.1
 
 - Harden recipe installer against path traversal (security fix).
