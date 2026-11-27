@@ -108,7 +108,7 @@ The items do not have to be stacked. In a grid, they move along both axes.
 
 ### Save the New Position
 
-Give each item a `data-sortable-update-url`. When the item is dropped at a new index, the controller sends a `POST` request to that URL. Its `position` parameter holds the new position of the item, starting at 1. Set `csrfToken` to also send a CSRF token, as a `_token` parameter:
+Give each item a `data-sortable-update-url`. When the item is dropped at a new index, the controller sends a `POST` request to that URL. The URL must have the same origin as the page. Its `position` parameter holds the new position of the item, starting at 1. Set `csrfToken` to also send a CSRF token, as a `_token` parameter:
 
 ```twig {"preview":true,"collapseClass":true}
 <ul data-controller="sortable" data-sortable-csrf-token-value="{{ csrf_token('reorder-tasks') }}" class="flex w-72 flex-col gap-2">

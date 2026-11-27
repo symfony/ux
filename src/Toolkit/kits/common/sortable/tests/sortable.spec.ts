@@ -229,6 +229,30 @@ describeRecipe('common/sortable', () => {
         });
     });
 
+    test.describe(() => {
+        // The refused save logs an error on purpose.
+        test.use({ failOnPageErrors: [async ({}, use) => use(), { auto: true }] });
+
+        test('sends no request to an update URL of another origin', async ({ page, gotoExample }) => {
+            await gotoExample('common/sortable/save-the-new-position');
+            const urls: string[] = [];
+            await page.route('**/tasks/*/position', (route) => {
+                urls.push(route.request().url());
+
+                return route.fulfill({ status: 204 });
+            });
+            await page.getByText('Write the release notes').evaluate((item) => {
+                item.dataset.sortableUpdateUrl = 'https://other.example/tasks/1/position';
+            });
+
+            await drag(page, page.getByText('Write the release notes'), page.getByText('Tag the new version'));
+            await drag(page, page.getByText('Tag the new version'), page.getByText('Review the pull requests'));
+
+            await expect.poll(() => urls.length).toBe(1);
+            expect(urls[0]).toMatch(/\/link\/tasks\/3\/position$/);
+        });
+    });
+
     test('renders a Turbo Stream response', async ({ page, gotoExample }) => {
         await gotoExample('common/sortable/save-the-new-position');
         const stream = '<turbo-stream action="remove" target="flash"></turbo-stream>';
