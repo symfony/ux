@@ -42,7 +42,7 @@ jobs:
             SYMFONY_REQUIRE: ${{ matrix.symfony-version || '>=5.4' }}
         services:
             mercure:
-                image: dunglas/mercure
+                image: dunglas/mercure:v0.24
                 env:
                     SERVER_NAME: :3000
                     MERCURE_PUBLISHER_JWT_KEY: '!ChangeMe!'
