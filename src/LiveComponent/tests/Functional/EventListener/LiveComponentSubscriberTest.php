@@ -181,6 +181,35 @@ final class LiveComponentSubscriberTest extends KernelTestCase
         ;
     }
 
+    /**
+     * @dataProvider provideNonArrayRequestData
+     */
+    public function testNonArrayRequestDataIsRejectedWithABadRequest(string $key, mixed $value)
+    {
+        $props = $this->dehydrateComponent($this->mountComponent('component2'))->getProps();
+        $data = array_merge(['props' => $props], [$key => $value]);
+
+        $this->browser()
+            ->post('/_components/component2', [
+                'body' => ['data' => json_encode($data)],
+            ])
+            ->assertStatus(400)
+            ->visit('/_components/component2?'.http_build_query(array_map('json_encode', $data)))
+            ->assertStatus(400)
+        ;
+    }
+
+    public static function provideNonArrayRequestData(): iterable
+    {
+        yield 'props is a string' => ['props', 'foo'];
+        yield 'props is an integer' => ['props', 1];
+        yield 'updated is a string' => ['updated', 'foo'];
+        yield 'updated is an integer' => ['updated', 1];
+        yield 'propsFromParent is a string' => ['propsFromParent', 'foo'];
+        yield 'propsFromParent is an integer' => ['propsFromParent', 1];
+        yield 'children is a string' => ['children', 'foo'];
+    }
+
     public function testCannotExecuteComponentActionForGetRequest()
     {
         $this->browser()

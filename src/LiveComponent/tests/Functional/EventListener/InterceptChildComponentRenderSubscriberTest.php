@@ -240,6 +240,42 @@ final class InterceptChildComponentRenderSubscriberTest extends KernelTestCase
         yield 'unicode non-breaking space' => ["di\xc2\xa0v"];
     }
 
+    /**
+     * @dataProvider provideMalformedChildren
+     */
+    #[DataProvider('provideMalformedChildren')]
+    public function testItRejectsMalformedChildrenPayloadWithABadRequest(mixed $children)
+    {
+        $component = $this->mountComponent('todo_list', [
+            'items' => [
+                ['text' => 'wake up'],
+            ],
+            'includeDataLiveId' => false,
+        ]);
+        $dehydratedProps = $this->dehydrateComponent($component);
+        $childId = AddLiveAttributesSubscriberTest::TODO_ITEM_DETERMINISTIC_PREFIX.'0';
+        $url = \sprintf('/_components/todo_list?%s', http_build_query([
+            'props' => json_encode($dehydratedProps->getProps()),
+            'children' => json_encode(\is_callable($children) ? $children($childId) : $children),
+        ]));
+
+        $this->browser()
+            ->visit($url)
+            ->assertStatus(400)
+        ;
+    }
+
+    public static function provideMalformedChildren(): iterable
+    {
+        yield 'children is a string' => ['foo'];
+        yield 'children is an integer' => [1];
+        yield 'entry is a string' => [static fn (string $id) => [$id => 'foo']];
+        yield 'fingerprint is missing' => [static fn (string $id) => [$id => ['tag' => 'li']]];
+        yield 'fingerprint is an array' => [static fn (string $id) => [$id => ['fingerprint' => ['foo'], 'tag' => 'li']]];
+        yield 'tag is missing' => [static fn (string $id) => [$id => ['fingerprint' => 'anything']]];
+        yield 'tag is an array' => [static fn (string $id) => [$id => ['fingerprint' => 'anything', 'tag' => ['li']]]];
+    }
+
     private function buildUrlForTodoListComponent(array $childrenFingerprints, bool $includeLiveId = false): string
     {
         return $this->doBuildUrlForComponent('todo_list', $childrenFingerprints, [
