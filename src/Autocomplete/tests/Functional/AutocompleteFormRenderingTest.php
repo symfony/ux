@@ -176,7 +176,26 @@ class AutocompleteFormRenderingTest extends KernelTestCase
         ;
     }
 
-    private function encodeData(array $data): string
+    public function testItReturnsErrorWhenExtraOptionsAreNotAnObject()
+    {
+        $notBase64 = '!!!';
+        $notJson = base64_encode('{not json');
+        $jsonScalar = $this->encodeData(1);
+        $checksumNotAString = $this->encodeData(['@checksum' => []]);
+
+        $this->browser()
+            ->post(\sprintf('/test/autocomplete/category_autocomplete_type?extra_options=%s', $notBase64))
+            ->assertStatus(400)
+            ->post(\sprintf('/test/autocomplete/category_autocomplete_type?extra_options=%s', $notJson))
+            ->assertStatus(400)
+            ->post(\sprintf('/test/autocomplete/category_autocomplete_type?extra_options=%s', $jsonScalar))
+            ->assertStatus(400)
+            ->post(\sprintf('/test/autocomplete/category_autocomplete_type?extra_options=%s', $checksumNotAString))
+            ->assertStatus(400)
+        ;
+    }
+
+    private function encodeData(mixed $data): string
     {
         return base64_encode(json_encode($data));
     }

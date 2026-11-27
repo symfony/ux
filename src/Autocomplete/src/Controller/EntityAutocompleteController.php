@@ -82,8 +82,16 @@ final class EntityAutocompleteController
             throw new BadRequestHttpException('The extra options cannot be parsed.', $e);
         }
 
+        if (!\is_array($extraOptions)) {
+            throw new BadRequestHttpException('The extra options cannot be parsed.');
+        }
+
         if (!\array_key_exists(AutocompleteChoiceTypeExtension::CHECKSUM_KEY, $extraOptions)) {
             throw new BadRequestHttpException('The extra options are missing the checksum.');
+        }
+
+        if (!\is_string($extraOptions[AutocompleteChoiceTypeExtension::CHECKSUM_KEY])) {
+            throw new BadRequestHttpException('The extra options checksum is invalid.');
         }
 
         $this->validateChecksum($extraOptions[AutocompleteChoiceTypeExtension::CHECKSUM_KEY], $extraOptions);
@@ -91,10 +99,7 @@ final class EntityAutocompleteController
         return $extraOptions;
     }
 
-    /**
-     * @return array<string, scalar>
-     */
-    private function getDecodedExtraOptions(string $extraOptions): array
+    private function getDecodedExtraOptions(string $extraOptions): mixed
     {
         return json_decode(base64_decode($extraOptions), true, flags: \JSON_THROW_ON_ERROR);
     }
