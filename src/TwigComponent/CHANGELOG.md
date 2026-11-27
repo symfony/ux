@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 3.9.0
+
+- Fix a Twig syntax error when a static HTML-syntax attribute value ends with a backslash or holds `\'`, as in `title="a\"`
+
 ## 3.8
 
 - Keep `MergeableInterface` values passed to a component as objects, so `attributes.defaults()` merges them
