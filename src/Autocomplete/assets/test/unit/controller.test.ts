@@ -902,6 +902,36 @@ describe('AutocompleteController', () => {
         expect(fetchMock.requests()[1].url).toEqual('/path/to/autocomplete?query=foo');
     });
 
+    it('adds an option to an optgroup whose label contains quotes', async () => {
+        const { container, tomSelect } = await startAutocompleteTest(`
+            <label for="the-select">Items</label>
+            <select
+                id="the-select"
+                data-testid="main-element"
+                data-controller="check autocomplete"
+                data-autocomplete-url-value="/path/to/autocomplete"
+            ></select>
+        `);
+
+        fetchMock.mockResponseOnce(
+            JSON.stringify({
+                results: {
+                    options: [{ group_by: ['a"]b'], value: 1, text: 'Beef' }],
+                    optgroups: [{ value: 'a"]b', label: 'a"]b' }],
+                },
+            })
+        );
+
+        userEvent.click(tomSelect.control_input);
+        await waitFor(() => {
+            expect(container.querySelectorAll('.option[data-selectable]')).toHaveLength(1);
+        });
+
+        tomSelect.addOption({ group_by: ['a"]b'], value: 2, text: 'Mutton' }, true);
+
+        expect(tomSelect.input.querySelector('option[value="2"]')).not.toBeNull();
+    });
+
     it('preserves the selected value and HTML with disconnect on single select', async () => {
         const { container, tomSelect } = await startAutocompleteTest(`
             <select data-testid="main-element" data-controller="autocomplete">
