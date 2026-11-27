@@ -83,7 +83,11 @@ final class CursorCodec implements CursorCodecInterface
         }
 
         $signature = $data['signature'] ?? null;
-        $json = json_encode($payload, \JSON_THROW_ON_ERROR);
+        try {
+            $json = json_encode($payload, \JSON_THROW_ON_ERROR);
+        } catch (\JsonException) {
+            throw new InvalidArgumentException('Invalid cursor value.');
+        }
         if (!\is_string($signature) || !hash_equals(hash_hmac('sha256', $json, $this->secret), $signature)) {
             throw new InvalidArgumentException('Invalid cursor signature.');
         }
