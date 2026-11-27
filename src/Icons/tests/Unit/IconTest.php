@@ -167,6 +167,7 @@ final class IconTest extends TestCase
             ['foo:'],
             [':foo'],
             ['foo::bar'],
+            ["foo--bar\n"],
         ];
     }
 
@@ -190,6 +191,7 @@ final class IconTest extends TestCase
             ['foo::'],
             ['::foo'],
             ['foo--bar'],
+            ["foo:bar\n"],
         ];
     }
 
@@ -220,6 +222,7 @@ final class IconTest extends TestCase
             ['foo '],
             [' foo'],
             ['🙂'],
+            ["foo\n"],
         ];
     }
 

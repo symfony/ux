@@ -53,7 +53,7 @@ final class ImportIconCommand extends Command
 
         $prefixIcons = [];
         foreach ($names as $name) {
-            if (!preg_match('#^([\w-]+):([\w-]+)$#', $name, $matches)) {
+            if (!preg_match('#^([\w-]+):([\w-]+)$#D', $name, $matches)) {
                 $io->error(\sprintf('Invalid icon name "%s".', $name));
                 $result = Command::FAILURE;
 
