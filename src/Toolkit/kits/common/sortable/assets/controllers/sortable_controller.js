@@ -46,6 +46,11 @@ export default class extends Controller {
             return;
         }
 
+        // The request carries the CSRF token, and its response can be rendered as Turbo Streams.
+        if (new URL(url, window.location.href).origin !== window.location.origin) {
+            throw new Error(`The update URL "${url}" must have the same origin as the page.`);
+        }
+
         const body = new FormData();
         body.append(this.paramNameValue, String(newDraggableIndex + 1));
         if (this.hasCsrfTokenValue) {
