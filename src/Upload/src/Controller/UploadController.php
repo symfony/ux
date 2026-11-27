@@ -227,6 +227,8 @@ final class UploadController
             return $this->completedResponse($result, $context);
         } catch (InvalidArgumentException|ValidationException $e) {
             return new JsonResponse(['error' => $e->getMessage()], Response::HTTP_BAD_REQUEST);
+        } catch (RequestExceptionInterface) {
+            return new JsonResponse(['error' => 'Malformed request body'], Response::HTTP_BAD_REQUEST);
         } catch (\Throwable $e) {
             $this->logger?->error('Direct upload failed: {message}', [
                 'exception' => $e,

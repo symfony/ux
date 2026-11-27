@@ -226,6 +226,17 @@ final class UploadControllerTest extends TestCase
         );
     }
 
+    public function testDirectUploadRejectsAFieldSentAsAnArray(): void
+    {
+        $controller = $this->controller();
+        $request = $this->directRequest('data', ['filename' => ['x'], 'fileSize' => 4, 'mimeType' => 'text/plain']);
+
+        $response = $controller->direct($request);
+
+        self::assertSame(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
+        self::assertSame('Malformed request body', $this->decode($response)['error']);
+    }
+
     public function testDirectUploadLogsUnexpectedFailure(): void
     {
         $uploader = $this->createStub(UploaderInterface::class);
