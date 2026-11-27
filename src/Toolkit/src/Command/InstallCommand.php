@@ -13,6 +13,7 @@ namespace Symfony\UX\Toolkit\Command;
 
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Formatter\OutputFormatter;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -184,7 +185,7 @@ class InstallCommand extends Command
         if ([] !== $installationReport->suggestedPhpPackages) {
             $this->io->writeln(++$stepIndex.'. Install suggested PHP package(s) with the command:');
             $this->io->newLine();
-            $this->io->writeln(\sprintf(' $ <info>composer require %s</>', implode(' ', $installationReport->suggestedPhpPackages)));
+            $this->io->writeln(\sprintf(' $ <info>composer require %s</>', $this->formatPackages($installationReport->suggestedPhpPackages)));
             $this->io->newLine();
         }
 
@@ -192,20 +193,20 @@ class InstallCommand extends Command
             $this->io->writeln(++$stepIndex.'. Install suggested front-end packages with one of the following commands:');
             $this->io->newLine();
             $this->io->writeln(' # with npm/pnpm/yarn');
-            $this->io->writeln(\sprintf(' $ <info>npm install --save %s</>', implode(' ', $installationReport->suggestedNpmPackages)));
+            $this->io->writeln(\sprintf(' $ <info>npm install --save %s</>', $this->formatPackages($installationReport->suggestedNpmPackages)));
             $this->io->newLine();
             $this->io->writeln(' # or with Importmap');
-            $this->io->writeln(\sprintf(' $ <info>php bin/console importmap:install %s</>', implode(' ', $installationReport->suggestedImportmapPackages)));
+            $this->io->writeln(\sprintf(' $ <info>php bin/console importmap:install %s</>', $this->formatPackages($installationReport->suggestedImportmapPackages)));
             $this->io->newLine();
         } elseif ([] !== $installationReport->suggestedNpmPackages) {
             $this->io->writeln(++$stepIndex.'. Install suggested front-end package(s) with the command:');
             $this->io->newLine();
-            $this->io->writeln(\sprintf(' $ <info>npm install --save %s</>', implode(' ', $installationReport->suggestedNpmPackages)));
+            $this->io->writeln(\sprintf(' $ <info>npm install --save %s</>', $this->formatPackages($installationReport->suggestedNpmPackages)));
             $this->io->newLine();
         } elseif ([] !== $installationReport->suggestedImportmapPackages) {
             $this->io->writeln(++$stepIndex.'. Install suggested front-end package(s) with the command:');
             $this->io->newLine();
-            $this->io->writeln(\sprintf(' $ <info>php bin/console importmap:install %s</>', implode(' ', $installationReport->suggestedImportmapPackages)));
+            $this->io->writeln(\sprintf(' $ <info>php bin/console importmap:install %s</>', $this->formatPackages($installationReport->suggestedImportmapPackages)));
             $this->io->newLine();
         }
 
@@ -229,5 +230,19 @@ class InstallCommand extends Command
         usort($alternativeRecipes, static fn (Recipe $recipeA, Recipe $recipeB) => strcmp($recipeA->name, $recipeB->name));
 
         return $alternativeRecipes;
+    }
+
+    /**
+     * @param array<\Stringable> $packages
+     */
+    private function formatPackages(array $packages): string
+    {
+        $arguments = array_map(static function (\Stringable $package): string {
+            $argument = (string) $package;
+
+            return 1 === preg_match('/^[A-Za-z0-9_.:@\/^~=+-]+$/D', $argument) ? $argument : escapeshellarg($argument);
+        }, $packages);
+
+        return OutputFormatter::escape(implode(' ', $arguments));
     }
 }

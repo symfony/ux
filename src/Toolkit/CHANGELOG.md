@@ -3,6 +3,7 @@
 ## 2.36.4
 
 - Reject glob characters in the sources of the `copy-files` of a recipe manifest.
+- Validate the version constraints and the Importmap package names of recipe dependencies, and shell-quote the suggested install commands.
 
 ## 2.36.1
 
