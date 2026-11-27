@@ -60,7 +60,7 @@ final class Icon implements \Stringable
      */
     public static function isValidId(string $id): bool
     {
-        return (bool) preg_match('#^([a-z0-9]+(-[a-z0-9]+)*)(--[a-z0-9]+(-[a-z0-9]+)*)*$#', $id);
+        return (bool) preg_match('#^([a-z0-9]+(-[a-z0-9]+)*)(--[a-z0-9]+(-[a-z0-9]+)*)*$#D', $id);
     }
 
     /**
@@ -73,7 +73,7 @@ final class Icon implements \Stringable
      */
     public static function isValidName(string $name): bool
     {
-        return (bool) preg_match('#^([a-z0-9]+(-[a-z0-9]+)*)(:[a-z0-9]+(-[a-z0-9]+)*)*$#', $name);
+        return (bool) preg_match('#^([a-z0-9]+(-[a-z0-9]+)*)(:[a-z0-9]+(-[a-z0-9]+)*)*$#D', $name);
     }
 
     public function __construct(

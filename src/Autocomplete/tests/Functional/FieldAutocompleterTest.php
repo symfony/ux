@@ -314,4 +314,14 @@ class FieldAutocompleterTest extends KernelTestCase
             ->assertJsonMatches('results[*].value', $ids)
         ;
     }
+
+    public function testItReturnsErrorWhenPageIsTooBig(): void
+    {
+        CategoryFactory::createOne(['name' => 'foo and baz']);
+
+        $this->browser()
+            ->get('/test/autocomplete/category_autocomplete_type?page=9223372036854775807')
+            ->assertStatus(400)
+        ;
+    }
 }

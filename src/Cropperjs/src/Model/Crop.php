@@ -152,7 +152,19 @@ class Crop
      */
     public function setOptions(string $options): self
     {
-        $this->options = json_decode($options, true);
+        $decoded = json_decode($options, true);
+
+        if (!\is_array($decoded) || ($decoded && array_is_list($decoded))) {
+            throw new \InvalidArgumentException('The crop options must be a JSON object.');
+        }
+
+        foreach (['x', 'y', 'width', 'height', 'rotate', 'scaleX', 'scaleY'] as $key) {
+            if (isset($decoded[$key]) && (!\is_int($decoded[$key]) && !\is_float($decoded[$key]) || !is_finite($decoded[$key]))) {
+                throw new \InvalidArgumentException(\sprintf('The crop option "%s" must be a finite number.', $key));
+            }
+        }
+
+        $this->options = $decoded;
 
         return $this;
     }

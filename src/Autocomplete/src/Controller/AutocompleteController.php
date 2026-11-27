@@ -94,8 +94,16 @@ class AutocompleteController
             throw new BadRequestHttpException('The extra options cannot be parsed.', $e);
         }
 
+        if (!\is_array($extraOptions)) {
+            throw new BadRequestHttpException('The extra options cannot be parsed.');
+        }
+
         if (!\array_key_exists(AutocompleteChoiceTypeExtension::CHECKSUM_KEY, $extraOptions)) {
             throw new BadRequestHttpException('The extra options are missing the checksum.');
+        }
+
+        if (!\is_string($extraOptions[AutocompleteChoiceTypeExtension::CHECKSUM_KEY])) {
+            throw new BadRequestHttpException('The extra options checksum is invalid.');
         }
 
         $this->validateExtraOptionsChecksum($extraOptions[AutocompleteChoiceTypeExtension::CHECKSUM_KEY], $extraOptions);
@@ -123,10 +131,7 @@ class AutocompleteController
         return \array_slice($excludedValues, 0, self::MAX_EXCLUDED_VALUES);
     }
 
-    /**
-     * @return array<string, scalar>
-     */
-    private function decodeExtraOptions(string $extraOptions): array
+    private function decodeExtraOptions(string $extraOptions): mixed
     {
         return json_decode(base64_decode($extraOptions), true, flags: \JSON_THROW_ON_ERROR);
     }

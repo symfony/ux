@@ -208,6 +208,12 @@ class AssertTest extends TestCase
         yield ['my@package'];
         yield ['my/package/name'];
         yield ['@scope//my-package'];
+        yield [';id'];
+        yield ['--save'];
+        yield ['-force'];
+        yield ['<fg=black>x'];
+        yield ['@;id/pkg'];
+        yield ["react\n"];
     }
 
     #[DataProvider('provideNonEscapingPaths')]
@@ -337,5 +343,154 @@ class AssertTest extends TestCase
         $this->expectNotToPerformAssertions();
 
         Assert::commonMarkAvailable();
+    }
+
+    #[DataProvider('provideGlobFreePaths')]
+    public function testPathHasNoGlobCharactersWithValidPath(string $path): void
+    {
+        $this->expectNotToPerformAssertions();
+
+        Assert::pathHasNoGlobCharacters($path);
+    }
+
+    public static function provideGlobFreePaths(): iterable
+    {
+        yield ['templates/'];
+        yield ['templates/components/Button.html.twig'];
+        yield ['templates/my-dir_1/file.name.twig'];
+    }
+
+    #[DataProvider('provideGlobPaths')]
+    public function testPathHasNoGlobCharactersWithGlobPath(string $path): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage(\sprintf('The path "%s" must not contain glob characters.', $path));
+
+        Assert::pathHasNoGlobCharacters($path);
+    }
+
+    public static function provideGlobPaths(): iterable
+    {
+        yield ['.{.,x}/'];
+        yield ['templates/*'];
+        yield ['templates/?'];
+        yield ['templates/[a-z]'];
+        yield ['templates/{a,b}'];
+        yield ['templates/a]'];
+        yield ['templates/a}'];
+    }
+
+    #[DataProvider('provideValidConstraintVersions')]
+    public function testConstraintVersionWithValidVersion(string $version): void
+    {
+        $this->expectNotToPerformAssertions();
+
+        Assert::constraintVersion($version);
+    }
+
+    public static function provideValidConstraintVersions(): iterable
+    {
+        yield ['1'];
+        yield ['1.2.3'];
+        yield ['^1.0'];
+        yield ['^1.0.0'];
+        yield ['~2.3.4'];
+        yield ['>=1.2 <2.0'];
+        yield ['>= 1.2, < 2.0'];
+        yield ['>=1.2,<2.0'];
+        yield ['!=1.5'];
+        yield ['^1.0 || ^2.0'];
+        yield ['^1.0|^2.0'];
+        yield ['1.0 - 2.0'];
+        yield ['1.x'];
+        yield ['1.*'];
+        yield ['*'];
+        yield ['v1.2.3'];
+        yield ['1.0.0-beta.1+build.5'];
+        yield ['1.0@dev'];
+        yield ['dev-main'];
+        yield ['dev-main as 1.0'];
+        yield ['latest'];
+        yield ['next'];
+        yield ['^5.0.0'];
+    }
+
+    #[DataProvider('provideInvalidConstraintVersions')]
+    public function testConstraintVersionWithInvalidVersion(string $version): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage(\sprintf('Invalid constraint version "%s".', $version));
+
+        Assert::constraintVersion($version);
+    }
+
+    public static function provideInvalidConstraintVersions(): iterable
+    {
+        yield [''];
+        yield [' '];
+        yield ['^1 --no-plugins'];
+        yield ['--no-plugins'];
+        yield ['-1'];
+        yield ['1; id'];
+        yield ['1 && id'];
+        yield ['$(id)'];
+        yield ['`id`'];
+        yield ['"1"'];
+        yield ["'1'"];
+        yield ["1\r2"];
+        yield ["1\n2"];
+        yield ["1\n"];
+        yield ["1\t2"];
+        yield ["1\0"];
+        yield ['1  2'];
+        yield [' 1'];
+        yield ['1 '];
+        yield ['<fg=black>1'];
+        yield ['</><fg=black>1'];
+        yield ['</>'];
+        yield ['<info>1</info>'];
+        yield ['>=1.2<2.0'];
+        yield ['1 | | 2'];
+    }
+
+    #[DataProvider('provideValidImportmapPackageNames')]
+    public function testImportmapPackageNameWithValidName(string $name): void
+    {
+        $this->expectNotToPerformAssertions();
+
+        Assert::importmapPackageName($name);
+    }
+
+    public static function provideValidImportmapPackageNames(): iterable
+    {
+        yield ['react'];
+        yield ['@hotwired/stimulus'];
+        yield ['bootstrap/dist/css/bootstrap.min.css'];
+        yield ['@scope/package/dist/Index.js'];
+    }
+
+    #[DataProvider('provideInvalidImportmapPackageNames')]
+    public function testImportmapPackageNameWithInvalidName(string $name): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage(\sprintf('Invalid importmap package name "%s".', $name));
+
+        Assert::importmapPackageName($name);
+    }
+
+    public static function provideInvalidImportmapPackageNames(): iterable
+    {
+        yield [''];
+        yield ['react; id'];
+        yield ['react --force'];
+        yield ['--force'];
+        yield ['<fg=black>react</>'];
+        yield ["react\r"];
+        yield ["react\n"];
+        yield ['react/../../etc'];
+        yield ['react/.hidden'];
+        yield ['react/'];
+        yield ['/react'];
+        yield ['React'];
     }
 }

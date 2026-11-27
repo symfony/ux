@@ -449,6 +449,10 @@ final class LiveComponentHydrator
         $sentChecksum = $identifierPops[self::CHECKSUM_KEY];
         unset($identifierPops[self::CHECKSUM_KEY]);
 
+        if (!\is_string($sentChecksum)) {
+            throw new HydrationException($error);
+        }
+
         try {
             $expectedChecksum = $this->calculateChecksum($identifierPops, $componentName, $slot);
         } catch (\JsonException $e) {
@@ -675,7 +679,11 @@ final class LiveComponentHydrator
                 throw new HydrationException(\sprintf('Invalid value sent for enum "%s".', $className));
             }
 
-            return $className::tryFrom($value);
+            try {
+                return $className::tryFrom($value);
+            } catch (\TypeError) {
+                throw new BadRequestHttpException(\sprintf('The model path "%s" was sent an invalid value of type "%s" for an enum.', $propertyPathForError, get_debug_type($value)));
+            }
         }
 
         // date time
@@ -705,7 +713,11 @@ final class LiveComponentHydrator
                 throw new BadRequestHttpException(\sprintf('The model path "%s" was sent an invalid data type "%s" for a uuid.', $propertyPathForError, get_debug_type($value)));
             }
 
-            return $className::fromString($value);
+            try {
+                return $className::fromString($value);
+            } catch (\InvalidArgumentException) {
+                throw new BadRequestHttpException(\sprintf('The model path "%s" was sent an invalid value for a uuid.', $propertyPathForError));
+            }
         }
 
         foreach ($this->hydrationExtensions as $extension) {

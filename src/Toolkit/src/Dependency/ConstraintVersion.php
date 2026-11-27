@@ -11,6 +11,8 @@
 
 namespace Symfony\UX\Toolkit\Dependency;
 
+use Symfony\UX\Toolkit\Assert;
+
 /**
  * Represents a version number, following the SemVer specification.
  *
@@ -26,6 +28,7 @@ final class ConstraintVersion implements \Stringable
     public function __construct(
         public readonly string $value,
     ) {
+        Assert::constraintVersion($value);
     }
 
     public function isHigherThan(self $version): bool

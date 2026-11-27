@@ -160,9 +160,6 @@ final class InterceptChildComponentRenderSubscriberTest extends KernelTestCase
         ;
     }
 
-    /**
-     * @dataProvider provideInvalidChildTags
-     */
     #[DataProvider('provideInvalidChildTags')]
     public function testItRejectsInvalidChildTag(string $tag): void
     {
@@ -281,6 +278,39 @@ final class InterceptChildComponentRenderSubscriberTest extends KernelTestCase
             ->assertElementCount('ul > div', 2)
             ->assertElementCount('ul > li[data-live-preserve]', 2)
         ;
+    }
+
+    #[DataProvider('provideMalformedChildren')]
+    public function testItRejectsMalformedChildrenPayloadWithABadRequest(mixed $children): void
+    {
+        $component = $this->mountComponent('todo_list', [
+            'items' => [
+                ['text' => 'wake up'],
+            ],
+            'includeDataLiveId' => false,
+        ]);
+        $dehydratedProps = $this->dehydrateComponent($component);
+        $childId = AddLiveAttributesSubscriberTest::TODO_ITEM_DETERMINISTIC_PREFIX.'0';
+        $url = \sprintf('/_components/todo_list?%s', http_build_query([
+            'props' => json_encode($dehydratedProps->getProps()),
+            'children' => json_encode(\is_callable($children) ? $children($childId) : $children),
+        ]));
+
+        $this->browser()
+            ->visit($url)
+            ->assertStatus(400)
+        ;
+    }
+
+    public static function provideMalformedChildren(): iterable
+    {
+        yield 'children is a string' => ['foo'];
+        yield 'children is an integer' => [1];
+        yield 'entry is a string' => [static fn (string $id) => [$id => 'foo']];
+        yield 'fingerprint is missing' => [static fn (string $id) => [$id => ['tag' => 'li']]];
+        yield 'fingerprint is an array' => [static fn (string $id) => [$id => ['fingerprint' => ['foo'], 'tag' => 'li']]];
+        yield 'tag is missing' => [static fn (string $id) => [$id => ['fingerprint' => 'anything']]];
+        yield 'tag is an array' => [static fn (string $id) => [$id => ['fingerprint' => 'anything', 'tag' => ['li']]]];
     }
 
     private function buildUrlForTodoListComponent(array $childrenFingerprints, bool $includeLiveId = false): string

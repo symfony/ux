@@ -101,7 +101,9 @@ final class TurboStream
 
         $attrString = '';
         foreach ($attr as $key => $value) {
-            $key = htmlspecialchars($key);
+            if (!preg_match('/^[a-zA-Z_:@][a-zA-Z0-9_:.@-]*$/D', (string) $key)) {
+                throw new \InvalidArgumentException(\sprintf('The attribute name "%s" is not a valid HTML attribute name.', $key));
+            }
             if (null === $value) {
                 $attrString .= \sprintf(' %s', $key);
             } elseif (\is_int($value) || \is_float($value)) {

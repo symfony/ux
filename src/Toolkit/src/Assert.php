@@ -69,7 +69,7 @@ final class Assert
     public static function npmPackageName(string $name): void
     {
         // Taken from https://github.com/dword-design/package-name-regex/blob/master/src/index.ts
-        if (1 !== preg_match('/^(@[a-z0-9-~][a-z0-9-._~]*\/)?[a-z0-9-~][a-z0-9-._~]*$/', $name)) {
+        if (1 !== preg_match('/^(@[a-z0-9~][a-z0-9-._~]*\/)?[a-z0-9~][a-z0-9-._~]*$/D', $name)) {
             throw new \InvalidArgumentException(\sprintf('Invalid NPM package name "%s".', $name));
         }
     }
@@ -95,6 +95,39 @@ final class Assert
     {
         if (1 !== preg_match('/^[a-zA-Z_][a-zA-Z0-9_]*$/', $name)) {
             throw new \InvalidArgumentException(\sprintf('Invalid block name "%s".', $name));
+        }
+    }
+
+    /**
+     * Assert that a version constraint is valid for Composer and NPM (ex: "^1.0", ">=1.2 <2.0", "^1.0 || ^2.0", "dev-main", "latest", etc.).
+     *
+     * Operators are only accepted at the start of a constraint, parts are separated by a single space, a comma or "|" / "||",
+     * so the constraint cannot hold an option, a shell metacharacter, a control character or a console markup tag.
+     *
+     * @param non-empty-string $version
+     *
+     * @throws \InvalidArgumentException if the constraint version is invalid
+     */
+    public static function constraintVersion(string $version): void
+    {
+        $part = '(?:(?:[<>]=?|!=|[=^~]) ?)?[A-Za-z0-9*][A-Za-z0-9.*+@_-]*';
+
+        if (1 !== preg_match(\sprintf('/^%1$s(?:(?: ?\|\|? ?| ?, ?| - | )%1$s)*$/D', $part), $version)) {
+            throw new \InvalidArgumentException(\sprintf('Invalid constraint version "%s".', $version));
+        }
+    }
+
+    /**
+     * Assert that the Importmap package name is valid (ex: "react", "@hotwired/stimulus", "bootstrap/dist/css/bootstrap.min.css", etc.).
+     *
+     * @param non-empty-string $name
+     *
+     * @throws \InvalidArgumentException if the Importmap package name is invalid
+     */
+    public static function importmapPackageName(string $name): void
+    {
+        if (1 !== preg_match('/^(@[a-z0-9~][a-z0-9-._~]*\/)?[a-z0-9~][a-z0-9-._~]*(\/[A-Za-z0-9_~-][A-Za-z0-9._~-]*)*$/D', $name)) {
+            throw new \InvalidArgumentException(\sprintf('Invalid importmap package name "%s".', $name));
         }
     }
 
@@ -125,6 +158,18 @@ final class Assert
     {
         if (!class_exists(\League\CommonMark\Environment\Environment::class)) {
             throw new \RuntimeException('The "league/commonmark" library is required to render Toolkit documentation as HTML. Try running "composer require league/commonmark".');
+        }
+    }
+
+    /**
+     * Assert that a relative path does not contain glob characters, so that it is always read literally.
+     *
+     * @throws \InvalidArgumentException if the path contains a glob character
+     */
+    public static function pathHasNoGlobCharacters(string $path): void
+    {
+        if (1 === preg_match('/[*?\[\]{}]/', $path)) {
+            throw new \InvalidArgumentException(\sprintf('The path "%s" must not contain glob characters.', $path));
         }
     }
 }

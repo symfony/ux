@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\Toolkit\Tests\Dependency;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\UX\Toolkit\Dependency\ConstraintVersion;
 
@@ -21,6 +22,22 @@ final class ConstraintVersionTest extends TestCase
         $version = new ConstraintVersion('1.2.3');
 
         $this->assertSame('1.2.3', (string) $version);
+    }
+
+    #[DataProvider('provideInvalidVersions')]
+    public function testCannotBeInstantiatedWithInvalidVersion(string $value): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        new ConstraintVersion($value);
+    }
+
+    public static function provideInvalidVersions(): iterable
+    {
+        yield ['^1 --no-plugins'];
+        yield ['1; id'];
+        yield ["1\r2"];
+        yield ['</><fg=black>1'];
     }
 
     public function testCanBeCompared(): void

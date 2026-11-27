@@ -11,10 +11,12 @@
 
 namespace Symfony\UX\TwigComponent\Tests\Unit;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\UX\TwigComponent\ComponentTemplateFinder;
 use Twig\Environment;
 use Twig\Loader\ArrayLoader;
+use Twig\Loader\FilesystemLoader;
 use Twig\Loader\LoaderInterface;
 
 /**
@@ -44,6 +46,59 @@ final class ComponentTemplateFinderTest extends TestCase
         $this->assertNull($finder->findAnonymousComponentTemplate('b.html.twig'));
         $this->assertNull($finder->findAnonymousComponentTemplate('components:b'));
         $this->assertNull($finder->findAnonymousComponentTemplate('c'));
+    }
+
+    #[DataProvider('provideNamesLeavingTheComponentsDirectory')]
+    public function testDoNotFindTemplateOutsideOfTheComponentsDirectory(string $name): void
+    {
+        $templates = [
+            'components/../admin/panel.html.twig',
+            'components/a/../b.html.twig',
+            'components/b.html.twig',
+            'components//x.html.twig',
+            'components/x.html.twig',
+            'admin/panel.html.twig',
+        ];
+        $finder = new ComponentTemplateFinder($this->createLoader($templates), 'components');
+
+        $template = $finder->findAnonymousComponentTemplate($name);
+
+        $this->assertNull($template);
+    }
+
+    public static function provideNamesLeavingTheComponentsDirectory(): iterable
+    {
+        yield 'parent segment' => ['../admin/panel'];
+        yield 'parent segment alone' => ['..'];
+        yield 'colon separated parent segment' => ['a:..:b'];
+        yield 'leading colon separated parent segment' => ['..:admin:panel'];
+        yield 'trailing parent segment' => ['a:..'];
+        yield 'slash separated parent segment' => ['a/../b'];
+        yield 'backslash separated parent segment' => ['..\\admin\\panel'];
+        yield 'leading slash' => ['/x'];
+        yield 'leading colon' => [':x'];
+        yield 'slash only' => ['/'];
+    }
+
+    public function testDoNotFindTemplateOutsideOfTheComponentsDirectoryWithFilesystemLoader(): void
+    {
+        $loader = new FilesystemLoader(__DIR__.'/../Fixtures/templates');
+        $finder = new ComponentTemplateFinder($loader, 'components');
+
+        $template = $finder->findAnonymousComponentTemplate('../base');
+
+        $this->assertNull($template);
+    }
+
+    public function testFindTemplateWithDotsInSegment(): void
+    {
+        $finder = new ComponentTemplateFinder($this->createLoader(['components/a..b.html.twig', 'components/a/.b.html.twig']), 'components');
+
+        $first = $finder->findAnonymousComponentTemplate('a..b');
+        $second = $finder->findAnonymousComponentTemplate('a:.b');
+
+        $this->assertSame('components/a..b.html.twig', $first);
+        $this->assertSame('components/a/.b.html.twig', $second);
     }
 
     public function testFindTemplateWithinDirectory(): void

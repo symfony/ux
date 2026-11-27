@@ -59,6 +59,14 @@ final class ImportIconCommandTest extends KernelTestCase
         ;
     }
 
+    public function testImportIconNameWithTrailingNewline(): void
+    {
+        $this->executeConsoleCommand("ux:icons:import \"lucide:circle\n\"")
+            ->assertStatusCode(1)
+            ->assertOutputContains('[ERROR] Invalid icon name "lucide:circle')
+        ;
+    }
+
     public function testImportNonExistentIconSet(): void
     {
         $this->executeConsoleCommand('ux:icons:import something:invalid')

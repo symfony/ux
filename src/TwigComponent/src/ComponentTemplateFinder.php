@@ -28,6 +28,11 @@ final class ComponentTemplateFinder implements ComponentTemplateFinderInterface
     {
         $componentPath = rtrim(str_replace(':', '/', $name));
 
+        $segments = preg_split('#[/\\\\]#', $componentPath);
+        if ('' === $segments[0] || \in_array('..', $segments, true)) {
+            return null;
+        }
+
         $template = rtrim($this->directory, '/').'/'.$componentPath.'.html.twig';
         if ($this->loader->exists($template)) {
             return $template;

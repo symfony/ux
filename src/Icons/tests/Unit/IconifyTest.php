@@ -371,6 +371,24 @@ class IconifyTest extends TestCase
         $iconify->fetchIcons('bi', ['à', 'foo']);
     }
 
+    public function testFetchIconsThrowsWithTrailingNewline(): void
+    {
+        $iconify = new Iconify(
+            cache: new NullAdapter(),
+            iconFactory: new IconFactory(),
+            endpoint: 'https://example.com',
+            httpClient: new MockHttpClient([
+                new JsonMockResponse([
+                    'bi' => [],
+                ]),
+            ]),
+        );
+
+        $this->expectException(\InvalidArgumentException::class);
+
+        $iconify->fetchIcons('bi', ["heart\n"]);
+    }
+
     public function testFetchIconsThrowsWithTooManyIcons(): void
     {
         $iconify = new Iconify(

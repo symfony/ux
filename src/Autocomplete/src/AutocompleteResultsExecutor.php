@@ -13,6 +13,7 @@ namespace Symfony\UX\Autocomplete;
 
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\PropertyAccess\Exception\UnexpectedTypeException;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\Component\PropertyAccess\PropertyPath;
@@ -66,7 +67,12 @@ final class AutocompleteResultsExecutor
 
         $page = max(1, $page);
 
-        $queryBuilder->setFirstResult(($page - 1) * $queryBuilder->getMaxResults());
+        $firstResult = ($page - 1) * $queryBuilder->getMaxResults();
+        if (!\is_int($firstResult)) {
+            throw new BadRequestHttpException('The page is out of range.');
+        }
+
+        $queryBuilder->setFirstResult($firstResult);
 
         $paginator = new Paginator($queryBuilder);
 

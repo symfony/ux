@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\Toolkit\Tests\Recipe;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\UX\Toolkit\Dependency\ConstraintVersion;
 use Symfony\UX\Toolkit\Dependency\ImportmapPackageDependency;
@@ -275,6 +276,100 @@ final class RecipeManifestTest extends TestCase
                     }
                 }
             JSON);
+    }
+
+    #[DataProvider('provideGlobCopyFilesSources')]
+    public function testFromJsonWithGlobCharactersInCopyFilesSource(string $source): void
+    {
+        $json = json_encode([
+            'type' => 'component',
+            'name' => 'MyComponent',
+            'description' => 'An incredible component',
+            'copy-files' => [$source => 'templates/'],
+        ], \JSON_THROW_ON_ERROR);
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage(\sprintf('The path "%s" must not contain glob characters.', $source));
+
+        RecipeManifest::fromJson($json);
+    }
+
+    public static function provideGlobCopyFilesSources(): iterable
+    {
+        yield 'brace expansion' => ['.{.,x}/'];
+        yield 'asterisk' => ['templates/*'];
+        yield 'question mark' => ['templates/?'];
+        yield 'opening bracket' => ['templates/[a-z]'];
+        yield 'closing bracket' => ['templates/a]'];
+        yield 'opening brace' => ['templates/{a,b}'];
+        yield 'closing brace' => ['templates/a}'];
+    }
+
+    #[DataProvider('provideInvalidDependencies')]
+    public function testFromJsonWithInvalidDependencyVersionOrName(string $type, string $dependency): void
+    {
+        $json = json_encode([
+            'type' => 'component',
+            'name' => 'MyComponent',
+            'description' => 'An incredible component',
+            'copy-files' => ['templates/' => 'templates/'],
+            'dependencies' => [$type => [$dependency]],
+        ], \JSON_THROW_ON_ERROR);
+
+        $this->expectException(\InvalidArgumentException::class);
+
+        RecipeManifest::fromJson($json);
+    }
+
+    public static function provideInvalidDependencies(): iterable
+    {
+        yield 'composer option' => ['composer', 'a/b:^1 --no-plugins'];
+        yield 'composer command' => ['composer', 'a/b:^1 --no-plugins; id'];
+        yield 'composer separator' => ['composer', 'a/b:1; id'];
+        yield 'composer carriage return' => ['composer', "a/b:1\r2"];
+        yield 'composer markup' => ['composer', 'a/b:</><fg=black>1'];
+        yield 'composer empty version' => ['composer', 'a/b:'];
+        yield 'npm option' => ['npm', 'a@--ignore-scripts'];
+        yield 'npm name option' => ['npm', '--ignore-scripts'];
+        yield 'npm separator' => ['npm', 'a@1; id'];
+        yield 'npm carriage return' => ['npm', "a@1\r2"];
+        yield 'npm markup' => ['npm', 'a@</><fg=black>1'];
+        yield 'importmap separator' => ['importmap', 'a; id'];
+        yield 'importmap option' => ['importmap', 'a --force'];
+        yield 'importmap markup' => ['importmap', '<fg=black>a</>'];
+        yield 'importmap carriage return' => ['importmap', "a\r"];
+    }
+
+    #[DataProvider('provideValidVersions')]
+    public function testFromJsonWithValidDependencyVersions(string $composerVersion, string $npmVersion): void
+    {
+        $json = json_encode([
+            'type' => 'component',
+            'name' => 'MyComponent',
+            'description' => 'An incredible component',
+            'copy-files' => ['templates/' => 'templates/'],
+            'dependencies' => [
+                'composer' => ['a/b:'.$composerVersion],
+                'npm' => ['c@'.$npmVersion],
+            ],
+        ], \JSON_THROW_ON_ERROR);
+
+        $manifest = RecipeManifest::fromJson($json);
+
+        $this->assertEquals([
+            new PhpPackageDependency('a/b', new ConstraintVersion($composerVersion)),
+            new NpmPackageDependency('c', new ConstraintVersion($npmVersion)),
+        ], $manifest->dependencies);
+    }
+
+    public static function provideValidVersions(): iterable
+    {
+        yield ['^1.0', '^5.0.0'];
+        yield ['~2.3.4', '~5.0'];
+        yield ['>=1.2 <2.0', '>=1.2 <2.0'];
+        yield ['^1.0 || ^2.0', '^1.0 || ^2.0'];
+        yield ['1.x', '1.x'];
+        yield ['dev-main', 'latest'];
     }
 
     public function testFromJsonWithMinimumValidData(): void

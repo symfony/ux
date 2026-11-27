@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\Toolkit\Tests\Dependency;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\UX\Toolkit\Dependency\ImportmapPackageDependency;
 
@@ -27,5 +28,20 @@ class ImportmapPackageDependencyTest extends TestCase
         $this->assertSame('bootstrap/dist/css/bootstrap.min.css', $dependency->package);
         $this->assertSame('Importmap package "bootstrap/dist/css/bootstrap.min.css"', $dependency->toDebug());
         $this->assertSame('bootstrap/dist/css/bootstrap.min.css', (string) $dependency);
+    }
+
+    #[DataProvider('provideInvalidPackages')]
+    public function testShouldRejectInvalidPackage(string $package): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        new ImportmapPackageDependency($package);
+    }
+
+    public static function provideInvalidPackages(): iterable
+    {
+        yield ['react; id'];
+        yield ['<fg=black>react</>'];
+        yield ["react\r"];
     }
 }

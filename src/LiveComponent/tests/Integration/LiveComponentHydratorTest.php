@@ -1918,6 +1918,43 @@ final class LiveComponentHydratorTest extends KernelTestCase
         );
     }
 
+    #[DataProvider('provideMalformedPayloads')]
+    public function testMalformedPayloadIsRejectedAsBadRequest(string $property, mixed $value, string $slot): void
+    {
+        $component = new class {
+            #[LiveProp(writable: true)]
+            public IntEnum $level = IntEnum::LOW;
+
+            #[LiveProp(writable: true)]
+            public ?Uuid $uuid = null;
+        };
+        $hydrator = $this->hydrator();
+        $metadata = $this->createLiveMetadata($component);
+        $props = $hydrator->addChecksumToData(['level' => 1, 'uuid' => null], '__testing', LiveComponentHydrator::CHECKSUM_SLOT_PROPS);
+        $updatedProps = [];
+        $propsFromParent = [];
+
+        match ($slot) {
+            'props' => $props[$property] = $value,
+            'updated' => $updatedProps[$property] = $value,
+            'propsFromParent' => $propsFromParent = [$property => $value],
+        };
+
+        $this->expectException(BadRequestHttpException::class);
+
+        $hydrator->hydrate($component, $props, $updatedProps, $metadata, $propsFromParent);
+    }
+
+    public static function provideMalformedPayloads(): iterable
+    {
+        yield 'props checksum is an array' => ['@checksum', ['foo'], 'props'];
+        yield 'props checksum is an integer' => ['@checksum', 1, 'props'];
+        yield 'props checksum is null' => ['@checksum', null, 'props'];
+        yield 'propsFromParent checksum is an array' => ['@checksum', ['foo'], 'propsFromParent'];
+        yield 'int enum updated with a non numeric string' => ['level', 'abc', 'updated'];
+        yield 'uuid updated with an invalid string' => ['uuid', 'zzz', 'updated'];
+    }
+
     public function testInterfaceTypedLivePropCannotBeHydrated(): void
     {
         $componentClass = new class {

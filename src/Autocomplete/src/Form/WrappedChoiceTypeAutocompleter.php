@@ -14,6 +14,7 @@ namespace Symfony\UX\Autocomplete\Form;
 use Symfony\Component\Form\ChoiceList\View\ChoiceGroupView;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Contracts\Service\ResetInterface;
 use Symfony\UX\Autocomplete\AutocompleteResults;
 use Symfony\UX\Autocomplete\ExcludedValuesAwareAutocompleterInterface;
@@ -61,6 +62,9 @@ final class WrappedChoiceTypeAutocompleter implements OptionsAwareAutocompleterI
         $maxResults = $this->getMaxResults() ?? 10;
         $page = max(1, $page);
         $offset = ($page - 1) * $maxResults;
+        if (!\is_int($offset)) {
+            throw new BadRequestHttpException('The page is out of range.');
+        }
 
         $pagedChoices = \array_slice($choices, $offset, $maxResults);
         $hasNextPage = \count($choices) > ($offset + $maxResults);
