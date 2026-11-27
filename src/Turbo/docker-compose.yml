@@ -1,7 +1,7 @@
 services:
     ###> symfony/mercure-bundle ###
     mercure:
-        image: dunglas/mercure
+        image: dunglas/mercure:v0.24
         ports:
             - 3000:3000
         environment:
