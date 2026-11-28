@@ -55,4 +55,34 @@ describe('executeMorphdom', () => {
         expect(document.activeElement).toBe(title);
         expect(from.querySelector('p')?.textContent).toBe('after');
     });
+
+    it('keeps the value typed into an input that the new HTML renders without a value attribute', () => {
+        const from = htmlToElement(
+            '<div><input name="title" value="before" class="pristine"><input name="slug" value="before"></div>'
+        );
+        document.body.append(from);
+        const title = from.firstElementChild as HTMLInputElement;
+        title.value = 'typed';
+        const to = htmlToElement('<div><input name="title" aria-invalid="true"><input name="slug"></div>');
+
+        executeMorphdom(from, to, [title], getValueFromElement, new ExternalMutationTracker(from, () => true));
+
+        expect(title.value).toBe('typed');
+        expect(title).toHaveAttribute('aria-invalid', 'true');
+        expect(title).not.toHaveAttribute('class');
+        expect((from.lastElementChild as HTMLInputElement).value).toBe('');
+    });
+
+    it('removes the value attribute of a changed checkbox that the new HTML renders without it', () => {
+        const from = htmlToElement('<div><input type="checkbox" name="agree" value="1"></div>');
+        document.body.append(from);
+        const agree = from.firstElementChild as HTMLInputElement;
+        agree.checked = true;
+        const to = htmlToElement('<div><input type="checkbox" name="agree" aria-invalid="true"></div>');
+
+        executeMorphdom(from, to, [agree], getValueFromElement, new ExternalMutationTracker(from, () => true));
+
+        expect(agree.checked).toBe(true);
+        expect(agree).not.toHaveAttribute('value');
+    });
 });
