@@ -1,0 +1,43 @@
+{%- props
+    ## 'default'|'neutral'|'primary'|'secondary'|'accent'|'info'|'success'|'warning'|'error' The color of the textarea.
+    color = 'default',
+    ## 'default'|'ghost' The style of the textarea.
+    variant = 'default',
+    ## 'xs'|'sm'|'md'|'lg'|'xl' The size of the textarea.
+    size = 'md'
+-%}
+{%- set style = html_cva(
+    base: 'textarea',
+    variants: {
+        color: {
+            default: '',
+            neutral: 'textarea-neutral',
+            primary: 'textarea-primary',
+            secondary: 'textarea-secondary',
+            accent: 'textarea-accent',
+            info: 'textarea-info',
+            success: 'textarea-success',
+            warning: 'textarea-warning',
+            error: 'textarea-error',
+        },
+        variant: {
+            default: '',
+            ghost: 'textarea-ghost',
+        },
+        size: {
+            xs: 'textarea-xs',
+            sm: 'textarea-sm',
+            md: '',
+            lg: 'textarea-lg',
+            xl: 'textarea-xl',
+        },
+    },
+) -%}
+<textarea
+    {{ attributes.defaults({
+        class: style.apply({color: color, variant: variant, size: size})|tailwind_classes,
+    }) }}
+>
+    {##- The initial text of the textarea. -#}
+    {%- block content %}{% endblock -%}
+</textarea>
