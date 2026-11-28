@@ -1,0 +1,23 @@
+<!--
+- Kit: daisyUI v5
+- Component: Card
+- Code:
+```twig
+<twig:Card class="w-96 bg-base-100 shadow-sm">
+    <twig:Card:Body>
+        <twig:Card:Actions class="justify-end">
+            <twig:Button shape="square" size="sm">
+                <svg aria-label="Close" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+            </twig:Button>
+        </twig:Card:Actions>
+        <p>We are using cookies for no reason.</p>
+    </twig:Card:Body>
+</twig:Card>
+```
+- Rendered code (run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="card w-96 bg-base-100 shadow-sm"><div class="card-body"><div class="card-actions justify-end"><button class="btn btn-sm btn-square" type="button"><svg aria-label="Close" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+        </div>
+        <p>We are using cookies for no reason.</p>
+    </div>
+</div>

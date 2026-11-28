@@ -1,0 +1,8 @@
+<div
+    {{ attributes.defaults({
+        class: 'card-body'|tailwind_classes,
+    }) }}
+>
+    {##- The body content, typically includes `Card:Title`, text and `Card:Actions`. -#}
+    {%- block content %}{% endblock -%}
+</div>
