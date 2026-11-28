@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 3.9
+
+- Add the `applications` option to load a distinct set of controllers per AssetMapper entrypoint
+
 ## 3.5.0
 
 - Add support for Symfony 8.2's standalone `AssetMapperBundle`

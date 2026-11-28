@@ -1,0 +1,9 @@
+{
+    "controllers": {
+        "@fake-vendor/ux-package2": {
+            "hello_controller": {
+                "enabled": false
+            }
+        }
+    }
+}
