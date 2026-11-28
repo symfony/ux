@@ -21,7 +21,7 @@ use Symfony\UX\Toolkit\Recipe\Recipe;
 use Symfony\UX\Toolkit\Recipe\RecipeType;
 
 /**
- * Reports the files that a recipe installs over the files of a component recipe.
+ * Reports the files that a recipe installs over the kit-global files or over the files of a component recipe.
  *
  * Blocks may share files with each other, as an application installs one of them.
  *
@@ -40,8 +40,24 @@ final class CopyFilesOverwriteChecker implements KitCheckerInterface
             }
         }
 
+        $kitFiles = [];
+        foreach ($this->getFiles($kit) as $file) {
+            $kitFiles[$file->destinationRelativePathName] = true;
+        }
+
         foreach ($kit->getRecipes() as $recipe) {
             foreach ($this->getFiles($recipe) as $file) {
+                if (isset($kitFiles[$file->destinationRelativePathName])) {
+                    yield new LintIssue(
+                        severity: LintSeverity::Error,
+                        category: 'copy-files.overwrite',
+                        message: \sprintf('"%s" is also installed by the kit: installing the recipe overwrites it.', $file->destinationRelativePathName),
+                        recipe: $recipe->name,
+                        file: $file->sourceRelativePathName,
+                    );
+                    continue;
+                }
+
                 $component = $components[$file->destinationRelativePathName] ?? $recipe->name;
                 if ($component === $recipe->name) {
                     continue;
@@ -61,10 +77,10 @@ final class CopyFilesOverwriteChecker implements KitCheckerInterface
     /**
      * @return iterable<File>
      */
-    private function getFiles(Recipe $recipe): iterable
+    private function getFiles(Kit|Recipe $source): iterable
     {
         try {
-            return $recipe->getFiles();
+            return $source->getFiles();
         } catch (DirectoryNotFoundException) {
             // reported by CopyFilesExistenceChecker
             return [];

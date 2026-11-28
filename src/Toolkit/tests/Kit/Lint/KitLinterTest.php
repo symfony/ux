@@ -16,6 +16,7 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\UX\Toolkit\Kit\Kit;
 use Symfony\UX\Toolkit\Kit\KitFactory;
+use Symfony\UX\Toolkit\Kit\KitManifest;
 use Symfony\UX\Toolkit\Kit\KitSynchronizer;
 use Symfony\UX\Toolkit\Kit\Lint\Checker\AttributesDefaultsChecker;
 use Symfony\UX\Toolkit\Kit\Lint\Checker\ComposerSymbolChecker;
@@ -82,6 +83,32 @@ class KitLinterTest extends TestCase
         $this->assertCount(1, $issues);
         $this->assertSame('orphan', $issues[0]->recipe);
         $this->assertSame(LintSeverity::Error, $issues[0]->severity);
+    }
+
+    public function testMissingRecipeManifestCheckerIgnoresTheKitFilesDirectories(): void
+    {
+        $kit = $this->loadFixtureKit('with-kit-files');
+        $linter = new KitLinter([new MissingRecipeManifestChecker(), new CopyFilesExistenceChecker()]);
+
+        $this->assertSame([], $linter->lint($kit)->getIssues());
+    }
+
+    public function testCopyFilesExistenceCheckerDetectsMissingKitDirectory(): void
+    {
+        $kit = new Kit(self::getFixtureKitPath('with-kit-files'), new KitManifest(
+            name: 'kit',
+            description: 'A kit',
+            license: 'MIT',
+            homepage: 'https://example.com',
+            copyFiles: ['assets/missing/' => 'assets/missing/'],
+        ));
+
+        $issues = iterator_to_array(new CopyFilesExistenceChecker()->check($kit), false);
+
+        $this->assertCount(1, $issues);
+        $this->assertSame('copy-files.missing', $issues[0]->category);
+        $this->assertNull($issues[0]->recipe);
+        $this->assertSame('assets/missing/', $issues[0]->file);
     }
 
     public function testCopyFilesExistenceCheckerDetectsMissingDirectory(): void

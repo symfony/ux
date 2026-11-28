@@ -35,8 +35,8 @@ final class PoolTest extends TestCase
             name: 'Test Recipe',
             copyFiles: [],
         ));
-        $pool->addFile($recipe, new File('path/to/file.html.twig', 'file.html.twig'));
-        $pool->addFile($recipe, new File('path/to/another-file.html.twig', 'another-file.html.twig'));
+        $pool->addFile($recipe->absolutePath, new File('path/to/file.html.twig', 'file.html.twig'));
+        $pool->addFile($recipe->absolutePath, new File('path/to/another-file.html.twig', 'another-file.html.twig'));
 
         $this->assertCount(1, $pool->getFiles());
         $this->assertCount(2, $pool->getFiles()[$recipe->absolutePath]);
@@ -51,8 +51,8 @@ final class PoolTest extends TestCase
             name: 'Test Recipe',
             copyFiles: [],
         ));
-        $pool->addFile($recipe, new File('path/to/file.html.twig', 'file.html.twig'));
-        $pool->addFile($recipe, new File('path/to/file.html.twig', 'file.html.twig'));
+        $pool->addFile($recipe->absolutePath, new File('path/to/file.html.twig', 'file.html.twig'));
+        $pool->addFile($recipe->absolutePath, new File('path/to/file.html.twig', 'file.html.twig'));
 
         $this->assertCount(1, $pool->getFiles());
     }

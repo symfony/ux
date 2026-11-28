@@ -20,6 +20,8 @@ use Symfony\UX\Toolkit\Kit\Lint\LintSeverity;
 /**
  * Detects directories at the kit root that look like a recipe but have no manifest.json.
  *
+ * The directories holding the kit-global files, declared in the kit "copy-files", are ignored.
+ *
  * @author Hugo Alliaume <hugo@alliau.me>
  *
  * @internal
@@ -33,8 +35,14 @@ final class MissingRecipeManifestChecker implements KitCheckerInterface
             return;
         }
 
+        // Directories holding the kit-global files (e.g. "assets/" for "assets/fonts/") are not recipes
+        $kitFilesDirs = [];
+        foreach (array_keys($kit->manifest->copyFiles) as $source) {
+            $kitFilesDirs[explode('/', Path::canonicalize($source), 2)[0]] = true;
+        }
+
         foreach ($entries as $entry) {
-            if ('.' === $entry || '..' === $entry) {
+            if ('.' === $entry || '..' === $entry || isset($kitFilesDirs[$entry])) {
                 continue;
             }
 

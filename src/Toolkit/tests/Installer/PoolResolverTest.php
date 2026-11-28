@@ -57,6 +57,21 @@ final class PoolResolverTest extends TestCase
         $this->assertCount(3, $pool->getPhpPackageDependencies());
     }
 
+    public function testResolvesTheKitFiles(): void
+    {
+        $kitSynchronizer = new KitSynchronizer(new Filesystem(), new RecipeSynchronizer());
+        $kit = self::createFixtureKit('with-kit-files');
+        $kitSynchronizer->synchronize($kit);
+
+        $pool = new PoolResolver()->resolveForRecipe($kit, $recipe = $kit->getRecipe('button'));
+
+        $this->assertSame([$kit->absolutePath, $recipe->absolutePath], array_keys($pool->getFiles()));
+        $this->assertSame([
+            'assets/fonts/Inter-Regular.woff2',
+            'assets/fonts/Inter-SemiBold.woff2',
+        ], array_keys($pool->getFiles()[$kit->absolutePath]));
+    }
+
     public function testCanHandleCircularRecipeDependencies(): void
     {
         $kitSynchronizer = new KitSynchronizer(new Filesystem(), new RecipeSynchronizer());

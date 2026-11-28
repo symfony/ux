@@ -12,6 +12,7 @@
 namespace Symfony\UX\Toolkit;
 
 use Symfony\Component\Filesystem\Path;
+use Symfony\Component\Finder\Finder;
 
 /**
  * @internal
@@ -37,6 +38,27 @@ final class File implements \Stringable
 
         Assert::pathDoesNotEscapeDirectory($this->sourceRelativePathName);
         Assert::pathDoesNotEscapeDirectory($this->destinationRelativePathName);
+    }
+
+    /**
+     * Lists the files to copy for the "copy-files" entries of a kit or recipe manifest.
+     *
+     * @param non-empty-string                          $absolutePath the directory the sources are relative to
+     * @param array<non-empty-string, non-empty-string> $copyFiles    source => destination
+     *
+     * @return list<self>
+     */
+    public static function collect(string $absolutePath, array $copyFiles): array
+    {
+        $files = [];
+        foreach ($copyFiles as $source => $destination) {
+            $finder = new Finder()->in(Path::join($absolutePath, $source))->sortByName()->files();
+            foreach ($finder as $file) {
+                $files[] = new self(Path::join($source, $file->getRelativePathname()), Path::join($destination, $file->getRelativePathname()));
+            }
+        }
+
+        return $files;
     }
 
     public function __toString(): string

@@ -12,6 +12,7 @@
 namespace Symfony\UX\Toolkit\Kit;
 
 use Symfony\Component\Filesystem\Path;
+use Symfony\UX\Toolkit\File;
 use Symfony\UX\Toolkit\Recipe\Recipe;
 use Symfony\UX\Toolkit\Recipe\RecipeType;
 
@@ -28,6 +29,11 @@ final class Kit
     private array $recipes = [];
 
     /**
+     * @var list<File>|null
+     */
+    private ?array $files = null;
+
+    /**
      * @param non-empty-string $absolutePath
      *
      * @throws \InvalidArgumentException
@@ -40,6 +46,16 @@ final class Kit
         if (!Path::isAbsolute($this->absolutePath)) {
             throw new \InvalidArgumentException(\sprintf('Kit path "%s" is not absolute.', $this->absolutePath));
         }
+    }
+
+    /**
+     * The kit-global files (e.g. fonts) to install with every recipe of the kit.
+     *
+     * @return list<File>
+     */
+    public function getFiles(): array
+    {
+        return $this->files ??= File::collect($this->absolutePath, $this->manifest->copyFiles);
     }
 
     public function addRecipe(Recipe $recipe): void

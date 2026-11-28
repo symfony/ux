@@ -11,11 +11,9 @@
 
 namespace Symfony\UX\Toolkit\Recipe;
 
-use Symfony\Component\Filesystem\Path;
 use Symfony\UX\Toolkit\Assert;
 use Symfony\UX\Toolkit\Dependency\DependencyInterface;
 use Symfony\UX\Toolkit\Dependency\DependencyParser;
-use Symfony\UX\Toolkit\Installer\InstallationDirectories;
 
 /**
  * @author Hugo Alliaume <hugo@alliau.me>
@@ -37,19 +35,7 @@ final class RecipeManifest
         public readonly array $dependencies = [],
         public readonly ?string $versionAdded = null,
     ) {
-        foreach ($this->copyFiles as $source => $destination) {
-            if (!Path::isRelative($source)) {
-                throw new \InvalidArgumentException(\sprintf('Copy file source "%s" must be a relative path.', $source));
-            }
-            if (!Path::isRelative($destination)) {
-                throw new \InvalidArgumentException(\sprintf('Copy file destination "%s" must be a relative path.', $destination));
-            }
-
-            Assert::pathDoesNotEscapeDirectory($source);
-            Assert::pathHasNoGlobCharacters($source);
-            Assert::pathDoesNotEscapeDirectory($destination);
-            InstallationDirectories::assertKnownPlaceholders($destination);
-        }
+        Assert::copyFiles($this->copyFiles);
     }
 
     /**

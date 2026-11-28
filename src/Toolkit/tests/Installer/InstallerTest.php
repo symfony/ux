@@ -132,6 +132,42 @@ final class InstallerTest extends KernelTestCase
         $this->assertDirectoryDoesNotExist($this->tmpDir.'/templates/components/ui');
     }
 
+    public function testInstallsTheKitFilesWithTheRecipe(): void
+    {
+        $installer = $this->createInstaller(new InstallationDirectories());
+        $kitFactory = self::getContainer()->get('ux_toolkit.kit.kit_factory');
+        $kit = $kitFactory->createKitFromAbsolutePath(self::getFixtureKitPath('with-kit-files'));
+
+        $installationReport = $installer->installRecipe($kit, $kit->getRecipe('button'), $this->tmpDir, false);
+
+        $this->assertSame([
+            'assets/fonts/Inter-Regular.woff2',
+            'assets/fonts/Inter-SemiBold.woff2',
+            'templates/components/Button.html.twig',
+        ], array_map(static fn (File $file) => $file->destinationRelativePathName, $installationReport->newFiles));
+        $this->assertFileEquals($kit->absolutePath.'/assets/fonts/Inter-Regular.woff2', $this->tmpDir.'/assets/fonts/Inter-Regular.woff2');
+        $this->assertFileEquals($kit->absolutePath.'/assets/fonts/Inter-SemiBold.woff2', $this->tmpDir.'/assets/fonts/Inter-SemiBold.woff2');
+    }
+
+    public function testAsksBeforeOverwritingAChangedKitFile(): void
+    {
+        $askedFiles = [];
+        $installer = new Installer($this->filesystem, static function (string $question, string $existingFile) use (&$askedFiles) {
+            $askedFiles[] = $existingFile;
+
+            return false;
+        });
+        $kitFactory = self::getContainer()->get('ux_toolkit.kit.kit_factory');
+        $kit = $kitFactory->createKitFromAbsolutePath(self::getFixtureKitPath('with-kit-files'));
+
+        $installer->installRecipe($kit, $kit->getRecipe('button'), $this->tmpDir, false);
+        $this->filesystem->dumpFile($this->tmpDir.'/assets/fonts/Inter-Regular.woff2', 'my own font');
+        $installer->installRecipe($kit, $kit->getRecipe('button'), $this->tmpDir, false);
+
+        $this->assertSame([Path::join($this->tmpDir, 'assets/fonts/Inter-Regular.woff2')], $askedFiles);
+        $this->assertStringEqualsFile($this->tmpDir.'/assets/fonts/Inter-Regular.woff2', 'my own font');
+    }
+
     public function testAsksWithTheRewrittenContents(): void
     {
         $askedFiles = [];

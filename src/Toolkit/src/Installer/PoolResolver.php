@@ -34,6 +34,10 @@ final class PoolResolver
             $this->addPackageDependency($pool, $dependency);
         }
 
+        foreach ($kit->getFiles() as $file) {
+            $pool->addFile($kit->absolutePath, $file);
+        }
+
         // Process the component and its dependencies
         $recipesStack = [$recipe];
         $visitedRecipes = new \SplObjectStorage();
@@ -49,7 +53,7 @@ final class PoolResolver
             $visitedRecipes[$currentRecipe] = null;
 
             foreach ($currentRecipe->getFiles() as $file) {
-                $pool->addFile($currentRecipe, $file);
+                $pool->addFile($currentRecipe->absolutePath, $file);
             }
 
             foreach ($currentRecipe->manifest->dependencies as $dependency) {

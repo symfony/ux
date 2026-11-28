@@ -11,6 +11,9 @@
 
 namespace Symfony\UX\Toolkit;
 
+use Symfony\Component\Filesystem\Path;
+use Symfony\UX\Toolkit\Installer\InstallationDirectories;
+
 /**
  * @internal
  */
@@ -143,6 +146,31 @@ final class Assert
     {
         if (\in_array('..', preg_split('#[\\\\/]+#', $path), true)) {
             throw new \InvalidArgumentException(\sprintf('The path "%s" must not escape its target directory.', $path));
+        }
+    }
+
+    /**
+     * Assert that the "copy-files" entries of a kit or recipe manifest are valid: relative paths
+     * that do not escape their directory, with only known placeholders in the destinations.
+     *
+     * @param array<non-empty-string, non-empty-string> $copyFiles source => destination
+     *
+     * @throws \InvalidArgumentException if an entry is invalid
+     */
+    public static function copyFiles(array $copyFiles): void
+    {
+        foreach ($copyFiles as $source => $destination) {
+            if (!Path::isRelative($source)) {
+                throw new \InvalidArgumentException(\sprintf('Copy file source "%s" must be a relative path.', $source));
+            }
+            if (!Path::isRelative($destination)) {
+                throw new \InvalidArgumentException(\sprintf('Copy file destination "%s" must be a relative path.', $destination));
+            }
+
+            self::pathDoesNotEscapeDirectory($source);
+            self::pathHasNoGlobCharacters($source);
+            self::pathDoesNotEscapeDirectory($destination);
+            InstallationDirectories::assertKnownPlaceholders($destination);
         }
     }
 

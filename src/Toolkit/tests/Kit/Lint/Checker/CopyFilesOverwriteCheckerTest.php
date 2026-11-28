@@ -43,4 +43,19 @@ final class CopyFilesOverwriteCheckerTest extends TestCase
             $this->assertSame('"%COMPONENTS_DIR%/DatePicker.html.twig" is also installed by the "date-picker" recipe: installing both overwrites one of them.', $issue->message);
         }
     }
+
+    public function testReportsTheFilesInstalledOverAKitFile(): void
+    {
+        $factory = new KitFactory(new Filesystem(), new KitSynchronizer(new Filesystem(), new RecipeSynchronizer()));
+        $kit = $factory->createKitFromAbsolutePath(self::getFixtureKitPath('with-kit-files'));
+
+        $issues = iterator_to_array(new CopyFilesOverwriteChecker()->check($kit), false);
+
+        $this->assertCount(1, $issues);
+        $this->assertSame(LintSeverity::Error, $issues[0]->severity);
+        $this->assertSame('copy-files.overwrite', $issues[0]->category);
+        $this->assertSame('heading', $issues[0]->recipe);
+        $this->assertSame('assets/fonts/Inter-Regular.woff2', $issues[0]->file);
+        $this->assertSame('"assets/fonts/Inter-Regular.woff2" is also installed by the kit: installing the recipe overwrites it.', $issues[0]->message);
+    }
 }
