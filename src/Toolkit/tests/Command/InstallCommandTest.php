@@ -154,7 +154,7 @@ class InstallCommandTest extends KernelTestCase
         $this->consoleCommand(\sprintf('ux:install button --kit=bootstrap --destination="%s"', str_replace('\\', '\\\\', $this->tmpDir)))
             ->execute()
             ->assertSuccessful()
-            ->assertOutputContains('npm install --save bootstrap@^5.3.0')
+            ->assertOutputContains('npm install --save bootstrap@^5.3.9')
             ->assertOutputContains('php bin/console importmap:require bootstrap bootstrap/dist/css/bootstrap.min.css')
         ;
     }

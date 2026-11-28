@@ -15,7 +15,7 @@
 - [Flowbite v4] Fix the `pagination` arrows pointing the wrong way in right-to-left, and the current page losing its color on hover
 - [Flowbite v4] Use the border color of the active tab on hover in the `line` variant of `tabs`
 - [Flowbite v4] Add the `dark`, `purple`, `indigo` and `teal` variants to `indicator`
-- [Bootstrap] Add the `xxl` size to `modal`, which requires Bootstrap 5.3.9
+- [Bootstrap] Require Bootstrap 5.3.9, and add the `xxl` size to `modal`
 - [Bootstrap] Add the `Nested collapse` example to `collapse`
 - [Bootstrap] Render the current page as a link in the `Sizing` example of `pagination`, and remove the label overflowing its bar from the `Labels` example of `progress`, which was hard to read
 
