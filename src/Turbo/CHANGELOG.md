@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 3.9.0
+
+- Add support for MercureBundle ^0.7 and Mercure ^0.10
+
 ## 3.7.0
 
 - Render the HTML attributes of `<twig:Turbo:Stream:From>` on the `<turbo-mercure-stream-source>` element, and add an `attributes` argument to `turbo_stream_from()`
