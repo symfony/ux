@@ -1,0 +1,35 @@
+{%- props
+    ## 'default'|'neutral'|'primary'|'secondary'|'accent'|'info'|'success'|'warning'|'error' The color of the checkbox.
+    color = 'default',
+    ## 'xs'|'sm'|'md'|'lg'|'xl' The size of the checkbox.
+    size = 'md'
+-%}
+{%- set style = html_cva(
+    base: 'checkbox',
+    variants: {
+        color: {
+            default: '',
+            neutral: 'checkbox-neutral',
+            primary: 'checkbox-primary',
+            secondary: 'checkbox-secondary',
+            accent: 'checkbox-accent',
+            info: 'checkbox-info',
+            success: 'checkbox-success',
+            warning: 'checkbox-warning',
+            error: 'checkbox-error',
+        },
+        size: {
+            xs: 'checkbox-xs',
+            sm: 'checkbox-sm',
+            md: '',
+            lg: 'checkbox-lg',
+            xl: 'checkbox-xl',
+        },
+    },
+) -%}
+<input
+    type="checkbox"
+    {{ attributes.defaults({
+        class: style.apply({color: color, size: size})|tailwind_classes,
+    }) }}
+/>
