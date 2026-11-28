@@ -6,6 +6,7 @@
 - [daisyUI v5] Add the `daisyui-5` kit, with the `button` recipe
 - [daisyUI v5] Add the `badge` recipe
 - [daisyUI v5] Add the `alert` recipe
+- [daisyUI v5] Add the `textarea` recipe
 
 ## 3.8.1
 
