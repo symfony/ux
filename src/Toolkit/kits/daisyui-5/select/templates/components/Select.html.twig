@@ -1,0 +1,47 @@
+{%- props
+    ## 'default'|'neutral'|'primary'|'secondary'|'accent'|'info'|'success'|'warning'|'error' The color of the select.
+    color = 'default',
+    ## 'default'|'ghost' The style of the select.
+    variant = 'default',
+    ## 'xs'|'sm'|'md'|'lg'|'xl'|int The size of the select. A number sets the HTML `size` attribute instead: the number of visible rows.
+    size = 'md',
+    ## 'select'|'label' The HTML tag to render, `label` wraps a plain `<select>` with an icon or a text.
+    as = 'select'
+-%}
+{%- set style = html_cva(
+    base: 'select',
+    variants: {
+        color: {
+            default: '',
+            neutral: 'select-neutral',
+            primary: 'select-primary',
+            secondary: 'select-secondary',
+            accent: 'select-accent',
+            info: 'select-info',
+            success: 'select-success',
+            warning: 'select-warning',
+            error: 'select-error',
+        },
+        variant: {
+            default: '',
+            ghost: 'select-ghost',
+        },
+        size: {
+            xs: 'select-xs',
+            sm: 'select-sm',
+            md: '',
+            lg: 'select-lg',
+            xl: 'select-xl',
+        },
+    },
+) -%}
+{%- set _select_is_daisy_size = size in ['xs', 'sm', 'md', 'lg', 'xl'] -%}
+<{{ as }}
+    {{ attributes.defaults({
+        class: style.apply({color: color, variant: variant, size: _select_is_daisy_size ? size : 'md'})|tailwind_classes,
+        size: _select_is_daisy_size ? false : size,
+    }) }}
+>
+    {##- The `<option>` elements, or, when `as` is `label`, a plain `<select>` with icons or texts around it. -#}
+    {%- block content %}{% endblock -%}
+</{{ as }}>
