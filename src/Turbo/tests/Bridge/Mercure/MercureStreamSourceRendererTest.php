@@ -19,6 +19,7 @@ use Symfony\Component\ErrorHandler\BufferingLogger;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Mercure\Authorization;
 use Symfony\Component\Mercure\Exception\ExceptionInterface;
 use Symfony\Component\Mercure\HubInterface;
 use Symfony\Component\Mercure\ProtocolVersion;
@@ -416,12 +417,36 @@ final class MercureStreamSourceRendererTest extends KernelTestCase
 
     public function testRenderTurboStreamFromDoesNotIgnoreAnAuthorizationCookieSetTwice(): void
     {
+        if (self::mergesAuthorizationCookies()) {
+            $this->markTestSkipped('symfony/mercure 0.10+ merges the authorization cookies set twice for a hub during the same request.');
+        }
+
         $renderer = $this->createRenderer('legacy', true, new BufferingLogger());
 
         $this->expectException(ExceptionInterface::class);
         $this->expectExceptionMessage('has already been set');
 
         $this->renderInRequest(Request::create('http://127.0.0.1/'), static fn (): string => $renderer->render('chat', ['private' => true]).$renderer->render('news', ['private' => true]));
+    }
+
+    public function testRenderTurboStreamFromMergesTheGrantsOfSeveralPrivateStreamSources(): void
+    {
+        if (!self::mergesAuthorizationCookies()) {
+            $this->markTestSkipped('Merging the authorization cookies set twice for a hub during the same request needs symfony/mercure 0.10+.');
+        }
+
+        [$html, $claims] = $this->renderWithAuthorizationCookie(
+            "{{ turbo_stream_from('chat', private=true, transport='legacy') }}{{ turbo_stream_from('news', private=true, transport='legacy') }}",
+            [],
+            'legacy',
+        );
+
+        $this->assertSame(
+            '<turbo-mercure-stream-source src="http://127.0.0.1:3000/.well-known/mercure?topic=chat" private></turbo-mercure-stream-source>'
+            .'<turbo-mercure-stream-source src="http://127.0.0.1:3000/.well-known/mercure?topic=news" private></turbo-mercure-stream-source>',
+            $html,
+        );
+        $this->assertSame(['chat', 'news'], $claims['mercure']['subscribe']);
     }
 
     public function testRenderTurboStreamFromDoesNotIgnoreAHubWithoutTokenFactory(): void
@@ -451,6 +476,14 @@ final class MercureStreamSourceRendererTest extends KernelTestCase
         self::assertInstanceOf(Cookie::class, $cookie);
 
         return [$html, json_decode(base64_decode(strtr(explode('.', (string) $cookie->getValue())[1], '-_', '+/')), true, flags: \JSON_THROW_ON_ERROR)];
+    }
+
+    /**
+     * symfony/mercure 0.10 merges the grants of every Authorization::setCookie() call for a hub during the same request, where older versions throw.
+     */
+    private static function mergesAuthorizationCookies(): bool
+    {
+        return (new \ReflectionClass(Authorization::class))->hasMethod('mergeGrants');
     }
 
     private function createRenderer(string $hubName, bool $ignoreCookieDomainErrors, ?LoggerInterface $logger = null): MercureStreamSourceRenderer
