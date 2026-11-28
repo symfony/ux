@@ -8,10 +8,12 @@ declare class export_default$2 {
   private body;
   private liveUrl;
   private download;
+  private data;
   private parsePromise;
   constructor(response: Response);
   getBody(): Promise<string>;
   getDownload(): Download | null;
+  getData(): Response | null;
   getLiveUrl(): string | null;
   getDownloadUrl(): string | null;
   isRemoved(): boolean;
