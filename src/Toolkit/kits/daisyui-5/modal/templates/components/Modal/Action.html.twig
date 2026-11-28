@@ -1,0 +1,8 @@
+<div
+    {{ attributes.defaults({
+        class: 'modal-action'|tailwind_classes,
+    }) }}
+>
+    {##- The actions of the modal, such as buttons. -#}
+    {%- block content %}{% endblock -%}
+</div>

@@ -1,0 +1,8 @@
+<div
+    {{ attributes.defaults({
+        class: 'modal-box'|tailwind_classes,
+    }) }}
+>
+    {##- The box content, such as a `Modal:Title`, a text and a `Modal:Action`. -#}
+    {%- block content %}{% endblock -%}
+</div>
