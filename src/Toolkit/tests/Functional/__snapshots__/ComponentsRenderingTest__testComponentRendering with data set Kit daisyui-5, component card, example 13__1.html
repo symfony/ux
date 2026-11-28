@@ -1,0 +1,28 @@
+<!--
+- Kit: daisyUI v5
+- Component: Card
+- Code:
+```twig
+<twig:Card side class="bg-base-100 shadow-sm">
+    <figure>
+        <img src="https://img.daisyui.com/images/stock/photo-1635805737707-575885ab0820.webp" alt="Movie" />
+    </figure>
+    <twig:Card:Body>
+        <twig:Card:Title>New movie is released!</twig:Card:Title>
+        <p>Click the button to watch on Jetflix app.</p>
+        <twig:Card:Actions class="justify-end">
+            <twig:Button color="primary">Watch</twig:Button>
+        </twig:Card:Actions>
+    </twig:Card:Body>
+</twig:Card>
+```
+- Rendered code (run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="card card-side bg-base-100 shadow-sm"><figure>
+        <img src="https://img.daisyui.com/images/stock/photo-1635805737707-575885ab0820.webp" alt="Movie">
+    </figure>
+    <div class="card-body"><h2 class="card-title">New movie is released!</h2>
+        <p>Click the button to watch on Jetflix app.</p>
+        <div class="card-actions justify-end"><button class="btn btn-primary" type="button">Watch</button>
+        </div>
+    </div>
+</div>

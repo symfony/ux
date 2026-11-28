@@ -1,0 +1,8 @@
+<div
+    {{ attributes.defaults({
+        class: 'card-actions'|tailwind_classes,
+    }) }}
+>
+    {##- The actions of the card, such as buttons. -#}
+    {%- block content %}{% endblock -%}
+</div>

@@ -1,0 +1,43 @@
+{%- props
+    ## 'default'|'border'|'dash' The style of the card.
+    variant = 'default',
+    ## 'xs'|'sm'|'md'|'lg'|'xl' The size of the card.
+    size = 'md',
+    ## boolean Whether the image of the `figure` sits on the side of the card.
+    side = false,
+    ## boolean Whether the image of the `figure` fills the background of the card.
+    imageFull = false,
+    ## 'div'|'label' The HTML tag to render.
+    as = 'div'
+-%}
+{%- set style = html_cva(
+    base: 'card',
+    variants: {
+        variant: {
+            default: '',
+            border: 'card-border',
+            dash: 'card-dash',
+        },
+        size: {
+            xs: 'card-xs',
+            sm: 'card-sm',
+            md: '',
+            lg: 'card-lg',
+            xl: 'card-xl',
+        },
+        side: {
+            true: 'card-side',
+        },
+        imageFull: {
+            true: 'image-full',
+        },
+    },
+) -%}
+<{{ as }}
+    {{ attributes.defaults({
+        class: style.apply({variant: variant, size: size, side: side, imageFull: imageFull})|tailwind_classes,
+    }) }}
+>
+    {##- The card content, typically a `figure` and a `Card:Body`. -#}
+    {%- block content %}{% endblock -%}
+</{{ as }}>

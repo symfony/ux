@@ -1,0 +1,12 @@
+{%- props
+    ## 'h1'|'h2'|'h3'|'h4'|'h5'|'h6'|'div' The HTML tag to render.
+    as = 'h2'
+-%}
+<{{ as }}
+    {{ attributes.defaults({
+        class: 'card-title'|tailwind_classes,
+    }) }}
+>
+    {##- The title text of the card. -#}
+    {%- block content %}{% endblock -%}
+</{{ as }}>
