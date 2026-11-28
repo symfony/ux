@@ -1,0 +1,47 @@
+{%- props
+    ## 'default'|'neutral'|'primary'|'secondary'|'accent'|'info'|'success'|'warning'|'error' The color of the input.
+    color = 'default',
+    ## 'default'|'ghost' The style of the input.
+    variant = 'default',
+    ## 'xs'|'sm'|'md'|'lg'|'xl' The size of the input.
+    size = 'md',
+    ## 'input'|'label' The HTML tag to render, `label` wraps a plain `<input>` with an icon or a text. The content is only rendered with `label`.
+    as = 'input'
+-%}
+{%- set style = html_cva(
+    base: 'input',
+    variants: {
+        color: {
+            default: '',
+            neutral: 'input-neutral',
+            primary: 'input-primary',
+            secondary: 'input-secondary',
+            accent: 'input-accent',
+            info: 'input-info',
+            success: 'input-success',
+            warning: 'input-warning',
+            error: 'input-error',
+        },
+        variant: {
+            default: '',
+            ghost: 'input-ghost',
+        },
+        size: {
+            xs: 'input-xs',
+            sm: 'input-sm',
+            md: '',
+            lg: 'input-lg',
+            xl: 'input-xl',
+        },
+    },
+) -%}
+<{{ as }}
+    {{ attributes.defaults({
+        class: style.apply({color: color, variant: variant, size: size})|tailwind_classes,
+    }) }}
+>
+{%- if as != 'input' -%}
+    {##- The content of the label: a plain `<input>`, with icons or texts around it. It is not rendered when `as` is `input`. -#}
+    {%- block content %}{% endblock -%}
+</{{ as }}>
+{%- endif %}
