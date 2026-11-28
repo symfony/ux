@@ -1,15 +1,11 @@
-import type { Page } from '@playwright/test';
+import type { Locator } from '@playwright/test';
 import { describeRecipe, expect, test } from '../../../../assets/test/browser/fixtures';
 
-async function focusRingsInFocusedChoiceCard(page: Page): Promise<{ onCard: boolean; total: number }> {
-    return page.evaluate(async () => {
+async function focusRingsOf(choiceCard: Locator): Promise<{ onCard: boolean; total: number }> {
+    return choiceCard.evaluate(async (label) => {
         await Promise.all(document.getAnimations().map((animation) => animation.finished));
 
         const hasRing = (element: Element) => / 3px(,|$)/.test(getComputedStyle(element).boxShadow);
-        const label = document.activeElement?.closest('[data-slot="field-label"]');
-        if (!label) {
-            return { onCard: false, total: 0 };
-        }
 
         return { onCard: hasRing(label), total: [label, ...label.querySelectorAll('*')].filter(hasRing).length };
     });
@@ -27,7 +23,9 @@ describeRecipe('shadcn/field', () => {
             }
             await expect(choiceCard).toHaveCount(1);
 
-            expect(await focusRingsInFocusedChoiceCard(page)).toEqual({ onCard: true, total: 1 });
+            const rings = await focusRingsOf(choiceCard);
+
+            expect(rings).toEqual({ onCard: true, total: 1 });
         });
     }
 });

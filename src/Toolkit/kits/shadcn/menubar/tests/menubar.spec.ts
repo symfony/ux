@@ -157,6 +157,18 @@ describeRecipe('shadcn/menubar', () => {
         await expect(bookmarks).not.toBeChecked();
     });
 
+    test('aligns an inset item with the checkbox items', async ({ page, gotoExample }) => {
+        await gotoExample('shadcn/menubar/checkbox-items');
+        const checkboxItem = page.locator('[data-slot="menubar-checkbox-item"]').first();
+        const insetItem = page.getByRole('menuitem', { name: /^Reload/ });
+
+        await page.getByRole('menuitem', { name: 'View' }).click();
+
+        await expect(insetItem).toBeVisible();
+        const padding = await checkboxItem.evaluate((item) => getComputedStyle(item).paddingInlineStart);
+        await expect(insetItem).toHaveCSS('padding-inline-start', padding);
+    });
+
     testState('selects a radio item', {
         example: 'radio-group',
         state: 'selected',

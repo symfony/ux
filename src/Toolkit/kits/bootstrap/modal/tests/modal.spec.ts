@@ -109,6 +109,24 @@ describeRecipe('bootstrap/modal', () => {
         await expect(modal).toBeVisible();
     });
 
+    for (const { size, label, width } of [
+        { size: 'sm', label: 'Small', width: 300 },
+        { size: 'lg', label: 'Large', width: 800 },
+        { size: 'xl', label: 'Extra large', width: 1140 },
+        { size: 'xxl', label: 'Extra extra large', width: 1320 },
+    ]) {
+        test(`opens the ${size} modal at its own width`, async ({ page, gotoExample }) => {
+            await page.setViewportSize({ width: 1440, height: 900 });
+            await gotoExample('bootstrap/modal/optional-sizes');
+            const modal = page.getByRole('dialog', { name: `${label} modal`, exact: true });
+
+            await page.getByRole('button', { name: `${label} modal`, exact: true }).click();
+
+            await expect(modal).toBeFocused();
+            await expect(modal.locator('.modal-dialog')).toHaveCSS('width', `${width}px`);
+        });
+    }
+
     testState('fills the modal from the trigger that opened it', {
         example: 'varying-modal-content',
         state: 'open-for-fat',
