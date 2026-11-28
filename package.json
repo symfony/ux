@@ -33,7 +33,7 @@
         "@playwright/test": "^1.65.1",
         "@puppeteer/browsers": "^3.2.7",
         "@testing-library/dom": "^10.4.2",
-        "@testing-library/jest-dom": "^7.0.1",
+        "@testing-library/jest-dom": "^8.0.0",
         "@testing-library/user-event": "^14.6.10",
         "@tsdown/css": "^0.23.7",
         "@types/google.maps": "^3.55.9",
