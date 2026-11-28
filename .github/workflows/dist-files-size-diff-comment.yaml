@@ -4,8 +4,9 @@ name: Dist Files Size Diff (Comment)
 # the upstream `Dist Files Size Diff` workflow runs on `pull_request` (read-only
 # token from forks) and uploads the diff as an artifact; this workflow runs in
 # the base-repo context with `pull-requests: write` to post the comment.
-# Safety: we gate on workflow_run.conclusion, validate the PR number with a
-# regex, and never execute artifact contents (diff.md is posted as comment body).
+# Safety: we gate on workflow_run.conclusion, find the pull request from the
+# workflow_run event and never from the artifact, and never execute artifact
+# contents (diff.md is posted as comment body).
 on:
     workflow_run: # zizmor: ignore[dangerous-triggers]
         workflows: ['Dist Files Size Diff']
@@ -30,18 +31,29 @@ jobs:
                   run-id: ${{ github.event.workflow_run.id }}
                   github-token: ${{ secrets.GITHUB_TOKEN }}
 
-            - name: Read pr-number artifact to env var
-              id: read-pr-number
+            - name: Find the pull request of the triggering workflow run
+              id: find-pr
+              env:
+                  GH_TOKEN: ${{ github.token }}
+                  PR_TARGET_REPO: ${{ github.repository }}
+                  PR_HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
+                  PR_BRANCH: |-
+                      ${{
+                        (github.event.workflow_run.head_repository.owner.login != github.event.workflow_run.repository.owner.login)
+                          && format('{0}:{1}', github.event.workflow_run.head_repository.owner.login, github.event.workflow_run.head_branch)
+                          || github.event.workflow_run.head_branch
+                      }}
               run: |
-                  PR_NUMBER=$(cat ./pr-number)
-                  if ! [[ "$PR_NUMBER" =~ ^[0-9]+$ ]]; then
-                      echo "Invalid PR number: $PR_NUMBER"
-                      exit 1
+                  read -r PR_NUMBER HEAD_SHA < <(gh pr view --repo "$PR_TARGET_REPO" "$PR_BRANCH" --json number,headRefOid --jq '"\(.number) \(.headRefOid)"') || true
+                  if [[ "$HEAD_SHA" != "$PR_HEAD_SHA" ]]; then
+                      echo "No pull request matches the head commit of this workflow run, skipping the comment."
+                      exit 0
                   fi
-                  echo "pr-number=$PR_NUMBER" >> $GITHUB_OUTPUT
+                  echo "pr-number=$PR_NUMBER" >> "$GITHUB_OUTPUT"
 
             - name: Comment on the pull request (if success)
+              if: steps.find-pr.outputs.pr-number != ''
               uses: marocchino/sticky-pull-request-comment@5770ad5eb8f42dd2c4f34da00c94c5381e49af88 # v3.0.5
               with:
-                  number: ${{ steps.read-pr-number.outputs.pr-number }}
+                  number: ${{ steps.find-pr.outputs.pr-number }}
                   path: ./diff.md
