@@ -1,0 +1,10 @@
+{%- set _dropdown_open = inject('dropdown.open', false) -%}
+{%- set _dropdown_contentId = inject('dropdown.contentId', null) -%}
+{%- set dropdown_trigger_attrs = {
+    'data-dropdown-target': 'trigger',
+    'aria-expanded': _dropdown_open ? 'true' : 'false',
+    'aria-controls': _dropdown_contentId,
+    'data-action': 'click->dropdown#toggle'|html_attr_type('sst'),
+} -%}
+{##- The trigger element (e.g., a `Button`) that opens and closes the dropdown on click. -#}
+{%- block content %}{% endblock -%}
