@@ -1,0 +1,47 @@
+<!--
+- Kit: daisyUI v5
+- Component: Tabs
+- Code:
+```twig
+<div class="flex w-full flex-col gap-8">
+    <twig:Tabs id="tabs-rtl-ar" defaultValue="tab-2" variant="lift" class="w-full" dir="rtl">
+        <twig:Tabs:List aria-label="علامات التبويب">
+            <twig:Tabs:Trigger value="tab-1">التبويب 1</twig:Tabs:Trigger>
+            <twig:Tabs:Trigger value="tab-2">التبويب 2</twig:Tabs:Trigger>
+            <twig:Tabs:Trigger value="tab-3">التبويب 3</twig:Tabs:Trigger>
+        </twig:Tabs:List>
+        <twig:Tabs:Content value="tab-1" class="bg-base-100 border-base-300 p-6">محتوى التبويب 1</twig:Tabs:Content>
+        <twig:Tabs:Content value="tab-2" class="bg-base-100 border-base-300 p-6">محتوى التبويب 2</twig:Tabs:Content>
+        <twig:Tabs:Content value="tab-3" class="bg-base-100 border-base-300 p-6">محتوى التبويب 3</twig:Tabs:Content>
+    </twig:Tabs>
+    <twig:Tabs id="tabs-rtl-he" defaultValue="tab-2" variant="lift" class="w-full" dir="rtl">
+        <twig:Tabs:List aria-label="תוויות">
+            <twig:Tabs:Trigger value="tab-1">התווית 1</twig:Tabs:Trigger>
+            <twig:Tabs:Trigger value="tab-2">התווית 2</twig:Tabs:Trigger>
+            <twig:Tabs:Trigger value="tab-3">התווית 3</twig:Tabs:Trigger>
+        </twig:Tabs:List>
+        <twig:Tabs:Content value="tab-1" class="bg-base-100 border-base-300 p-6">תוכן התווית 1</twig:Tabs:Content>
+        <twig:Tabs:Content value="tab-2" class="bg-base-100 border-base-300 p-6">תוכן התווית 2</twig:Tabs:Content>
+        <twig:Tabs:Content value="tab-3" class="bg-base-100 border-base-300 p-6">תוכן התווית 3</twig:Tabs:Content>
+    </twig:Tabs>
+</div>
+```
+- Rendered code (run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="flex w-full flex-col gap-8">
+    <div id="tabs-rtl-ar" data-tabs-active-value="tab-2" class="tabs tabs-lift w-full" data-controller="tabs" dir="rtl"><div role="tablist" class="tabs tabs-lift contents [&amp;.tabs-lift:has(~.tab-content)>.tab:first-child:not([aria-selected=true])]:[--tab-border-colors:var(--tab-border-color)_var(--tab-border-color)_#0000_var(--tab-border-color)] [&amp;.tabs-lift.tabs-bottom:has(~.tab-content)>.tab:first-child:not([aria-selected=true])]:[--tab-border-colors:#0000_var(--tab-border-color)_var(--tab-border-color)_var(--tab-border-color)]" data-action="keydown.left->tabs#selectLeft:prevent keydown.right->tabs#selectRight:prevent keydown.home->tabs#selectFirst:prevent keydown.end->tabs#selectLast:prevent" aria-label="علامات التبويب"><button id="tabs-rtl-ar-trigger-tab-1" role="tab" data-tabs-target="trigger" data-value="tab-1" aria-selected="false" aria-controls="tabs-rtl-ar-content-tab-1" tabindex="-1" class="tab" type="button" data-action="click->tabs#select">التبويب 1</button>
+            <button id="tabs-rtl-ar-trigger-tab-2" role="tab" data-tabs-target="trigger" data-value="tab-2" aria-selected="true" aria-controls="tabs-rtl-ar-content-tab-2" tabindex="0" class="tab" type="button" data-action="click->tabs#select">التبويب 2</button>
+            <button id="tabs-rtl-ar-trigger-tab-3" role="tab" data-tabs-target="trigger" data-value="tab-3" aria-selected="false" aria-controls="tabs-rtl-ar-content-tab-3" tabindex="-1" class="tab" type="button" data-action="click->tabs#select">التبويب 3</button>
+        </div>
+        <div id="tabs-rtl-ar-content-tab-1" role="tabpanel" data-tabs-target="content" data-value="tab-1" aria-labelledby="tabs-rtl-ar-trigger-tab-1" hidden="" class="tab-content block [[role=tablist]:not(:has(>[aria-selected=true]:first-child))~&amp;]:[--tabcontent-radius-ss:var(--radius-box)] [[role=tablist]:not(:has(>[aria-selected=true]:first-child))~&amp;]:[--tabcontent-radius-es:var(--radius-box)] bg-base-100 border-base-300 p-6" tabindex="0">محتوى التبويب 1</div>
+        <div id="tabs-rtl-ar-content-tab-2" role="tabpanel" data-tabs-target="content" data-value="tab-2" aria-labelledby="tabs-rtl-ar-trigger-tab-2" class="tab-content block [[role=tablist]:not(:has(>[aria-selected=true]:first-child))~&amp;]:[--tabcontent-radius-ss:var(--radius-box)] [[role=tablist]:not(:has(>[aria-selected=true]:first-child))~&amp;]:[--tabcontent-radius-es:var(--radius-box)] bg-base-100 border-base-300 p-6" tabindex="0">محتوى التبويب 2</div>
+        <div id="tabs-rtl-ar-content-tab-3" role="tabpanel" data-tabs-target="content" data-value="tab-3" aria-labelledby="tabs-rtl-ar-trigger-tab-3" hidden="" class="tab-content block [[role=tablist]:not(:has(>[aria-selected=true]:first-child))~&amp;]:[--tabcontent-radius-ss:var(--radius-box)] [[role=tablist]:not(:has(>[aria-selected=true]:first-child))~&amp;]:[--tabcontent-radius-es:var(--radius-box)] bg-base-100 border-base-300 p-6" tabindex="0">محتوى التبويب 3</div>
+    </div>
+    <div id="tabs-rtl-he" data-tabs-active-value="tab-2" class="tabs tabs-lift w-full" data-controller="tabs" dir="rtl"><div role="tablist" class="tabs tabs-lift contents [&amp;.tabs-lift:has(~.tab-content)>.tab:first-child:not([aria-selected=true])]:[--tab-border-colors:var(--tab-border-color)_var(--tab-border-color)_#0000_var(--tab-border-color)] [&amp;.tabs-lift.tabs-bottom:has(~.tab-content)>.tab:first-child:not([aria-selected=true])]:[--tab-border-colors:#0000_var(--tab-border-color)_var(--tab-border-color)_var(--tab-border-color)]" data-action="keydown.left->tabs#selectLeft:prevent keydown.right->tabs#selectRight:prevent keydown.home->tabs#selectFirst:prevent keydown.end->tabs#selectLast:prevent" aria-label="תוויות"><button id="tabs-rtl-he-trigger-tab-1" role="tab" data-tabs-target="trigger" data-value="tab-1" aria-selected="false" aria-controls="tabs-rtl-he-content-tab-1" tabindex="-1" class="tab" type="button" data-action="click->tabs#select">התווית 1</button>
+            <button id="tabs-rtl-he-trigger-tab-2" role="tab" data-tabs-target="trigger" data-value="tab-2" aria-selected="true" aria-controls="tabs-rtl-he-content-tab-2" tabindex="0" class="tab" type="button" data-action="click->tabs#select">התווית 2</button>
+            <button id="tabs-rtl-he-trigger-tab-3" role="tab" data-tabs-target="trigger" data-value="tab-3" aria-selected="false" aria-controls="tabs-rtl-he-content-tab-3" tabindex="-1" class="tab" type="button" data-action="click->tabs#select">התווית 3</button>
+        </div>
+        <div id="tabs-rtl-he-content-tab-1" role="tabpanel" data-tabs-target="content" data-value="tab-1" aria-labelledby="tabs-rtl-he-trigger-tab-1" hidden="" class="tab-content block [[role=tablist]:not(:has(>[aria-selected=true]:first-child))~&amp;]:[--tabcontent-radius-ss:var(--radius-box)] [[role=tablist]:not(:has(>[aria-selected=true]:first-child))~&amp;]:[--tabcontent-radius-es:var(--radius-box)] bg-base-100 border-base-300 p-6" tabindex="0">תוכן התווית 1</div>
+        <div id="tabs-rtl-he-content-tab-2" role="tabpanel" data-tabs-target="content" data-value="tab-2" aria-labelledby="tabs-rtl-he-trigger-tab-2" class="tab-content block [[role=tablist]:not(:has(>[aria-selected=true]:first-child))~&amp;]:[--tabcontent-radius-ss:var(--radius-box)] [[role=tablist]:not(:has(>[aria-selected=true]:first-child))~&amp;]:[--tabcontent-radius-es:var(--radius-box)] bg-base-100 border-base-300 p-6" tabindex="0">תוכן התווית 2</div>
+        <div id="tabs-rtl-he-content-tab-3" role="tabpanel" data-tabs-target="content" data-value="tab-3" aria-labelledby="tabs-rtl-he-trigger-tab-3" hidden="" class="tab-content block [[role=tablist]:not(:has(>[aria-selected=true]:first-child))~&amp;]:[--tabcontent-radius-ss:var(--radius-box)] [[role=tablist]:not(:has(>[aria-selected=true]:first-child))~&amp;]:[--tabcontent-radius-es:var(--radius-box)] bg-base-100 border-base-300 p-6" tabindex="0">תוכן התווית 3</div>
+    </div>
+</div>

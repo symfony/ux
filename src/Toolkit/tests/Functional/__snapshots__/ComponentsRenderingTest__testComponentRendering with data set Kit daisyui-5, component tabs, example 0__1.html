@@ -1,0 +1,19 @@
+<!--
+- Kit: daisyUI v5
+- Component: Tabs
+- Code:
+```twig
+<twig:Tabs id="tabs-default" defaultValue="tab-2">
+    <twig:Tabs:List aria-label="Tabs">
+        <twig:Tabs:Trigger value="tab-1">Tab 1</twig:Tabs:Trigger>
+        <twig:Tabs:Trigger value="tab-2">Tab 2</twig:Tabs:Trigger>
+        <twig:Tabs:Trigger value="tab-3">Tab 3</twig:Tabs:Trigger>
+    </twig:Tabs:List>
+</twig:Tabs>
+```
+- Rendered code (run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div id="tabs-default" data-tabs-active-value="tab-2" class="tabs" data-controller="tabs"><div role="tablist" class="tabs contents [&amp;.tabs-lift:has(~.tab-content)>.tab:first-child:not([aria-selected=true])]:[--tab-border-colors:var(--tab-border-color)_var(--tab-border-color)_#0000_var(--tab-border-color)] [&amp;.tabs-lift.tabs-bottom:has(~.tab-content)>.tab:first-child:not([aria-selected=true])]:[--tab-border-colors:#0000_var(--tab-border-color)_var(--tab-border-color)_var(--tab-border-color)]" data-action="keydown.left->tabs#selectLeft:prevent keydown.right->tabs#selectRight:prevent keydown.home->tabs#selectFirst:prevent keydown.end->tabs#selectLast:prevent" aria-label="Tabs"><button id="tabs-default-trigger-tab-1" role="tab" data-tabs-target="trigger" data-value="tab-1" aria-selected="false" aria-controls="tabs-default-content-tab-1" tabindex="-1" class="tab" type="button" data-action="click->tabs#select">Tab 1</button>
+        <button id="tabs-default-trigger-tab-2" role="tab" data-tabs-target="trigger" data-value="tab-2" aria-selected="true" aria-controls="tabs-default-content-tab-2" tabindex="0" class="tab" type="button" data-action="click->tabs#select">Tab 2</button>
+        <button id="tabs-default-trigger-tab-3" role="tab" data-tabs-target="trigger" data-value="tab-3" aria-selected="false" aria-controls="tabs-default-content-tab-3" tabindex="-1" class="tab" type="button" data-action="click->tabs#select">Tab 3</button>
+    </div>
+</div>

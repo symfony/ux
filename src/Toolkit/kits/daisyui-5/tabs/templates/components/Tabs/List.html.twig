@@ -1,0 +1,13 @@
+{%- set _tabs_class = inject('tabs.class', 'tabs') -%}
+{#- The tabs stay direct children of a `.tabs` element for daisyUI, and `contents` lays them out in the `Tabs` root, next to the panels.
+    The `--tab-border-colors` rules port the lift style of an unselected first tab followed by panels, which daisyUI reads from the `Tabs` root. -#}
+<div
+    role="tablist"
+    {{ attributes.defaults({
+        class: (_tabs_class ~ ' contents [&.tabs-lift:has(~.tab-content)>.tab:first-child:not([aria-selected=true])]:[--tab-border-colors:var(--tab-border-color)_var(--tab-border-color)_#0000_var(--tab-border-color)] [&.tabs-lift.tabs-bottom:has(~.tab-content)>.tab:first-child:not([aria-selected=true])]:[--tab-border-colors:#0000_var(--tab-border-color)_var(--tab-border-color)_var(--tab-border-color)]')|tailwind_classes,
+        'data-action': 'keydown.left->tabs#selectLeft:prevent keydown.right->tabs#selectRight:prevent keydown.home->tabs#selectFirst:prevent keydown.end->tabs#selectLast:prevent',
+    }) }}
+>
+    {##- The `Tabs:Trigger` elements. -#}
+    {%- block content %}{% endblock -%}
+</div>

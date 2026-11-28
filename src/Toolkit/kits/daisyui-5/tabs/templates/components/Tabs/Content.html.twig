@@ -1,0 +1,22 @@
+{%- props
+    ## string The value of the tab that shows this panel.
+    value
+-%}
+{%- set _tabs_id = inject('tabs.id') -%}
+{%- set _tabs_defaultValue = inject('tabs.defaultValue', '') -%}
+{#- daisyUI rounds the corner of a lift panel next to the first tab only when another tab is selected, which it reads from the panel's own tab: the `--tabcontent-radius-*` rules read it from `Tabs:List`. -#}
+<div
+    id="{{ _tabs_id }}-content-{{ value }}"
+    role="tabpanel"
+    data-tabs-target="content"
+    data-value="{{ value }}"
+    aria-labelledby="{{ _tabs_id }}-trigger-{{ value }}"
+    {{ _tabs_defaultValue is same as(value) ? '' : 'hidden' }}
+    {{ attributes.defaults({
+        class: 'tab-content block [[role=tablist]:not(:has(>[aria-selected=true]:first-child))~&]:[--tabcontent-radius-ss:var(--radius-box)] [[role=tablist]:not(:has(>[aria-selected=true]:first-child))~&]:[--tabcontent-radius-es:var(--radius-box)]'|tailwind_classes,
+        tabindex: '0',
+    }) }}
+>
+    {##- The content of the panel. -#}
+    {%- block content %}{% endblock -%}
+</div>
