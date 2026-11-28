@@ -32,6 +32,7 @@ interface CompiledRoute {
 }
 
 const UNRESERVED_CHARS_AND_SLASH = /^[A-Za-z0-9\-._~/]*$/;
+const DOT_SEGMENT = /(?:^|\/)\.\.?(?:\/|$)/;
 const compiledRoutes = new WeakMap<RouteDefinition, CompiledRoute>();
 
 export function generate(
@@ -128,7 +129,13 @@ function doGenerate(
             (value != null && toPhpString(value) !== toPhpString(defaults[token.name]))
         ) {
             checkRequirement(token, value, name);
-            url = token.prefix + toPhpString(value) + url;
+            const stringValue = toPhpString(value);
+            if (/[./]/.test(stringValue) && DOT_SEGMENT.test(token.prefix + stringValue + url.split('/', 1)[0])) {
+                throw new InvalidParameterError(
+                    `Parameter "${token.name}" for route "${name}" must not add "." or ".." segments to the path ("${stringValue}" given) to generate a corresponding URL.`
+                );
+            }
+            url = token.prefix + stringValue + url;
             optional = false;
         }
     }
