@@ -1,0 +1,24 @@
+{%- props
+    ## string The value of the tab, matching the `value` of its `Tabs:Content`.
+    value
+-%}
+{%- set _tabs_id = inject('tabs.id') -%}
+{%- set _tabs_defaultValue = inject('tabs.defaultValue', '') -%}
+{%- set _tabs_selected = _tabs_defaultValue is same as(value) -%}
+<button
+    id="{{ _tabs_id }}-trigger-{{ value }}"
+    role="tab"
+    data-tabs-target="trigger"
+    data-value="{{ value }}"
+    aria-selected="{{ _tabs_selected ? 'true' : 'false' }}"
+    aria-controls="{{ _tabs_id }}-content-{{ value }}"
+    tabindex="{{ _tabs_selected ? '0' : '-1' }}"
+    {{ attributes.defaults({
+        class: 'tab'|tailwind_classes,
+        type: 'button',
+        'data-action': 'click->tabs#select',
+    }) }}
+>
+    {##- The tab label and/or icon. -#}
+    {%- block content %}{% endblock -%}
+</button>

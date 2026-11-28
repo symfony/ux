@@ -1,0 +1,25 @@
+<!--
+- Kit: daisyUI v5
+- Component: Tabs
+- Code:
+```twig
+<twig:Tabs id="tabs-lift-content" defaultValue="tab-2" variant="lift" class="w-full">
+    <twig:Tabs:List aria-label="Tabs">
+        <twig:Tabs:Trigger value="tab-1">Tab 1</twig:Tabs:Trigger>
+        <twig:Tabs:Trigger value="tab-2">Tab 2</twig:Tabs:Trigger>
+        <twig:Tabs:Trigger value="tab-3">Tab 3</twig:Tabs:Trigger>
+    </twig:Tabs:List>
+    <twig:Tabs:Content value="tab-1" class="bg-base-100 border-base-300 p-6">Tab content 1</twig:Tabs:Content>
+    <twig:Tabs:Content value="tab-2" class="bg-base-100 border-base-300 p-6">Tab content 2</twig:Tabs:Content>
+    <twig:Tabs:Content value="tab-3" class="bg-base-100 border-base-300 p-6">Tab content 3</twig:Tabs:Content>
+</twig:Tabs>
+```
+- Rendered code (run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div id="tabs-lift-content" data-tabs-active-value="tab-2" class="tabs tabs-lift w-full" data-controller="tabs"><div role="tablist" class="tabs tabs-lift contents [&amp;.tabs-lift:has(~.tab-content)>.tab:first-child:not([aria-selected=true])]:[--tab-border-colors:var(--tab-border-color)_var(--tab-border-color)_#0000_var(--tab-border-color)] [&amp;.tabs-lift.tabs-bottom:has(~.tab-content)>.tab:first-child:not([aria-selected=true])]:[--tab-border-colors:#0000_var(--tab-border-color)_var(--tab-border-color)_var(--tab-border-color)]" data-action="keydown.left->tabs#selectLeft:prevent keydown.right->tabs#selectRight:prevent keydown.home->tabs#selectFirst:prevent keydown.end->tabs#selectLast:prevent" aria-label="Tabs"><button id="tabs-lift-content-trigger-tab-1" role="tab" data-tabs-target="trigger" data-value="tab-1" aria-selected="false" aria-controls="tabs-lift-content-content-tab-1" tabindex="-1" class="tab" type="button" data-action="click->tabs#select">Tab 1</button>
+        <button id="tabs-lift-content-trigger-tab-2" role="tab" data-tabs-target="trigger" data-value="tab-2" aria-selected="true" aria-controls="tabs-lift-content-content-tab-2" tabindex="0" class="tab" type="button" data-action="click->tabs#select">Tab 2</button>
+        <button id="tabs-lift-content-trigger-tab-3" role="tab" data-tabs-target="trigger" data-value="tab-3" aria-selected="false" aria-controls="tabs-lift-content-content-tab-3" tabindex="-1" class="tab" type="button" data-action="click->tabs#select">Tab 3</button>
+    </div>
+    <div id="tabs-lift-content-content-tab-1" role="tabpanel" data-tabs-target="content" data-value="tab-1" aria-labelledby="tabs-lift-content-trigger-tab-1" hidden="" class="tab-content block [[role=tablist]:not(:has(>[aria-selected=true]:first-child))~&amp;]:[--tabcontent-radius-ss:var(--radius-box)] [[role=tablist]:not(:has(>[aria-selected=true]:first-child))~&amp;]:[--tabcontent-radius-es:var(--radius-box)] bg-base-100 border-base-300 p-6" tabindex="0">Tab content 1</div>
+    <div id="tabs-lift-content-content-tab-2" role="tabpanel" data-tabs-target="content" data-value="tab-2" aria-labelledby="tabs-lift-content-trigger-tab-2" class="tab-content block [[role=tablist]:not(:has(>[aria-selected=true]:first-child))~&amp;]:[--tabcontent-radius-ss:var(--radius-box)] [[role=tablist]:not(:has(>[aria-selected=true]:first-child))~&amp;]:[--tabcontent-radius-es:var(--radius-box)] bg-base-100 border-base-300 p-6" tabindex="0">Tab content 2</div>
+    <div id="tabs-lift-content-content-tab-3" role="tabpanel" data-tabs-target="content" data-value="tab-3" aria-labelledby="tabs-lift-content-trigger-tab-3" hidden="" class="tab-content block [[role=tablist]:not(:has(>[aria-selected=true]:first-child))~&amp;]:[--tabcontent-radius-ss:var(--radius-box)] [[role=tablist]:not(:has(>[aria-selected=true]:first-child))~&amp;]:[--tabcontent-radius-es:var(--radius-box)] bg-base-100 border-base-300 p-6" tabindex="0">Tab content 3</div>
+</div>

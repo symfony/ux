@@ -1,0 +1,49 @@
+{%- props
+    ## string Unique identifier, used to generate the ids of the tabs and of their panels.
+    id,
+    ## string The value of the tab selected on initial render.
+    defaultValue = '',
+    ## 'default'|'box'|'border'|'lift' The style of the tabs.
+    variant = 'default',
+    ## 'xs'|'sm'|'md'|'lg'|'xl' The size of the tabs.
+    size = 'md',
+    ## 'top'|'bottom' Where the tabs sit, above or below the panels.
+    placement = 'top'
+-%}
+{%- set style = html_cva(
+    base: 'tabs',
+    variants: {
+        variant: {
+            default: '',
+            box: 'tabs-box',
+            border: 'tabs-border',
+            lift: 'tabs-lift',
+        },
+        size: {
+            xs: 'tabs-xs',
+            sm: 'tabs-sm',
+            md: '',
+            lg: 'tabs-lg',
+            xl: 'tabs-xl',
+        },
+        placement: {
+            top: '',
+            bottom: 'tabs-bottom',
+        },
+    },
+) -%}
+{%- set _tabs_class = style.apply({variant: variant, size: size, placement: placement}) -%}
+{%- do provide('tabs.id', id) -%}
+{%- do provide('tabs.defaultValue', defaultValue) -%}
+{%- do provide('tabs.class', _tabs_class) -%}
+<div
+    id="{{ id }}"
+    data-tabs-active-value="{{ defaultValue }}"
+    {{ attributes.defaults({
+        class: _tabs_class|tailwind_classes,
+        'data-controller': 'tabs',
+    }) }}
+>
+    {##- The `Tabs:List`, followed by one `Tabs:Content` per tab. -#}
+    {%- block content %}{% endblock -%}
+</div>
