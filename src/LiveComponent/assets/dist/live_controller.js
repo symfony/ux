@@ -2580,6 +2580,16 @@ var LiveControllerDefault = class LiveControllerDefault extends Controller {
 			this.component.addPlugin(plugin);
 		});
 		this.isComponentFresh = true;
+		this.component.on("render:started", (html, backendResponse, controls) => {
+			this.dispatchEvent("render:started", {
+				html,
+				backendResponse,
+				controls
+			});
+		});
+		this.component.on("render:finished", () => {
+			this.dispatchEvent("render:finished");
+		});
 	}
 	connectComponent() {
 		this.isComponentFresh = false;
