@@ -1,0 +1,35 @@
+<!--
+- Kit: daisyUI v5
+- Component: Modal
+- Code:
+```twig
+<div style="min-height: 280px">
+    <twig:Modal id="responsive">
+        <twig:Modal:Trigger>
+            <twig:Button {{ ...modal_trigger_attrs }}>open modal</twig:Button>
+        </twig:Modal:Trigger>
+        <twig:Modal:Content placement="bottom" class="sm:modal-middle">
+            <twig:Modal:Box>
+                <twig:Modal:Title>Hello!</twig:Modal:Title>
+                <p class="py-4">Press ESC key or click the button below to close</p>
+                <twig:Modal:Action>
+                    <twig:Modal:Close>
+                        <twig:Button {{ ...modal_close_attrs }}>Close</twig:Button>
+                    </twig:Modal:Close>
+                </twig:Modal:Action>
+            </twig:Modal:Box>
+        </twig:Modal:Content>
+    </twig:Modal>
+</div>
+```
+- Rendered code (run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div style="min-height: 280px">
+    <div data-modal-open-value="false" data-controller="modal"><button class="btn" type="button" data-action="click->modal#open" data-modal-target="trigger" aria-haspopup="dialog" aria-expanded="false">open modal</button>
+                <dialog id="modal-responsive" aria-labelledby="modal-responsive-title" data-modal-target="dialog" class="modal modal-bottom sm:modal-middle"><div class="modal-box"><h3 id="modal-responsive-title" class="text-lg font-bold">Hello!</h3>
+                <p class="py-4">Press ESC key or click the button below to close</p>
+                <div class="modal-action"><button class="btn" type="button" data-action="click->modal#close">Close</button>
+                                    </div>
+            </div>
+        </dialog>
+    </div>
+</div>

@@ -1,0 +1,56 @@
+<!--
+- Kit: daisyUI v5
+- Component: Modal
+- Code:
+```twig
+<div class="flex flex-wrap items-center justify-center gap-2" style="min-height: 280px">
+    {% for placement in ['top', 'bottom', 'start', 'end'] %}
+        <twig:Modal :id="'placement_' ~ placement">
+            <twig:Modal:Trigger>
+                <twig:Button {{ ...modal_trigger_attrs }}>{{ placement|capitalize }}</twig:Button>
+            </twig:Modal:Trigger>
+            <twig:Modal:Content :placement="placement" backdrop>
+                <twig:Modal:Box>
+                    <twig:Modal:Title>Hello!</twig:Modal:Title>
+                    <p class="py-4">Press ESC key or click outside to close</p>
+                </twig:Modal:Box>
+            </twig:Modal:Content>
+        </twig:Modal>
+    {% endfor %}
+</div>
+```
+- Rendered code (run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="flex flex-wrap items-center justify-center gap-2" style="min-height: 280px">
+            <div data-modal-open-value="false" data-controller="modal"><button class="btn" type="button" data-action="click->modal#open" data-modal-target="trigger" aria-haspopup="dialog" aria-expanded="false">Top</button>
+                        <dialog id="modal-placement_top" aria-labelledby="modal-placement_top-title" data-modal-target="dialog" class="modal modal-top"><div class="modal-box"><h3 id="modal-placement_top-title" class="text-lg font-bold">Hello!</h3>
+                    <p class="py-4">Press ESC key or click outside to close</p>
+                </div>
+                    <form method="dialog" class="modal-backdrop">
+            <button>close</button>
+        </form></dialog>
+        </div>
+            <div data-modal-open-value="false" data-controller="modal"><button class="btn" type="button" data-action="click->modal#open" data-modal-target="trigger" aria-haspopup="dialog" aria-expanded="false">Bottom</button>
+                        <dialog id="modal-placement_bottom" aria-labelledby="modal-placement_bottom-title" data-modal-target="dialog" class="modal modal-bottom"><div class="modal-box"><h3 id="modal-placement_bottom-title" class="text-lg font-bold">Hello!</h3>
+                    <p class="py-4">Press ESC key or click outside to close</p>
+                </div>
+                    <form method="dialog" class="modal-backdrop">
+            <button>close</button>
+        </form></dialog>
+        </div>
+            <div data-modal-open-value="false" data-controller="modal"><button class="btn" type="button" data-action="click->modal#open" data-modal-target="trigger" aria-haspopup="dialog" aria-expanded="false">Start</button>
+                        <dialog id="modal-placement_start" aria-labelledby="modal-placement_start-title" data-modal-target="dialog" class="modal modal-start"><div class="modal-box"><h3 id="modal-placement_start-title" class="text-lg font-bold">Hello!</h3>
+                    <p class="py-4">Press ESC key or click outside to close</p>
+                </div>
+                    <form method="dialog" class="modal-backdrop">
+            <button>close</button>
+        </form></dialog>
+        </div>
+            <div data-modal-open-value="false" data-controller="modal"><button class="btn" type="button" data-action="click->modal#open" data-modal-target="trigger" aria-haspopup="dialog" aria-expanded="false">End</button>
+                        <dialog id="modal-placement_end" aria-labelledby="modal-placement_end-title" data-modal-target="dialog" class="modal modal-end"><div class="modal-box"><h3 id="modal-placement_end-title" class="text-lg font-bold">Hello!</h3>
+                    <p class="py-4">Press ESC key or click outside to close</p>
+                </div>
+                    <form method="dialog" class="modal-backdrop">
+            <button>close</button>
+        </form></dialog>
+        </div>
+    </div>

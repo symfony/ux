@@ -1,0 +1,10 @@
+{%- set _modal_titleId = inject('modal.titleId') -%}
+<h3
+    id="{{ _modal_titleId }}"
+    {{ attributes.without('id').defaults({
+        class: 'text-lg font-bold'|tailwind_classes,
+    }) }}
+>
+    {##- The title of the modal, which gives the dialog its accessible name. -#}
+    {%- block content %}{% endblock -%}
+</h3>

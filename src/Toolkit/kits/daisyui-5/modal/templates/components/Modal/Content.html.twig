@@ -1,0 +1,37 @@
+{%- props
+    ## 'default'|'top'|'middle'|'bottom'|'start'|'end' The placement of the box on the screen.
+    placement = 'default',
+    ## boolean Whether a click outside the box closes the modal.
+    backdrop = false
+-%}
+{%- set _modal_id = inject('modal.id') -%}
+{%- set _modal_titleId = inject('modal.titleId') -%}
+{%- set style = html_cva(
+    base: 'modal',
+    variants: {
+        placement: {
+            default: '',
+            top: 'modal-top',
+            middle: 'modal-middle',
+            bottom: 'modal-bottom',
+            start: 'modal-start',
+            end: 'modal-end',
+        },
+    },
+) -%}
+<dialog
+    id="{{ _modal_id }}"
+    aria-labelledby="{{ _modal_titleId }}"
+    data-modal-target="dialog"
+    {{ attributes.defaults({
+        class: style.apply({placement: placement})|tailwind_classes,
+    }) }}
+>
+    {##- The modal content, typically a `Modal:Box`. -#}
+    {%- block content %}{% endblock -%}
+    {%- if backdrop %}
+        <form method="dialog" class="modal-backdrop">
+            <button>close</button>
+        </form>
+    {%- endif %}
+</dialog>
