@@ -405,6 +405,44 @@ Use the `as` prop to render the item as a link. The hover and focus states will 
 </div>
 ```
 
+### Dropdown
+
+Render an `Item` inside a `DropdownMenu:Item` to build rich menu entries.
+
+```twig {"preview":true}
+<div class="flex items-start justify-center pt-6" style="min-height: 260px">
+    <twig:DropdownMenu id="item-dropdown" align="end">
+        <twig:DropdownMenu:Trigger>
+            <twig:Button variant="outline" {{ ...dropdown_menu_trigger_attrs }}>
+                Select <twig:ux:icon name="lucide:chevron-down" />
+            </twig:Button>
+        </twig:DropdownMenu:Trigger>
+        <twig:DropdownMenu:Content class="w-48">
+            <twig:DropdownMenu:Group>
+                {% for username in ['shadcn', 'maxleiter', 'evilrabbit'] %}
+                    <twig:DropdownMenu:Item as="div">
+                        <twig:Item size="xs" class="p-2">
+                            <twig:Item:Media>
+                                <twig:Avatar class="size-6.5">
+                                    <twig:Avatar:Image src="https://github.com/{{ username }}.png" alt="" class="grayscale" />
+                                    <twig:Avatar:Fallback>{{ username|first }}</twig:Avatar:Fallback>
+                                </twig:Avatar>
+                            </twig:Item:Media>
+                            <twig:Item:Content>
+                                <twig:Item:Title>{{ username }}</twig:Item:Title>
+                                <twig:Item:Description class="leading-none">
+                                    {{ username }}@vercel.com
+                                </twig:Item:Description>
+                            </twig:Item:Content>
+                        </twig:Item>
+                    </twig:DropdownMenu:Item>
+                {% endfor %}
+            </twig:DropdownMenu:Group>
+        </twig:DropdownMenu:Content>
+    </twig:DropdownMenu>
+</div>
+```
+
 ### RTL
 
 To enable RTL support, set the `dir="rtl"` attribute on the root element.

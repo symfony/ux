@@ -24,7 +24,7 @@ import 'bootstrap';
 With npm, pnpm, or Yarn, install Bootstrap instead with your package manager:
 
 ```bash
-npm install bootstrap@^5.3.0
+npm install bootstrap@^5.3.9
 ```
 
 The imports in `assets/app.js` remain the same.

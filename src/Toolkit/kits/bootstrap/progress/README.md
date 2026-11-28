@@ -63,18 +63,10 @@ Set a custom height on the progress container.
 
 ### Labels
 
-Display short text inside the bar, with care for overflow and contrast when labels are long.
+Display short text inside the bar. A label longer than its bar is clipped, and letting it overflow with `.overflow-visible` cannot guarantee sufficient contrast against both backgrounds, so display long labels outside the bar.
 
 ```twig {"preview":true}
-<div class="vstack gap-3">
-    <twig:Progress value="25" ariaLabel="Example with label" label="25%" />
-    <twig:Progress
-        value="10"
-        ariaLabel="Example with long label"
-        label="Long label text for the progress bar"
-        barClass="overflow-visible text-dark"
-    />
-</div>
+<twig:Progress value="25" ariaLabel="Example with label" label="25%" />
 ```
 
 ### Backgrounds

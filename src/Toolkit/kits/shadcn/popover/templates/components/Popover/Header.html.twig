@@ -1,0 +1,9 @@
+<div
+    data-slot="popover-header"
+    {{ attributes.defaults({
+        class: 'flex flex-col gap-0.5 text-sm'|tailwind_classes,
+    }) }}
+>
+    {##- The header content, typically includes `Popover:Title` and `Popover:Description`. -#}
+    {%- block content %}{% endblock -%}
+</div>

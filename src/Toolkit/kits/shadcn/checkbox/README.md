@@ -43,6 +43,19 @@ A control that allows the user to toggle between checked and not checked.
 
 ## Examples
 
+### Invalid
+
+Set `aria-invalid` on the checkbox and `data-invalid` on the field wrapper to show the invalid styles.
+
+```twig {"preview":true}
+<twig:Field:Group class="mx-auto w-56">
+    <twig:Field orientation="horizontal" data-invalid>
+        <twig:Checkbox id="terms-checkbox-invalid" name="terms-checkbox-invalid" aria-invalid="true" />
+        <twig:Field:Label for="terms-checkbox-invalid">Accept terms and conditions</twig:Field:Label>
+    </twig:Field>
+</twig:Field:Group>
+```
+
 ### Basic
 
 Pair the checkbox with `Field` and `Field:Label` for proper layout and labeling.

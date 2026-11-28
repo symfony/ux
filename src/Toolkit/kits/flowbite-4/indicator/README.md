@@ -4,11 +4,15 @@ Use the indicator component to show a number count, account status, or as a load
 
 ```twig {"preview":true}
 <div class="flex justify-center gap-4">
-    <twig:Indicator variant="brand" />
     <twig:Indicator variant="gray" />
-    <twig:Indicator variant="danger" />
+    <twig:Indicator variant="dark" />
+    <twig:Indicator variant="brand" />
     <twig:Indicator variant="success" />
+    <twig:Indicator variant="danger" />
+    <twig:Indicator variant="purple" />
+    <twig:Indicator variant="indigo" />
     <twig:Indicator variant="warning" />
+    <twig:Indicator variant="teal" />
 </div>
 ```
 
@@ -20,7 +24,7 @@ Use the indicator component to show a number count, account status, or as a load
 
 ```twig
 <twig:Indicator
-    variant="brand | gray | danger | success | warning"
+    variant="brand | gray | dark | danger | success | warning | purple | indigo | teal"
 >
     Value
 </twig:Indicator>

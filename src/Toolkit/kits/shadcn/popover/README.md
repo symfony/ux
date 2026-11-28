@@ -66,10 +66,10 @@ A click-triggered popup that displays rich content, anchored to its trigger.
             <twig:Button variant="outline" {{ ...popover_trigger_attrs }}>Open Popover</twig:Button>
         </twig:Popover:Trigger>
         <twig:Popover:Content align="start">
-            <div class="space-y-1">
-                <h4 class="text-sm font-medium leading-none">Dimensions</h4>
-                <p class="text-xs text-muted-foreground">Set the dimensions for the layer.</p>
-            </div>
+            <twig:Popover:Header>
+                <twig:Popover:Title>Dimensions</twig:Popover:Title>
+                <twig:Popover:Description>Set the dimensions for the layer.</twig:Popover:Description>
+            </twig:Popover:Header>
         </twig:Popover:Content>
     </twig:Popover>
 </div>
@@ -120,10 +120,10 @@ Use the `align` prop to align the content to the `start`, `center` or `end` of t
         </twig:Popover:Trigger>
         <twig:Popover:Content align="start" class="w-64">
             <div class="grid gap-4">
-                <div class="space-y-1">
-                    <h4 class="text-sm font-medium leading-none">Dimensions</h4>
-                    <p class="text-xs text-muted-foreground">Set the dimensions for the layer.</p>
-                </div>
+                <twig:Popover:Header>
+                    <twig:Popover:Title>Dimensions</twig:Popover:Title>
+                    <twig:Popover:Description>Set the dimensions for the layer.</twig:Popover:Description>
+                </twig:Popover:Header>
                 <div class="grid gap-3">
                     <div class="flex items-center gap-3">
                         <twig:Label for="form-width" class="w-1/2">Width</twig:Label>
@@ -153,10 +153,10 @@ To enable RTL support, set the `dir="rtl"` attribute on the root element.
                 <twig:Button variant="outline" {{ ...popover_trigger_attrs }}>يسار</twig:Button>
             </twig:Popover:Trigger>
             <twig:Popover:Content side="left">
-                <div class="space-y-1">
-                    <h4 class="text-sm font-medium leading-none">الأبعاد</h4>
-                    <p class="text-xs text-muted-foreground">تعيين الأبعاد للطبقة.</p>
-                </div>
+                <twig:Popover:Header>
+                    <twig:Popover:Title>الأبعاد</twig:Popover:Title>
+                    <twig:Popover:Description>تعيين الأبعاد للطبقة.</twig:Popover:Description>
+                </twig:Popover:Header>
             </twig:Popover:Content>
         </twig:Popover>
         <twig:Popover name="rtl-ar">
@@ -164,10 +164,10 @@ To enable RTL support, set the `dir="rtl"` attribute on the root element.
                 <twig:Button variant="outline" {{ ...popover_trigger_attrs }}>أعلى</twig:Button>
             </twig:Popover:Trigger>
             <twig:Popover:Content side="top">
-                <div class="space-y-1">
-                    <h4 class="text-sm font-medium leading-none">الأبعاد</h4>
-                    <p class="text-xs text-muted-foreground">تعيين الأبعاد للطبقة.</p>
-                </div>
+                <twig:Popover:Header>
+                    <twig:Popover:Title>الأبعاد</twig:Popover:Title>
+                    <twig:Popover:Description>تعيين الأبعاد للطبقة.</twig:Popover:Description>
+                </twig:Popover:Header>
             </twig:Popover:Content>
         </twig:Popover>
         <twig:Popover name="rtl-ar">
@@ -175,10 +175,10 @@ To enable RTL support, set the `dir="rtl"` attribute on the root element.
                 <twig:Button variant="outline" {{ ...popover_trigger_attrs }}>أسفل</twig:Button>
             </twig:Popover:Trigger>
             <twig:Popover:Content side="bottom">
-                <div class="space-y-1">
-                    <h4 class="text-sm font-medium leading-none">الأبعاد</h4>
-                    <p class="text-xs text-muted-foreground">تعيين الأبعاد للطبقة.</p>
-                </div>
+                <twig:Popover:Header>
+                    <twig:Popover:Title>الأبعاد</twig:Popover:Title>
+                    <twig:Popover:Description>تعيين الأبعاد للطبقة.</twig:Popover:Description>
+                </twig:Popover:Header>
             </twig:Popover:Content>
         </twig:Popover>
         <twig:Popover name="rtl-ar">
@@ -186,10 +186,10 @@ To enable RTL support, set the `dir="rtl"` attribute on the root element.
                 <twig:Button variant="outline" {{ ...popover_trigger_attrs }}>يمين</twig:Button>
             </twig:Popover:Trigger>
             <twig:Popover:Content side="right">
-                <div class="space-y-1">
-                    <h4 class="text-sm font-medium leading-none">الأبعاد</h4>
-                    <p class="text-xs text-muted-foreground">تعيين الأبعاد للطبقة.</p>
-                </div>
+                <twig:Popover:Header>
+                    <twig:Popover:Title>الأبعاد</twig:Popover:Title>
+                    <twig:Popover:Description>تعيين الأبعاد للطبقة.</twig:Popover:Description>
+                </twig:Popover:Header>
             </twig:Popover:Content>
         </twig:Popover>
     </div>
@@ -201,10 +201,10 @@ To enable RTL support, set the `dir="rtl"` attribute on the root element.
                 <twig:Button variant="outline" {{ ...popover_trigger_attrs }}>שמאל</twig:Button>
             </twig:Popover:Trigger>
             <twig:Popover:Content side="left">
-                <div class="space-y-1">
-                    <h4 class="text-sm font-medium leading-none">מימדים</h4>
-                    <p class="text-xs text-muted-foreground">הגדר את המימדים לשכבה.</p>
-                </div>
+                <twig:Popover:Header>
+                    <twig:Popover:Title>מימדים</twig:Popover:Title>
+                    <twig:Popover:Description>הגדר את המימדים לשכבה.</twig:Popover:Description>
+                </twig:Popover:Header>
             </twig:Popover:Content>
         </twig:Popover>
         <twig:Popover name="rtl-he">
@@ -212,10 +212,10 @@ To enable RTL support, set the `dir="rtl"` attribute on the root element.
                 <twig:Button variant="outline" {{ ...popover_trigger_attrs }}>למעלה</twig:Button>
             </twig:Popover:Trigger>
             <twig:Popover:Content side="top">
-                <div class="space-y-1">
-                    <h4 class="text-sm font-medium leading-none">מימדים</h4>
-                    <p class="text-xs text-muted-foreground">הגדר את המימדים לשכבה.</p>
-                </div>
+                <twig:Popover:Header>
+                    <twig:Popover:Title>מימדים</twig:Popover:Title>
+                    <twig:Popover:Description>הגדר את המימדים לשכבה.</twig:Popover:Description>
+                </twig:Popover:Header>
             </twig:Popover:Content>
         </twig:Popover>
         <twig:Popover name="rtl-he">
@@ -223,10 +223,10 @@ To enable RTL support, set the `dir="rtl"` attribute on the root element.
                 <twig:Button variant="outline" {{ ...popover_trigger_attrs }}>למטה</twig:Button>
             </twig:Popover:Trigger>
             <twig:Popover:Content side="bottom">
-                <div class="space-y-1">
-                    <h4 class="text-sm font-medium leading-none">מימדים</h4>
-                    <p class="text-xs text-muted-foreground">הגדר את המימדים לשכבה.</p>
-                </div>
+                <twig:Popover:Header>
+                    <twig:Popover:Title>מימדים</twig:Popover:Title>
+                    <twig:Popover:Description>הגדר את המימדים לשכבה.</twig:Popover:Description>
+                </twig:Popover:Header>
             </twig:Popover:Content>
         </twig:Popover>
         <twig:Popover name="rtl-he">
@@ -234,10 +234,10 @@ To enable RTL support, set the `dir="rtl"` attribute on the root element.
                 <twig:Button variant="outline" {{ ...popover_trigger_attrs }}>ימין</twig:Button>
             </twig:Popover:Trigger>
             <twig:Popover:Content side="right">
-                <div class="space-y-1">
-                    <h4 class="text-sm font-medium leading-none">מימדים</h4>
-                    <p class="text-xs text-muted-foreground">הגדר את המימדים לשכבה.</p>
-                </div>
+                <twig:Popover:Header>
+                    <twig:Popover:Title>מימדים</twig:Popover:Title>
+                    <twig:Popover:Description>הגדר את המימדים לשכבה.</twig:Popover:Description>
+                </twig:Popover:Header>
             </twig:Popover:Content>
         </twig:Popover>
     </div>

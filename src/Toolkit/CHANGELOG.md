@@ -6,6 +6,18 @@
 - [daisyUI v5] Add the `daisyui-5` kit, with the `button` recipe
 - [daisyUI v5] Add the `badge` recipe
 - [daisyUI v5] Add the `alert` recipe
+- [Shadcn] Show the focus ring on the `Field:Label` used as a choice card when the control it contains has keyboard focus, and no longer draw a second ring on that `checkbox`, `radio-group` item or `switch`
+- [Shadcn] Keep the primary border of a checked `checkbox` marked as invalid
+- [Shadcn] Add the `Popover:Header`, `Popover:Title` and `Popover:Description` components
+- [Shadcn] Add the `inset` prop to `Menubar:Item`, to align it with the checkbox and radio items
+- [Shadcn] Add the `Invalid` example to `checkbox`, `Spacing` and `Edge to Edge` to `card`, `Radio` and `Responsive Layout` to `field`, `Dropdown` to `item` and `Actions` to `table`
+- [Flowbite v4] Fix the vertical `button-group` shifting its buttons sideways and doubling the border between them
+- [Flowbite v4] Fix the `pagination` arrows pointing the wrong way in right-to-left, and the current page losing its color on hover
+- [Flowbite v4] Use the border color of the active tab on hover in the `line` variant of `tabs`
+- [Flowbite v4] Add the `dark`, `purple`, `indigo` and `teal` variants to `indicator`
+- [Bootstrap] Require Bootstrap 5.3.9, and add the `xxl` size to `modal`
+- [Bootstrap] Add the `Nested collapse` example to `collapse`
+- [Bootstrap] Render the current page as a link in the `Sizing` example of `pagination`, and remove the label overflowing its bar from the `Labels` example of `progress`, which was hard to read
 
 ## 3.8.1
 

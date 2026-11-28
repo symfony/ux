@@ -101,6 +101,99 @@ Use the `size="sm"` prop to set the size of the card to small. The small size va
 </twig:Card>
 ```
 
+### Spacing
+
+In addition to the `size` prop, you can use the `--card-spacing` CSS variable to control the spacing between sections and the inset of card parts.
+
+```twig {"preview":true}
+<twig:Card class="mx-auto w-full max-w-sm [--card-spacing:--spacing(6)]">
+    <twig:Card:Header>
+        <twig:Card:Title>Login to your account</twig:Card:Title>
+        <twig:Card:Description>
+            Enter your email below to login to your account
+        </twig:Card:Description>
+        <twig:Card:Action>
+            <twig:Button variant="link">Sign Up</twig:Button>
+        </twig:Card:Action>
+    </twig:Card:Header>
+    <twig:Card:Content>
+        <form>
+            <div class="flex flex-col gap-6">
+                <div class="grid gap-2">
+                    <twig:Label for="email-spacing">Email</twig:Label>
+                    <twig:Input
+                        id="email-spacing"
+                        type="email"
+                        placeholder="m@example.com"
+                        required
+                    />
+                </div>
+                <div class="grid gap-2">
+                    <div class="flex items-center">
+                        <twig:Label for="password-spacing">Password</twig:Label>
+                        <a
+                            href="#"
+                            class="ms-auto inline-block text-sm underline-offset-4 hover:underline"
+                        >
+                            Forgot your password?
+                        </a>
+                    </div>
+                    <twig:Input id="password-spacing" type="password" required />
+                </div>
+            </div>
+        </form>
+    </twig:Card:Content>
+    <twig:Card:Footer class="flex-col gap-2">
+        <twig:Button type="submit" class="w-full">
+            Login
+        </twig:Button>
+        <twig:Button variant="outline" class="w-full">
+            Login with Google
+        </twig:Button>
+    </twig:Card:Footer>
+</twig:Card>
+```
+
+### Edge to Edge
+
+Use negative margins with `-mx-(--card-spacing)` to make content go edge to edge while keeping it aligned with the card inset. When the edge-to-edge content sits above a footer, use `-mb-(--card-spacing)` on `Card:Content` to remove the section gap.
+
+```twig {"preview":true}
+<twig:Card class="mx-auto w-full max-w-sm">
+    <twig:Card:Header>
+        <twig:Card:Title>Terms of Service</twig:Card:Title>
+        <twig:Card:Description>
+            Review the terms before accepting the agreement.
+        </twig:Card:Description>
+    </twig:Card:Header>
+    <twig:Card:Content class="-mb-(--card-spacing)">
+        <div class="-mx-(--card-spacing) max-h-48 space-y-4 overflow-y-scroll border-t bg-muted/50 px-(--card-spacing) py-4 text-sm leading-relaxed">
+            <p>
+                These terms govern your use of the workspace, including access to
+                shared documents, project files, and collaboration tools.
+            </p>
+            <p>
+                You are responsible for the content you upload and for ensuring that
+                your team has the appropriate permissions to view or edit it.
+            </p>
+            <p>
+                We may update features or limits as the service evolves. When those
+                changes materially affect your workflow, we will notify your
+                workspace administrators.
+            </p>
+            <p>
+                By continuing, you agree to keep your account credentials secure and
+                to follow your organization's acceptable use policies.
+            </p>
+        </div>
+    </twig:Card:Content>
+    <twig:Card:Footer class="justify-end gap-2">
+        <twig:Button variant="outline">Decline</twig:Button>
+        <twig:Button>Accept</twig:Button>
+    </twig:Card:Footer>
+</twig:Card>
+```
+
 ### Image
 
 Add an image before the card header to create a card with an image.

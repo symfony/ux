@@ -1,0 +1,9 @@
+<div
+    data-slot="popover-title"
+    {{ attributes.defaults({
+        class: 'font-medium'|tailwind_classes,
+    }) }}
+>
+    {##- The title of the popover. -#}
+    {%- block content %}{% endblock -%}
+</div>

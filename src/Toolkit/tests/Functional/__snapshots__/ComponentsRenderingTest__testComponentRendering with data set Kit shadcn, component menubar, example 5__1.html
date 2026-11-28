@@ -70,12 +70,12 @@
                     <twig:Menubar:CheckboxItem name="ar-bookmarks">شريط الإشارات المرجعية</twig:Menubar:CheckboxItem>
                     <twig:Menubar:CheckboxItem name="ar-urls" checked>عناوين URL الكاملة</twig:Menubar:CheckboxItem>
                     <twig:Menubar:Separator />
-                    <twig:Menubar:Item>إعادة تحميل<twig:Menubar:Shortcut>⌘R</twig:Menubar:Shortcut></twig:Menubar:Item>
-                    <twig:Menubar:Item disabled>إعادة تحميل قسري<twig:Menubar:Shortcut>⇧⌘R</twig:Menubar:Shortcut></twig:Menubar:Item>
+                    <twig:Menubar:Item inset>إعادة تحميل<twig:Menubar:Shortcut>⌘R</twig:Menubar:Shortcut></twig:Menubar:Item>
+                    <twig:Menubar:Item inset disabled>إعادة تحميل قسري<twig:Menubar:Shortcut>⇧⌘R</twig:Menubar:Shortcut></twig:Menubar:Item>
                     <twig:Menubar:Separator />
-                    <twig:Menubar:Item>تبديل وضع ملء الشاشة</twig:Menubar:Item>
+                    <twig:Menubar:Item inset>تبديل وضع ملء الشاشة</twig:Menubar:Item>
                     <twig:Menubar:Separator />
-                    <twig:Menubar:Item>إخفاء الشريط الجانبي</twig:Menubar:Item>
+                    <twig:Menubar:Item inset>إخفاء الشريط الجانبي</twig:Menubar:Item>
                 </twig:Menubar:Content>
             </twig:Menubar:Menu>
             <twig:Menubar:Menu>
@@ -89,9 +89,9 @@
                         <twig:Menubar:RadioItem value="luis">Luis</twig:Menubar:RadioItem>
                     </twig:Menubar:RadioGroup>
                     <twig:Menubar:Separator />
-                    <twig:Menubar:Item>تعديل...</twig:Menubar:Item>
+                    <twig:Menubar:Item inset>تعديل...</twig:Menubar:Item>
                     <twig:Menubar:Separator />
-                    <twig:Menubar:Item>إضافة ملف شخصي...</twig:Menubar:Item>
+                    <twig:Menubar:Item inset>إضافة ملف شخصي...</twig:Menubar:Item>
                 </twig:Menubar:Content>
             </twig:Menubar:Menu>
         </twig:Menubar>
@@ -163,12 +163,12 @@
                     <twig:Menubar:CheckboxItem name="he-bookmarks">סרגל סימניות</twig:Menubar:CheckboxItem>
                     <twig:Menubar:CheckboxItem name="he-urls" checked>כתובות URL מלאות</twig:Menubar:CheckboxItem>
                     <twig:Menubar:Separator />
-                    <twig:Menubar:Item>רענן<twig:Menubar:Shortcut>⌘R</twig:Menubar:Shortcut></twig:Menubar:Item>
-                    <twig:Menubar:Item disabled>רענן בכוח<twig:Menubar:Shortcut>⇧⌘R</twig:Menubar:Shortcut></twig:Menubar:Item>
+                    <twig:Menubar:Item inset>רענן<twig:Menubar:Shortcut>⌘R</twig:Menubar:Shortcut></twig:Menubar:Item>
+                    <twig:Menubar:Item inset disabled>רענן בכוח<twig:Menubar:Shortcut>⇧⌘R</twig:Menubar:Shortcut></twig:Menubar:Item>
                     <twig:Menubar:Separator />
-                    <twig:Menubar:Item>החלף מסך מלא</twig:Menubar:Item>
+                    <twig:Menubar:Item inset>החלף מסך מלא</twig:Menubar:Item>
                     <twig:Menubar:Separator />
-                    <twig:Menubar:Item>הסתר סרגל צד</twig:Menubar:Item>
+                    <twig:Menubar:Item inset>הסתר סרגל צד</twig:Menubar:Item>
                 </twig:Menubar:Content>
             </twig:Menubar:Menu>
             <twig:Menubar:Menu>
@@ -182,9 +182,9 @@
                         <twig:Menubar:RadioItem value="luis">Luis</twig:Menubar:RadioItem>
                     </twig:Menubar:RadioGroup>
                     <twig:Menubar:Separator />
-                    <twig:Menubar:Item>ערוך...</twig:Menubar:Item>
+                    <twig:Menubar:Item inset>ערוך...</twig:Menubar:Item>
                     <twig:Menubar:Separator />
-                    <twig:Menubar:Item>הוסף פרופיל...</twig:Menubar:Item>
+                    <twig:Menubar:Item inset>הוסף פרופיל...</twig:Menubar:Item>
                 </twig:Menubar:Content>
             </twig:Menubar:Menu>
         </twig:Menubar>
@@ -254,16 +254,16 @@
     </span>عناوين URL الكاملة</label>
                     <div role="separator" data-slot="menubar-separator" class="-mx-1 my-1 h-px bg-border"></div>
 
-                    <button type="button" role="menuitem" data-slot="menubar-item" data-variant="default" class="group/menubar-item relative flex w-full cursor-default select-none items-center gap-1.5 rounded-md px-1.5 py-1 text-sm outline-hidden hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground disabled:pointer-events-none disabled:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 hover:**:text-accent-foreground focus:**:text-accent-foreground">إعادة تحميل<span data-slot="menubar-shortcut" class="ms-auto text-xs tracking-widest text-muted-foreground group-focus/menubar-item:text-accent-foreground">⌘R</span>
+                    <button type="button" role="menuitem" data-slot="menubar-item" data-variant="default" class="group/menubar-item relative flex w-full cursor-default select-none items-center gap-1.5 rounded-md px-1.5 py-1 text-sm outline-hidden hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground disabled:pointer-events-none disabled:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 hover:**:text-accent-foreground focus:**:text-accent-foreground ps-7">إعادة تحميل<span data-slot="menubar-shortcut" class="ms-auto text-xs tracking-widest text-muted-foreground group-focus/menubar-item:text-accent-foreground">⌘R</span>
 </button>
-                    <button type="button" role="menuitem" data-slot="menubar-item" data-variant="default" class="group/menubar-item relative flex w-full cursor-default select-none items-center gap-1.5 rounded-md px-1.5 py-1 text-sm outline-hidden hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground disabled:pointer-events-none disabled:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 hover:**:text-accent-foreground focus:**:text-accent-foreground" disabled="">إعادة تحميل قسري<span data-slot="menubar-shortcut" class="ms-auto text-xs tracking-widest text-muted-foreground group-focus/menubar-item:text-accent-foreground">⇧⌘R</span>
+                    <button type="button" role="menuitem" data-slot="menubar-item" data-variant="default" class="group/menubar-item relative flex w-full cursor-default select-none items-center gap-1.5 rounded-md px-1.5 py-1 text-sm outline-hidden hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground disabled:pointer-events-none disabled:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 hover:**:text-accent-foreground focus:**:text-accent-foreground ps-7" disabled="">إعادة تحميل قسري<span data-slot="menubar-shortcut" class="ms-auto text-xs tracking-widest text-muted-foreground group-focus/menubar-item:text-accent-foreground">⇧⌘R</span>
 </button>
                     <div role="separator" data-slot="menubar-separator" class="-mx-1 my-1 h-px bg-border"></div>
 
-                    <button type="button" role="menuitem" data-slot="menubar-item" data-variant="default" class="group/menubar-item relative flex w-full cursor-default select-none items-center gap-1.5 rounded-md px-1.5 py-1 text-sm outline-hidden hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground disabled:pointer-events-none disabled:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 hover:**:text-accent-foreground focus:**:text-accent-foreground">تبديل وضع ملء الشاشة</button>
+                    <button type="button" role="menuitem" data-slot="menubar-item" data-variant="default" class="group/menubar-item relative flex w-full cursor-default select-none items-center gap-1.5 rounded-md px-1.5 py-1 text-sm outline-hidden hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground disabled:pointer-events-none disabled:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 hover:**:text-accent-foreground focus:**:text-accent-foreground ps-7">تبديل وضع ملء الشاشة</button>
                     <div role="separator" data-slot="menubar-separator" class="-mx-1 my-1 h-px bg-border"></div>
 
-                    <button type="button" role="menuitem" data-slot="menubar-item" data-variant="default" class="group/menubar-item relative flex w-full cursor-default select-none items-center gap-1.5 rounded-md px-1.5 py-1 text-sm outline-hidden hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground disabled:pointer-events-none disabled:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 hover:**:text-accent-foreground focus:**:text-accent-foreground">إخفاء الشريط الجانبي</button>
+                    <button type="button" role="menuitem" data-slot="menubar-item" data-variant="default" class="group/menubar-item relative flex w-full cursor-default select-none items-center gap-1.5 rounded-md px-1.5 py-1 text-sm outline-hidden hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground disabled:pointer-events-none disabled:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 hover:**:text-accent-foreground focus:**:text-accent-foreground ps-7">إخفاء الشريط الجانبي</button>
                 </div>
             </div>
             <div data-slot="menubar-menu" data-menubar-target="menu" class="group/menubar-menu relative"><button data-slot="menubar-trigger" data-variant="ghost" data-size="sm" class="group/button inline-flex shrink-0 items-center justify-center border border-transparent bg-clip-padding font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50 h-7 gap-1 rounded-[min(var(--radius-md),12px)] px-2.5 text-[0.8rem] in-data-[slot=button-group]:rounded-lg has-data-[icon=inline-end]:pe-1.5 has-data-[icon=inline-start]:ps-1.5 [&amp;_svg:not([class*='size-'])]:size-3.5" type="button" data-menubar-target="trigger" role="menuitem" tabindex="0" aria-haspopup="menu" aria-expanded="false" data-action="click->menubar#toggle mouseenter->menubar#enter">الملفات الشخصية</button>
@@ -285,10 +285,10 @@
                     </div>
                     <div role="separator" data-slot="menubar-separator" class="-mx-1 my-1 h-px bg-border"></div>
 
-                    <button type="button" role="menuitem" data-slot="menubar-item" data-variant="default" class="group/menubar-item relative flex w-full cursor-default select-none items-center gap-1.5 rounded-md px-1.5 py-1 text-sm outline-hidden hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground disabled:pointer-events-none disabled:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 hover:**:text-accent-foreground focus:**:text-accent-foreground">تعديل...</button>
+                    <button type="button" role="menuitem" data-slot="menubar-item" data-variant="default" class="group/menubar-item relative flex w-full cursor-default select-none items-center gap-1.5 rounded-md px-1.5 py-1 text-sm outline-hidden hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground disabled:pointer-events-none disabled:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 hover:**:text-accent-foreground focus:**:text-accent-foreground ps-7">تعديل...</button>
                     <div role="separator" data-slot="menubar-separator" class="-mx-1 my-1 h-px bg-border"></div>
 
-                    <button type="button" role="menuitem" data-slot="menubar-item" data-variant="default" class="group/menubar-item relative flex w-full cursor-default select-none items-center gap-1.5 rounded-md px-1.5 py-1 text-sm outline-hidden hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground disabled:pointer-events-none disabled:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 hover:**:text-accent-foreground focus:**:text-accent-foreground">إضافة ملف شخصي...</button>
+                    <button type="button" role="menuitem" data-slot="menubar-item" data-variant="default" class="group/menubar-item relative flex w-full cursor-default select-none items-center gap-1.5 rounded-md px-1.5 py-1 text-sm outline-hidden hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground disabled:pointer-events-none disabled:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 hover:**:text-accent-foreground focus:**:text-accent-foreground ps-7">إضافة ملف شخصي...</button>
                 </div>
             </div>
         </div>
@@ -355,16 +355,16 @@
     </span>כתובות URL מלאות</label>
                     <div role="separator" data-slot="menubar-separator" class="-mx-1 my-1 h-px bg-border"></div>
 
-                    <button type="button" role="menuitem" data-slot="menubar-item" data-variant="default" class="group/menubar-item relative flex w-full cursor-default select-none items-center gap-1.5 rounded-md px-1.5 py-1 text-sm outline-hidden hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground disabled:pointer-events-none disabled:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 hover:**:text-accent-foreground focus:**:text-accent-foreground">רענן<span data-slot="menubar-shortcut" class="ms-auto text-xs tracking-widest text-muted-foreground group-focus/menubar-item:text-accent-foreground">⌘R</span>
+                    <button type="button" role="menuitem" data-slot="menubar-item" data-variant="default" class="group/menubar-item relative flex w-full cursor-default select-none items-center gap-1.5 rounded-md px-1.5 py-1 text-sm outline-hidden hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground disabled:pointer-events-none disabled:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 hover:**:text-accent-foreground focus:**:text-accent-foreground ps-7">רענן<span data-slot="menubar-shortcut" class="ms-auto text-xs tracking-widest text-muted-foreground group-focus/menubar-item:text-accent-foreground">⌘R</span>
 </button>
-                    <button type="button" role="menuitem" data-slot="menubar-item" data-variant="default" class="group/menubar-item relative flex w-full cursor-default select-none items-center gap-1.5 rounded-md px-1.5 py-1 text-sm outline-hidden hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground disabled:pointer-events-none disabled:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 hover:**:text-accent-foreground focus:**:text-accent-foreground" disabled="">רענן בכוח<span data-slot="menubar-shortcut" class="ms-auto text-xs tracking-widest text-muted-foreground group-focus/menubar-item:text-accent-foreground">⇧⌘R</span>
+                    <button type="button" role="menuitem" data-slot="menubar-item" data-variant="default" class="group/menubar-item relative flex w-full cursor-default select-none items-center gap-1.5 rounded-md px-1.5 py-1 text-sm outline-hidden hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground disabled:pointer-events-none disabled:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 hover:**:text-accent-foreground focus:**:text-accent-foreground ps-7" disabled="">רענן בכוח<span data-slot="menubar-shortcut" class="ms-auto text-xs tracking-widest text-muted-foreground group-focus/menubar-item:text-accent-foreground">⇧⌘R</span>
 </button>
                     <div role="separator" data-slot="menubar-separator" class="-mx-1 my-1 h-px bg-border"></div>
 
-                    <button type="button" role="menuitem" data-slot="menubar-item" data-variant="default" class="group/menubar-item relative flex w-full cursor-default select-none items-center gap-1.5 rounded-md px-1.5 py-1 text-sm outline-hidden hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground disabled:pointer-events-none disabled:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 hover:**:text-accent-foreground focus:**:text-accent-foreground">החלף מסך מלא</button>
+                    <button type="button" role="menuitem" data-slot="menubar-item" data-variant="default" class="group/menubar-item relative flex w-full cursor-default select-none items-center gap-1.5 rounded-md px-1.5 py-1 text-sm outline-hidden hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground disabled:pointer-events-none disabled:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 hover:**:text-accent-foreground focus:**:text-accent-foreground ps-7">החלף מסך מלא</button>
                     <div role="separator" data-slot="menubar-separator" class="-mx-1 my-1 h-px bg-border"></div>
 
-                    <button type="button" role="menuitem" data-slot="menubar-item" data-variant="default" class="group/menubar-item relative flex w-full cursor-default select-none items-center gap-1.5 rounded-md px-1.5 py-1 text-sm outline-hidden hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground disabled:pointer-events-none disabled:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 hover:**:text-accent-foreground focus:**:text-accent-foreground">הסתר סרגל צד</button>
+                    <button type="button" role="menuitem" data-slot="menubar-item" data-variant="default" class="group/menubar-item relative flex w-full cursor-default select-none items-center gap-1.5 rounded-md px-1.5 py-1 text-sm outline-hidden hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground disabled:pointer-events-none disabled:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 hover:**:text-accent-foreground focus:**:text-accent-foreground ps-7">הסתר סרגל צד</button>
                 </div>
             </div>
             <div data-slot="menubar-menu" data-menubar-target="menu" class="group/menubar-menu relative"><button data-slot="menubar-trigger" data-variant="ghost" data-size="sm" class="group/button inline-flex shrink-0 items-center justify-center border border-transparent bg-clip-padding font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50 h-7 gap-1 rounded-[min(var(--radius-md),12px)] px-2.5 text-[0.8rem] in-data-[slot=button-group]:rounded-lg has-data-[icon=inline-end]:pe-1.5 has-data-[icon=inline-start]:ps-1.5 [&amp;_svg:not([class*='size-'])]:size-3.5" type="button" data-menubar-target="trigger" role="menuitem" tabindex="0" aria-haspopup="menu" aria-expanded="false" data-action="click->menubar#toggle mouseenter->menubar#enter">פרופילים</button>
@@ -386,10 +386,10 @@
                     </div>
                     <div role="separator" data-slot="menubar-separator" class="-mx-1 my-1 h-px bg-border"></div>
 
-                    <button type="button" role="menuitem" data-slot="menubar-item" data-variant="default" class="group/menubar-item relative flex w-full cursor-default select-none items-center gap-1.5 rounded-md px-1.5 py-1 text-sm outline-hidden hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground disabled:pointer-events-none disabled:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 hover:**:text-accent-foreground focus:**:text-accent-foreground">ערוך...</button>
+                    <button type="button" role="menuitem" data-slot="menubar-item" data-variant="default" class="group/menubar-item relative flex w-full cursor-default select-none items-center gap-1.5 rounded-md px-1.5 py-1 text-sm outline-hidden hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground disabled:pointer-events-none disabled:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 hover:**:text-accent-foreground focus:**:text-accent-foreground ps-7">ערוך...</button>
                     <div role="separator" data-slot="menubar-separator" class="-mx-1 my-1 h-px bg-border"></div>
 
-                    <button type="button" role="menuitem" data-slot="menubar-item" data-variant="default" class="group/menubar-item relative flex w-full cursor-default select-none items-center gap-1.5 rounded-md px-1.5 py-1 text-sm outline-hidden hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground disabled:pointer-events-none disabled:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 hover:**:text-accent-foreground focus:**:text-accent-foreground">הוסף פרופיל...</button>
+                    <button type="button" role="menuitem" data-slot="menubar-item" data-variant="default" class="group/menubar-item relative flex w-full cursor-default select-none items-center gap-1.5 rounded-md px-1.5 py-1 text-sm outline-hidden hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground disabled:pointer-events-none disabled:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 hover:**:text-accent-foreground focus:**:text-accent-foreground ps-7">הוסף פרופיל...</button>
                 </div>
             </div>
         </div>

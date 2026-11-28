@@ -88,6 +88,17 @@ describeRecipe('flowbite-4/tabs', () => {
         await expect(page.getByRole('tab', { name: 'Dashboard' })).toHaveAttribute('aria-selected', 'true');
     });
 
+    test('underlines a hovered tab with the color of the active one', async ({ page, gotoExample }) => {
+        await gotoExample('flowbite-4/tabs/tabs-with-underline');
+        const active = page.getByRole('tab', { name: 'Dashboard' });
+        const hovered = page.getByRole('tab', { name: 'Profile' });
+        const activeColor = await active.evaluate((tab) => getComputedStyle(tab).borderBottomColor);
+
+        await hovered.hover();
+
+        await expect(hovered).toHaveCSS('border-bottom-color', activeColor);
+    });
+
     test('selects a tab of a list without panels', async ({ page, gotoExample }) => {
         await gotoExample('flowbite-4/tabs/tabs-with-icons');
         const contacts = page.getByRole('tab', { name: 'Contacts' });

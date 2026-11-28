@@ -111,4 +111,40 @@ describeRecipe('bootstrap/collapse', () => {
             await expect(trigger).toHaveAttribute('aria-expanded', 'true');
         },
     });
+
+    testState('expands a collapse nested in another one', {
+        example: 'nested-collapse',
+        state: 'both-open',
+        act: async (page) => {
+            const parent = page.getByRole('button', { name: 'Toggle parent' });
+            const nested = page.getByRole('button', { name: 'Toggle nested collapse' });
+            await parent.click();
+            await expect(page.locator('#collapse-nested-parent')).toHaveClass(SHOWN);
+            await expect(page.getByText('This is the nested collapse content.')).toBeHidden();
+
+            await nested.click();
+            await page.mouse.move(0, 0);
+
+            await expect(page.getByText('This is the nested collapse content.')).toBeVisible();
+            await expect(page.locator('#collapse-nested-child')).toHaveClass(SHOWN);
+            await expect(nested).toHaveAttribute('aria-expanded', 'true');
+        },
+    });
+
+    test('keeps the parent open when its nested collapse closes', async ({ page, gotoExample }) => {
+        await gotoExample('bootstrap/collapse/nested-collapse');
+        const parent = page.getByRole('button', { name: 'Toggle parent' });
+        const nested = page.getByRole('button', { name: 'Toggle nested collapse' });
+        await parent.click();
+        await expect(page.locator('#collapse-nested-parent')).toHaveClass(SHOWN);
+        await nested.click();
+        await expect(page.locator('#collapse-nested-child')).toHaveClass(SHOWN);
+
+        await nested.click();
+
+        await expect(page.getByText('This is the nested collapse content.')).toBeHidden();
+        await expect(page.getByText('This is the parent collapse.')).toBeVisible();
+        await expect(parent).toHaveAttribute('aria-expanded', 'true');
+        await expect(nested).toHaveAttribute('aria-expanded', 'false');
+    });
 });

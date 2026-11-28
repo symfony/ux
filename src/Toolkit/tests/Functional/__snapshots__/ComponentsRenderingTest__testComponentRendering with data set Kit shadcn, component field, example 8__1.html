@@ -3,91 +3,58 @@
 - Component: Field
 - Code:
 ```twig
-<div class="w-full max-w-md">
-    <twig:Field:Group>
-        <twig:Field:Set>
-            <twig:Field:Label>Responses</twig:Field:Label>
-            <twig:Field:Description>
-                Get notified when ChatGPT responds to requests that take time, like research or image generation.
-            </twig:Field:Description>
-            <twig:Field:Group data-slot="checkbox-group">
+<twig:Field:Group class="w-full max-w-xs">
+    <twig:Field:Set>
+        <twig:Field:Legend variant="label">Compute Environment</twig:Field:Legend>
+        <twig:Field:Description>Select the compute environment for your cluster.</twig:Field:Description>
+        <twig:RadioGroup>
+            <twig:Field:Label for="kubernetes-r2h">
                 <twig:Field orientation="horizontal">
-                    <twig:Checkbox id="push" checked disabled />
-                    <twig:Field:Label for="push" class="font-normal">
-                        Push notifications
-                    </twig:Field:Label>
+                    <twig:Field:Content>
+                        <twig:Field:Title>Kubernetes</twig:Field:Title>
+                        <twig:Field:Description>Run GPU workloads on a K8s cluster.</twig:Field:Description>
+                    </twig:Field:Content>
+                    <twig:RadioGroup:Item name="compute" value="kubernetes" id="kubernetes-r2h" checked />
                 </twig:Field>
-            </twig:Field:Group>
-        </twig:Field:Set>
-        <twig:Field:Separator />
-        <twig:Field:Set>
-            <twig:Field:Label>Tasks</twig:Field:Label>
-            <twig:Field:Description>
-                Get notified when tasks you've created have updates. <a href="#">Manage tasks</a>
-            </twig:Field:Description>
-            <twig:Field:Group data-slot="checkbox-group">
+            </twig:Field:Label>
+            <twig:Field:Label for="vm-z4k">
                 <twig:Field orientation="horizontal">
-                    <twig:Checkbox id="push-tasks" />
-                    <twig:Field:Label for="push-tasks" class="font-normal">
-                        Push notifications
-                    </twig:Field:Label>
+                    <twig:Field:Content>
+                        <twig:Field:Title>Virtual Machine</twig:Field:Title>
+                        <twig:Field:Description>Access a cluster to run GPU workloads.</twig:Field:Description>
+                    </twig:Field:Content>
+                    <twig:RadioGroup:Item name="compute" value="vm" id="vm-z4k" />
                 </twig:Field>
-                <twig:Field orientation="horizontal">
-                    <twig:Checkbox id="email-tasks" />
-                    <twig:Field:Label for="email-tasks" class="font-normal">
-                        Email notifications
-                    </twig:Field:Label>
-                </twig:Field>
-            </twig:Field:Group>
-        </twig:Field:Set>
-    </twig:Field:Group>
-</div>
+            </twig:Field:Label>
+        </twig:RadioGroup>
+    </twig:Field:Set>
+</twig:Field:Group>
 ```
 - Rendered code (run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
-<div class="w-full max-w-md">
-    <div data-slot="field-group" class="group/field-group @container/field-group flex w-full flex-col gap-5 data-[slot=checkbox-group]:gap-3 *:data-[slot=field-group]:gap-4"><fieldset data-slot="field-set" class="flex flex-col gap-4 has-[>[data-slot=checkbox-group]]:gap-3 has-[>[data-slot=radio-group]]:gap-3"><label data-slot="field-label" class="items-center text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 group/field-label peer/field-label flex w-fit gap-2 leading-snug group-data-[disabled=true]/field:opacity-50 has-data-checked:border-primary/30 has-data-checked:bg-primary/5 has-checked:border-primary/30 has-checked:bg-primary/5 has-[>[data-slot=field]]:rounded-lg has-[>[data-slot=field]]:border has-[>[data-slot=field]]:not-has-[:disabled,[data-disabled]]:hover:bg-muted/50 *:data-[slot=field]:p-2.5 dark:has-data-checked:border-primary/20 dark:has-data-checked:bg-primary/10 dark:has-checked:border-primary/20 dark:has-checked:bg-primary/10 has-[>[data-slot=field]]:w-full has-[>[data-slot=field]]:flex-col">Responses</label>
-            <p data-slot="field-description" class="text-start text-sm leading-normal font-normal text-muted-foreground group-has-data-horizontal/field:text-balance [[data-variant=legend]+&amp;]:-mt-1.5 last:mt-0 nth-last-2:-mt-1 [&amp;>a]:underline [&amp;>a]:underline-offset-4 [&amp;>a:hover]:text-primary">Get notified when ChatGPT responds to requests that take time, like research or image generation.
-            </p>
-            <div data-slot="checkbox-group" class="group/field-group @container/field-group flex w-full flex-col gap-5 data-[slot=checkbox-group]:gap-3 *:data-[slot=field-group]:gap-4"><div role="group" data-slot="field" data-orientation="horizontal" class="group/field flex w-full gap-2 data-[invalid=true]:text-destructive flex-row items-center has-[>[data-slot=field-content]]:items-start *:data-[slot=field-label]:flex-auto has-[>[data-slot=field-content]]:[&amp;>[role=checkbox],[role=radio]]:mt-px"><div data-slot="checkbox" class="group relative grid size-4 shrink-0 grid-cols-1 group-has-disabled/field:opacity-50">
-    <input type="checkbox" class="peer col-start-1 row-start-1 appearance-none size-4 rounded-[4px] border border-input bg-transparent transition-colors outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 checked:border-primary checked:bg-primary dark:checked:border-primary dark:checked:bg-primary disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:bg-input/30 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 forced-colors:appearance-auto" id="push" checked="" disabled="">
-    <span data-slot="checkbox-indicator" class="pointer-events-none col-start-1 row-start-1 flex items-center justify-center text-primary-foreground opacity-0 transition-none group-has-checked:opacity-100 group-has-disabled:text-primary-foreground/50">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-3.5" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
-    </span>
-</div>
+<div data-slot="field-group" class="group/field-group @container/field-group flex flex-col gap-5 data-[slot=checkbox-group]:gap-3 *:data-[slot=field-group]:gap-4 w-full max-w-xs"><fieldset data-slot="field-set" class="flex flex-col gap-4 has-[>[data-slot=checkbox-group]]:gap-3 has-[>[data-slot=radio-group]]:gap-3"><legend data-slot="field-legend" data-variant="label" class="mb-1.5 font-medium data-[variant=label]:text-sm data-[variant=legend]:text-base">Compute Environment</legend>
+        <p data-slot="field-description" class="text-start text-sm leading-normal font-normal text-muted-foreground group-has-data-horizontal/field:text-balance [[data-variant=legend]+&amp;]:-mt-1.5 last:mt-0 nth-last-2:-mt-1 [&amp;>a]:underline [&amp;>a]:underline-offset-4 [&amp;>a:hover]:text-primary">Select the compute environment for your cluster.</p>
+        <div role="radiogroup" data-slot="radio-group" class="grid w-full gap-2"><label data-slot="field-label" class="items-center text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 group/field-label peer/field-label flex w-fit gap-2 leading-snug group-data-[disabled=true]/field:opacity-50 has-data-checked:border-primary/30 has-data-checked:bg-primary/5 has-checked:border-primary/30 has-checked:bg-primary/5 has-[>[data-slot=field]]:rounded-lg has-[>[data-slot=field]]:border has-[>[data-slot=field]]:not-has-[:disabled,[data-disabled]]:hover:bg-muted/50 has-[>[data-slot=field]]:has-[:focus-visible]:border-ring has-[>[data-slot=field]]:has-[:focus-visible]:ring-3 has-[>[data-slot=field]]:has-[:focus-visible]:ring-ring/50 *:data-[slot=field]:p-2.5 dark:has-data-checked:border-primary/20 dark:has-data-checked:bg-primary/10 dark:has-checked:border-primary/20 dark:has-checked:bg-primary/10 has-[>[data-slot=field]]:w-full has-[>[data-slot=field]]:flex-col" for="kubernetes-r2h"><div role="group" data-slot="field" data-orientation="horizontal" class="group/field flex w-full gap-2 data-[invalid=true]:text-destructive flex-row items-center has-[>[data-slot=field-content]]:items-start *:data-[slot=field-label]:flex-auto has-[>[data-slot=field-content]]:[&amp;>[role=checkbox],[role=radio]]:mt-px"><div data-slot="field-content" class="group/field-content flex flex-1 flex-col gap-0.5 leading-snug"><div data-slot="field-label" class="flex w-fit items-center gap-2 text-sm font-medium group-data-[disabled=true]/field:opacity-50">Kubernetes</div>
+                        <p data-slot="field-description" class="text-start text-sm leading-normal font-normal text-muted-foreground group-has-data-horizontal/field:text-balance [[data-variant=legend]+&amp;]:-mt-1.5 last:mt-0 nth-last-2:-mt-1 [&amp;>a]:underline [&amp;>a]:underline-offset-4 [&amp;>a:hover]:text-primary">Run GPU workloads on a K8s cluster.</p>
+                    </div>
+                    <label class="relative inline-flex size-4 shrink-0 items-center justify-center cursor-pointer group-data-[disabled=true]/field:cursor-not-allowed">
+    <input type="radio" name="compute" value="kubernetes" data-slot="radio-group-item" class="peer sr-only" id="kubernetes-r2h" checked="">
+    <span class="flex aspect-square size-4 items-center justify-center rounded-full border border-input outline-none after:absolute after:-inset-x-3 after:-inset-y-2 peer-focus-visible:border-ring peer-focus-visible:ring-3 peer-focus-visible:ring-ring/50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 peer-aria-invalid:border-destructive peer-aria-invalid:ring-3 peer-aria-invalid:ring-destructive/20 peer-aria-invalid:peer-checked:border-primary dark:bg-input/30 dark:peer-aria-invalid:border-destructive/50 dark:peer-aria-invalid:ring-destructive/40 peer-checked:border-primary peer-checked:bg-primary peer-checked:text-primary-foreground dark:peer-checked:bg-primary group-has-[>[data-slot=field]]/field-label:peer-focus-visible:ring-0 group-has-[>[data-slot=field]]/field-label:peer-focus-visible:border-input group-has-[>[data-slot=field]]/field-label:peer-focus-visible:peer-checked:border-primary"></span>
+    <span class="pointer-events-none absolute top-1/2 start-1/2 size-2 -translate-x-1/2 -translate-y-1/2 rtl:translate-x-1/2 scale-0 rounded-full bg-primary-foreground transition-transform peer-checked:scale-100"></span>
+</label>
 
-                    <label data-slot="field-label" class="items-center text-sm select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 group/field-label peer/field-label flex w-fit gap-2 leading-snug group-data-[disabled=true]/field:opacity-50 has-data-checked:border-primary/30 has-data-checked:bg-primary/5 has-checked:border-primary/30 has-checked:bg-primary/5 has-[>[data-slot=field]]:rounded-lg has-[>[data-slot=field]]:border has-[>[data-slot=field]]:not-has-[:disabled,[data-disabled]]:hover:bg-muted/50 *:data-[slot=field]:p-2.5 dark:has-data-checked:border-primary/20 dark:has-data-checked:bg-primary/10 dark:has-checked:border-primary/20 dark:has-checked:bg-primary/10 has-[>[data-slot=field]]:w-full has-[>[data-slot=field]]:flex-col font-normal" for="push">Push notifications
-                    </label>
                 </div>
-            </div>
-        </fieldset>
-        <div data-slot="field-separator" data-content="false" class="relative -my-2 h-5 text-sm group-data-[variant=outline]/field-group:-mb-2">
-    <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch absolute inset-0 top-1/2"></div>
-</div>
+            </label>
+            <label data-slot="field-label" class="items-center text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 group/field-label peer/field-label flex w-fit gap-2 leading-snug group-data-[disabled=true]/field:opacity-50 has-data-checked:border-primary/30 has-data-checked:bg-primary/5 has-checked:border-primary/30 has-checked:bg-primary/5 has-[>[data-slot=field]]:rounded-lg has-[>[data-slot=field]]:border has-[>[data-slot=field]]:not-has-[:disabled,[data-disabled]]:hover:bg-muted/50 has-[>[data-slot=field]]:has-[:focus-visible]:border-ring has-[>[data-slot=field]]:has-[:focus-visible]:ring-3 has-[>[data-slot=field]]:has-[:focus-visible]:ring-ring/50 *:data-[slot=field]:p-2.5 dark:has-data-checked:border-primary/20 dark:has-data-checked:bg-primary/10 dark:has-checked:border-primary/20 dark:has-checked:bg-primary/10 has-[>[data-slot=field]]:w-full has-[>[data-slot=field]]:flex-col" for="vm-z4k"><div role="group" data-slot="field" data-orientation="horizontal" class="group/field flex w-full gap-2 data-[invalid=true]:text-destructive flex-row items-center has-[>[data-slot=field-content]]:items-start *:data-[slot=field-label]:flex-auto has-[>[data-slot=field-content]]:[&amp;>[role=checkbox],[role=radio]]:mt-px"><div data-slot="field-content" class="group/field-content flex flex-1 flex-col gap-0.5 leading-snug"><div data-slot="field-label" class="flex w-fit items-center gap-2 text-sm font-medium group-data-[disabled=true]/field:opacity-50">Virtual Machine</div>
+                        <p data-slot="field-description" class="text-start text-sm leading-normal font-normal text-muted-foreground group-has-data-horizontal/field:text-balance [[data-variant=legend]+&amp;]:-mt-1.5 last:mt-0 nth-last-2:-mt-1 [&amp;>a]:underline [&amp;>a]:underline-offset-4 [&amp;>a:hover]:text-primary">Access a cluster to run GPU workloads.</p>
+                    </div>
+                    <label class="relative inline-flex size-4 shrink-0 items-center justify-center cursor-pointer group-data-[disabled=true]/field:cursor-not-allowed">
+    <input type="radio" name="compute" value="vm" data-slot="radio-group-item" class="peer sr-only" id="vm-z4k">
+    <span class="flex aspect-square size-4 items-center justify-center rounded-full border border-input outline-none after:absolute after:-inset-x-3 after:-inset-y-2 peer-focus-visible:border-ring peer-focus-visible:ring-3 peer-focus-visible:ring-ring/50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 peer-aria-invalid:border-destructive peer-aria-invalid:ring-3 peer-aria-invalid:ring-destructive/20 peer-aria-invalid:peer-checked:border-primary dark:bg-input/30 dark:peer-aria-invalid:border-destructive/50 dark:peer-aria-invalid:ring-destructive/40 peer-checked:border-primary peer-checked:bg-primary peer-checked:text-primary-foreground dark:peer-checked:bg-primary group-has-[>[data-slot=field]]/field-label:peer-focus-visible:ring-0 group-has-[>[data-slot=field]]/field-label:peer-focus-visible:border-input group-has-[>[data-slot=field]]/field-label:peer-focus-visible:peer-checked:border-primary"></span>
+    <span class="pointer-events-none absolute top-1/2 start-1/2 size-2 -translate-x-1/2 -translate-y-1/2 rtl:translate-x-1/2 scale-0 rounded-full bg-primary-foreground transition-transform peer-checked:scale-100"></span>
+</label>
 
-        <fieldset data-slot="field-set" class="flex flex-col gap-4 has-[>[data-slot=checkbox-group]]:gap-3 has-[>[data-slot=radio-group]]:gap-3"><label data-slot="field-label" class="items-center text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 group/field-label peer/field-label flex w-fit gap-2 leading-snug group-data-[disabled=true]/field:opacity-50 has-data-checked:border-primary/30 has-data-checked:bg-primary/5 has-checked:border-primary/30 has-checked:bg-primary/5 has-[>[data-slot=field]]:rounded-lg has-[>[data-slot=field]]:border has-[>[data-slot=field]]:not-has-[:disabled,[data-disabled]]:hover:bg-muted/50 *:data-[slot=field]:p-2.5 dark:has-data-checked:border-primary/20 dark:has-data-checked:bg-primary/10 dark:has-checked:border-primary/20 dark:has-checked:bg-primary/10 has-[>[data-slot=field]]:w-full has-[>[data-slot=field]]:flex-col">Tasks</label>
-            <p data-slot="field-description" class="text-start text-sm leading-normal font-normal text-muted-foreground group-has-data-horizontal/field:text-balance [[data-variant=legend]+&amp;]:-mt-1.5 last:mt-0 nth-last-2:-mt-1 [&amp;>a]:underline [&amp;>a]:underline-offset-4 [&amp;>a:hover]:text-primary">Get notified when tasks you've created have updates. <a href="#">Manage tasks</a>
-            </p>
-            <div data-slot="checkbox-group" class="group/field-group @container/field-group flex w-full flex-col gap-5 data-[slot=checkbox-group]:gap-3 *:data-[slot=field-group]:gap-4"><div role="group" data-slot="field" data-orientation="horizontal" class="group/field flex w-full gap-2 data-[invalid=true]:text-destructive flex-row items-center has-[>[data-slot=field-content]]:items-start *:data-[slot=field-label]:flex-auto has-[>[data-slot=field-content]]:[&amp;>[role=checkbox],[role=radio]]:mt-px"><div data-slot="checkbox" class="group relative grid size-4 shrink-0 grid-cols-1 group-has-disabled/field:opacity-50">
-    <input type="checkbox" class="peer col-start-1 row-start-1 appearance-none size-4 rounded-[4px] border border-input bg-transparent transition-colors outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 checked:border-primary checked:bg-primary dark:checked:border-primary dark:checked:bg-primary disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:bg-input/30 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 forced-colors:appearance-auto" id="push-tasks">
-    <span data-slot="checkbox-indicator" class="pointer-events-none col-start-1 row-start-1 flex items-center justify-center text-primary-foreground opacity-0 transition-none group-has-checked:opacity-100 group-has-disabled:text-primary-foreground/50">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-3.5" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
-    </span>
-</div>
-
-                    <label data-slot="field-label" class="items-center text-sm select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 group/field-label peer/field-label flex w-fit gap-2 leading-snug group-data-[disabled=true]/field:opacity-50 has-data-checked:border-primary/30 has-data-checked:bg-primary/5 has-checked:border-primary/30 has-checked:bg-primary/5 has-[>[data-slot=field]]:rounded-lg has-[>[data-slot=field]]:border has-[>[data-slot=field]]:not-has-[:disabled,[data-disabled]]:hover:bg-muted/50 *:data-[slot=field]:p-2.5 dark:has-data-checked:border-primary/20 dark:has-data-checked:bg-primary/10 dark:has-checked:border-primary/20 dark:has-checked:bg-primary/10 has-[>[data-slot=field]]:w-full has-[>[data-slot=field]]:flex-col font-normal" for="push-tasks">Push notifications
-                    </label>
                 </div>
-                <div role="group" data-slot="field" data-orientation="horizontal" class="group/field flex w-full gap-2 data-[invalid=true]:text-destructive flex-row items-center has-[>[data-slot=field-content]]:items-start *:data-[slot=field-label]:flex-auto has-[>[data-slot=field-content]]:[&amp;>[role=checkbox],[role=radio]]:mt-px"><div data-slot="checkbox" class="group relative grid size-4 shrink-0 grid-cols-1 group-has-disabled/field:opacity-50">
-    <input type="checkbox" class="peer col-start-1 row-start-1 appearance-none size-4 rounded-[4px] border border-input bg-transparent transition-colors outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 checked:border-primary checked:bg-primary dark:checked:border-primary dark:checked:bg-primary disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:bg-input/30 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 forced-colors:appearance-auto" id="email-tasks">
-    <span data-slot="checkbox-indicator" class="pointer-events-none col-start-1 row-start-1 flex items-center justify-center text-primary-foreground opacity-0 transition-none group-has-checked:opacity-100 group-has-disabled:text-primary-foreground/50">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-3.5" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
-    </span>
-</div>
-
-                    <label data-slot="field-label" class="items-center text-sm select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 group/field-label peer/field-label flex w-fit gap-2 leading-snug group-data-[disabled=true]/field:opacity-50 has-data-checked:border-primary/30 has-data-checked:bg-primary/5 has-checked:border-primary/30 has-checked:bg-primary/5 has-[>[data-slot=field]]:rounded-lg has-[>[data-slot=field]]:border has-[>[data-slot=field]]:not-has-[:disabled,[data-disabled]]:hover:bg-muted/50 *:data-[slot=field]:p-2.5 dark:has-data-checked:border-primary/20 dark:has-data-checked:bg-primary/10 dark:has-checked:border-primary/20 dark:has-checked:bg-primary/10 has-[>[data-slot=field]]:w-full has-[>[data-slot=field]]:flex-col font-normal" for="email-tasks">Email notifications
-                    </label>
-                </div>
-            </div>
-        </fieldset>
-    </div>
+            </label>
+        </div>
+    </fieldset>
 </div>

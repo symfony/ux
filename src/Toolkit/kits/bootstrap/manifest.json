@@ -7,7 +7,7 @@
     "color": "#7952b3",
     "icon": "icon.svg",
     "dependencies": {
-        "npm": ["bootstrap@^5.3.0"],
+        "npm": ["bootstrap@^5.3.9"],
         "importmap": ["bootstrap", "bootstrap/dist/css/bootstrap.min.css"]
     }
 }
