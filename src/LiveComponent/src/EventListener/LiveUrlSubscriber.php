@@ -15,7 +15,7 @@ use Psr\Container\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Symfony\Component\Routing\Exception\ResourceNotFoundException;
+use Symfony\Component\Routing\Exception\ExceptionInterface as RoutingException;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\Service\ServiceSubscriberInterface;
 use Symfony\UX\LiveComponent\LiveComponentHydrator;
@@ -126,7 +126,7 @@ class LiveUrlSubscriber implements EventSubscriberInterface, ServiceSubscriberIn
                 }
 
                 $newUrl = $router->generate($routeMatched['_route'], $routeParams);
-            } catch (ResourceNotFoundException) {
+            } catch (RoutingException) {
                 // reuse the previous URL path
             } finally {
                 $router->setContext($context);

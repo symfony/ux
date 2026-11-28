@@ -261,6 +261,7 @@ final class Kernel extends BaseKernel
         $routes->add('localized_route', '/locale/{_locale}/{_live_component}/{_live_action}')->defaults(['_live_action' => 'get']);
         $routes->add('route_defaults_live_route', '/route-defaults/{_live_component}/{_live_action}')->defaults(['_live_action' => 'get', '_scope' => 'storefront']);
         $routes->add('route_with_prop', '/route_with_prop/{pathProp}')->methods(['GET'])->requirements(['pathProp' => '\w+']);
+        $routes->add('post_route_with_prop', '/post_route_with_prop/{pathProp}')->methods(['POST']);
         $routes->add('route_with_alias_prop', '/route_with_alias_prop/{pathAlias}')->requirements(['pathAlias' => '\w+']);
         $routes->add('route_with_two_props', '/route_with_two_props/{pathProp}/{pathAlias}')->methods(['GET'])->requirements(['pathProp' => '\w+', 'pathAlias' => '\w+']);
         $routes->add('route_with_two_path_params_but_one_prop', '/route_with_two_path_params_but_one_prop/{pathProp}/{id}')->methods(['GET'])->requirements(['pathProp' => '\w+', 'id' => '\d+']);

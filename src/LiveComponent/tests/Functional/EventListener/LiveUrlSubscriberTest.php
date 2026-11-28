@@ -197,6 +197,30 @@ class LiveUrlSubscriberTest extends KernelTestCase
             ],
         ];
 
+        yield 'Path prop rejected by the route requirements' => [
+            'previousLocation' => '/route_with_prop/foo',
+            'expectedLocation' => '/route_with_prop/foo',
+            'initialComponentData' => [
+                'pathProp' => 'foo',
+            ],
+            'args' => [
+                'propName' => 'pathProp',
+                'propValue' => 'not a word',
+            ],
+        ];
+
+        yield 'Previous location only matches a POST route' => [
+            'previousLocation' => '/post_route_with_prop/foo',
+            'expectedLocation' => '/post_route_with_prop/foo',
+            'initialComponentData' => [
+                'pathProp' => 'foo',
+            ],
+            'args' => [
+                'propName' => 'pathProp',
+                'propValue' => 'bar',
+            ],
+        ];
+
         $address = new Address();
         $address->address = '123 Main St';
         $address->city = 'Anytown';
