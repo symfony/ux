@@ -1,0 +1,10 @@
+{%- set _dropdown_contentId = inject('dropdown.contentId', null) -%}
+<div
+    id="{{ _dropdown_contentId }}"
+    {{ attributes.defaults({
+        class: 'dropdown-content w-max'|tailwind_classes,
+    }) }}
+>
+    {##- The content shown when the dropdown is open, e.g. a `menu` list or a `card`. -#}
+    {%- block content %}{% endblock -%}
+</div>

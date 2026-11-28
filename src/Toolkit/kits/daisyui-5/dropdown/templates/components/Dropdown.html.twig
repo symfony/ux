@@ -1,0 +1,50 @@
+{%- props
+    ## string The id of the dropdown, also used to generate the id of its content.
+    id,
+    ## 'top'|'bottom'|'left'|'right' The side of the trigger the content opens on.
+    side = 'bottom',
+    ## 'start'|'center'|'end' The alignment of the content along the trigger.
+    align = 'start',
+    ## boolean Whether the content also opens when the pointer is over the dropdown.
+    hover = false,
+    ## boolean Whether the dropdown is open on initial render.
+    open = false
+-%}
+{%- do provide('dropdown.open', open) -%}
+{%- do provide('dropdown.contentId', id ~ '-content') -%}
+{%- set style = html_cva(
+    base: 'dropdown',
+    variants: {
+        side: {
+            top: 'dropdown-top',
+            bottom: '',
+            left: 'dropdown-left',
+            right: 'dropdown-right',
+        },
+        align: {
+            start: '',
+            center: 'dropdown-center',
+            end: 'dropdown-end',
+        },
+        open: {
+            true: 'dropdown-open',
+            false: 'dropdown-close',
+        },
+    },
+) -%}
+<div
+    id="{{ id }}"
+    data-state="{{ open ? 'open' : 'closed' }}"
+    {{ attributes.defaults({
+        class: style.apply({side: side, align: align, open: open ? 'true' : 'false'})|tailwind_classes,
+        'data-controller': 'dropdown',
+        'data-action': [
+            'keydown.esc->dropdown#close',
+            'focusout->dropdown#closeOnFocusOut',
+            hover ? 'mouseenter->dropdown#openOnHover mouseleave->dropdown#closeOnHover',
+        ]|filter(v => v)|join(' ')|html_attr_type('sst'),
+    }) }}
+>
+    {##- A `Dropdown:Trigger` and a `Dropdown:Content`. -#}
+    {%- block content %}{% endblock -%}
+</div>

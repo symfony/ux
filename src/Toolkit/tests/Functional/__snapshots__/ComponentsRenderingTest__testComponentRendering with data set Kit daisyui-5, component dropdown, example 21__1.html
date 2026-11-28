@@ -1,0 +1,55 @@
+<!--
+- Kit: daisyUI v5
+- Component: Dropdown
+- Code:
+```twig
+<div class="flex flex-col gap-4">
+    <div dir="rtl" style="min-height: 160px">
+        <twig:Dropdown id="dropdown-rtl-ar" open>
+            <twig:Dropdown:Trigger>
+                <twig:Button class="m-1" {{ ...dropdown_trigger_attrs }}>انقر للفتح</twig:Button>
+            </twig:Dropdown:Trigger>
+            <twig:Dropdown:Content>
+                <ul class="menu w-52 rounded-box bg-base-100 p-2 shadow-sm">
+                    <li><button>العنصر 1</button></li>
+                    <li><button>العنصر 2</button></li>
+                </ul>
+            </twig:Dropdown:Content>
+        </twig:Dropdown>
+    </div>
+    <div dir="rtl" style="min-height: 160px">
+        <twig:Dropdown id="dropdown-rtl-he" open>
+            <twig:Dropdown:Trigger>
+                <twig:Button class="m-1" {{ ...dropdown_trigger_attrs }}>לחץ לפתיחה</twig:Button>
+            </twig:Dropdown:Trigger>
+            <twig:Dropdown:Content>
+                <ul class="menu w-52 rounded-box bg-base-100 p-2 shadow-sm">
+                    <li><button>פריט 1</button></li>
+                    <li><button>פריט 2</button></li>
+                </ul>
+            </twig:Dropdown:Content>
+        </twig:Dropdown>
+    </div>
+</div>
+```
+- Rendered code (run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="flex flex-col gap-4">
+    <div dir="rtl" style="min-height: 160px">
+        <div id="dropdown-rtl-ar" data-state="open" class="dropdown dropdown-open" data-controller="dropdown" data-action="keydown.esc->dropdown#close focusout->dropdown#closeOnFocusOut"><button class="btn m-1" type="button" data-dropdown-target="trigger" aria-expanded="true" aria-controls="dropdown-rtl-ar-content" data-action="click->dropdown#toggle">انقر للفتح</button>
+                        <div id="dropdown-rtl-ar-content" class="dropdown-content w-max"><ul class="menu w-52 rounded-box bg-base-100 p-2 shadow-sm">
+                    <li><button>العنصر 1</button></li>
+                    <li><button>العنصر 2</button></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div dir="rtl" style="min-height: 160px">
+        <div id="dropdown-rtl-he" data-state="open" class="dropdown dropdown-open" data-controller="dropdown" data-action="keydown.esc->dropdown#close focusout->dropdown#closeOnFocusOut"><button class="btn m-1" type="button" data-dropdown-target="trigger" aria-expanded="true" aria-controls="dropdown-rtl-he-content" data-action="click->dropdown#toggle">לחץ לפתיחה</button>
+                        <div id="dropdown-rtl-he-content" class="dropdown-content w-max"><ul class="menu w-52 rounded-box bg-base-100 p-2 shadow-sm">
+                    <li><button>פריט 1</button></li>
+                    <li><button>פריט 2</button></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,29 @@
+<!--
+- Kit: daisyUI v5
+- Component: Dropdown
+- Code:
+```twig
+<div style="min-height: 160px">
+    <twig:Dropdown id="dropdown-align-start" align="start">
+        <twig:Dropdown:Trigger>
+            <twig:Button class="m-1" {{ ...dropdown_trigger_attrs }}>Click ⬇️</twig:Button>
+        </twig:Dropdown:Trigger>
+        <twig:Dropdown:Content>
+            <ul class="menu w-52 rounded-box bg-base-100 p-2 shadow-sm">
+                <li><button>Item 1</button></li>
+                <li><button>Item 2</button></li>
+            </ul>
+        </twig:Dropdown:Content>
+    </twig:Dropdown>
+</div>
+```
+- Rendered code (run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div style="min-height: 160px">
+    <div id="dropdown-align-start" data-state="closed" class="dropdown dropdown-close" data-controller="dropdown" data-action="keydown.esc->dropdown#close focusout->dropdown#closeOnFocusOut"><button class="btn m-1" type="button" data-dropdown-target="trigger" aria-expanded="false" aria-controls="dropdown-align-start-content" data-action="click->dropdown#toggle">Click ⬇️</button>
+                <div id="dropdown-align-start-content" class="dropdown-content w-max"><ul class="menu w-52 rounded-box bg-base-100 p-2 shadow-sm">
+                <li><button>Item 1</button></li>
+                <li><button>Item 2</button></li>
+            </ul>
+        </div>
+    </div>
+</div>
