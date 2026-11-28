@@ -4,6 +4,7 @@
 
 - [Common] Make the `sortable` controller refuse an update URL of another origin, instead of sending it the CSRF token
 - [daisyUI v5] Add the `daisyui-5` kit, with the `button` recipe
+- [Common] Add `password-strength` recipe
 
 ## 3.8.1
 
