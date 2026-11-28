@@ -130,6 +130,11 @@ final class UrlGeneratorParityTest extends TestCase
         yield 'special characters in path' => ['files', ['path' => "a b/c@d:e;f,g=h+i!j*k|l'm(n)o~p#q?r"], 'path', []];
         yield 'dot segments' => ['files', ['path' => 'a/../b/./c'], 'path', []];
         yield 'single dot segment' => ['files', ['path' => '.'], 'path', []];
+        yield 'trailing dot segment' => ['files', ['path' => 'a/..'], 'path', []];
+        yield 'dots that are not a segment' => ['files', ['path' => '.a/b../...'], 'path', []];
+        yield 'dot completed by the following text' => ['dotted', ['name' => '.', 'extension' => 'txt'], 'path', []];
+        yield 'dot after a dot prefix' => ['dotted', ['name' => 'a', 'extension' => '.'], 'path', []];
+        yield 'empty value after a dot prefix' => ['dotted', ['name' => 'a', 'extension' => ''], 'path', []];
         yield 'encoded slash stays encoded' => ['files', ['path' => 'a%2Fb'], 'path', []];
         yield 'unknown route' => ['unknown', [], 'path', []];
     }
@@ -156,6 +161,7 @@ final class UrlGeneratorParityTest extends TestCase
         $routes->add('secure', new Route('/secure', [], [], [], '', ['https']));
         $routes->add('fragment', new Route('/fragment', ['_fragment' => 'top']));
         $routes->add('files', new Route('/files/{path}', [], ['path' => '.+']));
+        $routes->add('dotted', new Route('/dotted/{name}.{extension}', [], ['name' => '.+', 'extension' => '.*']));
 
         return $routes;
     }

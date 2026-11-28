@@ -329,6 +329,29 @@
             "defaults": {},
             "hostTokens": [],
             "schemes": []
+        },
+        "dotted": {
+            "tokens": [
+                [
+                    "variable",
+                    ".",
+                    ".*",
+                    "extension"
+                ],
+                [
+                    "variable",
+                    "/",
+                    ".+",
+                    "name"
+                ],
+                [
+                    "text",
+                    "/dotted"
+                ]
+            ],
+            "defaults": {},
+            "hostTokens": [],
+            "schemes": []
         }
     },
     "cases": [
@@ -1472,7 +1495,10 @@
                 "httpPort": 80,
                 "httpsPort": 443
             },
-            "expected": "/files/a/%2E%2E/b/%2E/c"
+            "error": {
+                "name": "InvalidParameterError",
+                "message": "Parameter \"path\" for route \"files\" must not add \".\" or \"..\" segments to the path (\"a/../b/./c\" given) to generate a corresponding URL."
+            }
         },
         {
             "description": "single dot segment",
@@ -1492,7 +1518,119 @@
                 "httpPort": 80,
                 "httpsPort": 443
             },
-            "expected": "/files/%2E"
+            "error": {
+                "name": "InvalidParameterError",
+                "message": "Parameter \"path\" for route \"files\" must not add \".\" or \"..\" segments to the path (\".\" given) to generate a corresponding URL."
+            }
+        },
+        {
+            "description": "trailing dot segment",
+            "name": "files",
+            "parameters": {
+                "path": "a/.."
+            },
+            "referenceType": "path",
+            "context": {
+                "parameters": {
+                    "_locale": "en"
+                },
+                "baseUrl": "",
+                "pathInfo": "/",
+                "host": "localhost",
+                "scheme": "http",
+                "httpPort": 80,
+                "httpsPort": 443
+            },
+            "error": {
+                "name": "InvalidParameterError",
+                "message": "Parameter \"path\" for route \"files\" must not add \".\" or \"..\" segments to the path (\"a/..\" given) to generate a corresponding URL."
+            }
+        },
+        {
+            "description": "dots that are not a segment",
+            "name": "files",
+            "parameters": {
+                "path": ".a/b../..."
+            },
+            "referenceType": "path",
+            "context": {
+                "parameters": {
+                    "_locale": "en"
+                },
+                "baseUrl": "",
+                "pathInfo": "/",
+                "host": "localhost",
+                "scheme": "http",
+                "httpPort": 80,
+                "httpsPort": 443
+            },
+            "expected": "/files/.a/b../..."
+        },
+        {
+            "description": "dot completed by the following text",
+            "name": "dotted",
+            "parameters": {
+                "name": ".",
+                "extension": "txt"
+            },
+            "referenceType": "path",
+            "context": {
+                "parameters": {
+                    "_locale": "en"
+                },
+                "baseUrl": "",
+                "pathInfo": "/",
+                "host": "localhost",
+                "scheme": "http",
+                "httpPort": 80,
+                "httpsPort": 443
+            },
+            "expected": "/dotted/..txt"
+        },
+        {
+            "description": "dot after a dot prefix",
+            "name": "dotted",
+            "parameters": {
+                "name": "a",
+                "extension": "."
+            },
+            "referenceType": "path",
+            "context": {
+                "parameters": {
+                    "_locale": "en"
+                },
+                "baseUrl": "",
+                "pathInfo": "/",
+                "host": "localhost",
+                "scheme": "http",
+                "httpPort": 80,
+                "httpsPort": 443
+            },
+            "error": {
+                "name": "InvalidParameterError",
+                "message": "Parameter \"extension\" for route \"dotted\" must not add \".\" or \"..\" segments to the path (\".\" given) to generate a corresponding URL."
+            }
+        },
+        {
+            "description": "empty value after a dot prefix",
+            "name": "dotted",
+            "parameters": {
+                "name": "a",
+                "extension": ""
+            },
+            "referenceType": "path",
+            "context": {
+                "parameters": {
+                    "_locale": "en"
+                },
+                "baseUrl": "",
+                "pathInfo": "/",
+                "host": "localhost",
+                "scheme": "http",
+                "httpPort": 80,
+                "httpsPort": 443
+            },
+            "expected": "/dotted/a."
         },
         {
             "description": "encoded slash stays encoded",
