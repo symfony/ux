@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 3.9.0
+
+- Move `symfony/framework-bundle`, `symfony/twig-bundle`, `symfony/dependency-injection` and `symfony/config` to `require-dev`, as they are only needed by `UXIconsBundle`.
+  If your app does not require `symfony/framework-bundle` and `symfony/twig-bundle` itself, add them to your `composer.json`
+
 ## 3.6.0
 
 - Warm local icons on `cache:warmup`
