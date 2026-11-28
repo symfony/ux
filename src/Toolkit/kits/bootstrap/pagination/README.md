@@ -105,13 +105,13 @@ Use Bootstrap's large and small pagination sizes.
 ```twig {"preview":true}
 <div class="d-flex flex-column gap-3">
     <twig:Pagination size="lg" ariaLabel="Large pagination example">
-        <twig:Pagination:Item label="1" active />
+        <twig:Pagination:Item href="#" label="1" active />
         <twig:Pagination:Item href="#" label="2" />
         <twig:Pagination:Item href="#" label="3" />
     </twig:Pagination>
 
     <twig:Pagination size="sm" ariaLabel="Small pagination example">
-        <twig:Pagination:Item label="1" active />
+        <twig:Pagination:Item href="#" label="1" active />
         <twig:Pagination:Item href="#" label="2" />
         <twig:Pagination:Item href="#" label="3" />
     </twig:Pagination>

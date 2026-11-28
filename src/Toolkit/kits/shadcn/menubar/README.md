@@ -68,12 +68,12 @@ A horizontal menu bar with dropdown menus, similar to desktop application menus.
                 <twig:Menubar:CheckboxItem name="bookmarks">Bookmarks Bar</twig:Menubar:CheckboxItem>
                 <twig:Menubar:CheckboxItem name="urls" checked>Full URLs</twig:Menubar:CheckboxItem>
                 <twig:Menubar:Separator />
-                <twig:Menubar:Item>Reload<twig:Menubar:Shortcut>⌘R</twig:Menubar:Shortcut></twig:Menubar:Item>
-                <twig:Menubar:Item disabled>Force Reload<twig:Menubar:Shortcut>⇧⌘R</twig:Menubar:Shortcut></twig:Menubar:Item>
+                <twig:Menubar:Item inset>Reload<twig:Menubar:Shortcut>⌘R</twig:Menubar:Shortcut></twig:Menubar:Item>
+                <twig:Menubar:Item inset disabled>Force Reload<twig:Menubar:Shortcut>⇧⌘R</twig:Menubar:Shortcut></twig:Menubar:Item>
                 <twig:Menubar:Separator />
-                <twig:Menubar:Item>Toggle Fullscreen</twig:Menubar:Item>
+                <twig:Menubar:Item inset>Toggle Fullscreen</twig:Menubar:Item>
                 <twig:Menubar:Separator />
-                <twig:Menubar:Item>Hide Sidebar</twig:Menubar:Item>
+                <twig:Menubar:Item inset>Hide Sidebar</twig:Menubar:Item>
             </twig:Menubar:Content>
         </twig:Menubar:Menu>
         <twig:Menubar:Menu>
@@ -87,9 +87,9 @@ A horizontal menu bar with dropdown menus, similar to desktop application menus.
                     <twig:Menubar:RadioItem value="luis">Luis</twig:Menubar:RadioItem>
                 </twig:Menubar:RadioGroup>
                 <twig:Menubar:Separator />
-                <twig:Menubar:Item>Edit...</twig:Menubar:Item>
+                <twig:Menubar:Item inset>Edit...</twig:Menubar:Item>
                 <twig:Menubar:Separator />
-                <twig:Menubar:Item>Add Profile...</twig:Menubar:Item>
+                <twig:Menubar:Item inset>Add Profile...</twig:Menubar:Item>
             </twig:Menubar:Content>
         </twig:Menubar:Menu>
     </twig:Menubar>
@@ -142,8 +142,8 @@ Use `Menubar:CheckboxItem` for options that can be toggled on and off. Set the `
                 <twig:Menubar:CheckboxItem name="bookmarks-bar">Always Show Bookmarks Bar</twig:Menubar:CheckboxItem>
                 <twig:Menubar:CheckboxItem name="full-urls" checked>Always Show Full URLs</twig:Menubar:CheckboxItem>
                 <twig:Menubar:Separator />
-                <twig:Menubar:Item>Reload<twig:Menubar:Shortcut>⌘R</twig:Menubar:Shortcut></twig:Menubar:Item>
-                <twig:Menubar:Item disabled>Force Reload<twig:Menubar:Shortcut>⇧⌘R</twig:Menubar:Shortcut></twig:Menubar:Item>
+                <twig:Menubar:Item inset>Reload<twig:Menubar:Shortcut>⌘R</twig:Menubar:Shortcut></twig:Menubar:Item>
+                <twig:Menubar:Item inset disabled>Force Reload<twig:Menubar:Shortcut>⇧⌘R</twig:Menubar:Shortcut></twig:Menubar:Item>
             </twig:Menubar:Content>
         </twig:Menubar:Menu>
         <twig:Menubar:Menu>
@@ -178,8 +178,8 @@ Wrap `Menubar:RadioItem` components in a `Menubar:RadioGroup` so only one can be
                     <twig:Menubar:RadioItem value="luis">Luis</twig:Menubar:RadioItem>
                 </twig:Menubar:RadioGroup>
                 <twig:Menubar:Separator />
-                <twig:Menubar:Item>Edit...</twig:Menubar:Item>
-                <twig:Menubar:Item>Add Profile...</twig:Menubar:Item>
+                <twig:Menubar:Item inset>Edit...</twig:Menubar:Item>
+                <twig:Menubar:Item inset>Add Profile...</twig:Menubar:Item>
             </twig:Menubar:Content>
         </twig:Menubar:Menu>
         <twig:Menubar:Menu>
@@ -381,12 +381,12 @@ To enable RTL support, set the `dir="rtl"` attribute on the root element.
                     <twig:Menubar:CheckboxItem name="ar-bookmarks">شريط الإشارات المرجعية</twig:Menubar:CheckboxItem>
                     <twig:Menubar:CheckboxItem name="ar-urls" checked>عناوين URL الكاملة</twig:Menubar:CheckboxItem>
                     <twig:Menubar:Separator />
-                    <twig:Menubar:Item>إعادة تحميل<twig:Menubar:Shortcut>⌘R</twig:Menubar:Shortcut></twig:Menubar:Item>
-                    <twig:Menubar:Item disabled>إعادة تحميل قسري<twig:Menubar:Shortcut>⇧⌘R</twig:Menubar:Shortcut></twig:Menubar:Item>
+                    <twig:Menubar:Item inset>إعادة تحميل<twig:Menubar:Shortcut>⌘R</twig:Menubar:Shortcut></twig:Menubar:Item>
+                    <twig:Menubar:Item inset disabled>إعادة تحميل قسري<twig:Menubar:Shortcut>⇧⌘R</twig:Menubar:Shortcut></twig:Menubar:Item>
                     <twig:Menubar:Separator />
-                    <twig:Menubar:Item>تبديل وضع ملء الشاشة</twig:Menubar:Item>
+                    <twig:Menubar:Item inset>تبديل وضع ملء الشاشة</twig:Menubar:Item>
                     <twig:Menubar:Separator />
-                    <twig:Menubar:Item>إخفاء الشريط الجانبي</twig:Menubar:Item>
+                    <twig:Menubar:Item inset>إخفاء الشريط الجانبي</twig:Menubar:Item>
                 </twig:Menubar:Content>
             </twig:Menubar:Menu>
             <twig:Menubar:Menu>
@@ -400,9 +400,9 @@ To enable RTL support, set the `dir="rtl"` attribute on the root element.
                         <twig:Menubar:RadioItem value="luis">Luis</twig:Menubar:RadioItem>
                     </twig:Menubar:RadioGroup>
                     <twig:Menubar:Separator />
-                    <twig:Menubar:Item>تعديل...</twig:Menubar:Item>
+                    <twig:Menubar:Item inset>تعديل...</twig:Menubar:Item>
                     <twig:Menubar:Separator />
-                    <twig:Menubar:Item>إضافة ملف شخصي...</twig:Menubar:Item>
+                    <twig:Menubar:Item inset>إضافة ملف شخصي...</twig:Menubar:Item>
                 </twig:Menubar:Content>
             </twig:Menubar:Menu>
         </twig:Menubar>
@@ -474,12 +474,12 @@ To enable RTL support, set the `dir="rtl"` attribute on the root element.
                     <twig:Menubar:CheckboxItem name="he-bookmarks">סרגל סימניות</twig:Menubar:CheckboxItem>
                     <twig:Menubar:CheckboxItem name="he-urls" checked>כתובות URL מלאות</twig:Menubar:CheckboxItem>
                     <twig:Menubar:Separator />
-                    <twig:Menubar:Item>רענן<twig:Menubar:Shortcut>⌘R</twig:Menubar:Shortcut></twig:Menubar:Item>
-                    <twig:Menubar:Item disabled>רענן בכוח<twig:Menubar:Shortcut>⇧⌘R</twig:Menubar:Shortcut></twig:Menubar:Item>
+                    <twig:Menubar:Item inset>רענן<twig:Menubar:Shortcut>⌘R</twig:Menubar:Shortcut></twig:Menubar:Item>
+                    <twig:Menubar:Item inset disabled>רענן בכוח<twig:Menubar:Shortcut>⇧⌘R</twig:Menubar:Shortcut></twig:Menubar:Item>
                     <twig:Menubar:Separator />
-                    <twig:Menubar:Item>החלף מסך מלא</twig:Menubar:Item>
+                    <twig:Menubar:Item inset>החלף מסך מלא</twig:Menubar:Item>
                     <twig:Menubar:Separator />
-                    <twig:Menubar:Item>הסתר סרגל צד</twig:Menubar:Item>
+                    <twig:Menubar:Item inset>הסתר סרגל צד</twig:Menubar:Item>
                 </twig:Menubar:Content>
             </twig:Menubar:Menu>
             <twig:Menubar:Menu>
@@ -493,9 +493,9 @@ To enable RTL support, set the `dir="rtl"` attribute on the root element.
                         <twig:Menubar:RadioItem value="luis">Luis</twig:Menubar:RadioItem>
                     </twig:Menubar:RadioGroup>
                     <twig:Menubar:Separator />
-                    <twig:Menubar:Item>ערוך...</twig:Menubar:Item>
+                    <twig:Menubar:Item inset>ערוך...</twig:Menubar:Item>
                     <twig:Menubar:Separator />
-                    <twig:Menubar:Item>הוסף פרופיל...</twig:Menubar:Item>
+                    <twig:Menubar:Item inset>הוסף פרופיל...</twig:Menubar:Item>
                 </twig:Menubar:Content>
             </twig:Menubar:Menu>
         </twig:Menubar>

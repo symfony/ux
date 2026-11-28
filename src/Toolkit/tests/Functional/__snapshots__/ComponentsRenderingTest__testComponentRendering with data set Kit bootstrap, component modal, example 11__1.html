@@ -5,12 +5,12 @@
 ```twig
 <div style="min-height: 204px">
     <div class="d-flex flex-wrap gap-2">
-        {% for size, label in {xl: 'Extra large', lg: 'Large', sm: 'Small'} %}
+        {% for size, label in {xxl: 'Extra extra large', xl: 'Extra large', lg: 'Large', sm: 'Small'} %}
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#size-{{ size }}-modal">{{ label }} modal</button>
         {% endfor %}
     </div>
 
-    {% for size, label in {xl: 'Extra large', lg: 'Large', sm: 'Small'} %}
+    {% for size, label in {xxl: 'Extra extra large', xl: 'Extra large', lg: 'Large', sm: 'Small'} %}
         <twig:Modal id="size-{{ size }}-modal" size="{{ size }}">
             <twig:Modal:Header><twig:Modal:Title>{{ label }} modal</twig:Modal:Title></twig:Modal:Header>
             <twig:Modal:Body>Modal content at the <code>{{ size }}</code> size.</twig:Modal:Body>
@@ -22,11 +22,21 @@
 - Rendered code (run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
 <div style="min-height: 204px">
     <div class="d-flex flex-wrap gap-2">
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#size-xxl-modal">Extra extra large modal</button>
                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#size-xl-modal">Extra large modal</button>
                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#size-lg-modal">Large modal</button>
                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#size-sm-modal">Small modal</button>
             </div>
 
+            <div id="size-xxl-modal" class="modal fade" tabindex="-1" aria-labelledby="size-xxl-modal-label" aria-hidden="true">
+    <div class="modal-dialog modal-xxl">
+        <div class="modal-content"><div class="modal-header"><h1 id="size-xxl-modal-label" class="modal-title fs-5">Extra extra large modal</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div>
+            <div class="modal-body">Modal content at the <code>xxl</code> size.</div>
+            <div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button></div>
+        </div>
+    </div>
+</div>
             <div id="size-xl-modal" class="modal fade" tabindex="-1" aria-labelledby="size-xl-modal-label" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content"><div class="modal-header"><h1 id="size-xl-modal-label" class="modal-title fs-5">Extra large modal</h1>

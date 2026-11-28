@@ -1,7 +1,7 @@
 {%- props
     ## string The unique identifier targeted by modal controls.
     id,
-    ## 'sm'|'lg'|'xl'|null The optional maximum width of the modal dialog.
+    ## 'sm'|'lg'|'xl'|'xxl'|null The optional maximum width of the modal dialog.
     size = null,
     ## boolean Whether to vertically center the modal dialog.
     centered = false,
@@ -28,7 +28,7 @@
 }) -%}
 {%- set dialog_classes = html_classes({
     'modal-dialog': true,
-    ('modal-' ~ size): size in ['sm', 'lg', 'xl'],
+    ('modal-' ~ size): size in ['sm', 'lg', 'xl', 'xxl'],
     'modal-dialog-centered': centered,
     'modal-dialog-scrollable': scrollable,
 }) -%}

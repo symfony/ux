@@ -328,6 +328,37 @@ Combine labels, controls, and help text to compose accessible form fields and gr
 </div>
 ```
 
+### Radio
+
+```twig {"preview":true}
+<twig:Field:Set class="w-full max-w-xs">
+    <twig:Field:Legend variant="label">Subscription Plan</twig:Field:Legend>
+    <twig:Field:Description>
+        Yearly and lifetime plans offer significant savings.
+    </twig:Field:Description>
+    <twig:RadioGroup>
+        <twig:Field orientation="horizontal">
+            <twig:RadioGroup:Item name="plan" value="monthly" id="plan-monthly" checked />
+            <twig:Field:Label for="plan-monthly" class="font-normal">
+                Monthly ($9.99/month)
+            </twig:Field:Label>
+        </twig:Field>
+        <twig:Field orientation="horizontal">
+            <twig:RadioGroup:Item name="plan" value="yearly" id="plan-yearly" />
+            <twig:Field:Label for="plan-yearly" class="font-normal">
+                Yearly ($99.99/year)
+            </twig:Field:Label>
+        </twig:Field>
+        <twig:Field orientation="horizontal">
+            <twig:RadioGroup:Item name="plan" value="lifetime" id="plan-lifetime" />
+            <twig:Field:Label for="plan-lifetime" class="font-normal">
+                Lifetime ($299.99)
+            </twig:Field:Label>
+        </twig:Field>
+    </twig:RadioGroup>
+</twig:Field:Set>
+```
+
 ### Switch
 
 ```twig {"preview":true}
@@ -411,6 +442,36 @@ Wrap `Field` components inside `Field:Label` to create selectable field groups. 
             </twig:Field:Group>
         </twig:Field:Set>
     </twig:Field:Group>
+</div>
+```
+
+### Responsive Layout
+
+Set `orientation="responsive"` on `Field` to stack the label and the control in narrow containers, and to align them side by side once the surrounding `Field:Group` is wide enough.
+
+```twig {"preview":true}
+<div class="w-full max-w-lg">
+    <form>
+        <twig:Field:Set>
+            <twig:Field:Legend>Profile</twig:Field:Legend>
+            <twig:Field:Description>Fill in your profile information.</twig:Field:Description>
+            <twig:Field:Group>
+                <twig:Field orientation="responsive">
+                    <twig:Field:Content>
+                        <twig:Field:Label for="responsive-name">Name</twig:Field:Label>
+                        <twig:Field:Description>
+                            Provide your full name for identification
+                        </twig:Field:Description>
+                    </twig:Field:Content>
+                    <twig:Input id="responsive-name" placeholder="Evil Rabbit" required />
+                </twig:Field>
+                <twig:Field orientation="responsive">
+                    <twig:Button type="submit">Submit</twig:Button>
+                    <twig:Button type="button" variant="outline">Cancel</twig:Button>
+                </twig:Field>
+            </twig:Field:Group>
+        </twig:Field:Set>
+    </form>
 </div>
 ```
 

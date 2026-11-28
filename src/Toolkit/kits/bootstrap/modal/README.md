@@ -366,17 +366,17 @@ Disable the fade transition when the modal should appear immediately.
 
 ### Optional sizes
 
-Choose Bootstrap's small, large, or extra-large modal widths.
+Choose Bootstrap's small, large, extra-large, or extra-extra-large modal widths.
 
 ```twig {"preview":true}
 <div style="min-height: 204px">
     <div class="d-flex flex-wrap gap-2">
-        {% for size, label in {xl: 'Extra large', lg: 'Large', sm: 'Small'} %}
+        {% for size, label in {xxl: 'Extra extra large', xl: 'Extra large', lg: 'Large', sm: 'Small'} %}
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#size-{{ size }}-modal">{{ label }} modal</button>
         {% endfor %}
     </div>
 
-    {% for size, label in {xl: 'Extra large', lg: 'Large', sm: 'Small'} %}
+    {% for size, label in {xxl: 'Extra extra large', xl: 'Extra large', lg: 'Large', sm: 'Small'} %}
         <twig:Modal id="size-{{ size }}-modal" size="{{ size }}">
             <twig:Modal:Header><twig:Modal:Title>{{ label }} modal</twig:Modal:Title></twig:Modal:Header>
             <twig:Modal:Body>Modal content at the <code>{{ size }}</code> size.</twig:Modal:Body>

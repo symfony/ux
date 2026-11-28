@@ -139,6 +139,29 @@ Use ID and class selectors to control individual panels or several targets toget
 </div>
 ```
 
+### Nested collapse
+
+Place a collapse trigger inside another collapsible panel to progressively reveal additional content.
+
+```twig {"preview":true}
+<div class="align-self-start w-100">
+    <p class="d-inline-flex gap-1">
+        <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-nested-parent" aria-expanded="false" aria-controls="collapse-nested-parent">Toggle parent</button>
+    </p>
+    <twig:Collapse id="collapse-nested-parent">
+        <div class="card card-body">
+            <p class="mb-2">This is the parent collapse. It can contain links, buttons, and even other collapse triggers.</p>
+            <p class="d-inline-flex gap-1 mb-0">
+                <button class="btn btn-outline-primary btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-nested-child" aria-expanded="false" aria-controls="collapse-nested-child">Toggle nested collapse</button>
+            </p>
+            <twig:Collapse id="collapse-nested-child" class="mt-2">
+                <div class="card card-body">This is the nested collapse content.</div>
+            </twig:Collapse>
+        </div>
+    </twig:Collapse>
+</div>
+```
+
 ## API Reference
 
 ::: api-reference
