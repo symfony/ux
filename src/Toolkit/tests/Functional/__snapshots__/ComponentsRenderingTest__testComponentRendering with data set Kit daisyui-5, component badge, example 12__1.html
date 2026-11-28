@@ -1,0 +1,55 @@
+<!--
+- Kit: daisyUI v5
+- Component: Badge
+- Code:
+```twig
+<div class="flex flex-col gap-8">
+    <div class="flex flex-wrap items-center gap-2" dir="rtl">
+        <twig:Badge>شارة</twig:Badge>
+        <twig:Badge color="primary">أساسي</twig:Badge>
+        <twig:Badge color="secondary" variant="outline">ثانوي</twig:Badge>
+        <twig:Badge color="info">
+            <svg class="size-[1em]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="currentColor" stroke-linejoin="miter" stroke-linecap="butt"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-linecap="square" stroke-miterlimit="10" stroke-width="2"></circle><path d="m12,17v-5.5c0-.276-.224-.5-.5-.5h-1.5" fill="none" stroke="currentColor" stroke-linecap="square" stroke-miterlimit="10" stroke-width="2"></path><circle cx="12" cy="7.25" r="1.25" fill="currentColor" stroke-width="2"></circle></g></svg>
+            معلومات
+        </twig:Badge>
+        <twig:Button>
+            البريد الوارد <twig:Badge size="sm" color="secondary">+99</twig:Badge>
+        </twig:Button>
+    </div>
+    <div class="flex flex-wrap items-center gap-2" dir="rtl">
+        <twig:Badge>תג</twig:Badge>
+        <twig:Badge color="primary">ראשי</twig:Badge>
+        <twig:Badge color="secondary" variant="outline">משני</twig:Badge>
+        <twig:Badge color="info">
+            <svg class="size-[1em]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="currentColor" stroke-linejoin="miter" stroke-linecap="butt"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-linecap="square" stroke-miterlimit="10" stroke-width="2"></circle><path d="m12,17v-5.5c0-.276-.224-.5-.5-.5h-1.5" fill="none" stroke="currentColor" stroke-linecap="square" stroke-miterlimit="10" stroke-width="2"></path><circle cx="12" cy="7.25" r="1.25" fill="currentColor" stroke-width="2"></circle></g></svg>
+            מידע
+        </twig:Badge>
+        <twig:Button>
+            דואר נכנס <twig:Badge size="sm" color="secondary">+99</twig:Badge>
+        </twig:Button>
+    </div>
+</div>
+```
+- Rendered code (run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="flex flex-col gap-8">
+    <div class="flex flex-wrap items-center gap-2" dir="rtl">
+        <span class="badge">شارة</span>
+        <span class="badge badge-primary">أساسي</span>
+        <span class="badge badge-secondary badge-outline">ثانوي</span>
+        <span class="badge badge-info"><svg class="size-[1em]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="currentColor" stroke-linejoin="miter" stroke-linecap="butt"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-linecap="square" stroke-miterlimit="10" stroke-width="2"></circle><path d="m12,17v-5.5c0-.276-.224-.5-.5-.5h-1.5" fill="none" stroke="currentColor" stroke-linecap="square" stroke-miterlimit="10" stroke-width="2"></path><circle cx="12" cy="7.25" r="1.25" fill="currentColor" stroke-width="2"></circle></g></svg>
+            معلومات
+        </span>
+        <button class="btn" type="button">البريد الوارد <span class="badge badge-secondary badge-sm">+99</span>
+        </button>
+    </div>
+    <div class="flex flex-wrap items-center gap-2" dir="rtl">
+        <span class="badge">תג</span>
+        <span class="badge badge-primary">ראשי</span>
+        <span class="badge badge-secondary badge-outline">משני</span>
+        <span class="badge badge-info"><svg class="size-[1em]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="currentColor" stroke-linejoin="miter" stroke-linecap="butt"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-linecap="square" stroke-miterlimit="10" stroke-width="2"></circle><path d="m12,17v-5.5c0-.276-.224-.5-.5-.5h-1.5" fill="none" stroke="currentColor" stroke-linecap="square" stroke-miterlimit="10" stroke-width="2"></path><circle cx="12" cy="7.25" r="1.25" fill="currentColor" stroke-width="2"></circle></g></svg>
+            מידע
+        </span>
+        <button class="btn" type="button">דואר נכנס <span class="badge badge-secondary badge-sm">+99</span>
+        </button>
+    </div>
+</div>

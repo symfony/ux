@@ -1,0 +1,46 @@
+{%- props
+    ## 'default'|'neutral'|'primary'|'secondary'|'accent'|'info'|'success'|'warning'|'error' The color of the badge.
+    color = 'default',
+    ## 'default'|'outline'|'dash'|'soft'|'ghost' The style of the badge.
+    variant = 'default',
+    ## 'xs'|'sm'|'md'|'lg'|'xl' The size of the badge.
+    size = 'md'
+-%}
+{%- set style = html_cva(
+    base: 'badge',
+    variants: {
+        color: {
+            default: '',
+            neutral: 'badge-neutral',
+            primary: 'badge-primary',
+            secondary: 'badge-secondary',
+            accent: 'badge-accent',
+            info: 'badge-info',
+            success: 'badge-success',
+            warning: 'badge-warning',
+            error: 'badge-error',
+        },
+        variant: {
+            default: '',
+            outline: 'badge-outline',
+            dash: 'badge-dash',
+            soft: 'badge-soft',
+            ghost: 'badge-ghost',
+        },
+        size: {
+            xs: 'badge-xs',
+            sm: 'badge-sm',
+            md: '',
+            lg: 'badge-lg',
+            xl: 'badge-xl',
+        },
+    },
+) -%}
+<span
+    {{ attributes.defaults({
+        class: style.apply({color: color, variant: variant, size: size})|tailwind_classes,
+    }) }}
+>
+    {##- The badge label and/or icon. -#}
+    {%- block content %}{% endblock -%}
+</span>
